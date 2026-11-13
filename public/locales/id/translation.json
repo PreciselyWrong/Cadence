@@ -1,8 +1,8 @@
 {
     "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "agent": "Agen",
+        "dismiss": "Tandai sudah dibaca",
+        "open": "Buka"
     },
     "counts": {
         "notes_other": "{{count}} catatan",
@@ -26,6 +26,8 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_one": "{{count}} item diantrekan lagi",
+            "failed_one": "{{count}} item gagal",
       "retryError": "Tidak dapat mencoba lagi",
       "requeued": "{{count}} item diantrekan lagi",
       "retry": "Coba lagi",
@@ -82,7 +84,7 @@
       "save": "Simpan",
       "excluded": "Tag yang tidak pernah diberikan (dipisah koma)",
       "limits": "Jeda dan batas",
-      "default": "Default: {{value}}",
+      "default": "Bawaan: {{value}}",
       "thresholds": "Ambang keyakinan",
       "effortHint": "Diabaikan oleh endpoint kompatibel OpenAI dari Anthropic.",
       "effortNone": "Tidak dikirim",
@@ -248,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Perubahan ini tidak dapat disimpan",
+    "hintLocked": "Enter: baris baru",
+    "hint": "Enter: baris baru · Tab / Shift+Tab: menjorok · Alt+↑ / Alt+↓: pindahkan",
+    "newLine": "Tugas baru",
+    "title": "Kerangka"
   },
   "focusStats": {
     "title": "Fokus",
@@ -714,10 +716,10 @@
             "page": {
                 "notFound": "Plugin tidak ditemukan atau dimatikan"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Plugin ini berjalan di dalam server dan meminta:",
+            "approveOutro": "Izin membatasi apa yang diberikan Cadence kepada plugin; izin bukan sandbox. Setujui hanya kode yang sudah Anda baca.",
+            "approveTitle": "Setujui izin?",
+            "approve": "Setujui dan aktifkan"
         },
     "showTaskDescription": "Tampilkan deskripsi di bawah judul",
     "sync": {
@@ -730,7 +732,7 @@
         "recurrence_type": "Pengulangan",
         "icon": "Ikon",
         "color": "Warna",
-        "tag_uids": "Tags",
+        "tag_uids": "Tag",
         "next_task_uid": "Tindakan berikutnya",
         "parent_task_uid": "Tugas induk",
         "goal_uid": "Tujuan",
@@ -889,6 +891,7 @@
     "nextTaskSuggestion": "Saran Tugas Berikutnya",
     "enableNextTaskSuggestion": "Aktifkan Saran Tugas Berikutnya",
     "tabs": {
+            "agents": "Agen",
             "plugins": "Plugin",
       "classify": "Klasifikasi",
       "sync": "Sinkronisasi",
@@ -1113,7 +1116,7 @@
       "addError": "Tidak dapat menambahkan kalender itu",
       "deleteError": "Tidak dapat menghapus kalender itu",
       "title": "Kalender di Hari Ini",
-      "description": "Tampilkan rapat di samping rencana harimu. Cadence hanya membaca kalender ini, tidak pernah mengubahnya.",
+      "description": "Tampilkan rapat di samping rencana hari Anda. Cadence hanya membaca kalender ini, tidak pernah mengubahnya.",
       "empty": "Belum ada kalender yang terhubung.",
       "lastSync": "diperbarui {{time}}",
       "remove": "Hapus {{name}}",
@@ -1121,7 +1124,7 @@
       "name": "Nama",
       "namePlaceholder": "Kerja, Keluarga…",
       "url": "Alamat iCal rahasia",
-      "googleHelp": "Di Google Kalender: Setelan → kalendermu → Integrasikan kalender → \"Alamat rahasia dalam format iCal\". Apple Kalender dan Outlook punya tautan serupa. Siapa pun yang punya alamat ini bisa membaca kalender, jadi Cadence menyimpannya terenkripsi.",
+      "googleHelp": "Di Google Kalender: Setelan → kalender Anda → Integrasikan kalender → \"Alamat rahasia dalam format iCal\". Apple Kalender dan Outlook punya tautan serupa. Siapa pun yang punya alamat ini bisa membaca kalender, jadi Cadence menyimpannya terenkripsi.",
       "color": "Warna",
       "checking": "Memeriksa kalender…",
       "add": "Hubungkan",
@@ -1134,6 +1137,7 @@
       "toggleError": "Tidak dapat memperbarui kalender itu"
     },
     "planning": {
+            "maxOption_one": "{{count}} tugas",
       "title": "Perencanaan",
       "description": "Cara \"Apa yang bisa kamu kerjakan hari ini?\" mengurutkan tugasmu saat kamu merencanakan hari. Seret baris ke urutan yang kamu mau; tugas yang sama selalu muncul dalam urutan yang sama.",
       "orderTitle": "Urutan (seret untuk mengubah)",
@@ -1292,7 +1296,7 @@
         "description": "Tambahkan Cadence sebagai konektor kustom di claude.ai pada {{url}}. Cadence hanya menerima konektor baru dalam 10 menit setelah Anda mengklik tombol di bawah.",
         "title": "Hubungkan claude.ai"
       },
-      "description": "Hubungkan Cadence dengan aplikasi apa pun yang kompatibel dengan MCP melalui Model Context Protocol. Dengan begitu asisten AI bisa bekerja dengan tugas, proyek, dan catatanmu, baik di server Cadence lokal maupun jarak jauh.",
+      "description": "Hubungkan Cadence dengan aplikasi apa pun yang kompatibel dengan MCP melalui Model Context Protocol. Dengan begitu asisten AI bisa bekerja dengan tugas, proyek, dan catatan Anda, baik di server Cadence lokal maupun jarak jauh.",
       "example1": "Tampilkan tugasku untuk hari ini",
       "example2": "Buat tugas untuk meninjau integrasi MCP",
       "example3": "Proyek apa saja yang sedang berjalan?",
@@ -1314,7 +1318,7 @@
       },
       "step2": {
         "copy": "Salin",
-        "description": "Tambahkan konfigurasi ini ke klien MCP-mu. Ganti YOUR_API_TOKEN_HERE dengan token yang kamu buat di langkah 1. Konfigurasi ini memakai mcp-remote untuk terhubung ke server Cadence lewat HTTP. Contoh untuk Claude Desktop:",
+        "description": "Tambahkan konfigurasi ini ke klien MCP Anda. Ganti YOUR_API_TOKEN_HERE dengan token yang Anda buat di langkah 1. Konfigurasi ini memakai mcp-remote untuk terhubung ke server Cadence lewat HTTP. Contoh untuk Claude Desktop:",
         "loading": "Memuat...",
         "locationTitle": "Lokasi file konfigurasi Claude Desktop:",
         "otherClients": "Klien MCP lain mungkin memakai cara konfigurasi berbeda, lihat dokumentasi klienmu.",
@@ -1325,7 +1329,7 @@
         "title": "3. Operasi yang tersedia"
       },
       "step4": {
-        "description": "Setelah menambahkan konfigurasi, mulai ulang klien MCP-mu. Lalu kamu bisa memakai bahasa sehari-hari untuk bekerja dengan Cadence:",
+        "description": "Setelah menambahkan konfigurasi, mulai ulang klien MCP Anda. Lalu Anda bisa memakai bahasa sehari-hari untuk bekerja dengan Cadence:",
         "examplesTitle": "Contoh perintah:",
         "title": "4. Mulai gunakan"
       },
@@ -1723,8 +1727,8 @@
     "waiting": "Menunggu"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Sembunyikan kolom kosong",
+    "addDetail": "Tambahkan detail",
     "name": "Nama Proyek",
     "projectImage": "Gambar Proyek",
     "uploadImageHint": "Unggah gambar untuk proyek Anda (maks 10MB)",
@@ -2029,6 +2033,12 @@
     "createError": "Gagal membuat catatan"
   },
   "task": {
+        "minutesAgo_one": "{{count}} menit lalu",
+        "inMinutes_one": "dalam {{count}} menit",
+        "inHours_one": "dalam {{count}} jam",
+        "inDays_one": "dalam {{count}} hari",
+        "hoursAgo_one": "{{count}} jam lalu",
+        "daysAgo_one": "{{count}} hari lalu",
     "duplicateError": "Tidak dapat menduplikasi tugas.",
     "duplicated": "Tugas diduplikasi",
     "duplicate": "Duplikat",
@@ -2192,12 +2202,12 @@
     "dueDateBeforeDeferError": "Tanggal jatuh tempo tidak boleh sebelum tanggal penundaan",
     "areaUpdated": "Area berhasil diperbarui",
     "areaUpdateError": "Gagal memperbarui area",
-    "areaCleared": "Area berhasil dihapus",
-    "areaClearError": "Gagal menghapus area",
+    "areaCleared": "Area berhasil dilepas",
+    "areaClearError": "Gagal melepas area",
     "goalUpdated": "Tujuan diperbarui",
     "goalUpdateError": "Gagal memperbarui tujuan",
-    "goalCleared": "Tujuan dihapus",
-    "goalClearError": "Gagal menghapus tujuan",
+    "goalCleared": "Tujuan dilepas",
+    "goalClearError": "Gagal melepas tujuan",
     "notFound": "Tugas tidak ditemukan",
     "notFoundDescription": "Tugas yang Anda cari tidak ada atau telah dihapus.",
     "hoursAgo": "{{count}} jam lalu",
@@ -2432,7 +2442,7 @@
     "toggleDropdownMenu": "Buka atau tutup menu tarik-turun"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Semua catatan",
     "emptyPreview": "Catatan kosong",
     "loading": "Memuat catatan...",
     "error": "Kesalahan memuat catatan",
@@ -2506,7 +2516,7 @@
     "sidebar": {
       "recent": "Terbaru",
       "projects": "Proyek",
-      "tags": "Tags",
+      "tags": "Tag",
       "noProject": "Tanpa proyek",
       "more": "{{count}} lainnya"
     },
@@ -2522,7 +2532,7 @@
     "backgroundColor": "Warna latar",
     "selectProject": "Pilih proyek",
     "noMatchingNotes": "Tidak ada catatan yang cocok",
-    "noPreviewContent": "Tidak ada konten untuk dipratinjau. Beralih ke Edit untuk menambahkan konten.",
+    "noPreviewContent": "Tidak ada konten untuk dipratinjau. Beralih ke Ubah untuk menambahkan konten.",
     "mermaidError": "Diagram Mermaid tidak dapat ditampilkan",
     "mermaidRendering": "Menampilkan diagram…",
     "mermaidLabel": "Diagram Mermaid"
@@ -3195,7 +3205,7 @@
       "itemsCreated_other": "{{count}} item",
       "lastCreated": "Terakhir pada {{date}}",
       "nothingCreated": "Belum ada",
-      "emails": "Emails",
+      "emails": "Email",
       "emailsSent_one": "{{count}} terkirim",
       "emailsSent_other": "{{count}} terkirim",
       "emailsNone": "Belum ada yang terkirim",
@@ -3204,16 +3214,16 @@
         "habits": "Kebiasaan",
         "projects": "Proyek",
         "notes": "Catatan",
-        "areas": "Areas",
+        "areas": "Area",
         "goals": "Tujuan",
-        "tags": "Tags",
+        "tags": "Tag",
         "people": "Orang",
         "views": "Tampilan",
         "inbox": "Kotak Masuk"
       }
     },
     "userEmails": {
-      "title": "Emails",
+      "title": "Email",
       "language": "Bahasa: {{language}}",
       "to": "Kepada",
       "subject": "Subjek",
@@ -3426,7 +3436,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galeri",
     "label": "Tampilan",
     "list": "Daftar",
     "board": "Papan",
@@ -4189,7 +4199,7 @@
     "deletePerson": "Hapus orang",
     "deleteConfirm": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
     "contact": "Kontak",
-    "editPerson": "Edit orang",
+    "editPerson": "Ubah orang",
     "newPerson": "Orang baru",
     "noAssignedTasks": "Tidak ada tugas yang ditugaskan ke {{name}}.",
     "notFound": "Orang tidak ditemukan.",
@@ -4270,6 +4280,8 @@
     "invalidHint": "Mungkin sudah dipakai atau kedaluwarsa. Minta yang baru kepada orang yang mengirimkannya."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} tugas akan masuk ke slot kosong berikutnya.",
+        "placeAllDone_one": "{{count}} tugas diatur.",
     "inProgress": "Sedang dikerjakan",
     "overdue": "Terlambat",
     "dueToday": "Jatuh tempo hari ini",
@@ -4340,6 +4352,7 @@
     "beta": "Beta",
     "betaHint": "Halaman Hari Ini dengan rencana masih baru. Halaman klasik masih ada di bagian bawah halaman ini.",
     "ai": {
+            "carried_one": "{{count}} tugas ditambahkan ke besok",
       "suggested": "Disarankan AI",
       "estimateGuess": "Perkiraan AI",
       "nothingToAdd": "Tidak ada yang bisa ditambahkan: tidak ada waktu luang atau tugas untuk direncanakan.",
@@ -4391,7 +4404,7 @@
     "yesterday": "Kemarin",
     "backToToday": "Kembali ke hari ini",
     "noTimeYetOn": "{{date}}, belum ada waktu",
-    "reviewTitle": "Yang kamu lakukan pada {{date}}",
+    "reviewTitle": "Yang Anda lakukan pada {{date}}",
     "reviewNothingDone": "Tidak ada yang selesai hari itu.",
     "reviewDoneCount": "Selesai: {{count}}",
     "reviewNotDone": "Direncanakan, belum selesai",
@@ -4417,7 +4430,7 @@
     "dayView": "Hari",
     "agenda": "Agenda",
     "agendaAnytime": "Kapan saja",
-    "agendaEmpty": "Tidak ada yang dijadwalkan untuk hari ini.",
+    "agendaEmpty": "Tidak ada yang dijadwalkan untuk hari itu.",
     "agendaUntimed": "Tanpa waktu tetap",
     "resizePanes": "Ubah ukuran kolom",
     "calendarMenu": "Opsi kalender lainnya",
@@ -4444,7 +4457,7 @@
     "placedLater": "'{{name}}' dipindahkan ke slot yang lebih lambat.",
     "endDay": "Selesaikan hari",
     "endDayClean": "Tidak ada yang tersisa. Kerja bagus.",
-    "guidedTitle": "Mulai harimu",
+    "guidedTitle": "Mulai hari Anda",
     "guidedStep": "Langkah {{step}} dari {{total}}",
     "guidedLeftovers": "Sisa kemarin",
     "guidedNoLeftovers": "Tidak ada sisa dari kemarin.",
@@ -4551,7 +4564,7 @@
     "close": "Tutup",
     "filesAttached_one": "1 berkas terlampir.",
     "button": "Tangkap",
-    "syntaxHint": "#tag  +project  !1 sampai !3 prioritas  besok jam 3 sore untuk tanggal",
+    "syntaxHint": "#tag  +proyek  !1 sampai !3 prioritas  besok jam 3 sore untuk tanggal",
     "chainCount": "Ditambahkan ke {{project}}: {{total}}",
     "slash": {
       "priorityHigh": "Tinggi",
@@ -4585,27 +4598,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Tambahkan keinginan ke {{group}}",
+      "addWish": "Tambahkan keinginan…",
+      "createTaskFor": "Buat tugas untuk “{{title}}”",
+      "markDone": "Tandai “{{title}}” terwujud",
+      "wishFulfilled": "Terwujud",
+      "wishDropped": "Dibatalkan",
+      "allDone": "Semua selesai",
+      "addStep": "Tambahkan langkah berikutnya",
+      "nextStepInline": "Langkah berikutnya: {{name}}",
+      "nextStep": "Langkah berikutnya",
+      "completeStep": "Selesaikan “{{name}}”",
+      "nothingLinked": "Tidak ada yang tertaut",
+      "target": "Pada {{date}}",
+      "error": "Tidak dapat menyimpan, coba lagi",
+      "wishDone": "“{{title}}” terwujud",
+      "stepDone": "“{{name}}” selesai",
+      "doneWishes": "Terwujud",
+      "other": "Dijeda, tercapai, atau dibatalkan",
+      "noMatch": "Tidak ada yang cocok.",
+      "clearSearch": "Hapus pencarian",
+      "search": "Cari tujuan atau keinginan"
     },
     "newGoal": "Tujuan Baru",
     "noGoalsYet": "Belum ada tujuan.",
@@ -4936,6 +4949,13 @@
       "instructionsOther": "Kolom lain apa pun dapat disimpan di catatan tugas, sehingga tidak ada isi lembar yang hilang."
     },
     "import": {
+            "undoneKept_one": "Impor dibatalkan. {{count}} tugas yang diubah sejak itu dipertahankan.",
+            "rowCount_one": "{{count}} baris",
+            "doneTitle_one": "{{count}} tugas diimpor",
+            "countTags_one": "{{count}} tag baru",
+            "countProjects_one": "{{count}} proyek baru",
+            "countCreate_one": "{{count}} tugas baru",
+            "countAreas_one": "{{count}} area baru",
       "fieldParent": "Tugas induk",
       "fieldWbs": "WBS / nomor kerangka",
       "fieldEstimate": "Perkiraan",
@@ -5180,22 +5200,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 pilih · S lewati · O buka · Esc berhenti",
+      "nothing": "Belum ada yang perlu ditinjau sekarang.",
+      "back": "Kembali ke tinjauan",
+      "again": "Satu putaran lagi",
+      "saved": "Setiap keputusan disimpan. Yang Anda lewati akan muncul lagi nanti.",
+      "done": "Itu dulu untuk sekarang.",
+      "position": "{{position}} dari {{total}}",
+      "stop": "Berhenti",
+      "start": "Mulai",
+      "pitch": "Sekitar 5 menit, satu hal sekali. Berhenti kapan saja Anda mau.",
+      "title": "Tinjauan cepat"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Memuat…",
+    "calmClear": "Semua sudah terbaru",
+    "calm_other": "{{count}} hal untuk ditinjau, sesuai kecepatan Anda",
+    "calm_one": "{{count}} hal untuk ditinjau, sesuai kecepatan Anda",
     "cancelDate": "Batal",
     "choices": "Pilihan",
     "more": "Selengkapnya…",
@@ -5310,6 +5330,7 @@
     "close": "Tutup"
   },
   "comments": {
+        "count_one": "{{count}} komentar",
     "count": "{{count}} komentar",
     "loading": "Memuat komentar...",
     "failedToLoad": "Gagal memuat komentar",
@@ -5419,7 +5440,7 @@
     "pickProject": "Pindahkan ke proyek mana?",
     "actionError": "Tugas tidak dapat diperbarui",
     "deleteError": "Tugas tidak dapat dihapus",
-    "taskDeleted": "Menghapus “{{name}}”",
+    "taskDeleted": "“{{name}}” dihapus",
     "taskContext": "Tugas: {{name}}",
     "completeTask": "Selesaikan tugas",
     "reopenTask": "Buka kembali tugas",
@@ -5633,7 +5654,7 @@
       "conditional": "Ingatkan hanya selama periode belum tercapai",
       "create": "Buat kebiasaan",
       "description": "Deskripsi",
-      "editTitle": "Edit kebiasaan",
+      "editTitle": "Ubah kebiasaan",
       "firstDay": "Hari pertama minggu",
       "frequency": "Sesi per periode (opsional)",
       "goal": "Target",
@@ -5673,8 +5694,8 @@
       "add": "Tambah entri",
       "date": "Tanggal",
       "delete": "Hapus entri",
-      "editFor": "Edit entri tanggal {{date}}",
-      "editTitle": "Edit entri",
+      "editFor": "Ubah entri tanggal {{date}}",
+      "editTitle": "Ubah entri",
       "newTitle": "Tambah entri",
       "note": "Catatan",
       "value": "Jumlah",
@@ -5721,7 +5742,7 @@
     "history": {
       "none": "Tidak ada entri.",
       "ofDay": "Entri tanggal {{date}}",
-      "ofMonth": "Entri bulan ini",
+      "ofMonth": "Entri bulan tersebut",
       "title": "Riwayat"
     },
     "kind": {
@@ -5967,7 +5988,7 @@
       "url": "Alamat",
       "tags": "Tag"
     },
-    "editTitle": "Edit tautan",
+    "editTitle": "Ubah tautan",
     "deleteTitle": "Hapus tautan ini?",
     "deleteMessage": "Tautan ini keluar dari daftar Anda untuk selamanya. Untuk menyisihkannya, arsipkan saja.",
     "deleteError": "Tautan tidak dapat dihapus.",
@@ -6024,10 +6045,12 @@
     "testError": "Pengujian gagal."
   },
   "today": {
+        "taskCount_one": "{{count}} tugas",
+        "organized_one": "{{count}} tugas ditempatkan",
     "add": "Tambah",
     "addPlaceholder": "Tambahkan tugas",
     "added": "“{{name}}” ditambahkan ke hari itu",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, jatuh tempo {{range}}",
     "backToList": "Daftar",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Kalender hari ini",
@@ -6040,7 +6063,7 @@
     "doneCount": "Selesai · {{n}}",
     "dueAt": "Tenggat",
     "empty": "Belum ada rencana. Tambahkan tugas atau pilih dari saran.",
-    "emptyDay": "Belum ada rencana untuk hari ini.",
+    "emptyDay": "Belum ada rencana untuk hari itu.",
     "goToToday": "Hari Ini",
     "hideCalendar": "Sembunyikan kalender",
     "later": "Nanti",
@@ -6099,6 +6122,7 @@
     "habitLogFailed": "Kebiasaan tidak dapat dicatat."
   },
   "upcoming": {
+        "plannedOnDayHint_one": "{{count}} direncanakan pada suatu hari",
     "replan": "Perlu dijadwal ulang",
     "toPlan": "Perlu direncanakan",
     "expandToPlan": "Tampilkan yang perlu direncanakan ({{count}})",
@@ -6134,7 +6158,7 @@
       "none": "Tidak ada",
       "project": "Proyek",
       "priority": "Prioritas",
-      "tag": "Label"
+      "tag": "Tag"
     },
     "sortBy": "Urutkan menurut",
     "sort": {
@@ -6149,7 +6173,7 @@
     "calendarSpan": "Hari kalender",
     "reset": "Atur ulang",
     "noProject": "Tanpa proyek",
-    "noTag": "Tanpa label",
+    "noTag": "Tanpa tag",
     "priority": {
       "none": "Tanpa prioritas"
     },

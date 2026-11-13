@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Merkitse luetuksi",
+        "open": "Avaa"
     },
     "counts": {
         "notes_other": "{{count}} muistiinpanoa",
@@ -153,7 +153,7 @@
       "assistant": "AI-avustaja",
       "assistantEnabled": "Tekoälyn ehdotukset lajiteltaviin",
       "assistantLimit": "Tarkastettuja tehtäviä päivässä",
-      "llmProvider": "Tekoälypalveluntarjoaja: Profiili › Tekoälyavustaja",
+      "llmProvider": "Tekoälypalveluntarjoaja: Profiili › AI-avustaja",
       "save": "Tallenna",
       "saved": "Asetukset tallennettu",
       "saveError": "Asetuksia ei voitu tallentaa.",
@@ -183,7 +183,7 @@
       "dismiss": "Ohita",
       "archive": "Arkistoi Gmailiin",
       "taskName": "Tehtävän nimi",
-      "taskDue": "Määräpäivä",
+      "taskDue": "Eräpäivä",
       "createTask": "Luo tehtävä",
       "taskCreated": "Tehtävä luotu",
       "replied": "Vastaus avattu Gmailissa",
@@ -217,7 +217,7 @@
       "rename": "Nimeä uudelleen"
     },
     "splitLabel": "Yksi alitehtävä riviä kohden",
-    "dueOn": "Määräaika: {{date}}",
+    "dueOn": "Eräpäivä: {{date}}",
     "renameTo": "Nimeä uudelleen: {{name}}",
     "recurring": "toistuva",
     "error": "Jonoa ei voitu ladata.",
@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Muutosta ei voitu tallentaa",
+    "hintLocked": "Enter: uusi rivi",
+    "hint": "Enter: uusi rivi · Sarkain / Vaihto+Sarkain: sisennys · Alt+↑ / Alt+↓: siirrä",
+    "newLine": "Uusi tehtävä",
+    "title": "Jäsennys"
   },
   "focusStats": {
     "title": "Keskittyminen",
@@ -716,10 +716,10 @@
             "page": {
                 "notFound": "Liitännäistä ei löydy tai se on pois päältä"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Tämä liitännäinen toimii palvelimen sisällä ja pyytää:",
+            "approveOutro": "Oikeudet rajaavat sitä, mitä Cadence antaa liitännäiselle; ne eivät ole hiekkalaatikko. Hyväksy vain koodia, jonka olet lukenut.",
+            "approveTitle": "Hyväksytäänkö oikeudet?",
+            "approve": "Hyväksy ja ota käyttöön"
         },
     "showTaskDescription": "Näytä kuvaus otsikon alla",
     "sync": {
@@ -752,7 +752,7 @@
       },
       "entity": {
         "link": "Linkki",
-        "inbox_item": "Idea",
+        "inbox_item": "Ajatus",
         "note": "Muistiinpano",
         "tag": "Tunniste",
         "goal": "Tavoite",
@@ -838,10 +838,10 @@
     "personalInfo": "Henkilökohtaiset tiedot",
     "errorMessage": "Profiilin päivittäminen epäonnistui",
     "telegramIntegration": "Telegram-integraatio",
-    "telegramDescription": "Yhdistä Cadence-tilisi Telegram-botiin lisätäksesi kohteita saapuneet-viesteihisi Telegram-viestien kautta.",
+    "telegramDescription": "Yhdistä Cadence-tilisi Telegram-botiin lisätäksesi kohteita saapuneisiin Telegram-viestien kautta.",
     "telegramBotToken": "Telegram-botin tunnus",
     "telegramTokenDescription": "Luo botti @BotFatherin avulla Telegramissa ja liitä tunnus tänne.",
-    "telegramConnected": "Telegram-tilisi on yhdistetty! Lähetä viestejä bottillesi lisätäksesi kohteita Cadence-sisäänkirjautumiseesi.",
+    "telegramConnected": "Telegram-tilisi on yhdistetty! Lähetä viestejä bottillesi lisätäksesi kohteita Cadencen saapuneisiin.",
     "setupTelegram": "Aseta Telegram",
     "setupTelegramLower": "aseta telegram",
     "settingUp": "Asetetaan...",
@@ -899,6 +899,7 @@
     "nextTaskSuggestion": "Seuraava tehtäväehdotus",
     "enableNextTaskSuggestion": "Ota käyttöön seuraavien tehtävien ehdotukset",
     "tabs": {
+            "agents": "Agentit",
             "plugins": "Liitännäiset",
       "classify": "Lajittelu",
       "sync": "Synkronointi",
@@ -1053,8 +1054,8 @@
       "testRequired": "Sinun on testattava yhteys ennen jatkamista",
       "syncDirection": "Synkronointisuunta",
       "bidirectional": "Kaksisuuntainen (synkronoi molempiin suuntiin)",
-      "pullOnly": "Vain vetäminen (palvelimelta Tududiin)",
-      "pushOnly": "Vain työntäminen (Tududista palvelimelle)",
+      "pullOnly": "Vain vetäminen (palvelimelta Cadenceen)",
+      "pushOnly": "Vain työntäminen (Cadencesta palvelimelle)",
       "syncInterval": "Synkronointiväli (minuutit)",
       "syncIntervalHelp": "Kuinka usein synkronoida automaattisesti (5-1440 minuuttia)",
       "conflictPolicy": "Konfliktin ratkaisu",
@@ -1302,9 +1303,9 @@
       "example4": "Lisää saapuneisiin muistutus tarkistaa sähköpostit",
       "example5": "Etsi dokumentaatioon liittyviä tehtäviä",
       "remote": {
-        "cloud": "Käytä etä-tududia (pilvipalvelimet)",
+        "cloud": "Käytä etä-Cadencea (pilvipalvelimet)",
         "docker": "Käytä Docker-asennuksista",
-        "local": "Käytä paikallista tududia (localhost)",
+        "local": "Käytä paikallista Cadencea (localhost)",
         "title": "Etäkäyttö käytössä",
         "tokens": "Yhdistä turvallisesti API-tunnuksilla",
         "usesPrefix": "Tämä määritys käyttää",
@@ -1328,7 +1329,7 @@
         "title": "3. Käytettävissä olevat toiminnot"
       },
       "step4": {
-        "description": "Käynnistä MCP-asiakasohjelma uudelleen määrityksen lisäämisen jälkeen. Sen jälkeen voit käyttää tududia luonnollisella kielellä:",
+        "description": "Käynnistä MCP-asiakasohjelma uudelleen määrityksen lisäämisen jälkeen. Sen jälkeen voit käyttää Cadencea luonnollisella kielellä:",
         "examplesTitle": "Esimerkkikehotteita:",
         "title": "4. Aloita käyttö"
       },
@@ -1726,8 +1727,8 @@
     "waiting": "Odottaa"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Piilota tyhjät kentät",
+    "addDetail": "Lisää yksityiskohta",
     "name": "Projektin nimi",
     "projectImage": "Projektikuva",
     "uploadImageHint": "Lataa kuva projektiisi (max 10MB)",
@@ -2032,6 +2033,9 @@
     "createError": "Muistiinpanon luominen epäonnistui"
   },
   "task": {
+        "inMinutes_one": "{{count}} minuutin kuluttua",
+        "inHours_one": "{{count}} tunnin kuluttua",
+        "inDays_one": "{{count}} päivän kuluttua",
     "duplicateError": "Tehtävää ei voitu kopioida.",
     "duplicated": "Tehtävä kopioitu",
     "duplicate": "Kopioi",
@@ -2438,7 +2442,7 @@
     "toggleDropdownMenu": "Avaa tai sulje pudotusvalikko"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Kaikki muistiinpanot",
     "emptyPreview": "Tyhjä muistiinpano",
     "loading": "Ladataan muistiinpanoja...",
     "error": "Virhe muistiinpanojen lataamisessa",
@@ -2884,7 +2888,7 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 Tervetuloa tududiin!\n\nHenkilökohtainen tehtävienhallintabotisi on nyt yhdistetty ja valmis auttamaan!\n\n📝 Lähetä minulle vain viesti, niin lisään sen Cadence-postilaatikkoosi kohteena.\n\n✨ Komennot:\n• /help - Näytä ohjeet\n• /start - Näytä tervetuloviesti\n• Kirjoita vain mitä tahansa tekstiä - Lisää se postilaatikkokohteeksi\n\nAletaan järjestää! 🚀",
+    "welcomeMessage": "🎉 Tervetuloa Cadenceen!\n\nHenkilökohtainen tehtävienhallintabotisi on nyt yhdistetty ja valmis auttamaan!\n\n📝 Lähetä minulle vain viesti, niin lisään sen Cadence-postilaatikkoosi kohteena.\n\n✨ Komennot:\n• /help - Näytä ohjeet\n• /start - Näytä tervetuloviesti\n• Kirjoita vain mitä tahansa tekstiä - Lisää se postilaatikkokohteeksi\n\nAletaan järjestää! 🚀",
     "helpMessage": "📋 Cadence Bot Ohjeet\n\nLähetä minulle mikä tahansa tekstiviesti, niin lisään sen Cadence-postilaatikkoosi kohteena.\n\nKomennot:\n/start - Tervetuloviesti\n/help - Näytä tämä ohjeviesti\n\nKirjoita vain kohteesi, niin huolehdin lopusta!",
     "commandProcessed": "Komento käsitelty onnistuneesti",
     "messageProcessed": "Viesti käsitelty onnistuneesti",
@@ -2895,7 +2899,7 @@
     "version": "Versio",
     "description": "Itse isännöity tehtävienhallinta hierarkkisella organisaatiolla ja monikielisellä tuella. Rakennettu rakkaudella tuottavuuden ystäville.",
     "madeWithLove": "Rakennettu rakkaudella",
-    "appreciation": "Kiitos, että käytät tududia! Tuki auttaa pitämään tämän projektin elävänä ja kasvavana. Jos löydät sen hyödylliseksi, harkitse kehityksen tukemista.",
+    "appreciation": "Kiitos, että käytät Cadencea! Tuki auttaa pitämään tämän projektin elävänä ja kasvavana. Jos löydät sen hyödylliseksi, harkitse kehityksen tukemista.",
     "supportDevelopment": "Tukee kehitystä",
     "community": "Yhteisö",
     "viewOnGitHub": "Näytä GitHubissa",
@@ -3432,7 +3436,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galleria",
     "label": "Näkymä",
     "list": "Lista",
     "board": "Taulu",
@@ -3790,7 +3794,7 @@
       "description": "Kellonajallinen tehtävä hälyttää kyseisenä aikana, ei edellisenä päivänä. Puhelin ja tietokone jakavat tämän asetuksen; kanavat ovat tehtävämuistutusten kanavat.",
       "enable": "Muistuta kellonajallisista tehtävistä",
       "lead": "Milloin",
-      "atTime": "Ajallaan",
+      "atTime": "Kellonaikaan",
       "minutesBefore": "{{count}} min ennen"
         },
         "desktopApp": {
@@ -3810,7 +3814,7 @@
     "done": "Valmistunut",
     "done_desc": "Valmis ja tehty",
     "cancelled": "Peruutettu",
-    "cancelled_desc": "Ei tule valmistumaan",
+    "cancelled_desc": "päätetty olla jatkamatta",
     "idea": "Idea",
     "paused": "Tauolla",
     "paused_desc": "jätetty tarkoituksella sivuun, jatketaan myöhemmin",
@@ -4118,7 +4122,7 @@
     "notConfigured": "Tilausta ei ole vielä saatavilla tässä instanssissa. Ota yhteyttä tukeen.",
     "exportData": "Vie tietosi",
     "subscribe": "Tilaa",
-    "readOnlyBanner": "Kokeilujaksosi on päättynyt, joten tietosi ovat vain luku -tilassa. Tilaa jatkaaksesi tududin käyttöä tai vie tietosi. Tili poistetaan {{date}}.",
+    "readOnlyBanner": "Kokeilujaksosi on päättynyt, joten tietosi ovat vain luku -tilassa. Tilaa jatkaaksesi Cadencen käyttöä tai vie tietosi. Tili poistetaan {{date}}.",
     "lockedAi": "AI-avustaja kuuluu maksulliseen tilaukseen.",
     "lockedPublicNotes": "Julkiset muistiinpanolinkit kuuluvat maksulliseen tilaukseen.",
     "lockedMembers": "Jäsenten lisääminen kuuluu maksulliseen tilaukseen.",
@@ -4126,7 +4130,7 @@
     "onTrial": "Käytät ilmaista kokeilujaksoa",
     "readOnlyUntil": "Tietosi ovat vain luku -tilassa {{date}} asti, minkä jälkeen tili poistetaan. Tilaa jatkaaksesi Cadence Cloudin käyttöä.",
     "trialIncludes": "Kokeilujaksosi päättyy {{date}}. AI-avustaja, julkiset muistiinpanot ja jäsenten lisääminen avautuvat, kun tilaat.",
-    "backToApp": "Takaisin tududiin",
+    "backToApp": "Takaisin Cadenceen",
     "trialBanner": "Ilmainen kokeilu, päiviä jäljellä: {{count}}",
     "trialLock": {
       "webhooks": "Webhookit eivät sisälly ilmaiseen kokeilujaksoon. Tilaa, niin voit lähettää tapahtumia omiin palveluihisi.",
@@ -4276,6 +4280,7 @@
     "invalidHint": "Se on ehkä jo käytetty tai vanhentunut. Pyydä uusi sen lähettäneeltä."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} tehtävä sijoittuu seuraavaan vapaaseen aikaan.",
     "inProgress": "Käynnissä",
     "overdue": "Myöhässä",
     "dueToday": "Erääntyy tänään",
@@ -4456,7 +4461,7 @@
     "guidedLeftovers": "Eilisen jäännökset",
     "guidedNoLeftovers": "Eilisestä ei jäänyt mitään.",
     "guidedCarry": "Siirrä tähän päivään",
-    "guidedDrop": "Poista",
+    "guidedDrop": "Hylkää",
     "guidedPick": "Valitse, mitä teet tänään",
     "guidedNoPicks": "Ei valittavaa.",
     "guidedAdd": "Lisää",
@@ -4593,27 +4598,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Lisää toive ryhmään {{group}}",
+      "addWish": "Lisää toive…",
+      "createTaskFor": "Luo tehtävä kohteelle “{{title}}”",
+      "markDone": "Merkitse “{{title}}” toteutuneeksi",
+      "wishFulfilled": "Toteutunut",
+      "wishDropped": "Hylätty",
+      "allDone": "Kaikki valmiina",
+      "addStep": "Lisää seuraava askel",
+      "nextStepInline": "Seuraava askel: {{name}}",
+      "nextStep": "Seuraava askel",
+      "completeStep": "Merkitse “{{name}}” valmiiksi",
+      "nothingLinked": "Ei linkitettyjä",
+      "target": "Päivään {{date}} mennessä",
+      "error": "Tallennus epäonnistui, yritä uudelleen",
+      "wishDone": "“{{title}}” toteutunut",
+      "stepDone": "“{{name}}” valmis",
+      "doneWishes": "Toteutuneet",
+      "other": "Tauolla, saavutettu tai hylätty",
+      "noMatch": "Ei osumia.",
+      "clearSearch": "Tyhjennä haku",
+      "search": "Hae tavoitetta tai toivetta"
     },
     "newGoal": "Uusi tavoite",
     "noGoalsYet": "Ei vielä tavoitteita.",
@@ -4932,7 +4937,7 @@
       "exampleTag": "työmaa",
       "exampleNote": "Pidempi teksti kirjoitetaan tähän.",
       "instructionsSheet": "Näin täytät tämän",
-      "instructionsTitle": "Tämän taulukon täyttäminen tududia varten",
+      "instructionsTitle": "Tämän taulukon täyttäminen Cadencea varten",
       "instructionsName": "Nimi on ainoa pakollinen sarake. Yksi rivi on yksi tehtävä.",
       "instructionsProject": "Projekti: tehtävät, joilla on sama projektin nimi, päätyvät yhteen. Projektit, joita ei vielä ole, luodaan tuonnin yhteydessä.",
       "instructionsParent": "Yläatehtävä: kirjoita toisen taulukon tehtävän nimi, niin tästä rivistä tulee sen alatehtävä. Myös WBS-sarake (1, 1.1, 1.2) tai sisennetyt rivit käyvät.",
@@ -4944,6 +4949,7 @@
       "instructionsOther": "Mikä tahansa muu sarake voidaan säilyttää tehtävän muistiinpanossa, joten mikään taulukossa ei katoa."
     },
     "import": {
+            "undoneKept_one": "Tuonti peruttiin. {{count}} tehtävä, joka on muuttunut sen jälkeen, säilytettiin.",
       "fieldParent": "Yläatehtävä",
       "fieldWbs": "WBS / jäsennysnumero",
       "fieldEstimate": "Arvio",
@@ -5194,22 +5200,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 valitse · S ohita · O avaa · Esc lopeta",
+      "nothing": "Mikään ei vaadi huomiota juuri nyt.",
+      "back": "Takaisin katselmointiin",
+      "again": "Vielä yksi kierros",
+      "saved": "Jokainen päätös tallennetaan. Ohitetut palaavat seuraavalla kerralla.",
+      "done": "Siinä kaikki toistaiseksi.",
+      "position": "{{position}} / {{total}}",
+      "stop": "Lopeta",
+      "start": "Aloita",
+      "pitch": "Noin 5 minuuttia, yksi asia kerrallaan. Lopeta milloin haluat.",
+      "title": "Pikakatselmointi"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Ladataan…",
+    "calmClear": "Kaikki ajan tasalla",
+    "calm_other": "{{count}} asiaa katsottavana, omassa tahdissasi",
+    "calm_one": "{{count}} asia katsottavana, omassa tahdissasi",
     "cancelDate": "Peruuta",
     "choices": "Valinnat",
     "more": "Lisää…",
@@ -5485,7 +5491,7 @@
       "goCalendar": "Siirry Kalenteriin",
       "goProjects": "Siirry Projekteihin",
       "taskNav": "Siirry tehtävien välillä",
-      "taskComplete": "Merkitse tehtävä tehdyksi tai avaa uudelleen (tai Space)",
+      "taskComplete": "Merkitse tehtävä tehdyksi tai avaa uudelleen (tai välilyönti)",
       "taskEdit": "Avaa tehtävä muokattavaksi (tai Enter)",
       "taskDate": "Aseta päivämäärä",
       "taskPriority": "Aseta prioriteetti",
@@ -6042,7 +6048,7 @@
     "add": "Lisää",
     "addPlaceholder": "Lisää tehtävä",
     "added": "”{{name}}” lisätty päivään",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, eräpäivä {{range}}",
     "backToList": "Lista",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Päiväkalenteri",
@@ -6053,7 +6059,7 @@
     "daysShown": "Näytetyt päivät",
     "details": "Tiedot",
     "doneCount": "Valmiit · {{n}}",
-    "dueAt": "Määräaika",
+    "dueAt": "Eräpäivä",
     "empty": "Ei suunniteltuja tehtäviä. Lisää tehtävä tai valitse ehdotuksista.",
     "emptyDay": "Tälle päivälle ei ole suunniteltu mitään.",
     "goToToday": "Tänään",
@@ -6258,7 +6264,7 @@
     "italic": "Kursiivi",
     "strikethrough": "Yliviivaus",
     "heading": "Otsikko",
-    "bulletList": "Luettelo",
+    "bulletList": "Luettelomerkitty luettelo",
     "numberedList": "Numeroitu luettelo",
     "checklist": "Tarkistuslista",
     "quote": "Lainaus",

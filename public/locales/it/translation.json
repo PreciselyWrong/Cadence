@@ -1,6 +1,6 @@
 {
     "agentBanner": {
-        "agent": "Agent",
+        "agent": "Agente",
         "dismiss": "Segna come letto",
         "open": "Apri"
     },
@@ -237,7 +237,7 @@
       "title": "Smista la mia posta",
       "close": "Chiudi",
       "done": "Tutto smistato",
-      "back": "Torna a «Da smistare»",
+      "back": "Torna a «Da ordinare»",
       "createTask": "Crea attività: {{name}}",
       "replyInGmail": "Rispondi in Gmail",
       "readInGmail": "Leggi in Gmail",
@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Impossibile salvare questa modifica",
+    "hintLocked": "Invio: nuova riga",
+    "hint": "Invio: nuova riga · Tab / Maiusc+Tab: rientro · Alt+↑ / Alt+↓: sposta",
+    "newLine": "Nuova attività",
+    "title": "Schema"
   },
   "focusStats": {
     "title": "Focus",
@@ -317,7 +317,7 @@
     "showSearch": "Mostra la ricerca",
     "beta": "beta",
     "comingSoon": "Prossimamente",
-    "due": "Due",
+    "due": "Scadenza",
     "goal": "Obiettivo",
     "priority": "Priorità",
     "tags": "Tag",
@@ -717,16 +717,16 @@
             "page": {
                 "notFound": "Plugin non trovato o disattivato"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Questo plugin viene eseguito nel server e chiede:",
+            "approveOutro": "I permessi limitano ciò che Cadence concede al plugin; non sono una sandbox. Approva solo codice che hai letto.",
+            "approveTitle": "Approvare i permessi?",
+            "approve": "Approva e attiva"
         },
     "showTaskDescription": "Mostra la descrizione sotto il titolo",
     "sync": {
       "field": {
-        "review_at": "Revisione il",
-        "review_on": "Revisione il",
+        "review_at": "Da rivedere il",
+        "review_on": "Da rivedere il",
         "in_view_at": "In vista",
         "week_of": "Settimana",
         "estimated_minutes": "Durata",
@@ -881,6 +881,7 @@
     "nextTaskSuggestion": "Suggerimento Prossima Attività",
     "enableNextTaskSuggestion": "Abilita Suggerimenti Prossima Attività",
     "tabs": {
+            "agents": "Agenti",
             "plugins": "Plugin",
       "classify": "Classificazione",
       "sync": "Sincronizzazione",
@@ -1137,6 +1138,7 @@
       "toggleError": "Impossibile aggiornare il calendario"
     },
     "planning": {
+            "maxOption_one": "{{count}} attività",
       "title": "Pianificazione",
       "description": "Come «Cosa potresti fare oggi?» ordina le tue attività quando pianifichi la giornata. Trascina le righe nell’ordine che preferisci; le stesse attività escono sempre nello stesso ordine.",
       "orderTitle": "Ordine (trascina per cambiarlo)",
@@ -1861,7 +1863,7 @@
     "projectNameTooLong": "Il nome del progetto deve contenere al massimo {{max}} caratteri"
   },
   "inbox": {
-    "ideaSheet": "Elemento della posta in arrivo",
+    "ideaSheet": "Elemento della Inbox",
     "toSort": "Da ordinare ({{count}})",
     "unsorted": {
       "noDate": "Senza data",
@@ -1951,7 +1953,7 @@
       "madeProject": "Progetto creato",
       "madeNote": "Nota creata",
       "error": "Impossibile elaborare questo elemento. È ancora nella Inbox.",
-      "reasonProject": "Riguarda il progetto +{{detail}}",
+      "reasonProject": "Nomina il progetto +{{detail}}",
       "reasonTag": "È taggato #{{detail}}",
       "reasonUrl": "È un link",
       "reasonKeyword": "Inizia con “{{detail}}”",
@@ -1965,7 +1967,7 @@
       "android": "Android",
       "api": "API",
       "email": "Email",
-      "mail": "Posta",
+      "mail": "Mail",
       "desktop": "Desktop",
       "link": "Link",
       "share": "Condivisione"
@@ -2072,7 +2074,7 @@
       "noVerb": "Quale azione specifica devi intraprendere? Prova a iniziare con un verbo.",
       "vague": "Prova a iniziare con un verbo d'azione come \"Chiama\", \"Scrivi\", \"Pianifica\" o \"Ricerca\""
     },
-    "overdueAlert": "Questo compito era nel piano di ieri.",
+    "overdueAlert": "Questa attività era nel piano di ieri.",
     "overdueYesterday": "Pianificalo di nuovo oppure dividilo in passaggi più piccoli.",
     "content": "Contenuto",
     "noNotes": "Nessun contenuto aggiunto ancora",
@@ -2214,7 +2216,7 @@
     "turnIntoProject": "Trasforma in progetto",
     "turnIntoProjectError": "Impossibile trasformarlo in progetto.",
     "turnIntoProjectMessage": "Trasformare « {{name}} » in progetto? Le sue sottoattività diventano le attività del progetto e gli indirizzi della sua nota diventano le sue pagine.",
-    "inDays_one": "in {{count}} giorno",
+    "inDays_one": "tra {{count}} giorno",
     "daysAgo_one": "{{count}} giorno fa",
     "hoursAgo_one": "{{count}} ora fa",
     "minutesAgo_one": "{{count}} minuto fa",
@@ -2443,7 +2445,7 @@
     "toggleDropdownMenu": "Apri o chiudi menu a discesa"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Tutte le note",
     "emptyPreview": "Nota vuota",
     "loading": "Caricamento note...",
     "error": "Errore nel caricamento delle note",
@@ -2891,8 +2893,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 Benvenuto in Cadence!\n\nIl tuo bot personale per la gestione delle attività è ora connesso e pronto ad aiutarti!\n\n📝 Inviami semplicemente un messaggio e lo aggiungerò alla tua casella di posta di Cadence come un elemento.\n\n✨ Comandi:\n• /help - Mostra informazioni di aiuto\n• /start - Mostra il messaggio di benvenuto\n• Digita semplicemente qualsiasi testo - Aggiungilo come un elemento della casella di posta\n\nOrganizziamoci! 🚀",
-    "helpMessage": "📋 Aiuto Bot Cadence\n\nInviami qualsiasi messaggio di testo e lo aggiungerò alla tua casella di posta di Cadence come un elemento della casella di posta.\n\nComandi:\n/start - Messaggio di benvenuto\n/help - Mostra questo messaggio di aiuto\n\nDigita semplicemente il tuo elemento e mi occuperò del resto!",
+    "welcomeMessage": "🎉 Benvenuto in Cadence!\n\nIl tuo bot personale per la gestione delle attività è ora connesso e pronto ad aiutarti!\n\n📝 Inviami semplicemente un messaggio e lo aggiungerò alla tua Inbox di Cadence come elemento.\n\n✨ Comandi:\n• /help - Mostra informazioni di aiuto\n• /start - Mostra il messaggio di benvenuto\n• Digita semplicemente qualsiasi testo - Aggiungilo come elemento della Inbox\n\nOrganizziamoci! 🚀",
+    "helpMessage": "📋 Aiuto Bot Cadence\n\nInviami qualsiasi messaggio di testo e lo aggiungerò alla tua Inbox di Cadence come elemento.\n\nComandi:\n/start - Messaggio di benvenuto\n/help - Mostra questo messaggio di aiuto\n\nDigita semplicemente il tuo elemento e mi occuperò del resto!",
     "commandProcessed": "Comando elaborato con successo",
     "messageProcessed": "Messaggio elaborato con successo",
     "failedToAddToInbox": "❌ Impossibile aggiungere alla casella di posta: {{error}}"
@@ -3013,7 +3015,7 @@
       "activationHint": "{{n}} di {{total}} registrazioni",
       "weeklyUsers": "Utenti settimanali",
       "weeklyUsersHint": "ha creato qualcosa",
-      "selfHostedUsers": "self-hosted · {{n}} nuovi oggi"
+      "selfHostedUsers": "auto-ospitati · {{n}} nuovi oggi"
     },
     "waitlist": {
       "title": "Lista d'attesa",
@@ -3440,7 +3442,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galleria",
     "label": "Vista",
     "list": "Elenco",
     "board": "Bacheca",
@@ -3450,7 +3452,7 @@
     "title": "Nuova vista",
     "name": "Nome",
     "project": "Progetto",
-    "tag": "Etichetta",
+    "tag": "Tag",
     "priority": "Priorità",
     "due": "Scadenza",
     "status": "Stato",
@@ -3498,7 +3500,7 @@
     "noViewsMatch": "Nessuna vista trovata",
     "blankSlateFilteredHint": "Prova una ricerca diversa.",
     "blankSlateClearSearch": "Cancella ricerca",
-    "view": "Visualizza",
+    "view": "Vista",
     "progressSummary": "Vedi avanzamento · {{done}} di {{total}} attività completate",
     "sortTasks": "Ordina attività",
     "filters": "filtri"
@@ -3674,7 +3676,7 @@
     "test": {
       "title": "Test delle Notifiche",
       "description": "Invia una notifica di prova per vedere come appare nell'app e sui canali abilitati (Telegram, ecc.)",
-      "send": "Invia Test",
+      "send": "Invia test",
       "sending": "Invio in corso...",
       "rowLabel": "Invia una notifica di prova",
       "button": "Prova",
@@ -3818,7 +3820,7 @@
     "done": "Completato",
     "done_desc": "Finito e completato",
     "cancelled": "Annullato",
-    "cancelled_desc": "Non sarà completato",
+    "cancelled_desc": "deciso di non proseguire",
     "idea": "Idea",
     "paused": "In pausa",
     "paused_desc": "messo da parte di proposito, da riprendere più tardi",
@@ -4284,6 +4286,7 @@
     "invalidHint": "Potrebbe essere già stato usato o essere scaduto. Chiedine uno nuovo a chi te lo ha inviato."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} attività andrà nel prossimo slot libero.",
     "inProgress": "In corso",
     "overdue": "In ritardo",
     "dueToday": "In scadenza oggi",
@@ -4601,27 +4604,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Aggiungi un desiderio a {{group}}",
+      "addWish": "Aggiungi un desiderio…",
+      "createTaskFor": "Crea un'attività per “{{title}}”",
+      "markDone": "Segna “{{title}}” come realizzato",
+      "wishFulfilled": "Realizzato",
+      "wishDropped": "Abbandonato",
+      "allDone": "Tutto fatto",
+      "addStep": "Aggiungi un prossimo passo",
+      "nextStepInline": "Prossimo passo: {{name}}",
+      "nextStep": "Prossimo passo",
+      "completeStep": "Completa “{{name}}”",
+      "nothingLinked": "Niente collegato",
+      "target": "Entro il {{date}}",
+      "error": "Salvataggio impossibile, riprova",
+      "wishDone": "“{{title}}” realizzato",
+      "stepDone": "“{{name}}” completato",
+      "doneWishes": "Realizzati",
+      "other": "In pausa, raggiunti o abbandonati",
+      "noMatch": "Nessun risultato.",
+      "clearSearch": "Cancella la ricerca",
+      "search": "Cerca un obiettivo o un desiderio"
     },
     "newGoal": "Nuovo obiettivo",
     "noGoalsYet": "Ancora nessun obiettivo.",
@@ -4952,6 +4955,7 @@
       "instructionsOther": "Qualsiasi altra colonna può essere conservata nella nota dell'attività, così nulla del foglio va perso."
     },
     "import": {
+            "undoneKept_one": "L'importazione è stata annullata. {{count}} attività modificata da allora è stata conservata.",
       "fieldParent": "Attività padre",
       "fieldWbs": "WBS / numero di struttura",
       "fieldEstimate": "Stima",
@@ -5203,22 +5207,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 scegli · S salta · O apri · Esc ferma",
+      "nothing": "Niente da esaminare per ora.",
+      "back": "Torna alla revisione",
+      "again": "Un altro giro",
+      "saved": "Ogni decisione è salvata. Ciò che hai saltato tornerà la prossima volta.",
+      "done": "Per ora è tutto.",
+      "position": "{{position}} di {{total}}",
+      "stop": "Ferma",
+      "start": "Inizia",
+      "pitch": "Circa 5 minuti, una cosa alla volta. Fermati quando vuoi.",
+      "title": "Revisione rapida"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Caricamento…",
+    "calmClear": "Tutto è aggiornato",
+    "calm_other": "{{count}} cose da esaminare, al tuo ritmo",
+    "calm_one": "{{count}} cosa da esaminare, al tuo ritmo",
     "cancelDate": "Annulla",
     "choices": "Scelte",
     "more": "Altro…",
@@ -5258,7 +5262,7 @@
       "week": "Questa settimana"
     },
     "empty": {
-      "undecided": "La posta in arrivo è vuota.",
+      "undecided": "L'Inbox è vuota.",
       "pushed": "Niente che continui a rimandare.",
       "projects": "Ogni progetto attivo ha un prossimo passo.",
       "later": "Niente in sospeso.",
@@ -5280,7 +5284,7 @@
       "toTask": "Crea un'attività",
       "toLater": "Metti da parte",
       "discard": "Scarta",
-      "openInbox": "Apri la posta in arrivo",
+      "openInbox": "Apri l'Inbox",
       "addNext": "Aggiungi la prossima attività",
       "openProject": "Apri il progetto",
       "pauseProject": "Metti in attesa",
@@ -5439,11 +5443,11 @@
     "title": "Palette dei comandi",
     "placeholder": "Digita un comando o cerca...",
     "empty": "Nessun risultato",
-    "hintNav": "Su e Giù per spostarti, Enter per eseguire, Esc per chiudere",
+    "hintNav": "Su e Giù per spostarti, Invio per eseguire, Esc per chiudere",
     "pickProject": "Spostare in quale progetto?",
     "actionError": "Impossibile aggiornare l'attività",
     "deleteError": "Impossibile eliminare l'attività",
-    "taskDeleted": "Eliminato “{{name}}”",
+    "taskDeleted": "Eliminata “{{name}}”",
     "taskContext": "Attività: {{name}}",
     "completeTask": "Completa attività",
     "reopenTask": "Riapri attività",
@@ -5463,7 +5467,7 @@
     "toggleTheme": "Attiva/disattiva modalità scura",
     "showShortcuts": "Scorciatoie da tastiera",
     "groups": {
-      "links": "Links",
+      "links": "Link",
       "recent": "Recenti",
       "task": "Questa attività",
       "create": "Crea",
@@ -5494,13 +5498,13 @@
       "goCalendar": "Vai al Calendario",
       "goProjects": "Vai ai Progetti",
       "taskNav": "Spostati tra le attività",
-      "taskComplete": "Completa o riapri l'attività (o Space)",
-      "taskEdit": "Apri l'attività per modificarla (o Enter)",
+      "taskComplete": "Completa o riapri l'attività (o Spazio)",
+      "taskEdit": "Apri l'attività per modificarla (o Invio)",
       "taskDate": "Imposta la data",
       "taskPriority": "Imposta la priorità",
       "taskProject": "Sposta in un progetto",
       "taskDelete": "Elimina l'attività (con annulla)",
-      "createAlt": "Crea un elemento della Inbox, attività, progetto, nota, area o tag (con Alt+Shift)",
+      "createAlt": "Crea un elemento della Inbox, attività, progetto, nota, area o tag (con Alt+Maiusc)",
       "triageTask": "Smista: rendi attività",
       "triageLink": "Smista: tieni l'indirizzo nei Link",
       "triageProject": "Smista: rendi progetto",
@@ -5616,8 +5620,8 @@
     },
     "alcohol": {
       "count_one": "{{count}} bevanda",
-      "count_many": "{{count}} drink",
-      "count_other": "{{count}} drink",
+      "count_many": "{{count}} bevande",
+      "count_other": "{{count}} bevande",
       "drinks": "Unità alcoliche standard",
       "editFor": "Modifica {{date}}",
       "invalid": "Le unità alcoliche standard devono essere un numero intero maggiore di zero.",
@@ -5847,8 +5851,8 @@
       "limitAt": "Limite raggiunto",
       "limitExceeded": "Limite superato",
       "limitProgress": "{{value}} su {{max}} max",
-      "notPlanned": "Non previsto oggi",
-      "notStarted": "Non ancora iniziato",
+      "notPlanned": "Non prevista oggi",
+      "notStarted": "Non ancora iniziata",
       "paused": "In pausa",
       "sessions": "{{quantity}} · {{done}} / {{total}} sessioni",
       "todo": "Da fare",
@@ -5928,7 +5932,7 @@
   "notFound": {
     "todayDescription": "Visualizza le attività di oggi",
     "projectsDescription": "Sfoglia i tuoi progetti",
-    "inboxDescription": "Controlla gli elementi nella tua inbox",
+    "inboxDescription": "Controlla gli elementi nella tua Inbox",
     "notesDescription": "Sfoglia le tue note",
     "title": "Pagina non trovata",
     "description": "La pagina che cerchi non esiste. Potrebbe essere stata spostata o eliminata, oppure hai inserito un URL errato.",
@@ -5959,9 +5963,9 @@
     "count_other": "{{count}} link",
     "search": "Cerca link",
     "filter": {
-      "tag": "Etichetta",
+      "tag": "Tag",
       "archived": "Archiviati",
-      "allTags": "Tutte le etichette",
+      "allTags": "Tutti i tag",
       "allProjects": "Tutti i progetti"
     },
     "status": {
@@ -5974,7 +5978,7 @@
     },
     "lastCommit": "aggiornato {{date}}",
     "fetching": "Lettura della pagina…",
-    "editTags": "Modifica etichette",
+    "editTags": "Modifica tag",
     "goToSource": "Vai al punto in cui è stato salvato",
     "open": "Apri il link",
     "note": "La tua nota",
@@ -5995,7 +5999,7 @@
     "field": {
       "title": "Titolo",
       "url": "Indirizzo",
-      "tags": "Etichette"
+      "tags": "Tag"
     },
     "editTitle": "Modifica il link",
     "deleteTitle": "Eliminare questo link?",
@@ -6057,7 +6061,7 @@
     "add": "Aggiungi",
     "addPlaceholder": "Aggiungi un'attività",
     "added": "«{{name}}» aggiunta al giorno",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, scadenza {{range}}",
     "backToList": "Elenco",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Calendario del giorno",
@@ -6160,7 +6164,7 @@
     "planChanged": "Il piano è cambiato su un altro dispositivo. È stato ricaricato.",
     "loadFailed": "Impossibile caricare i giorni.",
     "inboxHint": "Trascina su un giorno per pianificarla",
-    "inboxEmpty": "La posta in arrivo è vuota.",
+    "inboxEmpty": "L'Inbox è vuota.",
     "view": "Visualizza",
     "layout": "Layout",
     "groupBy": "Raggruppa per",
@@ -6168,7 +6172,7 @@
       "none": "Nessuno",
       "project": "Progetto",
       "priority": "Priorità",
-      "tag": "Etichetta"
+      "tag": "Tag"
     },
     "sortBy": "Ordina per",
     "sort": {
@@ -6183,7 +6187,7 @@
     "calendarSpan": "Giorni del calendario",
     "reset": "Reimposta",
     "noProject": "Nessun progetto",
-    "noTag": "Nessuna etichetta",
+    "noTag": "Nessun tag",
     "priority": {
       "none": "Nessuna priorità"
     },

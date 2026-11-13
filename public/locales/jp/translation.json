@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "既読にする",
+        "open": "開く"
     },
     "counts": {
         "notes_other": "{{count}}件のノート",
@@ -26,6 +26,8 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_one": "{{count}}件を再キューしました",
+            "failed_one": "失敗した項目：{{count}}件",
       "retryError": "再試行できませんでした",
       "requeued": "{{count}}件を再キューしました",
       "retry": "再試行",
@@ -235,7 +237,7 @@
       "title": "メールを仕分ける",
       "close": "閉じる",
       "done": "すべて仕分けました",
-      "back": "「仕分け」に戻る",
+      "back": "「整理待ち」に戻る",
       "createTask": "タスクを作成：{{name}}",
       "replyInGmail": "Gmail で返信",
       "readInGmail": "Gmail で読む",
@@ -248,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "この変更を保存できませんでした",
+    "hintLocked": "Enter: 改行",
+    "hint": "Enter: 改行 · Tab / Shift+Tab: インデント · Alt+↑ / Alt+↓: 移動",
+    "newLine": "新しいタスク",
+    "title": "アウトライン"
   },
   "focusStats": {
     "title": "集中",
@@ -326,7 +328,7 @@
     "createCalendar": "カレンダーを作成",
     "untitled": "無題",
     "resolving": "解決中...",
-    "showLess": "簡易表示",
+    "showLess": "表示を減らす",
     "breadcrumb": "パンくず",
     "undo": "元に戻す",
     "copyCode": "コードをコピー",
@@ -456,7 +458,7 @@
     "hideCompleted": "完了したタスクを非表示"
   },
   "tasks": {
-    "deletedToast": "\"{{name}}\" deleted",
+    "deletedToast": "「{{name}}」を削除しました",
     "title": "タスク",
     "today": "今日",
     "total": "合計",
@@ -588,8 +590,8 @@
       "setDueDate": "期限日を設定"
     },
     "contextMenu": {
-      "projectChanged": "Project changed",
-      "dateChanged": "Date changed",
+      "projectChanged": "プロジェクトを変更しました",
+      "dateChanged": "日付を変更しました",
       "label": "タスクの操作",
       "priority": "優先度",
       "date": "日付",
@@ -714,71 +716,71 @@
             "page": {
                 "notFound": "プラグインが見つからないか、オフです"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "このプラグインはサーバー内で動作し、次を求めています:",
+            "approveOutro": "権限はCadenceがプラグインに渡す内容を制限するものですが、サンドボックスではありません。読んだコードだけを承認してください。",
+            "approveTitle": "権限を承認しますか？",
+            "approve": "承認して有効にする"
         },
     "showTaskDescription": "タイトルの下に説明を表示",
     "sync": {
       "field": {
-        "review_at": "Review on",
-        "review_on": "Review on",
-        "in_view_at": "In view",
-        "week_of": "Week",
-        "estimated_minutes": "Duration",
-        "recurrence_type": "Repeat",
-        "icon": "Icon",
-        "color": "Colour",
-        "tag_uids": "Tags",
-        "next_task_uid": "Next action",
-        "parent_task_uid": "Parent task",
-        "goal_uid": "Goal",
-        "area_uid": "Area",
-        "parent_project_uid": "Parent project",
-        "project_uid": "Project",
-        "completed_at": "Completed on",
-        "start_date": "Start",
-        "due_date": "Due date",
-        "status": "Status",
-        "priority": "Priority",
-        "description": "Description",
-        "content": "Content",
-        "note": "Note",
-        "title": "Title",
-        "name": "Title"
+        "review_at": "見直し日",
+        "review_on": "見直し日",
+        "in_view_at": "表示対象",
+        "week_of": "週",
+        "estimated_minutes": "所要時間",
+        "recurrence_type": "繰り返し",
+        "icon": "アイコン",
+        "color": "色",
+        "tag_uids": "タグ",
+        "next_task_uid": "次のアクション",
+        "parent_task_uid": "親タスク",
+        "goal_uid": "目標",
+        "area_uid": "エリア",
+        "parent_project_uid": "親プロジェクト",
+        "project_uid": "プロジェクト",
+        "completed_at": "完了日",
+        "start_date": "開始日",
+        "due_date": "期限",
+        "status": "ステータス",
+        "priority": "優先度",
+        "description": "説明",
+        "content": "内容",
+        "note": "ノート",
+        "title": "タイトル",
+        "name": "タイトル"
       },
       "entity": {
-        "link": "Link",
-        "inbox_item": "Idea",
-        "note": "Note",
-        "tag": "Tag",
-        "goal": "Goal",
-        "area": "Area",
-        "project": "Project",
-        "task": "Task"
+        "link": "リンク",
+        "inbox_item": "アイデア",
+        "note": "ノート",
+        "tag": "タグ",
+        "goal": "目標",
+        "area": "エリア",
+        "project": "プロジェクト",
+        "task": "タスク"
       },
-      "resolveError": "Could not settle that conflict",
-      "loadError": "Could not load the sync status",
-      "no": "no",
-      "yes": "yes",
-      "empty": "(empty)",
-      "dismiss": "Got it",
-      "keepCurrent": "Keep the other",
-      "keepLost": "Keep this value",
-      "current": "Kept: {{value}}",
-      "lost": "Set aside: {{value}}",
-      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
-      "conflicts": "Conflicts",
-      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
-      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
-      "lastChange": "Last change on the server {{ago}}",
-      "lastSeen": "Synced {{ago}}",
-      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
-      "devices": "Devices",
-      "title": "Sync"
+      "resolveError": "その競合を解決できませんでした。",
+      "loadError": "同期の状態を読み込めませんでした。",
+      "no": "いいえ",
+      "yes": "はい",
+      "empty": "(空)",
+      "dismiss": "わかりました",
+      "keepCurrent": "もう一方を残す",
+      "keepLost": "この値を残す",
+      "current": "保持中: {{value}}",
+      "lost": "除外: {{value}}",
+      "conflictsHint": "端末がサーバー上の値より古い値を送ったため、サーバーは自身の値を残しました。残す方を選んでください。",
+      "conflicts": "競合",
+      "pending_other": "このブラウザでオフライン中に行った変更 {{count}} 件が、送信を待っています。",
+      "pending_one": "このブラウザでオフライン中に行った変更 {{count}} 件が、送信を待っています。",
+      "lastChange": "サーバーでの最終変更: {{ago}}",
+      "lastSeen": "{{ago}}に同期",
+      "noDevices": "まだ同期したデバイスはありません。APIキーから、スマートフォンまたはLinux版アプリを接続してください。",
+      "devices": "デバイス",
+      "title": "同期"
     },
-    "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
+    "sectionFailed": "このセクションを表示できませんでした。別のセクションを選ぶか、ページを再読み込みしてください。",
     "taskFeed": {
       "title": "タスクを購読",
       "description": "期限付きの未完了タスクを Google カレンダー、Apple カレンダー、Outlook に表示する非公開アドレスです。アドレスを知っている人は誰でもタスクを読めます。",
@@ -803,9 +805,10 @@
     "nextTaskSuggestion": "次のタスクの提案",
     "enableNextTaskSuggestion": "次のタスク提案を有効にする",
     "tabs": {
+            "agents": "エージェント",
             "plugins": "プラグイン",
       "classify": "分類",
-      "sync": "Sync",
+      "sync": "同期",
       "general": "一般",
       "security": "セキュリティ",
       "productivity": "生産性",
@@ -873,17 +876,17 @@
     "personalInfo": "個人情報",
     "errorMessage": "プロフィールの更新に失敗しました",
     "telegramIntegration": "Telegramの統合",
-    "telegramDescription": "あなたのtududiアカウントをTelegramボットに接続して、Telegramメッセージを通じてあなたの受信箱にアイテムを追加します。",
+    "telegramDescription": "あなたのCadenceアカウントをTelegramボットに接続して、Telegramメッセージを通じてあなたの受信箱にアイテムを追加します。",
     "telegramBotToken": "Telegramボットトークン",
     "telegramTokenDescription": "Telegramの@BotFatherでボットを作成し、ここにトークンを貼り付けます。",
-    "telegramConnected": "あなたのTelegramアカウントは接続されています！ボットにメッセージを送って、あなたのtududiの受信箱にアイテムを追加します。",
+    "telegramConnected": "あなたのTelegramアカウントは接続されています！ボットにメッセージを送って、あなたのCadenceの受信箱にアイテムを追加します。",
     "setupTelegram": "Telegramの設定",
     "setupTelegramLower": "telegramの設定",
     "settingUp": "設定中...",
     "telegramSetupSuccess": "Telegramボット\"{{botName}}\"の設定が成功しました！",
     "telegramSetupFailed": "Telegramボットの設定に失敗しました。",
     "invalidTelegramToken": "無効なTelegramボットトークン形式。",
-    "telegramInstructions": "https://t.me/{{botUsername}}にアクセスし、あなたのボットとチャットを開始して、それをあなたのtududiアカウントに接続します。",
+    "telegramInstructions": "https://t.me/{{botUsername}}にアクセスし、あなたのボットとチャットを開始して、それをあなたのCadenceアカウントに接続します。",
     "botConfigured": "ボットの設定が成功しました！",
     "botUsername": "ボットのユーザー名：",
     "pollingStatus": "ポーリングステータス：",
@@ -1051,8 +1054,8 @@
       "testRequired": "続行する前に接続をテストする必要があります",
       "syncDirection": "同期方向",
       "bidirectional": "双方向（両方の方向で同期）",
-      "pullOnly": "プルのみ（サーバーからTududiへ）",
-      "pushOnly": "プッシュのみ（Tududiからサーバーへ）",
+      "pullOnly": "プルのみ（サーバーからCadenceへ）",
+      "pushOnly": "プッシュのみ（Cadenceからサーバーへ）",
       "syncInterval": "同期間隔（分）",
       "syncIntervalHelp": "自動的に同期する頻度（5-1440分）",
       "conflictPolicy": "競合解決",
@@ -1134,6 +1137,7 @@
       "toggleError": "カレンダーを更新できませんでした"
     },
     "planning": {
+            "maxOption_one": "{{count}}件のタスク",
       "title": "プランニング",
       "description": "一日を計画するとき、「今日は何ができそうですか?」がタスクを並べる順番です。行をドラッグして好きな順番にできます。同じタスクはいつも同じ順番で表示されます。",
       "orderTitle": "順番(ドラッグで変更)",
@@ -1266,7 +1270,7 @@
       },
       "title": "APIキー",
       "connectQrLabel": "デバイスを接続するQRコード",
-      "connectQrHelp": "スマートフォンまたはパソコンのTududiアプリでこのコードをスキャンすると、このキーで接続されます。"
+      "connectQrHelp": "スマートフォンまたはパソコンのCadenceアプリでこのコードをスキャンすると、このキーで接続されます。"
     },
     "calendarDescription": "カレンダービューを有効にして、タスクを期限ごとに日・週・月で表示します。",
     "connected": {
@@ -1990,7 +1994,7 @@
     "toggleDropdownMenu": "ドロップダウンメニューを切り替え"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "すべてのノート",
     "emptyPreview": "空のメモ",
     "loading": "ノートを読み込み中...",
     "noNotesFound": "ノートが見つかりませんでした",
@@ -2255,23 +2259,23 @@
     "removeArea": "エリアを解除",
     "triage": {
       "start": "整理",
-      "title": "受信トレイを整理",
+      "title": "受信箱を整理",
       "exit": "終了",
       "progress": "{{done}} / {{total}} 件を整理済み",
-      "done": "受信トレイは空です。整理する項目はありません。",
+      "done": "受信箱は空です。整理する項目はありません。",
       "doneLater": "{{count}} 件を後で整理するために残しました。それ以外は整理済みです。",
       "suggested": "候補: {{kind}}",
       "task": "タスク",
       "link": "リンク",
       "project": "プロジェクト",
-      "note": "メモ",
+      "note": "ノート",
       "later": "後で",
       "delete": "削除",
-      "keptLater": "後で整理するために受信トレイに残しました",
+      "keptLater": "後で整理するために受信箱に残しました",
       "madeTask": "タスクを作成しました",
       "madeLink": "リンクに追加しました",
       "madeProject": "プロジェクトを作成しました",
-      "madeNote": "メモを作成しました",
+      "madeNote": "ノートを作成しました",
       "error": "この項目を処理できませんでした。受信トレイに残っています。",
       "reasonProject": "プロジェクト +{{detail}} に言及しています",
       "reasonTag": "#{{detail}} のタグが付いています",
@@ -2294,8 +2298,8 @@
     }
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "空の項目を非表示",
+    "addDetail": "詳細を追加",
     "projectImage": "プロジェクト画像",
     "uploadImageHint": "プロジェクト用の画像をアップロード（最大10MB）",
     "browseImage": "画像を参照",
@@ -2382,9 +2386,15 @@
     "views": "プロジェクトの表示"
   },
   "task": {
-    "duplicateError": "Could not duplicate the task.",
-    "duplicated": "Task duplicated",
-    "duplicate": "Duplicate",
+        "minutesAgo_one": "{{count}} 分前",
+        "inMinutes_one": "{{count}} 分後",
+        "inHours_one": "{{count}} 時間後",
+        "inDays_one": "{{count}} 日後",
+        "hoursAgo_one": "{{count}} 時間前",
+        "daysAgo_one": "{{count}} 日前",
+    "duplicateError": "タスクを複製できませんでした。",
+    "duplicated": "タスクを複製しました",
+    "duplicate": "複製",
     "recurringScope": {
       "editTitle": "このタスクを編集しますか、それともシリーズ全体ですか？",
       "deleteTitle": "このタスクを削除しますか、それともシリーズ全体ですか？",
@@ -2403,7 +2413,7 @@
       "status": "ステータス",
       "priority": "優先度",
       "dueDate": "期日",
-      "deferUntil": "Defer until",
+      "deferUntil": "延期日",
       "note": "ノート"
     },
     "create": "作成",
@@ -2566,13 +2576,13 @@
   },
   "calendar": {
     "feed": {
-      "close": "Close",
-      "allDay": "All day"
+      "close": "閉じる",
+      "allDay": "終日"
     },
     "slot": {
-      "googleEvent": "New Google event",
-      "taskName": "Task name",
-      "addTaskAt": "Add task at {{time}}"
+      "googleEvent": "新しいGoogleの予定",
+      "taskName": "タスク名",
+      "addTaskAt": "{{time}}にタスクを追加"
     },
     "meetingJoin": "参加",
     "location": {
@@ -2889,7 +2899,7 @@
     "version": "バージョン",
     "description": "階層的な組織とマルチランゲージサポートを備えたセルフホステッドのタスク管理。生産性愛好者のために愛を込めて作られました。",
     "madeWithLove": "愛を込めて作られました",
-    "appreciation": "tududiをご利用いただきありがとうございます！あなたのサポートがこのプロジェクトを生かし、成長させる手助けになります。役立つと思ったら、開発を支援することを検討してください。",
+    "appreciation": "Cadenceをご利用いただきありがとうございます！あなたのサポートがこのプロジェクトを生かし、成長させる手助けになります。役立つと思ったら、開発を支援することを検討してください。",
     "supportDevelopment": "開発を支援する",
     "community": "コミュニティ",
     "viewOnGitHub": "GitHubで見る",
@@ -3426,7 +3436,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "ギャラリー",
     "label": "表示",
     "list": "リスト",
     "board": "ボード",
@@ -4270,6 +4280,8 @@
     "invalidHint": "すでに使用されたか、期限が切れた可能性があります。送ってくれた人に新しいリンクを頼んでください。"
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} 件のタスクを次の空き時間へ配置します。",
+        "placeAllDone_one": "{{count}} 件のタスクを配置しました。",
     "inProgress": "進行中",
     "overdue": "期限切れ",
     "dueToday": "今日が期限",
@@ -4340,6 +4352,7 @@
     "beta": "ベータ",
     "betaHint": "計画付きの今日のページは新しい機能です。従来のページはこのページの一番下から開けます。",
     "ai": {
+            "carried_one": "{{count}}件のタスクを明日に追加しました",
       "suggested": "AI の提案",
       "estimateGuess": "AI の見積もり",
       "nothingToAdd": "追加するものはありません: 空き時間がないか、計画するタスクがありません。",
@@ -4580,32 +4593,32 @@
     "viaProject": "プロジェクト経由",
     "viewArea": "エリアへ移動",
     "searchAreas": "エリアを検索…",
-    "clearArea": "エリアを削除",
+    "clearArea": "エリアを外す",
     "noAreasFound": "エリアが見つかりません"
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "{{group}} に願いを追加",
+      "addWish": "願いを追加…",
+      "createTaskFor": "“{{title}}”のタスクを作成",
+      "markDone": "“{{title}}”を実現済みにする",
+      "wishFulfilled": "実現済み",
+      "wishDropped": "取りやめ",
+      "allDone": "すべて完了",
+      "addStep": "次のステップを追加",
+      "nextStepInline": "次のステップ: {{name}}",
+      "nextStep": "次のステップ",
+      "completeStep": "“{{name}}”を完了",
+      "nothingLinked": "リンクされたものはありません",
+      "target": "{{date}}まで",
+      "error": "保存できませんでした。もう一度お試しください",
+      "wishDone": "“{{title}}”を実現しました",
+      "stepDone": "“{{name}}”を完了しました",
+      "doneWishes": "実現済み",
+      "other": "一時停止・達成・中止",
+      "noMatch": "一致するものはありません。",
+      "clearSearch": "検索をクリア",
+      "search": "目標または願いを検索"
     },
     "newGoal": "新しい目標",
     "noGoalsYet": "まだ目標はありません。",
@@ -4936,6 +4949,13 @@
       "instructionsOther": "それ以外の列はタスクのノートに残せるので、シートの内容が失われることはありません。"
     },
     "import": {
+            "undoneKept_one": "インポートを取り消しました。その後に変更された {{count}} 件のタスクは残しました。",
+            "rowCount_one": "{{count}} 行",
+            "doneTitle_one": "{{count}} 件のタスクをインポートしました",
+            "countTags_one": "新しいタグ {{count}} 件",
+            "countProjects_one": "新しいプロジェクト {{count}} 件",
+            "countCreate_one": "新しいタスク {{count}} 件",
+            "countAreas_one": "新しいエリア {{count}} 件",
       "fieldParent": "親タスク",
       "fieldWbs": "WBS / アウトライン番号",
       "fieldEstimate": "見積",
@@ -5180,22 +5200,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 選ぶ · S スキップ · O 開く · Esc 停止",
+      "nothing": "今は確認が必要なものはありません。",
+      "back": "見直しに戻る",
+      "again": "もう一周",
+      "saved": "決定はすべて保存されます。スキップしたものは次回また表示されます。",
+      "done": "今回はここまでです。",
+      "position": "{{position}} / {{total}}",
+      "stop": "停止",
+      "start": "開始",
+      "pitch": "約5分、一度に一つずつ。いつでも中断できます。",
+      "title": "クイック見直し"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "読み込み中…",
+    "calmClear": "すべて最新です",
+    "calm_other": "{{count}} 件、ご自分のペースで確認できます。",
+    "calm_one": "{{count}} 件、ご自分のペースで確認できます。",
     "cancelDate": "キャンセル",
     "choices": "選択肢",
     "more": "もっと見る…",
@@ -5206,9 +5226,9 @@
       "backToList": "一覧に戻る",
       "skip": "スキップ",
       "sorted": "仕分けるものはありません。",
-      "noMatch": "Nothing matches.",
-      "noProject": "No project",
-      "filter": "Filter"
+      "noMatch": "一致するものはありません。",
+      "noProject": "プロジェクトなし",
+      "filter": "フィルター"
     },
     "title": "見直し",
     "attention": "確認が必要 {{count}} 件",
@@ -5242,7 +5262,7 @@
       "stale": "古いタスクはありません。"
     },
     "actions": {
-      "done": "Done",
+      "done": "完了",
       "today": "今日やる",
       "shortSession": "今日短いセッション (25 分)",
       "split": "ステップに分ける",
@@ -5279,7 +5299,7 @@
       "inView": "視野に入れたもの",
       "emptyCommitted": "今週はまだ何も決めていません。",
       "emptyInView": "視野に入れたものはありません。タスクのメニューから追加できます。",
-      "choose": "選ぶのを手伝って"
+      "choose": "選ぶのを手伝ってください"
     },
     "routine": {
       "offer": "毎週金曜日に週次レビューを予定",
@@ -5310,6 +5330,7 @@
     "close": "閉じる"
   },
   "comments": {
+        "count_one": "{{count}}件のコメント",
     "count": "コメント {{count}}件",
     "loading": "コメントを読み込み中...",
     "failedToLoad": "コメントを読み込めませんでした",
@@ -5404,7 +5425,7 @@
   },
   "mobileNav": {
     "label": "メインナビゲーション",
-    "inbox": "受信トレイ",
+    "inbox": "受信箱",
     "tasks": "タスク",
     "agenda": "アジェンダ",
     "habits": "習慣",
@@ -5439,7 +5460,7 @@
     "toggleTheme": "ダークモードを切り替え",
     "showShortcuts": "キーボードショートカット",
     "groups": {
-      "links": "Links",
+      "links": "リンク",
       "recent": "最近",
       "task": "このタスク",
       "create": "作成",
@@ -5530,14 +5551,14 @@
     "rose": "ローズ"
   },
   "todoMd": {
-    "repoDiscard": "Discard",
-    "repoRetry": "Retry",
-    "repoError": "Could not sync with {{repo}}: {{error}}",
-    "repoPending": "{{count}} change(s) waiting: the repository cannot be reached.",
-    "repoConflict": "Conflict: \"{{name}}\" changed in the repository, nothing was written.",
-    "repoNotSynced": "Not synced with {{repo}} yet",
-    "repoSynced": "Synced with {{repo}} · {{ago}}",
-    "repoInfo": "Mirrors the TODO.md of the {{slug}} repository. Tasks you add and check off are committed and pushed.",
+    "repoDiscard": "破棄",
+    "repoRetry": "再試行",
+    "repoError": "{{repo}} と同期できませんでした: {{error}}",
+    "repoPending": "{{count}} 件の変更が待機中です: リポジトリに接続できません。",
+    "repoConflict": "競合: 「{{name}}」はリポジトリで変更されたため、何も書き込みませんでした。",
+    "repoNotSynced": "{{repo}} とはまだ同期していません",
+    "repoSynced": "{{repo}} と同期済み · {{ago}}",
+    "repoInfo": "{{slug}} リポジトリの TODO.md を反映しています。追加またはチェックしたタスクはコミットされ、プッシュされます。",
     "badge": "TODO.md",
     "badgeTitle": "TODO.mdファイル由来。ここでは読み取り専用です。ファイルを編集してください。",
     "readOnly": "これはTODO.mdファイル由来です。代わりにファイルを編集してください。",
@@ -5554,16 +5575,16 @@
     "linkFailed": "TODO.md ファイルを変更できませんでした。"
   },
   "cadenceHabits": {
-    "copyName": "{{name}} (copy)",
+    "copyName": "{{name}}（コピー）",
     "manage": {
-      "duplicate": "Duplicate",
-      "down": "Move down",
-      "up": "Move up",
-      "label": "Actions for {{name}}"
+      "duplicate": "複製",
+      "down": "下に移動",
+      "up": "上に移動",
+      "label": "{{name}}の操作"
     },
     "skip": {
-      "cancel": "Cancel the skip",
-      "today": "Skip today"
+      "cancel": "スキップを取り消す",
+      "today": "今日をスキップ"
     },
     "abstinence": {
       "assumption": "この件数は記録の内容によります。休止日は除外され、連続記録を止めます。この数字は健康状態を測るものではありません。",
@@ -5668,8 +5689,8 @@
       "title": "まだ習慣がありません。"
     },
     "entry": {
-      "undoFailed": "Could not undo the entry.",
-      "logged": "{{name}} logged",
+      "undoFailed": "記録を元に戻せませんでした。",
+      "logged": "{{name}}を記録しました",
       "add": "記録を追加",
       "date": "日付",
       "delete": "記録を削除",
@@ -5681,8 +5702,8 @@
       "valueUnit": "量（{{unit}}）"
     },
     "errors": {
-      "copy": "Could not copy the habit.",
-      "move": "Could not move the habit.",
+      "copy": "習慣をコピーできませんでした。",
+      "move": "習慣を移動できませんでした。",
       "action": "うまくいきませんでした（{{code}}）。",
       "activeDays": "少なくとも1日選んでください。",
       "customUnit": "単位名と記号を入力してください。",
@@ -5894,7 +5915,7 @@
     "tasks": "タスクを読み込み中…",
     "subtasks": "サブタスクを読み込み中..."
   },
-  "noteCreation": "新しいメモを作成",
+  "noteCreation": "新しいノートを作成",
   "notFound": {
     "todayDescription": "今日のタスクを表示",
     "projectsDescription": "プロジェクトを閲覧",
@@ -6024,6 +6045,8 @@
     "testError": "テストに失敗しました。"
   },
   "today": {
+        "taskCount_one": "{{count}} 件のタスク",
+        "organized_one": "{{count}}件のタスクを配置しました",
     "add": "追加",
     "addPlaceholder": "タスクを追加",
     "added": "「{{name}}」をこの日に追加しました",
@@ -6099,6 +6122,7 @@
     "habitLogFailed": "習慣を記録できませんでした。"
   },
   "upcoming": {
+        "plannedOnDayHint_one": "{{count}} 件は日付に予定済み",
     "replan": "再計画",
     "toPlan": "計画する",
     "expandToPlan": "計画するものを表示 ({{count}})",
@@ -6108,7 +6132,7 @@
     "title": "計画",
     "days": "日",
     "horizons": "期間",
-    "horizonsSoon": "近日公開",
+    "horizonsSoon": "次に続く",
     "addTask": "タスクを追加",
     "empty": "予定はありません。",
     "today": "今日",
@@ -6267,9 +6291,9 @@
     "note": "メモ",
     "dead": "見つかりません",
     "createTask": "タスクを作成",
-    "remove": "削除",
+    "remove": "外す",
     "actions": "ページの操作",
-    "removeError": "ページを削除できませんでした。",
+    "removeError": "ページを外せませんでした。",
     "copied": "ページをMarkdownとしてコピーしました",
     "deadCount": "見つからないページ: {{count}} 件",
     "allAnswer": "すべてのページが応答します",

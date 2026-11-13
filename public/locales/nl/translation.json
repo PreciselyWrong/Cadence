@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Die wijziging kon niet worden opgeslagen",
+    "hintLocked": "Enter: nieuwe regel",
+    "hint": "Enter: nieuwe regel · Tab / Shift+Tab: inspringen · Alt+↑ / Alt+↓: verplaatsen",
+    "newLine": "Nieuwe taak",
+    "title": "Overzicht"
   },
   "focusStats": {
     "title": "Focus",
@@ -406,7 +406,7 @@
     "unfoldProject": "{{name}} uitklappen"
   },
   "navigation": {
-    "home": "Home",
+    "home": "Start",
     "dashboard": "Dashboard",
     "profile": "Profiel",
     "profileSettings": "Profielinstellingen",
@@ -558,7 +558,7 @@
           "none": "Geen datum"
         },
         "days": "Dagen",
-        "tags": "Labels (een van, gescheiden door komma's)",
+        "tags": "Tags (een van, gescheiden door komma's)",
         "projects": "Projecten (optioneel)",
         "firstMatchHint": "Elke taak staat in het eerste kwadrant waarvan ze aan de regel voldoet. Een lege keuze past op alles.",
         "deleteTitle": "Matrix verwijderen",
@@ -689,7 +689,7 @@
             "needsApproval": "Deze versie vraagt meer dan voorheen. Zet hem opnieuw aan om de rechten en gebeurtenissen goed te keuren.",
             "checkUpdate": "Controleren op updates",
             "updateAvailable": "Update beschikbaar: {{version}}",
-            "upToDate": "Up-to-date",
+            "upToDate": "Actueel",
             "updateError": "Het updateadres kon niet worden gelezen",
             "settings": "Instellingen",
             "saveSettings": "Instellingen opslaan",
@@ -716,10 +716,10 @@
             "page": {
                 "notFound": "Plugin niet gevonden of uitgeschakeld"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Deze plug-in draait in de server en vraagt om:",
+            "approveOutro": "Rechten beperken wat Cadence aan de plug-in geeft; het is geen sandbox. Keur alleen code goed die je hebt gelezen.",
+            "approveTitle": "Rechten goedkeuren?",
+            "approve": "Goedkeuren en inschakelen"
         },
     "showTaskDescription": "Beschrijving onder de titel tonen",
     "sync": {
@@ -830,10 +830,10 @@
     "personalInfo": "Persoonlijke informatie",
     "errorMessage": "Het is niet gelukt om het profiel bij te werken",
     "telegramIntegration": "Telegram-integratie",
-    "telegramDescription": "Verbind uw Cadence-account met een Telegram-bot om items aan uw inbox toe te voegen via Telegram-berichten.",
+    "telegramDescription": "Verbind je Cadence-account met een Telegram-bot om items aan je inbox toe te voegen via Telegram-berichten.",
     "telegramBotToken": "Telegram-bottoken",
     "telegramTokenDescription": "Maak een bot met @BotFather op Telegram en plak de token hier.",
-    "telegramConnected": "Uw Telegram-account is verbonden! Stuur berichten naar uw bot om items aan uw Cadence-inbox toe te voegen.",
+    "telegramConnected": "Je Telegram-account is verbonden! Stuur berichten naar je bot om items aan je Cadence-inbox toe te voegen.",
     "setupTelegram": "Telegram instellen",
     "setupTelegramLower": "telegram instellen",
     "settingUp": "Aan het instellen...",
@@ -891,6 +891,7 @@
     "nextTaskSuggestion": "Volgende Taak Suggestie",
     "enableNextTaskSuggestion": "Schakel Volgende Taak Suggesties in",
     "tabs": {
+            "agents": "Agents",
             "plugins": "Plug-ins",
       "classify": "Indeling",
       "sync": "Synchronisatie",
@@ -1453,7 +1454,7 @@
             "security": "Toegang",
       "advanced": "Geavanceerd"
     },
-    "optional": "optioneel",
+    "optional": "Optioneel",
     "accent": "Accentkleur",
     "accentCustom": "Aangepaste kleur (hex)",
         "pureBlack": "Puur zwart in donkere modus",
@@ -1726,8 +1727,8 @@
     "waiting": "Wachten"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Lege velden verbergen",
+    "addDetail": "Een detail toevoegen",
     "name": "Projectnaam",
     "projectImage": "Projectafbeelding",
     "uploadImageHint": "Upload een afbeelding voor je project (max 10MB)",
@@ -1965,7 +1966,7 @@
       "api": "API",
       "email": "E-mail",
       "mail": "Mail",
-      "desktop": "Desktop",
+      "desktop": "Bureaublad",
       "link": "Link",
       "share": "Delen"
     }
@@ -2032,6 +2033,8 @@
     "createError": "Aanmaken van notitie is mislukt"
   },
   "task": {
+        "inHours_one": "over {{count}} uur",
+        "hoursAgo_one": "{{count}} uur geleden",
     "duplicateError": "De taak kon niet worden gedupliceerd.",
     "duplicated": "Taak gedupliceerd",
     "duplicate": "Dupliceren",
@@ -2213,7 +2216,7 @@
     "turnIntoProject": "Omzetten naar project",
     "turnIntoProjectError": "Kon niet naar een project worden omgezet.",
     "turnIntoProjectMessage": "« {{name}} » omzetten naar een project? De subtaken worden taken van het project en de adressen in de notitie worden de pagina's ervan.",
-    "inDays_one": "in {{count}} dag",
+    "inDays_one": "over {{count}} dag",
     "daysAgo_one": "{{count}} dag geleden",
     "minutesAgo_one": "{{count}} minuut geleden",
     "inMinutes_one": "over {{count}} minuut"
@@ -2439,7 +2442,7 @@
     "toggleDropdownMenu": "Vervolgkeuzemenu wisselen"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Alle notities",
     "emptyPreview": "Lege notitie",
     "loading": "Bezig met het laden van notities...",
     "error": "Fout bij het laden van notities",
@@ -2512,7 +2515,7 @@
     "openInNotes": "Openen in Notities",
     "sidebar": {
       "recent": "Recent",
-      "projects": "Projects",
+      "projects": "Projecten",
       "tags": "Tags",
       "noProject": "Geen project",
       "more": "{{count}} meer"
@@ -3006,8 +3009,8 @@
       "activation": "Activering, {{days}} dagen",
       "activationHint": "{{n}} van {{total}} aanmeldingen",
       "weeklyUsers": "Wekelijkse gebruikers",
-      "weeklyUsersHint": "heeft iets gemaakt",
-      "selfHostedUsers": "self-hosted · {{n}} nieuw vandaag"
+      "weeklyUsersHint": "hebben iets gemaakt",
+      "selfHostedUsers": "zelf gehost · {{n}} nieuw vandaag"
     },
     "waitlist": {
       "title": "Wachtlijst",
@@ -3207,7 +3210,7 @@
       "emailsSent_other": "{{count}} verzonden",
       "emailsNone": "Geen verzonden",
       "kinds": {
-        "tasks": "Tasks",
+        "tasks": "Taken",
         "habits": "Gewoonten",
         "projects": "Projecten",
         "notes": "Notities",
@@ -3357,7 +3360,7 @@
       "stepActivated": "activeert",
       "stepPaid": "betaalt",
       "pts": "{{diff}} pt",
-      "noRate": "Minder geteld bezoekers dan aanmeldingen",
+      "noRate": "Minder bezoekers geteld dan aanmeldingen",
       "before": "was {{n}}"
     },
     "insights": {
@@ -3433,7 +3436,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galerij",
     "label": "Weergave",
     "list": "Lijst",
     "board": "Bord",
@@ -3443,7 +3446,7 @@
     "title": "Nieuwe weergave",
     "name": "Naam",
     "project": "Project",
-    "tag": "Label",
+    "tag": "Tag",
     "priority": "Prioriteit",
     "due": "Deadline",
     "status": "Status",
@@ -3656,7 +3659,7 @@
       "taskAssigned": "Een taak is aan jou toegewezen door iemand anders",
       "habitReminders": "Je telefoon herinnert je er al aan; zet Push alleen aan als de server ook moet afgaan.",
       "comments": "Antwoorden, reacties op je taken en @vermeldingen",
-      "taskReminders": "De tijd die je bij een taak instelt. Je telefoon gaat af; zet Desktop aan als je computer ook moet afgaan"
+      "taskReminders": "De tijd die je bij een taak instelt. Je telefoon gaat af; zet Bureaublad aan als je computer ook moet afgaan"
     },
     "telegram": {
       "notConfigured": {
@@ -3667,7 +3670,7 @@
     "test": {
       "title": "Testmeldingen",
       "description": "Stuur een testmelding om te zien hoe deze in de app en op ingeschakelde kanalen (Telegram, enz.) verschijnt",
-      "send": "Verzend Test",
+      "send": "Test verzenden",
       "sending": "Verzenden...",
       "rowLabel": "Stuur een testmelding",
       "button": "Test",
@@ -3679,7 +3682,7 @@
     "info": {
       "title": "Opmerking:",
       "message": "E-mail- en pushmeldingen komen binnenkort. In-app en Telegram-meldingen zijn momenteel beschikbaar.",
-      "phoneRings": "Taakherinneringen gaan af op je telefoon. De desktop gaat alleen af als je Desktop in deze rij aanzet."
+      "phoneRings": "Taakherinneringen gaan af op je telefoon. De computer gaat alleen af als je Bureaublad in deze rij aanzet."
     },
     "webhooks": {
       "events": {
@@ -3811,7 +3814,7 @@
     "done": "Voltooid",
     "done_desc": "Afgerond en voltooid",
     "cancelled": "Geannuleerd",
-    "cancelled_desc": "Zal niet worden voltooid",
+    "cancelled_desc": "besloten dit niet na te streven",
     "idea": "Idee",
     "paused": "Gepauzeerd",
     "paused_desc": "bewust opzij gezet, om later te hervatten",
@@ -4277,6 +4280,7 @@
     "invalidHint": "Hij is mogelijk al gebruikt of verlopen. Vraag degene die hem stuurde om een nieuwe."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} taak gaat naar het eerstvolgende vrije moment.",
     "inProgress": "Bezig",
     "overdue": "Achterstallig",
     "dueToday": "Vandaag gepland",
@@ -4594,27 +4598,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Een wens toevoegen aan {{group}}",
+      "addWish": "Een wens toevoegen…",
+      "createTaskFor": "Een taak maken voor “{{title}}”",
+      "markDone": "“{{title}}” als gerealiseerd markeren",
+      "wishFulfilled": "Gerealiseerd",
+      "wishDropped": "Geschrapt",
+      "allDone": "Alles klaar",
+      "addStep": "Volgende stap toevoegen",
+      "nextStepInline": "Volgende stap: {{name}}",
+      "nextStep": "Volgende stap",
+      "completeStep": "“{{name}}” afronden",
+      "nothingLinked": "Niets gekoppeld",
+      "target": "Voor {{date}}",
+      "error": "Opslaan mislukt, probeer opnieuw",
+      "wishDone": "“{{title}}” gerealiseerd",
+      "stepDone": "“{{name}}” klaar",
+      "doneWishes": "Gerealiseerd",
+      "other": "Gepauzeerd, bereikt of geschrapt",
+      "noMatch": "Niets gevonden.",
+      "clearSearch": "Zoekopdracht wissen",
+      "search": "Zoek een doel of een wens"
     },
     "newGoal": "Nieuw doel",
     "noGoalsYet": "Nog geen doelen.",
@@ -4945,6 +4949,7 @@
       "instructionsOther": "Elke andere kolom kan in de notitie van de taak bewaard worden, zodat er niets uit het blad verloren gaat."
     },
     "import": {
+            "undoneKept_one": "De import is ongedaan gemaakt. {{count}} taak die sindsdien is gewijzigd, is bewaard.",
       "fieldParent": "Bovenliggende taak",
       "fieldWbs": "WBS / outlinenummer",
       "fieldEstimate": "Schatting",
@@ -5195,22 +5200,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
+      "keys": "1–9 kiezen · S overslaan · O openen · Esc stoppen",
+      "nothing": "Er is nu niets dat aandacht nodig heeft.",
+      "back": "Terug naar de review",
+      "again": "Nog een ronde",
+      "saved": "Elke beslissing wordt opgeslagen. Wat je hebt overgeslagen, komt de volgende keer terug.",
+      "done": "Dat was het voor nu.",
       "position": "{{position}} of {{total}}",
       "stop": "Stop",
       "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "pitch": "Ongeveer 5 minuten, één ding tegelijk. Stop wanneer je wilt.",
+      "title": "Snelle review"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Laden…",
+    "calmClear": "Alles is bijgewerkt",
+    "calm_other": "{{count}} punten om te bekijken, in je eigen tempo",
+    "calm_one": "{{count}} punt om te bekijken, in je eigen tempo",
     "cancelDate": "Annuleren",
     "choices": "Keuzes",
     "more": "Meer…",
@@ -5855,7 +5860,7 @@
       "custom": "Eigen eenheid",
       "glass": "Glazen",
       "grams": "Gram",
-      "hours": "Uur",
+      "hours": "Uren",
       "item": "Stuks",
       "kilograms": "Kilogram",
       "kilometers": "Kilometer",
@@ -5945,9 +5950,9 @@
     "count_other": "{{count}} links",
     "search": "Links zoeken",
     "filter": {
-      "tag": "Label",
+      "tag": "Tag",
       "archived": "Gearchiveerd",
-      "allTags": "Alle labels",
+      "allTags": "Alle tags",
       "allProjects": "Alle projecten"
     },
     "status": {
@@ -5960,7 +5965,7 @@
     },
     "lastCommit": "bijgewerkt {{date}}",
     "fetching": "Pagina wordt gelezen…",
-    "editTags": "Labels bewerken",
+    "editTags": "Tags bewerken",
     "goToSource": "Naar de plek waar het is opgeslagen",
     "open": "Link openen",
     "note": "Je notitie",
@@ -5981,11 +5986,11 @@
     "field": {
       "title": "Titel",
       "url": "Adres",
-      "tags": "Labels"
+      "tags": "Tags"
     },
     "editTitle": "Link bewerken",
     "deleteTitle": "Deze link verwijderen?",
-    "deleteMessage": "Hij verdwijnt definitief uit je links. Om hem opzij te zetten, archiveer je hem beter.",
+    "deleteMessage": "Hij verdwijnt definitief uit je links. Om hem opzij te zetten, archiveer je hem liever.",
     "deleteError": "De link kon niet worden verwijderd.",
     "taskVerb": {
       "try": "Probeer: {{title}}",
@@ -6043,7 +6048,7 @@
     "add": "Toevoegen",
     "addPlaceholder": "Voeg een taak toe",
     "added": "„{{name}}“ aan de dag toegevoegd",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, deadline {{range}}",
     "backToList": "Lijst",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Dagkalender",
@@ -6152,7 +6157,7 @@
       "none": "Geen",
       "project": "Project",
       "priority": "Prioriteit",
-      "tag": "Label"
+      "tag": "Tag"
     },
     "sortBy": "Sorteren op",
     "sort": {
@@ -6167,7 +6172,7 @@
     "calendarSpan": "Agendadagen",
     "reset": "Opnieuw instellen",
     "noProject": "Geen project",
-    "noTag": "Geen label",
+    "noTag": "Geen tag",
     "priority": {
       "none": "Geen prioriteit"
     },
@@ -6298,7 +6303,7 @@
   },
   "bookmarksImport": {
     "title": "Bladwijzers importeren",
-    "hint": "Een export uit Firefox (Library › Import and Backup › Export). Eén map wordt de pagina's van een project.",
+    "hint": "Een export uit Firefox (Bibliotheek › Importeren en back-up › Exporteren). Eén map wordt de pagina's van een project.",
     "file": "Bladwijzerbestand",
     "empty": "Geen bladwijzers in dit bestand.",
     "folder": "Map",
