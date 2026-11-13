@@ -67,6 +67,10 @@ const Layout: React.FC<LayoutProps> = ({
         location.pathname === '/today' || location.pathname === '/upcoming';
     // Notes fill the content area edge to edge.
     const isNotesView = /^\/notes?(\/|$)/.test(location.pathname);
+    // Pages remount on a path change so an expanded task row never carries
+    // over. Notes stays mounted from one note to the next, so a pending
+    // autosave and the editor focus survive the switch (#2072).
+    const pageKey = isNotesView ? '/notes' : location.pathname;
     const [isSidebarOpen, setIsSidebarOpen] = useState(
         window.innerWidth >= 1024
     );
@@ -511,9 +515,7 @@ const Layout: React.FC<LayoutProps> = ({
                                 <TrialBanner />
                                 <AgentMessageBanner />
                                 <Breadcrumbs />
-                                <TaskRowExpansionProvider
-                                    key={location.pathname}
-                                >
+                                <TaskRowExpansionProvider key={pageKey}>
                                     {children}
                                 </TaskRowExpansionProvider>
                             </div>

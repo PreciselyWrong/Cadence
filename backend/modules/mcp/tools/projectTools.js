@@ -16,6 +16,7 @@ const {
     prepareVisibilityChange,
     syncContainerShares,
     cascadeAreaToDescendants,
+    resolveContainerId,
 } = require('../../projects/service');
 const nextAction = require('../../projects/nextAction');
 const {
@@ -425,7 +426,13 @@ function registerProjectTools(server, context, tools) {
                 priority: params.priority !== undefined ? params.priority : 1,
                 status: params.status || 'not_started',
                 // A sub-project lives in its parent's area; area_id is ignored.
-                area_id: parent ? parent.area_id : params.area_id || null,
+                area_id: parent
+                    ? parent.area_id
+                    : await resolveContainerId(
+                          context.userId,
+                          'area',
+                          params.area_id || null
+                      ),
                 parent_project_id: parent ? parent.id : null,
                 due_date_at: params.due_date_at || null,
                 image_url: params.image_url || null,
@@ -645,7 +652,14 @@ function registerProjectTools(server, context, tools) {
                         await areaFollowingParent(effectiveParentId);
                 }
             } else if (params.area_id !== undefined) {
-                updates.area_id = params.area_id;
+                updates.area_id =
+                    params.area_id == project.area_id
+                        ? project.area_id
+                        : await resolveContainerId(
+                              context.userId,
+                              'area',
+                              params.area_id
+                          );
             }
 
             if (

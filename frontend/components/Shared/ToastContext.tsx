@@ -80,7 +80,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
             value={{ showSuccessToast, showErrorToast, showUndoToast }}
         >
             {children}
-            <div className="fixed top-20 right-4 z-50 space-y-2">
+            <div className="fixed top-20 right-4 z-[10060] space-y-2">
                 {toasts.map((toast, index) => (
                     <ToastComponent
                         key={toast.id}

@@ -36,7 +36,7 @@ const {
     syncProjectSharesFromContainer,
     dropProjectSharesFromContainer,
 } = require('../../services/containerShareSync');
-const { Project, Area, Task } = require('../../models');
+const { Project, Area, Task, Goal } = require('../../models');
 const nextAction = require('./nextAction');
 const {
     resolveParent,
@@ -160,6 +160,28 @@ async function prepareVisibilityChange(project, userId, visibility) {
         await dropProjectSharesFromContainer(project.id);
     }
     return visibility;
+}
+
+// A project can only be filed under an area or goal the caller owns or can
+// edit, the same rule as tasks and goals. Anything else, including a missing
+// row, gets the same error so ids cannot be probed. Returns undefined when
+// nothing was passed and null to unlink.
+async function resolveContainerId(userId, type, value) {
+    if (value === undefined) return undefined;
+    if (value === null || value === '') return null;
+    const raw = String(value).trim();
+    const where = /^\d+$/.test(raw) ? { id: raw } : { uid: raw };
+    const Model = type === 'area' ? Area : Goal;
+    const container = await Model.findOne({ where, attributes: ['id', 'uid'] });
+    const access = container
+        ? await permissionsService.getAccess(userId, type, container.uid)
+        : 'none';
+    if (access !== 'rw' && access !== 'admin') {
+        throw new ValidationError(
+            type === 'area' ? 'Invalid area.' : 'Invalid goal.'
+        );
+    }
+    return container.id;
 }
 
 // After a project is saved: leaving an area or goal takes back what that
@@ -674,15 +696,23 @@ class ProjectsService {
         const parent = data.parent_project_uid
             ? await resolveParent(userId, data.parent_project_uid)
             : null;
+        const areaId = parent
+            ? null
+            : await resolveContainerId(userId, 'area', area_id || null);
+        const goalId = await resolveContainerId(
+            userId,
+            'goal',
+            goal_id || null
+        );
 
         const projectData = {
             uid: projectUid,
             name: validatedName,
             description: description || '',
             // A sub-project lives in its parent's area; any area_id sent is ignored.
-            area_id: parent ? parent.area_id : area_id || null,
+            area_id: parent ? parent.area_id : areaId,
             parent_project_id: parent ? parent.id : null,
-            goal_id: goal_id || null,
+            goal_id: goalId,
             is_maintenance: is_maintenance || false,
             pin_to_sidebar: false,
             priority: toPriorityValue(priority),
@@ -780,9 +810,13 @@ class ProjectsService {
             );
         }
         if (description !== undefined) updateData.description = description;
+        // Keeping the current area or goal is always allowed, so a project
+        // whose container is no longer shared with the caller stays editable.
         if (goal_id !== undefined)
             updateData.goal_id =
-                goal_id === '' || goal_id === null ? null : goal_id;
+                goal_id == project.goal_id
+                    ? project.goal_id
+                    : await resolveContainerId(userId, 'goal', goal_id);
         if (is_maintenance !== undefined)
             updateData.is_maintenance = is_maintenance;
         if (pin_to_sidebar !== undefined)
@@ -819,7 +853,10 @@ class ProjectsService {
                     await areaFollowingParent(effectiveParentId);
             }
         } else if (area_id !== undefined) {
-            const resolvedAreaId = area_id === '' ? null : area_id;
+            const resolvedAreaId =
+                isOwner && area_id == project.area_id
+                    ? project.area_id
+                    : await resolveContainerId(userId, 'area', area_id);
             if (isOwner) {
                 // Owner controls the canonical area for all users
                 updateData.area_id = resolvedAreaId;
@@ -913,3 +950,4 @@ module.exports.prepareVisibilityChange = prepareVisibilityChange;
 module.exports.syncContainerShares = syncContainerShares;
 module.exports.cascadeAreaToDescendants = cascadeAreaToDescendants;
 module.exports.withParentUid = withParentUid;
+module.exports.resolveContainerId = resolveContainerId;

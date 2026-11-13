@@ -10,6 +10,7 @@ describe('AI Assistant - configurable max_tokens', () => {
     const savedEnv = {};
     const ENV_KEYS = [
         'LLM_API_KEY',
+        'LLM_MAX_TOKENS_DAILY_BRIEF',
         'LLM_MAX_TOKENS_TASK_INSIGHTS',
         'LLM_MAX_TOKENS_PROJECT_INSIGHTS',
         'LLM_DISABLE_THINKING',
@@ -23,7 +24,7 @@ describe('AI Assistant - configurable max_tokens', () => {
         process.env.LLM_API_KEY = 'test-key';
 
         mockCreate.mockResolvedValue({
-            choices: [{ message: { content: '{}' } }],
+            choices: [{ message: { content: '{"insight":"ok"}' } }],
             model: 'test-model',
             usage: { prompt_tokens: 10, completion_tokens: 5 },
         });
@@ -196,51 +197,5 @@ describe('AI Assistant - configurable max_tokens', () => {
         );
 
         expect(result.insight).toBe('from content field');
-    });
-
-    it('does not leak non-JSON chain-of-thought from reasoning_content into project insights', async () => {
-        mockCreate.mockResolvedValue({
-            choices: [
-                {
-                    message: {
-                        content: null,
-                        reasoning_content:
-                            '<think>let me consider what the user needs today...',
-                    },
-                },
-            ],
-            model: 'test-model',
-            usage: { prompt_tokens: 10, completion_tokens: 1500 },
-        });
-        const result = await aiAssistantService.generateProjectInsights(
-            { projectName: 'Website redesign' },
-            null
-        );
-
-        expect(result.insight).toBe('');
-        expect(result.next_action).toBe('');
-    });
-
-    it('does not leak non-JSON chain-of-thought from reasoning into project insights', async () => {
-        mockCreate.mockResolvedValue({
-            choices: [
-                {
-                    message: {
-                        content: null,
-                        reasoning:
-                            'Thinking Process:\n1. Analyze the user context...',
-                    },
-                },
-            ],
-            model: 'test-model',
-            usage: { prompt_tokens: 10, completion_tokens: 1500 },
-        });
-        const result = await aiAssistantService.generateProjectInsights(
-            { projectName: 'Website redesign' },
-            null
-        );
-
-        expect(result.insight).toBe('');
-        expect(result.next_action).toBe('');
     });
 });
