@@ -214,7 +214,11 @@ pub fn attach(window: &tauri::WebviewWindow, server: Url, start: Url) -> tauri::
                 .request()
                 .and_then(|r| r.uri())
                 .and_then(|u| Url::parse(&u).ok())?;
-            perform(view, &url, decide(&url, &new_window_server, Trigger::NewWindow));
+            perform(
+                view,
+                &url,
+                decide(&url, &new_window_server, Trigger::NewWindow),
+            );
             None
         });
 

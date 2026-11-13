@@ -71,17 +71,33 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - [x] Calendrier sur 1, 3 ou 7 jours, flèches ‹ › pour changer de jour
 - [x] Mode sombre retravaillé (anthracite bleuté, blocs nets)
 - [x] Réordonner la liste du jour décale aussi les créneaux du calendrier (Sunsama)
-- [x] « 7 prochains jours » renommé « Planifier » : colonne Inbox, jours en tableau, calendrier à droite réglable (1/3/7 jours)
+- [x] « 7 prochains jours » renommé « Planifier » : mode Jours (tableau, calendrier à droite)
 - [x] Planifier, mode Horizons : Cette semaine, Ce mois-ci, Mois prochain, Un jour (façon Akiflow)
+- [x] Glisser vers un mois garde le mois sans date précise (`tasks.month_of`)
+- [x] Horizon déduit de la date prévue (69744d66)
+- [x] Tâches d'un mois remontées dans « à planifier » au début du mois (69744d66) ; Android : même règle dans `TaskViews.unsorted`
+- [x] Icône de la source sur les tâches (web ; Android et skill mail-triage : voir Now)
+- [x] Tâches venues d'un TODO.md : se comportent comme de vraies tâches, sur le web et sur Android
+- [x] Popup de tâche : boutons vers son projet et ses étiquettes ; clic dehors ferme
+- [x] Bloc du calendrier ouvert surligné ; glisser ou étirer un bloc n'ouvre pas la tâche
+- [x] Page « Planifier » (ex-7 prochains jours) : colonne Inbox à gauche, puis jours (tableau), Inbox retirée de la barre latérale
 - [x] Android : Planifier (Inbox, Échues, 14 jours, Horizons), « Masquer les terminées » (Aujourd'hui, Planifier) et `tasks.month_of` (Room v18, synchro)
   Une colonne au lieu du tableau, feuille « Planifier » à l'appui long, pas de calendrier à droite. Vérif sur le téléphone : une tâche mise dans « Ce mois-ci » sur le web apparaît dans le même horizon, et inversement ; « Ajouter » d'un jour la prévoit ce jour sans échéance.
-- [x] Tâches venues d'un TODO.md : se comportent comme de vraies tâches, sur le web et sur Android
 - [x] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
 - [x] Android : reprendre les décisions du style bureau (2026-11-12)
   Fait en 1.28.0 : cases rondes, rouges seulement en priorité haute ; étiquettes par usage ; « Tâches à classer » limitée à cinq puis « Tout afficher ». Déjà conformes : projets en lignes sans statut « actif », compte ouvert à droite ; notes des pages de projet seulement quand elles existent. Restent (Room) : épinglées en tête des étiquettes (`pinned` absent de Room), tri des projets par dernière activité (`updated_at` des projets absent de Room), ligne d'avancement sur la page projet.
   Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée du 2026-11-12, « À reprendre sur Android »). Étiquettes : épinglées puis les plus utilisées ; Projets : statut seulement hors « actif », tâches ouvertes à droite, tri par dernière activité ; Liens : « Ajouter une note » dans le ⋯ ; Inbox : « Tâches à classer » limitée à cinq lignes puis « Tout afficher » ; page projet : avancement en une ligne de texte ; ligne et carte de tâche uniques (case ronde, rouge seulement pour la haute priorité, échéance en pastille « Aujourd'hui / Demain / date », ⋯ au clic droit ou sur la ligne sélectionnée), en-têtes et états vides des pages comme le web. Vérif : mêmes listes sur le téléphone que sur le web avec la même base.
 - [x] Android : horizon « Semaine prochaine » et envoi vers un horizon depuis Jours (2026-11-12)
   Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée « Planifier : envoyer vers un horizon depuis Jours »). Vérif : une tâche mise dans « Semaine prochaine » sur le web apparaît dans le même horizon sur le téléphone, et inversement ; une carte envoyée depuis un jour garde son échéance et se retire du jour.
+- [x] Planifier après la revue UX : 14 jours, En retard, calendrier borné, clavier, ajout rapide, filtres, un « + » par colonne
+- [x] Notifications Plasma riches : Terminé, +10 min, Ouvrir ; anneau couleur du projet
+- [x] Cloche de notifications masquée dans l'app desktop (côté web)
+- [x] Liens externes ouverts dans Firefox depuis l'app desktop + marqueur `CadenceDesktop/` (1a085cc6)
+- [x] Inbox de Planifier : « + » crée une tâche ; tâches à classer listées dans la colonne (984ea756)
+- [x] Markdown complet, barre de mise en forme (tableaux), liens `[[…]]`, mentions `@` et rétroliens dans notes et descriptions (dd10f26c, 216413d7, 3942449f ; Android à reprendre)
+- [x] Mode hors ligne web/Tauri fusionné dans `main` (44969c6f) ; reste à tester contre le vrai serveur (voir Now)
+- [ ] Installer le nouveau RPM et tester un vrai clic sur « Terminé »
+- [x] Faire relire les traductions des 25 autres langues (relecture IA du 2026-11-13 : les 24 langues hors en/fr du web ; Android n'a pas de `values-*` traduits)
 - [x] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
 - [x] Notes et descriptions éditées en plan (outliner) : puces, Tab avec enfants, repli, zoom, puce → tâche liée (web)
 - [x] Android : notes et descriptions en plan (outliner), repli, zoom, puce → tâche liée, case qui suit la tâche
@@ -124,9 +140,9 @@ Branche `feat/habit-stats-bdad4581`.
   - [x] Android : `Now` › « Un lien seul dans l'ajout rapide Android » (2026-11-12). Vérif sur le téléphone : partager une adresse, lui mettre une étiquette et un projet, en faire une tâche en moins de 4 touchers.
 - [x] Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)
   Bureau livré le 2026-11-12 (`docs/fork/WEB-UX-NOTES.md`) ; reste à vérifier à 390 px.
-- Sécurité : `users.telegram_bot_token` est stocké en clair et renvoyé en entier au navigateur
+- [x] Sécurité : `users.telegram_bot_token` est stocké en clair et renvoyé en entier au navigateur
   (`backend/models/user.js`, `PROFILE_UPDATE_ATTRIBUTES` de `users/repository.js`). Le chiffrer avec `secretCipher` (migration des valeurs existantes) et ne renvoyer que les 4 derniers caractères, comme `ai_api_key`. Vérif : la colonne commence par `enc:v1:`, `GET /api/profile` ne contient plus le jeton, le bot Telegram répond toujours.
-- PostgreSQL : `npm run db:migrate` après `db-prepare.js` voit 204 migrations en attente
+- [x] PostgreSQL : `npm run db:migrate` après `db-prepare.js` voit 204 migrations en attente
   (umzug n'en lit que 21 dans `SequelizeMeta`) et rejoue d'anciennes migrations qui contiennent des `PRAGMA` (`safeRemoveColumn`, `safeChangeColumn` de `migration-utils.js`). Antérieur au résumé du jour (ses 4 migrations passent sur PG 16, rejouées deux fois). Aucun test ne lance les migrations sur PG. Vérif : base PG vide → `db-prepare.js` → `db:migrate` deux fois sans erreur, `migration:status` à jour.
 - Fusionner l'amont (`chrisvel/tududi`) chaque semaine
   (dernière synchro : `eda9aa60`, v1.14.0 ; vérifié le 2026-11-01 : rien de neuf).
@@ -136,6 +152,12 @@ Branche `feat/habit-stats-bdad4581`.
   revue rapide une idée à la fois (le tri des liens est commun depuis la refonte Inbox + Liens). Vérif : mêmes gestes sur le web à 390 px et en bureau. Sans équivalent web (par nature) : widgets, Health Connect, agendas de l'appareil.
 - `docs/fork/CADENCE-PARITY.md`
   aucune case cochée sur 64 ; le remettre à jour ou le remplacer par ces deux entrées.
+- [x] Liens : n'extraire que les liens qui portent une vraie action
+  Problème : la bibliothèque de liens se remplit automatiquement de toutes les URL trouvées dans les tâches (Gitea, memo.nicolab.ch, fondations.nicolab.ch, fil LinkedIn, Gmail, run GitHub Actions, recherche Google, conversation Gemini, page Cailler…). Bruit, aucun intérêt.
+  Voulu : un lien n'entre dans la bibliothèque que s'il porte un vrai truc à faire (outil/dépôt à tester, article à lire, ressource à évaluer).
+  Pistes : exclure par défaut les domaines internes (*.nicolab.ch, *.tower, *.lan), les apps perso (mail.google.com, gemini, linkedin messaging, recherche Google, runs CI) ; ne pas extraire les URL de simple contexte d'une tâche ; option « ajouter à la bibliothèque » explicite ; nettoyage des liens existants sans intérêt.
+- [x] autofocus sur textarea en saisie de note + fermeture du modal lors de l'ajout
+- [x] Si j'appuie sur une tâche du calendrier a froid ça n'ouvre pas la tâche
 
 ## Ideas
 

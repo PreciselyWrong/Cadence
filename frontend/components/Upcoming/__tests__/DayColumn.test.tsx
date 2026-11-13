@@ -130,6 +130,8 @@ describe('DayColumn', () => {
     });
 
     it('tints the header of a weekend day', () => {
+        // Far from the real clock: on 2026-11-13 the 14th reads « Tomorrow ».
+        jest.useFakeTimers({ now: new Date('2026-11-02T12:00:00') });
         renderColumn({ date: '2026-11-14', isToday: false });
 
         expect(
@@ -139,6 +141,7 @@ describe('DayColumn', () => {
         expect(
             screen.getByRole('heading', { name: 'Saturday' }).closest('header')
         ).toHaveAttribute('data-weekend', 'true');
+        jest.useRealTimers();
     });
 
     it('labels the ISO week above the first day of the week', () => {
