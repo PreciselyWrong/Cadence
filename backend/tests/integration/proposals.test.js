@@ -588,6 +588,35 @@ describe('proposals', () => {
             return created.uid;
         };
 
+        it('sends a task to next week, this month or next month', async () => {
+            const { body: created } = await agent
+                .post('/api/proposals')
+                .send({ kind: 'week', start: today, end: day(6) });
+            await answerAs(created.uid, { answer: { headline: 'Horizons' } });
+            const sent = await agent
+                .post(`/api/proposals/${created.uid}/send`)
+                .send({
+                    decisions: [
+                        { task_uid: taskUid(dueSoon), op: 'next_week' },
+                        { task_uid: taskUid(second), op: 'next_month' },
+                    ],
+                });
+            expect(sent.status).toBe(200);
+            expect(sent.body.results.map((r) => r.state)).toEqual([
+                'applied',
+                'applied',
+            ]);
+            const week = await Task.findOne({
+                where: { uid: taskUid(dueSoon) },
+            });
+            expect(week.week_of).not.toBeNull();
+            const month = await Task.findOne({
+                where: { uid: taskUid(second) },
+            });
+            expect(month.month_of).not.toBeNull();
+            expect(month.week_of).toBeNull();
+        });
+
         it('applies the decisions only when no task has a note', async () => {
             const uid = await weekWithAnswer([
                 {

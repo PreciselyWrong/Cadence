@@ -198,6 +198,32 @@ describe('week decisions', () => {
         ]);
     });
 
+    it('groups a week, month or next-week choice apart and sends it without a date', () => {
+        const committed = new Map<string, Decision>([
+            ['a', { op: 'next_week' }],
+            ['d', { op: 'this_month' }],
+            ['e', { op: 'next_month' }],
+        ]);
+        expect(
+            groupByDecision(changes, committed).map((g) => g.key.id)
+        ).toEqual([
+            'day:2026-11-17',
+            'day:2026-11-18',
+            'next_week',
+            'this_month',
+            'next_month',
+        ]);
+        expect(decisionsToApply([changes[0]], committed)).toStrictEqual([
+            { task_uid: 'a', op: 'next_week' },
+        ]);
+        expect(
+            decisionsToApply([changes[3], changes[4]], committed)
+        ).toStrictEqual([
+            { task_uid: 'd', op: 'this_month' },
+            { task_uid: 'e', op: 'next_month' },
+        ]);
+    });
+
     it('takes the remarks that are not blank, in the agent order', () => {
         const notes = new Map([
             ['f', '  Pas ce jour  '],
@@ -276,6 +302,48 @@ describe('ProposalSheet', () => {
                 decisions: [
                     { task_uid: 't1', op: 'later' },
                     { task_uid: 't2', op: 'plan_day', date: '2026-11-17' },
+                    { task_uid: 't3', op: 'drop' },
+                ],
+            })
+        );
+    });
+
+    it('offers next week and the months after the days, before later', async () => {
+        renderSheet();
+        await screen.findByText('Valider le devis');
+
+        fireEvent.click(trigger('Valider le devis'));
+        const menu = screen.getByRole('menu');
+        const rows = within(menu)
+            .getAllByRole('menuitemradio')
+            .map((option) => option.textContent);
+        expect(rows.slice(-7)).toEqual([
+            'Cette semaine',
+            'Semaine prochaine',
+            'Ce mois-ci',
+            'Le mois prochain',
+            'Plus tard',
+            'Garder tel quel',
+            'Abandonner',
+        ]);
+        fireEvent.keyDown(menu, { key: 'Escape' });
+    });
+
+    it('applies a next week or month choice without a date', async () => {
+        (applyProposal as jest.Mock).mockResolvedValue(appliedOutcome);
+        renderSheet();
+        await screen.findByText('Valider le devis');
+
+        pick('Valider le devis', 'Semaine prochaine');
+        expect(groupOf('Valider le devis')).toEqual('Semaine prochaine');
+        pick('Appeler le plombier', 'Le mois prochain');
+        fireEvent.click(screen.getByRole('button', { name: 'Appliquer (3)' }));
+
+        await waitFor(() =>
+            expect(applyProposal).toHaveBeenCalledWith(UID, {
+                decisions: [
+                    { task_uid: 't1', op: 'next_week' },
+                    { task_uid: 't2', op: 'next_month' },
                     { task_uid: 't3', op: 'drop' },
                 ],
             })

@@ -5361,6 +5361,9 @@
       "planDay": "Im Tagesplan",
       "due": "Fällig am {{date}}",
       "thisWeek": "Diese Woche",
+      "nextWeek": "Nächste Woche",
+      "thisMonth": "Diesen Monat",
+      "nextMonth": "Nächsten Monat",
       "later": "Später",
       "drop": "Verwerfen"
     },

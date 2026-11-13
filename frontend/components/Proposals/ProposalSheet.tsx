@@ -631,6 +631,12 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                 });
             case 'this_week':
                 return t('proposals.ops.thisWeek', 'Cette semaine');
+            case 'next_week':
+                return t('proposals.ops.nextWeek', 'Semaine prochaine');
+            case 'this_month':
+                return t('proposals.ops.thisMonth', 'Ce mois-ci');
+            case 'next_month':
+                return t('proposals.ops.nextMonth', 'Le mois prochain');
             case 'later':
                 return t('proposals.ops.later', 'Plus tard');
             case 'keep':
@@ -648,6 +654,15 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
         }
         if (key.kind === 'this_week') {
             return t('proposals.groups.thisWeek', 'Cette semaine');
+        }
+        if (key.kind === 'next_week') {
+            return t('proposals.ops.nextWeek', 'Semaine prochaine');
+        }
+        if (key.kind === 'this_month') {
+            return t('proposals.ops.thisMonth', 'Ce mois-ci');
+        }
+        if (key.kind === 'next_month') {
+            return t('proposals.ops.nextMonth', 'Le mois prochain');
         }
         if (key.kind === 'later')
             return t('proposals.groups.later', 'Plus tard');

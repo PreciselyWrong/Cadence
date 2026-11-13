@@ -5352,6 +5352,9 @@
       "planDay": "Bugünkü plana",
       "due": "Son tarih {{date}}",
       "thisWeek": "Bu hafta",
+      "nextWeek": "Gelecek hafta",
+      "thisMonth": "Bu ay",
+      "nextMonth": "Gelecek ay",
       "later": "Daha sonra",
       "drop": "Bırak"
     },

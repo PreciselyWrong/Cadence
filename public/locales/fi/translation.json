@@ -5352,6 +5352,9 @@
       "planDay": "Tämän päivän suunnitelmassa",
       "due": "Eräpäivä {{date}}",
       "thisWeek": "Tämä viikko",
+      "nextWeek": "Ensi viikko",
+      "thisMonth": "Tämä kuukausi",
+      "nextMonth": "Ensi kuu",
       "later": "Myöhemmin",
       "drop": "Hylkää"
     },

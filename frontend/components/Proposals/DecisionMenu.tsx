@@ -188,6 +188,18 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({
             label: t('proposals.ops.thisWeek', 'Cette semaine'),
         },
         {
+            decision: { op: 'next_week' },
+            label: t('proposals.ops.nextWeek', 'Semaine prochaine'),
+        },
+        {
+            decision: { op: 'this_month' },
+            label: t('proposals.ops.thisMonth', 'Ce mois-ci'),
+        },
+        {
+            decision: { op: 'next_month' },
+            label: t('proposals.ops.nextMonth', 'Le mois prochain'),
+        },
+        {
             decision: { op: 'later' },
             label: t('proposals.ops.later', 'Plus tard'),
         },

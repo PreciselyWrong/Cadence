@@ -5352,6 +5352,9 @@
       "planDay": "Di rencana hari ini",
       "due": "Jatuh tempo {{date}}",
       "thisWeek": "Minggu ini",
+      "nextWeek": "Minggu depan",
+      "thisMonth": "Bulan ini",
+      "nextMonth": "Bulan depan",
       "later": "Nanti",
       "drop": "Buang"
     },

@@ -19,17 +19,36 @@ export const sameDecision = (a: Decision, b: Decision): boolean =>
 
 export type GroupKey =
     | { id: string; kind: 'day'; date: string }
-    | { id: string; kind: 'this_week' | 'later' | 'keep' | 'drop' };
+    | {
+          id: string;
+          kind:
+              | 'this_week'
+              | 'next_week'
+              | 'this_month'
+              | 'next_month'
+              | 'later'
+              | 'keep'
+              | 'drop';
+      };
 
 export interface DecisionGroup {
     key: GroupKey;
     rows: WeekChange[];
 }
 
-const TAIL = ['this_week', 'later', 'drop', 'keep'] as const;
+const TAIL = [
+    'this_week',
+    'next_week',
+    'this_month',
+    'next_month',
+    'later',
+    'drop',
+    'keep',
+] as const;
 
 // Rows grouped by their CURRENT decision: days first (planned or due that
-// day), then the week's, the parked, the dropped and the kept ones. Inside a
+// day), then the week's, next week's, the months', the parked, the dropped
+// and the kept ones. Inside a
 // group, rows keep the agent's order. Pure.
 export function groupByDecision(
     changes: WeekChange[],
@@ -38,6 +57,9 @@ export function groupByDecision(
     const days = new Map<string, WeekChange[]>();
     const tail: Record<(typeof TAIL)[number], WeekChange[]> = {
         this_week: [],
+        next_week: [],
+        this_month: [],
+        next_month: [],
         later: [],
         drop: [],
         keep: [],

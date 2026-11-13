@@ -13,7 +13,15 @@ export type ProposalStatus =
     'pending' | 'ready' | 'failed' | 'applied' | 'dismissed';
 
 export type WeekOp =
-    'plan_day' | 'this_week' | 'later' | 'due' | 'drop' | 'keep';
+    | 'plan_day'
+    | 'this_week'
+    | 'next_week'
+    | 'this_month'
+    | 'next_month'
+    | 'later'
+    | 'due'
+    | 'drop'
+    | 'keep';
 
 export interface WeekChange {
     task_uid: string;

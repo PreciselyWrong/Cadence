@@ -5444,6 +5444,9 @@
       "planDay": "W dzisiejszym planie",
       "due": "Termin {{date}}",
       "thisWeek": "Ten tydzień",
+      "nextWeek": "Następny tydzień",
+      "thisMonth": "Ten miesiąc",
+      "nextMonth": "Przyszły miesiąc",
       "later": "Później",
       "drop": "Porzuć"
     },

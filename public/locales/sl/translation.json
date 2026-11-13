@@ -5448,6 +5448,9 @@
       "planDay": "V današnjem načrtu",
       "due": "Rok {{date}}",
       "thisWeek": "Ta teden",
+      "nextWeek": "Naslednji teden",
+      "thisMonth": "Ta mesec",
+      "nextMonth": "Naslednji mesec",
       "later": "Pozneje",
       "drop": "Opusti"
     },

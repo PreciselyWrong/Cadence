@@ -5359,6 +5359,9 @@
       "planDay": "No plano de hoje",
       "due": "Vence em {{date}}",
       "thisWeek": "Esta semana",
+      "nextWeek": "Próxima semana",
+      "thisMonth": "Este mês",
+      "nextMonth": "Próximo mês",
       "later": "Depois",
       "drop": "Descartar"
     },

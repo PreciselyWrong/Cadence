@@ -5565,6 +5565,9 @@
       "planDay": "V dnešnom pláne",
       "due": "Termín {{date}}",
       "thisWeek": "Tento týždeň",
+      "nextWeek": "Budúci týždeň",
+      "thisMonth": "Tento mesiac",
+      "nextMonth": "Budúci mesiac",
       "later": "Neskôr",
       "drop": "Zahodiť"
     },

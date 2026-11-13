@@ -5352,6 +5352,9 @@
       "planDay": "今日のプランに",
       "due": "{{date}} が期限",
       "thisWeek": "今週",
+      "nextWeek": "来週",
+      "thisMonth": "今月",
+      "nextMonth": "来月",
       "later": "あとで",
       "drop": "取りやめ"
     },

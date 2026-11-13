@@ -5357,6 +5357,9 @@
       "planDay": "På dagens plan",
       "due": "Forfaller {{date}}",
       "thisWeek": "Denne uken",
+      "nextWeek": "Neste uke",
+      "thisMonth": "Denne måneden",
+      "nextMonth": "Neste måned",
       "later": "Senere",
       "drop": "Slipp"
     },

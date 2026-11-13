@@ -5352,6 +5352,9 @@
       "planDay": "Op het plan van vandaag",
       "due": "Vervalt {{date}}",
       "thisWeek": "Deze week",
+      "nextWeek": "Volgende week",
+      "thisMonth": "Deze maand",
+      "nextMonth": "Volgende maand",
       "later": "Later",
       "drop": "Laten vallen"
     },

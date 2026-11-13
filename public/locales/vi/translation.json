@@ -5352,6 +5352,9 @@
       "planDay": "Trong kế hoạch hôm nay",
       "due": "Hạn {{date}}",
       "thisWeek": "Tuần này",
+      "nextWeek": "Tuần sau",
+      "thisMonth": "Tháng này",
+      "nextMonth": "Tháng sau",
       "later": "Để sau",
       "drop": "Bỏ"
     },

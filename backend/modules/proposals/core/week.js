@@ -13,7 +13,16 @@ const MAX_PERIOD_DAYS = 14;
 const DEFAULT_PERIOD_DAYS = 7;
 const REASON_MAX = 100;
 const QUESTIONS_MAX = 3;
-const OPS = ['plan_day', 'this_week', 'later', 'due', 'drop'];
+const OPS = [
+    'plan_day',
+    'this_week',
+    'next_week',
+    'this_month',
+    'next_month',
+    'later',
+    'due',
+    'drop',
+];
 // The user may pick any of these per task; keep does nothing.
 const DECISION_OPS = [...OPS, 'keep'];
 const OPS_WITH_DATE = new Set(['plan_day', 'due']);

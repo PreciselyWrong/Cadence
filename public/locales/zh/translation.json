@@ -5352,6 +5352,9 @@
       "planDay": "在今日计划中",
       "due": "截止 {{date}}",
       "thisWeek": "本周",
+      "nextWeek": "下周",
+      "thisMonth": "本月",
+      "nextMonth": "下月",
       "later": "稍后",
       "drop": "放弃"
     },

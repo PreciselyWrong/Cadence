@@ -501,6 +501,22 @@ async function applyWeekChange(user, change) {
                 later: false,
             });
             return;
+        case 'next_week':
+            await run('update_task', {
+                id,
+                week_of: 'next_week',
+                later: false,
+            });
+            return;
+        case 'this_month':
+        case 'next_month':
+            await run('update_task', {
+                id,
+                month_of: change.op,
+                week_of: null,
+                later: false,
+            });
+            return;
         case 'later':
             await run('update_task', { id, later: true });
             return;

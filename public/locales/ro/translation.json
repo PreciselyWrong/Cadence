@@ -5369,6 +5369,9 @@
       "planDay": "În planul de azi",
       "due": "Scadent {{date}}",
       "thisWeek": "Săptămâna aceasta",
+      "nextWeek": "Săptămâna viitoare",
+      "thisMonth": "Luna aceasta",
+      "nextMonth": "Luna viitoare",
       "later": "Mai târziu",
       "drop": "Renunță"
     },

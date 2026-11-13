@@ -5360,6 +5360,9 @@
       "planDay": "Au plan du jour",
       "due": "Échéance le {{date}}",
       "thisWeek": "Cette semaine",
+      "nextWeek": "Semaine prochaine",
+      "thisMonth": "Ce mois-ci",
+      "nextMonth": "Le mois prochain",
       "later": "Plus tard",
       "drop": "Abandonner"
     },

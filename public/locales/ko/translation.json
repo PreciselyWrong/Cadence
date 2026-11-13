@@ -5352,6 +5352,9 @@
       "planDay": "오늘 계획에",
       "due": "{{date}} 마감",
       "thisWeek": "이번 주",
+      "nextWeek": "다음 주",
+      "thisMonth": "이번 달",
+      "nextMonth": "다음 달",
       "later": "나중에",
       "drop": "삭제"
     },

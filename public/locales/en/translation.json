@@ -5415,6 +5415,9 @@
       "planDay": "On today’s plan",
       "due": "Due {{date}}",
       "thisWeek": "This week",
+      "nextWeek": "Next week",
+      "thisMonth": "This month",
+      "nextMonth": "Next month",
       "later": "Later",
       "drop": "Drop"
     },

@@ -70,13 +70,15 @@ Operations the agent may propose:
 |---|---|---|
 | `plan_day` | required, in the period | Added to that day's plan without a time; due date untouched (`carryOver`) |
 | `this_week` | — | `update_task { week_of: "this_week", later: false }` |
+| `next_week` | — | `update_task { week_of: "next_week", later: false }` |
+| `this_month`, `next_month` | — | `update_task { month_of: <op>, week_of: null, later: false }` |
 | `later` | — | `update_task { later: true }` (the `#someday` tag) |
 | `due` | required, in the period | `update_task { due_date }` |
 | `drop` | — | `update_task { status: "cancelled" }` (not deleted) |
 
 ### Apply (week)
 
-`POST /api/proposals/:uid/apply { "decisions": [{ "task_uid", "op", "date"? }] }`. The user may pick, for any task of `facts.tasks`, any of `plan_day`, `this_week`, `later`, `due`, `drop` or `keep` (`keep`: nothing, and no result line). The operation can differ from the agent's. `date` is required for `plan_day` and `due` and must fall in `period.start` to `period.end` + 30 days. A task not in `facts.tasks` is refused with 400 (`Task … is not in this proposal`), as is a task decided twice, an unknown operation or a date out of the window. The legacy body `{ "task_uids": [...] }` still works: each uid takes the agent's operation (a uid the agent did not propose is 400).
+`POST /api/proposals/:uid/apply { "decisions": [{ "task_uid", "op", "date"? }] }`. The user may pick, for any task of `facts.tasks`, any of `plan_day`, `this_week`, `next_week`, `this_month`, `next_month`, `later`, `due`, `drop` or `keep` (`keep`: nothing, and no result line). The operation can differ from the agent's. `date` is required for `plan_day` and `due` and must fall in `period.start` to `period.end` + 30 days. A task not in `facts.tasks` is refused with 400 (`Task … is not in this proposal`), as is a task decided twice, an unknown operation or a date out of the window. The legacy body `{ "task_uids": [...] }` still works: each uid takes the agent's operation (a uid the agent did not propose is 400).
 
 ### Send with notes (week)
 
