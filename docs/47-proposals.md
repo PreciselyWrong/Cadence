@@ -269,6 +269,8 @@ Page `/career` (`frontend/components/Career/CareerPage.tsx`, pure rules `careerM
 
 ## Clients › Android
 
+Since 1.36.0 the sheet follows « Week sheet v2 » above (sections, day strip, inline day picker from `days`); the paragraphs below describe the earlier rows and stay true for send, notes and answers.
+
 Online only, like the mail deck: nothing is kept in Room. `tasks/.../proposals/` (`ProposalsClient` for the routes above, `ProposalRepository` for the last proposal of each kind, the open sheet and the tab a notification asks for, `ProposalModel.kt` for the pure rules). Offline, the actions say « Hors ligne » and keep nothing.
 
 - **Button**: « Planifier ma semaine » at the top of Planifier and Aujourd'hui; « Préparer ma revue » in the quick review card. Idle, then « En préparation… » (reads `GET /api/proposals` every 5 s while it is shown), then « … est prête ». A failed proposal goes back to idle.

@@ -17,6 +17,10 @@ class ProposalModelTest {
 
     private fun change(uid: String, op: ProposalOp, date: LocalDate? = null) = WeekChange(uid, op, date, reason = "raison $uid")
 
+    private fun task(uid: String, due: LocalDate? = null, overdue: Boolean = false) = FactTask(uid, "Tâche $uid", due, overdue)
+
+    private fun tasksOf(vararg tasks: FactTask): Map<String, FactTask> = tasks.associateBy { it.uid }
+
     /** Réponse exacte du contrat `docs/47-proposals.md`, telle que `GET /api/proposals/:uid` la renvoie. */
     private val weekJson = """
         {
@@ -41,7 +45,7 @@ class ProposalModelTest {
     """.trimIndent()
 
     @Test
-    fun `parses the documented week answer and facts`() {
+    fun `parses the documented week answer, its facts and its days`() {
         val dto = ProposalJson.decodeFromString<ProposalDto>(weekJson)
 
         assertEquals("ready", dto.status)
@@ -49,7 +53,53 @@ class ProposalModelTest {
         assertEquals("Tu travailles mardi ?", dto.answer?.questions?.single()?.text)
         assertEquals(listOf("Oui", "Non"), dto.answer?.questions?.single()?.choices)
         assertEquals("Valider le devis", Proposals.factTasks(dto.facts)["abc123"]?.name)
-        assertEquals("Cuisine", Proposals.factTasks(dto.facts)["abc123"]?.project)
+        assertEquals(monday.plusDays(1), Proposals.factTasks(dto.facts)["abc123"]?.due)
+        assertNull(dto.days)
+    }
+
+    @Test
+    fun `the days of the sheet come from the server when it sends them, else from the facts`() {
+        val dto = ProposalJson.decodeFromString<ProposalDto>(
+            """
+            {
+              "uid": "p3", "kind": "week", "status": "ready",
+              "days": [
+                { "date": "2026-11-17", "load_minutes": 30, "capacity_minutes": 630,
+                  "items": [{ "task_uid": "abc123", "name": "Classer la déclaration", "minutes": 30 }],
+                  "events": [{ "title": "Foire aux livres", "start": "13:30", "end": "14:30", "all_day": false }],
+                  "work": { "start": "07:30", "end": "18:00", "label": "Dentsply" } },
+                { "date": "2026-11-18", "load_minutes": 0, "capacity_minutes": 0,
+                  "events": [{ "title": "Congé", "all_day": true }] }
+              ],
+              "facts": { "days": [{ "date": "2026-11-16", "load_minutes": 45, "planned": ["abc123"] }] }
+            }
+            """.trimIndent(),
+        )
+
+        val loads = Proposals.dayLoads(dto.days, dto.facts)
+
+        assertEquals(listOf(tuesday, wednesday), loads.map { it.date })
+        assertEquals(630, loads[0].capacityMinutes)
+        assertEquals("Dentsply", loads[0].work?.label)
+        assertEquals("Classer la déclaration", loads[0].items.single().name)
+        assertFalse(loads[0].occupied)
+        assertTrue(loads[1].occupied)
+        assertTrue(loads[1].full)
+        assertEquals(1f, loads[1].fill)
+        assertEquals(listOf(monday), Proposals.dayLoads(null, dto.facts).map { it.date })
+        assertEquals(45, Proposals.dayLoads(null, dto.facts).single().loadMinutes)
+    }
+
+    @Test
+    fun `a day fills its bar by its load over its capacity and is full when the load reaches it`() {
+        val half = DayLoad(monday, loadMinutes = 240, capacityMinutes = 480, items = emptyList(), events = emptyList(), work = null)
+        val unknown = DayLoad(monday, loadMinutes = 240, capacityMinutes = null, items = emptyList(), events = emptyList(), work = null)
+        val reached = DayLoad(monday, loadMinutes = 480, capacityMinutes = 480, items = emptyList(), events = emptyList(), work = null)
+
+        assertEquals(0.5f, half.fill)
+        assertFalse(half.full)
+        assertEquals(0.5f, unknown.fill)
+        assertTrue(reached.full)
     }
 
     @Test
@@ -79,49 +129,94 @@ class ProposalModelTest {
     }
 
     @Test
-    fun `sections follow the current decision, days first then this week later due drop keep`() {
-        val changes = listOf(
-            change("a", ProposalOp.DROP),
-            change("b", ProposalOp.KEEP),
-            change("c", ProposalOp.PLAN_DAY, tuesday),
-            change("d", ProposalOp.LATER),
-            change("e", ProposalOp.THIS_WEEK),
-            change("f", ProposalOp.PLAN_DAY, monday),
-            change("g", ProposalOp.DUE, wednesday),
-            change("h", ProposalOp.NEXT_MONTH),
-            change("i", ProposalOp.NEXT_WEEK),
-            change("j", ProposalOp.THIS_MONTH),
-        )
+    fun `every task of the facts is a row, a task without a change keeps its place and is kept`() {
+        val tasks = tasksOf(task("a"), task("b"), task("c"))
+        val changes = listOf(change("c", ProposalOp.DROP), change("zzz", ProposalOp.LATER))
 
-        val sections = Proposals.sections(changes, emptyMap())
+        val rows = Proposals.weekRows(tasks, changes)
 
-        assertEquals(
-            listOf<DecisionGroup>(
-                DecisionGroup.Day(monday),
-                DecisionGroup.Day(tuesday),
-                DecisionGroup.ThisWeek,
-                DecisionGroup.NextWeek,
-                DecisionGroup.ThisMonth,
-                DecisionGroup.NextMonth,
-                DecisionGroup.Later,
-                DecisionGroup.Due(wednesday),
-                DecisionGroup.Drop,
-                DecisionGroup.Keep,
-            ),
-            sections.map { it.group },
-        )
-        assertEquals(listOf("f"), sections[0].changes.map { it.taskUid })
+        assertEquals(listOf("a", "b", "c"), rows.map { it.taskUid })
+        assertEquals(listOf(ProposalOp.KEEP, ProposalOp.KEEP, ProposalOp.DROP), rows.map { it.op })
     }
 
     @Test
-    fun `a chosen decision moves the row to its new group and the agent's stays in the answer`() {
-        val changes = listOf(change("a", ProposalOp.LATER), change("b", ProposalOp.THIS_WEEK))
-        val chosen = Proposals.choose(emptyMap(), changes[0], WeekDecision(ProposalOp.PLAN_DAY, tuesday))
+    fun `without facts the answer's changes are the rows`() {
+        val changes = listOf(change("a", ProposalOp.LATER))
 
-        val sections = Proposals.sections(changes, chosen)
+        assertEquals(changes, Proposals.weekRows(emptyMap(), changes))
+    }
 
-        assertEquals(listOf<DecisionGroup>(DecisionGroup.Day(tuesday), DecisionGroup.ThisWeek), sections.map { it.group })
-        assertEquals(WeekDecision(ProposalOp.LATER), Proposals.decision(changes[0], emptyMap()))
+    @Test
+    fun `overdue tasks come first whatever their decision, then the days, then the rest`() {
+        val tasks = tasksOf(
+            task("a"),
+            task("b", overdue = true),
+            task("c", overdue = true),
+            task("d"),
+            task("e"),
+            task("f"),
+        )
+        val rows = Proposals.weekRows(tasks, listOf(
+            change("a", ProposalOp.PLAN_DAY, tuesday),
+            change("b", ProposalOp.PLAN_DAY, monday),
+            change("c", ProposalOp.KEEP),
+            change("d", ProposalOp.LATER),
+            change("e", ProposalOp.DROP),
+        ))
+
+        val sections = Proposals.sections(rows, emptyMap(), tasks)
+
+        assertEquals(listOf(SheetSection.OVERDUE, SheetSection.DAYS, SheetSection.LATER), sections.map { it.section })
+        assertEquals(listOf("b", "c"), sections[0].changes.map { it.taskUid })
+        assertEquals(listOf("a"), sections[1].changes.map { it.taskUid })
+        assertEquals(listOf("d", "e", "f"), sections[2].changes.map { it.taskUid })
+    }
+
+    @Test
+    fun `a chosen day moves a row into the days section`() {
+        val tasks = tasksOf(task("a"), task("b"))
+        val rows = Proposals.weekRows(tasks, listOf(change("a", ProposalOp.LATER), change("b", ProposalOp.THIS_WEEK)))
+        val chosen = Proposals.choose(emptyMap(), rows[0], WeekDecision(ProposalOp.PLAN_DAY, tuesday))
+
+        val sections = Proposals.sections(rows, chosen, tasks)
+
+        assertEquals(listOf(SheetSection.DAYS, SheetSection.LATER), sections.map { it.section })
+        assertEquals(WeekDecision(ProposalOp.LATER), Proposals.decision(rows[0], emptyMap()))
+    }
+
+    @Test
+    fun `lateness counts the days since the due date, and is absent when not overdue`() {
+        val yesterday = task("a", due = monday.minusDays(1), overdue = true)
+
+        assertEquals(1, Proposals.lateness(yesterday, monday))
+        assertEquals(5, Proposals.lateness(task("b", due = monday.minusDays(5), overdue = true), monday))
+        assertNull(Proposals.lateness(task("c", due = monday.minusDays(5)), monday))
+        assertNull(Proposals.lateness(yesterday, null))
+    }
+
+    @Test
+    fun `the footer counts the changes, the kept rows and the returned rows, a noted row counts once`() {
+        val rows = listOf(
+            change("a", ProposalOp.LATER),
+            change("b", ProposalOp.DROP),
+            change("c", ProposalOp.KEEP),
+            change("d", ProposalOp.THIS_WEEK),
+        )
+
+        assertEquals(WeekCounts(changes = 3, kept = 1, returned = 0), Proposals.counts(rows, emptyMap(), emptyMap()))
+        assertEquals(
+            WeekCounts(changes = 2, kept = 1, returned = 1),
+            Proposals.counts(rows, emptyMap(), mapOf("b" to "Non, garde-la")),
+        )
+    }
+
+    @Test
+    fun `the agent's decision stays in the answer when the user chooses another`() {
+        val change = change("a", ProposalOp.LATER)
+        val chosen = Proposals.choose(emptyMap(), change, WeekDecision(ProposalOp.PLAN_DAY, tuesday))
+
+        assertEquals(WeekDecision(ProposalOp.PLAN_DAY, tuesday), Proposals.decision(change, chosen))
+        assertEquals(WeekDecision(ProposalOp.LATER), Proposals.decision(change, emptyMap()))
     }
 
     @Test
@@ -222,24 +317,19 @@ class ProposalModelTest {
 
     @Test
     fun `send is needed when a question is answered or a row is noted, apply otherwise`() {
-        val none = SendCounts(applied = 2, returned = 0)
+        val none = WeekCounts(changes = 2, kept = 0, returned = 0)
         assertFalse(Proposals.needsSend(none, emptyMap()))
         assertTrue(Proposals.needsSend(none, mapOf("q1" to "Oui")))
-        assertTrue(Proposals.needsSend(SendCounts(applied = 0, returned = 1), emptyMap()))
+        assertTrue(Proposals.needsSend(WeekCounts(changes = 0, kept = 0, returned = 1), emptyMap()))
     }
 
     @Test
-    fun `send counts give the applied and returned rows, keep rows are neither`() {
-        val changes = listOf(
-            change("a", ProposalOp.LATER),
-            change("b", ProposalOp.DROP),
-            change("c", ProposalOp.KEEP),
-            change("d", ProposalOp.THIS_WEEK),
-        )
-        val notes = mapOf("b" to "Non, garde-la")
+    fun `the focus day of a row is its planned day, else the first day of the period`() {
+        val period = monday to monday.plusDays(6)
 
-        assertEquals(SendCounts(applied = 2, returned = 1), Proposals.sendCounts(changes, emptyMap(), notes))
-        assertEquals(SendCounts(applied = 3, returned = 0), Proposals.sendCounts(changes, emptyMap(), emptyMap()))
+        assertEquals(tuesday, Proposals.focusDay(WeekDecision(ProposalOp.PLAN_DAY, tuesday), period))
+        assertEquals(monday, Proposals.focusDay(WeekDecision(ProposalOp.LATER), period))
+        assertNull(Proposals.focusDay(WeekDecision(ProposalOp.LATER), null))
     }
 
     @Test
@@ -297,16 +387,16 @@ class ProposalModelTest {
     }
 
     @Test
-    fun `task facts keep their goal and area`() {
+    fun `task facts give the due date and the overdue flag, and the day's date comes from facts today`() {
         val facts = ProposalJson.parseToJsonElement(
-            """{"tasks":[{"uid":"a","name":"Valider","goal":"Cuisine rénovée","area":"Maison"},{"uid":"b","name":"Lire"}]}""",
+            """{"today":"2026-11-16","tasks":[{"uid":"a","name":"Valider","due":"2026-11-15","overdue":true},{"uid":"b","name":"Lire"}]}""",
         ).jsonObject
 
         val tasks = Proposals.factTasks(facts)
 
-        assertEquals("Cuisine rénovée", tasks["a"]?.goal)
-        assertEquals("Maison", tasks["a"]?.area)
-        assertNull(tasks["b"]?.goal)
+        assertEquals(FactTask("a", "Valider", monday.minusDays(1), overdue = true), tasks["a"])
+        assertEquals(FactTask("b", "Lire", null, overdue = false), tasks["b"])
+        assertEquals(monday, Proposals.factToday(facts))
     }
 
     @Test

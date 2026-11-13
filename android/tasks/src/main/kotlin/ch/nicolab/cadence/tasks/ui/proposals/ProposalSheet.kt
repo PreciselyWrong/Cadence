@@ -5,7 +5,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +17,14 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,14 +44,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.CadenceField
 import ch.nicolab.cadence.designsystem.components.CadenceScrollSheet
-import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
@@ -57,13 +66,15 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.proposals.DecisionGroup
+import ch.nicolab.cadence.tasks.proposals.DayLoad
 import ch.nicolab.cadence.tasks.proposals.ProposalDto
 import ch.nicolab.cadence.tasks.proposals.ProposalOp
 import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.proposals.ProposalStatus
 import ch.nicolab.cadence.tasks.proposals.Proposals
 import ch.nicolab.cadence.tasks.proposals.QuestionDto
+import ch.nicolab.cadence.tasks.proposals.SheetSection
+import ch.nicolab.cadence.tasks.proposals.WeekCounts
 import ch.nicolab.cadence.tasks.proposals.WeekDecision
 import ch.nicolab.cadence.tasks.ui.TaskDatePickerDialog
 import ch.nicolab.cadence.tasks.ui.TasksViewModel
@@ -75,14 +86,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private val dayChip: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE d", tasksLocale)
-private val dayHeader: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE d MMMM", tasksLocale)
+private val dayHeader: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE d", tasksLocale)
 private val periodDay: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", tasksLocale)
 private val dueDay: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", tasksLocale)
 
+/** Largeur d'une case de jour quand la période en compte plus de sept : la bande défile. */
+private val WideDayCell = 64.dp
+
 /**
- * Feuille de la semaine prête : titre et sous-titre de l'agent, période, puis les tâches groupées par décision
- * courante, le tout dans un seul défilement ; « Envoyer » reste épinglé en bas. Chaque ligne montre la décision (par défaut celle de l'agent) ; un toucher ouvre le menu des choix.
- * Rien ne change avant « Appliquer » ; « Appliquer (N) » compte les décisions qui ne sont pas « garder ».
+ * Feuille de la semaine prête (`docs/47-proposals.md`, « Week sheet v2 ») : titre et sous-titre de l'agent, période,
+ * bande des jours, puis toutes les tâches des faits en trois sections (Échues, Par jour, Plus loin), dans un seul
+ * défilement ; « Envoyer » ou « Appliquer » reste épinglé en bas. Un toucher sur la décision d'une ligne ouvre,
+ * sous la ligne, le jour choisi et les choix. Rien ne change avant « Appliquer ».
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -127,12 +142,14 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
 
     val current = dto
     val status = ProposalStatus.of(current?.status)
-    val changes = remember(current) { Proposals.weekChanges(current?.answer) }
-    val sections = remember(changes, chosen) { Proposals.sections(changes, chosen) }
-    val names = remember(current) { Proposals.factTasks(current?.facts) }
+    val factTasks = remember(current) { Proposals.factTasks(current?.facts) }
+    val rows = remember(current) { Proposals.weekRows(factTasks, Proposals.weekChanges(current?.answer)) }
+    val sections = remember(rows, chosen, tasks) { Proposals.sections(rows, chosen, factTasks) }
     val period = remember(current) { periodOf(current) }
-    val pending = Proposals.pendingCount(changes, chosen)
-    val counts = Proposals.sendCounts(changes, chosen, notes)
+    val loads = remember(current) { Proposals.dayLoads(current?.days, current?.facts) }
+    val today = remember(current) { Proposals.factToday(current?.facts) }
+    val pending = Proposals.pendingCount(rows, chosen)
+    val counts = Proposals.counts(rows, chosen, notes)
     val sending = Proposals.needsSend(counts, answers)
 
     fun failure(error: Throwable): String = if (error is IOException) offline else failed
@@ -150,7 +167,7 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
     fun applyChanges() {
         scope.launch {
             busy = true
-            repo.apply(uid, Proposals.weekApplyBody(changes, chosen))
+            repo.apply(uid, Proposals.weekApplyBody(rows, chosen))
                 .onSuccess { outcome ->
                     tasks.requestSync()
                     onClose()
@@ -169,7 +186,7 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
     fun sendNotes() {
         scope.launch {
             busy = true
-            repo.send(uid, Proposals.sendBody(changes, chosen, notes, answers))
+            repo.send(uid, Proposals.sendBody(rows, chosen, notes, answers))
                 .onSuccess {
                     tasks.requestSync()
                     val returned = counts.returned
@@ -194,10 +211,13 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
     }
 
     val ready = status == ProposalStatus.READY
+    val menuChange = menuFor?.let { taskUid -> rows.firstOrNull { it.taskUid == taskUid } }
+    val focus = menuChange?.let { Proposals.focusDay(Proposals.decision(it, chosen), period) }
     val footer: (@Composable ColumnScope.() -> Unit)? = when {
         current == null -> null
         ready -> {
             {
+                WeekCountsLine(counts)
                 if (!sending) {
                     PrimaryAction(
                         stringResource(R.string.proposal_apply, pending),
@@ -206,14 +226,6 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
                         onClick = ::applyChanges,
                     )
                 } else {
-                    if (counts.returned > 0) {
-                        Text(
-                            stringResource(R.string.proposal_send_counts, counts.applied, counts.returned),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = cadence.onSurfaceVariant,
-                            modifier = Modifier.fillMaxWidth().padding(bottom = Space.xs),
-                        )
-                    }
                     PrimaryAction(
                         stringResource(R.string.proposal_send),
                         modifier = Modifier.fillMaxWidth(),
@@ -239,6 +251,7 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
             status == ProposalStatus.PENDING -> item { SheetNote(stringResource(R.string.proposal_preparing)) }
             ready -> {
                 period?.let { item(key = "period") { PeriodPill(it, Modifier.padding(top = Space.md)) } }
+                if (loads.isNotEmpty()) item(key = "days") { DayStrip(loads, focus) }
                 current.answer?.questions.orEmpty().forEach { question ->
                     item(key = "question-${question.id}") {
                         Column(Modifier.fillMaxWidth()) {
@@ -250,39 +263,63 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
                         }
                     }
                 }
-                if (changes.isEmpty()) {
+                if (rows.isEmpty()) {
                     item { SheetNote(stringResource(R.string.proposal_nothing)) }
                 } else {
-                    sections.forEach { section ->
-                        item(key = "group-${section.group}") {
-                            GroupHeader(section.group, Modifier.animateItem())
-                        }
-                        items(section.changes, key = { it.taskUid }) { change ->
-                            val task = names[change.taskUid]
-                            ChangeRow(
-                                name = task?.name?.takeIf { it.isNotBlank() } ?: stringResource(R.string.proposal_unknown_task),
-                                tag = task?.goal ?: task?.area,
-                                reason = change.reason,
-                                decision = Proposals.decision(change, chosen),
-                                modified = Proposals.isModified(change, chosen),
-                                noted = Proposals.hasNote(change, notes),
-                                noteOpen = change.taskUid in noteOpen,
-                                note = notes[change.taskUid].orEmpty(),
-                                enabled = !busy,
-                                onChoose = { menuFor = change.taskUid },
-                                onRestore = { chosen = Proposals.restore(chosen, change.taskUid) },
-                                onToggleNote = {
-                                    noteOpen = if (change.taskUid in noteOpen) noteOpen - change.taskUid else noteOpen + change.taskUid
-                                },
-                                onNote = { text ->
-                                    notes = if (text.isEmpty()) {
-                                        notes - change.taskUid
-                                    } else {
-                                        notes + (change.taskUid to text.take(Proposals.NOTE_MAX_LENGTH))
-                                    }
-                                },
+                    sections.forEach { group ->
+                        item(key = "section-${group.section}") {
+                            SectionHeader(
+                                group.section,
+                                count = group.changes.size.takeIf { group.section == SheetSection.OVERDUE },
                                 modifier = Modifier.animateItem(),
                             )
+                        }
+                        group.changes.forEach { change ->
+                            val task = factTasks[change.taskUid]
+                            val open = menuFor == change.taskUid
+                            item(key = "row-${change.taskUid}") {
+                                ChangeRow(
+                                    name = task?.name?.takeIf { it.isNotBlank() } ?: stringResource(R.string.proposal_unknown_task),
+                                    late = task?.let { latenessLabel(Proposals.lateness(it, today)) },
+                                    reason = change.reason,
+                                    dotColor = sectionDotColor(group.section),
+                                    decision = Proposals.decision(change, chosen),
+                                    modified = Proposals.isModified(change, chosen),
+                                    noted = Proposals.hasNote(change, notes),
+                                    noteOpen = change.taskUid in noteOpen,
+                                    note = notes[change.taskUid].orEmpty(),
+                                    enabled = !busy,
+                                    onChoose = { menuFor = if (open) null else change.taskUid },
+                                    onRestore = { chosen = Proposals.restore(chosen, change.taskUid) },
+                                    onToggleNote = {
+                                        noteOpen = if (change.taskUid in noteOpen) noteOpen - change.taskUid else noteOpen + change.taskUid
+                                    },
+                                    onNote = { text ->
+                                        notes = if (text.isEmpty()) {
+                                            notes - change.taskUid
+                                        } else {
+                                            notes + (change.taskUid to text.take(Proposals.NOTE_MAX_LENGTH))
+                                        }
+                                    },
+                                    modifier = Modifier.animateItem(),
+                                )
+                            }
+                            if (open) {
+                                item(key = "picker-${change.taskUid}") {
+                                    DayPicker(
+                                        focus = focus,
+                                        day = loads.firstOrNull { it.date == focus },
+                                        currentDecision = Proposals.decision(change, chosen),
+                                        options = remember(period) { Proposals.menuOptions(period?.first, period?.second) },
+                                        loads = loads,
+                                        onChoose = { option ->
+                                            chosen = Proposals.choose(chosen, change, option)
+                                            menuFor = null
+                                        },
+                                        onOtherDate = { dateFor = change.taskUid },
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -321,41 +358,7 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
         }
     }
 
-    val menuChange = menuFor?.let { taskUid -> changes.firstOrNull { it.taskUid == taskUid } }
-    if (menuChange != null) {
-        val task = names[menuChange.taskUid]
-        val options = remember(period) { Proposals.menuOptions(period?.first, period?.second) }
-        val currentDecision = Proposals.decision(menuChange, chosen)
-        CadenceSheet(
-            title = task?.name?.takeIf { it.isNotBlank() } ?: stringResource(R.string.proposal_unknown_task),
-            subtitle = null,
-            dismiss = { menuFor = null },
-        ) {
-            FlowRow(
-                Modifier.fillMaxWidth().padding(top = Space.sm, bottom = Space.lg),
-                horizontalArrangement = Arrangement.spacedBy(Space.sm),
-                verticalArrangement = Arrangement.spacedBy(Space.sm),
-            ) {
-                options.forEach { option ->
-                    ChoiceChip(
-                        label = optionLabel(option),
-                        selected = option == currentDecision,
-                        onClick = {
-                            chosen = Proposals.choose(chosen, menuChange, option)
-                            menuFor = null
-                        },
-                    )
-                }
-                ChoiceChip(
-                    label = stringResource(R.string.proposal_op_other_date),
-                    selected = false,
-                    onClick = { dateFor = menuChange.taskUid },
-                )
-            }
-        }
-    }
-
-    val pickedChange = dateFor?.let { taskUid -> changes.firstOrNull { it.taskUid == taskUid } }
+    val pickedChange = dateFor?.let { taskUid -> rows.firstOrNull { it.taskUid == taskUid } }
     if (pickedChange != null) {
         TaskDatePickerDialog(
             initial = (Proposals.decision(pickedChange, chosen).date ?: period?.first) ?: LocalDate.now(),
@@ -420,20 +423,278 @@ private fun QuestionBlock(question: QuestionDto, chosen: String?, enabled: Boole
 }
 
 @Composable
-private fun GroupHeader(group: DecisionGroup, modifier: Modifier = Modifier) {
-    Text(
-        groupLabel(group),
-        style = MaterialTheme.typography.labelMedium,
-        color = cadence.outline,
-        modifier = modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs),
+private fun SectionHeader(section: SheetSection, count: Int?, modifier: Modifier = Modifier) {
+    val palette = cadence
+    val overdue = section == SheetSection.OVERDUE
+    Row(
+        modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Space.sm),
+    ) {
+        Text(
+            sectionLabel(section).uppercase(tasksLocale),
+            style = MaterialTheme.typography.labelMedium,
+            color = if (overdue) palette.warning else palette.outline,
+        )
+        count?.let {
+            Box(
+                Modifier
+                    .clip(Radius.Pill)
+                    .background(if (overdue) palette.warningContainer else palette.containerHigh)
+                    .padding(horizontal = Space.sm),
+            ) {
+                Text(it.toString(), style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant)
+            }
+        }
+    }
+}
+
+@Composable
+private fun sectionLabel(section: SheetSection): String = when (section) {
+    SheetSection.OVERDUE -> stringResource(R.string.proposal_section_overdue)
+    SheetSection.DAYS -> stringResource(R.string.proposal_section_days)
+    SheetSection.LATER -> stringResource(R.string.proposal_section_later)
+}
+
+@Composable
+private fun sectionDotColor(section: SheetSection): Color = when (section) {
+    SheetSection.OVERDUE -> cadence.warning
+    SheetSection.DAYS -> cadence.primary
+    SheetSection.LATER -> cadence.outline
+}
+
+/** « 7 changements · 2 restent tels quels », et les remarques renvoyées s'il y en a. */
+@Composable
+private fun WeekCountsLine(counts: WeekCounts) {
+    Column(Modifier.fillMaxWidth().padding(bottom = Space.xs)) {
+        Text(
+            stringResource(
+                R.string.proposal_counts,
+                pluralStringResource(R.plurals.proposal_count_changes, counts.changes, counts.changes),
+                pluralStringResource(R.plurals.proposal_count_kept, counts.kept, counts.kept),
+            ),
+            style = MaterialTheme.typography.labelMedium,
+            color = cadence.onSurfaceVariant,
+        )
+        if (counts.returned > 0) {
+            Text(
+                pluralStringResource(R.plurals.proposal_returned, counts.returned, counts.returned),
+                style = MaterialTheme.typography.labelMedium,
+                color = cadence.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+/** Bande des jours de la période : charge, « Occupé » ou « — », et une barre de remplissage. Le jour du menu ouvert est marqué. */
+@Composable
+private fun DayStrip(days: List<DayLoad>, focus: LocalDate?) {
+    val wide = days.size > 7
+    val scroll = rememberScrollState()
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = Space.md)
+            .then(if (wide) Modifier.horizontalScroll(scroll) else Modifier),
+        horizontalArrangement = Arrangement.spacedBy(Space.xs),
+    ) {
+        days.forEach { day ->
+            DayCell(
+                day,
+                selected = day.date == focus,
+                modifier = if (wide) Modifier.width(WideDayCell) else Modifier.weight(1f),
+            )
+        }
+    }
+}
+
+@Composable
+private fun DayCell(day: DayLoad, selected: Boolean, modifier: Modifier = Modifier) {
+    val palette = cadence
+    Column(
+        modifier
+            .clip(Radius.Chip)
+            .background(palette.containerHigh)
+            .then(if (selected) Modifier.border(2.dp, palette.primary, Radius.Chip) else Modifier)
+            .padding(vertical = Space.sm, horizontal = Space.xs),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            day.date.format(dayChip),
+            style = MaterialTheme.typography.labelMedium,
+            color = palette.onSurface,
+            maxLines = 1,
+        )
+        Text(
+            dayStripLabel(day),
+            style = MaterialTheme.typography.labelSmall,
+            color = palette.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Box(
+            Modifier
+                .padding(top = Space.xs)
+                .fillMaxWidth()
+                .height(4.dp)
+                .clip(Radius.Pill)
+                .background(palette.outlineVariant),
+        ) {
+            Box(
+                Modifier
+                    .fillMaxWidth(day.fill)
+                    .fillMaxHeight()
+                    .background(if (day.full) palette.warning else palette.primary),
+            )
+        }
+    }
+}
+
+/** Sous une ligne : le jour choisi (charge, horaires, tâches, agenda), puis les choix. Rien n'est changé avant un choix. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun DayPicker(
+    focus: LocalDate?,
+    day: DayLoad?,
+    currentDecision: WeekDecision,
+    options: List<WeekDecision>,
+    loads: List<DayLoad>,
+    onChoose: (WeekDecision) -> Unit,
+    onOtherDate: () -> Unit,
+) {
+    val palette = cadence
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(bottom = Space.sm)
+            .clip(Radius.Control)
+            .background(palette.containerHigh)
+            .padding(Space.md),
+    ) {
+        focus?.let {
+            Text(
+                it.format(dayHeader).replaceFirstChar { c -> c.titlecase(tasksLocale) },
+                style = MaterialTheme.typography.titleSmall,
+                color = palette.onSurface,
+            )
+        }
+        day?.let { planLine(it) }?.let { line ->
+            Text(line, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant, modifier = Modifier.padding(top = Space.xs))
+        }
+        day?.work?.let { work ->
+            val text = work.label?.let { stringResource(R.string.proposal_day_work_label, it, work.start, work.end) }
+                ?: stringResource(R.string.proposal_day_work, work.start, work.end)
+            Text(text, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
+        }
+        day?.items?.forEach { item ->
+            PickerLine(item.name, durationLabel(item.minutes))
+        }
+        val events = day?.events.orEmpty()
+        if (events.isEmpty()) {
+            Text(
+                stringResource(R.string.proposal_nothing_on_agenda),
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.onSurfaceVariant,
+                modifier = Modifier.padding(top = Space.xs),
+            )
+        } else {
+            events.forEach { event ->
+                val time = if (event.allDay) {
+                    stringResource(R.string.proposal_all_day)
+                } else {
+                    listOfNotNull(event.start, event.end).joinToString("–")
+                }
+                PickerLine(event.title, time)
+            }
+        }
+        FlowRow(
+            Modifier.fillMaxWidth().padding(top = Space.sm),
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            verticalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
+            options.forEach { option ->
+                ChoiceChip(
+                    label = optionLabel(option, loads),
+                    selected = option == currentDecision,
+                    onClick = { onChoose(option) },
+                )
+            }
+            ChoiceChip(
+                label = stringResource(R.string.proposal_op_other_date),
+                selected = false,
+                onClick = onOtherDate,
+            )
+        }
+    }
+}
+
+@Composable
+private fun planLine(day: DayLoad): String = when {
+    day.loadMinutes == 0 -> stringResource(R.string.proposal_day_nothing)
+    day.capacityMinutes != null -> stringResource(
+        R.string.proposal_day_planned_of,
+        durationLabel(day.loadMinutes),
+        durationLabel(day.capacityMinutes),
     )
+    else -> stringResource(R.string.proposal_day_planned, durationLabel(day.loadMinutes))
+}
+
+@Composable
+private fun PickerLine(label: String, trailing: String) {
+    Row(
+        Modifier.fillMaxWidth().padding(vertical = 3.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = cadence.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f).padding(end = Space.sm),
+        )
+        Text(trailing, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+    }
+}
+
+/** « 30 min », « 1 h », « 1 h 30 ». */
+@Composable
+private fun durationLabel(minutes: Int): String = when {
+    minutes < 60 -> stringResource(R.string.proposal_minutes, minutes)
+    minutes % 60 == 0 -> stringResource(R.string.proposal_hours, minutes / 60)
+    else -> stringResource(R.string.proposal_hours_minutes, minutes / 60, minutes % 60)
+}
+
+/** Libellé de la charge d'une case de la bande : « Occupé », « — » si rien n'est prévu, sinon la durée. */
+@Composable
+private fun dayStripLabel(day: DayLoad): String = when {
+    day.occupied -> stringResource(R.string.proposal_busy)
+    day.loadMinutes == 0 -> "—"
+    else -> durationLabel(day.loadMinutes)
+}
+
+/** Charge d'un jour dans un choix : « occupé », « libre » ou la durée. */
+@Composable
+private fun dayLoadText(day: DayLoad): String = when {
+    day.occupied -> stringResource(R.string.proposal_busy_lower)
+    day.loadMinutes == 0 -> stringResource(R.string.proposal_free)
+    else -> durationLabel(day.loadMinutes)
+}
+
+/** Retard d'une tâche : « hier », « N j » ; rien pour aujourd'hui ou une date inconnue. */
+@Composable
+private fun latenessLabel(days: Int?): String? = when {
+    days == null || days <= 0 -> null
+    days == 1 -> stringResource(R.string.proposal_late_yesterday)
+    else -> stringResource(R.string.proposal_late_days, days)
 }
 
 @Composable
 private fun ChangeRow(
     name: String,
-    tag: String?,
+    late: String?,
     reason: String,
+    dotColor: Color,
     decision: WeekDecision,
     modified: Boolean,
     noted: Boolean,
@@ -451,6 +712,8 @@ private fun ChangeRow(
             Modifier.fillMaxWidth().padding(vertical = Space.sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            Box(Modifier.size(8.dp).clip(CircleShape).background(dotColor))
+            Spacer(Modifier.width(Space.md))
             Column(Modifier.weight(1f)) {
                 Text(
                     name,
@@ -459,19 +722,14 @@ private fun ChangeRow(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
-                tag?.takeIf { it.isNotBlank() }?.let {
+                if (late != null || reason.isNotBlank()) {
+                    val warning = cadence.warning
                     Text(
-                        it,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = cadence.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = Space.xs),
-                    )
-                }
-                if (reason.isNotBlank()) {
-                    Text(
-                        reason,
+                        buildAnnotatedString {
+                            late?.let { withStyle(SpanStyle(color = warning)) { append(it) } }
+                            if (late != null && reason.isNotBlank()) append(" · ")
+                            append(reason)
+                        },
                         style = MaterialTheme.typography.bodySmall,
                         color = cadence.onSurfaceVariant,
                         maxLines = 2,
@@ -567,19 +825,6 @@ private fun DecisionChip(label: String, modified: Boolean, onClick: () -> Unit) 
 
 private fun fadeTransition() = fadeIn(Motion.quick()).togetherWith(fadeOut(Motion.quick()))
 
-@Composable
-private fun groupLabel(group: DecisionGroup): String = when (group) {
-    is DecisionGroup.Day -> group.date.format(dayHeader).replaceFirstChar { it.titlecase(tasksLocale) }
-    DecisionGroup.ThisWeek -> stringResource(R.string.proposal_op_this_week)
-    DecisionGroup.NextWeek -> stringResource(R.string.proposal_op_next_week)
-    DecisionGroup.ThisMonth -> stringResource(R.string.proposal_op_this_month)
-    DecisionGroup.NextMonth -> stringResource(R.string.proposal_op_next_month)
-    DecisionGroup.Later -> stringResource(R.string.proposal_op_later)
-    is DecisionGroup.Due -> stringResource(R.string.proposal_op_due, group.date.format(dueDay))
-    DecisionGroup.Drop -> stringResource(R.string.proposal_op_drop)
-    DecisionGroup.Keep -> stringResource(R.string.proposal_op_keep)
-}
-
 /** Libellé court de la décision, dans la ligne. */
 @Composable
 private fun chipLabel(decision: WeekDecision): String = when (decision.op) {
@@ -594,10 +839,13 @@ private fun chipLabel(decision: WeekDecision): String = when (decision.op) {
     ProposalOp.KEEP -> stringResource(R.string.proposal_chip_keep)
 }
 
-/** Libellé d'une option du menu, en toutes lettres. */
+/** Libellé d'une option du menu : un jour porte sa charge (« mar. 17 · 30 min », « jeu. 19 · libre »). */
 @Composable
-private fun optionLabel(option: WeekDecision): String = when (option.op) {
-    ProposalOp.PLAN_DAY -> option.date?.format(dayChip).orEmpty()
+private fun optionLabel(option: WeekDecision, loads: List<DayLoad>): String = when (option.op) {
+    ProposalOp.PLAN_DAY -> option.date?.let { date ->
+        val day = loads.firstOrNull { it.date == date }
+        if (day == null) date.format(dayChip) else stringResource(R.string.proposal_day_option, date.format(dayChip), dayLoadText(day))
+    }.orEmpty()
     ProposalOp.THIS_WEEK -> stringResource(R.string.proposal_op_this_week)
     ProposalOp.NEXT_WEEK -> stringResource(R.string.proposal_op_next_week)
     ProposalOp.THIS_MONTH -> stringResource(R.string.proposal_op_this_month)
@@ -607,4 +855,3 @@ private fun optionLabel(option: WeekDecision): String = when (option.op) {
     ProposalOp.DROP -> stringResource(R.string.proposal_op_drop)
     ProposalOp.KEEP -> stringResource(R.string.proposal_op_keep)
 }
-

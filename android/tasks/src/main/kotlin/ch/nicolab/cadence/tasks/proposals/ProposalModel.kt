@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.proposals
 
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -45,7 +46,34 @@ data class ProposalDto(
     val facts: JsonObject? = null,
     @SerialName("period_start") val periodStart: String? = null,
     @SerialName("period_end") val periodEnd: String? = null,
+    /** Jours de la période, calculés à chaque lecture (week seulement) ; absent sur un serveur d'avant : la charge vient des faits. */
+    val days: List<ProposalDayDto>? = null,
 )
+
+/** Un jour de la période dans `GET /api/proposals/:uid` › `days` (`docs/47-proposals.md`, « Week sheet v2 »). */
+@Serializable
+data class ProposalDayDto(
+    val date: String = "",
+    @SerialName("load_minutes") val loadMinutes: Int = 0,
+    @SerialName("capacity_minutes") val capacityMinutes: Int? = null,
+    val items: List<DayItemDto> = emptyList(),
+    val events: List<DayEventDto> = emptyList(),
+    val work: DayWorkDto? = null,
+)
+
+@Serializable
+data class DayItemDto(@SerialName("task_uid") val taskUid: String = "", val name: String = "", val minutes: Int = 0)
+
+@Serializable
+data class DayEventDto(
+    val title: String = "",
+    val start: String? = null,
+    val end: String? = null,
+    @SerialName("all_day") val allDay: Boolean = false,
+)
+
+@Serializable
+data class DayWorkDto(val start: String = "", val end: String = "", val label: String? = null)
 
 @Serializable
 internal data class ProposalListDto(val proposals: List<ProposalDto> = emptyList())
@@ -83,13 +111,19 @@ data class ReviewItemDto(
 internal data class FactTaskDto(
     val uid: String = "",
     val name: String = "",
-    val project: String? = null,
-    val goal: String? = null,
-    val area: String? = null,
+    val due: String? = null,
+    val overdue: Boolean = false,
 )
 
 @Serializable
-internal data class FactsDto(val tasks: List<FactTaskDto> = emptyList())
+internal data class FactDayDto(val date: String = "", @SerialName("load_minutes") val loadMinutes: Int = 0)
+
+@Serializable
+internal data class FactsDto(
+    val today: String? = null,
+    val tasks: List<FactTaskDto> = emptyList(),
+    val days: List<FactDayDto> = emptyList(),
+)
 
 /** Décodage tolérant : les champs inconnus du serveur sont ignorés, une valeur absente prend son défaut. */
 internal val ProposalJson = Json {
@@ -137,49 +171,60 @@ enum class ProposalOp(val wire: String) {
 /** Un changement de la semaine, tel que le serveur l'a validé ; [date] n'existe que pour `plan_day` et `due`. */
 data class WeekChange(val taskUid: String, val op: ProposalOp, val date: LocalDate?, val reason: String)
 
-data class FactTask(val uid: String, val name: String, val project: String?, val goal: String?, val area: String?)
+/** Une tâche des faits : ce que la feuille montre ; [overdue] range la ligne dans « Échues ». */
+data class FactTask(val uid: String, val name: String, val due: LocalDate?, val overdue: Boolean)
+
+data class DayItem(val taskUid: String, val name: String, val minutes: Int)
+
+data class DayEvent(val title: String, val start: String?, val end: String?, val allDay: Boolean)
+
+data class DayWork(val start: String, val end: String, val label: String?)
+
+/**
+ * Un jour de la période : charge planifiée, capacité (null si inconnue) et ce qui le remplit. [occupied] et
+ * [fill] alimentent la bande des jours ; une capacité inconnue compte [Proposals.FALLBACK_CAPACITY_MINUTES].
+ */
+data class DayLoad(
+    val date: LocalDate,
+    val loadMinutes: Int,
+    val capacityMinutes: Int?,
+    val items: List<DayItem>,
+    val events: List<DayEvent>,
+    val work: DayWork?,
+) {
+    /** Journée prise : un événement sur toute la journée, ou une capacité nulle (un long événement couvre les heures de travail). */
+    val occupied: Boolean get() = capacityMinutes == 0 || events.any { it.allDay }
+
+    /** Part de la capacité déjà planifiée, de 0 à 1. */
+    val fill: Float
+        get() = if (occupied) 1f else (loadMinutes.toFloat() / (capacityMinutes ?: Proposals.FALLBACK_CAPACITY_MINUTES)).coerceIn(0f, 1f)
+
+    /** Journée pleine : la barre passe à la couleur d'alerte. */
+    val full: Boolean get() = occupied || (loadMinutes > 0 && loadMinutes >= (capacityMinutes ?: Proposals.FALLBACK_CAPACITY_MINUTES))
+}
 
 /** Ce qu'on fait d'une tâche de la semaine : une opération, et sa date pour `plan_day` et `due`. */
 data class WeekDecision(val op: ProposalOp, val date: LocalDate? = null)
 
-/**
- * Section de la feuille : les tâches dont la décision courante est [group]. L'ordre des sections est celui de
- * [Proposals.sections] : les jours d'abord, puis cette semaine, semaine prochaine, ce mois-ci, le mois prochain,
- * plus tard, les échéances, abandonner, garder.
- */
-data class DecisionSection(val group: DecisionGroup, val changes: List<WeekChange>)
+/** Sections de la feuille, dans l'ordre : en retard (quelle que soit la décision), journée choisie, le reste. */
+enum class SheetSection { OVERDUE, DAYS, LATER }
 
-sealed interface DecisionGroup {
-    data class Day(val date: LocalDate) : DecisionGroup
+data class SheetGroup(val section: SheetSection, val changes: List<WeekChange>)
 
-    data object ThisWeek : DecisionGroup
-
-    data object NextWeek : DecisionGroup
-
-    data object ThisMonth : DecisionGroup
-
-    data object NextMonth : DecisionGroup
-
-    data object Later : DecisionGroup
-
-    data class Due(val date: LocalDate) : DecisionGroup
-
-    data object Drop : DecisionGroup
-
-    data object Keep : DecisionGroup
-}
+/** Compte du pied de feuille : [changes] décisions qui changent une tâche, [kept] tâches gardées telles quelles, [returned] remarques. */
+data class WeekCounts(val changes: Int, val kept: Int, val returned: Int)
 
 data class ReviewJudgement(val taskUid: String, val choice: String, val reason: String)
 
 data class ApplyOutcome(val applied: Int, val failed: Int)
 
-/** Ce que « Envoyer » fait : décisions appliquées et tâches renvoyées avec une remarque. */
-data class SendCounts(val applied: Int, val returned: Int)
-
 /** Règles pures des propositions : décisions de la semaine, regroupement, corps des requêtes, lecture des réponses. */
 object Proposals {
     /** Longueur maximale d'une remarque envoyée à l'agent. */
     const val NOTE_MAX_LENGTH = 500
+
+    /** Capacité supposée d'une journée quand le serveur n'en donne pas : 8 h. */
+    const val FALLBACK_CAPACITY_MINUTES = 480
 
     /** Changements de l'agent. Une date manquante pour `plan_day` ou `due` ôte le changement. */
     fun weekChanges(answer: ProposalAnswerDto?): List<WeekChange> =
@@ -198,6 +243,18 @@ object Proposals {
     fun subtitleOf(answer: ProposalAnswerDto?): String? =
         (answer?.subtitle ?: answer?.summary)?.trim()?.takeIf { it.isNotEmpty() }
 
+    /**
+     * Une ligne par tâche des faits, dans leur ordre : le changement de l'agent, sinon « garder » (une tâche sans
+     * changement n'est pas une erreur). Un changement sur une tâche absente des faits est ignoré. Sans faits
+     * (réponse d'avant), les changements tels quels.
+     */
+    fun weekRows(tasks: Map<String, FactTask>, changes: List<WeekChange>): List<WeekChange> {
+        if (tasks.isEmpty()) return changes
+        val byTask = HashMap<String, WeekChange>()
+        changes.forEach { byTask.putIfAbsent(it.taskUid, it) }
+        return tasks.values.map { task -> byTask[task.uid] ?: WeekChange(task.uid, ProposalOp.KEEP, null, "") }
+    }
+
     /** Décision courante d'une tâche : celle que l'utilisateur a choisie, sinon celle de l'agent. */
     fun decision(change: WeekChange, chosen: Map<String, WeekDecision>): WeekDecision =
         chosen[change.taskUid] ?: suggested(change)
@@ -210,11 +267,28 @@ object Proposals {
 
     fun restore(chosen: Map<String, WeekDecision>, taskUid: String): Map<String, WeekDecision> = chosen - taskUid
 
-    /** Sections par décision courante, vides exclues. */
-    fun sections(changes: List<WeekChange>, chosen: Map<String, WeekDecision>): List<DecisionSection> {
-        val byGroup = changes.groupBy { groupOf(decision(it, chosen)) }
-        return byGroup.keys.sortedWith(GROUP_ORDER).map { DecisionSection(it, byGroup.getValue(it)) }
+    /**
+     * Sections de la feuille, vides exclues : « Échues » (tâche en retard, quelle que soit sa décision), « Par jour »
+     * (décision une journée), « Plus loin » (le reste). Dans une section, l'ordre des faits.
+     */
+    fun sections(rows: List<WeekChange>, chosen: Map<String, WeekDecision>, tasks: Map<String, FactTask>): List<SheetGroup> {
+        val grouped = rows.groupBy { sectionOf(it, chosen, tasks) }
+        return SheetSection.entries.mapNotNull { section -> grouped[section]?.let { SheetGroup(section, it) } }
     }
+
+    private fun sectionOf(change: WeekChange, chosen: Map<String, WeekDecision>, tasks: Map<String, FactTask>): SheetSection = when {
+        tasks[change.taskUid]?.overdue == true -> SheetSection.OVERDUE
+        decision(change, chosen).op == ProposalOp.PLAN_DAY -> SheetSection.DAYS
+        else -> SheetSection.LATER
+    }
+
+    /** Jours de retard d'une tâche en retard (1 = hier) ; null si elle n'est pas en retard ou si une date manque. */
+    fun lateness(task: FactTask, today: LocalDate?): Int? =
+        if (task.overdue && task.due != null && today != null) ChronoUnit.DAYS.between(task.due, today).toInt() else null
+
+    /** La période de la feuille : la décision d'une journée, sinon le premier jour de la période. */
+    fun focusDay(decision: WeekDecision, period: Pair<LocalDate, LocalDate>?): LocalDate? =
+        (decision.date.takeIf { decision.op == ProposalOp.PLAN_DAY }) ?: period?.first
 
     /** Options du menu d'une tâche : chaque jour de la période, puis cette semaine, la suivante, les mois, plus tard, garder et abandonner. */
     fun menuOptions(start: LocalDate?, end: LocalDate?): List<WeekDecision> {
@@ -244,22 +318,22 @@ object Proposals {
 
     fun hasNote(change: WeekChange, notes: Map<String, String>): Boolean = noteOf(notes[change.taskUid]) != null
 
-    /**
-     * Ce que « Envoyer » fait : [SendCounts.applied] décisions appliquées (ni gardées, ni remarquées) et
-     * [SendCounts.returned] tâches renvoyées à l'agent avec leur remarque.
-     */
-    fun sendCounts(changes: List<WeekChange>, chosen: Map<String, WeekDecision>, notes: Map<String, String>): SendCounts =
-        SendCounts(
-            applied = changes.count { !hasNote(it, notes) && decision(it, chosen).op != ProposalOp.KEEP },
-            returned = changes.count { hasNote(it, notes) },
+    /** Compte du pied : les lignes sans remarque (changements et gardées), puis les remarques. */
+    fun counts(rows: List<WeekChange>, chosen: Map<String, WeekDecision>, notes: Map<String, String>): WeekCounts {
+        val unnoted = rows.filterNot { hasNote(it, notes) }
+        return WeekCounts(
+            changes = unnoted.count { decision(it, chosen).op != ProposalOp.KEEP },
+            kept = unnoted.count { decision(it, chosen).op == ProposalOp.KEEP },
+            returned = rows.size - unnoted.size,
         )
+    }
 
     /** Choix préparé d'une question : taper un autre choix le remplace, retaper le même le retire. Rien n'est envoyé. */
     fun chooseAnswer(answers: Map<String, String>, questionId: String, choice: String): Map<String, String> =
         if (answers[questionId] == choice) answers - questionId else answers + (questionId to choice)
 
     /** « Envoyer » quand une question a une réponse ou qu'une ligne a une remarque ; sinon « Appliquer ». */
-    fun needsSend(counts: SendCounts, answers: Map<String, String>): Boolean = counts.returned > 0 || answers.isNotEmpty()
+    fun needsSend(counts: WeekCounts, answers: Map<String, String>): Boolean = counts.returned > 0 || answers.isNotEmpty()
 
     /**
      * Corps de `POST …/send` : les décisions sans remarque et sans `keep`, puis les remarques de la réponse
@@ -356,12 +430,37 @@ object Proposals {
     /** Réponse envoyée quand on tape un choix d'une question : la question suivie du choix. */
     fun questionReply(question: QuestionDto, choice: String): String = "${question.text.trim()} ${choice.trim()}"
 
-    fun factTasks(facts: JsonObject?): Map<String, FactTask> {
-        if (facts == null) return emptyMap()
-        val parsed = runCatching { ProposalJson.decodeFromJsonElement(FactsDto.serializer(), facts) }.getOrNull() ?: return emptyMap()
-        return parsed.tasks.filter { it.uid.isNotBlank() }
-            .associate { it.uid to FactTask(it.uid, it.name, it.project, it.goal?.takeIf(String::isNotBlank), it.area?.takeIf(String::isNotBlank)) }
+    fun factTasks(facts: JsonObject?): Map<String, FactTask> =
+        parseFacts(facts)?.tasks.orEmpty().filter { it.uid.isNotBlank() }
+            .associate { it.uid to FactTask(it.uid, it.name, dateOrNull(it.due), it.overdue) }
+
+    fun factToday(facts: JsonObject?): LocalDate? = dateOrNull(parseFacts(facts)?.today)
+
+    /** Les jours de la période : `days` du serveur si présent, sinon la seule charge des faits. */
+    fun dayLoads(days: List<ProposalDayDto>?, facts: JsonObject?): List<DayLoad> {
+        val loads = if (days != null) {
+            days.mapNotNull { day ->
+                dateOrNull(day.date)?.let { date ->
+                    DayLoad(
+                        date = date,
+                        loadMinutes = day.loadMinutes,
+                        capacityMinutes = day.capacityMinutes,
+                        items = day.items.map { DayItem(it.taskUid, it.name, it.minutes) },
+                        events = day.events.map { DayEvent(it.title, it.start, it.end, it.allDay) },
+                        work = day.work?.let { DayWork(it.start, it.end, it.label?.takeIf(String::isNotBlank)) },
+                    )
+                }
+            }
+        } else {
+            parseFacts(facts)?.days.orEmpty().mapNotNull { day ->
+                dateOrNull(day.date)?.let { DayLoad(it, day.loadMinutes, null, emptyList(), emptyList(), null) }
+            }
+        }
+        return loads.sortedBy { it.date }
     }
+
+    private fun parseFacts(facts: JsonObject?): FactsDto? =
+        facts?.let { runCatching { ProposalJson.decodeFromJsonElement(FactsDto.serializer(), it) }.getOrNull() }
 
     /** Lit `{ results: [{ state }] }` de la réponse d'un apply : combien de changements sont passés. */
     fun applyOutcome(body: JsonObject): ApplyOutcome {
@@ -372,40 +471,7 @@ object Proposals {
 
     private fun suggested(change: WeekChange) = WeekDecision(change.op, change.date)
 
-    private fun groupOf(decision: WeekDecision): DecisionGroup = when (decision.op) {
-        ProposalOp.PLAN_DAY -> DecisionGroup.Day(requireNotNull(decision.date))
-        ProposalOp.THIS_WEEK -> DecisionGroup.ThisWeek
-        ProposalOp.NEXT_WEEK -> DecisionGroup.NextWeek
-        ProposalOp.THIS_MONTH -> DecisionGroup.ThisMonth
-        ProposalOp.NEXT_MONTH -> DecisionGroup.NextMonth
-        ProposalOp.LATER -> DecisionGroup.Later
-        ProposalOp.DUE -> DecisionGroup.Due(requireNotNull(decision.date))
-        ProposalOp.DROP -> DecisionGroup.Drop
-        ProposalOp.KEEP -> DecisionGroup.Keep
-    }
-
-    /** Jours, puis cette semaine, semaine prochaine, ce mois-ci, le mois prochain, plus tard, échéances, abandonner, garder ; dans une même catégorie, par date. */
-    private val GROUP_ORDER: Comparator<DecisionGroup> = compareBy({ categoryOf(it) }, { dateOf(it) })
-
-    private fun categoryOf(group: DecisionGroup): Int = when (group) {
-        is DecisionGroup.Day -> 0
-        DecisionGroup.ThisWeek -> 1
-        DecisionGroup.NextWeek -> 2
-        DecisionGroup.ThisMonth -> 3
-        DecisionGroup.NextMonth -> 4
-        DecisionGroup.Later -> 5
-        is DecisionGroup.Due -> 6
-        DecisionGroup.Drop -> 7
-        DecisionGroup.Keep -> 8
-    }
-
-    private fun dateOf(group: DecisionGroup): LocalDate? = when (group) {
-        is DecisionGroup.Day -> group.date
-        is DecisionGroup.Due -> group.date
-        else -> null
-    }
-
     private const val MAX_MENU_DAYS = 14
 
-    private fun dateOrNull(value: String): LocalDate? = runCatching { LocalDate.parse(value.take(10)) }.getOrNull()
+    private fun dateOrNull(value: String?): LocalDate? = value?.let { runCatching { LocalDate.parse(it.take(10)) }.getOrNull() }
 }

@@ -43,7 +43,34 @@
     <string name="proposal_note">Remarque</string>
     <string name="proposal_note_hint">Ce qu\'il faut revoir</string>
     <string name="proposal_to_review">À revoir</string>
-    <string name="proposal_send_counts">%1$d appliquées · %2$d renvoyées</string>
+    <string name="proposal_section_overdue">Échues</string>
+    <string name="proposal_section_days">Par jour</string>
+    <string name="proposal_section_later">Plus loin</string>
+    <string name="proposal_late_yesterday">hier</string>
+    <string name="proposal_late_days">%1$d j</string>
+    <string name="proposal_counts">%1$s · %2$s</string>
+    <plurals name="proposal_count_changes">
+        <item quantity="one">%d changement</item>
+        <item quantity="other">%d changements</item>
+    </plurals>
+    <plurals name="proposal_count_kept">
+        <item quantity="one">%d reste tel quel</item>
+        <item quantity="other">%d restent tels quels</item>
+    </plurals>
+    <string name="proposal_busy">Occupé</string>
+    <string name="proposal_busy_lower">occupé</string>
+    <string name="proposal_free">libre</string>
+    <string name="proposal_day_option">%1$s · %2$s</string>
+    <string name="proposal_minutes">%1$d min</string>
+    <string name="proposal_hours">%1$d h</string>
+    <string name="proposal_hours_minutes">%1$d h %2$02d</string>
+    <string name="proposal_day_nothing">Rien de prévu</string>
+    <string name="proposal_day_planned">Déjà prévu&#8239;: %1$s</string>
+    <string name="proposal_day_planned_of">Déjà prévu&#8239;: %1$s sur %2$s</string>
+    <string name="proposal_day_work">Horaires %1$s–%2$s</string>
+    <string name="proposal_day_work_label">%1$s · %2$s–%3$s</string>
+    <string name="proposal_nothing_on_agenda">Rien à l\'agenda</string>
+    <string name="proposal_all_day">Toute la journée</string>
     <plurals name="proposal_returned">
         <item quantity="one">%1$d tâche renvoyée</item>
         <item quantity="other">%1$d tâches renvoyées</item>

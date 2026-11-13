@@ -1,3 +1,10 @@
+## [1.36.0] — 13 novembre 2026
+
+- « Ta semaine » : chaque tâche de la semaine apparaît, une tâche sans changement reste « Garder tel quel » ; trois sections, Échues (avec son retard : « hier », « 5 j »), Par jour et Plus loin.
+- Une bande des jours sous le titre montre la charge de chaque jour (« 3 h 30 », « Occupé », « — ») et la journée choisie.
+- Un toucher sur la décision d'une tâche ouvre, sous sa ligne, le jour choisi (tâches prévues, agenda, horaires) puis les choix, chaque jour avec sa charge.
+- Le pied compte les changements et les tâches qui restent telles quelles.
+
 ## [1.35.1] — 13 novembre 2026
 
 - Week-end : la suite d'un créneau occupé (« Ensuite : … ») s'affiche ; version reconstruite depuis le code publié (la 1.35.0 en ligne venait d'un état intermédiaire).
