@@ -5326,7 +5326,21 @@
     "planned": "Планирана {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} мин",
+      "hours": "{{hours}} ч",
+      "hoursMinutes": "{{hours}} ч {{minutes}}",
+      "free": "свободно",
+      "busy": "Зает"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} планирано",
+      "noItems": "Нищо не е планирано",
+      "noEvents": "Нищо в календара",
+      "allDay": "Цял ден",
+      "workHours": "Работно време",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Днес",
       "planOn": "Планирай за ден",
       "keep": "Остави както е",
@@ -5357,6 +5371,14 @@
     "retry": "Опитай отново",
     "startError": "Заявката не можа да се стартира.",
     "sheet": {
+      "changesCaption_one": "{{count}} промяна · {{kept}} остават непроменени",
+      "changesCaption_other": "{{count}} промени · {{kept}} остават непроменени",
+      "lateYesterday": "вчера",
+      "lateDays": "{{count}} д.",
+      "sectionOverdue": "Просрочени",
+      "sectionDays": "По ден",
+      "sectionLater": "По-късно",
+      "days": "Дните от седмицата",
       "preparing": "Седмицата ти се подготвя…",
       "failed": "Седмицата ти не можа да се подготви.",
       "title": "Твоята седмица",

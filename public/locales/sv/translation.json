@@ -5326,7 +5326,21 @@
     "planned": "Planerad {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} t",
+      "hoursMinutes": "{{hours}} t {{minutes}}",
+      "free": "ledig",
+      "busy": "Upptaget"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} planerat",
+      "noItems": "Inget planerat",
+      "noEvents": "Inget i kalendern",
+      "allDay": "Heldag",
+      "workHours": "Arbetstid",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "I dag",
       "planOn": "Planera en dag",
       "keep": "Behåll som det är",
@@ -5357,6 +5371,14 @@
     "retry": "Försök igen",
     "startError": "Begäran kunde inte startas.",
     "sheet": {
+      "changesCaption_one": "{{count}} ändring · {{kept}} förblir oförändrade",
+      "changesCaption_other": "{{count}} ändringar · {{kept}} förblir oförändrade",
+      "lateYesterday": "igår",
+      "lateDays": "{{count}} d",
+      "sectionOverdue": "Förfallna",
+      "sectionDays": "Per dag",
+      "sectionLater": "Senare",
+      "days": "Veckans dagar",
       "preparing": "Din vecka förbereds…",
       "failed": "Din vecka kunde inte förberedas.",
       "title": "Din vecka",

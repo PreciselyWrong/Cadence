@@ -5418,7 +5418,21 @@
     "planned": "Načrtovano {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} h",
+      "hoursMinutes": "{{hours}} h {{minutes}}",
+      "free": "prosto",
+      "busy": "Zasedeno"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} načrtovano",
+      "noItems": "Nič načrtovanega",
+      "noEvents": "Nič v koledarju",
+      "allDay": "Ves dan",
+      "workHours": "Delovni čas",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Danes",
       "planOn": "Načrtuj na dan",
       "keep": "Pusti, kot je",
@@ -5449,6 +5463,14 @@
     "retry": "Poskusi znova",
     "startError": "Zahteve ni bilo mogoče začeti.",
     "sheet": {
+      "changesCaption_one": "{{count}} sprememba · {{kept}} ostane nespremenjenih",
+      "changesCaption_other": "{{count}} sprememb · {{kept}} ostane nespremenjenih",
+      "lateYesterday": "včeraj",
+      "lateDays": "{{count}} d",
+      "sectionOverdue": "Zapadle",
+      "sectionDays": "Po dnevu",
+      "sectionLater": "Kasneje",
+      "days": "Dnevi v tednu",
       "preparing": "Tvoj teden se pripravlja…",
       "failed": "Tvojega tedna ni bilo mogoče pripraviti.",
       "title": "Tvoj teden",

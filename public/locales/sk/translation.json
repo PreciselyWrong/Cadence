@@ -5535,7 +5535,21 @@
     "planned": "Naplánované {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} h",
+      "hoursMinutes": "{{hours}} h {{minutes}}",
+      "free": "voľno",
+      "busy": "Obsadené"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} naplánované",
+      "noItems": "Nič naplánované",
+      "noEvents": "Nič v kalendári",
+      "allDay": "Celý deň",
+      "workHours": "Pracovný čas",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Dnes",
       "planOn": "Naplánovať na deň",
       "keep": "Nechať tak",
@@ -5566,6 +5580,14 @@
     "retry": "Skúsiť znova",
     "startError": "Žiadosť sa nepodarilo spustiť.",
     "sheet": {
+      "changesCaption_one": "{{count}} zmena · {{kept}} zostávajú bez zmeny",
+      "changesCaption_other": "{{count}} zmien · {{kept}} zostávajú bez zmeny",
+      "lateYesterday": "včera",
+      "lateDays": "{{count}} d",
+      "sectionOverdue": "Po termíne",
+      "sectionDays": "Podľa dňa",
+      "sectionLater": "Neskôr",
+      "days": "Dni v týždni",
       "preparing": "Tvoj týždeň sa pripravuje…",
       "failed": "Tvoj týždeň sa nepodarilo pripraviť.",
       "title": "Tvoj týždeň",

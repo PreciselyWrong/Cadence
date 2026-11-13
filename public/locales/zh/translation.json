@@ -5326,7 +5326,21 @@
     "planned": "计划于{{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} 分钟",
+      "hours": "{{hours}} 小时",
+      "hoursMinutes": "{{hours}} 小时 {{minutes}}",
+      "free": "空闲",
+      "busy": "忙碌"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · 已安排 {{load}}",
+      "noItems": "没有安排",
+      "noEvents": "日历上没有安排",
+      "allDay": "全天",
+      "workHours": "工作时间",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "今天",
       "planOn": "安排到某天",
       "keep": "保持不变",
@@ -5357,6 +5371,14 @@
     "retry": "重试",
     "startError": "无法开始请求。",
     "sheet": {
+      "changesCaption_one": "{{count}} 项更改 · {{kept}} 项保持不变",
+      "changesCaption_other": "{{count}} 项更改 · {{kept}} 项保持不变",
+      "lateYesterday": "昨天",
+      "lateDays": "{{count}} 天",
+      "sectionOverdue": "已逾期",
+      "sectionDays": "按天",
+      "sectionLater": "之后",
+      "days": "本周各天",
       "preparing": "正在准备你的一周…",
       "failed": "你的一周无法准备。",
       "title": "你的一周",

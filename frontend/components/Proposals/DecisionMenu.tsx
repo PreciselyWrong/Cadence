@@ -1,24 +1,30 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckIcon } from '@heroicons/react/24/outline';
 import Button from '../Shared/ui/Button';
 import { INLINE_FIELD_CLASS } from '../Shared/ui/controlSizes';
 import { Decision, sameDecision } from './weekDecisions';
 
-const MENU_WIDTH = 288;
-const GAP = 6;
-
 export interface DayChoice {
     date: string;
+    // The short day and its load, « mar. 17 · 30 min ».
     label: string;
     long: string;
 }
 
+// What is already planned on the selected day (from the week's `days`).
+export interface DayDetailView {
+    heading: string;
+    items: { id: string; name: string; duration: string }[];
+    events: { id: string; title: string; time: string }[];
+    work: string | null;
+}
+
 interface DecisionMenuProps {
+    // The row's decision chip: the picker stays with its row.
     anchor: HTMLElement;
     days: DayChoice[];
     current: Decision;
+    detail: DayDetailView | null;
     // The window « Autre date… » accepts (the server's: today to the end of
     // the period plus 30 days).
     minDate?: string;
@@ -28,25 +34,29 @@ interface DecisionMenuProps {
 }
 
 const OPTION = '[data-decision-option]:not([disabled])';
+const optionsOf = (root: HTMLElement | null) =>
+    Array.from(root?.querySelectorAll<HTMLElement>(OPTION) ?? []);
+const PILL =
+    'inline-flex h-8 items-center rounded-full px-3 text-label outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-primary max-sm:min-h-[44px]';
+const PILL_ON = 'bg-primary-container text-primary-on-container';
+const PILL_OFF =
+    'bg-surface-card text-surface-on ring-1 ring-inset ring-outline-variant hover:bg-surface-high';
 
-// The choices of one row: a day of the period, the week, later, as it is,
-// dropped, or another day to plan it on (as Android). Arrows move, digits pick a day, Escape closes
-// back to the row. Drawn in a portal so the scrolling sheet never clips it.
+// The inline day picker under a row: what is planned on the selected day,
+// then the days of the period with their load, then the horizons. Arrows
+// move, digits pick a day, Escape closes back to the row.
 const DecisionMenu: React.FC<DecisionMenuProps> = ({
     anchor,
     days,
     current,
+    detail,
     minDate,
     maxDate,
     onPick,
     onClose,
 }) => {
     const { t } = useTranslation();
-    const menuRef = useRef<HTMLDivElement>(null);
-    const [position, setPosition] = useState<{
-        top: number;
-        left: number;
-    } | null>(null);
+    const pickerRef = useRef<HTMLDivElement>(null);
     // A date off the day chips opens with the date field shown.
     const [otherDate, setOtherDate] = useState<string | null>(
         current.op === 'plan_day' &&
@@ -56,61 +66,32 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({
             : null
     );
 
-    const place = useCallback(() => {
-        const rect = anchor.getBoundingClientRect();
-        const height = menuRef.current?.offsetHeight ?? 0;
-        const below = rect.bottom + GAP;
-        const top =
-            below + height > window.innerHeight && rect.top - GAP - height > 8
-                ? rect.top - GAP - height
-                : below;
-        const left = Math.min(
-            Math.max(8, rect.right - MENU_WIDTH),
-            window.innerWidth - MENU_WIDTH - 8
-        );
-        setPosition({ top, left });
-    }, [anchor]);
-
-    const options = () =>
-        Array.from(
-            menuRef.current?.querySelectorAll<HTMLElement>(OPTION) ?? []
-        );
+    // Opens on the chosen option, in view.
+    useEffect(() => {
+        const picker = pickerRef.current;
+        if (typeof picker?.scrollIntoView === 'function') {
+            picker.scrollIntoView({ block: 'nearest' });
+        }
+        const list = optionsOf(picker);
+        (
+            list.find((el) => el.getAttribute('aria-checked') === 'true') ??
+            list[0]
+        )?.focus({ preventScroll: true });
+    }, []);
 
     useEffect(() => {
-        place();
-        const frame = requestAnimationFrame(() => {
-            place();
-            const list = options();
-            (
-                list.find((el) => el.getAttribute('aria-checked') === 'true') ??
-                list[0]
-            )?.focus();
-        });
         const onPointerDown = (event: PointerEvent) => {
             const target = event.target as Node;
             if (
-                !menuRef.current?.contains(target) &&
-                !anchor.contains(target)
+                !pickerRef.current?.contains(target) &&
+                !anchor.closest('li')?.contains(target)
             ) {
                 onClose();
             }
         };
         document.addEventListener('pointerdown', onPointerDown);
-        window.addEventListener('resize', place);
-        window.addEventListener('scroll', place, true);
-        return () => {
-            cancelAnimationFrame(frame);
-            document.removeEventListener('pointerdown', onPointerDown);
-            window.removeEventListener('resize', place);
-            window.removeEventListener('scroll', place, true);
-        };
-    }, [anchor, place, onClose]);
-
-    // The date field grows the menu: place it again.
-    const dateOpen = otherDate !== null;
-    useEffect(() => {
-        if (dateOpen) place();
-    }, [dateOpen, place]);
+        return () => document.removeEventListener('pointerdown', onPointerDown);
+    }, [anchor, onClose]);
 
     const pick = (decision: Decision) => {
         onPick(decision);
@@ -121,7 +102,7 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({
         const inField =
             event.target instanceof HTMLInputElement &&
             event.target.type === 'date';
-        const list = options();
+        const list = optionsOf(pickerRef.current);
         const index = list.indexOf(document.activeElement as HTMLElement);
         const focusAt = (i: number) =>
             list[(i + list.length) % list.length]?.focus();
@@ -182,7 +163,7 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({
 
     const checked = (decision: Decision) => sameDecision(current, decision);
 
-    const rows: { decision: Decision; label: string }[] = [
+    const horizons: { decision: Decision; label: string }[] = [
         {
             decision: { op: 'this_week' },
             label: t('proposals.ops.thisWeek', 'Cette semaine'),
@@ -213,26 +194,73 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({
         },
     ];
 
-    return createPortal(
+    return (
         <div
-            ref={menuRef}
-            role="menu"
-            data-decision-menu=""
-            aria-label={t('proposals.decide.menu', 'Choisir')}
-            onKeyDown={onKeyDown}
-            style={{
-                top: position?.top ?? -9999,
-                left: position?.left ?? -9999,
-                width: MENU_WIDTH,
-            }}
-            className="fixed z-[70] rounded-card bg-surface p-2 shadow-lg ring-1 ring-outline-variant/70 dark:bg-surface-card"
+            ref={pickerRef}
+            data-decision-picker=""
+            className="w-full space-y-3 rounded-card bg-surface-low p-3"
         >
-            {days.length > 0 && (
-                <>
-                    <div className="px-1.5 pb-1.5 pt-0.5 text-xs font-medium text-surface-on-variant">
-                        {t('proposals.decide.planOn', 'Planifier un jour')}
-                    </div>
-                    <div className="grid grid-cols-4 gap-1 px-0.5 pb-1">
+            {detail && (
+                <div data-day-detail="" className="space-y-1.5 text-body-m">
+                    <p className="font-medium text-surface-on">
+                        {detail.heading}
+                    </p>
+                    {detail.items.length === 0 ? (
+                        <p className="text-surface-on-variant">
+                            {t('proposals.decide.noItems', 'Rien de prévu')}
+                        </p>
+                    ) : (
+                        <ul className="space-y-1">
+                            {detail.items.map((item) => (
+                                <li
+                                    key={item.id}
+                                    className="flex items-baseline justify-between gap-3 text-surface-on"
+                                >
+                                    <span className="min-w-0 break-words">
+                                        {item.name}
+                                    </span>
+                                    <span className="shrink-0 text-surface-on-variant">
+                                        {item.duration}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {detail.events.length === 0 ? (
+                        <p className="text-surface-on-variant">
+                            {t('proposals.decide.noEvents', 'Rien à l’agenda')}
+                        </p>
+                    ) : (
+                        <ul className="space-y-1">
+                            {detail.events.map((event) => (
+                                <li
+                                    key={event.id}
+                                    className="flex items-baseline justify-between gap-3 text-surface-on"
+                                >
+                                    <span className="min-w-0 break-words">
+                                        {event.title}
+                                    </span>
+                                    <span className="shrink-0 text-surface-on-variant">
+                                        {event.time}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {detail.work && (
+                        <p className="text-surface-on-variant">{detail.work}</p>
+                    )}
+                </div>
+            )}
+            <div
+                role="menu"
+                data-decision-menu=""
+                aria-label={t('proposals.decide.menu', 'Choisir')}
+                onKeyDown={onKeyDown}
+                className="space-y-2"
+            >
+                {days.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
                         {days.map((day, index) => {
                             const decision: Decision = {
                                 op: 'plan_day',
@@ -253,88 +281,76 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({
                                     }
                                     data-decision-option=""
                                     onClick={() => pick(decision)}
-                                    className={`h-8 truncate rounded-chip px-1.5 text-label-m outline-none transition-colors duration-100 focus-visible:ring-2 focus-visible:ring-primary max-sm:min-h-[44px] ${
-                                        on
-                                            ? 'bg-primary text-primary-on'
-                                            : 'bg-surface-high text-surface-on hover:bg-surface-highest'
-                                    }`}
+                                    className={`${PILL} ${on ? PILL_ON : PILL_OFF}`}
                                 >
                                     {day.label}
                                 </button>
                             );
                         })}
                     </div>
-                    <div
-                        role="separator"
-                        className="my-1 h-px bg-outline-variant/60"
-                    />
-                </>
-            )}
-            {rows.map(({ decision, label }) => {
-                const on = checked(decision);
-                return (
-                    <button
-                        key={decision.op}
-                        type="button"
-                        role="menuitemradio"
-                        aria-checked={on}
-                        data-decision-option=""
-                        onClick={() => pick(decision)}
-                        className="flex min-h-[32px] w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-body-m text-surface-on outline-none transition-colors duration-100 hover:bg-surface-high focus-visible:bg-surface-high max-sm:min-h-[44px]"
-                    >
-                        <span className="flex-1 truncate">{label}</span>
-                        {on && (
-                            <CheckIcon
-                                aria-hidden="true"
-                                className="h-4 w-4 shrink-0 text-primary"
+                )}
+                <div className="flex flex-wrap gap-1.5">
+                    {horizons.map(({ decision, label }) => {
+                        const on = checked(decision);
+                        return (
+                            <button
+                                key={decision.op}
+                                type="button"
+                                role="menuitemradio"
+                                aria-checked={on}
+                                data-decision-option=""
+                                onClick={() => pick(decision)}
+                                className={`${PILL} ${on ? PILL_ON : PILL_OFF}`}
+                            >
+                                {label}
+                            </button>
+                        );
+                    })}
+                    {otherDate === null ? (
+                        <button
+                            type="button"
+                            role="menuitem"
+                            data-decision-option=""
+                            onClick={() => setOtherDate('')}
+                            className={`${PILL} ${PILL_OFF}`}
+                        >
+                            {t('proposals.decide.otherDate', 'Autre date…')}
+                        </button>
+                    ) : (
+                        <div className="flex w-full items-center gap-2">
+                            <input
+                                type="date"
+                                autoFocus
+                                data-decision-option=""
+                                aria-label={t(
+                                    'proposals.decide.otherDate',
+                                    'Autre date…'
+                                )}
+                                min={minDate}
+                                max={maxDate}
+                                value={otherDate}
+                                onChange={(event) =>
+                                    setOtherDate(event.target.value)
+                                }
+                                className={`${INLINE_FIELD_CLASS} min-w-0 flex-1`}
                             />
-                        )}
-                    </button>
-                );
-            })}
-            <div role="separator" className="my-1 h-px bg-outline-variant/60" />
-            {otherDate === null ? (
-                <button
-                    type="button"
-                    role="menuitem"
-                    data-decision-option=""
-                    onClick={() => setOtherDate('')}
-                    className="flex min-h-[32px] w-full items-center rounded-lg px-2.5 text-left text-body-m text-surface-on outline-none transition-colors duration-100 hover:bg-surface-high focus-visible:bg-surface-high max-sm:min-h-[44px]"
-                >
-                    {t('proposals.decide.otherDate', 'Autre date…')}
-                </button>
-            ) : (
-                <div className="flex items-center gap-2 px-1 py-1">
-                    <input
-                        type="date"
-                        autoFocus
-                        data-decision-option=""
-                        aria-label={t(
-                            'proposals.decide.otherDate',
-                            'Autre date…'
-                        )}
-                        min={minDate}
-                        max={maxDate}
-                        value={otherDate}
-                        onChange={(event) => setOtherDate(event.target.value)}
-                        className={`${INLINE_FIELD_CLASS} min-w-0 flex-1`}
-                    />
-                    <Button
-                        variant="primary"
-                        size="md"
-                        data-decision-option=""
-                        disabled={!otherDate}
-                        onClick={() =>
-                            otherDate &&
-                            pick({ op: 'plan_day', date: otherDate })
-                        }
-                    >
-                        {t('proposals.decide.ok', 'OK')}
-                    </Button>
+                            <Button
+                                variant="primary"
+                                size="md"
+                                data-decision-option=""
+                                disabled={!otherDate}
+                                onClick={() =>
+                                    otherDate &&
+                                    pick({ op: 'plan_day', date: otherDate })
+                                }
+                            >
+                                {t('proposals.decide.ok', 'OK')}
+                            </Button>
+                        </div>
+                    )}
                 </div>
-            )}
-        </div>,
-        document.body
+            </div>
+        </div>
     );
 };
 

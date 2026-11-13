@@ -10,13 +10,6 @@ import {
 import '@testing-library/jest-dom';
 import ProposalSheet from '../ProposalSheet';
 import {
-    Decision,
-    decisionsToApply,
-    groupByDecision,
-    notesToSend,
-    plannableDays,
-} from '../weekDecisions';
-import {
     applyProposal,
     dismissProposal,
     getProposal,
@@ -24,7 +17,7 @@ import {
     sendProposal,
     ProposalDetail,
     WeekAnswer,
-    WeekChange,
+    WeekDay,
 } from '../../../utils/proposalsService';
 
 jest.mock('../../../utils/proposalsService', () => ({
@@ -140,112 +133,6 @@ const appliedOutcome = {
     results: [{ task_uid: 't1', state: 'applied' }],
 };
 
-describe('week decisions', () => {
-    const changes: WeekChange[] = [
-        { task_uid: 'a', op: 'drop', reason: '' },
-        { task_uid: 'b', op: 'plan_day', date: '2026-11-18', reason: '' },
-        { task_uid: 'c', op: 'due', date: '2026-11-17', reason: '' },
-        { task_uid: 'd', op: 'this_week', reason: '' },
-        { task_uid: 'e', op: 'later', reason: '' },
-        { task_uid: 'f', op: 'plan_day', date: '2026-11-18', reason: '' },
-    ];
-
-    it('groups by the current decision: days, week, later, dropped, kept', () => {
-        const none = new Map<string, Decision>();
-        expect(groupByDecision(changes, none).map((g) => g.key.id)).toEqual([
-            'day:2026-11-17',
-            'day:2026-11-18',
-            'this_week',
-            'later',
-            'drop',
-        ]);
-        const changed = new Map<string, Decision>([
-            ['a', { op: 'plan_day', date: '2026-11-17' }],
-            ['e', { op: 'keep' }],
-        ]);
-        const groups = groupByDecision(changes, changed);
-        expect(groups.map((g) => g.key.id)).toEqual([
-            'day:2026-11-17',
-            'day:2026-11-18',
-            'this_week',
-            'keep',
-        ]);
-        expect(
-            groupByDecision(changes, new Map([['d', { op: 'keep' }]])).map(
-                (g) => g.key.id
-            )
-        ).toEqual([
-            'day:2026-11-17',
-            'day:2026-11-18',
-            'later',
-            'drop',
-            'keep',
-        ]);
-        expect(groups[0].rows.map((row) => row.task_uid)).toEqual(['a', 'c']);
-    });
-
-    it('applies every decision but the kept ones, dates only when dated', () => {
-        const changed = new Map<string, Decision>([
-            ['a', { op: 'keep' }],
-            ['d', { op: 'due', date: '2026-11-30' }],
-        ]);
-        expect(decisionsToApply(changes, changed)).toEqual([
-            { task_uid: 'b', op: 'plan_day', date: '2026-11-18' },
-            { task_uid: 'c', op: 'due', date: '2026-11-17' },
-            { task_uid: 'd', op: 'due', date: '2026-11-30' },
-            { task_uid: 'e', op: 'later' },
-            { task_uid: 'f', op: 'plan_day', date: '2026-11-18' },
-        ]);
-    });
-
-    it('groups a week, month or next-week choice apart and sends it without a date', () => {
-        const committed = new Map<string, Decision>([
-            ['a', { op: 'next_week' }],
-            ['d', { op: 'this_month' }],
-            ['e', { op: 'next_month' }],
-        ]);
-        expect(
-            groupByDecision(changes, committed).map((g) => g.key.id)
-        ).toEqual([
-            'day:2026-11-17',
-            'day:2026-11-18',
-            'next_week',
-            'this_month',
-            'next_month',
-        ]);
-        expect(decisionsToApply([changes[0]], committed)).toStrictEqual([
-            { task_uid: 'a', op: 'next_week' },
-        ]);
-        expect(
-            decisionsToApply([changes[3], changes[4]], committed)
-        ).toStrictEqual([
-            { task_uid: 'd', op: 'this_month' },
-            { task_uid: 'e', op: 'next_month' },
-        ]);
-    });
-
-    it('takes the remarks that are not blank, in the agent order', () => {
-        const notes = new Map([
-            ['f', '  Pas ce jour  '],
-            ['a', '   '],
-            ['b', 'Plutôt le lundi'],
-        ]);
-        expect(notesToSend(changes, notes)).toEqual([
-            { task_uid: 'b', text: 'Plutôt le lundi' },
-            { task_uid: 'f', text: 'Pas ce jour' },
-        ]);
-    });
-
-    it('offers the days of the period from today on', () => {
-        expect(
-            plannableDays(
-                { start: '2026-11-14', end: '2026-11-18' },
-                '2026-11-16'
-            )
-        ).toEqual(['2026-11-16', '2026-11-17', '2026-11-18']);
-    });
-});
-
 describe('ProposalSheet', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -335,7 +222,7 @@ describe('ProposalSheet', () => {
         await screen.findByText('Valider le devis');
 
         pick('Valider le devis', 'Semaine prochaine');
-        expect(groupOf('Valider le devis')).toEqual('Semaine prochaine');
+        expect(groupOf('Valider le devis')).toEqual('Plus loin');
         pick('Appeler le plombier', 'Le mois prochain');
         fireEvent.click(screen.getByRole('button', { name: 'Appliquer (3)' }));
 
@@ -656,5 +543,212 @@ describe('ProposalSheet', () => {
         expect(
             screen.getByRole('button', { name: 'Appliquer (3)' })
         ).toBeInTheDocument();
+    });
+});
+
+describe('week sheet: sections, day strip and picker', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    const weekDay = (date: string, extra: Partial<WeekDay> = {}): WeekDay => ({
+        date,
+        load_minutes: 0,
+        capacity_minutes: 480,
+        items: [],
+        events: [],
+        work: null,
+        ...extra,
+    });
+
+    const cell = (date: string) =>
+        document.querySelector<HTMLElement>(`[data-day-cell="${date}"]`)!;
+
+    it('keeps a task without a change visible on Garder tel quel, outside the count', async () => {
+        const base = detail();
+        (getProposal as jest.Mock).mockResolvedValue(
+            detail({
+                facts: {
+                    ...(base.facts as Record<string, unknown>),
+                    tasks: [
+                        ...(base.facts as { tasks: unknown[] }).tasks,
+                        { uid: 't4', name: 'Relire le cadre' },
+                    ],
+                },
+            })
+        );
+        renderSheet();
+        const row = await screen.findByText('Relire le cadre');
+        expect(
+            within(row.closest('li') as HTMLElement).getByRole('button', {
+                name: /Tel quel, Relire le cadre/,
+            })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('3 changements · 1 restent tels quels')
+        ).toBeInTheDocument();
+    });
+
+    it('lists overdue tasks first, with how late they are', async () => {
+        const base = detail();
+        const facts = base.facts as {
+            tasks: {
+                uid: string;
+                name: string;
+                due?: string;
+                overdue?: boolean;
+            }[];
+        };
+        (getProposal as jest.Mock).mockResolvedValue(
+            detail({
+                facts: {
+                    ...base.facts,
+                    tasks: facts.tasks.map((task) =>
+                        task.uid === 't1'
+                            ? { ...task, overdue: true, due: '2026-11-15' }
+                            : task.uid === 't2'
+                              ? { ...task, overdue: true, due: '2026-11-11' }
+                              : task
+                    ),
+                },
+            })
+        );
+        renderSheet();
+        await screen.findByText('Valider le devis');
+
+        expect(groupOf('Valider le devis')).toEqual('Échues');
+        expect(groupOf('Appeler le plombier')).toEqual('Échues');
+        expect(groupOf('Ancienne idée')).toEqual('Plus loin');
+        expect(screen.getByText('hier')).toBeInTheDocument();
+        expect(screen.getByText('5 j')).toBeInTheDocument();
+        const sections = screen
+            .getAllByRole('region')
+            .map((region) => region.getAttribute('aria-label'));
+        expect(sections).toEqual(['Échues', 'Plus loin']);
+    });
+
+    it('shows each day of the period with its load, busy and empty days', async () => {
+        (getProposal as jest.Mock).mockResolvedValue(
+            detail({
+                days: [
+                    weekDay('2026-11-17', {
+                        load_minutes: 30,
+                        items: [{ task_uid: 't1', name: 'Devis', minutes: 30 }],
+                    }),
+                    weekDay('2026-11-18', {
+                        events: [{ title: 'Congé', all_day: true }],
+                    }),
+                ],
+            })
+        );
+        renderSheet();
+        await screen.findByText('Valider le devis');
+
+        expect(
+            within(cell('2026-11-17')).getByText('30 min')
+        ).toBeInTheDocument();
+        expect(
+            within(cell('2026-11-18')).getByText('Occupé')
+        ).toBeInTheDocument();
+        expect(within(cell('2026-11-19')).getByText('—')).toBeInTheDocument();
+        expect(cell('2026-11-18').querySelector('[style]')).toHaveStyle({
+            width: '100%',
+        });
+    });
+
+    it('marks the strip day of the open picker', async () => {
+        renderSheet();
+        await screen.findByText('Valider le devis');
+        expect(cell('2026-11-17')).not.toHaveAttribute('aria-current');
+
+        fireEvent.click(trigger('Valider le devis'));
+        expect(cell('2026-11-17')).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('opens the day picker under the row with the day details and the loads', async () => {
+        (getProposal as jest.Mock).mockResolvedValue(
+            detail({
+                days: [
+                    weekDay('2026-11-17', {
+                        load_minutes: 30,
+                        work: {
+                            start: '07:30',
+                            end: '18:00',
+                            label: 'Dentsply',
+                        },
+                        items: [
+                            {
+                                task_uid: 't9',
+                                name: 'Classer la déclaration',
+                                minutes: 30,
+                            },
+                        ],
+                        events: [],
+                    }),
+                ],
+            })
+        );
+        renderSheet();
+        await screen.findByText('Valider le devis');
+
+        fireEvent.click(trigger('Valider le devis'));
+        const menu = screen.getByRole('menu');
+        const picker = menu.parentElement as HTMLElement;
+        expect(
+            within(picker).getByText('Classer la déclaration')
+        ).toBeInTheDocument();
+        expect(within(picker).getByText('30 min')).toBeInTheDocument();
+        expect(
+            within(picker).getByText('Dentsply · 7 h 30–18 h')
+        ).toBeInTheDocument();
+        expect(within(picker).getByText('Rien à l’agenda')).toBeInTheDocument();
+
+        const options = within(menu).getAllByRole('menuitemradio');
+        expect(options[1]).toHaveTextContent('· 30 min');
+        expect(options[1]).toHaveAttribute('aria-checked', 'true');
+        expect(options[3]).toHaveTextContent('· libre');
+        // The horizons follow the days, in their usual order.
+        expect(options.slice(-7).map((o) => o.textContent)).toEqual([
+            'Cette semaine',
+            'Semaine prochaine',
+            'Ce mois-ci',
+            'Le mois prochain',
+            'Plus tard',
+            'Garder tel quel',
+            'Abandonner',
+        ]);
+    });
+
+    it('falls back to the facts loads and no details without the days', async () => {
+        const base = detail();
+        (getProposal as jest.Mock).mockResolvedValue(
+            detail({
+                facts: {
+                    ...base.facts,
+                    days: [
+                        {
+                            date: '2026-11-17',
+                            events: [],
+                            planned: [],
+                            load_minutes: 90,
+                        },
+                    ],
+                },
+            })
+        );
+        renderSheet();
+        await screen.findByText('Valider le devis');
+
+        expect(
+            within(cell('2026-11-17')).getByText('1 h 30')
+        ).toBeInTheDocument();
+        fireEvent.click(trigger('Valider le devis'));
+        const menu = screen.getByRole('menu');
+        expect(
+            menu.parentElement!.querySelector('[data-day-detail]')
+        ).toBeNull();
+        expect(within(menu).getAllByRole('menuitemradio')[1]).toHaveTextContent(
+            '· 1 h 30'
+        );
     });
 });

@@ -107,8 +107,39 @@ export interface ProposalSummary {
     updated_at: string;
 }
 
+// The week's days as they stand now (`days`, week proposals only, computed at
+// each read). Absent on an older server: the facts' loads are the fallback.
+export interface WeekDayItem {
+    task_uid: string;
+    name: string;
+    minutes: number;
+}
+
+export interface WeekDayEvent {
+    title: string;
+    start?: string;
+    end?: string;
+    all_day: boolean;
+}
+
+export interface WeekDayWork {
+    start: string;
+    end: string;
+    label?: string | null;
+}
+
+export interface WeekDay {
+    date: string;
+    load_minutes: number;
+    capacity_minutes: number;
+    items: WeekDayItem[];
+    events: WeekDayEvent[];
+    work: WeekDayWork | null;
+}
+
 export interface ProposalDetail extends ProposalSummary {
     facts: WeekFacts | Record<string, unknown>;
+    days?: WeekDay[];
 }
 
 export interface ApplyResult {

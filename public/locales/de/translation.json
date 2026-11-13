@@ -5335,7 +5335,21 @@
     "planned": "Geplant {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} Min.",
+      "hours": "{{hours}} Std.",
+      "hoursMinutes": "{{hours}} Std. {{minutes}}",
+      "free": "frei",
+      "busy": "Belegt"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} geplant",
+      "noItems": "Nichts geplant",
+      "noEvents": "Nichts im Kalender",
+      "allDay": "Ganztägig",
+      "workHours": "Arbeitszeit",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Heute",
       "planOn": "An einem Tag planen",
       "keep": "So lassen",
@@ -5366,6 +5380,14 @@
     "retry": "Erneut versuchen",
     "startError": "Die Anfrage konnte nicht gestartet werden.",
     "sheet": {
+      "changesCaption_one": "{{count}} Änderung · {{kept}} bleiben unverändert",
+      "changesCaption_other": "{{count}} Änderungen · {{kept}} bleiben unverändert",
+      "lateYesterday": "gestern",
+      "lateDays": "{{count}} T.",
+      "sectionOverdue": "Überfällig",
+      "sectionDays": "Nach Tag",
+      "sectionLater": "Später",
+      "days": "Tage der Woche",
       "preparing": "Deine Woche wird vorbereitet…",
       "failed": "Deine Woche konnte nicht vorbereitet werden.",
       "title": "Deine Woche",

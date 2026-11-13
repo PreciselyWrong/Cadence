@@ -5327,7 +5327,21 @@
     "planned": "Προγραμματισμένη {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} λεπ",
+      "hours": "{{hours}} ώρ",
+      "hoursMinutes": "{{hours}} ώρ {{minutes}}",
+      "free": "ελεύθερο",
+      "busy": "Κατειλημμένο"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} προγραμματισμένα",
+      "noItems": "Τίποτα προγραμματισμένο",
+      "noEvents": "Τίποτα στο ημερολόγιο",
+      "allDay": "Ολόκληρη την ημέρα",
+      "workHours": "Ώρες εργασίας",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Σήμερα",
       "planOn": "Προγραμματισμός σε μέρα",
       "keep": "Άφησέ το ως έχει",
@@ -5358,6 +5372,14 @@
     "retry": "Δοκίμασε ξανά",
     "startError": "Το αίτημα δεν μπόρεσε να ξεκινήσει.",
     "sheet": {
+      "changesCaption_one": "{{count}} αλλαγή · {{kept}} μένουν ως έχουν",
+      "changesCaption_other": "{{count}} αλλαγές · {{kept}} μένουν ως έχουν",
+      "lateYesterday": "χθες",
+      "lateDays": "{{count}} η",
+      "sectionOverdue": "Εκπρόθεσμες",
+      "sectionDays": "Ανά ημέρα",
+      "sectionLater": "Αργότερα",
+      "days": "Ημέρες της εβδομάδας",
       "preparing": "Η εβδομάδα σου ετοιμάζεται…",
       "failed": "Η εβδομάδα σου δεν μπόρεσε να ετοιμαστεί.",
       "title": "Η εβδομάδα σου",

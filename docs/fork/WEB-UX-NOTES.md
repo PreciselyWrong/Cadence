@@ -965,3 +965,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : entre 640 et 767 px, la barre du bas (fixe, à 16 px du bord) passait sous le rail de la barre latérale ; et sous 1024 px, changer de page refermait le panneau ouvert (Notes, Objectifs, Habitudes).
 - **Décision** : la barre commence après le rail (ou après le panneau ouvert, `cdm-bar--sidebar-open`) jusqu'à `md` ; la fermeture au changement de page ne vaut qu'en tiroir (sous 640 px, `isSidebarDrawer()` dans `frontend/utils/sidebarWidth.ts`), à partir de 640 px le panneau reste ouvert.
 - **Android à reprendre** : rien (la barre Android ne partage pas l'écran avec un rail).
+
+### 2026-11-13 — « Ta semaine » v2 : sections, bande des jours, choix de jour en ligne
+
+- **Décision** : toutes les tâches des faits sont là, une sans changement sur « Garder tel quel ». Trois sections : Échues (retard « hier » ou « N j », en orange), Par jour, Plus loin. Sous le sous-titre, une bande des sept jours (charge, « Occupé » si un événement sur la journée, barre orange quand c'est plein). Le menu de la ligne devient un choix en ligne : le jour choisi montre ce qui y est prévu (tâches, agenda, heures de travail), puis les jours avec leur charge, puis les horizons.
+- **Android à reprendre** : mêmes sections et même bande des jours ; le détail du jour vient de `days` (serveur, Ta semaine), absent sur un ancien serveur (charges seules).

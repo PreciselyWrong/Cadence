@@ -5341,7 +5341,21 @@
     "planned": "Programată {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} h",
+      "hoursMinutes": "{{hours}} h {{minutes}}",
+      "free": "liber",
+      "busy": "Ocupat"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} planificate",
+      "noItems": "Nimic planificat",
+      "noEvents": "Nimic în calendar",
+      "allDay": "Toată ziua",
+      "workHours": "Program de lucru",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Azi",
       "planOn": "Planifică într-o zi",
       "keep": "Lasă așa",
@@ -5372,6 +5386,14 @@
     "retry": "Încearcă din nou",
     "startError": "Cererea nu a putut fi pornită.",
     "sheet": {
+      "changesCaption_one": "{{count}} modificare · {{kept}} rămân neschimbate",
+      "changesCaption_other": "{{count}} modificări · {{kept}} rămân neschimbate",
+      "lateYesterday": "ieri",
+      "lateDays": "{{count}} z",
+      "sectionOverdue": "Restante",
+      "sectionDays": "Pe zi",
+      "sectionLater": "Mai târziu",
+      "days": "Zilele săptămânii",
       "preparing": "Săptămâna ta se pregătește…",
       "failed": "Săptămâna ta nu a putut fi pregătită.",
       "title": "Săptămâna ta",

@@ -5326,7 +5326,21 @@
     "planned": "Dijadwalkan {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} mnt",
+      "hours": "{{hours}} j",
+      "hoursMinutes": "{{hours}} j {{minutes}}",
+      "free": "kosong",
+      "busy": "Sibuk"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} direncanakan",
+      "noItems": "Tidak ada yang direncanakan",
+      "noEvents": "Tidak ada di kalender",
+      "allDay": "Sehari penuh",
+      "workHours": "Jam kerja",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Hari ini",
       "planOn": "Rencanakan pada hari",
       "keep": "Biarkan apa adanya",
@@ -5357,6 +5371,14 @@
     "retry": "Coba lagi",
     "startError": "Permintaan tidak dapat dimulai.",
     "sheet": {
+      "changesCaption_one": "{{count}} perubahan · {{kept}} tetap seperti semula",
+      "changesCaption_other": "{{count}} perubahan · {{kept}} tetap seperti semula",
+      "lateYesterday": "kemarin",
+      "lateDays": "{{count}} h",
+      "sectionOverdue": "Terlambat",
+      "sectionDays": "Per hari",
+      "sectionLater": "Nanti",
+      "days": "Hari dalam minggu",
       "preparing": "Minggu Anda sedang disiapkan…",
       "failed": "Minggu Anda tidak dapat disiapkan.",
       "title": "Minggu Anda",

@@ -5326,7 +5326,21 @@
     "planned": "Đã lên kế hoạch {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} phút",
+      "hours": "{{hours}} giờ",
+      "hoursMinutes": "{{hours}} giờ {{minutes}}",
+      "free": "rảnh",
+      "busy": "Bận"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} đã lên kế hoạch",
+      "noItems": "Chưa có gì được lên kế hoạch",
+      "noEvents": "Không có gì trong lịch",
+      "allDay": "Cả ngày",
+      "workHours": "Giờ làm việc",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Hôm nay",
       "planOn": "Lên kế hoạch vào ngày",
       "keep": "Giữ nguyên",
@@ -5357,6 +5371,14 @@
     "retry": "Thử lại",
     "startError": "Không thể bắt đầu yêu cầu.",
     "sheet": {
+      "changesCaption_one": "{{count}} thay đổi · {{kept}} giữ nguyên",
+      "changesCaption_other": "{{count}} thay đổi · {{kept}} giữ nguyên",
+      "lateYesterday": "hôm qua",
+      "lateDays": "{{count}} ng",
+      "sectionOverdue": "Quá hạn",
+      "sectionDays": "Theo ngày",
+      "sectionLater": "Sau đó",
+      "days": "Các ngày trong tuần",
       "preparing": "Tuần của bạn đang được chuẩn bị…",
       "failed": "Không thể chuẩn bị tuần của bạn.",
       "title": "Tuần của bạn",

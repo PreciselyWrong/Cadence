@@ -30,19 +30,25 @@ import {
     WeekFacts,
     WeekTaskFact,
 } from '../../utils/proposalsService';
-import DecisionMenu, { DayChoice } from './DecisionMenu';
+import DecisionMenu, { DayChoice, DayDetailView } from './DecisionMenu';
 import { PROPOSAL_CHANGED_EVENT } from './proposalLinks';
 import { POLL_MS } from './useProposal';
 import {
     addDays,
+    DATED_OPS,
+    daysLate,
     Decision,
+    dayLoad,
+    DayLoad,
     decisionsToApply,
-    GroupKey,
-    groupByDecision,
     notesToSend,
     plannableDays,
+    restingCount,
+    rowsOf,
+    SectionId,
     sameDecision,
     suggestionOf,
+    weekSections,
 } from './weekDecisions';
 
 // How long the results stay before the sheet closes when all went through.
@@ -53,6 +59,11 @@ const LEAVE_MS = 200;
 const MOVE_MS = 240;
 
 const TRIGGER = '[data-decision-trigger]';
+const DOT_TONE: Record<SectionId, string> = {
+    overdue: 'bg-warning',
+    days: 'bg-primary',
+    later: 'bg-outline-variant',
+};
 const NOTE_TRIGGER = '[data-note-trigger]';
 // A remark is one line, as long as the agent needs to know what to change.
 const NOTE_MAX = 500;
@@ -81,6 +92,9 @@ const formatDay = (date: string, options: Intl.DateTimeFormatOptions) => {
 
 const capitalize = (text: string) =>
     text.charAt(0).toLocaleUpperCase() + text.slice(1);
+
+const dateOf = (decision: Decision): string | undefined =>
+    DATED_OPS.includes(decision.op) ? decision.date : undefined;
 
 const refName = (ref: FactRef | undefined): string | null => {
     if (!ref) return null;
@@ -190,16 +204,18 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
     const facts = detail?.facts as WeekFacts | undefined;
     const ready =
         detail?.status === 'ready' && detail.kind === 'week' && !!answer;
-    const changes = useMemo(
-        () => (ready ? (answer!.changes ?? []) : []),
-        [ready, answer]
-    );
     const tasks = useMemo(
         () =>
             new Map<string, WeekTaskFact>(
                 (facts?.tasks ?? []).map((task) => [task.uid, task])
             ),
         [facts]
+    );
+    // Every task of the facts has a row; one the agent gave no change for
+    // starts on « Garder tel quel ».
+    const changes = useMemo(
+        () => (ready ? rowsOf(facts?.tasks ?? [], answer!.changes ?? []) : []),
+        [ready, answer, facts]
     );
     const nameOf = (taskUid: string) => tasks.get(taskUid)?.name ?? taskUid;
     const today = facts?.today;
@@ -209,9 +225,9 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
             decisions.get(change.task_uid) ?? suggestionOf(change),
         [decisions]
     );
-    const groups = useMemo(
-        () => groupByDecision(changes, decisions),
-        [changes, decisions]
+    const sections = useMemo(
+        () => weekSections(changes, tasks, decisions),
+        [changes, tasks, decisions]
     );
     // A noted row waits for the agent's answer: its decision is not applied.
     const sending = useMemo(
@@ -237,6 +253,11 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                 changes.filter((change) => !notedUids.has(change.task_uid)),
                 decisions
             ),
+        [changes, decisions, notedUids]
+    );
+
+    const resting = useMemo(
+        () => restingCount(changes, decisions, notedUids),
         [changes, decisions, notedUids]
     );
 
@@ -282,21 +303,118 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
             formatDay(date, { weekday: 'long', day: 'numeric', month: 'long' })
         );
 
-    const days: DayChoice[] = useMemo(
-        () =>
-            plannableDays(facts?.period, today).map((date) => ({
-                date,
-                label: shortDay(date),
-                long: capitalize(
-                    formatDay(date, {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long',
-                    })
-                ),
-            })),
-        [facts, today, shortDay]
+    // The week's days as the server computes them now; the facts' loads when
+    // the server sent none (then no details and no bars in the strip).
+    const dayDetails = useMemo(
+        () => new Map((detail?.days ?? []).map((day) => [day.date, day])),
+        [detail?.days]
     );
+    const factLoads = useMemo(
+        () =>
+            new Map(
+                (facts?.days ?? []).map((day) => [day.date, day.load_minutes])
+            ),
+        [facts]
+    );
+    const loadOn = useCallback(
+        (date: string) =>
+            dayDetails.get(date)?.load_minutes ?? factLoads.get(date) ?? 0,
+        [dayDetails, factLoads]
+    );
+    const stripDays = useMemo(
+        () => plannableDays(facts?.period, undefined),
+        [facts]
+    );
+
+    // Hours as « 3 h » or « 3 h 30 »: durations and the clock of the day.
+    const hoursText = (totalMinutes: number) => {
+        const hours = Math.floor(totalMinutes / 60);
+        const rest = totalMinutes % 60;
+        return rest === 0
+            ? t('proposals.load.hours', '{{hours}} h', { hours })
+            : t('proposals.load.hoursMinutes', '{{hours}} h {{minutes}}', {
+                  hours,
+                  minutes: String(rest).padStart(2, '0'),
+              });
+    };
+    const duration = (minutes: number) =>
+        minutes < 60
+            ? t('proposals.load.minutes', '{{count}} min', { count: minutes })
+            : hoursText(minutes);
+    const clockOf = (time: string | undefined) => {
+        const [hours, minutes] = (time ?? '').split(':').map(Number);
+        return Number.isNaN(hours)
+            ? (time ?? '')
+            : hoursText(hours * 60 + (minutes || 0));
+    };
+    const loadLabel = (load: DayLoad) => {
+        if (load.busy) return t('proposals.load.busy', 'Occupé');
+        return load.minutes > 0 ? duration(load.minutes) : '—';
+    };
+
+    const days: DayChoice[] = plannableDays(facts?.period, today).map(
+        (date) => {
+            const minutes = loadOn(date);
+            return {
+                date,
+                label: t('proposals.decide.dayLoad', '{{day}} · {{load}}', {
+                    day: shortDay(date),
+                    load:
+                        minutes > 0
+                            ? duration(minutes)
+                            : t('proposals.load.free', 'libre'),
+                }),
+                long: longDay(date),
+            };
+        }
+    );
+
+    // What is planned on one day, for the picker; none without the detail.
+    const dayView = (date: string | undefined): DayDetailView | null => {
+        const day = date ? dayDetails.get(date) : undefined;
+        if (!day) return null;
+        return {
+            heading:
+                day.load_minutes > 0
+                    ? t(
+                          'proposals.decide.dayHeading',
+                          '{{day}} · {{load}} prévues',
+                          {
+                              day: longDay(day.date),
+                              load: duration(day.load_minutes),
+                          }
+                      )
+                    : longDay(day.date),
+            items: day.items.map((item) => ({
+                id: item.task_uid,
+                name: item.name,
+                duration: duration(item.minutes),
+            })),
+            events: day.events.map((event, index) => ({
+                id: `${index}`,
+                title: event.title,
+                time: event.all_day
+                    ? t('proposals.decide.allDay', 'Toute la journée')
+                    : `${clockOf(event.start)}–${clockOf(event.end)}`,
+            })),
+            work: day.work
+                ? t(
+                      'proposals.decide.workLine',
+                      '{{name}} · {{start}}–{{end}}',
+                      {
+                          name:
+                              day.work.label ||
+                              t(
+                                  'proposals.decide.workHours',
+                                  'Heures de travail'
+                              ),
+                          start: clockOf(day.work.start),
+                          end: clockOf(day.work.end),
+                      }
+                  )
+                : null,
+        };
+    };
 
     const maxDate = facts?.period?.end
         ? addDays(facts.period.end, OTHER_DATE_DAYS)
@@ -646,29 +764,12 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
         }
     };
 
-    const groupTitle = (key: GroupKey) => {
-        if (key.kind === 'day') {
-            return key.date === today
-                ? t('proposals.decide.groupToday', 'Aujourd’hui')
-                : longDay(key.date);
+    const sectionTitle = (id: SectionId) => {
+        if (id === 'overdue') {
+            return t('proposals.sheet.sectionOverdue', 'Échues');
         }
-        if (key.kind === 'this_week') {
-            return t('proposals.groups.thisWeek', 'Cette semaine');
-        }
-        if (key.kind === 'next_week') {
-            return t('proposals.ops.nextWeek', 'Semaine prochaine');
-        }
-        if (key.kind === 'this_month') {
-            return t('proposals.ops.thisMonth', 'Ce mois-ci');
-        }
-        if (key.kind === 'next_month') {
-            return t('proposals.ops.nextMonth', 'Le mois prochain');
-        }
-        if (key.kind === 'later')
-            return t('proposals.groups.later', 'Plus tard');
-        if (key.kind === 'keep')
-            return t('proposals.decide.groupKeep', 'Tel quel');
-        return t('proposals.groups.drop', 'À abandonner');
+        if (id === 'days') return t('proposals.sheet.sectionDays', 'Par jour');
+        return t('proposals.sheet.sectionLater', 'Plus loin');
     };
 
     const tagOf = (task: WeekTaskFact | undefined) => {
@@ -689,8 +790,10 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
     const menuChange = menu
         ? changes.find((c) => c.task_uid === menu.taskUid)
         : undefined;
+    // The day the open picker is on: its strip cell is marked.
+    const pickedDate = menuChange ? dateOf(decisionOf(menuChange)) : undefined;
 
-    const renderRow = (change: WeekChange) => {
+    const renderRow = (change: WeekChange, section: SectionId) => {
         const task = tasks.get(change.task_uid);
         const decision = decisionOf(change);
         const suggestion = suggestionOf(change);
@@ -698,6 +801,7 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
         const note = notes.get(change.task_uid) ?? '';
         const changed = !noted && !sameDecision(decision, suggestion);
         const tag = tagOf(task);
+        const late = daysLate(task, today);
         const label = decisionLabel(decision);
         const name = nameOf(change.task_uid);
         const quiet =
@@ -714,6 +818,10 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                 data-task-row={change.task_uid}
                 className="flex min-h-[44px] flex-wrap items-start gap-x-3 gap-y-2 py-2.5"
             >
+                <span
+                    aria-hidden="true"
+                    className={`mt-2 h-2 w-2 shrink-0 rounded-full ${DOT_TONE[section]}`}
+                />
                 <div className="min-w-0 flex-1">
                     <p
                         className={`break-words text-body transition-colors duration-[220ms] ${
@@ -728,8 +836,26 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                     >
                         {name}
                     </p>
-                    {(tag || change.reason || changed || noted) && (
+                    {(late !== null ||
+                        tag ||
+                        change.reason ||
+                        changed ||
+                        noted) && (
                         <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-body-m text-surface-on-variant">
+                            {late !== null && (
+                                <span className="text-label-m text-warning">
+                                    {late === 1
+                                        ? t(
+                                              'proposals.sheet.lateYesterday',
+                                              'hier'
+                                          )
+                                        : t(
+                                              'proposals.sheet.lateDays',
+                                              '{{count}} j',
+                                              { count: late }
+                                          )}
+                                </span>
+                            )}
                             {noted && (
                                 <span className="text-label-m text-warning">
                                     {t('proposals.sheet.toReview', 'À revoir')}
@@ -827,6 +953,18 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                         </button>
                     )}
                 </div>
+                {open && menu && (
+                    <DecisionMenu
+                        anchor={menu.anchor}
+                        days={days}
+                        current={decision}
+                        detail={dayView(dateOf(decision) ?? dateOf(suggestion))}
+                        minDate={today}
+                        maxDate={maxDate}
+                        onPick={(next) => decide(change, next)}
+                        onClose={closeMenu}
+                    />
+                )}
                 {editing && (
                     <div data-note-editor className="w-full pb-1">
                         <textarea
@@ -1001,21 +1139,83 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                         </div>
                     )}
 
+                    {showChanges && stripDays.length > 0 && (
+                        <ol
+                            aria-label={t(
+                                'proposals.sheet.days',
+                                'Les jours de la semaine'
+                            )}
+                            className="mb-3 grid grid-cols-7 gap-1"
+                        >
+                            {stripDays.map((date) => {
+                                const load = dayLoad(
+                                    loadOn(date),
+                                    dayDetails.get(date)
+                                );
+                                const picked = date === pickedDate;
+                                return (
+                                    <li
+                                        key={date}
+                                        data-day-cell={date}
+                                        aria-current={picked || undefined}
+                                        className={`min-w-0 rounded-inner bg-surface-high px-1 py-2 text-center ${
+                                            picked ? 'ring-2 ring-primary' : ''
+                                        }`}
+                                    >
+                                        <p className="truncate text-label-m text-surface-on">
+                                            {formatDay(date, {
+                                                weekday: 'short',
+                                                day: 'numeric',
+                                            })}
+                                        </p>
+                                        <p
+                                            className={`truncate text-label-m ${
+                                                load.full
+                                                    ? 'text-warning'
+                                                    : 'text-surface-on-variant'
+                                            }`}
+                                        >
+                                            {loadLabel(load)}
+                                        </p>
+                                        {load.share !== null && (
+                                            <div className="mx-auto mt-1 h-1 w-10/12 overflow-hidden rounded-full bg-surface-highest">
+                                                <div
+                                                    className={`h-full rounded-full ${
+                                                        load.full
+                                                            ? 'bg-warning'
+                                                            : 'bg-primary'
+                                                    }`}
+                                                    style={{
+                                                        width: `${Math.round(
+                                                            load.share * 100
+                                                        )}%`,
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                    </li>
+                                );
+                            })}
+                        </ol>
+                    )}
+
                     {showChanges &&
-                        groups.map((group) => (
+                        sections.map((section) => (
                             <section
-                                key={group.key.id}
+                                key={section.id}
                                 className="pt-3"
-                                aria-label={groupTitle(group.key)}
+                                aria-label={sectionTitle(section.id)}
                             >
                                 <h3 className="flex items-baseline justify-between text-label-m text-surface-on-variant">
-                                    <span>{groupTitle(group.key)}</span>
+                                    <span>{sectionTitle(section.id)}</span>
                                     <span aria-hidden="true">
-                                        {group.rows.length}
+                                        {section.rows.length}
                                     </span>
                                 </h3>
                                 <ul className="mt-0.5 divide-y divide-outline-variant/60">
-                                    {group.rows.map(renderRow)}
+                                    {section.rows.map((row) =>
+                                        renderRow(row, section.id)
+                                    )}
                                 </ul>
                             </section>
                         ))}
@@ -1122,6 +1322,18 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                         )}
                         {replyText === null && (
                             <>
+                                {changes.length > 0 && sending.length === 0 && (
+                                    <p className="text-right text-label-m text-surface-on-variant">
+                                        {t(
+                                            'proposals.sheet.changesCaption',
+                                            '{{count}} changements · {{kept}} restent tels quels',
+                                            {
+                                                count: toApply.length,
+                                                kept: resting,
+                                            }
+                                        )}
+                                    </p>
+                                )}
                                 {answerList.length > 0 && (
                                     <p className="text-right text-label-m text-surface-on-variant">
                                         {t(
@@ -1200,17 +1412,6 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                     </footer>
                 )}
             </section>
-            {menu && menuChange && (
-                <DecisionMenu
-                    anchor={menu.anchor}
-                    days={days}
-                    current={decisionOf(menuChange)}
-                    minDate={today}
-                    maxDate={maxDate}
-                    onPick={(decision) => decide(menuChange, decision)}
-                    onClose={closeMenu}
-                />
-            )}
         </div>
     );
 };

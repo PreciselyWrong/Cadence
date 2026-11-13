@@ -5326,7 +5326,21 @@
     "planned": "{{when}} 계획됨"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}}분",
+      "hours": "{{hours}}시간",
+      "hoursMinutes": "{{hours}}시간 {{minutes}}",
+      "free": "여유",
+      "busy": "바쁨"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} 예정",
+      "noItems": "예정된 일 없음",
+      "noEvents": "캘린더에 일정 없음",
+      "allDay": "종일",
+      "workHours": "근무 시간",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "오늘",
       "planOn": "날짜에 계획",
       "keep": "그대로 두기",
@@ -5357,6 +5371,14 @@
     "retry": "다시 시도",
     "startError": "요청을 시작하지 못했어요.",
     "sheet": {
+      "changesCaption_one": "{{count}}건 변경 · {{kept}}건은 그대로",
+      "changesCaption_other": "{{count}}건 변경 · {{kept}}건은 그대로",
+      "lateYesterday": "어제",
+      "lateDays": "{{count}}일",
+      "sectionOverdue": "기한 지남",
+      "sectionDays": "날짜별",
+      "sectionLater": "나중에",
+      "days": "이번 주 요일",
       "preparing": "이번 주를 준비하는 중…",
       "failed": "이번 주를 준비하지 못했어요.",
       "title": "이번 주",

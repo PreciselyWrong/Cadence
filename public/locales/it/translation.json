@@ -5333,7 +5333,21 @@
     "planned": "Pianificata {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} h",
+      "hoursMinutes": "{{hours}} h {{minutes}}",
+      "free": "libero",
+      "busy": "Occupato"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} previste",
+      "noItems": "Niente in programma",
+      "noEvents": "Niente in calendario",
+      "allDay": "Tutto il giorno",
+      "workHours": "Orario di lavoro",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Oggi",
       "planOn": "Pianifica in un giorno",
       "keep": "Lascia così",
@@ -5364,6 +5378,14 @@
     "retry": "Riprova",
     "startError": "Impossibile avviare la richiesta.",
     "sheet": {
+      "changesCaption_one": "{{count}} modifica · {{kept}} restano invariate",
+      "changesCaption_other": "{{count}} modifiche · {{kept}} restano invariate",
+      "lateYesterday": "ieri",
+      "lateDays": "{{count}} g",
+      "sectionOverdue": "Scadute",
+      "sectionDays": "Per giorno",
+      "sectionLater": "Più avanti",
+      "days": "Giorni della settimana",
       "preparing": "La tua settimana è in preparazione…",
       "failed": "La tua settimana non è stata preparata.",
       "title": "La tua settimana",

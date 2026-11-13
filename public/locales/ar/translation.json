@@ -5378,7 +5378,21 @@
     "planned": "مجدولة {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} د",
+      "hours": "{{hours}} س",
+      "hoursMinutes": "{{hours}} س {{minutes}}",
+      "free": "فارغ",
+      "busy": "مشغول"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} مخططة",
+      "noItems": "لا شيء مخطط",
+      "noEvents": "لا شيء في التقويم",
+      "allDay": "طوال اليوم",
+      "workHours": "ساعات العمل",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "اليوم",
       "planOn": "التخطيط ليوم",
       "keep": "إبقاء كما هو",
@@ -5409,6 +5423,14 @@
     "retry": "أعد المحاولة",
     "startError": "تعذّر بدء الطلب.",
     "sheet": {
+      "changesCaption_one": "{{count}} تغيير · {{kept}} تبقى كما هي",
+      "changesCaption_other": "{{count}} تغييرات · {{kept}} تبقى كما هي",
+      "lateYesterday": "أمس",
+      "lateDays": "{{count}} ي",
+      "sectionOverdue": "متأخرة",
+      "sectionDays": "حسب اليوم",
+      "sectionLater": "لاحقًا",
+      "days": "أيام الأسبوع",
       "preparing": "جارٍ تحضير أسبوعك…",
       "failed": "تعذّر تحضير أسبوعك.",
       "title": "أسبوعك",

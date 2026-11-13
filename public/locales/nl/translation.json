@@ -5326,7 +5326,21 @@
     "planned": "Gepland {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} u",
+      "hoursMinutes": "{{hours}} u {{minutes}}",
+      "free": "vrij",
+      "busy": "Bezet"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} gepland",
+      "noItems": "Niets gepland",
+      "noEvents": "Niets in de agenda",
+      "allDay": "Hele dag",
+      "workHours": "Werkuren",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Vandaag",
       "planOn": "Op een dag plannen",
       "keep": "Zo laten",
@@ -5357,6 +5371,14 @@
     "retry": "Opnieuw proberen",
     "startError": "Het verzoek kon niet worden gestart.",
     "sheet": {
+      "changesCaption_one": "{{count}} wijziging · {{kept}} blijven zoals ze zijn",
+      "changesCaption_other": "{{count}} wijzigingen · {{kept}} blijven zoals ze zijn",
+      "lateYesterday": "gisteren",
+      "lateDays": "{{count}} d",
+      "sectionOverdue": "Verlopen",
+      "sectionDays": "Per dag",
+      "sectionLater": "Later",
+      "days": "Dagen van de week",
       "preparing": "Je week wordt voorbereid…",
       "failed": "Je week kon niet worden voorbereid.",
       "title": "Je week",

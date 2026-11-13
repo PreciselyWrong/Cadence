@@ -242,6 +242,8 @@ Computed live at each read (the plans move), not stored, not sent to the agent:
 
 ## Clients › Web
 
+The week sheet follows « Week sheet v2 » above (sections, day strip, inline day picker from `days`, `DecisionMenu.tsx` is now inline); the paragraphs below describe the earlier rows and stay true for send, notes and answers.
+
 Online only, like the Android client: nothing is kept offline. `frontend/utils/proposalsService.ts` (the routes above), `frontend/components/Proposals/`: `ProposalButton.tsx` (header button), `useProposal.ts` (the latest proposal of a kind, polled every 5 s only while pending), `ProposalSheet.tsx` (the week's sheet), `DecisionMenu.tsx` (the choices of a row), `weekDecisions.ts` (pure rules: decisions, groups, apply body, days), `ProposalHost.tsx` (mounted in `Layout.tsx`, opens `?proposal=<uid>` like `?task=`), `proposalLinks.ts` (the param and `PROPOSAL_CHANGED_EVENT`).
 
 - **Button**: « Planifier ma semaine » in the header of Aujourd'hui and of Planifier (`UpcomingBoard.tsx`). Idle, then « En préparation… » (disabled, spinner), then « Ta semaine est prête », which opens the sheet by `?proposal=`. A failure seen on the page shows a toast with « Réessayer » (`showUndoToast`, with its own label). « Préparer ma revue » sits in the Review header; when ready, its button starts the quick review.

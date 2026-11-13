@@ -5326,7 +5326,21 @@
     "planned": "{{when}} planlandı"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} dk",
+      "hours": "{{hours}} sa",
+      "hoursMinutes": "{{hours}} sa {{minutes}}",
+      "free": "boş",
+      "busy": "Dolu"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} planlı",
+      "noItems": "Planlanmış bir şey yok",
+      "noEvents": "Takvimde bir şey yok",
+      "allDay": "Tüm gün",
+      "workHours": "Çalışma saatleri",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Bugün",
       "planOn": "Bir güne planla",
       "keep": "Olduğu gibi bırak",
@@ -5357,6 +5371,14 @@
     "retry": "Yeniden dene",
     "startError": "İstek başlatılamadı.",
     "sheet": {
+      "changesCaption_one": "{{count}} değişiklik · {{kept}} olduğu gibi kalıyor",
+      "changesCaption_other": "{{count}} değişiklik · {{kept}} olduğu gibi kalıyor",
+      "lateYesterday": "dün",
+      "lateDays": "{{count}} g",
+      "sectionOverdue": "Gecikmiş",
+      "sectionDays": "Güne göre",
+      "sectionLater": "Daha sonra",
+      "days": "Haftanın günleri",
       "preparing": "Haftan hazırlanıyor…",
       "failed": "Haftan hazırlanamadı.",
       "title": "Haftan",

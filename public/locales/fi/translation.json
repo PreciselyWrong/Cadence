@@ -5326,7 +5326,21 @@
     "planned": "Suunniteltu {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} t",
+      "hoursMinutes": "{{hours}} t {{minutes}}",
+      "free": "vapaa",
+      "busy": "Varattu"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} suunniteltu",
+      "noItems": "Ei suunniteltua",
+      "noEvents": "Ei kalenterimerkintöjä",
+      "allDay": "Koko päivän",
+      "workHours": "Työaika",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "Tänään",
       "planOn": "Suunnittele päivälle",
       "keep": "Pidä ennallaan",
@@ -5357,6 +5371,14 @@
     "retry": "Yritä uudelleen",
     "startError": "Pyyntöä ei voitu aloittaa.",
     "sheet": {
+      "changesCaption_one": "{{count}} muutos · {{kept}} jää ennalleen",
+      "changesCaption_other": "{{count}} muutosta · {{kept}} jää ennalleen",
+      "lateYesterday": "eilen",
+      "lateDays": "{{count}} pv",
+      "sectionOverdue": "Myöhässä",
+      "sectionDays": "Päivittäin",
+      "sectionLater": "Myöhemmin",
+      "days": "Viikon päivät",
       "preparing": "Viikkoasi valmistellaan…",
       "failed": "Viikkoasi ei voitu valmistella.",
       "title": "Viikkosi",

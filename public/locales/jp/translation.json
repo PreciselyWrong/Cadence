@@ -5326,7 +5326,21 @@
     "planned": "{{when}}に予定"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} 分",
+      "hours": "{{hours}} 時間",
+      "hoursMinutes": "{{hours}} 時間 {{minutes}}",
+      "free": "空き",
+      "busy": "予定あり"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · 予定 {{load}}",
+      "noItems": "予定なし",
+      "noEvents": "予定はありません",
+      "allDay": "終日",
+      "workHours": "作業時間",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "今日",
       "planOn": "日を指定して計画",
       "keep": "そのままにする",
@@ -5357,6 +5371,14 @@
     "retry": "再試行",
     "startError": "リクエストを開始できませんでした。",
     "sheet": {
+      "changesCaption_one": "{{count}} 件の変更 · {{kept}} 件はそのまま",
+      "changesCaption_other": "{{count}} 件の変更 · {{kept}} 件はそのまま",
+      "lateYesterday": "昨日",
+      "lateDays": "{{count}} 日",
+      "sectionOverdue": "期限切れ",
+      "sectionDays": "日別",
+      "sectionLater": "そのほか",
+      "days": "今週の日",
       "preparing": "今週を準備しています…",
       "failed": "今週の準備ができませんでした。",
       "title": "今週",

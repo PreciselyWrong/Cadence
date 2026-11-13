@@ -5331,7 +5331,21 @@
     "planned": "Planlagt {{when}}"
   },
   "proposals": {
+    "load": {
+      "minutes": "{{count}} min",
+      "hours": "{{hours}} t",
+      "hoursMinutes": "{{hours}} t {{minutes}}",
+      "free": "ledig",
+      "busy": "Opptatt"
+    },
     "decide": {
+      "dayLoad": "{{day}} · {{load}}",
+      "dayHeading": "{{day}} · {{load}} planlagt",
+      "noItems": "Ingenting planlagt",
+      "noEvents": "Ingenting i kalenderen",
+      "allDay": "Hele dagen",
+      "workHours": "Arbeidstid",
+      "workLine": "{{name}} · {{start}}–{{end}}",
       "today": "I dag",
       "planOn": "Planlegg på en dag",
       "keep": "Behold som det er",
@@ -5362,6 +5376,14 @@
     "retry": "Prøv igjen",
     "startError": "Forespørselen kunne ikke startes.",
     "sheet": {
+      "changesCaption_one": "{{count}} endring · {{kept}} forblir uendret",
+      "changesCaption_other": "{{count}} endringer · {{kept}} forblir uendret",
+      "lateYesterday": "i går",
+      "lateDays": "{{count}} d",
+      "sectionOverdue": "Forfalte",
+      "sectionDays": "Per dag",
+      "sectionLater": "Senere",
+      "days": "Ukens dager",
       "preparing": "Uken din forberedes…",
       "failed": "Uken din kunne ikke forberedes.",
       "title": "Uken din",
