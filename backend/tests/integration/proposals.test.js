@@ -641,6 +641,59 @@ describe('proposals', () => {
             return created.uid;
         };
 
+        it('moves the due date of an overdue task to its new day, and clears it for a horizon', async () => {
+            const late = JSON.parse(
+                (
+                    await run('create_task', {
+                        name: 'En retard',
+                        due_date: day(-2),
+                    })
+                ).content[0].text
+            );
+            const later = JSON.parse(
+                (
+                    await run('create_task', {
+                        name: 'Vieille',
+                        due_date: day(-3),
+                    })
+                ).content[0].text
+            );
+            const { body: created } = await agent
+                .post('/api/proposals')
+                .send({ kind: 'week', start: today, end: day(6) });
+            await answerAs(created.uid, { answer: { headline: 'Échues' } });
+            const sent = await sendAs(created.uid, {
+                decisions: [
+                    { task_uid: taskUid(late), op: 'plan_day', date: day(2) },
+                    { task_uid: taskUid(later), op: 'next_week' },
+                    {
+                        task_uid: taskUid(dueSoon),
+                        op: 'plan_day',
+                        date: day(1),
+                    },
+                ],
+            });
+            expect(sent.status).toBe(200);
+            const lateRow = await Task.findOne({
+                where: { uid: taskUid(late) },
+            });
+            expect(
+                moment(lateRow.due_date)
+                    .tz(user.timezone || 'UTC')
+                    .format('YYYY-MM-DD')
+            ).toBe(day(2));
+            const laterRow = await Task.findOne({
+                where: { uid: taskUid(later) },
+            });
+            expect(laterRow.due_date).toBeNull();
+            const soonRow = await Task.findOne({
+                where: { uid: taskUid(dueSoon) },
+            });
+            expect(moment(soonRow.due_date).format('YYYY-MM-DD')).not.toBe(
+                day(1)
+            );
+        });
+
         it('sends a task to next week, this month or next month', async () => {
             const { body: created } = await agent
                 .post('/api/proposals')

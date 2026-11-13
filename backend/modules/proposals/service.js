@@ -622,18 +622,45 @@ async function attempt(taskUid, action) {
 }
 
 // Applies the week decisions one by one; `keep` does nothing.
-async function applyWeekDecisions(user, decisions) {
+// An overdue task that the user places again stops being overdue: a day
+// becomes its due date, a horizon clears it. Other tasks keep their due date.
+const HORIZON_OPS = new Set([
+    'this_week',
+    'next_week',
+    'this_month',
+    'next_month',
+    'later',
+]);
+
+async function applyWeekDecisions(user, decisions, overdue = new Set()) {
     const results = [];
     for (const decision of decisions) {
         if (decision.op === 'keep') continue;
         results.push(
-            await attempt(decision.task_uid, () =>
-                applyWeekChange(user, decision)
-            )
+            await attempt(decision.task_uid, async () => {
+                await applyWeekChange(user, decision);
+                if (!overdue.has(decision.task_uid)) return;
+                if (decision.op === 'plan_day') {
+                    await toolsFor(user)('update_task', {
+                        id: decision.task_uid,
+                        due_date: decision.date,
+                    });
+                } else if (HORIZON_OPS.has(decision.op)) {
+                    await toolsFor(user)('update_task', {
+                        id: decision.task_uid,
+                        due_date: null,
+                    });
+                }
+            })
         );
     }
     return results;
 }
+
+const overdueOf = (facts) =>
+    new Set(
+        (facts?.tasks ?? []).filter((task) => task.overdue).map((t) => t.uid)
+    );
 
 async function applyProposal(user, uid, body = {}) {
     const row = await repository.findByUid(user.id, uid);
@@ -645,7 +672,11 @@ async function applyProposal(user, uid, body = {}) {
 
     if (row.kind === 'week') {
         const decisions = weekDecisionsOf(row.facts, row.answer, body);
-        results = await applyWeekDecisions(user, decisions);
+        results = await applyWeekDecisions(
+            user,
+            decisions,
+            overdueOf(row.facts)
+        );
     } else {
         const decisions = body.decisions;
         if (!Array.isArray(decisions)) {
@@ -715,7 +746,11 @@ async function sendProposal(user, uid, body = {}) {
         return applied;
     }
 
-    const results = await applyWeekDecisions(user, decisions);
+    const results = await applyWeekDecisions(
+        user,
+        decisions,
+        overdueOf(row.facts)
+    );
     const noted = new Set(notes.map((note) => note.task_uid));
     const previous = {
         changes: (row.answer?.changes ?? []).filter((change) =>

@@ -68,6 +68,8 @@ Answer (`POST /api/proposals/:uid/answer`, `answer` object, contract v2):
 
 Operations the agent may propose:
 
+**Overdue tasks** (`facts.tasks[].overdue`): a `plan_day` also sets the due date to that day, and a horizon (`this_week`, `next_week`, `this_month`, `next_month`, `later`) clears it, so a task the user places again is no longer overdue. Other tasks keep their due date.
+
 | `op` | Date | Applied as |
 |---|---|---|
 | `plan_day` | required, in the period | Added to that day's plan without a time; due date untouched (`carryOver`) |
