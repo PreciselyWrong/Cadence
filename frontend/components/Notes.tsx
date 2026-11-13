@@ -72,30 +72,20 @@ const Notes: React.FC = () => {
     const [editingNote, setEditingNote] = useState<Note | null>(null);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
     const [noteToShare, setNoteToShare] = useState<Note | null>(null);
-    // Notes are browsed via the sidebar's folder tree now, not a list on
-    // this page - this page is the editor/preview pane only. `orderBy`
-    // still picks which note auto-selects first on load.
+    // Order of the overview list (/notes with no note open).
     const orderBy = 'updated_at:desc';
     const [showDiscardDialog, setShowDiscardDialog] = useState(false);
     const [saveStatus, setSaveStatus] = useState<
         'saved' | 'saving' | 'unsaved'
     >('saved');
     const [isFocusMode, setIsFocusMode] = useState(false);
-    const hasAutoSelected = useRef(false);
-    // Gallery (pictures) or list (the latest note opens on a wide screen),
-    // remembered in ui_settings.viewTypes.notes.
-    const {
-        viewType: notesView,
-        setViewType: setNotesView,
-        loaded: notesViewLoaded,
-    } = useViewType('notes');
+    // The uid whose note was already requested for this URL, so the fetch
+    // effect below runs once per visit to a note.
+    const requestedUidRef = useRef<string | undefined>(undefined);
+    // Gallery (pictures) or list, remembered in ui_settings.viewTypes.notes.
+    const { viewType: notesView, setViewType: setNotesView } =
+        useViewType('notes');
     const notesGallery = notesView === 'gallery';
-    // "All notes" from a note's menu: stay on the overview this visit. The
-    // page remounts when the path changes (Layout keys it by pathname), so
-    // the choice also travels in the navigation state.
-    const [showOverview, setShowOverview] = useState(() =>
-        Boolean((location.state as { overview?: boolean } | null)?.overview)
-    );
     const currentUidRef = useRef(uid);
     const [urlNoteMissing, setUrlNoteMissing] = useState(false);
     // Timestamp flag attached to the /notes navigation state by Layout's
@@ -227,7 +217,7 @@ const Notes: React.FC = () => {
         if (note?.uid) {
             navigate(`/notes/${note.uid}`, { replace: true });
         } else {
-            navigate('/notes', { replace: true, state: { overview: true } });
+            navigate('/notes', { replace: true });
         }
     };
 
@@ -453,27 +443,27 @@ const Notes: React.FC = () => {
     }, [newNoteSignal, startNewNote, navigate]);
 
     useEffect(() => {
-        hasAutoSelected.current = false;
+        requestedUidRef.current = undefined;
         currentUidRef.current = uid;
     }, [uid]);
 
     useEffect(() => {
         if (newNoteSignal) return;
-        if (!uid || hasAutoSelected.current) return;
+        if (!uid || requestedUidRef.current === uid) return;
 
         const noteFromUrl = hasLoaded
             ? sortedNotes.find((note) => note.uid === uid)
             : undefined;
         if (noteFromUrl) {
             setPreviewNote(noteFromUrl);
-            hasAutoSelected.current = true;
+            requestedUidRef.current = uid;
             return;
         }
 
         // Fetch the note directly instead of waiting for the full notes
         // list (#1785). This also covers notes missing from a stale cached
         // list, e.g. a project shared with us after it was loaded (#1523).
-        hasAutoSelected.current = true;
+        requestedUidRef.current = uid;
         setUrlNoteMissing(false);
         fetchNoteBySlug(uid)
             .then((fetchedNote) => {
@@ -502,44 +492,6 @@ const Notes: React.FC = () => {
             setNotes([previewNote, ...notes]);
         }
     }, [hasLoaded]);
-
-    // The note in the URL is unavailable: fall back to the first note once
-    // the list has loaded.
-    useEffect(() => {
-        if (!urlNoteMissing || !hasLoaded || previewNote) return;
-        const isDesktop = window.innerWidth >= 768;
-        if (isDesktop && sortedNotes.length > 0) {
-            handleSelectNote(sortedNotes[0]);
-        }
-    }, [urlNoteMissing, hasLoaded, sortedNotes, previewNote]);
-
-    useEffect(() => {
-        if (newNoteSignal) return;
-        if (
-            !uid &&
-            notesViewLoaded &&
-            !notesGallery &&
-            !showOverview &&
-            sortedNotes.length > 0 &&
-            !previewNote &&
-            !isEditing &&
-            !hasAutoSelected.current
-        ) {
-            const isDesktop = window.innerWidth >= 768;
-            if (isDesktop) {
-                handleSelectNote(sortedNotes[0]);
-                hasAutoSelected.current = true;
-            }
-        }
-    }, [
-        sortedNotes,
-        previewNote,
-        uid,
-        isEditing,
-        notesViewLoaded,
-        notesGallery,
-        showOverview,
-    ]);
 
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -637,16 +589,13 @@ const Notes: React.FC = () => {
                                 onShare={() => setNoteToShare(editingNote)}
                                 onOpenFocusMode={() => setIsFocusMode(true)}
                                 onShowAll={() => {
-                                    setShowOverview(true);
                                     void handleSelectNote(null);
                                 }}
                             />
                         ) : previewNote ? null : sortedNotes.length > 0 ? (
-                            // No note selected yet (mobile lands here since
-                            // it skips auto-selecting the most recent note,
-                            // and desktop briefly does too before that
-                            // effect runs). Show every note to pick from
-                            // instead of a dead-end placeholder (#1527).
+                            // No note open: /notes always lands here, on
+                            // every screen size, to pick from. Show every
+                            // note instead of a dead-end placeholder (#1527).
                             <div className="flex-1 overflow-y-auto">
                                 {/* The gallery takes a wider column than the list. */}
                                 <PageShell

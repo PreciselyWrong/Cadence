@@ -188,7 +188,7 @@ describe('Notes gallery', () => {
             loaded: true,
         });
 
-        renderAt('/notes');
+        renderAt('/notes/note-a');
 
         expect(
             await screen.findByDisplayValue('Trip ideas')

@@ -295,8 +295,8 @@ Hover the left edge of a paragraph, heading, list item, quote, code block or tab
 
 ### Overview: List or Gallery
 
-- `/notes` without a note open shows every note under a **List / Gallery** switch, remembered for the account in `ui_settings.viewTypes.notes`. **List** (default) shows text cards; on a wide screen the most recent note opens by itself, as before. **Gallery** shows picture cards (two to four columns) and the page always lands on it: the note's first image (Markdown `![](…)` or `<img>`, web addresses and this server's files only), else the preview image of a link found in the note (`links.image_url`, see [Links](37-links.md)), else the start of its text without Markdown; then the title and up to three tags. A card opens the note.
-- **All notes** in a note's ⋮ menu leaves the note for this overview (it stays there for the visit even in List mode).
+- `/notes` without a note open shows every note under a **List / Gallery** switch, remembered for the account in `ui_settings.viewTypes.notes`. **List** (default) shows text cards. No note opens by itself, on any screen size: `/notes` always lands on the overview, and so does `/notes/<uid>` when that note is missing. **Gallery** shows picture cards (two to four columns): the note's first image (Markdown `![](…)` or `<img>`, web addresses and this server's files only), else the preview image of a link found in the note (`links.image_url`, see [Links](37-links.md)), else the start of its text without Markdown; then the title and up to three tags. A card opens the note.
+- **All notes** in a note's ⋮ menu leaves the note for `/notes`, the overview.
 - Logic: `frontend/components/Note/NoteGallery.tsx`, `frontend/components/Shared/GalleryCard.tsx`, `frontend/utils/galleryPreview.ts`.
 
 ## Focus Mode
@@ -469,7 +469,7 @@ Note payloads never include the token. They carry `is_public` (boolean) instead,
 - Both panels visible simultaneously
 
 **Auto-selection:**
-- First note auto-selected on page load
+- No note is auto-selected: `/notes` shows the overview
 - Clicking note updates right panel
 - No "back" navigation needed
 

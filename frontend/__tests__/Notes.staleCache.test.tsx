@@ -138,7 +138,7 @@ describe('Notes stale-cache fallback (#1523)', () => {
         ).not.toBeInTheDocument();
     });
 
-    it('falls back to the first note only once the direct fetch confirms the note is unavailable', async () => {
+    it('shows the overview, not another note, once the direct fetch confirms the note is unavailable', async () => {
         mockFetchNoteBySlug.mockRejectedValue(new Error('Not found'));
 
         renderNotesAt('does-not-exist');
@@ -147,8 +147,9 @@ describe('Notes stale-cache fallback (#1523)', () => {
             expect(mockFetchNoteBySlug).toHaveBeenCalledWith('does-not-exist');
         });
 
+        expect(await screen.findByText(ownNote.title)).toBeInTheDocument();
         expect(
-            await screen.findByDisplayValue(ownNote.title)
-        ).toBeInTheDocument();
+            screen.queryByDisplayValue(ownNote.title)
+        ).not.toBeInTheDocument();
     });
 });

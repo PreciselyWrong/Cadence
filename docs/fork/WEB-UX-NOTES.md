@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-13 — Notes : /notes ouvre toujours la vue d'ensemble (web)
+
+- **Problème** : sur grand écran, `/notes` ouvrait tout de suite la note la plus récente ; l'utilisateur veut arriver sur la liste de ses notes, pas dans une note. Une adresse de note introuvable tombait aussi sur la première note.
+- **Décision** : `/notes` sans note ouvre toujours la vue d'ensemble (liste ou galerie, tous écrans) ; `/notes/<uid>` d'une note introuvable aussi. Une note ne s'ouvre que sur un clic, depuis la barre latérale, un lien ou la vue d'ensemble. « Toutes les notes » du ⋮ mène à `/notes`. Code mort retiré (sélection automatique, indicateur de visite, état `overview` de la navigation).
+- **Android** : rien à changer. L'onglet Notes (`ui/NoteViews.kt`, `NotesTab`) affiche déjà la vue d'ensemble et n'ouvre une note qu'au toucher (`TasksScreen.kt`).
+
 ### 2026-11-12 — Vocabulaire unique (web)
 
 - **Problème** : un même concept avait plusieurs noms selon l'écran : « domaine » à côté de la page « Zones », priorités « Faible / Élevée » ici et « Basse / Haute » là, textes d'aide de recherche différents d'une liste à l'autre (« Rechercher des tâches... », « Rechercher une tâche… »), « Créer la tâche » sur les cartes Mail contre « Créer une tâche » ailleurs.
