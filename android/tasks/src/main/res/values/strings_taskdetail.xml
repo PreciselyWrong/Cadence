@@ -28,7 +28,8 @@
 
     <!-- Feuille de date partagée -->
     <string name="tasks_date_weekend">Ce week-end</string>
-    <string name="tasks_date_next_week">Semaine prochaine</string>
+    <string name="tasks_date_later">Plus tard</string>
+    <string name="tasks_date_horizon_notice">« %1$s » → %2$s, sans date</string>
     <string name="tasks_date_time">Heure</string>
     <string name="tasks_date_time_remove">Retirer l\'heure</string>
     <string name="tasks_date_prev_month">Mois précédent</string>

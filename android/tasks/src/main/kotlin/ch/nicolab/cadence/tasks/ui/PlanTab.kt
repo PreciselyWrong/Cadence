@@ -11,6 +11,12 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -42,6 +48,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.Horizon
+import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.planning.PlanCard
 import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.formatMinutes
@@ -75,6 +82,7 @@ private sealed interface AddTarget {
 @StringRes
 internal fun horizonLabel(horizon: Horizon): Int = when (horizon) {
     Horizon.WEEK -> R.string.plan_horizon_week
+    Horizon.NEXT_WEEK -> R.string.plan_horizon_next_week
     Horizon.THIS_MONTH -> R.string.plan_horizon_this_month
     Horizon.NEXT_MONTH -> R.string.plan_horizon_next_month
     Horizon.SOMEDAY -> R.string.plan_horizon_someday
@@ -105,6 +113,8 @@ internal fun PlanTab(
     var horizons by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.PLAN_HORIZONS)) }
     var planning by remember { mutableStateOf<PlanTarget?>(null) }
     var adding by remember { mutableStateOf<AddTarget?>(null) }
+    // « Ce mois-ci » d'« À planifier » est replié par défaut ; son compte reste visible.
+    var monthOpen by rememberSaveable { mutableStateOf(false) }
     val today = moment.today
 
     @Composable
@@ -159,6 +169,33 @@ internal fun PlanTab(
             }
             if (unsorted.isEmpty() && ideas.isEmpty()) {
                 item(key = "inbox-empty") { QuietLine(R.string.plan_inbox_empty) }
+            }
+            val toSchedule = board.toSchedule
+            if (!toSchedule.isEmpty) {
+                item(key = "schedule-header") {
+                    SectionHeader(
+                        title = stringResource(R.string.plan_to_schedule),
+                        count = toSchedule.stale.size + toSchedule.week.size + toSchedule.month.size,
+                    )
+                }
+                if (toSchedule.stale.isNotEmpty()) {
+                    item(key = "schedule-stale") { SubHeading(stringResource(R.string.plan_to_reschedule), toSchedule.stale.size, error = true) }
+                    items(toSchedule.stale, key = { "schedule-stale-${it.uid}" }) { task -> Row(task) { planning = PlanTarget.Task(task) } }
+                }
+                if (toSchedule.week.isNotEmpty()) {
+                    item(key = "schedule-week") { SubHeading(stringResource(R.string.plan_horizon_week), toSchedule.week.size) }
+                    items(toSchedule.week, key = { "schedule-week-${it.uid}" }) { task -> Row(task) { planning = PlanTarget.Task(task) } }
+                }
+                if (toSchedule.month.isNotEmpty()) {
+                    item(key = "schedule-month") {
+                        SubHeading(stringResource(R.string.plan_horizon_this_month), toSchedule.month.size, expanded = monthOpen) {
+                            monthOpen = !monthOpen
+                        }
+                    }
+                    if (monthOpen) {
+                        items(toSchedule.month, key = { "schedule-month-${it.uid}" }) { task -> Row(task) { planning = PlanTarget.Task(task) } }
+                    }
+                }
             }
             if (board.overdue.isNotEmpty()) {
                 item(key = "overdue-header") {
@@ -241,6 +278,16 @@ internal fun PlanTab(
                 }
                 planning = null
             },
+            onDropCommitment = when (target) {
+                is PlanTarget.Card -> target.card.task
+                is PlanTarget.Task -> target.task
+                is PlanTarget.Idea -> null
+            }?.takeIf { PlanBoard.dropCommitment(it) != null }?.let { task ->
+                {
+                    viewModel.dropCommitment(task)
+                    planning = null
+                }
+            },
             onRemove = (target as? PlanTarget.Card)?.card?.takeIf { it.planned }?.let { card ->
                 {
                     viewModel.planRemove(card)
@@ -299,6 +346,34 @@ private fun LazyListScope.planDay(
     }
 }
 
+/**
+ * Sous-titre d'« À planifier » : libellé et compte ; [error] pour « À replanifier » ; avec [onToggle], la ligne
+ * replie ou déplie sa liste ([expanded]).
+ */
+@Composable
+private fun SubHeading(title: String, count: Int, error: Boolean = false, expanded: Boolean = true, onToggle: (() -> Unit)? = null) {
+    val palette = cadence
+    val color = if (error) palette.error else palette.onSurfaceVariant
+    androidx.compose.foundation.layout.Row(
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = if (onToggle != null) Size.touch else Size.badgeHeight)
+            .then(if (onToggle != null) Modifier.clickable(role = Role.Button, onClick = onToggle) else Modifier)
+            .padding(top = Space.sm, bottom = Space.xs),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text("$title · $count", style = MaterialTheme.typography.labelLarge, color = color, modifier = Modifier.weight(1f))
+        if (onToggle != null) {
+            Icon(
+                if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
+                contentDescription = null,
+                tint = palette.onSurfaceVariant,
+                modifier = Modifier.size(Size.icon),
+            )
+        }
+    }
+}
+
 @Composable
 private fun QuietLine(@StringRes text: Int) {
     Text(
@@ -335,6 +410,7 @@ private fun PlanSheet(
     currentHorizon: Horizon?,
     onDay: (LocalDate) -> Unit,
     onHorizon: (Horizon) -> Unit,
+    onDropCommitment: (() -> Unit)?,
     onRemove: (() -> Unit)?,
     onMore: (() -> Unit)?,
     onDismiss: () -> Unit,
@@ -355,6 +431,7 @@ private fun PlanSheet(
                     ChoiceChip(label = stringResource(horizonLabel(horizon)), selected = horizon == currentHorizon, onClick = { onHorizon(horizon) })
                 }
             }
+            onDropCommitment?.let { TextButton(onClick = it, modifier = Modifier.heightIn(min = Size.touch)) { Text(stringResource(R.string.plan_sheet_drop_commitment)) } }
             onRemove?.let { TextButton(onClick = it, modifier = Modifier.heightIn(min = Size.touch)) { Text(stringResource(R.string.plan_sheet_remove)) } }
             onMore?.let { TextButton(onClick = it, modifier = Modifier.heightIn(min = Size.touch)) { Text(stringResource(R.string.plan_sheet_more)) } }
         }

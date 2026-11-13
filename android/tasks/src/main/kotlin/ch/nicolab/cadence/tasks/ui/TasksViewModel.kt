@@ -74,6 +74,7 @@ import ch.nicolab.cadence.tasks.planning.PlanEdit
 import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.PlanEntry
 import ch.nicolab.cadence.tasks.planning.PlanHorizons
+import ch.nicolab.cadence.tasks.planning.ToSchedule
 import ch.nicolab.cadence.tasks.planning.TodayReorder
 import ch.nicolab.cadence.tasks.planning.ServerPlan
 import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
@@ -179,6 +180,7 @@ internal data class PlanBoardState(
     val days: List<PlanDay> = emptyList(),
     val overdue: List<TaskItem> = emptyList(),
     val horizons: PlanHorizons = PlanHorizons(emptyMap(), emptyList()),
+    val toSchedule: ToSchedule = ToSchedule(),
 )
 
 /** Feuille ouverte par un balayage ; porte la tâche visée. */
@@ -947,15 +949,18 @@ internal class TasksViewModel(
     fun toggleEvent(key: EventInstanceKey) = launchAction { calendar.toggleDone(key) }
 
     private val planEdits = TasksGraph.planEdits(application)
+    private val planSlots = PlanSlotsStore(application)
 
     /** Page Planifier : les jours (plan du jour + échéances), le retard et les horizons. */
     val planBoard: StateFlow<PlanBoardState> =
         combine(scopedTasks, today, moment, weekStart, PlanSlotsStore(application).entryChanges()) { all, state, m, week, plan ->
             val dueByDay = TaskViews.upcoming(all, m.today, m.now, m.zone, days = (PlanBoard.DAYS - 1).toLong())
+            val horizons = PlanBoard.horizons(all, plan, m.today, week)
             PlanBoardState(
                 days = PlanBoard.days(all, plan, m.today, state.today, dueByDay, m.zone),
                 overdue = PlanBoard.overdue(state.overdue, plan, m.today),
-                horizons = PlanBoard.horizons(all, plan, m.today, week),
+                horizons = horizons,
+                toSchedule = PlanBoard.toSchedule(all, plan, m.today, week, horizons),
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), PlanBoardState())
 
@@ -980,6 +985,35 @@ internal class TasksViewModel(
         val from = planBoard.value.horizons.of(task.uid)
         val change = PlanBoard.horizonChange(task, from, to, m.today, weekStart.value) ?: return
         changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to))))
+    }
+
+    /** « Retirer l'engagement » d'« À planifier » : semaine et mois effacés, avec « Annuler ». */
+    fun dropCommitment(task: TaskItem) {
+        val change = PlanBoard.dropCommitment(task) ?: return
+        changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_commitment_dropped_notice, task.name))
+    }
+
+    /**
+     * Horizon choisi dans le choix de date de la fiche : engagement posé comme dans Planifier, échéance vidée et
+     * lignes du plan d'aujourd'hui et après retirées ; « Annuler » rend l'échéance, l'engagement et le plan.
+     */
+    fun dateHorizon(task: TaskItem, horizon: Horizon) = launchAction {
+        val m = moment.value
+        val writes = PlanBoard.horizonFromDate(task, horizon, planSlots.entries(), m.today, weekStart.value)
+        repository.updateTask(task.uid, writes.change)
+        val undoPlan = if (writes.plan.isEmpty()) null else planEdits.apply(writes.plan)
+        val due = UndoChanges.restoreDue(task, m.zone)
+        val restore = UndoChanges.restoreFunnel(task).let {
+            if (writes.change.clearDue) it.copy(dueDate = due.dueDate, dueTime = due.dueTime) else it
+        }
+        _notices.tryEmit(
+            UndoNotice(format(R.string.tasks_date_horizon_notice, task.name, getString(horizonLabel(horizon)))) {
+                launchAction {
+                    repository.updateTask(task.uid, restore)
+                    undoPlan?.invoke()
+                }
+            },
+        )
     }
 
     /**

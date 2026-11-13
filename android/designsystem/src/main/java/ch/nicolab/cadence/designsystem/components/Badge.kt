@@ -24,7 +24,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 
 /** Ton sémantique d'une pastille. */
-enum class BadgeTone { Neutral, Primary, Success, Warning, Error }
+enum class BadgeTone { Neutral, Primary, Success, Warning, Error, Info, Horizon }
 
 /**
  * Pastille d'information : date, projet, état. Une couleur de projet ou de calendrier remplace
@@ -50,6 +50,8 @@ fun CadenceBadge(
             BadgeTone.Success -> palette.successContainer to palette.success
             BadgeTone.Warning -> palette.warningContainer to palette.warning
             BadgeTone.Error -> palette.errorContainer to palette.onErrorContainer
+            BadgeTone.Info -> palette.infoContainer to palette.info
+            BadgeTone.Horizon -> palette.horizonContainer to palette.horizon
         }
     }
     Row(

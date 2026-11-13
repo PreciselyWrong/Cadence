@@ -1,3 +1,11 @@
+## [1.25.0] — 13 novembre 2026
+
+- Le choix de date de la fiche propose une ligne « Plus tard » : Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour. Choisir un horizon retire la date et la tâche des jours prévus ; choisir une date retire l'horizon. Le raccourci « Semaine prochaine » (lundi prochain) laisse place à l'horizon.
+- Sans date, la fiche montre l'horizon en violet, ou « À replanifier » en rouge quand la semaine ou le mois choisis sont passés.
+- Planifier : une section « À planifier » sous l'Inbox réunit les tâches à replanifier, celles de cette semaine sans jour et celles de ce mois (repliées). Appui long : un jour, un horizon ou « Retirer l'engagement ».
+- Planifier › Horizons gagne « Semaine prochaine », comme sur le web.
+- Pastilles de la fiche en couleurs : échéance dépassée en rouge, du jour en vert, priorité haute rouge, moyenne ambre, basse bleu ardoise ; statut et autres valeurs neutres.
+
 ## [1.23.0] — 12 novembre 2026
 
 - Les notifications des agents se rangent par agent, sous son nom, avec une petite étincelle et la couleur de leur niveau ; une rafale (fin des heures calmes) ne sonne qu'une fois.

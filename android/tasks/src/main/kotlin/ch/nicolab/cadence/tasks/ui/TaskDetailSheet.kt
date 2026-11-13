@@ -2,6 +2,7 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Flag
@@ -98,6 +100,8 @@ import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.planning.Commitment
+import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.FileOwnedField
 import java.time.LocalDate
@@ -141,6 +145,8 @@ internal fun TaskDetailSheet(
     val tagColors = remember(tags) { tagBadgeColorsByName(tags) }
     val zone = moment.zone
     val today = moment.today
+    // Engagement montré à la place de la date, seulement pour une tâche sans échéance.
+    val commitment = PlanBoard.commitment(current, today, weekStart).takeIf { current.dueDay == null }
     val palette = cadence
     val context = LocalContext.current
 
@@ -247,6 +253,7 @@ internal fun TaskDetailSheet(
                     projectEnabled = !FileBackedActions.ownsField(current, FileOwnedField.PROJECT),
                     today = today,
                     dueTime = dueTime,
+                    commitment = commitment,
                     projectName = projects.firstOrNull { it.uid == current.projectUid }?.name,
                     projectIcon = projects.firstOrNull { it.uid == current.projectUid }?.icon,
                     projectColor = current.projectUid?.let { projectColors[it] }?.let(::Color),
@@ -303,9 +310,12 @@ internal fun TaskDetailSheet(
                         today = today,
                         dueTime = dueTime,
                         startTime = startTime,
+                        commitment = commitment,
                         projectName = projects.firstOrNull { it.uid == current.projectUid }?.name,
                         projectIcon = projects.firstOrNull { it.uid == current.projectUid }?.icon,
+                        projectColor = current.projectUid?.let { projectColors[it] }?.let(::Color),
                         tagNames = tags.filter { it.uid in current.tagUids }.map { it.name },
+                        tagColor = tags.firstOrNull { it.uid in current.tagUids }?.name?.let { tagColors[it] },
                         onDates = { openDates(DateTab.Due) },
                         onRepeat = { picker = Picker.Repeat },
                         onEstimate = { picker = Picker.Estimate },
@@ -357,7 +367,9 @@ internal fun TaskDetailSheet(
     val applyDue = { date: LocalDate?, time: LocalTime? ->
         val result = TaskEdits.due(latest, date, time, zone)
         // Pour une série, le jour et l'heure forment un seul changement : une seule question.
-        val change = result.moveDate?.let { result.change.copy(dueDate = it) } ?: result.change
+        val moved = result.moveDate?.let { result.change.copy(dueDate = it) } ?: result.change
+        // Une date précise remplace l'horizon : semaine, mois et « Un jour » sont retirés.
+        val change = if (date != null && moved != TaskChange()) PlanBoard.withDatePicked(moved, latest) else moved
         if (change != TaskChange()) viewModel.edit(latest, change)
     }
     val dismissPicker = { picker = null }
@@ -378,6 +390,8 @@ internal fun TaskDetailSheet(
                     }
                 },
                 onDismiss = dismissPicker,
+                horizon = (commitment as? Commitment.Holds)?.horizon,
+                onHorizon = if (!onStart && PlanBoard.canTakeHorizon(latest)) { horizon -> viewModel.dateHorizon(latest, horizon) } else null,
                 header = {
                     SegmentedTabs(
                         labels = listOf(
@@ -617,6 +631,7 @@ private fun DetailBadges(
     projectEnabled: Boolean,
     today: LocalDate,
     dueTime: LocalTime?,
+    commitment: Commitment?,
     projectName: String?,
     projectIcon: String?,
     projectColor: Color?,
@@ -639,8 +654,18 @@ private fun DetailBadges(
             TapBadge(onDates) {
                 CadenceBadge(
                     text = if (overdue) stringResource(R.string.tasks_detail_overdue, text) else text,
-                    tone = if (overdue) BadgeTone.Neutral else BadgeTone.Primary,
+                    tone = dueTone(overdue, due == today),
                     icon = Icons.Outlined.Schedule,
+                )
+            }
+        }
+        // Sans date, l'horizon tient lieu de date : violet doux, ou « À replanifier » en rouge s'il est passé.
+        if (task.dueDay == null && task.startDay == null) commitment?.let { held ->
+            TapBadge(onDates) {
+                CadenceBadge(
+                    text = stringResource(commitmentLabel(held)),
+                    tone = if (held is Commitment.Holds) BadgeTone.Horizon else BadgeTone.Error,
+                    icon = Icons.Outlined.DateRange,
                 )
             }
         }
@@ -653,7 +678,7 @@ private fun DetailBadges(
                     tone = when (priority) {
                         TaskPriority.HIGH -> BadgeTone.Error
                         TaskPriority.MEDIUM -> BadgeTone.Warning
-                        else -> BadgeTone.Neutral
+                        else -> BadgeTone.Info
                     },
                     icon = Icons.Outlined.Flag,
                 )
@@ -669,7 +694,7 @@ private fun DetailBadges(
             CadenceBadge(text = stringResource(R.string.tasks_detail_done), tone = BadgeTone.Success)
         } else if (task.status != TaskStatus.NOT_STARTED) {
             TapBadge(onStatus) {
-                CadenceBadge(text = stringResource(statusLabelRes(task.status)), tone = BadgeTone.Primary)
+                CadenceBadge(text = stringResource(statusLabelRes(task.status)), tone = BadgeTone.Neutral)
             }
         }
         if (task.isRecurring) {
@@ -688,6 +713,19 @@ private fun DetailBadges(
     }
 }
 
+/** Échéance : dépassée en rouge, aujourd'hui en vert, sinon neutre. */
+private fun dueTone(overdue: Boolean, isToday: Boolean): BadgeTone = when {
+    overdue -> BadgeTone.Error
+    isToday -> BadgeTone.Success
+    else -> BadgeTone.Neutral
+}
+
+@StringRes
+private fun commitmentLabel(commitment: Commitment): Int = when (commitment) {
+    is Commitment.Holds -> horizonLabel(commitment.horizon)
+    Commitment.Stale -> R.string.plan_to_reschedule
+}
+
 @Composable
 private fun TapBadge(onClick: () -> Unit, enabled: Boolean = true, content: @Composable () -> Unit) {
     Box(
@@ -701,9 +739,12 @@ private fun detailFields(
     today: LocalDate,
     dueTime: LocalTime?,
     startTime: LocalTime?,
+    commitment: Commitment?,
     projectName: String?,
     projectIcon: String?,
+    projectColor: Color?,
     tagNames: List<String>,
+    tagColor: Color?,
     onDates: () -> Unit,
     onRepeat: () -> Unit,
     onEstimate: () -> Unit,
@@ -719,17 +760,40 @@ private fun detailFields(
         start != null && due != null -> "$start → $due"
         due != null -> due
         start != null -> stringResource(R.string.tasks_detail_starts, start)
+        commitment != null -> stringResource(commitmentLabel(commitment))
         else -> stringResource(R.string.tasks_detail_dates_none)
+    }
+    val palette = cadence
+    val datesAccent = when {
+        due != null && TaskViews.isOverdue(task, today) -> palette.error
+        due != null && task.dueDay == today -> palette.success
+        due != null || start != null -> null
+        commitment is Commitment.Holds -> palette.horizon
+        commitment == Commitment.Stale -> palette.error
+        else -> null
+    }
+    val priorityAccent = when (task.priority) {
+        TaskPriority.HIGH -> palette.error
+        TaskPriority.MEDIUM -> palette.warning
+        null -> null
+        else -> palette.info
     }
     val none = stringResource(R.string.tasks_detail_none)
     val statusSet = task.isClosed || task.status != TaskStatus.NOT_STARTED
     return listOf(
         KeyedDetailField(
             DetailFieldKey.DATES,
-            filled = due != null || start != null,
-            // Le badge du haut ne montre que l'échéance : un début garde sa ligne.
-            hasBadge = due != null && start == null,
-            DetailField(Icons.Outlined.CalendarMonth, stringResource(R.string.tasks_detail_dates), dates, onDates, due == null && start == null),
+            filled = due != null || start != null || commitment != null,
+            // Le badge du haut ne montre que l'échéance ou l'horizon : un début garde sa ligne.
+            hasBadge = (due != null || commitment != null) && start == null,
+            DetailField(
+                Icons.Outlined.CalendarMonth,
+                stringResource(R.string.tasks_detail_dates),
+                dates,
+                onDates,
+                due == null && start == null && commitment == null,
+                accent = datesAccent,
+            ),
         ),
         KeyedDetailField(
             DetailFieldKey.REPEAT,
@@ -765,6 +829,7 @@ private fun detailFields(
                 task.priority?.let { stringResource(priorityLabel(it)) } ?: stringResource(R.string.tasks_priority_none),
                 onPriority,
                 task.priority == null,
+                accent = priorityAccent,
             ),
         ),
         KeyedDetailField(
@@ -788,6 +853,7 @@ private fun detailFields(
                 tagNames.takeIf { it.isNotEmpty() }?.joinToString(" ") { "#$it" } ?: none,
                 onTags,
                 tagNames.isEmpty(),
+                accent = tagColor,
             ),
         ),
         KeyedDetailField(
@@ -801,6 +867,7 @@ private fun detailFields(
                 onProject,
                 projectName == null,
                 enabled = projectEnabled,
+                accent = projectColor,
             ),
         ),
     )

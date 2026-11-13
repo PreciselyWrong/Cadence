@@ -47,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -65,6 +66,7 @@ import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.RowGroup
 import ch.nicolab.cadence.designsystem.components.SettingRow
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.TaskCheckbox
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.components.rowGroupShape
@@ -90,6 +92,8 @@ internal class DetailField(
     val empty: Boolean = false,
     /** Faux pour une ligne qu'un fichier possède (le projet d'une tâche TODO.md) : elle se lit sans s'ouvrir. */
     val enabled: Boolean = true,
+    /** Couleur de ce que porte la valeur (date, priorité, projet, étiquette) ; null : neutre. */
+    val accent: Color? = null,
 )
 
 internal enum class DetailFieldKey { DATES, REPEAT, ESTIMATE, PRIORITY, STATUS, TAGS, PROJECT }
@@ -139,7 +143,13 @@ private fun DetailRow(field: DetailField, shape: Shape) {
             .padding(horizontal = Space.lg, vertical = Space.md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(field.icon, null, tint = palette.primary, modifier = Modifier.size(Size.iconLarge))
+        // Une valeur posée prend la couleur de ce qu'elle porte (sinon l'encre neutre), une ligne vide reste grise.
+        val tint = when {
+            field.empty -> palette.outline
+            field.accent != null -> readableTintOf(field.accent, palette.card, 3.0)
+            else -> palette.onSurfaceVariant
+        }
+        Icon(field.icon, null, tint = tint, modifier = Modifier.size(Size.iconLarge))
         Spacer(Modifier.width(Space.lg))
         Column(Modifier.weight(1f)) {
             Text(field.label, style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant)

@@ -29,8 +29,29 @@ internal data class PlanDay(val date: LocalDate, val open: List<PlanCard>, val d
     val minutes: Int get() = open.sumOf { it.minutes ?: 0 }
 }
 
-/** Les quatre horizons de la page Planifier, dans l'ordre de l'écran. */
-internal enum class Horizon { WEEK, THIS_MONTH, NEXT_MONTH, SOMEDAY }
+/** Les horizons de la page Planifier, dans l'ordre de l'écran (web : `HORIZON_KEYS`). */
+internal enum class Horizon { WEEK, NEXT_WEEK, THIS_MONTH, NEXT_MONTH, SOMEDAY }
+
+/** Engagement lu sur une tâche : un horizon qui tient encore, ou une semaine ou un mois passés (« À replanifier »). */
+internal sealed interface Commitment {
+    data class Holds(val horizon: Horizon) : Commitment
+    data object Stale : Commitment
+}
+
+/**
+ * Section « À planifier » de Planifier : [stale] (« À replanifier », engagement passé), [week] (engagées cette
+ * semaine sans jour), [month] (engagées ce mois sans jour cette semaine).
+ */
+internal data class ToSchedule(
+    val stale: List<TaskItem> = emptyList(),
+    val week: List<TaskItem> = emptyList(),
+    val month: List<TaskItem> = emptyList(),
+) {
+    val isEmpty: Boolean get() = stale.isEmpty() && week.isEmpty() && month.isEmpty()
+}
+
+/** Écritures d'un horizon choisi depuis le choix de date : le changement de la tâche et les lignes du plan à retirer. */
+internal data class HorizonWrites(val change: TaskChange, val plan: List<PlanEdit>)
 
 /** Horizons remplis ; [plannedThisWeek] : tâches prévues un jour de cette semaine, listées à part sous « Cette semaine ». */
 internal data class PlanHorizons(
@@ -123,8 +144,8 @@ internal object PlanBoard {
 
     /**
      * Horizons (web : `bucketHorizons`), première règle qui s'applique à une tâche ouverte de premier niveau :
-     * 1. `#someday` ; 2. un engagement qui tient encore : `week_of` de cette semaine, `month_of` de ce mois ou du
-     * suivant ; 3. sa date, déduite et jamais écrite : sa première ligne du plan depuis le début de la semaine, sinon
+     * 1. `#someday` ; 2. un engagement qui tient encore : `week_of` de cette semaine ou de la suivante, `month_of` de
+     * ce mois ou du suivant ; 3. sa date, déduite et jamais écrite : sa première ligne du plan depuis le début de la semaine, sinon
      * son échéance à partir d'aujourd'hui (pas pour une série). Un jour de cette semaine donne Cette semaine (une tâche
      * prévue un jour de cette semaine est listée à part, [PlanHorizons.plannedThisWeek]), un jour suivant de ce mois Ce
      * mois-ci, un jour du mois suivant Mois prochain. Une semaine, un mois ou une échéance passés ne décident rien.
@@ -150,6 +171,7 @@ internal object PlanBoard {
             val key = when {
                 task.someday -> Horizon.SOMEDAY
                 task.weekOf == weekStart -> Horizon.WEEK
+                task.weekOf == weekStart.plusDays(7) -> Horizon.NEXT_WEEK
                 task.monthOf == thisMonth -> Horizon.THIS_MONTH
                 task.monthOf == nextMonth -> Horizon.NEXT_MONTH
                 else -> {
@@ -183,10 +205,76 @@ internal object PlanBoard {
         return when (to) {
             Horizon.SOMEDAY -> TaskChange(later = true, needsWhen = settled)
             Horizon.WEEK -> TaskChange(weekOf = weekStart, clearMonth = true, later = leaveSomeday, needsWhen = settled)
+            Horizon.NEXT_WEEK -> TaskChange(weekOf = weekStart.plusDays(7), clearMonth = true, later = leaveSomeday, needsWhen = settled)
             Horizon.THIS_MONTH -> TaskChange(monthOf = thisMonth, clearWeek = true, later = leaveSomeday, needsWhen = settled)
             Horizon.NEXT_MONTH -> TaskChange(monthOf = thisMonth.plusMonths(1), clearWeek = true, later = leaveSomeday, needsWhen = settled)
         }
     }
+
+    /**
+     * « À planifier » (sous l'Inbox, même règle que le web) sur les tâches ouvertes de premier niveau :
+     * - « À replanifier » : non récurrente, sans `#someday`, `week_of` avant cette semaine ou `month_of` avant ce mois,
+     *   que [horizons] ne place nulle part et sans ligne du plan aujourd'hui ou après ;
+     * - « Cette semaine » : `week_of` de cette semaine (et dans ce seau), sans ligne du plan un jour de cette semaine ;
+     * - « Ce mois-ci » : `month_of` de ce mois (et dans ce seau), sans ligne du plan un jour de cette semaine.
+     */
+    fun toSchedule(tasks: List<TaskItem>, plan: List<PlanEntry>, today: LocalDate, weekStart: LocalDate, horizons: PlanHorizons): ToSchedule {
+        val weekEnd = weekStart.plusDays(6)
+        val thisMonth = today.withDayOfMonth(1)
+        val ahead = ServerPlan.plannedFrom(plan, today)
+        val thisWeek = plan.filter { !it.day.isBefore(weekStart) && !it.day.isAfter(weekEnd) }.mapTo(HashSet()) { it.uid }
+        val placed = horizons.buckets.values.flatten().mapTo(HashSet()) { it.uid } + horizons.plannedThisWeek.map { it.first.uid }
+        val open = tasks.filter { !it.isClosed && it.parentTaskUid == null && !it.virtual }
+        val stale = open.filter { task ->
+            !task.isRecurring && !task.someday && task.uid !in placed && task.uid !in ahead &&
+                (task.weekOf?.isBefore(weekStart) == true || task.monthOf?.isBefore(thisMonth) == true)
+        }
+        val week = horizons.buckets[Horizon.WEEK].orEmpty().filter { it.weekOf == weekStart && it.uid !in thisWeek }
+        val month = horizons.buckets[Horizon.THIS_MONTH].orEmpty().filter { it.monthOf == thisMonth && it.uid !in thisWeek }
+        return ToSchedule(stale, week, month)
+    }
+
+    /** « Retirer l'engagement » : efface la semaine et le mois posés ; null s'il n'y en a pas. */
+    fun dropCommitment(task: TaskItem): TaskChange? =
+        TaskChange(clearWeek = task.weekOf != null, clearMonth = task.monthOf != null).takeIf { it != TaskChange() }
+
+    /** Engagement montré par le champ de date d'une tâche sans échéance (même ordre que [horizons]). */
+    fun commitment(task: TaskItem, today: LocalDate, weekStart: LocalDate): Commitment? {
+        val thisMonth = today.withDayOfMonth(1)
+        return when {
+            task.someday -> Commitment.Holds(Horizon.SOMEDAY)
+            task.weekOf == weekStart -> Commitment.Holds(Horizon.WEEK)
+            task.weekOf == weekStart.plusDays(7) -> Commitment.Holds(Horizon.NEXT_WEEK)
+            task.monthOf == thisMonth -> Commitment.Holds(Horizon.THIS_MONTH)
+            task.monthOf == thisMonth.plusMonths(1) -> Commitment.Holds(Horizon.NEXT_MONTH)
+            task.weekOf?.isBefore(weekStart) == true || task.monthOf?.isBefore(thisMonth) == true -> Commitment.Stale
+            else -> null
+        }
+    }
+
+    /** Un horizon remplace la date d'une tâche simple de premier niveau ; une série garde son échéance. */
+    fun canTakeHorizon(task: TaskItem): Boolean = !task.isRecurring && task.parentTaskUid == null && !task.virtual
+
+    /**
+     * Horizon choisi dans le choix de date : écrit comme le menu « Planifier » ([horizonChange], l'autre engagement
+     * retiré), vide l'échéance (heure comprise) et retire les lignes du plan de la tâche d'aujourd'hui et après.
+     */
+    fun horizonFromDate(task: TaskItem, to: Horizon, plan: List<PlanEntry>, today: LocalDate, weekStart: LocalDate): HorizonWrites {
+        val from = if (task.someday) Horizon.SOMEDAY else null
+        val base = horizonChange(task, from, to, today, weekStart) ?: TaskChange()
+        val change = if (task.dueDay != null || task.dueDate != null) base.copy(clearDue = true) else base
+        val lines = plan.filter { it.uid == task.uid && !it.day.isBefore(today) }
+            .map { it.day }.distinct().sorted()
+            .map { RemoveTask(it, task.uid) }
+        return HorizonWrites(change, lines)
+    }
+
+    /** Une date précise choisie : la semaine, le mois et `#someday` posés sont retirés avec [change]. */
+    fun withDatePicked(change: TaskChange, task: TaskItem): TaskChange = change.copy(
+        clearWeek = change.clearWeek || task.weekOf != null,
+        clearMonth = change.clearMonth || task.monthOf != null,
+        later = if (task.someday) false else change.later,
+    )
 
     private const val DEFAULT_MINUTES = 30
 }

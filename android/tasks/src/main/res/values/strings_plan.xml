@@ -11,6 +11,7 @@
     <string name="plan_day_empty">Rien de prévu.</string>
     <string name="plan_done_count">Terminées (%d)</string>
     <string name="plan_horizon_week">Cette semaine</string>
+    <string name="plan_horizon_next_week">Semaine prochaine</string>
     <string name="plan_horizon_this_month">Ce mois-ci</string>
     <string name="plan_horizon_next_month">Mois prochain</string>
     <string name="plan_horizon_someday">Un jour</string>
@@ -20,6 +21,10 @@
     <string name="plan_sheet_days">Jour</string>
     <string name="plan_sheet_horizons">Horizon</string>
     <string name="plan_sheet_remove">Retirer de ce jour</string>
+    <string name="plan_sheet_drop_commitment">Retirer l\'engagement</string>
+    <string name="plan_commitment_dropped_notice">« %1$s » : engagement retiré</string>
+    <string name="plan_to_schedule">À planifier</string>
+    <string name="plan_to_reschedule">À replanifier</string>
     <string name="plan_sheet_more">Plus d\'actions</string>
     <string name="plan_sheet_open">Ouvrir la tâche</string>
     <string name="plan_moved_notice">« %1$s » → %2$s</string>

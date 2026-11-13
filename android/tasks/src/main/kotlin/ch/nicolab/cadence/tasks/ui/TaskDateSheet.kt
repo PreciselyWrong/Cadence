@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 
 package ch.nicolab.cadence.tasks.ui
 
@@ -9,6 +9,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -25,7 +27,6 @@ import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.EventBusy
-import androidx.compose.material.icons.outlined.NextWeek
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.WbSunny
@@ -48,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
@@ -56,6 +58,7 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.planning.Horizon
 import ch.nicolab.cadence.tasks.quickadd.MonthGrid
 import ch.nicolab.cadence.tasks.quickadd.QuickDates
 import java.time.LocalDate
@@ -67,7 +70,8 @@ private data class Shortcut(val icon: ImageVector, val label: Int, val date: Loc
 /**
  * Feuille de date commune à la fiche de tâche et à l'ajout rapide : raccourcis, mini calendrier
  * et heure facultative. Chaque geste applique et ferme ; [header] accueille un sélecteur
- * (Début / Échéance) au-dessus du contenu.
+ * (Début / Échéance) au-dessus du contenu. Avec [onHorizon], une ligne « Plus tard » sous les
+ * raccourcis pose un horizon à la place de la date ([horizon] : celui qui tient déjà).
  */
 @Composable
 internal fun TaskDateSheet(
@@ -78,6 +82,8 @@ internal fun TaskDateSheet(
     onApply: (LocalDate?, LocalTime?) -> Unit,
     onDismiss: () -> Unit,
     header: (@Composable () -> Unit)? = null,
+    horizon: Horizon? = null,
+    onHorizon: ((Horizon) -> Unit)? = null,
 ) {
     var pickingTime by remember { mutableStateOf(false) }
     val apply = { newDate: LocalDate?, newTime: LocalTime? ->
@@ -94,15 +100,34 @@ internal fun TaskDateSheet(
                 Shortcut(Icons.Outlined.Today, R.string.tasks_day_today, today),
                 Shortcut(Icons.Outlined.WbSunny, R.string.tasks_day_tomorrow, QuickDates.tomorrow(today)),
                 Shortcut(Icons.Outlined.Weekend, R.string.tasks_date_weekend, QuickDates.weekend(today)),
-                Shortcut(Icons.Outlined.NextWeek, R.string.tasks_date_next_week, QuickDates.nextWeek(today)),
                 Shortcut(Icons.Outlined.EventBusy, R.string.tasks_no_due_date, null),
             )
             shortcuts.forEach { shortcut ->
                 ShortcutRow(
                     shortcut = shortcut,
-                    selected = date == shortcut.date,
+                    selected = date == shortcut.date && (shortcut.date != null || horizon == null),
                     onClick = { apply(shortcut.date, shortcut.date?.let { time }) },
                 )
+            }
+            onHorizon?.let { pick ->
+                Text(
+                    stringResource(R.string.tasks_date_later),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = cadence.onSurfaceVariant,
+                    modifier = Modifier.padding(top = Space.xs),
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    Horizon.entries.forEach { choice ->
+                        ChoiceChip(
+                            label = stringResource(horizonLabel(choice)),
+                            selected = date == null && choice == horizon,
+                            onClick = {
+                                pick(choice)
+                                onDismiss()
+                            },
+                        )
+                    }
+                }
             }
             MiniCalendar(selected = date, today = today, onPick = { apply(it, time) })
             TimeRow(

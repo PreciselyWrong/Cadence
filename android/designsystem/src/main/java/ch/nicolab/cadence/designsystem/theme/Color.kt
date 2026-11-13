@@ -42,6 +42,12 @@ data class CadencePalette(
     val successContainer: Color,
     val warning: Color,
     val warningContainer: Color,
+    /** Information douce (priorité basse) : bleu ardoise, encre sur son conteneur à plus de 4,5:1. */
+    val info: Color,
+    val infoContainer: Color,
+    /** Horizon (semaine, mois, un jour) sans date précise : violet doux, distinct de l'accent. */
+    val horizon: Color,
+    val horizonContainer: Color,
     /** Voile sous les feuilles modales. */
     val scrim: Color,
     val isDark: Boolean,
@@ -73,6 +79,10 @@ val LightPalette = CadencePalette(
     successContainer = Color(0xFFABF5A3),
     warning = Color(0xFF7C5800),
     warningContainer = Color(0xFFFFDEA8),
+    info = Color(0xFF2F4A73),
+    infoContainer = Color(0xFFDCE6F5),
+    horizon = Color(0xFF6A2FA8),
+    horizonContainer = Color(0xFFEFE3FB),
     scrim = Color(0xFF0E0E14),
     isDark = false,
 )
@@ -101,6 +111,10 @@ val DarkPalette = CadencePalette(
     successContainer = Color(0xFF1F5223),
     warning = Color(0xFFF5BD52),
     warningContainer = Color(0xFF5D4200),
+    info = Color(0xFFB5CBEE),
+    infoContainer = Color(0xFF2A3A55),
+    horizon = Color(0xFFD8BFF8),
+    horizonContainer = Color(0xFF45306A),
     scrim = Color(0xFF000000),
     isDark = true,
 )
