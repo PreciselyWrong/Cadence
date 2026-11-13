@@ -96,7 +96,11 @@ import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
 import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
+import ch.nicolab.cadence.tasks.live.NotificationRoute
+import ch.nicolab.cadence.tasks.live.NotificationTarget
+import ch.nicolab.cadence.tasks.live.pluginPageIntent
 import ch.nicolab.cadence.tasks.proposals.ProposalRepository
+import ch.nicolab.cadence.tasks.ui.notifications.NotificationsScreen
 import ch.nicolab.cadence.tasks.proposals.ProposalTab
 import ch.nicolab.cadence.tasks.ui.proposals.CareerScreen
 import ch.nicolab.cadence.tasks.ui.proposals.ProposalSheet
@@ -155,6 +159,9 @@ internal fun CadenceAppScreen(
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
     var careerOpen by rememberSaveable { mutableStateOf(false) }
     var triageOpen by rememberSaveable { mutableStateOf(false) }
+    // « Trier mes mails » directement (notification mail_ready) : la liste de « À trier » s'ouvre sur le paquet.
+    var triageDeck by rememberSaveable { mutableStateOf(false) }
+    var notificationsOpen by rememberSaveable { mutableStateOf(false) }
     val agentMessages by AgentInbox.messages.collectAsStateWithLifecycle()
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
@@ -271,6 +278,43 @@ internal fun CadenceAppScreen(
             viewModel.importBackup(content, { backupMessage = importedMessage }, { backupMessage = it })
         }
     }
+    // Cible d'un toucher (écran des notifications ou notification système) : la même pour les deux.
+    val openTarget: (NotificationTarget) -> Unit = { target ->
+        settingsOpen = false
+        notificationsOpen = false
+        when (target) {
+            is NotificationTarget.ProposalSheet -> proposals.show(target.uid)
+            NotificationTarget.Review -> {
+                tab = Tab.BILAN
+                reviewOpen = true
+            }
+            NotificationTarget.Career -> {
+                tab = Tab.BILAN
+                careerOpen = true
+            }
+            NotificationTarget.MailDeck -> {
+                triageDeck = true
+                triageOpen = true
+            }
+            is NotificationTarget.Plugin -> scope.launch { pluginPageIntent(context, target.page)?.let(context::startActivity) }
+            is NotificationTarget.Task -> {
+                tab = Tab.TASKS
+                opening = TaskOpening(pending = target.uid)
+            }
+            is NotificationTarget.Project -> {
+                tab = Tab.TASKS
+                projectToShow = target.uid
+            }
+            NotificationTarget.Center -> notificationsOpen = true
+        }
+    }
+    val routedTarget by NotificationRoute.pending.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(routedTarget) {
+        routedTarget?.let { target ->
+            NotificationRoute.consume()
+            openTarget(target)
+        }
+    }
     val destinations = Tab.entries.map { NavDestination(stringResource(it.label), it.icon, it.selectedIcon) }
     val settingsDeps = SettingsDeps(
         groups = groups,
@@ -321,6 +365,7 @@ internal fun CadenceAppScreen(
                             onProjectShown = { projectToShow = null },
                             onOpenSearch = { searchOpen = true },
                             onOpenSettings = { openSettings(null) },
+                            onOpenNotifications = { notificationsOpen = true },
                             routineStrip = {
                                 RoutineStrip(
                                     habits = habits,
@@ -333,6 +378,7 @@ internal fun CadenceAppScreen(
                         Tab.AGENDA -> AgendaScreen(
                             onOpenHabit = { viewModel.clearSaveError(); quickHabitId = it },
                             onOpenSettings = { openSettings(null) },
+                            onOpenNotifications = { notificationsOpen = true },
                             onOpenCalendarSettings = { openSettings(CALENDARS_SETTINGS_PAGE) },
                         )
                         Tab.HABITS -> HabitsTab(
@@ -344,6 +390,7 @@ internal fun CadenceAppScreen(
                             options = { options = it },
                             create = { choosingCreation = true },
                             openSettings = { openSettings(null) },
+                            openNotifications = { notificationsOpen = true },
                             timers = timers,
                             busy = busy,
                             direct = { item -> viewModel.directAction(item) { receipt ->
@@ -372,6 +419,7 @@ internal fun CadenceAppScreen(
                             onOpenCareer = { careerOpen = true },
                             onOpenGoals = { goalsOpen = true },
                             onOpenSettings = { openSettings(null) },
+                            onOpenNotifications = { notificationsOpen = true },
                         )
                     }
                 }
@@ -402,10 +450,14 @@ internal fun CadenceAppScreen(
             )
             if (careerOpen) CareerScreen(onBack = { careerOpen = false })
             if (goalsOpen) GoalsScreen(onBack = { goalsOpen = false })
-            if (triageOpen) TriageRoute(onBack = { triageOpen = false })
+            if (triageOpen) TriageRoute(onBack = {
+                triageOpen = false
+                triageDeck = false
+            }, openDeck = triageDeck)
+            if (notificationsOpen) NotificationsScreen(onBack = { notificationsOpen = false }, onOpen = openTarget)
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen && !notificationsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }
@@ -413,7 +465,7 @@ internal fun CadenceAppScreen(
                 snackbar,
                 Modifier.align(Alignment.BottomCenter).padding(
                     // Sans barre flottante, la bannière s'arrête quand même au-dessus des boutons du système (3 boutons ou gestes).
-                    bottom = if (settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen) {
+                    bottom = if (settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen || notificationsOpen) {
                         WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.lg
                     } else {
                         navigationClearance() + Space.sm

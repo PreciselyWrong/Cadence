@@ -30,7 +30,6 @@ import ch.nicolab.cadence.tasks.plugins.PluginsStore
 import ch.nicolab.cadence.tasks.plugins.pluginsClient
 import ch.nicolab.cadence.tasks.reminder.TaskReminderScheduler
 import ch.nicolab.cadence.tasks.sync.ServerSession
-import ch.nicolab.cadence.tasks.widget.openTaskIntent
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -310,7 +309,7 @@ internal object LiveChannels {
  * Page d'un plugin sur la requête d'une notification ; le fichier vient du menu des plugins (relu en ligne s'il ne
  * connaît pas encore ce plugin). Null si le plugin n'a pas de page.
  */
-internal suspend fun pluginPageIntent(context: Context, target: LiveTarget.Plugin): Intent? {
+suspend fun pluginPageIntent(context: Context, target: LiveTarget.Plugin): Intent? {
     val store = PluginsStore.of(context)
     val item = store.menu().items.firstOrNull { it.id == target.id }
         ?: pluginsClient(context).menu().getOrNull()?.also(store::saveMenu)?.items?.firstOrNull { it.id == target.id }
@@ -378,7 +377,7 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
                 putString(EXTRA_UID, notification.uid)
                 putString(EXTRA_LABEL, label)
             })
-        intentFor(LiveTarget.of(notification.openPath, notification.taskUid))?.let { intent ->
+        NotificationRoute.intent(context, NotificationTargets.of(notification.payload()))?.let { intent ->
             builder.setContentIntent(
                 PendingIntent.getActivity(
                     context,
@@ -530,15 +529,6 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
         "copy:$uid",
         Intent(AgentReplyReceiver.ACTION_COPY).putExtra(AgentReplyReceiver.EXTRA_TEXT, text),
     )
-
-    /** Page du plugin si le menu la connaît, la tâche, ou l'app. */
-    private suspend fun intentFor(target: LiveTarget): Intent? = when (target) {
-        is LiveTarget.Plugin -> pluginPageIntent(context, target) ?: launchIntent()
-        is LiveTarget.Task -> openTaskIntent(context, target.uid)
-        LiveTarget.App -> launchIntent()
-    }
-
-    private fun launchIntent(): Intent? = context.packageManager.getLaunchIntentForPackage(context.packageName)
 
     companion object {
         const val TAG = "agents"

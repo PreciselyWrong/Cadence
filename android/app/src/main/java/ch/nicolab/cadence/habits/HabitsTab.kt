@@ -27,6 +27,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
 import ch.nicolab.cadence.domain.LearnedQuestion
+import ch.nicolab.cadence.tasks.ui.notifications.NotificationsBellButton
 
 /**
  * Onglet Habitudes : un seul en-tête partagé, puis le sélecteur qui choisit entre
@@ -42,6 +43,7 @@ internal fun HabitsTab(
     options: (HabitCardState) -> Unit,
     create: () -> Unit,
     openSettings: () -> Unit,
+    openNotifications: () -> Unit = {},
     timers: Map<String, HabitTimer>,
     busy: Boolean,
     direct: (HabitCardState) -> Unit,
@@ -57,6 +59,7 @@ internal fun HabitsTab(
             ScreenHeader(
                 title = stringResource(R.string.habits_title),
                 actions = {
+                    NotificationsBellButton(onClick = openNotifications)
                     RoundHeaderButton(Icons.Outlined.Settings, stringResource(R.string.tab_settings), onClick = openSettings)
                 },
             )

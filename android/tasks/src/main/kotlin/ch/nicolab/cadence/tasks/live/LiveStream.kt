@@ -73,9 +73,14 @@ data class LiveNotification(
     /** Proposition d'agent (`data.proposal_uid`, `docs/47-proposals.md`) : son uid et son statut. */
     val proposalUid: String? = null,
     val proposalStatus: String? = null,
+    /** Projet visé (`data.projectUid`) : le toucher ouvre sa page. */
+    val projectUid: String? = null,
 ) {
     /** Routée vers le téléphone : le serveur envoie aussi au flux ce qui ne va qu'au bureau. */
     val forMobile: Boolean get() = MOBILE in sources
+
+    /** Champs qui décident de la cible du toucher ([NotificationTargets.of]). */
+    fun payload(): NotificationPayload = NotificationPayload(kind, proposalUid, pluginId, openPath, taskUid, projectUid)
 
     companion object {
         const val EVENT = "notification"
@@ -102,6 +107,7 @@ data class LiveNotification(
                 level = body.text("level"),
                 proposalUid = data?.text("proposal_uid"),
                 proposalStatus = data?.text("status"),
+                projectUid = data?.text("projectUid"),
             )
         }
 

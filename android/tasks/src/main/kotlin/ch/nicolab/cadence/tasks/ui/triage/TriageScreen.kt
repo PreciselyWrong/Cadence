@@ -95,11 +95,11 @@ internal fun TriageEntry(count: Int, onOpen: () -> Unit) {
 
 /** « À trier » ouvert directement (notification du classement). Même écran que depuis Ma journée. */
 @Composable
-fun TriageRoute(onBack: () -> Unit) = TriageScreen(today = LocalDate.now(), onBack = onBack)
+fun TriageRoute(onBack: () -> Unit, openDeck: Boolean = false) = TriageScreen(today = LocalDate.now(), onBack = onBack, openDeck = openDeck)
 
 /** Une proposition à la fois, avec sa raison en une ligne : valider, corriger, garder telle quelle ou passer. */
 @Composable
-internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
+internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolean = false) {
     val viewModel: TriageViewModel = viewModel()
     val tasksViewModel: TasksViewModel = viewModel()
     val projects by tasksViewModel.projects.collectAsStateWithLifecycle()
@@ -111,7 +111,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
     var correcting by remember { mutableStateOf<TriageItemDto?>(null) }
     var opened by remember { mutableStateOf<String?>(null) }
     var precise by remember { mutableStateOf<Pair<TriageItemDto, QuestionDto>?>(null) }
-    var deckOpen by remember { mutableStateOf(false) }
+    var deckOpen by remember { mutableStateOf(openDeck) }
     BackHandler(onBack = onBack)
     LaunchedEffect(viewModel) { viewModel.refresh() }
     LaunchedEffect(viewModel) {

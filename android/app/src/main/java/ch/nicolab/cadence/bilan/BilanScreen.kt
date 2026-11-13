@@ -19,6 +19,7 @@ import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.WeekOutlook
 import ch.nicolab.cadence.tasks.ui.GoalsEntryPanel
+import ch.nicolab.cadence.tasks.ui.notifications.NotificationsBellButton
 import ch.nicolab.cadence.tasks.ui.proposals.CareerEntryPanel
 import ch.nicolab.cadence.tasks.ui.review.ReviewEntryPanel
 import ch.nicolab.cadence.ui.ScreenList
@@ -43,6 +44,7 @@ internal fun BilanScreen(
     onOpenCareer: () -> Unit,
     onOpenGoals: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenNotifications: () -> Unit = {},
 ) {
     val byId = habits.associateBy { it.stored.id }
     val outlook = remember(habits) {
@@ -74,6 +76,7 @@ internal fun BilanScreen(
             title = stringResource(R.string.bilan_title),
             subtitle = weekSubtitle,
             actions = {
+                NotificationsBellButton(onClick = onOpenNotifications)
                 RoundHeaderButton(Icons.Outlined.Settings, stringResource(R.string.tab_settings), onClick = onOpenSettings)
             },
         )

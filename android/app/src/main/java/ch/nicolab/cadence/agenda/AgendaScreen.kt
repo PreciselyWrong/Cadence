@@ -62,6 +62,7 @@ import ch.nicolab.cadence.tasks.ui.RecurringAction
 import ch.nicolab.cadence.tasks.ui.QuickAddSheet
 import ch.nicolab.cadence.tasks.ui.TaskSheetHost
 import ch.nicolab.cadence.tasks.ui.RecurringScopeDialog
+import ch.nicolab.cadence.tasks.ui.notifications.NotificationsBellButton
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
@@ -100,6 +101,7 @@ fun AgendaScreen(
     modifier: Modifier = Modifier,
     onOpenHabit: (String) -> Unit = {},
     onOpenSettings: () -> Unit = {},
+    onOpenNotifications: () -> Unit = {},
     onOpenCalendarSettings: () -> Unit = {},
 ) {
     val viewModel: AgendaViewModel = viewModel()
@@ -185,6 +187,7 @@ fun AgendaScreen(
                 onToday = viewModel::goToToday,
                 onDisplay = { displayOpen = true },
                 onSettings = onOpenSettings,
+                onNotifications = onOpenNotifications,
                 calendarOpen = calendar.open && state.mode != AgendaMode.MONTH,
                 onCalendar = if (state.mode == AgendaMode.MONTH) null else ({ calendar = calendar.toggled(state.selected) }),
             )
@@ -288,6 +291,7 @@ private fun AgendaHeader(
     onToday: () -> Unit,
     onDisplay: () -> Unit,
     onSettings: () -> Unit,
+    onNotifications: () -> Unit,
     calendarOpen: Boolean,
     onCalendar: (() -> Unit)?,
 ) {
@@ -339,6 +343,7 @@ private fun AgendaHeader(
             onClick = onDisplay,
         )
         Spacer(Modifier.width(Space.sm))
+        NotificationsBellButton(onClick = onNotifications)
         RoundHeaderButton(Icons.Outlined.Settings, stringResource(R.string.tab_settings), onClick = onSettings)
     }
 }

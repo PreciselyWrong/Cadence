@@ -54,6 +54,7 @@ import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.PinnedShortcut
 import ch.nicolab.cadence.tasks.model.PinnedShortcuts
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.ui.notifications.NotificationsBellButton
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -86,6 +87,7 @@ fun TasksScreen(
     onProjectShown: () -> Unit = {},
     onOpenSearch: () -> Unit = {},
     onOpenSettings: () -> Unit,
+    onOpenNotifications: () -> Unit = {},
     routineStrip: @Composable () -> Unit = {},
     showPlan: Boolean = false,
     onPlanShown: () -> Unit = {},
@@ -217,6 +219,7 @@ fun TasksScreen(
                             contentDescription = stringResource(R.string.tasks_search_open),
                             onClick = onOpenSearch,
                         )
+                        NotificationsBellButton(onClick = onOpenNotifications)
                         RoundHeaderButton(
                             icon = Icons.Outlined.Settings,
                             contentDescription = stringResource(R.string.tasks_open_settings),

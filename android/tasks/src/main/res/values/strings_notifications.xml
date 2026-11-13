@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Écran « Notifications » (docs/36-notifications.md) : celles des agents et du classement, lues et non lues.
+     Espace fine insécable (U+202F) avant « : ; ? ! ». -->
+<resources>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_empty">Rien de nouveau</string>
+    <string name="notifications_read_all">Tout marquer comme lu</string>
+    <string name="notifications_retry">Réessayer</string>
+    <string name="notifications_error">Impossible de charger les notifications.</string>
+    <string name="notifications_offline">Hors ligne : les notifications se lisent en ligne.</string>
+</resources>

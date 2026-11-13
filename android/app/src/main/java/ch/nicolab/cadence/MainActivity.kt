@@ -1,5 +1,6 @@
 package ch.nicolab.cadence
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,7 @@ import androidx.activity.viewModels
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.tasks.autoclassify.EXTRA_OPEN_TRIAGE
 import ch.nicolab.cadence.tasks.links.ProvideCadenceUriHandler
+import ch.nicolab.cadence.tasks.live.NotificationRoute
 import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.widget.EXTRA_OPEN_TASK_UID
 
@@ -25,11 +27,26 @@ class MainActivity : ComponentActivity() {
         viewModel.onAppVisible()
     }
 
+    /**
+     * Un tap sur une notification alors que l'app tourne déjà arrive ici, pas dans [onCreate] : sans cette
+     * activité, la cible (feuille, Carrière, « Trier mes mails », tâche…) n'était jamais ouverte.
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        routeIntent(intent)
+    }
+
+    private fun routeIntent(intent: Intent?) {
+        ProposalRepository.of(this).route(intent)
+        NotificationRoute.route(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         // Un tap sur « Ta semaine est prête » ou un échec : la feuille ou l'onglet, une seule fois par lancement.
-        if (savedInstanceState == null) ProposalRepository.of(this).route(intent)
+        if (savedInstanceState == null) routeIntent(intent)
         setContent {
             CadenceTheme {
                 ProvideCadenceUriHandler {

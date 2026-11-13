@@ -2,24 +2,16 @@ package ch.nicolab.cadence.tasks.live
 
 import android.content.Context
 import android.util.Log
-import ch.nicolab.cadence.tasks.data.currentServerSession
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
 import java.net.URLEncoder
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonObject
 
 /** Message non lu d'un agent : une notification posée par un plugin (`data.pluginId`). */
 data class AgentMessage(
@@ -67,14 +59,13 @@ object AgentMessages {
 object AgentInbox {
     private const val TAG = "AgentInbox"
     private const val LIST_PATH = "/api/notifications?includeRead=false&limit=20"
-    private const val TIMEOUT_MS = 15_000
 
     private val _messages = MutableStateFlow<List<AgentMessage>>(emptyList())
     val messages: StateFlow<List<AgentMessage>> = _messages.asStateFlow()
 
     suspend fun refresh(context: Context) {
         _messages.value = try {
-            val body = request(context, "GET", LIST_PATH)
+            val body = liveRequest(context, "GET", LIST_PATH)
             AgentMessages.pick(body)
         } catch (error: CancellationException) {
             throw error
@@ -82,42 +73,20 @@ object AgentInbox {
             Log.i(TAG, "Agent messages not read", error)
             emptyList()
         }
+        NotificationCenter.refreshUnread(context)
     }
 
     /** Retire le message aussitôt, puis le marque lu ; vrai si le serveur l'a noté. */
     suspend fun markRead(context: Context, uid: String): Boolean {
         _messages.update { list -> list.filterNot { it.uid == uid } }
         return try {
-            request(context, "POST", "/api/notifications/" + URLEncoder.encode(uid, "UTF-8") + "/read")
+            liveRequest(context, "POST", "/api/notifications/" + URLEncoder.encode(uid, "UTF-8") + "/read")
             true
         } catch (error: CancellationException) {
             throw error
         } catch (error: Exception) {
             Log.w(TAG, "Agent message not marked read", error)
             false
-        }
-    }
-
-    private suspend fun request(context: Context, method: String, path: String): JsonObject = withContext(Dispatchers.IO) {
-        val session = currentServerSession(context.applicationContext) ?: throw IOException("Aucun serveur configuré")
-        val connection = (URL(session.baseUrl.trimEnd('/') + path).openConnection() as HttpURLConnection).apply {
-            requestMethod = method
-            connectTimeout = TIMEOUT_MS
-            readTimeout = TIMEOUT_MS
-            setRequestProperty("Authorization", "Bearer ${session.token}")
-            setRequestProperty("Accept", "application/json")
-            if (method == "POST") {
-                doOutput = true
-                setFixedLengthStreamingMode(0)
-            }
-        }
-        try {
-            val code = connection.responseCode
-            if (code !in 200..299) throw IOException("HTTP $code")
-            val text = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-            runCatching { Json.parseToJsonElement(text).jsonObject }.getOrDefault(JsonObject(emptyMap()))
-        } finally {
-            connection.disconnect()
         }
     }
 }

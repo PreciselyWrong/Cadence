@@ -1,3 +1,8 @@
+## [1.33.0] — 13 novembre 2026
+
+- Notifications : un écran liste les notifications des agents et du classement, lues et non lues, la plus récente d'abord. Une cloche à côté des Réglages (Tâches, Agenda, Habitudes, Bilan) affiche le nombre de non lues ; un toucher marque la notification lue et l'ouvre, « Tout marquer comme lu » vide le compteur.
+- Un toucher sur une notification système ouvre sa cible : « Trier mes mails », la semaine prête, la revue, la Carrière, une page de plugin, une tâche ou un projet. Quand l'app était déjà ouverte, le toucher ne faisait rien : corrigé.
+
 ## [1.32.0] — 13 novembre 2026
 
 - Carrière : les choix se préparent puis « Valider » les applique d'un coup.
