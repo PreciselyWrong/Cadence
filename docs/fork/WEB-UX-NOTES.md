@@ -828,3 +828,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Demande** : voir le vrai favicon (Gmail, le site d'un lien) sur la pastille d'origine d'une tâche, pas une lettre.
 - **Décision** : avec une adresse d'origine, la pastille montre l'icône du site, lue par le serveur (`/api/links/favicon`, le site ne voit pas qui regarde) ; la lettre reste sans adresse ou si l'icône manque.
 - **Android à reprendre** : fait dans la même étape (lignes de tâches et fiche, par Coil avec la clé).
+
+### 2026-11-13 — Logo net et épinglés centrés dans la barre latérale
+
+- **Demande** : le logo de la barre latérale était pixelisé (PNG de 1558 px réduit à 32 px), son texte manquait de finition, et les épinglés étaient calés à gauche.
+- **Décision** : logo vectoriel tiré de la charte (`public/wordmark-dark.svg`, recadré depuis `docs/brand/wordmark-dark.svg`, Plus Jakarta Sans Bold en tracés) ; épinglés en tuiles d'un quart de largeur, centrés.
+- **Android à reprendre** : rien, l'app n'a ni ce logo ni cette grille.

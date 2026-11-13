@@ -363,10 +363,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     >
                                         <img
                                             src={getAssetPath(
-                                                'wide-logo-light.png'
+                                                'wordmark-dark.svg'
                                             )}
                                             alt="Cadence"
-                                            className="h-8 w-auto"
+                                            className="h-[22px] w-auto"
                                         />
                                     </Link>
                                     <button

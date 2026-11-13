@@ -78,7 +78,7 @@ const PinnedTile: React.FC<PinnedTileProps> = ({
     const ink = color ? `color-mix(in srgb, ${color} 55%, white)` : undefined;
     return (
         <div
-            className="relative min-w-0"
+            className="relative w-1/4 min-w-0 px-px"
             onContextMenu={(event) => {
                 event.preventDefault();
                 trigger.current?.click();
@@ -179,7 +179,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
     return (
         <section
             aria-label={t('sidebar.pinned', 'Pinned')}
-            className="grid grid-cols-4 gap-0.5 px-1"
+            className="flex flex-wrap justify-center gap-y-0.5 px-1"
         >
             {pinnedProjects.map((project) => {
                 const path = getProjectPath(project);
