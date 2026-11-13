@@ -165,6 +165,7 @@ describe('weekFacts', () => {
             date: '2026-11-17',
             events: [{ title: 'Dentiste', start: 'a', end: 'b' }],
             planned: ['a'],
+            task_count: 2,
             load_minutes: 60,
         });
         expect(result.tasks[0]).toEqual({
@@ -189,6 +190,44 @@ describe('validateWeekAnswer', () => {
         ],
         plans: new Map(),
         events: [],
+    });
+
+    it('puts at most the daily cap of tasks on a day, the rest to this week', () => {
+        const day = PERIOD.start;
+        const capped = weekFacts({
+            today: TODAY,
+            period: PERIOD,
+            weekStart: WEEK,
+            tasks: ['a', 'b', 'c', 'd'].map((uid) => task(uid, { due: day })),
+            plans: new Map([
+                [
+                    day,
+                    [
+                        { task_uid: 'x', duration_minutes: 30 },
+                        { task_uid: 'y', duration_minutes: 30 },
+                        { task_uid: 'a', duration_minutes: 30 },
+                    ],
+                ],
+            ]),
+            events: [],
+            maxTasksPerDay: 5,
+        });
+        expect(capped.max_tasks_per_day).toBe(5);
+        expect(capped.days[0].task_count).toBe(3);
+        const { answer } = validateAnswer('week', capped, {
+            headline: 'Plein',
+            changes: ['b', 'c', 'd'].map((uid) => ({
+                task_uid: uid,
+                op: 'plan_day',
+                date: day,
+                reason: 'r',
+            })),
+        });
+        expect(answer.changes.map((c) => [c.task_uid, c.op])).toEqual([
+            ['b', 'plan_day'],
+            ['c', 'plan_day'],
+            ['d', 'this_week'],
+        ]);
     });
 
     it('keeps valid changes and drops the rest', () => {

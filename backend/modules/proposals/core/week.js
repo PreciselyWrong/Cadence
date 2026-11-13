@@ -8,6 +8,9 @@ const { isDay, addDays, daysBetween, listDays } = require('./day');
 const { cleanText } = require('./text');
 
 const MAX_TASKS = 40;
+// Tasks on one day's plan at most, unless the user sets another cap
+// (ui_settings.planning.maxTasksPerDay).
+const MAX_TASKS_PER_DAY = 5;
 const MAX_EVENTS_PER_DAY = 20;
 const MAX_PERIOD_DAYS = 14;
 const DEFAULT_PERIOD_DAYS = 7;
@@ -118,6 +121,7 @@ function weekFacts({
     plans,
     events,
     context = {},
+    maxTasksPerDay = MAX_TASKS_PER_DAY,
 }) {
     const plannedUids = new Set();
     for (const items of plans.values()) {
@@ -150,6 +154,7 @@ function weekFacts({
             planned: items
                 .map((item) => item.task_uid)
                 .filter((uid) => shown.has(uid)),
+            task_count: items.length,
             load_minutes: items.reduce(
                 (sum, item) => sum + (item.duration_minutes || 0),
                 0
@@ -159,6 +164,7 @@ function weekFacts({
     return {
         period,
         today,
+        max_tasks_per_day: maxTasksPerDay,
         days,
         tasks: selected,
         ...context,
@@ -178,6 +184,34 @@ function cleanQuestion(raw) {
         .map((choice) => cleanText(choice, 60))
         .filter(Boolean);
     return { id, text, choices };
+}
+
+// A day never holds more than the daily cap: the tasks staying on it (those
+// of other plans, and the facts' tasks that no change moves) count first,
+// then the agent's plan_day changes in its order; the ones over the cap go to
+// this week instead.
+function capDays(facts, changes) {
+    const cap = facts.max_tasks_per_day;
+    if (!Number.isInteger(cap) || cap < 1) return;
+    const moved = new Set(changes.map((change) => change.task_uid));
+    const used = new Map(
+        (facts.days ?? []).map((day) => {
+            const leaving = (day.planned ?? []).filter((uid) =>
+                moved.has(uid)
+            ).length;
+            return [day.date, (day.task_count ?? 0) - leaving];
+        })
+    );
+    for (const change of changes) {
+        if (change.op !== 'plan_day') continue;
+        const count = used.get(change.date) ?? 0;
+        if (count >= cap) {
+            change.op = 'this_week';
+            delete change.date;
+        } else {
+            used.set(change.date, count + 1);
+        }
+    }
 }
 
 // Keeps what is valid in the agent's answer and drops the rest. A change
@@ -206,6 +240,7 @@ function validateWeekAnswer(facts, raw) {
         seen.add(item.task_uid);
         changes.push(change);
     }
+    capDays(facts, changes);
     return {
         questions: takeList(raw.questions, QUESTIONS_MAX)
             .map(cleanQuestion)

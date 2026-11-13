@@ -68,6 +68,8 @@ Answer (`POST /api/proposals/:uid/answer`, `answer` object, contract v2):
 
 Operations the agent may propose:
 
+**Daily cap**: a day holds at most `facts.max_tasks_per_day` tasks (`ui_settings.planning.maxTasksPerDay`, default 5), counting `facts.days[].task_count`. The answer's `plan_day` changes over the cap, in the agent's order, become `this_week`.
+
 **Overdue tasks** (`facts.tasks[].overdue`): a `plan_day` also sets the due date to that day, and a horizon (`this_week`, `next_week`, `this_month`, `next_month`, `later`) clears it, so a task the user places again is no longer overdue. Other tasks keep their due date.
 
 | `op` | Date | Applied as |

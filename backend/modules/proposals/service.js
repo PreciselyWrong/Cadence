@@ -18,6 +18,7 @@ const dispatcher = require('../webhooks/dispatcher');
 const { logError } = require('../../services/logService');
 const reviewService = require('../review/service');
 const dailyPlan = require('../daily-plan/service');
+const dailyPlanRepository = require('../daily-plan/repository');
 const calendarFeeds = require('../calendar-feeds/service');
 const goalsService = require('../goals/service');
 const repository = require('./repository');
@@ -236,6 +237,16 @@ function linkOf(task) {
     };
 }
 
+// The daily cap of the week (docs/47-proposals.md): Profil › Planning value,
+// else the default of core/week.js.
+async function maxTasksPerDayOf(user) {
+    const settings = await dailyPlanRepository.findUiSettings(user.id);
+    const value = settings?.planning?.maxTasksPerDay;
+    return Number.isInteger(value) && value >= 1 && value <= 20
+        ? value
+        : undefined;
+}
+
 async function computeWeek(user, { start, end }, timezone, today) {
     const hours = await dailyPlan.getDayHours(user);
     const now = moment.tz(timezone);
@@ -296,6 +307,7 @@ async function computeWeek(user, { start, end }, timezone, today) {
             plans,
             events,
             context: await userContext(user),
+            maxTasksPerDay: await maxTasksPerDayOf(user),
         }),
     };
 }
