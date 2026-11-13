@@ -85,6 +85,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
         commitNote,
         saveNote,
         changeDue,
+        changeHorizon,
         changeStart,
         changeDefer,
         changeReminder,
@@ -99,6 +100,9 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
     // The upload area only takes room once the task has a file or the user
     // asks to attach one; the card stays mounted to learn the count.
     const [attachmentsCount, setAttachmentsCount] = useState(0);
+    // A horizon picked from the due chip takes the task off its plans: the
+    // day the sheet was opened from no longer holds it.
+    const [leftPlan, setLeftPlan] = useState(false);
     const [attachOpen, setAttachOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0);
     const showAttachments = attachOpen || attachmentsCount > 0;
@@ -176,6 +180,14 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                 task={task}
                 people={assignablePeople}
                 onDue={changeDue}
+                onHorizon={
+                    readOnly
+                        ? undefined
+                        : (key, from) => {
+                              setLeftPlan(true);
+                              changeHorizon(key, from);
+                          }
+                }
                 onStart={changeStart}
                 onDefer={changeDefer}
                 onReminder={changeReminder}
@@ -235,7 +247,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                 }
                 onOpenParent={openTaskPanel}
             />
-            {plannedLabel && (
+            {plannedLabel && !leftPlan && (
                 <p
                     data-testid="task-planned-label"
                     className="-mt-2 text-sm tabular-nums text-gray-600 dark:text-gray-300"

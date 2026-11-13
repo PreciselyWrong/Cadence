@@ -117,11 +117,20 @@ describe('TaskChipRow progressive disclosure', () => {
         expect(screen.queryByTestId('chip-priority')).not.toBeInTheDocument();
     });
 
-    it('shows a past due date like any set date, without red', () => {
-        renderRow({ due_date: '2030-03-01' });
+    // The chip takes the colour of its date: a later day neutral, a past
+    // one red (chipTones.ts).
+    it('shows a later due date neutral and a past one red', () => {
+        const { unmount } = renderRow({ due_date: '2999-03-01' });
+        expect(screen.getByTestId('chip-due')).toHaveAttribute(
+            'data-tone',
+            'neutral'
+        );
+        unmount();
 
-        const due = screen.getByTestId('chip-due');
-        expect(due.className).not.toMatch(/red/);
-        expect(due).toHaveClass('bg-primary-container');
+        renderRow({ due_date: '2020-03-01' });
+        expect(screen.getByTestId('chip-due')).toHaveAttribute(
+            'data-tone',
+            'danger'
+        );
     });
 });

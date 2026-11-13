@@ -5515,6 +5515,7 @@
     "more": "Mehr"
   },
   "datePopover": {
+    "later": "Später",
     "today": "Heute",
     "tomorrow": "Morgen",
     "weekend": "Dieses Wochenende",
@@ -6112,6 +6113,12 @@
     "habitLogFailed": "Die Gewohnheit konnte nicht eingetragen werden."
   },
   "upcoming": {
+    "replan": "Neu planen",
+    "toPlan": "Zu planen",
+    "expandToPlan": "Zu planen anzeigen ({{count}})",
+    "commitTo": "Vormerken für",
+    "removeCommitment": "Zusage entfernen",
+    "commitmentRemoved": "Zusage entfernt",
     "title": "Planen",
     "days": "Tage",
     "horizons": "Horizonte",

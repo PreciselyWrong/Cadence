@@ -5542,6 +5542,7 @@
     "more": "Ещё"
   },
   "datePopover": {
+    "later": "Позже",
     "today": "Сегодня",
     "tomorrow": "Завтра",
     "weekend": "В эти выходные",
@@ -6157,6 +6158,12 @@
     "habitLogFailed": "Не удалось отметить привычку."
   },
   "upcoming": {
+    "replan": "Перепланировать",
+    "toPlan": "Запланировать",
+    "expandToPlan": "Показать «Запланировать» ({{count}})",
+    "commitTo": "Назначить на",
+    "removeCommitment": "Снять обязательство",
+    "commitmentRemoved": "Обязательство снято",
     "title": "План",
     "days": "Дни",
     "horizons": "Горизонты",

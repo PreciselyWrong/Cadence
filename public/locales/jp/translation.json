@@ -5488,6 +5488,7 @@
     "more": "その他"
   },
   "datePopover": {
+    "later": "後で",
     "today": "今日",
     "tomorrow": "明日",
     "weekend": "今週末",
@@ -6083,6 +6084,12 @@
     "habitLogFailed": "習慣を記録できませんでした。"
   },
   "upcoming": {
+    "replan": "再計画",
+    "toPlan": "計画する",
+    "expandToPlan": "計画するものを表示 ({{count}})",
+    "commitTo": "割り当て先",
+    "removeCommitment": "コミットを解除",
+    "commitmentRemoved": "コミットを解除しました",
     "title": "計画",
     "days": "日",
     "horizons": "期間",

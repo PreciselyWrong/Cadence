@@ -5488,6 +5488,7 @@
     "more": "Daha fazla"
   },
   "datePopover": {
+    "later": "Daha sonra",
     "today": "Bugün",
     "tomorrow": "Yarın",
     "weekend": "Bu hafta sonu",
@@ -6083,6 +6084,12 @@
     "habitLogFailed": "Alışkanlık kaydedilemedi."
   },
   "upcoming": {
+    "replan": "Yeniden planlanacak",
+    "toPlan": "Planlanacak",
+    "expandToPlan": "Planlanacakları göster ({{count}})",
+    "commitTo": "Şuna ata",
+    "removeCommitment": "Taahhüdü kaldır",
+    "commitmentRemoved": "Taahhüt kaldırıldı",
     "title": "Planla",
     "days": "Günler",
     "horizons": "Ufuklar",

@@ -5624,6 +5624,7 @@
     "more": "Viac"
   },
   "datePopover": {
+    "later": "Neskôr",
     "today": "Dnes",
     "tomorrow": "Zajtra",
     "weekend": "Tento víkend",
@@ -6132,6 +6133,12 @@
     "habitLogFailed": "Návyk sa nepodarilo zaznamenať."
   },
   "upcoming": {
+    "replan": "Na preplánovanie",
+    "toPlan": "Na naplánovanie",
+    "expandToPlan": "Zobraziť na naplánovanie ({{count}})",
+    "commitTo": "Záväzok na",
+    "removeCommitment": "Odstrániť záväzok",
+    "commitmentRemoved": "Záväzok odstránený",
     "title": "Plánovať",
     "days": "Dni",
     "horizons": "Horizonty",

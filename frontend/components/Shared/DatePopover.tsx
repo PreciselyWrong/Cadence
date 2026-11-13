@@ -16,6 +16,13 @@ import {
 } from '../../utils/profileService';
 import { resolveUserLocale } from '../../utils/localeUtils';
 import { CONTROL_HEIGHT, FIELD_HEIGHT } from './ui/controlSizes';
+import type { Task } from '../../entities/Task';
+import {
+    Commitment,
+    HORIZON_KEYS,
+    HorizonKey,
+    commitmentOf,
+} from '../Upcoming/horizons';
 
 export interface DateValue {
     date: string | null;
@@ -26,11 +33,21 @@ interface DatePopoverProps {
     value: DateValue;
     onChange: (value: DateValue) => void;
     label: string;
-    renderTrigger: (
-        props: ChipPopoverTriggerProps & { display: string | null }
-    ) => React.ReactNode;
+    renderTrigger: (props: DateTriggerProps) => React.ReactNode;
     // Hides the time field, for date-only fields
     withTime?: boolean;
+    // The task sheet's due chip: a « Later » row of horizons replaces the
+    // « Next week » quick choice; the trigger learns the task's commitment.
+    horizons?: {
+        task: Task;
+        // `from` is the task's commitment before the pick.
+        onPick: (key: HorizonKey, from: Commitment | null) => void;
+    };
+}
+
+export interface DateTriggerProps extends ChipPopoverTriggerProps {
+    display: string | null;
+    commitment: Commitment | null;
 }
 
 const PARSE_DELAY_MS = 300;
@@ -45,6 +62,7 @@ const DatePopover: React.FC<DatePopoverProps> = ({
     label,
     renderTrigger,
     withTime = true,
+    horizons,
 }) => {
     const { t, i18n } = useTranslation();
     const locale = useMemo(
@@ -68,12 +86,17 @@ const DatePopover: React.FC<DatePopoverProps> = ({
     const display = value.date
         ? formatDateLabel(value.date, withTime ? value.time : null, locale)
         : null;
+    const commitment = horizons
+        ? commitmentOf(horizons.task, toYmd(new Date()), firstDay)
+        : null;
 
     return (
         <ChipPopover
             label={label}
             widthClass="w-80"
-            renderTrigger={(props) => renderTrigger({ ...props, display })}
+            renderTrigger={(props) =>
+                renderTrigger({ ...props, display, commitment })
+            }
         >
             {(close) => (
                 <DatePanel
@@ -81,6 +104,17 @@ const DatePopover: React.FC<DatePopoverProps> = ({
                     firstDay={firstDay}
                     locale={locale}
                     withTime={withTime}
+                    horizon={
+                        horizons
+                            ? {
+                                  current: value.date ? null : commitment,
+                                  onPick: (key) => {
+                                      horizons.onPick(key, commitment);
+                                      close();
+                                  },
+                              }
+                            : undefined
+                    }
                     onPick={(next) => {
                         onChange(next);
                         close();
@@ -103,16 +137,28 @@ interface DatePanelProps {
     firstDay: number;
     locale: string;
     withTime: boolean;
+    horizon?: {
+        current: Commitment | null;
+        onPick: (key: HorizonKey) => void;
+    };
     onPick: (value: DateValue) => void;
     onTime: (time: string | null) => void;
     t: (key: string, fallback: string) => string;
 }
+
+const horizonChipClass = (current: boolean) =>
+    `${CONTROL_HEIGHT.sm} rounded-full px-2.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+        current
+            ? 'bg-primary text-primary-on'
+            : 'bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700/60 dark:text-gray-100 dark:hover:bg-gray-700'
+    }`;
 
 const DatePanel: React.FC<DatePanelProps> = ({
     value,
     firstDay,
     locale,
     withTime,
+    horizon,
     onPick,
     onTime,
     t,
@@ -157,6 +203,17 @@ const DatePanel: React.FC<DatePanelProps> = ({
         tomorrow: t('datePopover.tomorrow', 'Tomorrow'),
         weekend: t('datePopover.weekend', 'This weekend'),
         next_week: t('datePopover.nextWeek', 'Next week'),
+    };
+    // With the horizons row, « Next week » is the horizon, not a Monday.
+    const shortcuts = horizon
+        ? DATE_SHORTCUTS.filter((kind) => kind !== 'next_week')
+        : DATE_SHORTCUTS;
+    const horizonLabel: Record<HorizonKey, string> = {
+        week: t('upcoming.thisWeek', 'This week'),
+        next_week: t('upcoming.horizonNextWeek', 'Next week'),
+        this_month: t('upcoming.thisMonth', 'This month'),
+        next_month: t('upcoming.nextMonth', 'Next month'),
+        someday: t('upcoming.someday', 'Someday'),
     };
 
     const weekdayFormat = new Intl.DateTimeFormat(locale, { weekday: 'short' });
@@ -237,7 +294,7 @@ const DatePanel: React.FC<DatePanelProps> = ({
                 role="group"
                 aria-label={t('datePopover.quick', 'Quick choices')}
             >
-                {DATE_SHORTCUTS.map((kind) => (
+                {shortcuts.map((kind) => (
                     <button
                         key={kind}
                         type="button"
@@ -260,6 +317,35 @@ const DatePanel: React.FC<DatePanelProps> = ({
                     <span>{t('datePopover.noDate', 'No date')}</span>
                 </button>
             </div>
+
+            {horizon && (
+                <div
+                    role="group"
+                    aria-label={t('datePopover.later', 'Later')}
+                    data-testid="date-popover-horizons"
+                    className="px-1"
+                >
+                    <p className="mb-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+                        {t('datePopover.later', 'Later')}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                        {HORIZON_KEYS.map((key) => (
+                            <button
+                                key={key}
+                                type="button"
+                                aria-pressed={horizon.current === key}
+                                data-testid={`date-horizon-${key}`}
+                                onClick={() => horizon.onPick(key)}
+                                className={horizonChipClass(
+                                    horizon.current === key
+                                )}
+                            >
+                                {horizonLabel[key]}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="rounded-xl bg-gray-50 p-2 dark:bg-gray-900/50">
                 <div className="mb-1 flex items-center justify-between">

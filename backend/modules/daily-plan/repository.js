@@ -292,6 +292,25 @@ class DailyPlanRepository {
         });
     }
 
+    // The days from `from` on whose plan of the user holds the task.
+    async findPlanDatesWithTask(userId, taskId, from) {
+        const plans = await DailyPlan.findAll({
+            where: { user_id: userId, plan_date: { [Op.gte]: from } },
+            attributes: ['plan_date'],
+            include: [
+                {
+                    model: DailyPlanItem,
+                    as: 'Items',
+                    where: { task_id: taskId },
+                    attributes: [],
+                    required: true,
+                },
+            ],
+            order: [['plan_date', 'ASC']],
+        });
+        return plans.map((plan) => String(plan.plan_date).slice(0, 10));
+    }
+
     // Plan lines of the user on `date` or on any day from `from` on, as
     // { plan_date, task_id }: the only plans that place a task on a day.
     async findPlanLinesFrom(userId, from, date) {

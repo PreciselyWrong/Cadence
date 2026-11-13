@@ -5517,6 +5517,7 @@
     "more": "Plus"
   },
   "datePopover": {
+    "later": "Plus tard",
     "today": "Aujourd'hui",
     "tomorrow": "Demain",
     "weekend": "Ce week-end",
@@ -6120,6 +6121,12 @@
     "habitLogFailed": "Impossible d'enregistrer l'habitude."
   },
   "upcoming": {
+    "replan": "À replanifier",
+    "toPlan": "À planifier",
+    "expandToPlan": "Afficher À planifier ({{count}})",
+    "commitTo": "Engager pour",
+    "removeCommitment": "Retirer l’engagement",
+    "commitmentRemoved": "Engagement retiré",
     "title": "Planifier",
     "days": "Jours",
     "horizons": "Horizons",

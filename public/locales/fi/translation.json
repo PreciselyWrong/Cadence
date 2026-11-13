@@ -5503,6 +5503,7 @@
     "more": "Lisää"
   },
   "datePopover": {
+    "later": "Myöhemmin",
     "today": "Tänään",
     "tomorrow": "Huomenna",
     "weekend": "Tänä viikonloppuna",
@@ -6100,6 +6101,12 @@
     "habitLogFailed": "Tapaa ei voitu kirjata."
   },
   "upcoming": {
+    "replan": "Suunniteltava uudelleen",
+    "toPlan": "Suunniteltavat",
+    "expandToPlan": "Näytä suunniteltavat ({{count}})",
+    "commitTo": "Sitoudu",
+    "removeCommitment": "Poista sitoumus",
+    "commitmentRemoved": "Sitoumus poistettu",
     "title": "Suunnittelu",
     "days": "Päivät",
     "horizons": "Näkymät",

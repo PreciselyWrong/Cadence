@@ -5500,6 +5500,7 @@
     "more": "Más"
   },
   "datePopover": {
+    "later": "Más tarde",
     "today": "Hoy",
     "tomorrow": "Mañana",
     "weekend": "Este fin de semana",
@@ -6105,6 +6106,12 @@
     "habitLogFailed": "No se pudo registrar el hábito."
   },
   "upcoming": {
+    "replan": "Por replanificar",
+    "toPlan": "Por planificar",
+    "expandToPlan": "Mostrar por planificar ({{count}})",
+    "commitTo": "Comprometer para",
+    "removeCommitment": "Quitar el compromiso",
+    "commitmentRemoved": "Compromiso quitado",
     "title": "Planificar",
     "days": "Días",
     "horizons": "Horizontes",

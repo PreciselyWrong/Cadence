@@ -5519,6 +5519,7 @@
     "more": "Mai mult"
   },
   "datePopover": {
+    "later": "Mai târziu",
     "today": "Azi",
     "tomorrow": "Mâine",
     "weekend": "Weekendul acesta",
@@ -6125,6 +6126,12 @@
     "habitLogFailed": "Obiceiul nu a putut fi înregistrat."
   },
   "upcoming": {
+    "replan": "De replanificat",
+    "toPlan": "De planificat",
+    "expandToPlan": "Arată de planificat ({{count}})",
+    "commitTo": "Angajează pentru",
+    "removeCommitment": "Elimină angajamentul",
+    "commitmentRemoved": "Angajament eliminat",
     "title": "Planificare",
     "days": "Zile",
     "horizons": "Orizonturi",

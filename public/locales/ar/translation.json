@@ -5540,6 +5540,7 @@
     "more": "المزيد"
   },
   "datePopover": {
+    "later": "لاحقًا",
     "today": "اليوم",
     "tomorrow": "غدًا",
     "weekend": "نهاية هذا الأسبوع",
@@ -6173,6 +6174,12 @@
     "habitLogFailed": "تعذّر تسجيل العادة."
   },
   "upcoming": {
+    "replan": "لإعادة الجدولة",
+    "toPlan": "للتخطيط",
+    "expandToPlan": "إظهار ما يجب تخطيطه ({{count}})",
+    "commitTo": "الالتزام بـ",
+    "removeCommitment": "إزالة الالتزام",
+    "commitmentRemoved": "تمت إزالة الالتزام",
     "title": "التخطيط",
     "days": "الأيام",
     "horizons": "الآفاق",

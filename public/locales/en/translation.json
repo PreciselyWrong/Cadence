@@ -5477,6 +5477,7 @@
     "more": "More"
   },
   "datePopover": {
+    "later": "Later",
     "today": "Today",
     "tomorrow": "Tomorrow",
     "weekend": "This weekend",
@@ -6074,6 +6075,12 @@
     "habitLogFailed": "Could not log the habit."
   },
   "upcoming": {
+    "replan": "To replan",
+    "toPlan": "To plan",
+    "expandToPlan": "Show what to plan ({{count}})",
+    "commitTo": "Commit to",
+    "removeCommitment": "Remove the commitment",
+    "commitmentRemoved": "Commitment removed",
     "title": "Plan",
     "days": "Days",
     "horizons": "Horizons",

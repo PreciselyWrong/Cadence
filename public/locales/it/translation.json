@@ -5512,6 +5512,7 @@
     "more": "Altro"
   },
   "datePopover": {
+    "later": "Più tardi",
     "today": "Oggi",
     "tomorrow": "Domani",
     "weekend": "Questo weekend",
@@ -6117,6 +6118,12 @@
     "habitLogFailed": "Impossibile registrare l'abitudine."
   },
   "upcoming": {
+    "replan": "Da ripianificare",
+    "toPlan": "Da pianificare",
+    "expandToPlan": "Mostra da pianificare ({{count}})",
+    "commitTo": "Impegna per",
+    "removeCommitment": "Rimuovi l’impegno",
+    "commitmentRemoved": "Impegno rimosso",
     "title": "Pianifica",
     "days": "Giorni",
     "horizons": "Orizzonti",

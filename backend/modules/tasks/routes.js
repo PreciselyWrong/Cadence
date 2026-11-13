@@ -1042,6 +1042,9 @@ async function applyTaskPatch(task, body, req) {
     if (parked && body.today === undefined) {
         await dailyPlanService.setTaskOnToday(req.currentUser, task.uid, false);
     }
+    if (decisionFields.wantsUnplan(body)) {
+        await dailyPlanService.takeTaskOffPlansFrom(req.currentUser, task);
+    }
     if (typeof body.today === 'boolean') {
         await dailyPlanService.setTaskOnToday(
             req.currentUser,

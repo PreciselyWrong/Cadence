@@ -5488,6 +5488,7 @@
     "more": "Thêm"
   },
   "datePopover": {
+    "later": "Để sau",
     "today": "Hôm nay",
     "tomorrow": "Ngày mai",
     "weekend": "Cuối tuần này",
@@ -6083,6 +6084,12 @@
     "habitLogFailed": "Không thể ghi nhận thói quen."
   },
   "upcoming": {
+    "replan": "Cần lên lịch lại",
+    "toPlan": "Cần lên kế hoạch",
+    "expandToPlan": "Hiện mục cần lên kế hoạch ({{count}})",
+    "commitTo": "Cam kết cho",
+    "removeCommitment": "Bỏ cam kết",
+    "commitmentRemoved": "Đã bỏ cam kết",
     "title": "Kế hoạch",
     "days": "Ngày",
     "horizons": "Tầm nhìn",

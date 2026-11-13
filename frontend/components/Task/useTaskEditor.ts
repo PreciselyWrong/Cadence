@@ -20,6 +20,12 @@ import { isStartAfterDue } from '../../utils/dueDateTime';
 import { isTodoMdTask } from '../../utils/todoMd';
 import { datePresets } from '../../utils/datePresets';
 import { DateValue } from '../Shared/DatePopover';
+import {
+    Commitment,
+    HorizonKey,
+    commitmentClearPatch,
+    horizonDuePatch,
+} from '../Upcoming/horizons';
 import useTaskAutosave from './useTaskAutosave';
 import {
     TASK_PANEL_SAVED_EVENT,
@@ -179,13 +185,43 @@ export const useTaskEditor = (
             return;
         }
         setError(null);
+        // A precise day replaces the week, the month or #someday.
+        const clear = value.date ? commitmentClearPatch(task) : null;
         void run(
             {
                 due_date: (value.date ?? null) as unknown as string,
                 due_time: value.date ? value.time : null,
                 due_has_time: !!(value.date && value.time),
+                ...(clear
+                    ? ({ week_of: null, month_of: null } as Partial<Task>)
+                    : {}),
             },
-            (s) => s.setDue(value.date, value.time)
+            async (s, commit) => {
+                await s.setDue(value.date, value.time);
+                if (clear && task.uid) {
+                    await updateTask(task.uid, clear as Partial<Task>);
+                    await commit();
+                }
+            }
+        );
+    };
+
+    // A horizon picked from the due chip: committed to it, the date cleared
+    // and the task taken off its plans from today on (horizonDuePatch).
+    const changeHorizon = (key: HorizonKey, from: Commitment | null) => {
+        setError(null);
+        const patch = horizonDuePatch(from, key);
+        // The server turns this_week & co. into dates: only the date shows
+        // at once, the commitment once saved.
+        void runFields(
+            {
+                due_date: null as unknown as string,
+                due_time: null,
+                due_has_time: false,
+            },
+            patch as unknown as Record<string, unknown>,
+            'task.dueDateUpdateError',
+            'Failed to update due date'
         );
     };
 
@@ -346,6 +382,7 @@ export const useTaskEditor = (
         commitNote,
         saveNote,
         changeDue,
+        changeHorizon,
         changeStart,
         changeDefer,
         changeReminder,

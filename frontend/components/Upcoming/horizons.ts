@@ -248,3 +248,146 @@ export const leaveDayWrites = (card: {
     card.planned && /^\d{4}-\d{2}-\d{2}$/.test(card.date)
         ? [{ date: card.date, ops: [{ op: 'remove', task_uid: card.uid }] }]
         : [];
+
+// What a task is committed to, read from its fields only (never its date or
+// its plan): #someday, then a week or month that still holds; `replan` when
+// its only commitment is a week or month that has passed. The task sheet's
+// date chip shows it when the task has no date.
+export type Commitment = HorizonKey | 'replan';
+
+const passedCommitment = (
+    task: HorizonTask,
+    week: string,
+    thisMonth: string
+): boolean => {
+    const weekOf = day(task.week_of);
+    const monthOf = day(task.month_of);
+    return (!!weekOf && weekOf < week) || (!!monthOf && monthOf < thisMonth);
+};
+
+export const commitmentOf = (
+    task: Task,
+    today: string,
+    firstDayOfWeek: number
+): Commitment | null => {
+    const held = task as HorizonTask;
+    if (isSomeday(held)) return 'someday';
+    const week = weekStartOf(today, firstDayOfWeek);
+    const nextWeek = format(addDays(parseISO(week), 7), 'yyyy-MM-dd');
+    const thisMonth = monthStartOf(today);
+    const weekOf = day(held.week_of);
+    const monthOf = day(held.month_of);
+    if (weekOf === week) return 'week';
+    if (weekOf === nextWeek) return 'next_week';
+    if (monthOf === thisMonth) return 'this_month';
+    if (monthOf === monthStartOf(today, 1)) return 'next_month';
+    return passedCommitment(held, week, thisMonth) ? 'replan' : null;
+};
+
+// A horizon picked from the date chip: the commitment of horizonPatch, the
+// due date and time cleared, and the task taken off its plans from today on
+// (`unplan`, PATCH /task). Picking the current horizon still clears the date.
+export type HorizonDuePatch = HorizonPatch & {
+    due_date: null;
+    due_time: null;
+    due_has_time: false;
+    unplan: true;
+};
+
+export const horizonDuePatch = (
+    from: Commitment | null,
+    to: HorizonKey
+): HorizonDuePatch => ({
+    ...(horizonPatch(from === 'replan' ? null : from, to) ?? {}),
+    due_date: null,
+    due_time: null,
+    due_has_time: false,
+    unplan: true,
+});
+
+// A precise day picked for a committed task: the week, the month and the
+// #someday tag go; null when the task holds none of them.
+export const commitmentClearPatch = (task: Task): HorizonPatch | null => {
+    const held = task as HorizonTask;
+    const someday = isSomeday(held);
+    if (!held.week_of && !held.month_of && !someday) return null;
+    return {
+        week_of: null,
+        month_of: null,
+        ...(someday ? { later: false } : {}),
+    };
+};
+
+export interface ToPlanBox {
+    replan: Task[];
+    week: Task[];
+    month: Task[];
+}
+
+// Each task's open plan days among the loaded ones.
+const planDaysByTask = (days: PlanDays): Map<string, string[]> => {
+    const byTask = new Map<string, string[]>();
+    Object.entries(days).forEach(([date, planDay]) => {
+        (planDay?.plan?.items ?? []).forEach((item) => {
+            const uid = item.task?.uid;
+            if (!uid || item.occurrence_done) return;
+            byTask.set(uid, [...(byTask.get(uid) ?? []), date]);
+        });
+    });
+    return byTask;
+};
+
+/**
+ * The « À planifier » box of the Days layout, open top-level tasks without
+ * #someday:
+ * - replan: not recurring, with a week or month that has passed, placed in
+ *   no horizon by bucketHorizons and planned on no day from today on;
+ * - week: committed to this week, planned on no day of this week;
+ * - month: committed to this month (and not to this or next week), planned
+ *   on no day of this week.
+ * Plan lines count for the days the board has loaded.
+ */
+export const toPlan = (
+    tasks: Task[],
+    today: string,
+    firstDayOfWeek: number,
+    days: PlanDays = {}
+): ToPlanBox => {
+    const week = weekStartOf(today, firstDayOfWeek);
+    const weekEnd = format(addDays(parseISO(week), 6), 'yyyy-MM-dd');
+    const nextWeek = format(addDays(parseISO(week), 7), 'yyyy-MM-dd');
+    const thisMonth = monthStartOf(today);
+    const buckets = bucketHorizons(tasks, today, firstDayOfWeek, days);
+    const placed = new Set(
+        HORIZON_KEYS.flatMap((key) => buckets[key].map((task) => task.uid))
+    );
+    const plans = planDaysByTask(days);
+    const plannedWhere = (uid: string, test: (date: string) => boolean) =>
+        (plans.get(uid) ?? []).some(test);
+    const box: ToPlanBox = { replan: [], week: [], month: [] };
+    (tasks as HorizonTask[]).forEach((task) => {
+        const uid = task.uid;
+        if (!uid || isTaskDone(task.status) || task.parent_task_id) return;
+        if (isSomeday(task)) return;
+        const thisWeek = (date: string) => date >= week && date <= weekEnd;
+        if (day(task.week_of) === week) {
+            if (!plannedWhere(uid, thisWeek)) box.week.push(task);
+            return;
+        }
+        // Next week ranks before this month, as in bucketHorizons.
+        if (day(task.week_of) === nextWeek) return;
+        if (day(task.month_of) === thisMonth) {
+            if (!plannedWhere(uid, thisWeek)) box.month.push(task);
+            return;
+        }
+        if (
+            !isRecurring(task) &&
+            passedCommitment(task, week, thisMonth) &&
+            !placed.has(uid) &&
+            !plannedWhere(uid, (date) => date >= today)
+        ) {
+            box.replan.push(task);
+        }
+    });
+    return box;
+};

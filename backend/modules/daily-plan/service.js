@@ -503,6 +503,23 @@ async function setTaskOnToday(user, taskUid, onToday) {
     return changed ? getPlan(user, planDate) : null;
 }
 
+// The task leaves every plan from today on (a horizon chosen instead of a
+// day); earlier days keep it, they are history. Each day goes through the
+// plan ops, so the sync journal and the ETags follow.
+async function takeTaskOffPlansFrom(user, task) {
+    const timezone = getSafeTimezone(user.timezone);
+    const today = resolvePlanDate('today', timezone);
+    const dates = await repository.findPlanDatesWithTask(
+        user.id,
+        task.id,
+        today
+    );
+    for (const date of dates) {
+        await runPlanOps(user, date, [{ op: 'remove', task_uid: task.uid }]);
+    }
+    return dates;
+}
+
 async function clearPlan(user, date) {
     const timezone = getSafeTimezone(user.timezone);
     const planDate = resolvePlanDate(date, timezone);
@@ -1028,6 +1045,7 @@ module.exports = {
     clearPlan,
     carryOver,
     setTaskOnToday,
+    takeTaskOffPlansFrom,
     getCandidates,
     parseSuggestedLimit,
     getRanking,

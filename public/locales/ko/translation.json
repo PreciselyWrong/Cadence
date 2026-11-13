@@ -5488,6 +5488,7 @@
     "more": "더보기"
   },
   "datePopover": {
+    "later": "나중에",
     "today": "오늘",
     "tomorrow": "내일",
     "weekend": "이번 주말",
@@ -6083,6 +6084,12 @@
     "habitLogFailed": "습관을 기록하지 못했습니다."
   },
   "upcoming": {
+    "replan": "다시 계획",
+    "toPlan": "계획할 일",
+    "expandToPlan": "계획할 일 보기 ({{count}})",
+    "commitTo": "약속 대상",
+    "removeCommitment": "약속 해제",
+    "commitmentRemoved": "약속을 해제했습니다",
     "title": "계획",
     "days": "요일",
     "horizons": "기간",

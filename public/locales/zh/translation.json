@@ -5488,6 +5488,7 @@
     "more": "更多"
   },
   "datePopover": {
+    "later": "稍后",
     "today": "今天",
     "tomorrow": "明天",
     "weekend": "本周末",
@@ -6083,6 +6084,12 @@
     "habitLogFailed": "无法记录该习惯。"
   },
   "upcoming": {
+    "replan": "待重新安排",
+    "toPlan": "待安排",
+    "expandToPlan": "显示待安排 ({{count}})",
+    "commitTo": "安排到",
+    "removeCommitment": "取消承诺",
+    "commitmentRemoved": "已取消承诺",
     "title": "计划",
     "days": "日",
     "horizons": "展望",

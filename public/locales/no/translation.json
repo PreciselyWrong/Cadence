@@ -5511,6 +5511,7 @@
     "more": "Mer"
   },
   "datePopover": {
+    "later": "Senere",
     "today": "I dag",
     "tomorrow": "I morgen",
     "weekend": "Denne helgen",
@@ -6108,6 +6109,12 @@
     "habitLogFailed": "Kunne ikke registrere vanen."
   },
   "upcoming": {
+    "replan": "Planlegg på nytt",
+    "toPlan": "Å planlegge",
+    "expandToPlan": "Vis det som skal planlegges ({{count}})",
+    "commitTo": "Forplikt til",
+    "removeCommitment": "Fjern forpliktelsen",
+    "commitmentRemoved": "Forpliktelse fjernet",
     "title": "Planlegg",
     "days": "Dager",
     "horizons": "Horisonter",

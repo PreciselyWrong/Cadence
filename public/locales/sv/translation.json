@@ -5506,6 +5506,7 @@
     "more": "Mer"
   },
   "datePopover": {
+    "later": "Senare",
     "today": "Idag",
     "tomorrow": "Imorgon",
     "weekend": "Denna helg",
@@ -6103,6 +6104,12 @@
     "habitLogFailed": "Det gick inte att registrera vanan."
   },
   "upcoming": {
+    "replan": "Planera om",
+    "toPlan": "Att planera",
+    "expandToPlan": "Visa att planera ({{count}})",
+    "commitTo": "Åta dig för",
+    "removeCommitment": "Ta bort åtagandet",
+    "commitmentRemoved": "Åtagandet borttaget",
     "title": "Planera",
     "days": "Dagar",
     "horizons": "Horisonter",

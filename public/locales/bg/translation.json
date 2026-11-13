@@ -5503,6 +5503,7 @@
     "more": "Още"
   },
   "datePopover": {
+    "later": "По-късно",
     "today": "Днес",
     "tomorrow": "Утре",
     "weekend": "Този уикенд",
@@ -6100,6 +6101,12 @@
     "habitLogFailed": "Навикът не можа да бъде отбелязан."
   },
   "upcoming": {
+    "replan": "За препланиране",
+    "toPlan": "За планиране",
+    "expandToPlan": "Покажи за планиране ({{count}})",
+    "commitTo": "Ангажирай за",
+    "removeCommitment": "Премахни ангажимента",
+    "commitmentRemoved": "Ангажиментът е премахнат",
     "title": "План",
     "days": "Дни",
     "horizons": "Хоризонти",

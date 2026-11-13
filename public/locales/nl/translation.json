@@ -5504,6 +5504,7 @@
     "more": "Meer"
   },
   "datePopover": {
+    "later": "Later",
     "today": "Vandaag",
     "tomorrow": "Morgen",
     "weekend": "Dit weekend",
@@ -6101,6 +6102,12 @@
     "habitLogFailed": "De gewoonte kon niet worden vastgelegd."
   },
   "upcoming": {
+    "replan": "Opnieuw plannen",
+    "toPlan": "Te plannen",
+    "expandToPlan": "Te plannen tonen ({{count}})",
+    "commitTo": "Vastleggen voor",
+    "removeCommitment": "Toezegging verwijderen",
+    "commitmentRemoved": "Toezegging verwijderd",
     "title": "Plannen",
     "days": "Dagen",
     "horizons": "Horizonnen",

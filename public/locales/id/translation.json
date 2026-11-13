@@ -5488,6 +5488,7 @@
     "more": "Lainnya"
   },
   "datePopover": {
+    "later": "Nanti",
     "today": "Hari ini",
     "tomorrow": "Besok",
     "weekend": "Akhir pekan ini",
@@ -6083,6 +6084,12 @@
     "habitLogFailed": "Kebiasaan tidak dapat dicatat."
   },
   "upcoming": {
+    "replan": "Perlu dijadwal ulang",
+    "toPlan": "Perlu direncanakan",
+    "expandToPlan": "Tampilkan yang perlu direncanakan ({{count}})",
+    "commitTo": "Tetapkan ke",
+    "removeCommitment": "Hapus komitmen",
+    "commitmentRemoved": "Komitmen dihapus",
     "title": "Rencana",
     "days": "Hari",
     "horizons": "Horizon",

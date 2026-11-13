@@ -5545,6 +5545,7 @@
     "more": "Več"
   },
   "datePopover": {
+    "later": "Pozneje",
     "today": "Danes",
     "tomorrow": "Jutri",
     "weekend": "Ta konec tedna",
@@ -6160,6 +6161,12 @@
     "habitLogFailed": "Navade ni bilo mogoče zabeležiti."
   },
   "upcoming": {
+    "replan": "Za ponovno načrtovanje",
+    "toPlan": "Za načrtovanje",
+    "expandToPlan": "Prikaži za načrtovanje ({{count}})",
+    "commitTo": "Zaveži za",
+    "removeCommitment": "Odstrani zavezo",
+    "commitmentRemoved": "Zaveza odstranjena",
     "title": "Načrtovanje",
     "days": "Dnevi",
     "horizons": "Obzorja",

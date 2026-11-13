@@ -38,34 +38,47 @@ import { resolveTaskArea } from '../../utils/taskArea';
 import { useStore } from '../../store/useStore';
 import EntityIcon from '../Shared/EntityIcon';
 import { CONTROL_HEIGHT } from '../Shared/ui/controlSizes';
-
-// One place for the chip colours, so they can follow the shared tokens.
-const FILLED =
-    'bg-primary-container text-primary-on-container hover:bg-primary/20';
-const EMPTY =
-    'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-700/60 dark:text-gray-400 dark:hover:bg-gray-700';
+import { toYmd } from '../../utils/datePresets';
+import type { Commitment, HorizonKey } from '../Upcoming/horizons';
+import {
+    ChipTone,
+    chipToneProps,
+    colorTone,
+    dueTone,
+    priorityTone,
+} from './chipTones';
 
 interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     icon: React.ReactNode;
     text: string;
     filled: boolean;
+    // What the chip holds decides its colour (chipTones.ts); a filled chip
+    // without one is neutral.
+    tone?: ChipTone;
 }
 
 // A task mirrored from a TODO.md file shows its fields but changes none.
 const ReadOnlyChips = createContext(false);
 
 const Chip = forwardRef<HTMLButtonElement, ChipProps>(
-    ({ icon, text, filled, className = '', ...rest }, ref) => {
+    ({ icon, text, filled, tone, className = '', style, ...rest }, ref) => {
         const readOnly = useContext(ReadOnlyChips);
+        const look = chipToneProps(filled ? (tone ?? 'neutral') : 'empty');
         return (
             <button
                 ref={ref}
                 type="button"
                 {...rest}
+                style={{ ...look.style, ...style }}
+                data-tone={
+                    filled
+                        ? typeof tone === 'object'
+                            ? 'color'
+                            : (tone ?? 'neutral')
+                        : 'empty'
+                }
                 disabled={readOnly || rest.disabled}
-                className={`inline-flex ${CONTROL_HEIGHT.sm} max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default disabled:opacity-60 ${
-                    filled ? FILLED : EMPTY
-                } ${className}`}
+                className={`inline-flex ${CONTROL_HEIGHT.sm} max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default disabled:opacity-60 ${look.className} ${className}`}
             >
                 <span className="flex-shrink-0 [&>svg]:h-3.5 [&>svg]:w-3.5">
                     {icon}
@@ -127,6 +140,9 @@ export interface TaskChipRowProps {
     task: Task;
     people: Person[];
     onDue: (value: DateValue) => void;
+    // A horizon picked from the due chip; without it the chip has no
+    // « Later » row.
+    onHorizon?: (key: HorizonKey, from: Commitment | null) => void;
     onStart: (value: DateValue) => void;
     onDefer: (iso: string | null) => void;
     onReminder: (iso: string | null) => void;
@@ -146,6 +162,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
     task,
     people,
     onDue,
+    onHorizon,
     onStart,
     onDefer,
     onReminder,
@@ -244,6 +261,17 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
     const areaName = (ownArea ?? inherited)?.name ?? null;
 
     const tagNames = task.tags?.map((tag) => tag.name) ?? [];
+    // The first tag with a colour gives the chip its colour.
+    const tagColor = task.tags?.find((tag) => tag.color)?.color;
+    const today = toYmd(new Date());
+    const horizonLabel: Record<Commitment, string> = {
+        week: t('upcoming.thisWeek', 'This week'),
+        next_week: t('upcoming.horizonNextWeek', 'Next week'),
+        this_month: t('upcoming.thisMonth', 'This month'),
+        next_month: t('upcoming.nextMonth', 'Next month'),
+        someday: t('upcoming.someday', 'Someday'),
+        replan: t('upcoming.replan', 'To replan'),
+    };
     const assignee =
         people.find((p) => p.uid === task.assigned_to) ??
         (task.AssignedTo as Person | undefined) ??
@@ -313,18 +341,33 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     label={t('taskPanel.due', 'Due')}
                     value={{ date: dueDate, time: dueTime }}
                     onChange={onDue}
-                    renderTrigger={({ display, ...props }) => (
-                        <Chip
-                            {...props}
-                            icon={<CalendarDaysIcon />}
-                            text={display ?? t('taskPanel.due', 'Due')}
-                            filled={!!display}
-                            data-testid="chip-due"
-                            aria-label={`${t('taskPanel.due', 'Due')} : ${
-                                display ?? t('datePopover.noDate', 'No date')
-                            }`}
-                        />
-                    )}
+                    horizons={
+                        onHorizon ? { task, onPick: onHorizon } : undefined
+                    }
+                    renderTrigger={({ display, commitment, ...props }) => {
+                        // No date: the horizon it is committed to, or « To
+                        // replan » once that week or month has passed.
+                        const shown =
+                            display ??
+                            (commitment ? horizonLabel[commitment] : null);
+                        return (
+                            <Chip
+                                {...props}
+                                icon={<CalendarDaysIcon />}
+                                text={shown ?? t('taskPanel.due', 'Due')}
+                                filled={!!shown}
+                                tone={dueTone({
+                                    date: dueDate,
+                                    today,
+                                    commitment,
+                                })}
+                                data-testid="chip-due"
+                                aria-label={`${t('taskPanel.due', 'Due')} : ${
+                                    shown ?? t('datePopover.noDate', 'No date')
+                                }`}
+                            />
+                        );
+                    }}
                 />
 
                 {show.start && (
@@ -365,6 +408,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                                         : t('forms.priority', 'Priority')
                                 }
                                 filled={!!priorityValue}
+                                tone={priorityTone(priorityValue)}
                                 data-testid="chip-priority"
                             />
                         )}
@@ -399,6 +443,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                                 t('taskPanel.project', 'Project')
                             }
                             filled={!!project}
+                            tone={colorTone(project?.color)}
                             data-testid="chip-project"
                         />
                     )}
@@ -485,6 +530,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                                         : t('forms.tags', 'Tags')
                                 }
                                 filled={tagNames.length > 0}
+                                tone={colorTone(tagColor)}
                                 data-testid="chip-tags"
                             />
                         )}

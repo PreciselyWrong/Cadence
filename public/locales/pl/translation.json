@@ -5542,6 +5542,7 @@
     "more": "Więcej"
   },
   "datePopover": {
+    "later": "Później",
     "today": "Dziś",
     "tomorrow": "Jutro",
     "weekend": "W tym weekendzie",
@@ -6157,6 +6158,12 @@
     "habitLogFailed": "Nie udało się zapisać nawyku."
   },
   "upcoming": {
+    "replan": "Do ponownego zaplanowania",
+    "toPlan": "Do zaplanowania",
+    "expandToPlan": "Pokaż do zaplanowania ({{count}})",
+    "commitTo": "Zobowiąż na",
+    "removeCommitment": "Usuń zobowiązanie",
+    "commitmentRemoved": "Zobowiązanie usunięte",
     "title": "Planuj",
     "days": "Dni",
     "horizons": "Horyzonty",

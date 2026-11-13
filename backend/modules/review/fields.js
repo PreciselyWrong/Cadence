@@ -9,6 +9,8 @@
 //   later: boolean          → adds or removes the user's #someday tag; true
 //                             also takes the task out of view, the week,
 //                             the month and today's plan
+//   unplan: true            → takes the task off every plan from today on
+//                             (applied by the task route after the update)
 // None of them touches due_date, so nothing here reaches Google or makes a
 // task overdue.
 const moment = require('moment-timezone');
@@ -110,6 +112,7 @@ function applyDecisionFields(attrs, body, task, user) {
     if (body.needs_when !== undefined) {
         attrs.needs_when = asBoolean(body.needs_when, 'needs_when');
     }
+    if (body.unplan !== undefined) asBoolean(body.unplan, 'unplan');
     // Parking wins over anything sent with it.
     if (body.later !== undefined && asBoolean(body.later, 'later')) {
         attrs.in_view_at = null;
@@ -137,8 +140,13 @@ async function applyLater(task, body, userId) {
     return false;
 }
 
+// True when the PATCH asks for the task to leave its plans from today on.
+const wantsUnplan = (body) =>
+    body.unplan !== undefined && asBoolean(body.unplan, 'unplan');
+
 module.exports = {
     applyDecisionFields,
+    wantsUnplan,
     applyLater,
     parseMonthOf,
     parseWeekOf,
