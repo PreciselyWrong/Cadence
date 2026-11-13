@@ -37,7 +37,7 @@ In the days layout, a slim strip under the day columns (Semaine prochaine, Ce mo
 
 Under the inbox column, a box « À planifier » (`ToPlanBox.tsx`, rule `toPlan` in `horizons.ts`; Android `PlanBoard.toSchedule`), open top-level tasks without #someday:
 
-- **À replanifier** (first, red): not recurring, `week_of` before this week or `month_of` before this month, placed in no horizon by `bucketHorizons`, and with no plan line today or later.
+- **À replanifier** (first, red): not recurring, `week_of` before this week or `month_of` before this month, placed in no horizon by `bucketHorizons`, and with no plan line today or later. A task already shown elsewhere is left out: overdue (non-recurring, due before today: « En retard » / « Échues ») or unsorted (no project and no area, or `needs_when`: « Tâches à classer »). Its chip then shows its red due date, not « À replanifier ».
 - **Cette semaine**: `week_of` = this week, no plan line on a day of this week.
 - **Ce mois-ci** (collapsed by default, count shown): `month_of` = this month (and not committed to this or next week), no plan line on a day of this week.
 
