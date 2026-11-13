@@ -1,6 +1,6 @@
 # Mail cards in "À trier"
 
-Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); web card built the same day (`frontend/components/Triage/MailCard.tsx`); Android card the same day (1.17.0, `android/tasks/.../ui/triage/MailCards.kt`). « Trier mes mails » deck and the appointment decision (`event`) on 2026-11-13, server, web and Android; the Hermes side (create the calendar event, chat on a card) is still to do (see Hermes contract). Tracked in `TODO.md` › Next.
+Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); web card built the same day (`frontend/components/Triage/MailCard.tsx`); Android card the same day (1.17.0, `android/tasks/.../ui/triage/MailCards.kt`). « Trier mes mails » deck and the appointment decision (`event`) on 2026-11-13, server, web and Android; the Hermes side was built the same day (see Hermes contract), not yet deployed. Tracked in `TODO.md` › Next.
 
 Mail that asks something of the user shows up as cards in the triage queue (`docs/40-triage.md`), next to the other proposals. The user decides there in one gesture. Cadence is not a mail client: it never shows a full message, never sends, and only touches Gmail to archive a thread when the user asks for it.
 
@@ -65,17 +65,12 @@ Every decision (not a replay of the same order) is also sent as the webhook and 
 
 ## Hermes contract
 
-What the mail agent and the Hermes plugin (separate repository) do with the deck:
+Built on 2026-11-13 in the Hermes repository and the Hermes plugin 2.5.0; still to deploy.
 
-- **Propose an appointment.** When a mail sets a meeting, `propose_mail` with `suggestion: { kind: "event", event: { title, start, end?, location? } }`. The deck shows « Ajouter à l’agenda : <date> » as the main button.
-- **Create it once accepted.** The plugin subscribes to `mail.decided` (manifest `events`) and forwards a decision `event` to the mail agent's Hermes route; the agent creates the event in Google Calendar through capgw, then calls `report_mail_event` (`created` with the event link, or `failed` with the reason, also written to the Agents inbox). As a fallback (plugin off, agent down), the agent's scheduled run reads `list_mail_cards` and handles every card whose `event.state` is still `requested`. The calendar write must be idempotent on `(account, thread_id)`: the event and the poll can both see the same card.
-- **Chat on a card.** « Discuter » opens the plugin page with `?view=chat&mail=<mail_uid>`. The page should start (or resume) a conversation with the mail agent about that card: it can read the card from `GET /api/triage` (item `mail:<mail_uid>`) for the subject, sender and summary. Until the plugin reads `mail`, the button opens the plain chat.
-
-The agent's prompt change lives in Hermes, outside this repository.
-
-## Gmail gateway
-
-Optional. `TUDUDI_GMAIL_MCP_URL` and `TUDUDI_GMAIL_MCP_TOKEN` point Cadence's server at the restricted Gmail tool's HTTP endpoint on the same Docker network. The token is the tool's **archive-only token** (`--archive-token-file`, tool 1.3.0), never its full token: the tool itself refuses every other method and tool for it (`403 tool_not_allowed`), and Cadence's code only ever sends `archive_thread`, without following redirects. Without these variables the archive option is hidden and Cadence never contacts Gmail. Cadence holds no Google OAuth token.
+- **Propose.** The mail agent's 6:30 summary job proposes each mail to decide through `propose_mail` (through capgw, which only lets the card fields and a Gmail link through), with `suggestion: { kind: "event", event: { title, start, end?, location? } }` when a mail sets a meeting. When a thread is settled in the agent's own chat, it calls `resolve_mail`.
+- **Create the accepted appointments, without AI.** Every 10 minutes a script-only job calls capgw's `mail_events_sync`: capgw reads the cards through `list_mail_cards`, and for each card decided `event` whose `event.state` is `requested`, creates the event in the primary Google Calendar from Cadence's data (never from an agent's arguments), once (private property `cadenceMail = <account>:<thread_id>`), then calls `report_mail_event` (`created` with the link, or `failed` for an unreadable date). Google unreachable or not yet authorized: the card stays `requested` for the next run. Agents never get `report_mail_event`. Needs the Google scope `calendar.events` on capgw's token.
+- **`mail.decided`** stays available to webhooks and plugins; the Hermes plugin does not need it.
+- **Chat on a card.** « Discuter » opens the plugin page with `?view=chat&mail=<mail_uid>`. The page reads the card from `GET /api/triage` (item `mail:<mail_uid>`), opens a new conversation with the profile of its setting `mailAgent`, and passes the card as data only.
 
 ## Storage and offline
 
