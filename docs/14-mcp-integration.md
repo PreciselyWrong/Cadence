@@ -1247,7 +1247,11 @@ Closes the waiting card of a thread handled in Gmail. `account`, `thread_id`.
 
 #### `list_mail_cards`
 
-Pending, put-off and recently decided cards (30 days), newest first, with their decision.
+Pending, put-off and recently decided cards (30 days), newest first, with their decision and, for an accepted appointment, `event` (`state`: `requested`, `created`, `failed`).
+
+#### `report_mail_event`
+
+After the user accepted an appointment on a mail card (decision `event`), records whether the agent created the calendar event. `account`, `thread_id`, `state` (`created` or `failed`), `url?` (Google Calendar link), `error?`. See [Mail cards](43-mail-triage.md).
 
 ---
 

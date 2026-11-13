@@ -189,7 +189,8 @@
       "replied": "Antwort in Gmail geöffnet",
       "postponed": "Kommt morgen wieder",
       "dismissed": "Mail ignoriert",
-      "notArchived": "Nicht in Gmail archiviert"
+      "notArchived": "Nicht in Gmail archiviert",
+      "eventRequested": "Termin an den Agenten übergeben"
     },
     "linkLater": "In 30 Tagen",
     "linkArchive": "Archivieren",
@@ -230,7 +231,23 @@
     "emptyTitle": "Nichts zu sortieren",
     "left": "{{count}} zu prüfen",
     "entry": "Zu sortieren ({{count}})",
-    "title": "Zu sortieren"
+    "title": "Zu sortieren",
+    "deck": {
+      "open": "Meine Mails sortieren ({{count}})",
+      "title": "Meine Mails sortieren",
+      "close": "Schließen",
+      "done": "Alles sortiert",
+      "back": "Zurück zu „Zu sortieren“",
+      "createTask": "Aufgabe erstellen: {{name}}",
+      "replyInGmail": "In Gmail antworten",
+      "readInGmail": "In Gmail lesen",
+      "addEvent": "Zum Kalender hinzufügen: {{when}}",
+      "editTask": "Aufgabe bearbeiten",
+      "openMail": "Mail öffnen",
+      "chat": "Besprechen",
+      "undo": "Rückgängig",
+      "keys": "Enter oder →: Vorschlag · ←: später · ↓: überspringen · Strg+Z: rückgängig · Esc: schließen"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3695,7 +3712,8 @@
         "noteCreated": "Notiz erstellt",
         "linkCreated": "Link gespeichert",
         "dailySummary": "Tägliche Zusammenfassung",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Mail-Karte entschieden"
       },
       "groups": {
         "alerts": "Erinnerungen und Hinweise",

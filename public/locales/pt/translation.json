@@ -189,7 +189,8 @@
       "replied": "Resposta aberta no Gmail",
       "postponed": "Volta amanhã",
       "dismissed": "E-mail ignorado",
-      "notArchived": "Não arquivado no Gmail"
+      "notArchived": "Não arquivado no Gmail",
+      "eventRequested": "Compromisso enviado ao agente"
     },
     "linkLater": "Em 30 dias",
     "linkArchive": "Arquivar",
@@ -230,7 +231,23 @@
     "emptyTitle": "Nada para organizar",
     "left": "{{count}} por ver",
     "entry": "Por organizar ({{count}})",
-    "title": "Por organizar"
+    "title": "Por organizar",
+    "deck": {
+      "open": "Organizar meus e-mails ({{count}})",
+      "title": "Organizar meus e-mails",
+      "close": "Fechar",
+      "done": "Tudo organizado",
+      "back": "Voltar a “Por organizar”",
+      "createTask": "Criar tarefa: {{name}}",
+      "replyInGmail": "Responder no Gmail",
+      "readInGmail": "Ler no Gmail",
+      "addEvent": "Adicionar ao calendário: {{when}}",
+      "editTask": "Editar tarefa",
+      "openMail": "Abrir e-mail",
+      "chat": "Conversar",
+      "undo": "Desfazer",
+      "keys": "Enter ou →: conselho · ←: depois · ↓: pular · Ctrl+Z: desfazer · Esc: fechar"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3692,7 +3709,8 @@
         "noteCreated": "Nota criada",
         "linkCreated": "Link guardado",
         "dailySummary": "Resumo diário",
-        "test": "Teste"
+        "test": "Teste",
+        "mailDecided": "Cartão de e-mail decidido"
       },
       "groups": {
         "alerts": "Lembretes e alertas",

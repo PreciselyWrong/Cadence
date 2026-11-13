@@ -187,7 +187,8 @@
       "replied": "Gmail에서 답장을 열었습니다",
       "postponed": "내일 다시 표시",
       "dismissed": "메일을 무시했습니다",
-      "notArchived": "Gmail에 보관되지 않음"
+      "notArchived": "Gmail에 보관되지 않음",
+      "eventRequested": "약속을 에이전트에게 전달함"
     },
     "linkLater": "30일 후",
     "linkArchive": "보관",
@@ -228,7 +229,23 @@
     "emptyTitle": "정리할 항목이 없습니다",
     "left": "{{count}}개 남음",
     "entry": "정리할 항목 ({{count}})",
-    "title": "정리할 항목"
+    "title": "정리할 항목",
+    "deck": {
+      "open": "내 메일 정리 ({{count}})",
+      "title": "내 메일 정리",
+      "close": "닫기",
+      "done": "모두 정리됨",
+      "back": "“정리할 항목”으로 돌아가기",
+      "createTask": "작업 만들기: {{name}}",
+      "replyInGmail": "Gmail에서 답장",
+      "readInGmail": "Gmail에서 읽기",
+      "addEvent": "캘린더에 추가: {{when}}",
+      "editTask": "작업 편집",
+      "openMail": "메일 열기",
+      "chat": "대화하기",
+      "undo": "실행 취소",
+      "keys": "Enter 또는 →: 제안 · ←: 나중에 · ↓: 건너뛰기 · Ctrl+Z: 실행 취소 · Esc: 닫기"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3677,7 +3694,8 @@
         "noteCreated": "메모 생성됨",
         "linkCreated": "링크 저장됨",
         "dailySummary": "일일 요약",
-        "test": "테스트"
+        "test": "테스트",
+        "mailDecided": "메일 카드 결정됨"
       },
       "groups": {
         "alerts": "알림 및 경고",

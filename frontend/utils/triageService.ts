@@ -120,16 +120,28 @@ export interface MailPayload {
     received_at: string;
     summary: string;
     suggestion: {
-        kind: 'task' | 'reply' | 'read';
+        kind: 'task' | 'reply' | 'read' | 'event';
         task_name?: string;
         due_date?: string;
         project_uid?: string;
+        // kind event: the appointment the mail sets
+        event?: MailEvent;
     } | null;
     draft_excerpt: string | null;
     gmail_url: string;
 }
 
-export type MailDecision = 'task' | 'reply' | 'later' | 'dismiss';
+// An appointment for the agent to put in the calendar: start is a day
+// (all day) or an ISO 8601 time with its offset.
+export interface MailEvent {
+    title: string | null;
+    start: string;
+    end: string | null;
+    all_day: boolean;
+    location?: string;
+}
+
+export type MailDecision = 'task' | 'reply' | 'event' | 'later' | 'dismiss';
 
 export interface MailOutcome {
     archived?: boolean;

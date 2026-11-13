@@ -1,6 +1,6 @@
 import PageShell from '../Shared/ui/PageShell';
 import EmptyState from '../Shared/ui/EmptyState';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     answerQuestion,
@@ -19,6 +19,7 @@ import { useToast } from '../Shared/ToastContext';
 import { deferDelete } from '../../utils/deferredDelete';
 import ClassifyCard from '../AutoClassify/ClassifyCard';
 import MailCard from './MailCard';
+import MailDeck from './MailDeck';
 import PageHeader from '../Shared/ui/PageHeader';
 import {
     applyClassifySuggestion,
@@ -26,6 +27,7 @@ import {
     dismissClassifySuggestion,
 } from '../../utils/autoClassifyService';
 import PluginActions from '../Plugins/PluginActions';
+import Button from '../Shared/ui/Button';
 
 const ACTION_LABELS: Record<TriageAction, [string, string]> = {
     rename: ['triage.action.rename', 'Renommer'],
@@ -76,16 +78,22 @@ const TriagePage: React.FC = () => {
     const [correcting, setCorrecting] = useState(false);
     const [editing, setEditing] = useState<TriageAction | null>(null);
     const [value, setValue] = useState('');
+    const [deckOpen, setDeckOpen] = useState(false);
 
+    const load = useCallback(
+        () =>
+            fetchTriageQueue()
+                .then(setQueue)
+                .catch(() =>
+                    showErrorToast(
+                        t('triage.error', 'La file n’a pas pu être lue.')
+                    )
+                ),
+        [t, showErrorToast]
+    );
     useEffect(() => {
-        fetchTriageQueue()
-            .then(setQueue)
-            .catch(() =>
-                showErrorToast(
-                    t('triage.error', 'La file n’a pas pu être lue.')
-                )
-            );
-    }, [t, showErrorToast]);
+        load();
+    }, [load]);
 
     const items = useMemo(
         () =>
@@ -97,6 +105,7 @@ const TriagePage: React.FC = () => {
         [queue, gone, skipped]
     );
     const item: TriageItem | undefined = items[0];
+    const mailCount = items.filter((entry) => entry.type === 'mail').length;
     const task = item?.task_uid ? queue?.tasks[item.task_uid] : undefined;
     // A card of the classifier (modules/auto-classify): a task, note or link.
     const classifier = item?.source === 'classify';
@@ -169,6 +178,7 @@ const TriagePage: React.FC = () => {
         task: ['triage.mail.taskCreated', 'Tâche créée'],
         reply: ['triage.mail.replied', 'Réponse ouverte dans Gmail'],
         later: ['triage.mail.postponed', 'Revient demain'],
+        event: ['triage.mail.eventRequested', 'Rendez-vous demandé à l’agent'],
         dismiss: ['triage.mail.dismissed', 'Mail ignoré'],
     };
     // The decision stands even when Gmail did not archive the thread.
@@ -257,11 +267,44 @@ const TriagePage: React.FC = () => {
         return t(key, fallback);
     };
 
+    // Full screen: the page under it is not rendered, so nothing behind the
+    // deck takes the focus or the keys.
+    if (deckOpen && queue) {
+        return (
+            <MailDeck
+                items={items}
+                archiveAvailable={queue.mail_archive === true}
+                onClose={(sent) => {
+                    setDeckOpen(false);
+                    // The queue again, once the last decision is in.
+                    sent.finally(load);
+                }}
+            />
+        );
+    }
+
     return (
         <PageShell template="list" className="pb-28 sm:pb-12">
             <PageHeader
                 title={t('triage.title', 'À trier')}
-                actions={<PluginActions place="triage" />}
+                actions={
+                    <>
+                        {mailCount > 0 && (
+                            <Button
+                                variant="primary"
+                                data-testid="triage-mail-deck"
+                                onClick={() => setDeckOpen(true)}
+                            >
+                                {t(
+                                    'triage.deck.open',
+                                    'Trier mes mails ({{count}})',
+                                    { count: mailCount }
+                                )}
+                            </Button>
+                        )}
+                        <PluginActions place="triage" />
+                    </>
+                }
                 meta={
                     items.length > 0
                         ? t('triage.left', '{{count}} à voir', {

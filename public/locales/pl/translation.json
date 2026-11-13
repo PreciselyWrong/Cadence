@@ -195,7 +195,8 @@
       "replied": "Odpowiedź otwarta w Gmailu",
       "postponed": "Wróci jutro",
       "dismissed": "Wiadomość zignorowana",
-      "notArchived": "Nie zarchiwizowano w Gmailu"
+      "notArchived": "Nie zarchiwizowano w Gmailu",
+      "eventRequested": "Spotkanie przekazane agentowi"
     },
     "linkLater": "Za 30 dni",
     "linkArchive": "Archiwizuj",
@@ -236,7 +237,23 @@
     "emptyTitle": "Nic do uporządkowania",
     "left": "{{count}} do przejrzenia",
     "entry": "Do uporządkowania ({{count}})",
-    "title": "Do uporządkowania"
+    "title": "Do uporządkowania",
+    "deck": {
+      "open": "Posortuj moją pocztę ({{count}})",
+      "title": "Posortuj moją pocztę",
+      "close": "Zamknij",
+      "done": "Wszystko posortowane",
+      "back": "Wróć do „Do posortowania”",
+      "createTask": "Utwórz zadanie: {{name}}",
+      "replyInGmail": "Odpowiedz w Gmailu",
+      "readInGmail": "Przeczytaj w Gmailu",
+      "addEvent": "Dodaj do kalendarza: {{when}}",
+      "editTask": "Edytuj zadanie",
+      "openMail": "Otwórz wiadomość",
+      "chat": "Porozmawiaj",
+      "undo": "Cofnij",
+      "keys": "Enter lub →: porada · ←: później · ↓: pomiń · Ctrl+Z: cofnij · Esc: zamknij"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3720,7 +3737,8 @@
         "noteCreated": "Utworzono notatkę",
         "linkCreated": "Zapisano link",
         "dailySummary": "Podsumowanie dnia",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Karta poczty rozstrzygnięta"
       },
       "groups": {
         "alerts": "Przypomnienia i alerty",

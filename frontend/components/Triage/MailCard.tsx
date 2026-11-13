@@ -2,17 +2,14 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MailDecision, MailPayload } from '../../utils/triageService';
 import Button from '../Shared/ui/Button';
+import MailTaskForm from './MailTaskForm';
+import { GMAIL } from './mailDeck';
 
 // The reply link is an anchor, which Button cannot render: it keeps Button's look.
 const linkBase =
     'inline-flex h-9 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 text-body-m font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary max-sm:min-h-[44px]';
 const linkPrimary = `${linkBase} bg-primary text-primary-on hover:bg-primary/90`;
 const linkSecondary = `${linkBase} text-surface-on ring-1 ring-inset ring-outline-variant hover:bg-surface-high`;
-const field =
-    'mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900';
-
-// The server only keeps Gmail addresses; checked again before it becomes a link.
-const GMAIL = 'https://mail.google.com/';
 
 interface MailCardProps {
     payload: MailPayload;
@@ -44,8 +41,6 @@ const MailCard: React.FC<MailCardProps> = ({
     const { t } = useTranslation();
     const [archive, setArchive] = useState(false);
     const [taskForm, setTaskForm] = useState(false);
-    const [name, setName] = useState('');
-    const [dueDate, setDueDate] = useState('');
 
     const suggested = payload.suggestion;
     const replyUrl = payload.gmail_url.startsWith(GMAIL)
@@ -58,24 +53,6 @@ const MailCard: React.FC<MailCardProps> = ({
     // Putting a mail off keeps it in the inbox.
     const decide = (decision: MailDecision, extra = {}) =>
         onDecide(decision, extra, archive && decision !== 'later');
-
-    const openTaskForm = () => {
-        setName(
-            suggested?.task_name ?? payload.subject ?? payload.summary ?? ''
-        );
-        setDueDate(suggested?.due_date ?? '');
-        setTaskForm(true);
-    };
-
-    const submitTask = (event: React.FormEvent) => {
-        event.preventDefault();
-        const text = name.trim();
-        if (!text) return;
-        decide(
-            'task',
-            dueDate ? { name: text, due_date: dueDate } : { name: text }
-        );
-    };
 
     const taskFirst = suggested?.kind !== 'reply';
 
@@ -106,9 +83,7 @@ const MailCard: React.FC<MailCardProps> = ({
                     variant={taskFirst ? 'primary' : 'secondary'}
                     size="md"
                     aria-expanded={taskForm}
-                    onClick={() =>
-                        taskForm ? setTaskForm(false) : openTaskForm()
-                    }
+                    onClick={() => setTaskForm((open) => !open)}
                 >
                     {t('triage.mail.task', 'Tâche')}
                 </Button>
@@ -151,38 +126,16 @@ const MailCard: React.FC<MailCardProps> = ({
             )}
 
             {taskForm && (
-                <form
-                    onSubmit={submitTask}
-                    className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-700"
-                >
-                    <label className="block text-sm text-gray-700 dark:text-gray-200">
-                        {t('triage.mail.taskName', 'Nom de la tâche')}
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            className={field}
-                            autoFocus
-                        />
-                    </label>
-                    <label className="mt-2 block text-sm text-gray-700 dark:text-gray-200">
-                        {t('triage.mail.taskDue', 'Échéance')}
-                        <input
-                            type="date"
-                            value={dueDate}
-                            onChange={(event) => setDueDate(event.target.value)}
-                            className={field}
-                        />
-                    </label>
-                    <Button
-                        type="submit"
-                        variant="primary"
-                        size="md"
-                        className="mt-2"
-                    >
-                        {t('triage.mail.createTask', 'Créer la tâche')}
-                    </Button>
-                </form>
+                <MailTaskForm
+                    initialName={
+                        suggested?.task_name ??
+                        payload.subject ??
+                        payload.summary ??
+                        ''
+                    }
+                    initialDue={suggested?.due_date ?? ''}
+                    onSubmit={(task) => decide('task', task)}
+                />
             )}
         </div>
     );

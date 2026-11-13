@@ -195,7 +195,8 @@
       "replied": "Відповідь відкрито в Gmail",
       "postponed": "Повернеться завтра",
       "dismissed": "Лист пропущено",
-      "notArchived": "Не архівовано в Gmail"
+      "notArchived": "Не архівовано в Gmail",
+      "eventRequested": "Зустріч передано агенту"
     },
     "linkLater": "Через 30 днів",
     "linkArchive": "В архів",
@@ -236,7 +237,23 @@
     "emptyTitle": "Нічого розбирати",
     "left": "Залишилось: {{count}}",
     "entry": "На розбір ({{count}})",
-    "title": "На розбір"
+    "title": "На розбір",
+    "deck": {
+      "open": "Розібрати пошту ({{count}})",
+      "title": "Розібрати пошту",
+      "close": "Закрити",
+      "done": "Усе розібрано",
+      "back": "Назад до «Розібрати»",
+      "createTask": "Створити завдання: {{name}}",
+      "replyInGmail": "Відповісти в Gmail",
+      "readInGmail": "Прочитати в Gmail",
+      "addEvent": "Додати до календаря: {{when}}",
+      "editTask": "Змінити завдання",
+      "openMail": "Відкрити лист",
+      "chat": "Обговорити",
+      "undo": "Скасувати",
+      "keys": "Enter або →: порада · ←: пізніше · ↓: пропустити · Ctrl+Z: скасувати · Esc: закрити"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3720,7 +3737,8 @@
         "noteCreated": "Створено нотатку",
         "linkCreated": "Збережено посилання",
         "dailySummary": "Щоденний підсумок",
-        "test": "Тест"
+        "test": "Тест",
+        "mailDecided": "Картку листа вирішено"
       },
       "groups": {
         "alerts": "Нагадування та сповіщення",

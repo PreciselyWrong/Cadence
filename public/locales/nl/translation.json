@@ -189,7 +189,8 @@
       "replied": "Antwoord geopend in Gmail",
       "postponed": "Komt morgen terug",
       "dismissed": "Mail genegeerd",
-      "notArchived": "Niet gearchiveerd in Gmail"
+      "notArchived": "Niet gearchiveerd in Gmail",
+      "eventRequested": "Afspraak doorgegeven aan de agent"
     },
     "linkLater": "Over 30 dagen",
     "linkArchive": "Archiveren",
@@ -230,7 +231,23 @@
     "emptyTitle": "Niets te sorteren",
     "left": "{{count}} te bekijken",
     "entry": "Te sorteren ({{count}})",
-    "title": "Te sorteren"
+    "title": "Te sorteren",
+    "deck": {
+      "open": "Mijn mail sorteren ({{count}})",
+      "title": "Mijn mail sorteren",
+      "close": "Sluiten",
+      "done": "Alles gesorteerd",
+      "back": "Terug naar „Te sorteren”",
+      "createTask": "Taak maken: {{name}}",
+      "replyInGmail": "Beantwoorden in Gmail",
+      "readInGmail": "Lezen in Gmail",
+      "addEvent": "Toevoegen aan agenda: {{when}}",
+      "editTask": "Taak bewerken",
+      "openMail": "Mail openen",
+      "chat": "Bespreken",
+      "undo": "Ongedaan maken",
+      "keys": "Enter of →: advies · ←: later · ↓: overslaan · Ctrl+Z: ongedaan maken · Esc: sluiten"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3684,7 +3701,8 @@
         "noteCreated": "Notitie gemaakt",
         "linkCreated": "Link opgeslagen",
         "dailySummary": "Dagelijkse samenvatting",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Mailkaart beslist"
       },
       "groups": {
         "alerts": "Herinneringen en meldingen",

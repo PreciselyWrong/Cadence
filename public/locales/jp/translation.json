@@ -187,7 +187,8 @@
       "replied": "Gmail で返信を開きました",
       "postponed": "明日また表示",
       "dismissed": "メールを無視しました",
-      "notArchived": "Gmail でアーカイブされていません"
+      "notArchived": "Gmail でアーカイブされていません",
+      "eventRequested": "予定をエージェントに渡しました"
     },
     "linkLater": "30日後",
     "linkArchive": "アーカイブ",
@@ -228,7 +229,23 @@
     "emptyTitle": "整理するものはありません",
     "left": "残り {{count}} 件",
     "entry": "整理待ち（{{count}}）",
-    "title": "整理待ち"
+    "title": "整理待ち",
+    "deck": {
+      "open": "メールを仕分ける（{{count}}）",
+      "title": "メールを仕分ける",
+      "close": "閉じる",
+      "done": "すべて仕分けました",
+      "back": "「仕分け」に戻る",
+      "createTask": "タスクを作成：{{name}}",
+      "replyInGmail": "Gmail で返信",
+      "readInGmail": "Gmail で読む",
+      "addEvent": "カレンダーに追加：{{when}}",
+      "editTask": "タスクを編集",
+      "openMail": "メールを開く",
+      "chat": "相談する",
+      "undo": "元に戻す",
+      "keys": "Enter または →：提案 · ←：後で · ↓：スキップ · Ctrl+Z：元に戻す · Esc：閉じる"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3677,7 +3694,8 @@
         "noteCreated": "ノートを作成",
         "linkCreated": "リンクを保存",
         "dailySummary": "デイリーサマリー",
-        "test": "テスト"
+        "test": "テスト",
+        "mailDecided": "メールカードを決定しました"
       },
       "groups": {
         "alerts": "リマインダーとアラート",

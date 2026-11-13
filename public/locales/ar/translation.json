@@ -203,7 +203,8 @@
       "replied": "فُتح الرد في Gmail",
       "postponed": "يعود غدًا",
       "dismissed": "تم تجاهل الرسالة",
-      "notArchived": "لم تتم الأرشفة في Gmail"
+      "notArchived": "لم تتم الأرشفة في Gmail",
+      "eventRequested": "أُرسل الموعد إلى الوكيل"
     },
     "linkLater": "بعد 30 يومًا",
     "linkArchive": "أرشفة",
@@ -244,7 +245,23 @@
     "emptyTitle": "لا شيء للفرز",
     "left": "{{count}} للمراجعة",
     "entry": "للفرز ({{count}})",
-    "title": "للفرز"
+    "title": "للفرز",
+    "deck": {
+      "open": "فرز بريدي ({{count}})",
+      "title": "فرز بريدي",
+      "close": "إغلاق",
+      "done": "تم فرز كل شيء",
+      "back": "العودة إلى «للفرز»",
+      "createTask": "إنشاء مهمة: {{name}}",
+      "replyInGmail": "الرد في Gmail",
+      "readInGmail": "القراءة في Gmail",
+      "addEvent": "إضافة إلى التقويم: {{when}}",
+      "editTask": "تعديل المهمة",
+      "openMail": "فتح الرسالة",
+      "chat": "مناقشة",
+      "undo": "تراجع",
+      "keys": "Enter أو →: النصيحة · ←: لاحقًا · ↓: تخطٍّ · Ctrl+Z: تراجع · Esc: إغلاق"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3717,7 +3734,8 @@
         "noteCreated": "تم إنشاء ملاحظة",
         "linkCreated": "تم حفظ رابط",
         "dailySummary": "الملخص اليومي",
-        "test": "اختبار"
+        "test": "اختبار",
+        "mailDecided": "تم البت في بطاقة البريد"
       },
       "groups": {
         "alerts": "التذكيرات والتنبيهات",

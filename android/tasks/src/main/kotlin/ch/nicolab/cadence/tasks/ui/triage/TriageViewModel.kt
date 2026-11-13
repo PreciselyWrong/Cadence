@@ -108,6 +108,7 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
             when (decision) {
                 MailDecision.TASK -> R.string.triage_mail_task_created
                 MailDecision.REPLY -> R.string.triage_mail_replied
+                MailDecision.EVENT -> R.string.triage_mail_event_requested
                 MailDecision.LATER -> R.string.triage_mail_postponed
                 MailDecision.DISMISS -> R.string.triage_mail_dismissed
             },

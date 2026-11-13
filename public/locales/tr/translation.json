@@ -187,7 +187,8 @@
       "replied": "Yanıt Gmail'de açıldı",
       "postponed": "Yarın geri gelir",
       "dismissed": "E-posta yok sayıldı",
-      "notArchived": "Gmail'de arşivlenmedi"
+      "notArchived": "Gmail'de arşivlenmedi",
+      "eventRequested": "Randevu ajana iletildi"
     },
     "linkLater": "30 gün sonra",
     "linkArchive": "Arşivle",
@@ -228,7 +229,23 @@
     "emptyTitle": "Ayıklanacak bir şey yok",
     "left": "Bakılacak: {{count}}",
     "entry": "Ayıklanacak ({{count}})",
-    "title": "Ayıklanacak"
+    "title": "Ayıklanacak",
+    "deck": {
+      "open": "Postalarımı ayıkla ({{count}})",
+      "title": "Postalarımı ayıkla",
+      "close": "Kapat",
+      "done": "Hepsi ayıklandı",
+      "back": "“Ayıklanacaklar”a dön",
+      "createTask": "Görev oluştur: {{name}}",
+      "replyInGmail": "Gmail’de yanıtla",
+      "readInGmail": "Gmail’de oku",
+      "addEvent": "Takvime ekle: {{when}}",
+      "editTask": "Görevi düzenle",
+      "openMail": "Postayı aç",
+      "chat": "Konuş",
+      "undo": "Geri al",
+      "keys": "Enter veya →: öneri · ←: sonra · ↓: atla · Ctrl+Z: geri al · Esc: kapat"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3677,7 +3694,8 @@
         "noteCreated": "Not oluşturuldu",
         "linkCreated": "Bağlantı kaydedildi",
         "dailySummary": "Günlük özet",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Posta kartı karara bağlandı"
       },
       "groups": {
         "alerts": "Hatırlatıcılar ve uyarılar",

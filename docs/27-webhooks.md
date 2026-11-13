@@ -26,6 +26,7 @@ On Cadence Cloud, webhooks are part of the paid plan and not of the free trial.
 | `task.created`, `task.updated`, `task.completed`, `task.deleted` | One of your tasks changes, from any source (web, API, MCP, inbox) |
 | `note.created`, `link.created` | A note is created, or a link is saved (found in an inbox item, task or note, see [Links](37-links.md)), from any source |
 | `daily_summary` | Once a day at the hour you pick, in your timezone: overdue, due today and in progress |
+| `mail.decided` | You decide a mail card in « À trier » (see [Mail cards](43-mail-triage.md)): `data.mail` with `mail_uid`, `account`, `thread_id`, `subject`, `decision`, `task_uid`, `event`, `later_until` |
 
 The reminder and alert events follow the same notifications as the in-app bell: if the in-app column is off for a type, no webhook is sent for it either. `task.updated` only fires for changes that matter outside Cadence (name, note, status, priority, dates, project, parent, estimate) and lists them in `data.changed`. Habit check-ins do not count as task changes. Changes to many tasks at once through a bulk update are not sent.
 

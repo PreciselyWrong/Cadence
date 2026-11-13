@@ -187,7 +187,8 @@
       "replied": "已在 Gmail 中打开回复",
       "postponed": "明天再显示",
       "dismissed": "已忽略邮件",
-      "notArchived": "未在 Gmail 中归档"
+      "notArchived": "未在 Gmail 中归档",
+      "eventRequested": "已将约会交给代理"
     },
     "linkLater": "30 天后",
     "linkArchive": "归档",
@@ -228,7 +229,23 @@
     "emptyTitle": "没有需要整理的内容",
     "left": "还有 {{count}} 项",
     "entry": "待整理（{{count}}）",
-    "title": "待整理"
+    "title": "待整理",
+    "deck": {
+      "open": "整理我的邮件（{{count}}）",
+      "title": "整理我的邮件",
+      "close": "关闭",
+      "done": "全部整理完毕",
+      "back": "返回“待整理”",
+      "createTask": "创建任务：{{name}}",
+      "replyInGmail": "在 Gmail 中回复",
+      "readInGmail": "在 Gmail 中阅读",
+      "addEvent": "添加到日历：{{when}}",
+      "editTask": "编辑任务",
+      "openMail": "打开邮件",
+      "chat": "讨论",
+      "undo": "撤销",
+      "keys": "Enter 或 →：建议 · ←：稍后 · ↓：跳过 · Ctrl+Z：撤销 · Esc：关闭"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3677,7 +3694,8 @@
         "noteCreated": "已创建笔记",
         "linkCreated": "已保存链接",
         "dailySummary": "每日摘要",
-        "test": "测试"
+        "test": "测试",
+        "mailDecided": "邮件卡片已决定"
       },
       "groups": {
         "alerts": "提醒和警报",

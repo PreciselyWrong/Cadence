@@ -195,7 +195,8 @@
       "replied": "Ответ открыт в Gmail",
       "postponed": "Вернётся завтра",
       "dismissed": "Письмо пропущено",
-      "notArchived": "Не архивировано в Gmail"
+      "notArchived": "Не архивировано в Gmail",
+      "eventRequested": "Встреча передана агенту"
     },
     "linkLater": "Через 30 дней",
     "linkArchive": "В архив",
@@ -236,7 +237,23 @@
     "emptyTitle": "Разбирать нечего",
     "left": "Осталось: {{count}}",
     "entry": "На разбор ({{count}})",
-    "title": "На разбор"
+    "title": "На разбор",
+    "deck": {
+      "open": "Разобрать почту ({{count}})",
+      "title": "Разобрать почту",
+      "close": "Закрыть",
+      "done": "Всё разобрано",
+      "back": "Назад к «Разобрать»",
+      "createTask": "Создать задачу: {{name}}",
+      "replyInGmail": "Ответить в Gmail",
+      "readInGmail": "Прочитать в Gmail",
+      "addEvent": "Добавить в календарь: {{when}}",
+      "editTask": "Изменить задачу",
+      "openMail": "Открыть письмо",
+      "chat": "Обсудить",
+      "undo": "Отменить",
+      "keys": "Enter или →: совет · ←: позже · ↓: пропустить · Ctrl+Z: отменить · Esc: закрыть"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3720,7 +3737,8 @@
         "noteCreated": "Создана заметка",
         "linkCreated": "Сохранена ссылка",
         "dailySummary": "Ежедневная сводка",
-        "test": "Тест"
+        "test": "Тест",
+        "mailDecided": "Карточка письма решена"
       },
       "groups": {
         "alerts": "Напоминания и оповещения",

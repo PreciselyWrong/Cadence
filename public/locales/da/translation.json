@@ -189,7 +189,8 @@
       "replied": "Svar åbnet i Gmail",
       "postponed": "Kommer igen i morgen",
       "dismissed": "Mail ignoreret",
-      "notArchived": "Ikke arkiveret i Gmail"
+      "notArchived": "Ikke arkiveret i Gmail",
+      "eventRequested": "Aftale sendt til agenten"
     },
     "linkLater": "Om 30 dage",
     "linkArchive": "Arkivér",
@@ -230,7 +231,23 @@
     "emptyTitle": "Intet at sortere",
     "left": "{{count}} at se",
     "entry": "At sortere ({{count}})",
-    "title": "At sortere"
+    "title": "At sortere",
+    "deck": {
+      "open": "Sortér min post ({{count}})",
+      "title": "Sortér min post",
+      "close": "Luk",
+      "done": "Alt er sorteret",
+      "back": "Tilbage til “Til sortering”",
+      "createTask": "Opret opgave: {{name}}",
+      "replyInGmail": "Svar i Gmail",
+      "readInGmail": "Læs i Gmail",
+      "addEvent": "Tilføj til kalender: {{when}}",
+      "editTask": "Redigér opgave",
+      "openMail": "Åbn mail",
+      "chat": "Drøft",
+      "undo": "Fortryd",
+      "keys": "Enter eller →: råd · ←: senere · ↓: spring over · Ctrl+Z: fortryd · Esc: luk"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3686,7 +3703,8 @@
         "noteCreated": "Note oprettet",
         "linkCreated": "Link gemt",
         "dailySummary": "Daglig oversigt",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Mailkort besluttet"
       },
       "groups": {
         "alerts": "Påmindelser og advarsler",

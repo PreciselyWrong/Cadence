@@ -28,11 +28,16 @@ const CAPTURE_EVENTS = ['note.created', 'link.created'];
 
 const SUMMARY_EVENTS = ['daily_summary'];
 
+// A decision on a mail card (docs/43-mail-triage.md), for the agent that
+// proposed it.
+const MAIL_EVENTS = ['mail.decided'];
+
 const ALL_EVENTS = [
     ...NOTIFICATION_EVENTS,
     ...TASK_EVENTS,
     ...CAPTURE_EVENTS,
     ...SUMMARY_EVENTS,
+    ...MAIL_EVENTS,
 ];
 
 // The webhook event for an in-app notification, or null for notifications
@@ -72,6 +77,7 @@ module.exports = {
     TASK_EVENTS,
     CAPTURE_EVENTS,
     SUMMARY_EVENTS,
+    MAIL_EVENTS,
     ALL_EVENTS,
     eventForNotification,
 };

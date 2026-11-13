@@ -12,10 +12,19 @@ const {
     NotFoundError,
     ValidationError,
 } = require('../../shared/errors');
-const { normalizeProposal, threadKey, clean, isDay } = require('./core/mail');
+const {
+    normalizeProposal,
+    threadKey,
+    clean,
+    isDay,
+    eventFields,
+} = require('./core/mail');
 const gateway = require('./mailGateway');
+const dispatcher = require('../webhooks/dispatcher');
+const { logError } = require('../../services/logService');
 
-const DECISIONS = new Set(['task', 'reply', 'later', 'dismiss']);
+const DECISIONS = new Set(['task', 'reply', 'event', 'later', 'dismiss']);
+const EVENT_STATES = new Set(['created', 'failed']);
 const RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 const KEY_MAX = 150;
 const LIST_MAX = 100;
@@ -40,6 +49,7 @@ const REOPEN = {
     decided_at: null,
     task_uid: null,
     archived_at: null,
+    event: null,
 };
 
 const pick = (card) =>
@@ -122,6 +132,7 @@ async function listCards(user) {
             later_until: row.later_until,
             decision: row.decision,
             decided_at: row.decided_at,
+            event: row.event ?? null,
         })),
     };
 }
@@ -200,11 +211,57 @@ async function createTask(user, row, payload) {
     return created.task?.uid ?? created.uid;
 }
 
+// The appointment the user accepted, for the agent to put in the calendar:
+// the agent's suggestion, corrected by the client's payload.
+function requestedEvent(row, payload) {
+    const suggested =
+        row.suggestion?.kind === 'event' ? (row.suggestion.event ?? {}) : {};
+    const merged = { ...suggested };
+    for (const key of ['title', 'start', 'end', 'location']) {
+        if (payload[key] !== undefined) merged[key] = payload[key];
+    }
+    // A new start without a new end drops an end that no longer fits.
+    if (payload.start !== undefined && payload.end === undefined) {
+        merged.end = null;
+    }
+    if (merged.start === undefined || merged.start === null) {
+        throw new ValidationError('payload.start is required');
+    }
+    const event = eventFields(merged, 'payload');
+    event.title = event.title ?? row.subject ?? row.summary;
+    return { ...event, state: 'requested' };
+}
+
+// Plugins and webhooks hear each decision, so the agent that proposed the
+// card can act on it (an appointment to create) and learn from it.
+async function announce(userId, row) {
+    try {
+        await dispatcher.emit(userId, 'mail.decided', {
+            text: `Mail decided: ${row.decision} (${row.subject ?? row.summary})`,
+            data: {
+                mail: {
+                    mail_uid: row.uid,
+                    account: row.account,
+                    thread_id: row.thread_id,
+                    subject: row.subject,
+                    decision: row.decision,
+                    task_uid: row.task_uid ?? null,
+                    event: row.event ?? null,
+                    later_until: row.later_until ?? null,
+                },
+            },
+        });
+    } catch (error) {
+        logError({ error, mailUid: row.uid }, 'Mail decision event failed');
+    }
+}
+
 const outcome = (row, extra = {}) => ({
     mail_uid: row.uid,
     state: row.status,
     decision: row.decision,
     task_uid: row.task_uid ?? null,
+    event: row.event ?? null,
     ...extra,
 });
 
@@ -300,6 +357,9 @@ async function decide(
             if (decision === 'task') {
                 changes.task_uid = await createTask(user, row, payload);
             }
+            if (decision === 'event') {
+                changes.event = requestedEvent(row, payload);
+            }
             changes.status = 'done';
             changes.decided_at = new Date();
             changes.later_until = null;
@@ -312,6 +372,7 @@ async function decide(
     }
     await MailItem.update(changes, { where: { id: row.id } });
     await row.reload();
+    await announce(user.id, row);
 
     if (!archive) return outcome(row);
     const archived = await gateway.archiveThread(row.account, row.thread_id);
@@ -319,8 +380,56 @@ async function decide(
     return outcome(row, { archived });
 }
 
+const CALENDAR_HOSTS = new Set(['calendar.google.com', 'www.google.com']);
+
+function calendarUrl(value) {
+    if (value === undefined || value === null) return null;
+    let url;
+    try {
+        url = new URL(value);
+    } catch {
+        throw new ValidationError('url must open Google Calendar');
+    }
+    if (
+        url.protocol !== 'https:' ||
+        !CALENDAR_HOSTS.has(url.hostname) ||
+        (url.hostname === 'www.google.com' &&
+            !url.pathname.startsWith('/calendar')) ||
+        url.username ||
+        url.password ||
+        value.length > 2048
+    ) {
+        throw new ValidationError('url must open Google Calendar');
+    }
+    return url.toString();
+}
+
+// The agent says what came of an appointment the user accepted.
+async function reportEvent(user, input = {}) {
+    const row = await findThread(user.id, threadKey(input));
+    if (!row) throw new NotFoundError('Mail card not found');
+    if (row.decision !== 'event' || !row.event) {
+        throw new ValidationError('this card asked for no event');
+    }
+    if (!EVENT_STATES.has(input.state)) {
+        throw new ValidationError('state must be created or failed');
+    }
+    const event = { ...row.event, state: input.state };
+    delete event.url;
+    delete event.error;
+    if (input.state === 'created') {
+        const url = calendarUrl(input.url);
+        if (url) event.url = url;
+    } else {
+        event.error = clean(input.error, 200);
+    }
+    await row.update({ event });
+    return { mail_uid: row.uid, event };
+}
+
 module.exports = {
     proposeMail,
+    reportEvent,
     resolveMail,
     listCards,
     queueItems,

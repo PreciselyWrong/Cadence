@@ -110,6 +110,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
     var correcting by remember { mutableStateOf<TriageItemDto?>(null) }
     var opened by remember { mutableStateOf<String?>(null) }
     var precise by remember { mutableStateOf<Pair<TriageItemDto, QuestionDto>?>(null) }
+    var deckOpen by remember { mutableStateOf(false) }
     BackHandler(onBack = onBack)
     LaunchedEffect(viewModel) { viewModel.refresh() }
     LaunchedEffect(viewModel) {
@@ -122,6 +123,19 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
         }
     }
 
+    if (deckOpen) {
+        MailDeckScreen(
+            items = items,
+            archiveAvailable = queue?.mailArchive == true,
+            today = today,
+            onDecide = { item, decision, payload, archive -> viewModel.decideMail(item, decision, payload, archive) },
+            onSkip = { item -> viewModel.skip(item) },
+            onClose = { deckOpen = false },
+        )
+        return
+    }
+    val mailCount = items.count { it.type == MAIL_TYPE }
+
     Surface(Modifier.fillMaxSize(), color = cadence.background, contentColor = cadence.onSurface) {
         Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
             ScreenHeader(
@@ -131,6 +145,12 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                 backDescription = stringResource(R.string.tasks_back),
                 actions = { PluginActionButtons(place = "triage", context = emptyMap()) },
             )
+            if (mailCount > 0) {
+                PrimaryAction(
+                    stringResource(R.string.triage_deck_open, mailCount),
+                    Modifier.fillMaxWidth().padding(horizontal = Space.gutter, vertical = Space.xs),
+                ) { deckOpen = true }
+            }
             val item = items.firstOrNull()
             if (item == null) {
                 EmptyState(

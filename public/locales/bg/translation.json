@@ -187,7 +187,8 @@
       "replied": "Отговорът е отворен в Gmail",
       "postponed": "Връща се утре",
       "dismissed": "Писмото е пренебрегнато",
-      "notArchived": "Не е архивирано в Gmail"
+      "notArchived": "Не е архивирано в Gmail",
+      "eventRequested": "Срещата е предадена на агента"
     },
     "linkLater": "След 30 дни",
     "linkArchive": "Архивирай",
@@ -228,7 +229,23 @@
     "emptyTitle": "Няма нищо за подреждане",
     "left": "{{count}} за преглед",
     "entry": "За подреждане ({{count}})",
-    "title": "За подреждане"
+    "title": "За подреждане",
+    "deck": {
+      "open": "Сортирай пощата ми ({{count}})",
+      "title": "Сортирай пощата ми",
+      "close": "Затвори",
+      "done": "Всичко е сортирано",
+      "back": "Обратно към „За сортиране“",
+      "createTask": "Създай задача: {{name}}",
+      "replyInGmail": "Отговори в Gmail",
+      "readInGmail": "Прочети в Gmail",
+      "addEvent": "Добави в календара: {{when}}",
+      "editTask": "Редактирай задачата",
+      "openMail": "Отвори писмото",
+      "chat": "Обсъди",
+      "undo": "Отмени",
+      "keys": "Enter или →: съвет · ←: по-късно · ↓: пропусни · Ctrl+Z: отмени · Esc: затвори"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3684,7 +3701,8 @@
         "noteCreated": "Създадена бележка",
         "linkCreated": "Запазена връзка",
         "dailySummary": "Дневно обобщение",
-        "test": "Тест"
+        "test": "Тест",
+        "mailDecided": "Картата за писмо е решена"
       },
       "groups": {
         "alerts": "Напомняния и известия",

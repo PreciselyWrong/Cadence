@@ -189,7 +189,8 @@
       "replied": "Réponse ouverte dans Gmail",
       "postponed": "Revient demain",
       "dismissed": "Mail ignoré",
-      "notArchived": "Pas archivé dans Gmail"
+      "notArchived": "Pas archivé dans Gmail",
+      "eventRequested": "Rendez-vous demandé à l’agent"
     },
     "linkLater": "Dans 30 jours",
     "linkArchive": "Archiver",
@@ -230,7 +231,23 @@
     "emptyTitle": "Rien à trier",
     "left": "{{count}} à voir",
     "entry": "À trier ({{count}})",
-    "title": "À trier"
+    "title": "À trier",
+    "deck": {
+      "open": "Trier mes mails ({{count}})",
+      "title": "Trier mes mails",
+      "close": "Fermer",
+      "done": "Tout est trié",
+      "back": "Retour à « À trier »",
+      "createTask": "Créer la tâche : {{name}}",
+      "replyInGmail": "Répondre dans Gmail",
+      "readInGmail": "Lire dans Gmail",
+      "addEvent": "Ajouter à l’agenda : {{when}}",
+      "editTask": "Modifier la tâche",
+      "openMail": "Ouvrir le mail",
+      "chat": "Discuter",
+      "undo": "Annuler",
+      "keys": "Entrée ou → : conseil · ← : plus tard · ↓ : passer · Ctrl+Z : annuler · Échap : fermer"
+    }
   },
   "outline": {
     "saveError": "Impossible d'enregistrer ce changement",
@@ -3694,7 +3711,8 @@
         "noteCreated": "Note créée",
         "linkCreated": "Lien enregistré",
         "dailySummary": "Résumé quotidien",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Carte Mail décidée"
       },
       "groups": {
         "alerts": "Rappels et alertes",

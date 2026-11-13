@@ -37,12 +37,16 @@ module.exports = (sequelize) => {
             // pending | later | done
             status: { type: DataTypes.STRING(16), allowNull: false },
             later_until: { type: DataTypes.DATE, allowNull: true },
-            // task | reply | later | dismiss | resolved (by the agent)
+            // task | reply | event | later | dismiss | resolved (by the agent)
             decision: { type: DataTypes.STRING(16), allowNull: true },
             decided_at: { type: DataTypes.DATE, allowNull: true },
             decide_key: { type: DataTypes.STRING(150), allowNull: true },
             task_uid: { type: DataTypes.STRING, allowNull: true },
             archived_at: { type: DataTypes.DATE, allowNull: true },
+            // The appointment accepted by the user, for the agent to put in
+            // the calendar: title, start, end, all_day, location, state
+            // (requested | created | failed), url or error.
+            event: { type: DataTypes.JSON, allowNull: true },
         },
         {
             tableName: 'mail_items',

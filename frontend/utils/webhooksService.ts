@@ -66,6 +66,7 @@ export const WEBHOOK_EVENT_GROUPS: { key: string; events: string[] }[] = [
             'task.deleted',
             'note.created',
             'link.created',
+            'mail.decided',
         ],
     },
     { key: 'summary', events: ['daily_summary'] },

@@ -304,6 +304,151 @@ describe('triage › mail cards', () => {
         expect(await MailItem.count({ where: { uid } })).toBe(0);
     });
 
+    describe('appointment (event decision)', () => {
+        const meeting = {
+            kind: 'event',
+            event: {
+                title: 'Visite du chantier',
+                start: '2026-11-20T14:00:00+01:00',
+                end: '2026-11-20T15:00:00+01:00',
+                location: 'Rue du Lac 4',
+            },
+        };
+
+        it('accepts an event suggestion and shows it on the card', async () => {
+            await propose({ suggestion: meeting });
+            const [item] = await mailItems();
+            expect(item.payload.suggestion).toEqual({
+                kind: 'event',
+                event: { ...meeting.event, all_day: false },
+            });
+        });
+
+        it('refuses an event suggestion without a valid start or ending before it', async () => {
+            await expect(
+                propose({
+                    suggestion: { kind: 'event', event: { title: 'x' } },
+                })
+            ).rejects.toThrow(/start/);
+            await expect(
+                propose({
+                    suggestion: {
+                        kind: 'event',
+                        event: {
+                            title: 'x',
+                            start: '2026-11-20T14:00:00Z',
+                            end: '2026-11-20T13:00:00Z',
+                        },
+                    },
+                })
+            ).rejects.toThrow(/end/);
+        });
+
+        it('records the appointment for the agent, creates no task', async () => {
+            const { mail_uid: uid } = await propose({ suggestion: meeting });
+            const response = await decide(uid, { decision: 'event' });
+            expect(response.status).toBe(200);
+            expect(response.body).toMatchObject({
+                state: 'done',
+                decision: 'event',
+                event: { ...meeting.event, all_day: false, state: 'requested' },
+            });
+            expect(await Task.count({ where: { user_id: user.id } })).toBe(0);
+            const { cards } = JSON.parse(
+                (await run('list_mail_cards', {})).content[0].text
+            );
+            expect(cards[0]).toMatchObject({
+                decision: 'event',
+                event: { title: 'Visite du chantier', state: 'requested' },
+            });
+        });
+
+        it('takes a corrected date, and an all-day event from a day', async () => {
+            const { mail_uid: uid } = await propose({ suggestion: meeting });
+            const response = await decide(uid, {
+                decision: 'event',
+                payload: { start: '2026-11-21' },
+            });
+            expect(response.body.event).toMatchObject({
+                title: 'Visite du chantier',
+                start: '2026-11-21',
+                end: null,
+                all_day: true,
+            });
+        });
+
+        it('refuses an appointment without any start, and keeps the card', async () => {
+            const { mail_uid: uid } = await propose();
+            const response = await decide(uid, { decision: 'event' });
+            expect(response.status).toBe(400);
+            expect(await mailItems()).toHaveLength(1);
+        });
+
+        it('tells plugins about every decision', async () => {
+            const pluginEvents = require('../../modules/plugins/eventBus');
+            const heard = [];
+            const stop = pluginEvents.subscribe((event) => heard.push(event));
+            try {
+                const { mail_uid: uid } = await propose({
+                    suggestion: meeting,
+                });
+                await decide(uid, { decision: 'event', idempotency_key: 'e1' });
+                await decide(uid, { decision: 'event', idempotency_key: 'e1' });
+            } finally {
+                stop();
+            }
+            const decided = heard.filter((e) => e.name === 'mail.decided');
+            expect(decided).toHaveLength(1);
+            expect(decided[0].data.mail).toMatchObject({
+                account: 'perso',
+                thread_id: THREAD,
+                decision: 'event',
+                event: { title: 'Visite du chantier', state: 'requested' },
+            });
+        });
+
+        it('lets the agent report the event it created, or why it could not', async () => {
+            const { mail_uid: uid } = await propose({ suggestion: meeting });
+            await decide(uid, { decision: 'event' });
+            const report = (fields) =>
+                run('report_mail_event', {
+                    account: 'perso',
+                    thread_id: THREAD,
+                    ...fields,
+                });
+            await expect(
+                report({ state: 'created', url: 'https://evil.example/x' })
+            ).rejects.toThrow(/url/);
+            await report({
+                state: 'created',
+                url: 'https://calendar.google.com/calendar/event?eid=abc',
+            });
+            let row = await MailItem.findOne({ where: { uid } });
+            expect(row.event).toMatchObject({
+                state: 'created',
+                url: 'https://calendar.google.com/calendar/event?eid=abc',
+            });
+            await report({ state: 'failed', error: 'Agenda indisponible' });
+            row = await MailItem.findOne({ where: { uid } });
+            expect(row.event).toMatchObject({
+                state: 'failed',
+                error: 'Agenda indisponible',
+            });
+        });
+
+        it('refuses a report on a card that asked for no event', async () => {
+            const { mail_uid: uid } = await propose();
+            await decide(uid, { decision: 'dismiss' });
+            await expect(
+                run('report_mail_event', {
+                    account: 'perso',
+                    thread_id: THREAD,
+                    state: 'created',
+                })
+            ).rejects.toThrow(/event/);
+        });
+    });
+
     describe('Gmail gateway', () => {
         it('refuses to archive when no gateway is set, and changes nothing', async () => {
             const { mail_uid: uid } = await propose();

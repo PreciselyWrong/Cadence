@@ -5,6 +5,7 @@ import ch.nicolab.cadence.tasks.sync.encodePath
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.put
 
@@ -15,6 +16,7 @@ const val MAIL_TYPE = "mail"
 enum class MailDecision(val wire: String) {
     TASK("task"),
     REPLY("reply"),
+    EVENT("event"),
     LATER("later"),
     DISMISS("dismiss"),
 }
@@ -36,7 +38,14 @@ data class MailCardData(
     /** Nom proposé pour la tâche : celui de l'agent, sinon l'objet, sinon le résumé. */
     val taskName: String,
     val dueDate: String?,
+    /** Conseil de l'agent : `task`, `reply`, `read`, `event`, ou null. */
+    val kind: String? = null,
+    /** Rendez-vous que fixe le mail (`kind` = `event`), à créer dans l'agenda par l'agent. */
+    val event: MailEventData? = null,
 )
+
+/** Rendez-vous d'une carte Mail : [start] est un jour (journée entière) ou une heure ISO 8601 avec son décalage. */
+data class MailEventData(val title: String?, val start: String, val end: String?, val allDay: Boolean, val location: String?)
 
 /** Lecture tolérante de la charge utile : une forme inconnue donne null, jamais une exception. */
 object MailPayload {
@@ -59,6 +68,19 @@ object MailPayload {
             replyFirst = suggestion?.let { text(it, "kind") } == "reply",
             taskName = suggestion?.let { text(it, "task_name") } ?: subject ?: summary,
             dueDate = suggestion?.let { text(it, "due_date") },
+            kind = suggestion?.let { text(it, "kind") },
+            event = (suggestion?.get("event") as? JsonObject)?.let(::event),
+        )
+    }
+
+    private fun event(source: JsonObject): MailEventData? {
+        val start = text(source, "start") ?: return null
+        return MailEventData(
+            title = text(source, "title"),
+            start = start,
+            end = text(source, "end"),
+            allDay = (source["all_day"] as? JsonPrimitive)?.booleanOrNull ?: !start.contains('T'),
+            location = text(source, "location"),
         )
     }
 

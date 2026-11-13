@@ -187,7 +187,8 @@
       "replied": "Balasan dibuka di Gmail",
       "postponed": "Kembali besok",
       "dismissed": "Email diabaikan",
-      "notArchived": "Tidak diarsipkan di Gmail"
+      "notArchived": "Tidak diarsipkan di Gmail",
+      "eventRequested": "Janji temu dikirim ke agen"
     },
     "linkLater": "Dalam 30 hari",
     "linkArchive": "Arsipkan",
@@ -228,7 +229,23 @@
     "emptyTitle": "Tidak ada yang perlu dipilah",
     "left": "{{count}} untuk ditinjau",
     "entry": "Untuk dipilah ({{count}})",
-    "title": "Untuk dipilah"
+    "title": "Untuk dipilah",
+    "deck": {
+      "open": "Pilah surel saya ({{count}})",
+      "title": "Pilah surel saya",
+      "close": "Tutup",
+      "done": "Semua sudah dipilah",
+      "back": "Kembali ke “Untuk dipilah”",
+      "createTask": "Buat tugas: {{name}}",
+      "replyInGmail": "Balas di Gmail",
+      "readInGmail": "Baca di Gmail",
+      "addEvent": "Tambahkan ke kalender: {{when}}",
+      "editTask": "Ubah tugas",
+      "openMail": "Buka surel",
+      "chat": "Diskusikan",
+      "undo": "Urungkan",
+      "keys": "Enter atau →: saran · ←: nanti · ↓: lewati · Ctrl+Z: urungkan · Esc: tutup"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3677,7 +3694,8 @@
         "noteCreated": "Catatan dibuat",
         "linkCreated": "Tautan disimpan",
         "dailySummary": "Ringkasan harian",
-        "test": "Tes"
+        "test": "Tes",
+        "mailDecided": "Kartu surel diputuskan"
       },
       "groups": {
         "alerts": "Pengingat dan peringatan",

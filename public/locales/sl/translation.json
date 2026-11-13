@@ -195,7 +195,8 @@
       "replied": "Odgovor odprt v Gmailu",
       "postponed": "Vrne se jutri",
       "dismissed": "Pošta prezrta",
-      "notArchived": "Ni arhivirano v Gmailu"
+      "notArchived": "Ni arhivirano v Gmailu",
+      "eventRequested": "Sestanek posredovan agentu"
     },
     "linkLater": "Čez 30 dni",
     "linkArchive": "Arhiviraj",
@@ -236,7 +237,23 @@
     "emptyTitle": "Ničesar ni za razvrstiti",
     "left": "{{count}} za pregled",
     "entry": "Za razvrstitev ({{count}})",
-    "title": "Za razvrstitev"
+    "title": "Za razvrstitev",
+    "deck": {
+      "open": "Razvrsti mojo pošto ({{count}})",
+      "title": "Razvrsti mojo pošto",
+      "close": "Zapri",
+      "done": "Vse je razvrščeno",
+      "back": "Nazaj na »Za razvrstitev«",
+      "createTask": "Ustvari opravilo: {{name}}",
+      "replyInGmail": "Odgovori v Gmailu",
+      "readInGmail": "Preberi v Gmailu",
+      "addEvent": "Dodaj v koledar: {{when}}",
+      "editTask": "Uredi opravilo",
+      "openMail": "Odpri sporočilo",
+      "chat": "Pogovor",
+      "undo": "Razveljavi",
+      "keys": "Enter ali →: nasvet · ←: pozneje · ↓: preskoči · Ctrl+Z: razveljavi · Esc: zapri"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3723,7 +3740,8 @@
         "noteCreated": "Zapisek ustvarjen",
         "linkCreated": "Povezava shranjena",
         "dailySummary": "Dnevni povzetek",
-        "test": "Preizkus"
+        "test": "Preizkus",
+        "mailDecided": "Kartica pošte odločena"
       },
       "groups": {
         "alerts": "Opomniki in opozorila",

@@ -195,7 +195,8 @@
       "replied": "Odpoveď otvorená v Gmaile",
       "postponed": "Vráti sa zajtra",
       "dismissed": "Pošta ignorovaná",
-      "notArchived": "Nearchivované v Gmaile"
+      "notArchived": "Nearchivované v Gmaile",
+      "eventRequested": "Stretnutie odovzdané agentovi"
     },
     "linkLater": "O 30 dní",
     "linkArchive": "Archivovať",
@@ -236,7 +237,23 @@
     "emptyTitle": "Nič na roztriedenie",
     "left": "{{count}} na prezretie",
     "entry": "Na roztriedenie ({{count}})",
-    "title": "Na roztriedenie"
+    "title": "Na roztriedenie",
+    "deck": {
+      "open": "Roztriediť moju poštu ({{count}})",
+      "title": "Roztriediť moju poštu",
+      "close": "Zavrieť",
+      "done": "Všetko roztriedené",
+      "back": "Späť na „Na roztriedenie“",
+      "createTask": "Vytvoriť úlohu: {{name}}",
+      "replyInGmail": "Odpovedať v Gmaile",
+      "readInGmail": "Čítať v Gmaile",
+      "addEvent": "Pridať do kalendára: {{when}}",
+      "editTask": "Upraviť úlohu",
+      "openMail": "Otvoriť e-mail",
+      "chat": "Diskutovať",
+      "undo": "Späť",
+      "keys": "Enter alebo →: rada · ←: neskôr · ↓: preskočiť · Ctrl+Z: späť · Esc: zavrieť"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -4058,7 +4075,8 @@
         "noteCreated": "Poznámka vytvorená",
         "linkCreated": "Odkaz uložený",
         "dailySummary": "Denný súhrn",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Karta e-mailu rozhodnutá"
       },
       "groups": {
         "alerts": "Pripomienky a upozornenia",

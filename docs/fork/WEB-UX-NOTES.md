@@ -860,6 +860,12 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : le bouton du pied de la barre latérale ouvre une nouvelle issue sur le dépôt public de Cadence, déjà remplie (titre = première ligne, corps = message, page affichée et version) ; rien n'est envoyé avant que la personne la publie sur GitHub. Le client Linux l'ouvre dans le navigateur (`desktop/src-tauri/src/links.rs`). La page Admin › Retours reste pour les anciens retours.
 - **Android à reprendre** : rien, Android n'a pas de bouton de retour.
 
+### 2026-11-13 — « Trier mes mails » en paquet de cartes
+
+- **Problème** : trier les mails de l'agent carte par carte dans « À trier », au milieu des autres propositions, demandait de lire chaque carte puis de chercher le bon bouton.
+- **Décision** : un bouton « Trier mes mails (n) » en tête d'« À trier » ouvre un paquet plein écran, une carte à la fois ; le conseil de l'agent est le gros bouton et se fait en un geste (tâche créée, réponse ouverte dans Gmail, rendez-vous demandé à l'agent) ; Modifier la tâche, Répondre, Plus tard, Ignorer en secondaire, puis Ouvrir le mail, Discuter (plugin Hermes), Passer. La carte part avec une courte animation, « Annuler » rend la dernière décision ; fin = « Tout est trié ». Clavier : Entrée/→ conseil, ← plus tard, ↓ passer, Ctrl+Z annuler, Échap fermer (`frontend/components/Triage/MailDeck.tsx`, règles `mailDeck.ts`).
+- **Android** : livré dans la même étape (`ui/triage/MailDeckScreen.kt`, règles `triage/MailDeck.kt`) : glisser à droite = conseil, à gauche = plus tard, annulation par la barre du bas.
+
 ### 2026-11-13 — « En retard » : Replanifier ▾ et « Proposer un plan »
 
 - **Problème** : le bloc « En retard » de Plan n'avait qu'un bouton qui mettait toutes les tâches en retard à aujourd'hui ; avec 9 tâches en retard, personne n'en veut autant le même jour.

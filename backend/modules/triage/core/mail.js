@@ -8,7 +8,7 @@ const { ValidationError } = require('../../../shared/errors');
 
 const SUMMARY_MAX = 200;
 const EXCERPT_MAX = 280;
-const KINDS = new Set(['task', 'reply', 'read']);
+const KINDS = new Set(['task', 'reply', 'read', 'event']);
 const ACCOUNT = /^[A-Za-z0-9_.-]{1,64}$/;
 const THREAD = /^[A-Za-z0-9_-]{1,128}$/;
 const ADDRESS = /^[^\s@<>]+@[^\s@<>]+$/;
@@ -55,7 +55,7 @@ function suggestion(value) {
     if (value === undefined || value === null) return null;
     if (typeof value !== 'object' || !KINDS.has(value.kind)) {
         throw new ValidationError(
-            'suggestion.kind must be task, reply or read'
+            'suggestion.kind must be task, reply, read or event'
         );
     }
     const result = { kind: value.kind };
@@ -69,6 +69,53 @@ function suggestion(value) {
     }
     const project = clean(value.project_uid, 64);
     if (project) result.project_uid = project;
+    if (value.kind === 'event') {
+        result.event = eventFields(value.event ?? {}, 'suggestion.event');
+    }
+    return result;
+}
+
+// A start is a day (all-day event) or an ISO 8601 time with its offset.
+const TIME =
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
+const isTime = (value) =>
+    typeof value === 'string' &&
+    TIME.test(value) &&
+    !Number.isNaN(+new Date(value));
+
+// An appointment to put in the calendar (docs/43-mail-triage.md): a title, a
+// start, an optional end of the same kind and after it, a place.
+function eventFields(value, field) {
+    if (value === null || typeof value !== 'object') {
+        throw new ValidationError(`${field} must be an object`);
+    }
+    const allDay = isDay(value.start);
+    if (!allDay && !isTime(value.start)) {
+        throw new ValidationError(
+            `${field}.start must be YYYY-MM-DD or an ISO 8601 time with offset`
+        );
+    }
+    let end = null;
+    if (value.end !== undefined && value.end !== null) {
+        const sameKind = allDay ? isDay(value.end) : isTime(value.end);
+        const after = allDay
+            ? value.end >= value.start
+            : new Date(value.end) > new Date(value.start);
+        if (!sameKind || !after) {
+            throw new ValidationError(
+                `${field}.end must be of the same kind as start and after it`
+            );
+        }
+        end = value.end;
+    }
+    const result = {
+        title: clean(value.title, 255),
+        start: value.start,
+        end,
+        all_day: allDay,
+    };
+    const location = clean(value.location, 255);
+    if (location) result.location = location;
     return result;
 }
 
@@ -121,4 +168,4 @@ function normalizeProposal(input = {}) {
     };
 }
 
-module.exports = { normalizeProposal, threadKey, clean, isDay };
+module.exports = { normalizeProposal, threadKey, clean, isDay, eventFields };

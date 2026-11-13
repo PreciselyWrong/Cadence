@@ -103,7 +103,13 @@ class MailCardTest {
         assertTrue(body["archive"]!!.jsonPrimitive.boolean)
         assertEquals("k1", body["idempotency_key"]?.jsonPrimitive?.content)
         assertEquals(
-            mapOf(MailDecision.TASK to "task", MailDecision.REPLY to "reply", MailDecision.LATER to "later", MailDecision.DISMISS to "dismiss"),
+            mapOf(
+                MailDecision.TASK to "task",
+                MailDecision.REPLY to "reply",
+                MailDecision.EVENT to "event",
+                MailDecision.LATER to "later",
+                MailDecision.DISMISS to "dismiss",
+            ),
             MailDecision.entries.associateWith { it.wire },
         )
     }

@@ -60,7 +60,7 @@ The automatic classifier (`docs/41-auto-classify.md`) adds its own cards to the 
 
 ## Mail cards
 
-Mail that asks for an action, proposed by an agent through the MCP tool `propose_mail`, is a card `type: mail` (`action: decide_mail`, `source: mail`, `payload`: sender, subject, summary, suggestion, draft excerpt, `gmail_url`), decided through `POST /triage/mail/:uid/decide`. Contract: `docs/43-mail-triage.md` (server, web and Android cards built).
+Mail that asks for an action, proposed by an agent through the MCP tool `propose_mail`, is a card `type: mail` (`action: decide_mail`, `source: mail`, `payload`: sender, subject, summary, suggestion, draft excerpt, `gmail_url`), decided through `POST /triage/mail/:uid/decide`. « Trier mes mails » shows them as a full-screen deck, the agent's advice as the main button. Contract: `docs/43-mail-triage.md` (server, web and Android cards and deck built).
 
 ## Actions
 
@@ -81,7 +81,7 @@ All under `/api` and `/api/v1`.
 | `POST /triage/answers` | `{ target: { scope, ref }, answer: yes \| no \| text }` → `{ context }`. `POST /daily-plan/:date/brief/answers` takes the same body for the Android app up to 1.20 |
 | `GET /triage/contexts` | `?scope=&target_ref=` → `{ contexts }` (200 at most) |
 | `PATCH /triage/contexts/:uid`, `DELETE /triage/contexts/:uid` | `{ text }`; 404 for a context of someone else |
-| `POST /triage/mail/:uid/decide` | `{ decision: task \| reply \| later \| dismiss, payload?, archive?, idempotency_key? }` |
+| `POST /triage/mail/:uid/decide` | `{ decision: task \| reply \| event \| later \| dismiss, payload?, archive?, idempotency_key? }` |
 
 ## Clients
 

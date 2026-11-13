@@ -189,7 +189,8 @@
       "replied": "Risposta aperta in Gmail",
       "postponed": "Torna domani",
       "dismissed": "Mail ignorata",
-      "notArchived": "Non archiviata in Gmail"
+      "notArchived": "Non archiviata in Gmail",
+      "eventRequested": "Appuntamento inviato all’agente"
     },
     "linkLater": "Tra 30 giorni",
     "linkArchive": "Archivia",
@@ -230,7 +231,23 @@
     "emptyTitle": "Niente da ordinare",
     "left": "{{count}} da vedere",
     "entry": "Da ordinare ({{count}})",
-    "title": "Da ordinare"
+    "title": "Da ordinare",
+    "deck": {
+      "open": "Smista la mia posta ({{count}})",
+      "title": "Smista la mia posta",
+      "close": "Chiudi",
+      "done": "Tutto smistato",
+      "back": "Torna a «Da smistare»",
+      "createTask": "Crea attività: {{name}}",
+      "replyInGmail": "Rispondi in Gmail",
+      "readInGmail": "Leggi in Gmail",
+      "addEvent": "Aggiungi al calendario: {{when}}",
+      "editTask": "Modifica attività",
+      "openMail": "Apri la mail",
+      "chat": "Discuti",
+      "undo": "Annulla",
+      "keys": "Invio o →: consiglio · ←: più tardi · ↓: salta · Ctrl+Z: annulla · Esc: chiudi"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3691,7 +3708,8 @@
         "noteCreated": "Nota creata",
         "linkCreated": "Link salvato",
         "dailySummary": "Riepilogo giornaliero",
-        "test": "Prova"
+        "test": "Prova",
+        "mailDecided": "Scheda mail decisa"
       },
       "groups": {
         "alerts": "Promemoria e avvisi",

@@ -43,9 +43,21 @@ function registerMailTools(server, context, tools) {
                     properties: {
                         kind: {
                             type: 'string',
-                            enum: ['task', 'reply', 'read'],
+                            enum: ['task', 'reply', 'read', 'event'],
                         },
                         task_name: { type: 'string' },
+                        event: {
+                            type: 'object',
+                            description:
+                                'kind event only: the appointment the mail sets. start is YYYY-MM-DD (all day) or ISO 8601 with offset; end of the same kind, after start.',
+                            properties: {
+                                title: { type: 'string' },
+                                start: { type: 'string' },
+                                end: { type: 'string' },
+                                location: { type: 'string' },
+                            },
+                            required: ['start'],
+                        },
                         due_date: { type: 'string', description: 'YYYY-MM-DD' },
                         project_uid: { type: 'string' },
                     },
@@ -89,9 +101,34 @@ function registerMailTools(server, context, tools) {
     tools.push({
         name: 'list_mail_cards',
         description:
-            'List the mail cards, newest first: pending, put off, and those decided in the last 30 days with the decision (task, reply, later, dismiss, resolved). Read it before proposing, so a thread is not proposed twice.',
+            'List the mail cards, newest first: pending, put off, and those decided in the last 30 days with the decision (task, reply, event, later, dismiss, resolved). Read it before proposing, so a thread is not proposed twice. A card decided as event with event.state requested waits for you to create the calendar event, then call report_mail_event.',
         inputSchema: { type: 'object', properties: {} },
         handler: async () => text(await mail().listCards(context.user)),
+    });
+
+    tools.push({
+        name: 'report_mail_event',
+        description:
+            'After the user accepted an appointment on a mail card (decision event), say whether you created the calendar event: state created with its Google Calendar url, or failed with a short reason.',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                ...THREAD_PROPERTIES,
+                state: { type: 'string', enum: ['created', 'failed'] },
+                url: {
+                    type: 'string',
+                    description:
+                        'https://calendar.google.com/ link of the event',
+                },
+                error: {
+                    type: 'string',
+                    description: 'Why it failed, at most 200 characters',
+                },
+            },
+            required: ['account', 'thread_id', 'state'],
+        },
+        handler: async (params) =>
+            text(await mail().reportEvent(context.user, params)),
     });
 }
 

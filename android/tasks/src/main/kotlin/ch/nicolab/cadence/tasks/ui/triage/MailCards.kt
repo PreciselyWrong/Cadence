@@ -137,7 +137,7 @@ internal fun MailCardView(
 /** La tâche née du mail : nom et échéance préremplis, modifiables. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MailTaskSheet(card: MailCardData, today: LocalDate, onDismiss: () -> Unit, onCreate: (JsonObject) -> Unit) {
+internal fun MailTaskSheet(card: MailCardData, today: LocalDate, onDismiss: () -> Unit, onCreate: (JsonObject) -> Unit) {
     var name by remember(card.mailUid) { mutableStateOf(card.taskName) }
     var due by remember(card.mailUid) { mutableStateOf(card.dueDate?.let { runCatching { LocalDate.parse(it) }.getOrNull() }) }
     var pickingDate by remember { mutableStateOf(false) }

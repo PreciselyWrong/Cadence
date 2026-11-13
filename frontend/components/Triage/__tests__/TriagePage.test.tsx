@@ -244,6 +244,25 @@ describe('TriagePage', () => {
         expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
     });
 
+    it('opens the mail deck, and reads the queue again once it is closed', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue(MAIL_QUEUE);
+        (decideMail as jest.Mock).mockResolvedValue({});
+        render(<TriagePage />);
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Trier mes mails (1)' })
+        );
+        expect(screen.getByTestId('mail-deck')).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Ignorer' }));
+        await screen.findByText('Tout est trié');
+        (fetchTriageQueue as jest.Mock).mockClear();
+        fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+        await waitFor(() =>
+            expect(decideMail).toHaveBeenCalledWith('m1', 'dismiss', {}, false)
+        );
+        await waitFor(() => expect(fetchTriageQueue).toHaveBeenCalled());
+        expect(screen.queryByTestId('mail-deck')).not.toBeInTheDocument();
+    });
+
     it('says so when the mail was not archived in Gmail', async () => {
         (fetchTriageQueue as jest.Mock).mockResolvedValue({
             ...MAIL_QUEUE,

@@ -95,6 +95,10 @@ const eventLabel = (t: TFunction, event: string) =>
             'notifications.webhooks.events.linkCreated',
             'Link saved'
         ),
+        'mail.decided': t(
+            'notifications.webhooks.events.mailDecided',
+            'Mail card decided'
+        ),
         daily_summary: t(
             'notifications.webhooks.events.dailySummary',
             'Daily summary'

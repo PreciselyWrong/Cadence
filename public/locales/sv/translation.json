@@ -189,7 +189,8 @@
       "replied": "Svar öppnat i Gmail",
       "postponed": "Kommer tillbaka i morgon",
       "dismissed": "Mejl ignorerat",
-      "notArchived": "Inte arkiverat i Gmail"
+      "notArchived": "Inte arkiverat i Gmail",
+      "eventRequested": "Möte skickat till agenten"
     },
     "linkLater": "Om 30 dagar",
     "linkArchive": "Arkivera",
@@ -230,7 +231,23 @@
     "emptyTitle": "Inget att sortera",
     "left": "{{count}} att se över",
     "entry": "Att sortera ({{count}})",
-    "title": "Att sortera"
+    "title": "Att sortera",
+    "deck": {
+      "open": "Sortera min e-post ({{count}})",
+      "title": "Sortera min e-post",
+      "close": "Stäng",
+      "done": "Allt är sorterat",
+      "back": "Tillbaka till ”Att sortera”",
+      "createTask": "Skapa uppgift: {{name}}",
+      "replyInGmail": "Svara i Gmail",
+      "readInGmail": "Läs i Gmail",
+      "addEvent": "Lägg till i kalendern: {{when}}",
+      "editTask": "Redigera uppgift",
+      "openMail": "Öppna e-post",
+      "chat": "Diskutera",
+      "undo": "Ångra",
+      "keys": "Enter eller →: råd · ←: senare · ↓: hoppa över · Ctrl+Z: ångra · Esc: stäng"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3686,7 +3703,8 @@
         "noteCreated": "Anteckning skapad",
         "linkCreated": "Länk sparad",
         "dailySummary": "Daglig sammanfattning",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "E-postkort avgjort"
       },
       "groups": {
         "alerts": "Påminnelser och aviseringar",

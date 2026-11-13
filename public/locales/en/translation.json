@@ -189,7 +189,8 @@
       "replied": "Reply opened in Gmail",
       "postponed": "Back tomorrow",
       "dismissed": "Mail ignored",
-      "notArchived": "Not archived in Gmail"
+      "notArchived": "Not archived in Gmail",
+      "eventRequested": "Appointment sent to the agent"
     },
     "linkLater": "In 30 days",
     "linkArchive": "Archive",
@@ -230,7 +231,23 @@
     "emptyTitle": "Nothing to sort",
     "left": "{{count}} to review",
     "entry": "To sort ({{count}})",
-    "title": "To sort"
+    "title": "To sort",
+    "deck": {
+      "open": "Sort my mail ({{count}})",
+      "title": "Sort my mail",
+      "close": "Close",
+      "done": "All sorted",
+      "back": "Back to “To sort”",
+      "createTask": "Create task: {{name}}",
+      "replyInGmail": "Reply in Gmail",
+      "readInGmail": "Read in Gmail",
+      "addEvent": "Add to calendar: {{when}}",
+      "editTask": "Edit task",
+      "openMail": "Open mail",
+      "chat": "Chat",
+      "undo": "Undo",
+      "keys": "Enter or →: advice · ←: later · ↓: skip · Ctrl+Z: undo · Esc: close"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3924,7 +3941,8 @@
         "noteCreated": "Note created",
         "linkCreated": "Link saved",
         "dailySummary": "Daily summary",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Mail card decided"
       },
       "groups": {
         "alerts": "Reminders and alerts",

@@ -187,7 +187,8 @@
       "replied": "Đã mở thư trả lời trong Gmail",
       "postponed": "Quay lại vào ngày mai",
       "dismissed": "Đã bỏ qua thư",
-      "notArchived": "Chưa lưu trữ trong Gmail"
+      "notArchived": "Chưa lưu trữ trong Gmail",
+      "eventRequested": "Đã gửi cuộc hẹn cho tác tử"
     },
     "linkLater": "Sau 30 ngày",
     "linkArchive": "Lưu trữ",
@@ -228,7 +229,23 @@
     "emptyTitle": "Không có gì để phân loại",
     "left": "Còn {{count}} mục",
     "entry": "Cần phân loại ({{count}})",
-    "title": "Cần phân loại"
+    "title": "Cần phân loại",
+    "deck": {
+      "open": "Phân loại thư của tôi ({{count}})",
+      "title": "Phân loại thư của tôi",
+      "close": "Đóng",
+      "done": "Đã phân loại xong",
+      "back": "Quay lại “Cần phân loại”",
+      "createTask": "Tạo công việc: {{name}}",
+      "replyInGmail": "Trả lời trong Gmail",
+      "readInGmail": "Đọc trong Gmail",
+      "addEvent": "Thêm vào lịch: {{when}}",
+      "editTask": "Sửa công việc",
+      "openMail": "Mở thư",
+      "chat": "Trao đổi",
+      "undo": "Hoàn tác",
+      "keys": "Enter hoặc →: gợi ý · ←: để sau · ↓: bỏ qua · Ctrl+Z: hoàn tác · Esc: đóng"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3677,7 +3694,8 @@
         "noteCreated": "Đã tạo ghi chú",
         "linkCreated": "Đã lưu liên kết",
         "dailySummary": "Tóm tắt hằng ngày",
-        "test": "Thử nghiệm"
+        "test": "Thử nghiệm",
+        "mailDecided": "Đã quyết định thẻ thư"
       },
       "groups": {
         "alerts": "Nhắc nhở và cảnh báo",

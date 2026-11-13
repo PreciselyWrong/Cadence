@@ -189,7 +189,8 @@
       "replied": "Vastaus avattu Gmailissa",
       "postponed": "Palaa huomenna",
       "dismissed": "Viesti ohitettu",
-      "notArchived": "Ei arkistoitu Gmailiin"
+      "notArchived": "Ei arkistoitu Gmailiin",
+      "eventRequested": "Tapaaminen välitetty agentille"
     },
     "linkLater": "30 päivän päästä",
     "linkArchive": "Arkistoi",
@@ -230,7 +231,23 @@
     "emptyTitle": "Ei lajiteltavaa",
     "left": "{{count}} katsottavana",
     "entry": "Lajiteltavat ({{count}})",
-    "title": "Lajiteltavat"
+    "title": "Lajiteltavat",
+    "deck": {
+      "open": "Lajittele postini ({{count}})",
+      "title": "Lajittele postini",
+      "close": "Sulje",
+      "done": "Kaikki lajiteltu",
+      "back": "Takaisin kohtaan ”Lajiteltavat”",
+      "createTask": "Luo tehtävä: {{name}}",
+      "replyInGmail": "Vastaa Gmailissa",
+      "readInGmail": "Lue Gmailissa",
+      "addEvent": "Lisää kalenteriin: {{when}}",
+      "editTask": "Muokkaa tehtävää",
+      "openMail": "Avaa viesti",
+      "chat": "Keskustele",
+      "undo": "Kumoa",
+      "keys": "Enter tai →: ehdotus · ←: myöhemmin · ↓: ohita · Ctrl+Z: kumoa · Esc: sulje"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3683,7 +3700,8 @@
         "noteCreated": "Muistiinpano luotu",
         "linkCreated": "Linkki tallennettu",
         "dailySummary": "Päivän yhteenveto",
-        "test": "Testi"
+        "test": "Testi",
+        "mailDecided": "Postikortti päätetty"
       },
       "groups": {
         "alerts": "Muistutukset ja hälytykset",

@@ -191,7 +191,8 @@
       "replied": "Răspuns deschis în Gmail",
       "postponed": "Revine mâine",
       "dismissed": "Mesaj ignorat",
-      "notArchived": "Nearhivat în Gmail"
+      "notArchived": "Nearhivat în Gmail",
+      "eventRequested": "Întâlnire trimisă agentului"
     },
     "linkLater": "Peste 30 de zile",
     "linkArchive": "Arhivează",
@@ -232,7 +233,23 @@
     "emptyTitle": "Nimic de sortat",
     "left": "{{count}} de văzut",
     "entry": "De sortat ({{count}})",
-    "title": "De sortat"
+    "title": "De sortat",
+    "deck": {
+      "open": "Sortează-mi e-mailurile ({{count}})",
+      "title": "Sortează-mi e-mailurile",
+      "close": "Închide",
+      "done": "Totul e sortat",
+      "back": "Înapoi la „De sortat”",
+      "createTask": "Creează sarcina: {{name}}",
+      "replyInGmail": "Răspunde în Gmail",
+      "readInGmail": "Citește în Gmail",
+      "addEvent": "Adaugă în calendar: {{when}}",
+      "editTask": "Editează sarcina",
+      "openMail": "Deschide e-mailul",
+      "chat": "Discută",
+      "undo": "Anulează",
+      "keys": "Enter sau →: sfat · ←: mai târziu · ↓: sari · Ctrl+Z: anulează · Esc: închide"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3696,7 +3713,8 @@
         "noteCreated": "Notă creată",
         "linkCreated": "Link salvat",
         "dailySummary": "Rezumat zilnic",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "Card de e-mail decis"
       },
       "groups": {
         "alerts": "Mementouri și alerte",

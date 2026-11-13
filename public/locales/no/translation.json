@@ -189,7 +189,8 @@
       "replied": "Svar åpnet i Gmail",
       "postponed": "Kommer tilbake i morgen",
       "dismissed": "E-post ignorert",
-      "notArchived": "Ikke arkivert i Gmail"
+      "notArchived": "Ikke arkivert i Gmail",
+      "eventRequested": "Avtale sendt til agenten"
     },
     "linkLater": "Om 30 dager",
     "linkArchive": "Arkiver",
@@ -230,7 +231,23 @@
     "emptyTitle": "Ingenting å sortere",
     "left": "{{count}} å se på",
     "entry": "Å sortere ({{count}})",
-    "title": "Å sortere"
+    "title": "Å sortere",
+    "deck": {
+      "open": "Sorter e-posten min ({{count}})",
+      "title": "Sorter e-posten min",
+      "close": "Lukk",
+      "done": "Alt er sortert",
+      "back": "Tilbake til «Til sortering»",
+      "createTask": "Opprett oppgave: {{name}}",
+      "replyInGmail": "Svar i Gmail",
+      "readInGmail": "Les i Gmail",
+      "addEvent": "Legg til i kalender: {{when}}",
+      "editTask": "Rediger oppgave",
+      "openMail": "Åpne e-post",
+      "chat": "Diskuter",
+      "undo": "Angre",
+      "keys": "Enter eller →: råd · ←: senere · ↓: hopp over · Ctrl+Z: angre · Esc: lukk"
+    }
   },
   "outline": {
     "saveError": "Could not save that change",
@@ -3687,7 +3704,8 @@
         "noteCreated": "Notat opprettet",
         "linkCreated": "Lenke lagret",
         "dailySummary": "Daglig sammendrag",
-        "test": "Test"
+        "test": "Test",
+        "mailDecided": "E-postkort avgjort"
       },
       "groups": {
         "alerts": "Påminnelser og varsler",
