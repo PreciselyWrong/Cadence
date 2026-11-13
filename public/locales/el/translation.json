@@ -1280,6 +1280,10 @@
       "logError": "Σφάλμα"
     },
     "sidebarSmartListsTitle": "Έξυπνες λίστες",
+    "sidebarNotesPanelTitle": "Πίνακας σημειώσεων",
+    "sidebarGoalsPanelTitle": "Πίνακας στόχων",
+    "sidebarHabitsPanelTitle": "Πίνακας συνηθειών",
+    "sidebarSectionPanelHint": "Εμφανίζεται όταν αυτό το εικονίδιο είναι ανοιχτό στη γραμμή.",
     "sidebarRailTitle": "Γραμμή εικονιδίων και Περισσότερα",
     "sidebarShowCount": "Εμφάνιση πλήθους για {{name}}",
     "sidebarCountBadge": "Πλήθος",

@@ -8,7 +8,10 @@ import {
     RAIL_PLACES,
     RailId,
     RailPlace,
+    SECTION_PANEL_KINDS,
     SectionBadgeId,
+    SectionPanelBlockId,
+    SectionPanelKind,
     SmartListId,
     moveItem,
 } from '../../utils/minimalSidebar';
@@ -58,6 +61,19 @@ const BADGE_KEYS: Exclude<SectionBadgeId, 'favorites'>[] = [
     'tags',
 ];
 
+const SECTION_BLOCK_LABELS: Record<SectionPanelBlockId, [string, string]> = {
+    favorites: ['profile.sidebarPanelPinned', 'Pinned'],
+    notes: ['sidebar.notes', 'Notes'],
+    goals: ['sidebar.goals', 'Goals'],
+    habits: ['sidebar.habits', 'Habits'],
+};
+
+const SECTION_PANEL_TITLES: Record<SectionPanelKind, [string, string]> = {
+    notes: ['profile.sidebarNotesPanelTitle', 'Notes panel'],
+    goals: ['profile.sidebarGoalsPanelTitle', 'Goals panel'],
+    habits: ['profile.sidebarHabitsPanelTitle', 'Habits panel'],
+};
+
 const PLACE_LABELS: Record<RailPlace, [string, string]> = {
     rail: ['profile.sidebarPlaceRail', 'Icon rail'],
     more: ['profile.sidebarPlaceMore', 'More menu'],
@@ -66,6 +82,94 @@ const PLACE_LABELS: Record<RailPlace, [string, string]> = {
 
 const buttonClass =
     'rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-200 disabled:opacity-30 dark:text-gray-300 dark:hover:bg-white/10';
+
+// Shows, hides and reorders the blocks of one panel. The rows keep the order
+// of the list they are given; `onChange` receives the whole next list.
+function BlockRows<K extends string>({
+    items,
+    labels,
+    onChange,
+    testId,
+}: {
+    items: { key: K; visible: boolean }[];
+    labels: Record<K, [string, string]>;
+    onChange: (next: { key: K; visible: boolean }[]) => void;
+    testId: string;
+}) {
+    const { t } = useTranslation();
+    return (
+        <ul className="space-y-1" data-testid={testId}>
+            {items.map((item, index) => {
+                const [key, fallback] = labels[item.key];
+                const name = t(key, fallback);
+                return (
+                    <li
+                        key={item.key}
+                        className="flex flex-wrap items-center gap-3 text-sm"
+                    >
+                        <label className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={item.visible}
+                                aria-label={t(
+                                    'profile.sidebarShowItem',
+                                    'Show {{name}}',
+                                    { name }
+                                )}
+                                onChange={(event) =>
+                                    onChange(
+                                        items.map((block, i) =>
+                                            i === index
+                                                ? {
+                                                      ...block,
+                                                      visible:
+                                                          event.target.checked,
+                                                  }
+                                                : block
+                                        )
+                                    )
+                                }
+                            />
+                            <span>{name}</span>
+                        </label>
+                        <span className="ml-auto flex gap-1">
+                            <button
+                                type="button"
+                                className={buttonClass}
+                                aria-label={t(
+                                    'profile.sidebarMoveUp',
+                                    'Move {{name}} up',
+                                    { name }
+                                )}
+                                disabled={index === 0}
+                                onClick={() =>
+                                    onChange(moveItem(items, index, -1))
+                                }
+                            >
+                                ↑
+                            </button>
+                            <button
+                                type="button"
+                                className={buttonClass}
+                                aria-label={t(
+                                    'profile.sidebarMoveDown',
+                                    'Move {{name}} down',
+                                    { name }
+                                )}
+                                disabled={index === items.length - 1}
+                                onClick={() =>
+                                    onChange(moveItem(items, index, 1))
+                                }
+                            >
+                                ↓
+                            </button>
+                        </span>
+                    </li>
+                );
+            })}
+        </ul>
+    );
+}
 
 // Edits the Minimal sidebar only: the panel blocks with their count badges,
 // the smart lists and the icon rail placement. Every change saves at once,
@@ -247,6 +351,30 @@ const SidebarMinimalEditor: React.FC<SidebarMinimalEditorProps> = ({
                 </ul>
             </section>
 
+            {SECTION_PANEL_KINDS.map((kind) => (
+                <section key={kind}>
+                    <h4 className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
+                        {label(SECTION_PANEL_TITLES[kind])}
+                    </h4>
+                    <p className="mb-2 text-xs text-gray-600 dark:text-gray-300">
+                        {t(
+                            'profile.sidebarSectionPanelHint',
+                            'Shown when this icon is open on the rail.'
+                        )}
+                    </p>
+                    <BlockRows<SectionPanelBlockId>
+                        testId={`sidebar-${kind}-panel-editor`}
+                        items={settings.panels[kind]}
+                        labels={SECTION_BLOCK_LABELS}
+                        onChange={(next) =>
+                            save({
+                                panels: { ...settings.panels, [kind]: next },
+                            })
+                        }
+                    />
+                </section>
+            ))}
+
             <section>
                 <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">
                     {t('profile.sidebarSmartListsTitle', 'Smart lists')}
@@ -416,6 +544,7 @@ const SidebarMinimalEditor: React.FC<SidebarMinimalEditorProps> = ({
                             sectionBadges:
                                 DEFAULT_MINIMAL_SIDEBAR.sectionBadges,
                             panel: DEFAULT_MINIMAL_SIDEBAR.panel,
+                            panels: DEFAULT_MINIMAL_SIDEBAR.panels,
                         })
                     }
                     className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-white/5"

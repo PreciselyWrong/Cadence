@@ -106,6 +106,7 @@ function validateSidebarSettings(body) {
         rail,
         sectionBadges,
         panel,
+        panels,
     } = body;
     const result = {};
 
@@ -181,6 +182,9 @@ function validateSidebarSettings(body) {
     }
     if (panel !== undefined) {
         result.panel = sanitizePanel(panel);
+    }
+    if (panels !== undefined) {
+        result.panels = sanitizeSectionPanels(panels);
     }
 
     return result;
@@ -293,6 +297,41 @@ function sanitizePanel(value) {
         if (!MINIMAL_PANEL_KEYS.includes(key) || seen.has(key)) continue;
         seen.add(key);
         result.push({ key, visible: coerceFlag(entry.visible) });
+    }
+    return result;
+}
+
+// The Notes, Goals and Habits panels: blocks per rail panel, same rules.
+const MINIMAL_SECTION_PANEL_BLOCKS = {
+    notes: ['favorites', 'notes'],
+    goals: ['goals'],
+    habits: ['habits'],
+};
+
+function sanitizeSectionPanels(value) {
+    if (!isPlainObject(value)) {
+        throw new ValidationError('panels must be an object');
+    }
+    const result = {};
+    for (const [kind, allowedKeys] of Object.entries(
+        MINIMAL_SECTION_PANEL_BLOCKS
+    )) {
+        if (!(kind in value)) continue;
+        const blocks = value[kind];
+        if (!Array.isArray(blocks) || blocks.length > SIDEBAR_ORDER_MAX_ITEMS) {
+            throw new ValidationError(
+                `panels.${kind} must be an array of at most ${SIDEBAR_ORDER_MAX_ITEMS} entries`
+            );
+        }
+        const seen = new Set();
+        result[kind] = [];
+        for (const entry of blocks) {
+            if (!isPlainObject(entry)) continue;
+            const { key } = entry;
+            if (!allowedKeys.includes(key) || seen.has(key)) continue;
+            seen.add(key);
+            result[kind].push({ key, visible: coerceFlag(entry.visible) });
+        }
     }
     return result;
 }

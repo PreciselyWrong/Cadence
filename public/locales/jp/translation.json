@@ -1420,6 +1420,10 @@
       "logError": "エラー"
     },
     "sidebarSmartListsTitle": "スマートリスト",
+    "sidebarNotesPanelTitle": "メモのパネル",
+    "sidebarGoalsPanelTitle": "目標のパネル",
+    "sidebarHabitsPanelTitle": "習慣のパネル",
+    "sidebarSectionPanelHint": "このアイコンがレールで開いているときに表示されます。",
     "sidebarRailTitle": "アイコンバーと「その他」",
     "sidebarShowCount": "{{name}} の件数を表示",
     "sidebarCountBadge": "件数",

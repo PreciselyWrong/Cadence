@@ -1442,6 +1442,10 @@
       "logError": "Napaka"
     },
     "sidebarSmartListsTitle": "Pametni seznami",
+    "sidebarNotesPanelTitle": "Plošča zapiskov",
+    "sidebarGoalsPanelTitle": "Plošča ciljev",
+    "sidebarHabitsPanelTitle": "Plošča navad",
+    "sidebarSectionPanelHint": "Prikazano, ko je ta ikona odprta na vrstici.",
     "sidebarRailTitle": "Vrstica ikon in Več",
     "sidebarShowCount": "Pokaži število za {{name}}",
     "sidebarCountBadge": "Število",

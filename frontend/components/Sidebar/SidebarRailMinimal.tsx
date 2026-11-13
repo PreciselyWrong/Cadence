@@ -26,7 +26,11 @@ import { getAssetPath } from '../../config/paths';
 import { useStore } from '../../store/useStore';
 import type { SidebarVisibleSections } from '../Profile/types';
 import SidebarPanelIcon from './SidebarPanelIcon';
-import type { RailId, RailPlace } from '../../utils/minimalSidebar';
+import {
+    RAIL_PANEL_KIND,
+    type RailId,
+    type RailPlace,
+} from '../../utils/minimalSidebar';
 
 type RailItemId =
     | 'today'
@@ -185,6 +189,13 @@ const RAIL_ITEMS: Record<RailItemId, RailItem> = {
         Icon: ShieldCheckIcon,
     },
 };
+
+// The rail entry whose own panel (Notes, Goals, Habits) the route opens, if
+// any. Other routes keep the tasks panel.
+export const panelRailIdFor = (pathname: string): RailId | null =>
+    (Object.keys(RAIL_PANEL_KIND) as RailId[]).find((id) =>
+        RAIL_ITEMS[id].match.test(pathname)
+    ) ?? null;
 
 interface SidebarRailMinimalProps {
     handleNavClick: (path: string, title: string) => void;

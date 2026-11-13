@@ -1438,6 +1438,10 @@
       "logError": "Ошибка"
     },
     "sidebarSmartListsTitle": "Умные списки",
+    "sidebarNotesPanelTitle": "Панель заметок",
+    "sidebarGoalsPanelTitle": "Панель целей",
+    "sidebarHabitsPanelTitle": "Панель привычек",
+    "sidebarSectionPanelHint": "Показывается, когда этот значок открыт на панели.",
     "sidebarRailTitle": "Панель значков и Ещё",
     "sidebarShowCount": "Показывать счётчик для «{{name}}»",
     "sidebarCountBadge": "Счётчик",

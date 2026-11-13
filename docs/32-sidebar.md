@@ -77,6 +77,10 @@ By default the primary icons are Today, Inbox, Calendar, Notes, Habits, Views, A
 
 Every item here still has its own route. Hiding an item in the sidebar settings hides it in the rail too.
 
+## Panel per rail icon
+
+The open panel follows the route: Notes (`/notes`), Goals (`/goals`) and Habits (`/habits`) show their own blocks, every other route shows the tasks panel (the blocks above). Each panel's blocks are shown, hidden and ordered in Profile > Sidebar, saved in `sidebar_settings.panels` (`notes`: favorites, notes; `goals`: goals; `habits`: habits). Defaults keep the tasks panel as it was. Code: `frontend/utils/minimalSidebar.ts` (`SECTION_PANEL_BLOCKS`, `RAIL_PANEL_KIND`), `Sidebar/SidebarRailMinimal.tsx` (`panelRailIdFor`).
+
 ## Dense
 
 The Customising settings do not apply to Dense. Dense renders the upstream sidebar: the full link list, every section in the panel, the admin group at the bottom, and the upstream icon rail.

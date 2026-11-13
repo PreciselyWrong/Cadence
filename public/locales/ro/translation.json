@@ -1427,6 +1427,10 @@
       "logError": "Eroare"
     },
     "sidebarSmartListsTitle": "Liste inteligente",
+    "sidebarNotesPanelTitle": "Panou Note",
+    "sidebarGoalsPanelTitle": "Panou Obiective",
+    "sidebarHabitsPanelTitle": "Panou Obiceiuri",
+    "sidebarSectionPanelHint": "Afișat când această pictogramă este deschisă pe bară.",
     "sidebarRailTitle": "Bară de iconițe și Mai multe",
     "sidebarShowCount": "Afișează numărul pentru {{name}}",
     "sidebarCountBadge": "Număr",

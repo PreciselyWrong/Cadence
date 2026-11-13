@@ -1420,6 +1420,10 @@
       "logError": "Fel"
     },
     "sidebarSmartListsTitle": "Smarta listor",
+    "sidebarNotesPanelTitle": "Anteckningspanel",
+    "sidebarGoalsPanelTitle": "Målpanel",
+    "sidebarHabitsPanelTitle": "Vanepanel",
+    "sidebarSectionPanelHint": "Visas när den här ikonen är öppen i listen.",
     "sidebarRailTitle": "Ikonlist och Mer",
     "sidebarShowCount": "Visa antal för {{name}}",
     "sidebarCountBadge": "Antal",

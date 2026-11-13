@@ -1420,6 +1420,10 @@
       "logError": "Fout"
     },
     "sidebarSmartListsTitle": "Slimme lijsten",
+    "sidebarNotesPanelTitle": "Notities-paneel",
+    "sidebarGoalsPanelTitle": "Doelen-paneel",
+    "sidebarHabitsPanelTitle": "Gewoonten-paneel",
+    "sidebarSectionPanelHint": "Getoond wanneer dit pictogram open staat in de balk.",
     "sidebarRailTitle": "Pictogrammenbalk en Meer",
     "sidebarShowCount": "Aantal tonen voor {{name}}",
     "sidebarCountBadge": "Aantal",

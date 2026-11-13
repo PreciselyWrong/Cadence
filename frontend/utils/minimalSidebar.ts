@@ -59,6 +59,31 @@ export interface PanelSetting {
     visible: boolean;
 }
 
+// The panels of the rail entries that have their own (Notes, Goals, Habits).
+// Any other rail entry shows the tasks panel above (`panel`).
+export const SECTION_PANEL_BLOCKS = {
+    notes: ['favorites', 'notes'],
+    goals: ['goals'],
+    habits: ['habits'],
+} as const;
+export type SectionPanelKind = keyof typeof SECTION_PANEL_BLOCKS;
+export type SectionPanelBlockId =
+    (typeof SECTION_PANEL_BLOCKS)[SectionPanelKind][number];
+export const SECTION_PANEL_KINDS = Object.keys(
+    SECTION_PANEL_BLOCKS
+) as SectionPanelKind[];
+
+export const RAIL_PANEL_KIND: Partial<Record<RailId, SectionPanelKind>> = {
+    notes: 'notes',
+    goals: 'goals',
+    habits: 'habits',
+};
+
+export interface SectionPanelSetting {
+    key: SectionPanelBlockId;
+    visible: boolean;
+}
+
 export interface SmartListSetting {
     key: SmartListId;
     visible: boolean;
@@ -75,6 +100,7 @@ export interface MinimalSidebarSettings {
     rail: RailSetting[];
     sectionBadges: Record<SectionBadgeId, boolean>;
     panel: PanelSetting[];
+    panels: Record<SectionPanelKind, SectionPanelSetting[]>;
 }
 
 // Rail items that open on the icon rail by default; the rest sit in More.
@@ -113,6 +139,20 @@ export const DEFAULT_MINIMAL_SIDEBAR: MinimalSidebarSettings = {
         tags: false,
     },
     panel: PANEL_IDS.map((key) => ({ key, visible: true })),
+    panels: {
+        notes: SECTION_PANEL_BLOCKS.notes.map((key) => ({
+            key,
+            visible: true,
+        })),
+        goals: SECTION_PANEL_BLOCKS.goals.map((key) => ({
+            key,
+            visible: true,
+        })),
+        habits: SECTION_PANEL_BLOCKS.habits.map((key) => ({
+            key,
+            visible: true,
+        })),
+    },
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -157,6 +197,19 @@ const reorderLike = (saved: unknown[], order: readonly string[]): unknown[] =>
         )
         .filter(Boolean);
 
+function readVisibleEntry<
+    K extends string,
+    T extends { key: K; visible: boolean },
+>(entry: Record<string, unknown>, fallback: T): T {
+    return {
+        ...fallback,
+        visible:
+            typeof entry.visible === 'boolean'
+                ? entry.visible
+                : fallback.visible,
+    };
+}
+
 export function resolveMinimalSidebar(saved: unknown): MinimalSidebarSettings {
     const source = isRecord(saved) ? saved : {};
     const badges = isRecord(source.sectionBadges) ? source.sectionBadges : {};
@@ -199,14 +252,18 @@ export function resolveMinimalSidebar(saved: unknown): MinimalSidebarSettings {
         panel: resolveList(
             source.panel,
             DEFAULT_MINIMAL_SIDEBAR.panel,
-            (entry, fallback) => ({
-                key: fallback.key,
-                visible:
-                    typeof entry.visible === 'boolean'
-                        ? entry.visible
-                        : fallback.visible,
-            })
+            readVisibleEntry
         ),
+        panels: Object.fromEntries(
+            SECTION_PANEL_KINDS.map((kind) => [
+                kind,
+                resolveList(
+                    isRecord(source.panels) ? source.panels[kind] : undefined,
+                    DEFAULT_MINIMAL_SIDEBAR.panels[kind],
+                    readVisibleEntry
+                ),
+            ])
+        ) as MinimalSidebarSettings['panels'],
     };
 }
 

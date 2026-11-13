@@ -2152,6 +2152,10 @@
       "logError": "Помилка"
     },
     "sidebarSmartListsTitle": "Розумні списки",
+    "sidebarNotesPanelTitle": "Панель нотаток",
+    "sidebarGoalsPanelTitle": "Панель цілей",
+    "sidebarHabitsPanelTitle": "Панель звичок",
+    "sidebarSectionPanelHint": "Показується, коли цей значок відкрито на панелі.",
     "sidebarRailTitle": "Панель значків і Ще",
     "sidebarShowCount": "Показувати лічильник для «{{name}}»",
     "sidebarCountBadge": "Лічильник",

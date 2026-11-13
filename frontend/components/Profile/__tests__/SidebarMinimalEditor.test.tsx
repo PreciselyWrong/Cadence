@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SidebarMinimalEditor from '../SidebarMinimalEditor';
 import { useStore } from '../../../store/useStore';
@@ -128,7 +128,27 @@ describe('SidebarMinimalEditor', () => {
             rail: DEFAULT_MINIMAL_SIDEBAR.rail,
             sectionBadges: DEFAULT_MINIMAL_SIDEBAR.sectionBadges,
             panel: DEFAULT_MINIMAL_SIDEBAR.panel,
+            panels: DEFAULT_MINIMAL_SIDEBAR.panels,
         });
+    });
+
+    it('hides a block of the notes panel and keeps the other panels', () => {
+        renderEditor();
+
+        fireEvent.click(
+            within(
+                screen.getByTestId('sidebar-notes-panel-editor')
+            ).getByLabelText('Show Notes')
+        );
+
+        const [patch] = saveMock.mock.calls[0];
+        expect(patch.panels.notes).toEqual([
+            { key: 'favorites', visible: true },
+            { key: 'notes', visible: false },
+        ]);
+        expect(patch.panels.goals).toEqual(
+            DEFAULT_MINIMAL_SIDEBAR.panels.goals
+        );
     });
 
     it('hides a panel block, such as the month calendar', () => {

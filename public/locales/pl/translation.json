@@ -1438,6 +1438,10 @@
       "logError": "Błąd"
     },
     "sidebarSmartListsTitle": "Inteligentne listy",
+    "sidebarNotesPanelTitle": "Panel notatek",
+    "sidebarGoalsPanelTitle": "Panel celów",
+    "sidebarHabitsPanelTitle": "Panel nawyków",
+    "sidebarSectionPanelHint": "Widoczne, gdy ta ikona jest otwarta na pasku.",
     "sidebarRailTitle": "Pasek ikon i Więcej",
     "sidebarShowCount": "Pokaż liczbę dla: {{name}}",
     "sidebarCountBadge": "Liczba",

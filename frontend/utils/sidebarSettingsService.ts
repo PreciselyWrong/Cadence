@@ -11,6 +11,7 @@ export const saveMinimalSidebarSettings = async (
         rail: MinimalSidebarSettings['rail'];
         sectionBadges: MinimalSidebarSettings['sectionBadges'];
         panel: MinimalSidebarSettings['panel'];
+        panels: MinimalSidebarSettings['panels'];
     }>
 ): Promise<void> => {
     const response = await fetch(getApiPath('profile/sidebar-settings'), {

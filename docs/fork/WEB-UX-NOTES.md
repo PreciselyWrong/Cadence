@@ -883,3 +883,10 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : « Étaler sur 7 jours » planifie les échues sur les jours à venir ; elles quittaient alors le retard d'Aujourd'hui, qui paraissait vide alors que 8 tâches étaient en retard.
 - **Décision** : le repli « En retard · N » (fermé par défaut, absent sans retard) liste toutes les échues ; celles planifiées un autre jour portent « Prévue ven. 18 » à la place de « Aujourd'hui ». Le bandeau « En retard » de Plan ne change pas (elles y sont sur leur jour). Serveur : `overdue_planned` de `GET /api/daily-plan/day`.
 - **Android** : livré dans la même étape (1.29.0) : même repli, nommé « Échues » (formulation neutre, `NoLatenessWordingTest`), au-dessus d'Aujourd'hui, `ServerPlan.apply` → `overduePlanned`, `plannedDays`.
+
+### 2026-11-13 — Un panneau par icône du rail
+
+- **Problème** : le panneau de la barre latérale montrait toujours la même liste (épinglés, mois, listes, projets, zones, étiquettes), quelle que soit l'icône ouverte dans le rail ; Notes et Objectifs n'avaient pas leur navigation à eux.
+- **Décision** : comme la barre d'activité de VS Code, le panneau suit la section ouverte. Notes (`/notes`) : épinglés et arbre des notes avec recherche et « + » ; Objectifs (`/goals`) : la liste des objectifs ; Habitudes (`/habits`) : le lien vers les habitudes. Les autres entrées du rail gardent le panneau Tâches. Chaque panneau se règle dans Profil › Sidebar (blocs affichés, ordre), `sidebarMinimal.panels` (défauts = panneau Tâches actuel).
+- **Logo** : dans l'en-tête du panneau, le logo et le mot Cadence sont centrés ; le bouton de repli reste à droite.
+- **Android à reprendre** : Android n'a pas de barre latérale. L'équivalent serait la liste de l'onglet ouvert (Notes : arbre des dossiers, Objectifs : liste, Habitudes : liste) en tête de l'écran, réglable dans les réglages de l'écran d'accueil.

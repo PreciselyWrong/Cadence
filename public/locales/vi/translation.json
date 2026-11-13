@@ -1420,6 +1420,10 @@
       "logError": "Lỗi"
     },
     "sidebarSmartListsTitle": "Danh sách thông minh",
+    "sidebarNotesPanelTitle": "Bảng ghi chú",
+    "sidebarGoalsPanelTitle": "Bảng mục tiêu",
+    "sidebarHabitsPanelTitle": "Bảng thói quen",
+    "sidebarSectionPanelHint": "Hiển thị khi biểu tượng này được mở trên thanh.",
     "sidebarRailTitle": "Thanh biểu tượng và Khác",
     "sidebarShowCount": "Hiện số đếm cho {{name}}",
     "sidebarCountBadge": "Số đếm",

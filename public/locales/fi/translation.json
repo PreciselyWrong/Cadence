@@ -1420,6 +1420,10 @@
       "logError": "Virhe"
     },
     "sidebarSmartListsTitle": "Älykkäät listat",
+    "sidebarNotesPanelTitle": "Muistiinpanot-paneeli",
+    "sidebarGoalsPanelTitle": "Tavoitteet-paneeli",
+    "sidebarHabitsPanelTitle": "Tavat-paneeli",
+    "sidebarSectionPanelHint": "Näkyy, kun tämä kuvake on auki kiskolla.",
     "sidebarRailTitle": "Kuvakepalkki ja Lisää",
     "sidebarShowCount": "Näytä määrä: {{name}}",
     "sidebarCountBadge": "Määrä",

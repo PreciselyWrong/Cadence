@@ -1420,6 +1420,10 @@
       "logError": "Грешка"
     },
     "sidebarSmartListsTitle": "Умни списъци",
+    "sidebarNotesPanelTitle": "Панел „Бележки“",
+    "sidebarGoalsPanelTitle": "Панел „Цели“",
+    "sidebarHabitsPanelTitle": "Панел „Навици“",
+    "sidebarSectionPanelHint": "Показва се, когато тази икона е отворена в лентата.",
     "sidebarRailTitle": "Икони и меню „Още“",
     "sidebarShowCount": "Показване на броя за {{name}}",
     "sidebarCountBadge": "Брой",

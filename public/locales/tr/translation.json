@@ -1420,6 +1420,10 @@
       "logError": "Hata"
     },
     "sidebarSmartListsTitle": "Akıllı listeler",
+    "sidebarNotesPanelTitle": "Notlar paneli",
+    "sidebarGoalsPanelTitle": "Hedefler paneli",
+    "sidebarHabitsPanelTitle": "Alışkanlıklar paneli",
+    "sidebarSectionPanelHint": "Bu simge rayda açıkken gösterilir.",
     "sidebarRailTitle": "Simge çubuğu ve Diğer",
     "sidebarShowCount": "{{name}} için sayıyı göster",
     "sidebarCountBadge": "Sayı",

@@ -1420,6 +1420,10 @@
       "logError": "Galat"
     },
     "sidebarSmartListsTitle": "Daftar pintar",
+    "sidebarNotesPanelTitle": "Panel catatan",
+    "sidebarGoalsPanelTitle": "Panel tujuan",
+    "sidebarHabitsPanelTitle": "Panel kebiasaan",
+    "sidebarSectionPanelHint": "Tampil saat ikon ini terbuka di rel.",
     "sidebarRailTitle": "Rel ikon dan Lainnya",
     "sidebarShowCount": "Tampilkan jumlah untuk {{name}}",
     "sidebarCountBadge": "Jumlah",

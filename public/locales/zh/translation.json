@@ -1420,6 +1420,10 @@
       "logError": "错误"
     },
     "sidebarSmartListsTitle": "智能列表",
+    "sidebarNotesPanelTitle": "笔记面板",
+    "sidebarGoalsPanelTitle": "目标面板",
+    "sidebarHabitsPanelTitle": "习惯面板",
+    "sidebarSectionPanelHint": "在图标栏中打开此图标时显示。",
     "sidebarRailTitle": "图标栏与更多",
     "sidebarShowCount": "显示 {{name}} 的计数",
     "sidebarCountBadge": "计数",

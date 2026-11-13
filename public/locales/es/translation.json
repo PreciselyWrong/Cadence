@@ -1281,6 +1281,10 @@
       "logError": "Error"
     },
     "sidebarSmartListsTitle": "Listas inteligentes",
+    "sidebarNotesPanelTitle": "Panel de notas",
+    "sidebarGoalsPanelTitle": "Panel de objetivos",
+    "sidebarHabitsPanelTitle": "Panel de hábitos",
+    "sidebarSectionPanelHint": "Se muestra cuando este icono está abierto en la barra.",
     "sidebarRailTitle": "Barra de iconos y Más",
     "sidebarShowCount": "Mostrar recuento de {{name}}",
     "sidebarCountBadge": "Recuento",

@@ -1715,6 +1715,10 @@
       "logError": "Chyba"
     },
     "sidebarSmartListsTitle": "Inteligentné zoznamy",
+    "sidebarNotesPanelTitle": "Panel poznámok",
+    "sidebarGoalsPanelTitle": "Panel cieľov",
+    "sidebarHabitsPanelTitle": "Panel návykov",
+    "sidebarSectionPanelHint": "Zobrazí sa, keď je táto ikona otvorená na lište.",
     "sidebarRailTitle": "Lišta ikon a Viac",
     "sidebarShowCount": "Zobraziť počet pre {{name}}",
     "sidebarCountBadge": "Počet",

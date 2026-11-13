@@ -1963,6 +1963,10 @@
       "logError": "Fehler"
     },
     "sidebarSmartListsTitle": "Intelligente Listen",
+    "sidebarNotesPanelTitle": "Notizen-Bereich",
+    "sidebarGoalsPanelTitle": "Ziele-Bereich",
+    "sidebarHabitsPanelTitle": "Gewohnheiten-Bereich",
+    "sidebarSectionPanelHint": "Wird angezeigt, wenn dieses Symbol in der Leiste geöffnet ist.",
     "sidebarRailTitle": "Symbolleiste und Mehr",
     "sidebarShowCount": "Anzahl für {{name}} anzeigen",
     "sidebarCountBadge": "Anzahl",

@@ -1420,6 +1420,10 @@
       "logError": "오류"
     },
     "sidebarSmartListsTitle": "스마트 목록",
+    "sidebarNotesPanelTitle": "메모 패널",
+    "sidebarGoalsPanelTitle": "목표 패널",
+    "sidebarHabitsPanelTitle": "습관 패널",
+    "sidebarSectionPanelHint": "이 아이콘이 레일에서 열려 있을 때 표시됩니다.",
     "sidebarRailTitle": "아이콘 레일과 더보기",
     "sidebarShowCount": "{{name}} 개수 표시",
     "sidebarCountBadge": "개수",

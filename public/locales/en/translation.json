@@ -1443,6 +1443,10 @@
       "logError": "Error"
     },
     "sidebarSmartListsTitle": "Smart lists",
+    "sidebarNotesPanelTitle": "Notes panel",
+    "sidebarGoalsPanelTitle": "Goals panel",
+    "sidebarHabitsPanelTitle": "Habits panel",
+    "sidebarSectionPanelHint": "Shown when this icon is open on the rail.",
     "sidebarRailTitle": "Icon rail and More",
     "sidebarShowCount": "Show count for {{name}}",
     "sidebarCountBadge": "Count",

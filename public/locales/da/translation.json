@@ -1420,6 +1420,10 @@
       "logError": "Fejl"
     },
     "sidebarSmartListsTitle": "Smarte lister",
+    "sidebarNotesPanelTitle": "Notepanel",
+    "sidebarGoalsPanelTitle": "Målpanel",
+    "sidebarHabitsPanelTitle": "Vanepanel",
+    "sidebarSectionPanelHint": "Vises når dette ikon er åbent på skinnen.",
     "sidebarRailTitle": "Ikonlinje og Mere",
     "sidebarShowCount": "Vis antal for {{name}}",
     "sidebarCountBadge": "Antal",

@@ -26,7 +26,9 @@ import SidebarBookmarks from './Sidebar/SidebarBookmarks';
 import SidebarResizeHandle from './Sidebar/SidebarResizeHandle';
 import SidebarPanelIcon from './Sidebar/SidebarPanelIcon';
 import SidebarRail from './Sidebar/SidebarRail';
-import SidebarRailMinimal from './Sidebar/SidebarRailMinimal';
+import SidebarRailMinimal, {
+    panelRailIdFor,
+} from './Sidebar/SidebarRailMinimal';
 import SidebarSmartLists from './Sidebar/SidebarSmartLists';
 import { useIsMinimal } from '../hooks/useUiDensity';
 import { canOpenAccess } from '../entities/Role';
@@ -35,7 +37,11 @@ import { useStore } from '../store/useStore';
 import type { SidebarVisibleSections } from './Profile/types';
 import { sidebarPercentToRem } from '../utils/sidebarWidth';
 import type { SidebarSectionId } from '../utils/sidebarLayout';
-import type { PanelId, RailId } from '../utils/minimalSidebar';
+import {
+    RAIL_PANEL_KIND,
+    type PanelId,
+    type RailId,
+} from '../utils/minimalSidebar';
 
 interface SidebarProps {
     isSidebarOpen: boolean;
@@ -121,10 +127,20 @@ const Sidebar: React.FC<SidebarProps> = ({
     );
     const panelShows = (key: PanelId) =>
         panel.some((block) => block.key === key && block.visible);
+    // The panel follows the route: Notes, Goals and Habits show their own
+    // blocks (Profile > Sidebar); every other route shows the tasks panel.
+    const panelsSettings = useStore(
+        (state) => state.userSettingsStore.sidebarMinimal.panels
+    );
+    const railPanelId = panelRailIdFor(location.pathname);
+    const sectionPanelKind = railPanelId
+        ? RAIL_PANEL_KIND[railPanelId]
+        : undefined;
 
-    // With the panel open, the minimal rail skips the entries the panel
+    // With the tasks panel open, the minimal rail skips the entries the panel
     // already lists (smart lists at the top, Areas among the sections).
     const railIdsListedInPanel = (): RailId[] => {
+        if (sectionPanelKind) return [];
         const ids: RailId[] = [];
         if (panelShows('smartLists')) {
             for (const item of smartLists) {
@@ -354,7 +370,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 }
                             >
                                 <SidebarResizeHandle />
-                                <div className="h-14 mt-2 flex-shrink-0 flex items-center justify-between pl-5 pr-3">
+                                <div className="relative h-14 mt-2 flex-shrink-0 flex items-center justify-center px-5">
                                     <Link
                                         to="/"
                                         className="flex items-center no-underline"
@@ -370,7 +386,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     <button
                                         type="button"
                                         onClick={() => setIsSidebarOpen(false)}
-                                        className="p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                                         aria-label={t(
                                             'navbar.collapseSidebar',
                                             'Collapse Sidebar'
@@ -382,7 +398,30 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     </button>
                                 </div>
                                 <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-1 pb-4">
-                                    {isMinimal ? (
+                                    {isMinimal && sectionPanelKind ? (
+                                        panelsSettings[sectionPanelKind]
+                                            .filter((block) => block.visible)
+                                            .map((block) => (
+                                                <React.Fragment key={block.key}>
+                                                    {block.key ===
+                                                    'favorites' ? (
+                                                        <div className="mb-2 empty:hidden">
+                                                            {
+                                                                sectionElements.favorites
+                                                            }
+                                                        </div>
+                                                    ) : (
+                                                        <div className="mb-[6px]">
+                                                            {
+                                                                sectionElements[
+                                                                    block.key as SidebarSectionId
+                                                                ]
+                                                            }
+                                                        </div>
+                                                    )}
+                                                </React.Fragment>
+                                            ))
+                                    ) : isMinimal ? (
                                         panel
                                             .filter((block) => block.visible)
                                             .map((block) => (

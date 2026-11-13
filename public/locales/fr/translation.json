@@ -1422,6 +1422,10 @@
       "logError": "Erreur"
     },
     "sidebarSmartListsTitle": "Listes intelligentes",
+    "sidebarNotesPanelTitle": "Panneau Notes",
+    "sidebarGoalsPanelTitle": "Panneau Objectifs",
+    "sidebarHabitsPanelTitle": "Panneau Habitudes",
+    "sidebarSectionPanelHint": "Affiché quand cette icône est ouverte dans la barre.",
     "sidebarRailTitle": "Barre d’icônes et Plus",
     "sidebarShowCount": "Afficher le compteur de {{name}}",
     "sidebarCountBadge": "Compteur",

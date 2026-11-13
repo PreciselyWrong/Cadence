@@ -1440,6 +1440,10 @@
       "logError": "خطأ"
     },
     "sidebarSmartListsTitle": "القوائم الذكية",
+    "sidebarNotesPanelTitle": "لوحة الملاحظات",
+    "sidebarGoalsPanelTitle": "لوحة الأهداف",
+    "sidebarHabitsPanelTitle": "لوحة العادات",
+    "sidebarSectionPanelHint": "تظهر عند فتح هذه الأيقونة في الشريط.",
     "sidebarRailTitle": "شريط الأيقونات والمزيد",
     "sidebarShowCount": "إظهار العدد لـ {{name}}",
     "sidebarCountBadge": "العدد",
