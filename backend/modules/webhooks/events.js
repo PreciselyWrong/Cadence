@@ -32,12 +32,17 @@ const SUMMARY_EVENTS = ['daily_summary'];
 // proposed it.
 const MAIL_EVENTS = ['mail.decided'];
 
+// A week or a review asked for (docs/47-proposals.md): the agent answers
+// through POST /api/proposals/:uid/answer.
+const PROPOSAL_EVENTS = ['proposal.requested'];
+
 const ALL_EVENTS = [
     ...NOTIFICATION_EVENTS,
     ...TASK_EVENTS,
     ...CAPTURE_EVENTS,
     ...SUMMARY_EVENTS,
     ...MAIL_EVENTS,
+    ...PROPOSAL_EVENTS,
 ];
 
 // The webhook event for an in-app notification, or null for notifications
@@ -78,6 +83,7 @@ module.exports = {
     CAPTURE_EVENTS,
     SUMMARY_EVENTS,
     MAIL_EVENTS,
+    PROPOSAL_EVENTS,
     ALL_EVENTS,
     eventForNotification,
 };

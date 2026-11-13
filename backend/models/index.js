@@ -111,6 +111,7 @@ const LinkPreview = require('./link_preview')(sequelize);
 const BriefProposal = require('./brief_proposal')(sequelize);
 const TaskTriage = require('./task_triage')(sequelize);
 const MailItem = require('./mail_item')(sequelize);
+const Proposal = require('./proposal')(sequelize);
 const { AutoClassifyItem, AutoClassifyChange, AutoClassifySuggestion } =
     require('./auto_classify')(sequelize);
 const LinkedContext = require('./linked_context')(sequelize);
@@ -788,6 +789,7 @@ module.exports = {
     BriefProposal,
     TaskTriage,
     MailItem,
+    Proposal,
     AutoClassifyItem,
     AutoClassifyChange,
     AutoClassifySuggestion,
