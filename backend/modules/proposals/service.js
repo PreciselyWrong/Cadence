@@ -23,6 +23,7 @@ const goalsService = require('../goals/service');
 const repository = require('./repository');
 const { cleanText } = require('./core/text');
 const { listDays } = require('./core/day');
+const { weekDays } = require('./core/weekDays');
 const { contextFacts } = require('./core/context');
 const {
     resolvePeriod,
@@ -187,6 +188,10 @@ async function periodEvents(user, period) {
             date: event.date,
             start: event.start,
             end: event.end,
+            all_day: event.all_day,
+            busy: event.busy,
+            start_minute: event.start_minute,
+            end_minute: event.end_minute,
         }));
     } catch (error) {
         logError({ error }, 'Proposal calendar events unavailable');
@@ -405,10 +410,38 @@ async function createProposal(user, { kind, start, end } = {}) {
     return { row, created: true };
 }
 
+// The day strip of a week proposal, read live from the plans, focus blocks and
+// calendar of each day. Not stored, not sent to the agent (docs/47-proposals.md,
+// Week sheet v2).
+async function weekDaysOf(user, row) {
+    if (!row.period_start || !row.period_end) return [];
+    const dates = listDays(row.period_start, row.period_end);
+    const [views, events] = await Promise.all([
+        Promise.all(dates.map((date) => dailyPlan.getPlan(user, date))),
+        periodEvents(user, { start: row.period_start, end: row.period_end }),
+    ]);
+    return weekDays(
+        dates.map((date, i) => ({
+            date,
+            items: (views[i].plan?.items ?? []).map((item) => ({
+                task_uid: item.task_uid,
+                name: cleanText(item.task?.name, 255),
+                duration_minutes: item.duration_minutes,
+            })),
+            events: events.filter((event) => event.date === date),
+            focusBlocks: views[i].focus_blocks_of_day,
+            dayHours: views[i].day_hours,
+        }))
+    );
+}
+
 async function getProposal(user, uid) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
-    return serialize(await expireIfStale(row), { withFacts: true });
+    const current = await expireIfStale(row);
+    const out = serialize(current, { withFacts: true });
+    if (current.kind === 'week') out.days = await weekDaysOf(user, current);
+    return out;
 }
 
 async function listProposals(user, { status, kind } = {}) {

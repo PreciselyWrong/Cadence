@@ -111,6 +111,59 @@ describe('proposals', () => {
         );
     });
 
+    it('shows each day of a week proposal live: plan, work and load, not sent to the agent', async () => {
+        await dailyPlan.replaceItems(user, day(1), [
+            { task_uid: taskUid(planned), duration_minutes: 45 },
+        ]);
+        await dailyPlan.saveFocusBlocks(user, {
+            blocks: [
+                {
+                    days: [moment.tz(day(1), 'UTC').day()],
+                    start: 540,
+                    end: 720,
+                    label: 'Dentsply',
+                },
+            ],
+        });
+        const { body: created } = await agent
+            .post('/api/proposals')
+            .send({ kind: 'week', start: today, end: day(6) });
+
+        const read = await agent.get(`/api/proposals/${created.uid}`);
+        expect(read.status).toBe(200);
+        expect(read.body.days).toHaveLength(7);
+        expect(read.body.days.map((d) => d.date)).toEqual(
+            [0, 1, 2, 3, 4, 5, 6].map(day)
+        );
+
+        const tomorrow = read.body.days[1];
+        expect(tomorrow).toMatchObject({
+            date: day(1),
+            load_minutes: 45,
+            capacity_minutes: 180,
+            items: [
+                {
+                    task_uid: taskUid(planned),
+                    name: 'Ranger le garage',
+                    minutes: 45,
+                },
+            ],
+            work: { start: '09:00', end: '12:00', label: 'Dentsply' },
+        });
+
+        expect(read.body.days[2]).toMatchObject({
+            load_minutes: 0,
+            capacity_minutes: 600,
+            items: [],
+            work: { start: '08:00', end: '18:00', label: null },
+        });
+
+        const [, , payload] = requested()[0];
+        expect(payload.data.facts.days[1]).not.toHaveProperty(
+            'capacity_minutes'
+        );
+    });
+
     it('refuses a period over 14 days and an unknown kind', async () => {
         const long = await agent.post('/api/proposals').send({
             kind: 'week',

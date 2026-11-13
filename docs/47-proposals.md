@@ -215,6 +215,31 @@ Apply, `POST /api/proposals/:uid/apply { decisions }`. Each decision names an it
 
 Tasks are created through the `create_task` tool with `source: "mcp"`: `agent` is not a task source, and adding one would touch the web and Android badges.
 
+## Week sheet v2 (validated mockup, 2026-11-13)
+
+**Every task of the facts is shown**, not only the ones the agent changes: a task without a change starts on « Garder ». The agent must give a change for every overdue task (`facts.tasks[].overdue`), `keep` excluded.
+
+**Sections**: « Échues » first (overdue tasks, warning color, lateness « hier » / « N j »), then « Par jour » (current decision is a day), then « Plus loin » (horizons, later, drop, keep). One row per task: dot, name, grey line (lateness · agent reason), one decision chip, note button.
+
+**Day strip**: under the headline, the 7 days of the period, each with the planned time (« 3 h 30 », « Occupé » when an all-day or long event fills the work hours, « — » when empty) and a fill bar (warning color when full).
+
+**Day picker**: tapping a row's chip opens, under the row, the selected day's details: tasks already planned (name, duration), calendar events, work hours; then the choices, each day with its load (« mar. 17 · 30 min », « jeu. 19 · libre »), then the horizons.
+
+**Footer**: « N changements · M restent tels quels », « Envoyer ». Pinned.
+
+### `GET /api/proposals/:uid` › `days` (week only)
+
+Computed live at each read (the plans move), not stored, not sent to the agent:
+
+```json
+"days": [{ "date": "2026-11-17", "load_minutes": 30, "capacity_minutes": 630,
+  "items": [{ "task_uid": "…", "name": "Classer la déclaration 2025", "minutes": 30 }],
+  "events": [{ "title": "Foire aux livres", "start": "13:30", "end": "14:30", "all_day": false }],
+  "work": { "start": "07:30", "end": "18:00", "label": "Dentsply" } }]
+```
+
+`items`: every task on that day's plan (any task, not only the facts'), `minutes` = duration (60 when unset). `work`: the day's focus block from Profil › Planning (`focusBlocksOn`), else the day hours, null if none. `capacity_minutes`: work minutes minus timed events inside them. A day is full when `load_minutes >= capacity_minutes` or an all-day event covers it.
+
 ## Clients › Web
 
 Online only, like the Android client: nothing is kept offline. `frontend/utils/proposalsService.ts` (the routes above), `frontend/components/Proposals/`: `ProposalButton.tsx` (header button), `useProposal.ts` (the latest proposal of a kind, polled every 5 s only while pending), `ProposalSheet.tsx` (the week's sheet), `DecisionMenu.tsx` (the choices of a row), `weekDecisions.ts` (pure rules: decisions, groups, apply body, days), `ProposalHost.tsx` (mounted in `Layout.tsx`, opens `?proposal=<uid>` like `?task=`), `proposalLinks.ts` (the param and `PROPOSAL_CHANGED_EVENT`).
