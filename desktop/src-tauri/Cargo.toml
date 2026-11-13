@@ -28,6 +28,7 @@ futures-lite = "=2.6.1"
 [target.'cfg(target_os = "linux")'.dependencies]
 # Same crate wry uses: the link policy needs WebKit's navigation type, which Tauri does not pass on.
 webkit2gtk = { version = "=2.0.2", features = ["v2_6"] }
+gtk = "=0.18.2"
 
 [profile.release]
 opt-level = "s"

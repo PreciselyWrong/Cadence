@@ -15,6 +15,7 @@ mod links;
 mod notify;
 mod shortcut;
 mod sync;
+mod titlebar;
 
 use config::Config;
 use std::{
@@ -177,8 +178,11 @@ fn run_ui(kind: String, path: Option<String>) {
                         WebviewWindowBuilder::new(handle, "main", WebviewUrl::External(blank))
                             .title("Cadence")
                             .inner_size(1280.0, 840.0)
+                            .visible(false)
                             .build()?;
+                    titlebar::attach(&window)?;
                     links::attach(&window, server, url)?;
+                    window.show()?;
                 }
                 ("quick", _) => {
                     WebviewWindowBuilder::new(

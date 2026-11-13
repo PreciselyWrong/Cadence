@@ -383,6 +383,7 @@ version = "0.1.0"
 dependencies = [
  "ashpd",
  "futures-lite",
+ "gtk",
  "notify-rust",
  "serde",
  "serde_json",
