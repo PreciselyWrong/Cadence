@@ -846,3 +846,10 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : la page Boîte de réception doublait la colonne Inbox de Plan ; la colonne renvoyait vers la page dès qu'on cliquait une idée.
 - **Décision** : plus de page Inbox. Un clic sur une idée de la colonne ouvre son panneau de décision sur place (Tâche, Projet…, Note, Inbox, Supprimer) ; l'en-tête de la colonne porte « À trier (N) » et « Trier » (tri une à une, `/inbox?triage=1`). La colonne est toujours là (repliable), l'option « Colonne Inbox » d'Affichage disparaît. `/inbox` mène à Plan ; un partage du système ouvre la boîte de saisie préremplie. L'Inbox quitte la barre latérale, le lanceur, le rail et la barre du bas du téléphone.
 - **Android à reprendre** : fait dans la même étape (onglet Boîte retiré, idées décidées depuis Planifier).
+
+### 2026-11-13 — Fiche colorée, horizons dans la date, « À planifier »
+
+- **Problème** : toutes les pastilles remplies de la fiche avaient la même couleur ; la date ne proposait pas les horizons ; une tâche dont la semaine ou le mois engagé était passé disparaissait de Plan.
+- **Décision** : couleur par valeur (`frontend/components/Task/chipTones.ts`) : échéance dépassée `danger`, du jour `success`, horizon violet doux (PALETTE `purple`), « À replanifier » `danger` ; priorité haute `danger`, moyenne `warning`, basse bleu doux ; projet et étiquette leur couleur PALETTE ; autres : neutre rempli ; vide : gris discret. Ligne « Plus tard » dans le choix de date (horizon courant en `bg-primary`). Boîte « À planifier » sous l'Inbox de Plan, « À replanifier » encadré `danger` comme « En retard », absente quand tout est planifié.
+- **Android à reprendre** : fait dans la même étape (1.25.0).
+

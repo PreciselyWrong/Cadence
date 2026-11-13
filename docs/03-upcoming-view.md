@@ -33,9 +33,25 @@ A past week or month, a past due day (overdue: the days layout's « En retard »
 
 In the days layout, a slim strip under the day columns (Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, with counts) takes dropped cards. A drop takes the card off its day's plan and writes the horizon (`week_of = next week`, `month_of`, `#someday`); the due date is kept. One undo restores both. Shift+W sends the focused card to Semaine prochaine, Shift+M to Ce mois-ci, and the right-click menu offers the same targets. Clicking a target opens Horizons on that column.
 
+### « À planifier » (Days layout)
+
+Under the inbox column, a box « À planifier » (`ToPlanBox.tsx`, rule `toPlan` in `horizons.ts`; Android `PlanBoard.toSchedule`), open top-level tasks without #someday:
+
+- **À replanifier** (first, red): not recurring, `week_of` before this week or `month_of` before this month, placed in no horizon by `bucketHorizons`, and with no plan line today or later.
+- **Cette semaine**: `week_of` = this week, no plan line on a day of this week.
+- **Ce mois-ci** (collapsed by default, count shown): `month_of` = this month (and not committed to this or next week), no plan line on a day of this week.
+
+Plan lines count for the days the board has loaded. Cards drag onto a day (planned like an inbox card; the commitment stays). Right click (Android: long press, « Planifier » sheet): « Engager pour » Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, and « Retirer l'engagement » (clears `week_of` and `month_of`); Undo writes back the week and month held before. Shift+W / Shift+M and the strip work on its cards too. When all three groups are empty the box renders nothing at all (no header, border or bar). Collapsible on the web (`upcoming.toPlanCollapsed`): under a collapsed inbox it is a 44 px bar with its count. On the phone it is a section under the Inbox (placement chosen over a top banner or a list filter: one long press per task, no stacked sheet).
+
+### Due chip of the task sheet
+
+The date picker of the task sheet's due date has a « Plus tard » row: Cette semaine · Semaine prochaine · Ce mois-ci · Mois prochain · Un jour; its « Semaine prochaine » quick choice (next Monday) is gone there (other date pickers keep it). A horizon is one write: `horizonPatch` semantics (the other commitment null, `later` for Un jour, `later:false` when leaving #someday), due date and time cleared, and the task leaves every plan from today on (`PATCH /task` `unplan: true`, `daily-plan/service.js` `takeTaskOffPlansFrom`; Android through its plan write queue, offline included). A precise day clears `week_of`, `month_of` and #someday. Without a date the chip shows the commitment (violet) or « À replanifier » (red) when its only week or month has passed.
+
 ### Android
 
 The phone's « Planifier » (Tâches › title selector, was « À venir ») shows the same board in one column: Inbox (Tâches à classer, then ideas; « Ajouter » creates a task), Échues (« Tout à aujourd'hui » plans them today), then 14 days with their load, or the four horizons with « Prévues un jour » under This week. A long press opens « Planifier »: a day (plan ops: `move`, `add`, or `slot` + `remove` for a slotted card, never the due date), a horizon (`week_of`, `month_of`, `#someday`), « Retirer de ce jour », or the usual menu; an idea planned this way becomes a task first. Day members and horizons follow the same rules (`planning/PlanBoard.kt`); the plans of the 14 days are read after each sync and kept on the device, so the board works offline and every write is queued.
+
+Android also has the Next week horizon, the « À planifier » section under the Inbox and the « Plus tard » row of the task date sheet, with the same rules (1.25.0, tests `PlanCommitmentsTest`).
 
 ## Basic Rules
 
