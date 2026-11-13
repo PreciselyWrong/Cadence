@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
@@ -52,6 +52,9 @@ import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.planning.PlanCard
 import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.formatMinutes
+import ch.nicolab.cadence.tasks.ui.triage.TriageEntry
+import ch.nicolab.cadence.tasks.ui.triage.TriageScreen
+import ch.nicolab.cadence.tasks.ui.triage.TriageViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -115,6 +118,13 @@ internal fun PlanTab(
     var adding by remember { mutableStateOf<AddTarget?>(null) }
     // « Ce mois-ci » d'« À planifier » est replié par défaut ; son compte reste visible.
     var monthOpen by rememberSaveable { mutableStateOf(false) }
+    // « À trier (N) » au-dessus de l'Inbox : seulement en ligne, comme l'ancien écran Inbox.
+    val triage: TriageViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val triageItems by triage.items.collectAsStateWithLifecycle()
+    val triageOnline by triage.online.collectAsStateWithLifecycle()
+    var triageOpen by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(triage) { triage.refresh() }
+    val triageCount = if (triageOnline) triageItems.size else 0
     val today = moment.today
 
     @Composable
@@ -153,6 +163,9 @@ internal fun PlanTab(
             )
         }
         if (!horizons) {
+            if (triageCount > 0) {
+                item(key = "triage") { TriageEntry(triageCount, onOpen = { triageOpen = true }) }
+            }
             item(key = "inbox-header") {
                 SectionHeader(
                     title = stringResource(R.string.plan_inbox),
@@ -162,10 +175,18 @@ internal fun PlanTab(
                 )
             }
             items(unsorted, key = { "inbox-task-${it.uid}" }) { task ->
-                Row(task) { planning = PlanTarget.Task(task) }
+                Column {
+                    Row(task) { planning = PlanTarget.Task(task) }
+                    if (task.needsWhen) WhenChoices(task, viewModel)
+                }
             }
             items(ideas, key = { "inbox-idea-${it.uid}" }) { entry ->
-                IdeaRow(entry) { planning = PlanTarget.Idea(entry) }
+                IdeaItem(
+                    entry = entry,
+                    viewModel = viewModel,
+                    onPlan = { planning = PlanTarget.Idea(entry) },
+                    modifier = Modifier.padding(bottom = Space.sm),
+                )
             }
             if (unsorted.isEmpty() && ideas.isEmpty()) {
                 item(key = "inbox-empty") { QuietLine(R.string.plan_inbox_empty) }
@@ -308,6 +329,8 @@ internal fun PlanTab(
         )
     }
 
+    if (triageOpen) TriageScreen(today = LocalDate.now(), onBack = { triageOpen = false })
+
     adding?.let { target ->
         QuickAddSheet(
             onDismiss = { adding = null },
@@ -381,23 +404,6 @@ private fun QuietLine(@StringRes text: Int) {
         style = MaterialTheme.typography.bodyMedium,
         color = cadence.onSurfaceVariant,
         modifier = Modifier.padding(vertical = Space.xs),
-    )
-}
-
-/** Une idée de l'Inbox dans Planifier : son texte ; un appui ouvre « Planifier » (elle deviendra une tâche). */
-@Composable
-private fun IdeaRow(entry: InboxEntry, onPlan: () -> Unit) {
-    Text(
-        entry.content,
-        style = MaterialTheme.typography.bodyLarge,
-        color = cadence.onSurface,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = Size.touch)
-            .clickable(role = Role.Button, onClick = onPlan)
-            .padding(vertical = Space.sm, horizontal = Space.lg),
     )
 }
 

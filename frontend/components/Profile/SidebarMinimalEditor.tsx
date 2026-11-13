@@ -21,12 +21,10 @@ interface SidebarMinimalEditorProps {
 const SMART_LIST_LABELS: Record<SmartListId, [string, string]> = {
     today: ['sidebar.today', 'Today'],
     next7: ['sidebar.plan', 'Plan'],
-    inbox: ['sidebar.inbox', 'Inbox'],
 };
 
 const RAIL_LABELS: Record<RailId, [string, string]> = {
     today: ['sidebar.today', 'Today'],
-    inbox: ['sidebar.inbox', 'Inbox'],
     calendar: ['sidebar.calendar', 'Calendar'],
     notes: ['sidebar.notes', 'Notes'],
     habits: ['sidebar.habits', 'Habits'],

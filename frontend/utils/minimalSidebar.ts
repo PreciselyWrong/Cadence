@@ -2,9 +2,10 @@
 // Dense layout keys. The backend keeps only known keys; this file fills in
 // defaults for anything missing so new items appear for existing users.
 
-// Inbox first: what came in sits above the day (2026-11-12).
-// Tomorrow left the list (2026-11-12): the Plan page covers it.
-export const SMART_LIST_IDS = ['inbox', 'today', 'next7'] as const;
+// Tomorrow left the list (2026-11-12): the Plan page covers it. Inbox left it
+// (2026-11-13): its items are a column on Plan. A stored 'inbox' entry is
+// dropped by resolveMinimalSidebar, like any unknown key.
+export const SMART_LIST_IDS = ['today', 'next7'] as const;
 // The order every account had before, Tomorrow included; a saved list in that
 // exact order was never rearranged by its owner, so it takes the new default.
 // Kept literal: it must still match after Tomorrow leaves SMART_LIST_IDS.
@@ -13,7 +14,6 @@ export type SmartListId = (typeof SMART_LIST_IDS)[number];
 
 export const RAIL_IDS = [
     'today',
-    'inbox',
     'calendar',
     'notes',
     'habits',
@@ -80,7 +80,6 @@ export interface MinimalSidebarSettings {
 // Rail items that open on the icon rail by default; the rest sit in More.
 const DEFAULT_RAIL_PLACE: Record<RailId, RailPlace> = {
     today: 'rail',
-    inbox: 'rail',
     calendar: 'rail',
     notes: 'rail',
     habits: 'rail',
@@ -99,14 +98,12 @@ const DEFAULT_RAIL_PLACE: Record<RailId, RailPlace> = {
 };
 
 export const DEFAULT_MINIMAL_SIDEBAR: MinimalSidebarSettings = {
-    // Calm by default: counts only where something waits for the user
-    // (Today, Inbox); the rest can be turned on in Profile > Sidebar. The
-    // Inbox row is off for new accounts (its items show as a column on Plan);
-    // a saved choice still wins.
+    // Calm by default: a count only where something waits for the user
+    // (Today); the rest can be turned on in Profile > Sidebar.
     smartLists: SMART_LIST_IDS.map((key) => ({
         key,
-        visible: key !== 'inbox',
-        showCount: key === 'today' || key === 'inbox',
+        visible: true,
+        showCount: key === 'today',
     })),
     rail: RAIL_IDS.map((key) => ({ key, place: DEFAULT_RAIL_PLACE[key] })),
     sectionBadges: {

@@ -1840,6 +1840,7 @@
     "projectNameTooLong": "프로젝트 이름은 {{max}}자 이하여야 합니다"
   },
   "inbox": {
+    "ideaSheet": "받은함 항목",
     "toSort": "정리할 항목 ({{count}})",
     "unsorted": {
       "noDate": "날짜 없음",

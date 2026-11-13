@@ -85,6 +85,7 @@ import {
     useHorizonTasks,
     useUnsortedTasks,
 } from './useDays';
+import { useInboxPolling } from '../Inbox/useInboxPolling';
 import InboxColumn, {
     INBOX_CARD_DATE,
     inboxCollapsed,
@@ -93,10 +94,7 @@ import InboxColumn, {
     saveInboxCollapsed,
 } from './InboxColumn';
 import type { InboxDragData } from './InboxColumn';
-import {
-    loadInboxItemsToStore,
-    processInboxItemWithStore,
-} from '../../utils/inboxService';
+import { processInboxItemWithStore } from '../../utils/inboxService';
 import DayColumn from './DayColumn';
 import type { ColumnDropData } from './DayColumn';
 import TaskCard, { cardId } from './TaskCard';
@@ -427,7 +425,7 @@ const UpcomingBoard: React.FC = () => {
 
     const inboxItems = useStore((state) => state.inboxStore.inboxItems);
     const inboxLoading = useStore((state) => state.inboxStore.isLoading);
-    const unsorted = useUnsortedTasks(options.showInbox);
+    const unsorted = useUnsortedTasks(true);
     // Tasks planned on a loaded day from today on: the server still counts
     // them unsorted (a plan line is no moment), the inbox column does not.
     // Read from the days after they load, hence state.
@@ -446,11 +444,7 @@ const UpcomingBoard: React.FC = () => {
         !inboxLoading &&
         unsorted.tasks !== null &&
         inboxCollapsed(openInboxCount, inboxChoice);
-    const inboxWidth = options.showInbox
-        ? inboxIsCollapsed
-            ? INBOX_COLLAPSED_WIDTH
-            : INBOX_WIDTH
-        : 0;
+    const inboxWidth = inboxIsCollapsed ? INBOX_COLLAPSED_WIDTH : INBOX_WIDTH;
     const minBoard = minBoardWidth(inboxWidth);
     const placement = narrow
         ? 'drawer'
@@ -524,9 +518,7 @@ const UpcomingBoard: React.FC = () => {
     bucketsRef.current = buckets;
     const overdue = horizonsMode ? [] : (shownDays[today]?.overdue ?? []);
 
-    useEffect(() => {
-        loadInboxItemsToStore(true).catch(console.error);
-    }, []);
+    useInboxPolling();
 
     // Navigation lands on a day: scroll its column to the strip's start.
     useEffect(() => {
@@ -557,30 +549,19 @@ const UpcomingBoard: React.FC = () => {
     // The task lists beside the days: the horizons and the inbox's tasks.
     const reloadHorizonTasks = horizon.reload;
     const reloadUnsorted = unsorted.reload;
-    const showInbox = options.showInbox;
     const reloadHorizons = useCallback(
-        () =>
-            Promise.all([
-                reloadHorizonTasks(),
-                showInbox ? reloadUnsorted() : undefined,
-            ]),
-        [reloadHorizonTasks, reloadUnsorted, showInbox]
+        () => Promise.all([reloadHorizonTasks(), reloadUnsorted()]),
+        [reloadHorizonTasks, reloadUnsorted]
     );
     const reload = useCallback(
         async (only?: string[]) => {
             await Promise.all([
                 reloadDays(only),
                 horizonsMode ? reloadHorizonTasks() : undefined,
-                showInbox ? reloadUnsorted() : undefined,
+                reloadUnsorted(),
             ]);
         },
-        [
-            reloadDays,
-            reloadHorizonTasks,
-            reloadUnsorted,
-            horizonsMode,
-            showInbox,
-        ]
+        [reloadDays, reloadHorizonTasks, reloadUnsorted, horizonsMode]
     );
 
     const fail = useCallback(
@@ -2080,26 +2061,24 @@ const UpcomingBoard: React.FC = () => {
                             </section>
                         )}
                         <div className="flex min-h-0 min-w-0 flex-1 gap-3">
-                            {options.showInbox && (
-                                <div className="flex min-h-0 shrink-0 p-1">
-                                    <InboxColumn
-                                        items={inboxItems}
-                                        tasks={inboxTasks}
-                                        today={today}
-                                        loading={
-                                            inboxLoading ||
-                                            unsorted.tasks === null
-                                        }
-                                        openTaskUid={openTaskUid}
-                                        onAdd={addToInbox}
-                                        onOpenTask={(line) => openLine(line)}
-                                        onToggleTask={toggle}
-                                        onToggleSubtask={toggleSubtask}
-                                        collapsed={inboxIsCollapsed}
-                                        onCollapsedChange={setInboxCollapsed}
-                                    />
-                                </div>
-                            )}
+                            <div className="flex min-h-0 shrink-0 p-1">
+                                <InboxColumn
+                                    items={inboxItems}
+                                    tasks={inboxTasks}
+                                    today={today}
+                                    loading={
+                                        inboxLoading || unsorted.tasks === null
+                                    }
+                                    openTaskUid={openTaskUid}
+                                    onAdd={addToInbox}
+                                    onOpenTask={(line) => openLine(line)}
+                                    onToggleTask={toggle}
+                                    onToggleSubtask={toggleSubtask}
+                                    collapsed={inboxIsCollapsed}
+                                    onCollapsedChange={setInboxCollapsed}
+                                    onIdeaToTask={() => void reloadUnsorted()}
+                                />
+                            </div>
                             <div
                                 ref={boardRef}
                                 data-testid="upcoming-columns"

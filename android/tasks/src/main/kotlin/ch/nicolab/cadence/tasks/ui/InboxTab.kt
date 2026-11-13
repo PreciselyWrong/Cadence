@@ -8,21 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material3.AlertDialog
@@ -31,7 +21,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismissBox
@@ -48,139 +37,79 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ch.nicolab.cadence.designsystem.components.CadenceSheet
-import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
-import ch.nicolab.cadence.designsystem.components.PrimaryAction
-import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
-import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.FunnelStage
-import ch.nicolab.cadence.tasks.quickadd.ShareCapture
 import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkLists
 import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.TaskItem
-import ch.nicolab.cadence.tasks.ui.triage.TriageEntry
+import ch.nicolab.cadence.tasks.quickadd.ShareCapture
+
+/** L'idée à trier et le titre de sa page s'il est connu à l'appui. */
+private data class IdeaChoice(val entry: InboxEntry, val pageTitle: String?)
 
 /**
- * Capture rapide : le champ en tête envoie la saisie à la boîte de réception. Chaque idée, lien ou non, se trie d'une
- * seule rangée : Tâche (saisie pré-remplie, projet et étiquettes visibles ; une simple adresse devient tout de suite une
- * tâche), Projet… (idée qui porte une adresse, enregistrée dans les liens), Note ;
- * glisser à gauche supprime. Une décision s'écrit tout de suite, « Annuler » écrit l'inverse.
- * Sous les entrées, « Tâches à classer » liste les tâches sans échéance, qu'aucun autre onglet n'affiche : sans projet
- * ni domaine, ou classées mais sans quand choisi (« Quand ? » sous la ligne : cette semaine, une date, plus tard, sans date).
- * Quand la file « À trier » attend, une entrée « À trier (N) » s'affiche au-dessus de la saisie.
+ * Une idée de l'Inbox, dans Planifier : sa rangée de décisions et les feuilles qu'elles ouvrent (choix du projet,
+ * conversion en tâche, modification). [onPlan] ouvre « Planifier » de l'écran, qui la porte à un jour ou un horizon.
+ * Chaque décision s'écrit tout de suite ; « Annuler » sur l'écran écrit l'inverse.
  */
 @Composable
-internal fun InboxTab(
+internal fun IdeaItem(
+    entry: InboxEntry,
     viewModel: TasksViewModel,
-    captureFocus: FocusRequester,
-    onOpen: (TaskItem) -> Unit,
-    triageCount: Int = 0,
-    onOpenTriage: () -> Unit = {},
+    onPlan: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val entries by viewModel.inbox.collectAsStateWithLifecycle()
     val links by viewModel.links.collectAsStateWithLifecycle()
-    val unsorted by viewModel.unsorted.collectAsStateWithLifecycle()
-    val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val verbs = ShareCapture.verbs(LocalContext.current)
-    val projectNames = rememberProjectNames(viewModel)
-    val projectColors = rememberProjectColors(viewModel)
-    val projectIcons = rememberProjectIcons(viewModel)
-    var capture by rememberSaveable { mutableStateOf("") }
     var converting by remember { mutableStateOf<IdeaChoice?>(null) }
     var linking by remember { mutableStateOf<IdeaChoice?>(null) }
-    var editing by remember { mutableStateOf<InboxEntry?>(null) }
-    val submit = {
-        val text = capture.trim()
-        if (text.isNotEmpty()) {
-            viewModel.captureInbox(text)
-            capture = ""
-        }
-    }
-
-    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
-        if (triageCount > 0) {
-            item(key = "triage") { TriageEntry(triageCount, onOpen = onOpenTriage) }
-        }
-        item(key = "capture") {
-            CaptureField(
-                value = capture,
-                onValueChange = { capture = it },
-                onSubmit = submit,
-                modifier = Modifier.padding(bottom = Space.md).focusRequester(captureFocus),
-            )
-        }
-        // L'Inbox vide ne se dit que si rien n'attend non plus dans « Tâches à classer ».
-        if (entries.isEmpty() && unsorted.isEmpty()) {
-            item { EmptyState(R.string.tasks_inbox_empty) }
-        }
-        items(entries, key = { it.uid }) { entry ->
-            // Une page déjà enregistrée dans les liens donne son titre ; sinon celui de l'aperçu lu par le serveur.
-            val saved = remember(links, entry) { LinkLists.forEntry(links, entry.content)?.title }
-            IdeaRow(
-                modifier = Modifier.padding(bottom = Space.sm),
-                entry = entry,
-                previews = viewModel.linkPreviews,
-                savedTitle = saved,
-                onTask = { title ->
-                    if (IdeaTasks.isOnlyAddress(entry.content)) {
-                        viewModel.saveLinkIdeaAsTask(entry, title)
-                    } else {
-                        converting = IdeaChoice(entry, title)
-                    }
-                },
-                onProject = { title -> linking = IdeaChoice(entry, title) },
-                onNote = { viewModel.convertIdeaToNote(entry) },
-                onEdit = { editing = entry },
-                onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
-            )
-        }
-        if (unsorted.isNotEmpty()) {
-            item { SectionHeader(title = stringResource(R.string.tasks_section_unsorted)) }
-            taskRows(
-                unsorted,
-                projectNames,
-                projectColors,
-                moment,
-                viewModel,
-                onOpen,
-                projectIcons = projectIcons,
-                belowRow = { task -> if (task.needsWhen) WhenChoices(task, viewModel) },
-            )
-        }
-    }
-
-    editing?.let { entry ->
+    var editing by remember { mutableStateOf(false) }
+    // Une page déjà enregistrée dans les liens donne son titre ; sinon celui de l'aperçu lu par le serveur.
+    val saved = remember(links, entry) { LinkLists.forEntry(links, entry.content)?.title }
+    IdeaRow(
+        entry = entry,
+        previews = viewModel.linkPreviews,
+        savedTitle = saved,
+        onTask = { title ->
+            if (IdeaTasks.isOnlyAddress(entry.content)) {
+                viewModel.saveLinkIdeaAsTask(entry, title)
+            } else {
+                converting = IdeaChoice(entry, title)
+            }
+        },
+        onProject = { title -> linking = IdeaChoice(entry, title) },
+        onNote = { viewModel.convertIdeaToNote(entry) },
+        onPlan = onPlan,
+        onEdit = { editing = true },
+        onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
+        modifier = modifier,
+    )
+    if (editing) {
         IdeaTextDialog(
             initial = entry.content,
             onSave = { text ->
                 viewModel.renameIdea(entry.uid, text)
-                editing = null
+                editing = false
             },
-            onDismiss = { editing = null },
+            onDismiss = { editing = false },
         )
     }
     converting?.let { choice ->
@@ -205,101 +134,20 @@ internal fun InboxTab(
 }
 
 /**
- * « Quand ? » sous une tâche classée sans moment choisi. Chaque choix passe par le ViewModel, donc part en file hors
- * ligne ; la tâche sort de la liste dès qu'un moment est posé.
- */
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun WhenChoices(task: TaskItem, viewModel: TasksViewModel) {
-    val moment by viewModel.moment.collectAsStateWithLifecycle()
-    var picking by remember(task.uid) { mutableStateOf(false) }
-    FlowRow(
-        Modifier.fillMaxWidth().padding(start = Space.lg, end = Space.lg, bottom = Space.sm),
-        horizontalArrangement = Arrangement.spacedBy(Space.sm),
-        verticalArrangement = Arrangement.spacedBy(Space.sm),
-    ) {
-        Text(
-            stringResource(R.string.tasks_when_label),
-            style = MaterialTheme.typography.labelLarge,
-            color = cadence.onSurfaceVariant,
-            modifier = Modifier.padding(end = Space.xs),
-        )
-        QuickPill(stringResource(R.string.funnel_this_week), onClick = { viewModel.funnel(task, FunnelStage.THIS_WEEK) }, quiet = true)
-        QuickPill(stringResource(R.string.tasks_when_pick_date), onClick = { picking = true }, quiet = true)
-        QuickPill(stringResource(R.string.funnel_later), onClick = { viewModel.funnel(task, FunnelStage.LATER) }, quiet = true)
-        QuickPill(stringResource(R.string.tasks_no_due_date), onClick = { viewModel.clearWhen(task) }, quiet = true)
-    }
-    if (picking) {
-        TaskDatePickerDialog(
-            initial = moment.today,
-            onConfirm = { picking = false; viewModel.reschedule(task, it) },
-            onDismiss = { picking = false },
-        )
-    }
-}
-
-/** L'idée à trier et le titre de sa page s'il est connu à l'appui. */
-private data class IdeaChoice(val entry: InboxEntry, val pageTitle: String?)
-
-/** Champ de capture rempli et arrondi, avec un bouton d'envoi rond : le clavier valide aussi. */
-@Composable
-private fun CaptureField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    onSubmit: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val palette = cadence
-    Row(
-        modifier
-            .fillMaxWidth()
-            .clip(Radius.Pill)
-            .background(palette.containerHigh)
-            .padding(start = Space.lg),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(Modifier.weight(1f)) {
-            if (value.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.tasks_inbox_capture_hint),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = palette.outline,
-                )
-            }
-            BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
-                singleLine = true,
-                textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.onSurface),
-                cursorBrush = SolidColor(palette.primary),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-                keyboardActions = KeyboardActions(onSend = { onSubmit() }),
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-        RoundHeaderButton(
-            icon = Icons.AutoMirrored.Outlined.Send,
-            contentDescription = stringResource(R.string.tasks_inbox_capture_send),
-            style = if (value.isBlank()) HeaderButtonStyle.Plain else HeaderButtonStyle.Filled,
-            onClick = onSubmit,
-        )
-    }
-}
-
-/**
- * Une idée de la boîte : carte arrondie, texte (caché quand il n'est qu'une adresse), aperçu de la page s'il y en a
- * une, puis la rangée de décisions : Tâche, Liens (avec une adresse), Note, et « … » (Modifier, Supprimer).
+ * Une idée : carte arrondie, texte (caché quand il n'est qu'une adresse), aperçu de la page s'il y en a une, puis la
+ * rangée de décisions : Tâche, Projet (avec une adresse), Note, et « … » (Planifier, Modifier, Supprimer).
  * Glisser vers la gauche supprime, avec « Annuler » ; toucher le texte ouvre la tâche pré-remplie.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-private fun IdeaRow(
+internal fun IdeaRow(
     entry: InboxEntry,
     previews: LinkPreviews,
     savedTitle: String?,
     onTask: (String?) -> Unit,
     onProject: (String?) -> Unit,
     onNote: () -> Unit,
+    onPlan: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -384,6 +232,7 @@ private fun IdeaRow(
                     }
                     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                         listOf(
+                            R.string.plan_sheet_title to onPlan,
                             R.string.tasks_idea_edit to onEdit,
                             R.string.tasks_idea_delete to onDelete,
                         ).forEach { (label, action) ->
@@ -457,3 +306,37 @@ internal fun QuickPill(
 }
 
 private const val IDEA_COLLAPSED_LINES = 3
+
+/**
+ * « Quand ? » sous une tâche classée sans moment choisi. Chaque choix passe par le ViewModel, donc part en file hors
+ * ligne ; la tâche sort de la liste dès qu'un moment est posé.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+internal fun WhenChoices(task: TaskItem, viewModel: TasksViewModel) {
+    val moment by viewModel.moment.collectAsStateWithLifecycle()
+    var picking by remember(task.uid) { mutableStateOf(false) }
+    FlowRow(
+        Modifier.fillMaxWidth().padding(start = Space.lg, end = Space.lg, bottom = Space.sm),
+        horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        verticalArrangement = Arrangement.spacedBy(Space.sm),
+    ) {
+        Text(
+            stringResource(R.string.tasks_when_label),
+            style = MaterialTheme.typography.labelLarge,
+            color = cadence.onSurfaceVariant,
+            modifier = Modifier.padding(end = Space.xs),
+        )
+        QuickPill(stringResource(R.string.funnel_this_week), onClick = { viewModel.funnel(task, FunnelStage.THIS_WEEK) }, quiet = true)
+        QuickPill(stringResource(R.string.tasks_when_pick_date), onClick = { picking = true }, quiet = true)
+        QuickPill(stringResource(R.string.funnel_later), onClick = { viewModel.funnel(task, FunnelStage.LATER) }, quiet = true)
+        QuickPill(stringResource(R.string.tasks_no_due_date), onClick = { viewModel.clearWhen(task) }, quiet = true)
+    }
+    if (picking) {
+        TaskDatePickerDialog(
+            initial = moment.today,
+            onConfirm = { picking = false; viewModel.reschedule(task, it) },
+            onDismiss = { picking = false },
+        )
+    }
+}

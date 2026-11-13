@@ -1843,6 +1843,7 @@
     "projectNameTooLong": "Projectnaam mag maximaal {{max}} tekens bevatten"
   },
   "inbox": {
+    "ideaSheet": "Inbox-item",
     "toSort": "Te sorteren ({{count}})",
     "unsorted": {
       "noDate": "Zonder datum",

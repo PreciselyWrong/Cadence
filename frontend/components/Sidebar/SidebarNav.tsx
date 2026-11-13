@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Location } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     CalendarDaysIcon,
-    InboxIcon,
     ListBulletIcon,
     ClockIcon,
     CalendarIcon,
@@ -14,7 +13,6 @@ import {
 import { useStore } from '../../store/useStore';
 import { useDailyPlanProgress } from '../../store/dailyPlanStore';
 import { usePluginMenuStore } from '../../store/pluginMenuStore';
-import { loadInboxItemsToStore } from '../../utils/inboxService';
 import {
     SidebarLinkId,
     pluginEntryId,
@@ -49,7 +47,6 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
     compact = false,
 }) => {
     const { t } = useTranslation();
-    const store = useStore();
     const calendarEnabled = useStore(
         (state) => state.userSettingsStore.calendarEnabled
     );
@@ -64,21 +61,10 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
         (state) => state.userSettingsStore.sidebarLinkOrder
     );
 
-    const inboxItemsCount = store.inboxStore.pagination.total;
     const planProgress = useDailyPlanProgress((state) => state.progress);
     const pluginItems = usePluginMenuStore((state) => state.items);
 
-    useEffect(() => {
-        loadInboxItemsToStore(false).catch(console.error);
-    }, []);
-
     const allNavLinks = [
-        {
-            id: 'inbox',
-            path: '/inbox',
-            title: t('sidebar.inbox', 'Inbox'),
-            icon: <InboxIcon className="h-[15px] w-[15px]" />,
-        },
         {
             id: 'today',
             path: '/today',
@@ -146,7 +132,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
         if (path === '/today') {
             return location.pathname.startsWith('/today');
         }
-        if (path === '/inbox' || path === '/calendar' || path === '/everyone') {
+        if (path === '/calendar' || path === '/everyone') {
             return location.pathname === path;
         }
         if (path.startsWith('/plugins/')) {
@@ -199,9 +185,6 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                             >
                                 {link.icon}
                             </span>
-                            {link.path === '/inbox' && inboxItemsCount > 0 && (
-                                <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
-                            )}
                         </button>
                     </li>
                 ))}
@@ -239,11 +222,6 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
                                 )}
                             >
                                 {planProgress.done}/{planProgress.total}
-                            </span>
-                        )}
-                        {link.path === '/inbox' && inboxItemsCount > 0 && (
-                            <span className="text-[12px] text-gray-500 dark:text-gray-300">
-                                {inboxItemsCount > 99 ? '99+' : inboxItemsCount}
                             </span>
                         )}
                     </button>

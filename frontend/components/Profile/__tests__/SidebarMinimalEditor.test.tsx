@@ -72,7 +72,6 @@ describe('SidebarMinimalEditor', () => {
 
         const [patch] = saveMock.mock.calls[0];
         expect(patch.smartLists?.map((item) => item.key)).toEqual([
-            'inbox',
             'next7',
             'today',
         ]);

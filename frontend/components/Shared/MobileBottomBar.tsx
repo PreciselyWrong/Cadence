@@ -5,28 +5,25 @@ import {
     CalendarDaysIcon,
     ChartBarIcon,
     CheckCircleIcon,
-    InboxIcon,
     PlusIcon,
 } from '@heroicons/react/24/outline';
 import {
     CalendarDaysIcon as CalendarDaysSolid,
     ChartBarIcon as ChartBarSolid,
     CheckCircleIcon as CheckCircleSolid,
-    InboxIcon as InboxSolid,
 } from '@heroicons/react/24/solid';
 import { openCapture } from '../../utils/captureUi';
 import { useStore } from '../../store/useStore';
 import HexagonIcon from './HexagonIcon';
 import '../../styles/mobile-native.css';
 
-type TabId = 'inbox' | 'tasks' | 'agenda' | 'habits' | 'review';
+type TabId = 'tasks' | 'agenda' | 'habits' | 'review';
 
 const TASK_PATHS =
     /^\/(today|tasks|upcoming|projects?|tags?|tasks?|areas?|views?|kanban|eisenhower|boards|goals?|notes?|people|person)(\/|$)/;
 
-// Android's bottom pill bar: Boîte · Tâches · Agenda · Habitudes · Bilan.
+// Android's bottom pill bar: Tâches · Agenda · Habitudes · Bilan.
 export const activeTab = (pathname: string): TabId | null => {
-    if (/^\/inbox(\/|$)/.test(pathname)) return 'inbox';
     if (/^\/calendar(\/|$)/.test(pathname)) return 'agenda';
     if (/^\/habits?(\/|$)/.test(pathname)) return 'habits';
     if (/^\/(review|insights)(\/|$)/.test(pathname)) return 'review';
@@ -34,9 +31,8 @@ export const activeTab = (pathname: string): TabId | null => {
     return null;
 };
 
-// The floating add button only exists on Tâches and Boîte, like on Android.
-export const fabTarget = (pathname: string): 'task' | 'inbox' | null => {
-    if (/^\/inbox(\/|$)/.test(pathname)) return 'inbox';
+// The floating add button only exists on Tâches, like on Android.
+export const fabTarget = (pathname: string): 'task' | null => {
     if (/^\/(today|tasks|upcoming)(\/|$)/.test(pathname) || pathname === '/') {
         return 'task';
     }
@@ -64,13 +60,6 @@ const MobileBottomBar: React.FC = () => {
 
     // Each tab reads its page's own title.
     const destinations: Destination[] = [
-        {
-            id: 'inbox',
-            to: '/inbox',
-            label: t('inbox.title', 'Inbox'),
-            icon: <InboxIcon className={iconClass} />,
-            selectedIcon: <InboxSolid className={iconClass} />,
-        },
         {
             id: 'tasks',
             to: '/today',
@@ -114,11 +103,7 @@ const MobileBottomBar: React.FC = () => {
                     type="button"
                     className="cdm-fab"
                     data-testid="mobile-fab"
-                    aria-label={
-                        fab === 'inbox'
-                            ? t('navigation.quickInboxCapture', 'Quick capture')
-                            : t('mobileNav.newTask', 'New task')
-                    }
+                    aria-label={t('mobileNav.newTask', 'New task')}
                     onClick={() => openCapture(fab)}
                 >
                     <PlusIcon className="h-7 w-7" strokeWidth={2.2} />

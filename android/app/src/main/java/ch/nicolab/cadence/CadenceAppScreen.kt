@@ -23,13 +23,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Hexagon
-import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Hexagon
-import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.outlined.Insights
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -92,7 +90,6 @@ import ch.nicolab.cadence.settings.SettingsScreen
 import ch.nicolab.cadence.tasks.search.SearchEntry
 import ch.nicolab.cadence.tasks.search.SearchKind
 import ch.nicolab.cadence.tasks.ui.GoalsScreen
-import ch.nicolab.cadence.tasks.ui.InboxScreen
 import ch.nicolab.cadence.tasks.ui.triage.TriageRoute
 import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
@@ -105,13 +102,22 @@ import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.launch
 
-private enum class Tab(@param:StringRes val label: Int, val icon: ImageVector, val selectedIcon: ImageVector) {
-    INBOX(R.string.tab_inbox, Icons.Outlined.Inbox, Icons.Filled.Inbox),
+internal enum class Tab(@param:StringRes val label: Int, val icon: ImageVector, val selectedIcon: ImageVector) {
     TASKS(R.string.tab_tasks, Icons.Outlined.Checklist, Icons.Filled.Checklist),
     AGENDA(R.string.tab_agenda, Icons.Outlined.CalendarMonth, Icons.Filled.CalendarMonth),
     HABITS(R.string.tab_habits, Icons.Outlined.Hexagon, Icons.Filled.Hexagon),
     BILAN(R.string.tab_bilan, Icons.Outlined.Insights, Icons.Filled.Insights),
 }
+
+/**
+ * Onglet restauré par son nom. Un nom retiré (l'ancien onglet Inbox) ou inconnu retombe sur Tâches, sans planter.
+ */
+internal fun tabNamed(name: String?): Tab = Tab.entries.firstOrNull { it.name == name } ?: Tab.TASKS
+
+private val tabSaver = androidx.compose.runtime.saveable.Saver<Tab, String>(
+    save = { it.name },
+    restore = { tabNamed(it) },
+)
 
 @Composable
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -131,7 +137,8 @@ internal fun CadenceAppScreen(
     val busy by viewModel.isSaving.collectAsStateWithLifecycle()
     val saveError by viewModel.saveError.collectAsStateWithLifecycle()
     val healthConnectState by viewModel.healthConnectState.collectAsStateWithLifecycle()
-    var tab by rememberSaveable { mutableStateOf(Tab.TASKS) }
+    // Clé propre : l'ancienne valeur sérialisée (enum) n'est jamais relue.
+    var tab by rememberSaveable(key = "main-tab", stateSaver = tabSaver) { mutableStateOf(Tab.TASKS) }
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
@@ -267,7 +274,6 @@ internal fun CadenceAppScreen(
                 ) { current ->
                     when (current) {
                         null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
-                        Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
                         Tab.TASKS -> TasksScreen(
                             openTaskUid = opening.pending,
                             onTaskOpened = { opening = opening.consumed() },

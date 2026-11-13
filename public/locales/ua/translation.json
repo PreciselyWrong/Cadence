@@ -1157,6 +1157,7 @@
     "saturday": "Сб"
   },
   "inbox": {
+    "ideaSheet": "Елемент вхідних",
     "toSort": "Розібрати ({{count}})",
     "unsorted": {
       "noDate": "Без дати",

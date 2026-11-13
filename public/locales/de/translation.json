@@ -988,6 +988,7 @@
     "saturday": "Sa"
   },
   "inbox": {
+    "ideaSheet": "Eingangselement",
     "toSort": "Zu sortieren ({{count}})",
     "unsorted": {
       "noDate": "Ohne Datum",

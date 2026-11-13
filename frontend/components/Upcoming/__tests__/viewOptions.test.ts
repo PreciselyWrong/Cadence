@@ -28,7 +28,6 @@ describe('sanitizeViewOptions', () => {
         expect(result).toEqual({
             ...DEFAULT_VIEW_OPTIONS,
             groupBy: 'tag',
-            showInbox: false,
         });
     });
 

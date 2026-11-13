@@ -276,11 +276,6 @@ const ViewMenu: React.FC<ViewMenuProps> = ({
                             }
                         />
                         <Toggle
-                            label={t('upcoming.showInbox', 'Inbox column')}
-                            checked={options.showInbox}
-                            onChange={(showInbox) => update({ showInbox })}
-                        />
-                        <Toggle
                             label={t('upcoming.showCalendar', 'Show calendar')}
                             checked={options.showCalendar}
                             onChange={(showCalendar) =>

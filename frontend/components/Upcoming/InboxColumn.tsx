@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useDraggable } from '@dnd-kit/core';
 import {
     SortableContext,
@@ -17,6 +17,7 @@ import { DayLine, lineFromDue } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
 import { taskCardClass } from '../Shared/task/TaskCardBody';
 import { plainPreview } from '../Shared/task/plainText';
+import TriageEntry from '../Inbox/TriageEntry';
 
 export interface InboxDragData {
     kind: 'inbox';
@@ -116,6 +117,8 @@ export interface InboxColumnProps {
     onOpenTask?(line: DayLine): void;
     onToggleTask?(line: DayLine): void;
     onToggleSubtask?(subtask: Task): void;
+    // An opened idea became a task waiting in « Tâches à classer ».
+    onIdeaToTask?(): void;
     // A thin bar with the inbox icon and the count instead of the column.
     collapsed?: boolean;
     onCollapsedChange?(collapsed: boolean): void;
@@ -140,6 +143,9 @@ const AddTaskButton: React.FC<{
         </button>
     );
 };
+
+// Loaded on the first opened idea: its panel brings the note editor along.
+const InboxIdeaSheet = lazy(() => import('../Inbox/InboxIdeaSheet'));
 
 const COLLAPSED_KEY = 'upcoming.inboxCollapsed';
 
@@ -173,7 +179,7 @@ const noop = () => undefined;
 /**
  * The inbox, pinned at the left of the board: the unsorted tasks first, as
  * task cards (a click opens the sheet), then the open ideas (a click opens
- * the inbox page). Both are dragged onto a day or a horizon to plan them.
+ * the idea's decision panel). Both are dragged onto a day or a horizon to plan them.
  * Its + creates a task. Collapsed, it is a 44 px bar that expands it again.
  */
 const InboxColumn: React.FC<InboxColumnProps> = ({
@@ -186,12 +192,15 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
     onOpenTask = noop,
     onToggleTask = noop,
     onToggleSubtask = noop,
+    onIdeaToTask,
     collapsed = false,
     onCollapsedChange,
 }) => {
     const { t } = useTranslation();
-    const navigate = useNavigate();
     const open = openInboxItems(items);
+    const [openIdeaUid, setOpenIdeaUid] = useState<string | null>(null);
+    // A decided or deleted idea leaves the store, and its panel with it.
+    const openIdea = open.find((item) => item.uid === openIdeaUid) ?? null;
     const lines = tasks.map((task) => lineFromDue(task, today));
     const count = lines.length + open.length;
     const title = t('sidebar.inbox', 'Inbox');
@@ -309,6 +318,18 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                 <p className="text-xs text-surface-on-variant">
                     {t('upcoming.inboxHint', 'Drag onto a day to plan it')}
                 </p>
+                <div className="-ml-2.5 mt-1 flex flex-wrap gap-0.5 empty:hidden">
+                    <TriageEntry />
+                    {open.length > 0 && (
+                        <Link
+                            to="/inbox?triage=1"
+                            data-testid="inbox-triage-start"
+                            className="inline-flex h-7 items-center rounded-lg px-2.5 text-body-m font-medium text-surface-on-variant hover:bg-surface-high hover:text-surface-on focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                        >
+                            {t('inbox.triage.start', 'Triage')}
+                        </Link>
+                    )}
+                </div>
             </header>
             <div
                 role="list"
@@ -380,7 +401,7 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                     <InboxCard
                         key={item.uid}
                         item={item}
-                        onOpen={() => navigate('/inbox')}
+                        onOpen={() => setOpenIdeaUid(item.uid ?? null)}
                     />
                 ))}
                 {!loading && count === 0 && (
@@ -389,6 +410,15 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                     </p>
                 )}
             </div>
+            {openIdeaUid !== null && (
+                <Suspense fallback={null}>
+                    <InboxIdeaSheet
+                        item={openIdea}
+                        onClose={() => setOpenIdeaUid(null)}
+                        onTaskCaptured={onIdeaToTask}
+                    />
+                </Suspense>
+            )}
         </section>
     );
 };

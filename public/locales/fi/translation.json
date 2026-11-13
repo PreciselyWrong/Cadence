@@ -1843,6 +1843,7 @@
     "projectNameTooLong": "Projektin nimen enimmäispituus on {{max}} merkkiä"
   },
   "inbox": {
+    "ideaSheet": "Saapuneet-kohde",
     "toSort": "Lajiteltavaa ({{count}})",
     "unsorted": {
       "noDate": "Ilman päivää",

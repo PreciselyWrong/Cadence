@@ -22,6 +22,18 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
+// The real sheet loads projects and areas; the column only decides which
+// idea it shows.
+jest.mock('../../Inbox/InboxIdeaSheet', () => ({
+    __esModule: true,
+    default: ({ item }: { item: { content: string } | null }) =>
+        item ? <div data-testid="idea-sheet">{item.content}</div> : null,
+}));
+jest.mock('../../Inbox/TriageEntry', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 const item = (fields: Partial<InboxItem>): InboxItem =>
     ({
         uid: 'u1',
@@ -255,12 +267,36 @@ describe('InboxColumn', () => {
         );
     });
 
-    it('opens the inbox page when a card is clicked', () => {
+    it('opens the idea panel in place when a card is clicked', async () => {
+        renderColumn([
+            item({ uid: 'a', content: 'Open me' }),
+            item({ uid: 'b', content: 'Not me' }),
+        ]);
+        expect(screen.queryByTestId('idea-sheet')).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getAllByTestId('inbox-card')[0]);
+
+        expect(await screen.findByTestId('idea-sheet')).toHaveTextContent(
+            'Open me'
+        );
+        expect(screen.queryByTestId('location')).not.toBeInTheDocument();
+    });
+
+    it('offers the one-at-a-time triage while ideas wait', () => {
         renderColumn([item({ uid: 'a', content: 'Open me' })]);
 
-        fireEvent.click(screen.getByTestId('inbox-card'));
+        expect(screen.getByTestId('inbox-triage-start')).toHaveAttribute(
+            'href',
+            '/inbox?triage=1'
+        );
+    });
 
-        expect(screen.getByTestId('location')).toHaveTextContent('/inbox');
+    it('offers no triage without ideas', () => {
+        renderColumn([], false, [task('t1', 'Unsorted')]);
+
+        expect(
+            screen.queryByTestId('inbox-triage-start')
+        ).not.toBeInTheDocument();
     });
 });
 

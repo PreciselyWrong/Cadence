@@ -166,7 +166,7 @@ const CommandCenter: React.FC<CommandCenterProps> = ({
                 window.dispatchEvent(new Event('openUniversalSearch')),
             help: openHelp,
             'go-today': () => navigate('/today'),
-            'go-inbox': () => navigate('/inbox'),
+            'go-inbox': () => navigate('/upcoming'),
             'go-upcoming': () => navigate('/upcoming'),
             'go-calendar': () => navigate('/calendar'),
             'go-projects': () => navigate('/projects'),

@@ -90,6 +90,11 @@ jest.mock('../../../utils/calendarFeedsService', () => ({
     fetchCalendarEvents: jest.fn(async () => ({ events: [] })),
 }));
 
+// « À trier (N) » reads the triage queue from the server.
+jest.mock('../../Inbox/TriageEntry', () => ({
+    __esModule: true,
+    default: () => null,
+}));
 jest.mock('../../../utils/inboxService', () => ({
     loadInboxItemsToStore: jest.fn(async () => undefined),
     processInboxItemWithStore: jest.fn(async () => ({})),
@@ -653,14 +658,14 @@ describe('UpcomingBoard', () => {
         );
     });
 
-    it('hides the inbox column when the view says so', async () => {
+    it('keeps the inbox column when an old view hid it', async () => {
         localStorage.setItem(
             'upcoming.viewOptions',
             JSON.stringify({ showInbox: false })
         );
         renderBoard();
         await screen.findAllByTestId('upcoming-column');
-        expect(screen.queryByTestId('inbox-column')).not.toBeInTheDocument();
+        expect(screen.getByTestId('inbox-column')).toBeInTheDocument();
     });
 
     it('shows the inbox pinned as the first column', async () => {

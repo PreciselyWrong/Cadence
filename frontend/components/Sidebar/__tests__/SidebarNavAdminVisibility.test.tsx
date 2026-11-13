@@ -102,7 +102,6 @@ describe('SidebarNav link order and visibility', () => {
         renderNav();
 
         expect(renderedLinks()).toEqual([
-            'sidebar-nav-inbox',
             'sidebar-nav-today',
             'sidebar-nav-upcoming',
             'sidebar-nav-calendar',
@@ -116,7 +115,7 @@ describe('SidebarNav link order and visibility', () => {
         setSettings({ calendarEnabled: true, hasCollaborators: false });
         act(() => {
             useStore.getState().userSettingsStore.setSidebarOrder({
-                linkOrder: ['allTasks', 'today', 'inbox'],
+                linkOrder: ['allTasks', 'today', 'upcomingTasks'],
             });
         });
 
@@ -125,12 +124,11 @@ describe('SidebarNav link order and visibility', () => {
         expect(renderedLinks().slice(0, 3)).toEqual([
             'sidebar-nav-tasks',
             'sidebar-nav-today',
-            'sidebar-nav-inbox',
+            'sidebar-nav-upcoming',
         ]);
     });
 
     it.each([
-        ['inbox', 'Inbox'],
         ['today', 'Today'],
         ['allTasks', 'All Tasks'],
         ['upcomingTasks', 'Upcoming'],

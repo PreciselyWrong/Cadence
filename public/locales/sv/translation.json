@@ -1843,6 +1843,7 @@
     "projectNameTooLong": "Projektnamnet får vara högst {{max}} tecken"
   },
   "inbox": {
+    "ideaSheet": "Inkorgsobjekt",
     "toSort": "Att sortera ({{count}})",
     "unsorted": {
       "noDate": "Utan datum",

@@ -17,7 +17,6 @@ Four rows at the top of the panel. By default only Today and Inbox show a count 
 | Today | `/today` | Open tasks due today (not done, cancelled or archived; subtasks excluded) |
 | Tomorrow | `/tasks?type=tomorrow` | Open tasks due tomorrow, same rule as the list |
 | Next 7 days | `/upcoming` | Open tasks in the 7-day Upcoming view |
-| Inbox | `/inbox` | Inbox items, the number the Inbox page shows |
 
 - Counts come from `GET /api/tasks/smart-counts` (`{today, tomorrow, next7}`). Tomorrow and Next 7 days run the same filter as their list; Today counts due-today tasks only, because the Today page mixes plan, progress and due sections.
 - The counts refresh on every navigation.

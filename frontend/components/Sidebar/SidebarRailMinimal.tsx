@@ -11,7 +11,6 @@ import {
     EllipsisHorizontalIcon,
     FireIcon,
     FlagIcon,
-    InboxIcon,
     ListBulletIcon,
     QueueListIcon,
     RectangleStackIcon,
@@ -31,7 +30,6 @@ import type { RailId, RailPlace } from '../../utils/minimalSidebar';
 
 type RailItemId =
     | 'today'
-    | 'inbox'
     | 'calendar'
     | 'notes'
     | 'habits'
@@ -65,14 +63,6 @@ const RAIL_ITEMS: Record<RailItemId, RailItem> = {
         titleKey: 'sidebar.today',
         title: 'Today',
         Icon: SunIcon,
-    },
-    inbox: {
-        id: 'inbox',
-        path: '/inbox',
-        match: /^\/inbox$/,
-        titleKey: 'sidebar.inbox',
-        title: 'Inbox',
-        Icon: InboxIcon,
     },
     calendar: {
         id: 'calendar',

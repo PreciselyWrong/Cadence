@@ -1840,6 +1840,7 @@
     "projectNameTooLong": "Tên dự án phải có tối đa {{max}} ký tự"
   },
   "inbox": {
+    "ideaSheet": "Mục hộp thư đến",
     "toSort": "Cần sắp xếp ({{count}})",
     "unsorted": {
       "noDate": "Không có ngày",

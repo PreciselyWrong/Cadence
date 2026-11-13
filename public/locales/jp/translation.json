@@ -2166,6 +2166,7 @@
     "sunday": "日"
   },
   "inbox": {
+    "ideaSheet": "受信箱の項目",
     "toSort": "整理する項目（{{count}}）",
     "unsorted": {
       "noDate": "日付なし",

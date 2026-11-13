@@ -9,7 +9,6 @@ import {
     FireIcon,
     FlagIcon,
     FolderIcon,
-    InboxIcon,
     ListBulletIcon,
     PuzzlePieceIcon,
     QueueListIcon,
@@ -327,7 +326,6 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
     const pluginItems = usePluginMenuStore((state) => state.items);
 
     const linkRows: Row[] = [
-        { id: 'inbox', label: t('sidebar.inbox', 'Inbox'), Icon: InboxIcon },
         {
             id: 'today',
             label: t('sidebar.today', 'Today'),

@@ -1840,6 +1840,7 @@
     "projectNameTooLong": "项目名称不能超过 {{max}} 个字符"
   },
   "inbox": {
+    "ideaSheet": "收件箱项目",
     "toSort": "待整理 ({{count}})",
     "unsorted": {
       "noDate": "无日期",

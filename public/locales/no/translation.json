@@ -1844,6 +1844,7 @@
     "projectNameTooLong": "Prosjektnavnet kan være høyst {{max}} tegn"
   },
   "inbox": {
+    "ideaSheet": "Innboks-element",
     "toSort": "Å sortere ({{count}})",
     "unsorted": {
       "noDate": "Uten dato",

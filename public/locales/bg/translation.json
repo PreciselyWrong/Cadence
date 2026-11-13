@@ -1841,6 +1841,7 @@
     "projectNameTooLong": "Името на проекта трябва да е до {{max}} знака"
   },
   "inbox": {
+    "ideaSheet": "Елемент от входящи",
     "toSort": "За подреждане ({{count}})",
     "unsorted": {
       "noDate": "Без дата",

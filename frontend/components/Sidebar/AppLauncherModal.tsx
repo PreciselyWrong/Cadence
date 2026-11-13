@@ -12,7 +12,6 @@ import {
     FireIcon,
     FlagIcon,
     FolderIcon,
-    InboxIcon,
     LightBulbIcon,
     ListBulletIcon,
     QueueListIcon,
@@ -82,15 +81,6 @@ const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
 
     const groups = useMemo(() => {
         const all: Array<LauncherEntry | false> = [
-            {
-                id: 'inbox',
-                group: 'links',
-                orderKey: 'inbox',
-                path: '/inbox',
-                title: t('sidebar.inbox', 'Inbox'),
-                Icon: InboxIcon,
-                gradient: 'from-sky-400 to-blue-600',
-            },
             {
                 id: 'today',
                 group: 'links',

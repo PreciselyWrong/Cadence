@@ -69,6 +69,8 @@ interface InboxItemDetailProps {
     onAddToProject?: (inboxItemUid: string, draft: LinkDraft) => Promise<void>;
     projects: Project[];
     isNew?: boolean;
+    // Opens straight into its decision panel (Plan's idea sheet).
+    autoOpen?: boolean;
     onEditingChange?: (editing: boolean) => void;
 }
 
@@ -83,6 +85,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     onAddToProject,
     projects,
     isNew = false,
+    autoOpen = false,
     onEditingChange,
 }) => {
     const { t } = useTranslation();
@@ -90,7 +93,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         tagsStore: { tags },
     } = useStore();
     const [loading, setLoading] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(autoOpen);
     // The edit box opens with the cleaned title (tokens like #tag, ~area,
     // dates and @person removed). Null until the analysis returns. The
     // removed words are carried: shown as badges and kept when saved.

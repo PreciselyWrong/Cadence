@@ -44,7 +44,7 @@ The lightning chip in the navbar reads "Capture"; its key (`C`) is in the toolti
 
 ## Inbox triage
 
-Inbox, Triage button (or `/inbox?triage=1`, or "Triage the inbox" in the palette). One item at a time:
+Plan's inbox column, « Trier » (or `/inbox?triage=1`, or "Triage the inbox" in the palette). One item at a time:
 
 | Key | Action |
 |---|---|

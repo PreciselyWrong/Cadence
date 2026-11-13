@@ -1840,6 +1840,7 @@
     "projectNameTooLong": "Proje adı en fazla {{max}} karakter olabilir"
   },
   "inbox": {
+    "ideaSheet": "Gelen kutusu öğesi",
     "toSort": "Sıralanacak ({{count}})",
     "unsorted": {
       "noDate": "Tarihsiz",

@@ -1840,6 +1840,7 @@
     "projectNameTooLong": "Nama proyek maksimal {{max}} karakter"
   },
   "inbox": {
+    "ideaSheet": "Item kotak masuk",
     "toSort": "Untuk dipilah ({{count}})",
     "unsorted": {
       "noDate": "Tanpa tanggal",

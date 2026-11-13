@@ -1865,6 +1865,7 @@
     "projectNameTooLong": "Ime projekta sme imeti največ {{max}} znakov"
   },
   "inbox": {
+    "ideaSheet": "Inbox item",
     "toSort": "Za razvrstitev ({{count}})",
     "unsorted": {
       "noDate": "Brez datuma",

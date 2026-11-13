@@ -2186,6 +2186,7 @@
     "nextMonth": "el próximo mes"
   },
   "inbox": {
+    "ideaSheet": "Elemento de la bandeja de entrada",
     "toSort": "Por ordenar ({{count}})",
     "unsorted": {
       "noDate": "Sin fecha",

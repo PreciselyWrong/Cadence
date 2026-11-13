@@ -52,7 +52,7 @@ import TodayView from './components/Today/TodayView';
 import TaskDetails from './components/Task/TaskDetails';
 import TaskLinkRedirect from './components/Task/TaskLinkRedirect';
 import LoadingScreen from './components/Shared/LoadingScreen';
-import InboxItems from './components/Inbox/InboxItems';
+import InboxRoute from './components/Inbox/InboxRoute';
 import Habits from './components/Habits/Habits';
 import HabitDetails from './components/Habits/HabitDetails';
 import EisenhowerMatrix from './components/Eisenhower/EisenhowerMatrix';
@@ -81,7 +81,9 @@ import { RecurringScopeDialogHost } from './components/Task/RecurringScopeDialog
 import {
     clearSharedText,
     hasPendingSharedText,
+    takeSharedText,
 } from './utils/shareTargetService';
+import { openCapture } from './utils/captureUi';
 const PublicNotePage = lazy(
     () => import('./components/PublicNote/PublicNotePage')
 );
@@ -318,13 +320,14 @@ const App: React.FC = () => {
         if (isSignedIn) void usePluginMenuStore.getState().load();
     }, [isSignedIn]);
 
+    // A share from the OS sheet opens the capture box prefilled, once signed
+    // in, so the user can still edit it or pick task, note or project.
     useEffect(() => {
-        if (!currentUser) return;
-        if (location.pathname === '/inbox') return;
-        if (!hasPendingSharedText()) return;
-
-        navigate('/inbox', { replace: true });
-    }, [currentUser, location.pathname, navigate]);
+        if (!currentUser || !hasPendingSharedText()) return;
+        const text = takeSharedText();
+        clearSharedText();
+        if (text) openCapture('inbox', null, text);
+    }, [currentUser]);
 
     // The welcome page is done with: Today opens.
     const finishWelcome = (result: StarterResult) => {
@@ -339,15 +342,6 @@ const App: React.FC = () => {
         setCurrentUser(user);
         navigate('/today', { replace: true });
     };
-
-    // The Inbox keeps offering a claimed share while the user stays on it (the
-    // page remounts whenever Layout shows its first-load spinner), so the claim
-    // is released on the first navigation away from it instead.
-    useEffect(() => {
-        if (location.pathname !== '/inbox') {
-            clearSharedText();
-        }
-    }, [location.pathname]);
 
     useEffect(() => {
         if (i18n.isInitialized) {
@@ -627,7 +621,7 @@ const App: React.FC = () => {
                                 element={<SummaryPage />}
                             />
                             <Route path="/review" element={<ReviewPage />} />
-                            <Route path="/inbox" element={<InboxItems />} />
+                            <Route path="/inbox" element={<InboxRoute />} />
                             <Route path="/habits" element={<Habits />} />
                             <Route
                                 path="/plugins/:id"

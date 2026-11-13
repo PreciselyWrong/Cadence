@@ -1,5 +1,7 @@
 # Inbox Page - Behavior Rules
 
+> **Since 2026-11-13 there is no Inbox page.** The inbox lives in Plan's left column (`/upcoming`, `frontend/components/Upcoming/InboxColumn.tsx`): the unsorted tasks (« Tâches à classer »), then the open ideas. A click on an idea opens its decision panel in place (`Inbox/InboxIdeaSheet.tsx`, the same `InboxItemDetail` panel described below, with its actions in `Inbox/useInboxIdeaActions.tsx`); ideas and tasks are dragged onto a day or a horizon to plan them. The column header holds « À trier (N) » and, while ideas wait, « Trier » (the one-at-a-time triage, still at `/inbox?triage=1`). `/inbox` redirects to `/upcoming`; a share from the OS sheet opens the capture box prefilled. The column polls for new items every 15 s (Telegram toast). The rules below on capture, parsing and the decision panel still apply; what they say about the page's list, its « Recently captured » section and its paging no longer does.
+
 This document explains how the Inbox page works in Cadence from a user behavior perspective. For technical implementation details, see the backend code in `/backend/modules/inbox/` and frontend components in `/frontend/components/Inbox/`.
 
 ---

@@ -494,7 +494,6 @@
     <string name="alcohol_stats_paused_day">Habitude en pause</string>
     <string name="alcohol_stats_unobserved_day">Hors période suivie</string>
     <string name="alcohol_stats_today_clear">Aujourd’hui, aucune consommation notée</string>
-    <string name="tab_inbox">Inbox</string>
     <string name="tab_agenda">Agenda</string>
     <string name="tab_bilan">Bilan</string>
     <string name="agenda_today">Aujourd’hui</string>

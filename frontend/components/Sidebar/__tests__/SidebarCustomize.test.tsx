@@ -280,7 +280,7 @@ describe('Minimal sidebar customization', () => {
         ]);
     });
 
-    it('moves Inbox first for a list saved in the old default order', () => {
+    it('drops a stored Inbox row, left over from before Inbox left the sidebar', () => {
         setUp('minimal', {
             smartLists: [
                 { key: 'today', visible: true, showCount: true },
@@ -294,10 +294,7 @@ describe('Minimal sidebar customization', () => {
             <SidebarSmartLists handleNavClick={jest.fn()} location={location} />
         );
 
-        expect(smartListOrder()).toEqual([
-            'sidebar-smart-inbox',
-            'sidebar-smart-today',
-        ]);
+        expect(smartListOrder()).toEqual(['sidebar-smart-today']);
     });
 
     it('restores a saved rail placement from the profile', () => {

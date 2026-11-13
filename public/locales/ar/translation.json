@@ -1864,6 +1864,7 @@
     "projectNameTooLong": "يجب ألا يتجاوز اسم المشروع {{max}} حرفًا"
   },
   "inbox": {
+    "ideaSheet": "عنصر البريد الوارد",
     "toSort": "للفرز ({{count}})",
     "unsorted": {
       "noDate": "بدون تاريخ",

@@ -120,7 +120,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
     const handleDropdownSelect = (type: string) => {
         switch (type) {
             case 'Inbox':
-                navigate('/inbox');
+                navigate('/upcoming');
                 if (window.innerWidth < 1024) {
                     setIsSidebarOpen(false);
                 }

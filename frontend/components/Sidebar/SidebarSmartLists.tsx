@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Location } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-    CalendarDaysIcon,
-    InboxIcon,
-    SunIcon,
-} from '@heroicons/react/24/outline';
+import { CalendarDaysIcon, SunIcon } from '@heroicons/react/24/outline';
 import { useStore } from '../../store/useStore';
-import { loadInboxItemsToStore } from '../../utils/inboxService';
 import {
     fetchSmartTaskCounts,
     SmartTaskCounts,
@@ -34,20 +29,12 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
 }) => {
     const { t } = useTranslation();
     const [counts, setCounts] = useState<SmartTaskCounts | null>(null);
-    const inboxCount = useStore((state) => state.inboxStore.pagination.total);
     // Which lists show, in what order, and which show a count badge.
     const config = useStore(
         (state) => state.userSettingsStore.sidebarMinimal.smartLists
     );
-    // Counts are only fetched when a visible badge needs one (Inbox has its
-    // own count in the store).
-    const needsCounts = config.some(
-        (item) => item.visible && item.showCount && item.key !== 'inbox'
-    );
-
-    useEffect(() => {
-        loadInboxItemsToStore(false).catch(console.error);
-    }, []);
+    // Counts are only fetched when a visible badge needs one.
+    const needsCounts = config.some((item) => item.visible && item.showCount);
 
     // Refetch on every navigation so a task finished on another page is
     // reflected once the user moves on.
@@ -80,14 +67,6 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
             icon: <CalendarDaysIcon className="h-[16px] w-[16px]" />,
             count: counts?.next7,
             isActive: location.pathname === '/upcoming',
-        },
-        {
-            id: 'inbox',
-            path: '/inbox',
-            title: t('sidebar.inbox', 'Inbox'),
-            icon: <InboxIcon className="h-[16px] w-[16px]" />,
-            count: inboxCount,
-            isActive: location.pathname === '/inbox',
         },
     ];
 

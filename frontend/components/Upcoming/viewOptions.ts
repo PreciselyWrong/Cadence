@@ -21,7 +21,6 @@ export interface PlanViewOptions {
     groupBy: GroupBy;
     sortBy: SortBy;
     showCompleted: boolean;
-    showInbox: boolean;
     showCalendar: boolean;
     calendarSpan: CalendarSpan;
     filters: PlanFilters;
@@ -38,7 +37,6 @@ export const DEFAULT_VIEW_OPTIONS: PlanViewOptions = {
     groupBy: 'none',
     sortBy: 'plan',
     showCompleted: true,
-    showInbox: true,
     showCalendar: true,
     calendarSpan: 1,
     filters: NO_FILTERS,
@@ -53,7 +51,6 @@ const ALLOWED: { [K in ChoiceKey]: readonly PlanViewOptions[K][] } = {
     groupBy: ['none', 'project', 'priority', 'tag'],
     sortBy: ['plan', 'time', 'priority', 'name', 'project'],
     showCompleted: [true, false],
-    showInbox: [true, false],
     showCalendar: [true, false],
     calendarSpan: [1, 3, 7],
 };

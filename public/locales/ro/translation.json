@@ -1849,6 +1849,7 @@
     "projectNameTooLong": "Numele proiectului trebuie să aibă cel mult {{max}} caractere"
   },
   "inbox": {
+    "ideaSheet": "Element din inbox",
     "toSort": "De sortat ({{count}})",
     "unsorted": {
       "noDate": "Fără dată",

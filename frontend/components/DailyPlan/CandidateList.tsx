@@ -585,7 +585,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                     ))}
                     {candidates.inbox_count > candidates.inbox.length && (
                         <a
-                            href="/inbox"
+                            href="/upcoming"
                             className="px-3 pt-1 text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300"
                         >
                             {t(

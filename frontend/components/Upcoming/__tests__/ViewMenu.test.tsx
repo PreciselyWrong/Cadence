@@ -135,7 +135,9 @@ describe('ViewMenu', () => {
         fireEvent.change(screen.getByLabelText('Sort by'), {
             target: { value: 'name' },
         });
-        fireEvent.click(screen.getByRole('checkbox', { name: 'Inbox column' }));
+        fireEvent.click(
+            screen.getByRole('checkbox', { name: 'Show calendar' })
+        );
 
         fireEvent.click(screen.getByRole('button', { name: 'Reset' }));
 

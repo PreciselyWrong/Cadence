@@ -1865,6 +1865,7 @@
     "projectNameTooLong": "Название проекта не должно превышать {{max}} символов"
   },
   "inbox": {
+    "ideaSheet": "Элемент входящих",
     "toSort": "Разобрать ({{count}})",
     "unsorted": {
       "noDate": "Без даты",

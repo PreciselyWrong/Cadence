@@ -5,7 +5,6 @@ import {
     HomeIcon,
     FolderIcon,
     DocumentTextIcon,
-    InboxIcon,
     ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 
@@ -27,15 +26,6 @@ const NotFound: React.FC = () => {
             description: t(
                 'notFound.projectsDescription',
                 'Browse your projects'
-            ),
-        },
-        {
-            name: t('navigation.inbox', 'Inbox'),
-            href: '/inbox',
-            icon: InboxIcon,
-            description: t(
-                'notFound.inboxDescription',
-                'Check your inbox items'
             ),
         },
         {

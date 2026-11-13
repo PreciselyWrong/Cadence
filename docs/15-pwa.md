@@ -88,15 +88,13 @@ Once installed, Cadence appears in the OS share sheet. Sharing a link or text fr
    - composes one string from `title`/`text`/`url`, dropping empty and duplicate values (Chrome on Android sends the same URL as both `text` and `url`)
    - stores it in `sessionStorage` under `tududi_pending_share` with a timestamp
    - rewrites the URL with `history.replaceState()` to strip the share params, so a reload doesn't replay the same share (other params such as `?loaded=` are preserved)
-3. `InboxItems` calls `takeSharedText()` on mount and passes the result as `initialValue` to `QuickCaptureInput`. The first call moves the payload out of `sessionStorage` and holds it in module scope for the rest of the page load, so every call returns the same text; `App.tsx` releases it with `clearSharedText()` on the first navigation away from `/inbox`.
-
-   The claim has to survive remounts: `Layout` swaps the routed page out for a full-screen spinner while its stores run their **first** fetch, so `InboxItems` mounts, unmounts and mounts again on every cold start — which is exactly what a launch from the share sheet is. A read that emptied `sessionStorage` on the first, discarded mount left the surviving composer blank every time.
+3. Once a user is signed in, `App.tsx` takes the text (`takeSharedText()`, then `clearSharedText()`) and opens the global capture box prefilled with it (`openCapture('inbox', null, text)`). `/inbox` itself redirects to Plan (`/upcoming`), where the inbox lives since 2026-11-13. The capture box is a store, not a page, so the spinner `Layout` shows on a cold start cannot drop the text.
 
 The shared content is **prefilled, not auto-saved** — the user can edit it and still choose where it goes (a shared link alone gets Inbox / Task / Links / Note, `docs/04-inbox-page.md`), and the existing smart parsing (URL preview, `#tag`, `+Project`, task/note suggestion) applies as if they had typed it.
 
 ### Why sessionStorage instead of reading the URL directly
 
-If the session has expired, `/inbox` is redirected to `/login` by `App.tsx` and the query params are lost. Stashing the payload first means the share survives the login round-trip: after authentication `App.tsx` sees `hasPendingSharedText()` and navigates to `/inbox`. Pending shares older than 10 minutes are discarded so a stale payload can't hijack a later navigation.
+If the session has expired, `/inbox` is redirected to `/login` by `App.tsx` and the query params are lost. Stashing the payload first means the share survives the login round-trip: after authentication `App.tsx` sees `hasPendingSharedText()` and opens the capture box with it. Pending shares older than 10 minutes are discarded so a stale payload can't hijack a later navigation.
 
 ### Limitations
 

@@ -2149,6 +2149,7 @@
     "projectNameTooLong": "Názov projektu môže mať najviac {{max}} znakov"
   },
   "inbox": {
+    "ideaSheet": "Inbox item",
     "toSort": "Na roztriedenie ({{count}})",
     "unsorted": {
       "noDate": "Bez dátumu",

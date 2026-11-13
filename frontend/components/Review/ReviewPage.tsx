@@ -777,7 +777,7 @@ const ReviewPage: React.FC = () => {
     const openRow = (row: Row) => {
         if (row.kind === 'project')
             navigate(`/project/${row.item.project.uid}`);
-        else if (row.kind === 'inbox') navigate('/inbox');
+        else if (row.kind === 'inbox') navigate('/upcoming');
         else openTaskDetails(row.item.task.uid as string);
     };
 
@@ -991,7 +991,7 @@ const ReviewPage: React.FC = () => {
                                 {step === 'undecided' && total > 0 && (
                                     <p className="mb-2 text-xs text-surface-on-variant">
                                         <Link
-                                            to="/inbox"
+                                            to="/upcoming"
                                             className="underline-offset-2 hover:underline"
                                         >
                                             {t(

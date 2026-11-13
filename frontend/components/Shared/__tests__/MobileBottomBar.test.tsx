@@ -19,7 +19,7 @@ jest.mock('react-router-dom', () => ({
 
 describe('mobile bottom bar', () => {
     it('maps routes to the Android tabs', () => {
-        expect(activeTab('/inbox')).toBe('inbox');
+        expect(activeTab('/inbox')).toBeNull();
         expect(activeTab('/today')).toBe('tasks');
         expect(activeTab('/project/abc-home')).toBe('tasks');
         expect(activeTab('/calendar')).toBe('agenda');
@@ -28,9 +28,9 @@ describe('mobile bottom bar', () => {
         expect(activeTab('/profile')).toBeNull();
     });
 
-    it('offers the floating add button only on Tâches and Boîte', () => {
+    it('offers the floating add button only on Tâches', () => {
         expect(fabTarget('/today')).toBe('task');
-        expect(fabTarget('/inbox')).toBe('inbox');
+        expect(fabTarget('/inbox')).toBeNull();
         expect(fabTarget('/habits')).toBeNull();
         expect(fabTarget('/calendar')).toBeNull();
     });

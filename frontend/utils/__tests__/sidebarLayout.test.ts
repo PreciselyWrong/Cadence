@@ -72,11 +72,15 @@ describe('sortByOrder', () => {
 describe('plugin entries in the sidebar order', () => {
     it('keeps a plugin entry in its saved place', () => {
         const result = resolveOrder(
-            ['inbox', 'plugin:hermes', 'today'],
+            ['calendar', 'plugin:hermes', 'today'],
             DEFAULT_LINK_ORDER
         );
 
-        expect(result.slice(0, 3)).toEqual(['inbox', 'plugin:hermes', 'today']);
+        expect(result.slice(0, 3)).toEqual([
+            'calendar',
+            'plugin:hermes',
+            'today',
+        ]);
         expect(result).toHaveLength(DEFAULT_LINK_ORDER.length + 1);
     });
 

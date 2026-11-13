@@ -56,8 +56,8 @@ describe('AppLauncherModal', () => {
         renderModal();
 
         expect(screen.getByRole('dialog')).toBeInTheDocument();
+        expect(screen.queryByTestId('app-launcher-inbox')).toBeNull();
         for (const id of [
-            'inbox',
             'projects',
             'areas',
             'goals',
@@ -138,7 +138,6 @@ describe('AppLauncherModal', () => {
             renderModal({ isAdmin: true });
 
             expect(idsIn('links')).toEqual([
-                'inbox',
                 'today',
                 'upcoming',
                 'calendar',

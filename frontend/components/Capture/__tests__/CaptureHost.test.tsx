@@ -254,7 +254,7 @@ describe('CaptureHost', () => {
         expect(screen.queryByTestId('capture-goal')).not.toBeInTheDocument();
     });
 
-    it.each(['/inbox', '/task/abc', '/note/xyz'])(
+    it.each(['/task/abc', '/note/xyz'])(
         'keeps the phone button out of the way on %s',
         (path) => {
             renderHost(path);

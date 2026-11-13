@@ -1847,6 +1847,7 @@
     "projectNameTooLong": "Le nom du projet ne doit pas dépasser {{max}} caractères"
   },
   "inbox": {
+    "ideaSheet": "Élément de la boîte de réception",
     "toSort": "À trier ({{count}})",
     "unsorted": {
       "noDate": "Sans date",

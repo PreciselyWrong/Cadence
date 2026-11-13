@@ -1865,6 +1865,7 @@
     "projectNameTooLong": "Nazwa projektu może mieć maksymalnie {{max}} znaków"
   },
   "inbox": {
+    "ideaSheet": "Element skrzynki odbiorczej",
     "toSort": "Do uporządkowania ({{count}})",
     "unsorted": {
       "noDate": "Bez daty",

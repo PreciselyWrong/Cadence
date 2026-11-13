@@ -129,9 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         if (panelShows('smartLists')) {
             for (const item of smartLists) {
                 if (!item.visible) continue;
-                if (item.key === 'today' || item.key === 'inbox') {
-                    ids.push(item.key);
-                }
+                if (item.key === 'today') ids.push(item.key);
             }
         }
         if (panelShows('areas')) ids.push('areas');

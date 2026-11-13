@@ -14,9 +14,9 @@ import {
 import { useStore } from '../../store/useStore';
 import { useScreenCovered } from './useScreenCovered';
 
-// The Inbox page has this same box inline, and the editors need the screen
-// for typing, so the phone button stays out of their way.
-const PHONE_BUTTON_HIDDEN_ON = ['/inbox', '/task/', '/note/'];
+// The editors need the screen for typing, so the phone button stays out of
+// their way.
+const PHONE_BUTTON_HIDDEN_ON = ['/task/', '/note/'];
 
 const NAVBAR_BUTTON = '[data-testid="capture-navbar-button"]';
 const PHONE_BUTTON = '[data-testid="capture-phone-button"]';

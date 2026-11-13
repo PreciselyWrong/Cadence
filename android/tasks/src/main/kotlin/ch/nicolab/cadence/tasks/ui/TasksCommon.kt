@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.ui
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -258,4 +259,30 @@ internal fun LazyListScope.taskRows(
             belowRow?.invoke(task)
         }
     }
+}
+
+/** Bandeau « Annuler » des suppressions de notes, d'idées et d'objectifs, sur l'écran qui les montre. */
+@Composable
+internal fun DeletionUndoEffect(viewModel: TasksViewModel, snackbar: SnackbarHostState) {
+    val context = LocalContext.current
+    val undoLabel = stringResource(R.string.tasks_undo)
+    LaunchedEffect(viewModel) {
+        viewModel.deletions.collect { deletion ->
+            snackbar.currentSnackbarData?.dismiss()
+            launch {
+                val result = snackbar.showSnackbar(
+                    message = deletionMessage(context, deletion),
+                    actionLabel = undoLabel,
+                    duration = SnackbarDuration.Short,
+                )
+                if (result == SnackbarResult.ActionPerformed) viewModel.undoDeletion(deletion)
+            }
+        }
+    }
+}
+
+private fun deletionMessage(context: Context, deletion: PendingDeletion): String = when (deletion.kind) {
+    DeletionKind.Note -> context.getString(R.string.tasks_note_deleted)
+    DeletionKind.Idea -> context.getString(R.string.tasks_idea_deleted)
+    DeletionKind.Goal -> context.getString(R.string.goals_deleted, deletion.title.orEmpty())
 }

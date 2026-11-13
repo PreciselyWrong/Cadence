@@ -20,7 +20,7 @@ type ShortcutHandlers = Partial<Record<ShortcutAction, () => void>>;
  * useKeyboardShortcuts(
  *   userShortcuts,
  *   {
- *     inbox: () => navigate('/inbox'),
+ *     inbox: () => navigate('/upcoming'),
  *     task: () => openTaskModal(),
  *   },
  *   true

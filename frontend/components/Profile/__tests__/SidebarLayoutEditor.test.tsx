@@ -95,10 +95,9 @@ describe('SidebarLayoutEditor', () => {
     it('shows the links and sections in the saved order', () => {
         renderEditor({
             linkOrder: [
-                'today',
-                'inbox',
-                'upcomingTasks',
                 'calendar',
+                'today',
+                'upcomingTasks',
                 'allTasks',
                 'assignedToMe',
                 'everyone',
@@ -113,23 +112,23 @@ describe('SidebarLayoutEditor', () => {
         });
 
         const ids = renderedIds();
-        expect(ids.slice(0, 3)).toEqual(['favorites', 'today', 'inbox']);
-        expect(ids.slice(8, 10)).toEqual(['notes', 'projects']);
+        expect(ids.slice(0, 3)).toEqual(['favorites', 'calendar', 'today']);
+        expect(ids.slice(7, 9)).toEqual(['notes', 'projects']);
     });
 
     it('has a switch on every row that reflects what is visible', () => {
-        renderEditor({ visibleSections: { projects: false, inbox: false } });
+        renderEditor({ visibleSections: { projects: false, calendar: false } });
 
         expect(
             screen.getByRole('switch', { name: 'Show Projects' })
         ).toHaveAttribute('aria-checked', 'false');
         expect(
-            screen.getByRole('switch', { name: 'Show Inbox' })
+            screen.getByRole('switch', { name: 'Show Calendar' })
         ).toHaveAttribute('aria-checked', 'false');
         expect(
             screen.getByRole('switch', { name: 'Show Notes' })
         ).toHaveAttribute('aria-checked', 'true');
-        expect(screen.getAllByRole('switch')).toHaveLength(19);
+        expect(screen.getAllByRole('switch')).toHaveLength(18);
     });
 
     it('reports the item when a switch is clicked', () => {
@@ -146,7 +145,7 @@ describe('SidebarLayoutEditor', () => {
         renderEditor({ isAdmin: true });
 
         expect(
-            screen.getByRole('button', { name: 'Move Inbox' })
+            screen.getByRole('button', { name: 'Move Calendar' })
         ).toBeInTheDocument();
         expect(
             screen.getByRole('button', { name: 'Move Projects' })
@@ -235,16 +234,15 @@ describe('SidebarLayoutEditor', () => {
 
             act(() => {
                 dropHandlers[0]({
-                    active: { id: 'inbox' },
+                    active: { id: 'calendar' },
                     over: { id: 'upcomingTasks' },
                 });
             });
 
             expect(onReorder).toHaveBeenCalledWith('links', [
                 'today',
-                'upcomingTasks',
-                'inbox',
                 'calendar',
+                'upcomingTasks',
                 'allTasks',
                 'assignedToMe',
                 'everyone',
@@ -311,7 +309,7 @@ describe('SidebarLayoutEditor', () => {
         it('lists each running plugin after the built-in links', () => {
             renderEditor();
 
-            expect(renderedIds().slice(0, 9)).toEqual([
+            expect(renderedIds().slice(0, 8)).toEqual([
                 'favorites',
                 ...DEFAULT_LINK_ORDER,
                 'plugin:hermes',
@@ -335,7 +333,7 @@ describe('SidebarLayoutEditor', () => {
 
             act(() => {
                 dropHandlers[0]({
-                    active: { id: 'inbox' },
+                    active: { id: 'calendar' },
                     over: { id: 'upcomingTasks' },
                 });
             });
@@ -343,9 +341,8 @@ describe('SidebarLayoutEditor', () => {
             expect(onReorder).toHaveBeenCalledWith('links', [
                 'plugin:hermes',
                 'today',
-                'upcomingTasks',
-                'inbox',
                 'calendar',
+                'upcomingTasks',
                 'allTasks',
                 'assignedToMe',
                 'everyone',
@@ -359,7 +356,7 @@ describe('SidebarLayoutEditor', () => {
 
             act(() => {
                 dropHandlers[0]({
-                    active: { id: 'inbox' },
+                    active: { id: 'calendar' },
                     over: { id: 'upcomingTasks' },
                 });
             });
@@ -367,9 +364,8 @@ describe('SidebarLayoutEditor', () => {
             expect(onReorder).toHaveBeenCalledWith('links', [
                 'plugin:gone',
                 'today',
-                'upcomingTasks',
-                'inbox',
                 'calendar',
+                'upcomingTasks',
                 'allTasks',
                 'assignedToMe',
                 'everyone',

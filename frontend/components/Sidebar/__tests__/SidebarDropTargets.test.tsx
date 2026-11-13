@@ -249,8 +249,6 @@ describe('day targets', () => {
 
         hover('day:today');
         expect(lit(today)).toBe(true);
-        expect(screen.getByTestId('sidebar-nav-inbox')).not.toHaveAttribute(
-            'data-sidebar-drop'
-        );
+        expect(screen.queryByTestId('sidebar-nav-inbox')).toBeNull();
     });
 });

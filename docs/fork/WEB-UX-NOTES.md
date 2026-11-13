@@ -840,3 +840,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Demande** : une tâche-lien n'était qu'un texte avec l'adresse brute dans les listes ; repères visuels voulus (favicon, image de la page), sans perdre l'épure.
 - **Décision** : sous le titre, l'icône et le nom du site remplacent l'adresse (l'icône n'est pas répétée si la pastille d'origine la montre) ; l'image de la page au format 1,91:1 : petite en fin de ligne (listes, Aujourd'hui), en couverture en haut des cartes (Plan, colonne Inbox, tableau de projet) ; rien sans image. Pages de projet : icône du site à la place de l'initiale, image si la page en a une. Une vidéo YouTube prend l'image servie par YouTube.
 - **Android à reprendre** : fait dans la même étape (`TaskRow`, donc toutes les listes, Aujourd'hui et Planifier ; pages de projet), sans couverture : la ligne Android garde la petite image en fin de ligne.
+
+### 2026-11-13 — L'Inbox vit dans Plan
+
+- **Problème** : la page Boîte de réception doublait la colonne Inbox de Plan ; la colonne renvoyait vers la page dès qu'on cliquait une idée.
+- **Décision** : plus de page Inbox. Un clic sur une idée de la colonne ouvre son panneau de décision sur place (Tâche, Projet…, Note, Inbox, Supprimer) ; l'en-tête de la colonne porte « À trier (N) » et « Trier » (tri une à une, `/inbox?triage=1`). La colonne est toujours là (repliable), l'option « Colonne Inbox » d'Affichage disparaît. `/inbox` mène à Plan ; un partage du système ouvre la boîte de saisie préremplie. L'Inbox quitte la barre latérale, le lanceur, le rail et la barre du bas du téléphone.
+- **Android à reprendre** : fait dans la même étape (onglet Boîte retiré, idées décidées depuis Planifier).
