@@ -123,7 +123,7 @@ class CareerModelTest {
 
     @Test
     fun `apply body carries note and due date only when set`() {
-        val offer = CareerModel.applyBody(CareerDecision.of(CareerKind.OFFER, "o1", CareerOp.APPLY, note = "  Bonne piste  ")!!)
+        val offer = CareerModel.applyBody(listOf(CareerDecision.of(CareerKind.OFFER, "o1", CareerOp.APPLY, note = "  Bonne piste  ")!!))
         val decision = offer["decisions"]!!.jsonArray.single().jsonObject
         assertEquals("offer", decision["kind"]!!.jsonPrimitive.content)
         assertEquals("o1", decision["id"]!!.jsonPrimitive.content)
@@ -131,11 +131,86 @@ class CareerModelTest {
         assertEquals("Bonne piste", decision["note"]!!.jsonPrimitive.content)
         assertNull(decision["due_date"])
 
-        val blank = CareerModel.applyBody(CareerDecision.of(CareerKind.OFFER, "o1", CareerOp.SKIP, note = "   ")!!)
+        val blank = CareerModel.applyBody(listOf(CareerDecision.of(CareerKind.OFFER, "o1", CareerOp.SKIP, note = "   ")!!))
         assertNull(blank["decisions"]!!.jsonArray.single().jsonObject["note"])
 
-        val task = CareerModel.applyBody(CareerDecision.of(CareerKind.TASK, "t1", CareerOp.CREATE, dueDate = "2026-11-18")!!)
+        val task = CareerModel.applyBody(listOf(CareerDecision.of(CareerKind.TASK, "t1", CareerOp.CREATE, dueDate = "2026-11-18")!!))
         assertEquals("2026-11-18", task["decisions"]!!.jsonArray.single().jsonObject["due_date"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `apply body carries every staged decision in one call`() {
+        val body = CareerModel.applyBody(
+            listOf(
+                CareerDecision.of(CareerKind.OFFER, "o1", CareerOp.APPLY)!!,
+                CareerDecision.of(CareerKind.FOLLOWUP, "f1", CareerOp.DONE)!!,
+            ),
+        )
+        val decisions = body["decisions"]!!.jsonArray.map { it.jsonObject["op"]!!.jsonPrimitive.content }
+        assertEquals(listOf("apply", "done"), decisions)
+    }
+
+    @Test
+    fun `settled keys are the applied and already decided results`() {
+        val body = ProposalJson.parseToJsonElement(
+            """{"uid":"new","status":"ready","results":[
+                {"kind":"offer","id":"o1","state":"applied"},
+                {"kind":"followup","id":"f1","state":"already_decided"},
+                {"kind":"task","id":"t1","state":"failed","error":"boom"}
+            ]}""",
+        ).jsonObject
+        assertEquals(setOf("offer:o1", "followup:f1"), CareerModel.settledKeys(body))
+    }
+
+    @Test
+    fun `tapping stages a choice without any change to the proposal`() {
+        val draft = CareerDraft(uid = "new").tap(CareerKind.OFFER, "o1", CareerOp.APPLY, null)
+        assertEquals(CareerOp.APPLY, draft.choiceOf(CareerKind.OFFER, "o1")?.op)
+        assertEquals(1, draft.size)
+        assertEquals(listOf("apply"), draft.decisions().map { it.op.wire })
+    }
+
+    @Test
+    fun `another tap changes the staged choice and the same tap clears it`() {
+        val applied = CareerDraft(uid = "new").tap(CareerKind.OFFER, "o1", CareerOp.APPLY, null)
+        val changed = applied.tap(CareerKind.OFFER, "o1", CareerOp.SKIP, null)
+        assertEquals(CareerOp.SKIP, changed.choiceOf(CareerKind.OFFER, "o1")?.op)
+        assertEquals(1, changed.size)
+        assertEquals(0, changed.tap(CareerKind.OFFER, "o1", CareerOp.SKIP, null).size)
+    }
+
+    @Test
+    fun `a note goes with its staged decision only, trimmed when sent`() {
+        val noted = CareerDraft(uid = "new").tap(CareerKind.OFFER, "o1", CareerOp.APPLY, null).withNote(CareerKind.OFFER, "o1", "  Bonne piste  ")
+        assertEquals("Bonne piste", noted.decisions().single().note)
+        val orphan = CareerDraft(uid = "new").withNote(CareerKind.OFFER, "o2", "Trop loin")
+        assertTrue(orphan.decisions().isEmpty())
+    }
+
+    @Test
+    fun `settled decisions leave the draft and failed ones stay staged`() {
+        val draft = CareerDraft(uid = "new")
+            .tap(CareerKind.OFFER, "o1", CareerOp.APPLY, null)
+            .tap(CareerKind.TASK, "t1", CareerOp.CREATE, "2026-11-18")
+            .withNote(CareerKind.TASK, "t1", "Vite")
+        val rest = draft.settle(setOf("offer:o1"))
+        assertEquals(listOf("t1"), rest.decisions().map { it.id })
+        assertEquals("Vite", rest.decisions().single().note)
+        assertEquals("2026-11-18", rest.decisions().single().dueDate)
+    }
+
+    @Test
+    fun `a new proposal resets the draft and clear empties it`() {
+        val draft = CareerDraft(uid = "old").tap(CareerKind.OFFER, "o1", CareerOp.APPLY, null)
+        assertEquals(0, draft.forProposal("new").size)
+        assertEquals(1, draft.forProposal("old").size)
+        assertEquals(0, draft.cleared().size)
+    }
+
+    @Test
+    fun `a later choice is a decision sent with the others`() {
+        val draft = CareerDraft(uid = "new").tap(CareerKind.OFFER, "o1", CareerOp.LATER, null)
+        assertEquals(listOf("later"), draft.decisions().map { it.op.wire })
     }
 
     @Test

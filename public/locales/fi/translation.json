@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "valittu: {{label}}",
+        "validate": "Vahvista ({{count}})",
+        "clear": "Tyhjennä",
+        "applied": "{{count}} päätöstä toteutettu",
+        "appliedOne": "1 päätös toteutettu",
         "title": "Ura",
         "updatedAt": "päivitetty klo {{time}}",
         "empty": "Ei mitään uutta tänään",
@@ -5327,6 +5332,8 @@
       "sendError": "Huomautuksia ei voitu lähettää.",
       "sendCaption_one": "{{count}} käytetty · {{sent}} palautettu",
       "sendCaption_other": "{{count}} käytetty · {{sent}} palautettu",
+      "answersCaption_one": "{{count}} vastaus annettu",
+      "answersCaption_other": "{{count}} vastausta annettu",
       "notesSent_one": "{{count}} tehtävä palautettu, kerron kun se on valmis",
       "notesSent_other": "{{count}} tehtävä palautettu, kerron kun se on valmis",
       "appliedCount": "{{count}} / {{total}} käytetty"

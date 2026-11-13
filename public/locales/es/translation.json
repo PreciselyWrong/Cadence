@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "elegido: {{label}}",
+        "validate": "Confirmar ({{count}})",
+        "clear": "Borrar",
+        "applied": "{{count}} decisiones aplicadas",
+        "appliedOne": "1 decisión aplicada",
         "title": "Carrera",
         "updatedAt": "actualizado a las {{time}}",
         "empty": "Nada nuevo hoy",
@@ -5321,6 +5326,8 @@
       "sendError": "No se pudieron enviar las notas.",
       "sendCaption_one": "{{count}} aplicada · {{sent}} devueltas",
       "sendCaption_other": "{{count}} aplicada · {{sent}} devueltas",
+      "answersCaption_one": "{{count}} respuesta dada",
+      "answersCaption_other": "{{count}} respuestas dadas",
       "notesSent_one": "{{count}} tarea devuelta, te aviso cuando esté lista",
       "notesSent_other": "{{count}} tareas devueltas, te aviso cuando estén listas",
       "appliedCount": "{{count}} de {{total}} aplicados"

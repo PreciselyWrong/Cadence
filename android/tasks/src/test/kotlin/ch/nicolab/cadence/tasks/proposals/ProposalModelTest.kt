@@ -169,6 +169,34 @@ class ProposalModelTest {
     }
 
     @Test
+    fun `a question choice is staged, changed by another choice and cleared by the same one`() {
+        val answered = Proposals.chooseAnswer(emptyMap(), "q1", "Oui")
+        assertEquals(mapOf("q1" to "Oui"), answered)
+        assertEquals(mapOf("q1" to "Non"), Proposals.chooseAnswer(answered, "q1", "Non"))
+        assertEquals(emptyMap<String, String>(), Proposals.chooseAnswer(answered, "q1", "Oui"))
+    }
+
+    @Test
+    fun `send body carries the answers next to the decisions and the notes`() {
+        val changes = listOf(change("a", ProposalOp.LATER), change("b", ProposalOp.DUE, tuesday))
+        val body = Proposals.sendBody(changes, emptyMap(), mapOf("b" to "Plutôt jeudi"), mapOf("q1" to "Non"))
+
+        assertEquals(listOf("a"), body["decisions"]!!.jsonArray.map { it.jsonObject["task_uid"]!!.jsonPrimitive.content })
+        assertEquals(1, body["notes"]!!.jsonArray.size)
+        val answer = body["answers"]!!.jsonArray.single().jsonObject
+        assertEquals("q1", answer["question_id"]!!.jsonPrimitive.content)
+        assertEquals("Non", answer["choice"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `send is needed when a question is answered or a row is noted, apply otherwise`() {
+        val none = SendCounts(applied = 2, returned = 0)
+        assertFalse(Proposals.needsSend(none, emptyMap()))
+        assertTrue(Proposals.needsSend(none, mapOf("q1" to "Oui")))
+        assertTrue(Proposals.needsSend(SendCounts(applied = 0, returned = 1), emptyMap()))
+    }
+
+    @Test
     fun `send counts give the applied and returned rows, keep rows are neither`() {
         val changes = listOf(
             change("a", ProposalOp.LATER),

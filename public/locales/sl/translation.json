@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "izbrano: {{label}}",
+        "validate": "Potrdi ({{count}})",
+        "clear": "Počisti",
+        "applied": "{{count}} odločitev uveljavljenih",
+        "appliedOne": "1 odločitev uveljavljena",
         "title": "Kariera",
         "updatedAt": "posodobljeno ob {{time}}",
         "empty": "Danes nič novega",
@@ -5421,6 +5426,8 @@
       "sendCaption_two": "{{count}} uporabljeni · {{sent}} vrnjene",
       "sendCaption_few": "{{count}} uporabljene · {{sent}} vrnjene",
       "sendCaption_other": "{{count}} uporabljenih · {{sent}} vrnjene",
+      "answersCaption_one": "{{count}} odgovor",
+      "answersCaption_other": "{{count}} odgovorov",
       "notesSent_one": "{{count}} naloga vrnjena, sporočim, ko bo pripravljena",
       "notesSent_two": "{{count}} nalogi vrnjeni, sporočim, ko bosta pripravljeni",
       "notesSent_few": "{{count}} naloge vrnjene, sporočim, ko bodo pripravljene",

@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "選択: {{label}}",
+        "validate": "確定 ({{count}})",
+        "clear": "クリア",
+        "applied": "{{count}}件の決定を適用しました",
+        "appliedOne": "1件の決定を適用しました",
         "title": "キャリア",
         "updatedAt": "{{time}} に更新",
         "empty": "今日は新しいことはありません",
@@ -5327,6 +5332,8 @@
       "sendError": "メモを送信できませんでした。",
       "sendCaption_one": "{{count}}件適用 · {{sent}}件差し戻し",
       "sendCaption_other": "{{count}}件適用 · {{sent}}件差し戻し",
+      "answersCaption_one": "{{count}}件の回答",
+      "answersCaption_other": "{{count}}件の回答",
       "notesSent_one": "{{count}}件のタスクを差し戻しました。準備ができたらお知らせします",
       "notesSent_other": "{{count}}件のタスクを差し戻しました。準備ができたらお知らせします",
       "appliedCount": "{{count}} / {{total}} 件を適用"

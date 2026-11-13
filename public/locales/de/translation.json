@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "gewählt: {{label}}",
+        "validate": "Bestätigen ({{count}})",
+        "clear": "Leeren",
+        "applied": "{{count}} Entscheidungen angewendet",
+        "appliedOne": "1 Entscheidung angewendet",
         "title": "Karriere",
         "updatedAt": "aktualisiert um {{time}}",
         "empty": "Heute nichts Neues",
@@ -5336,6 +5341,8 @@
       "sendError": "Die Notizen konnten nicht gesendet werden.",
       "sendCaption_one": "{{count}} übernommen · {{sent}} zurückgeschickt",
       "sendCaption_other": "{{count}} übernommen · {{sent}} zurückgeschickt",
+      "answersCaption_one": "{{count}} Antwort gegeben",
+      "answersCaption_other": "{{count}} Antworten gegeben",
       "notesSent_one": "{{count}} Aufgabe zurückgeschickt, ich melde mich, wenn sie fertig ist",
       "notesSent_other": "{{count}} Aufgaben zurückgeschickt, ich melde mich, wenn sie fertig sind",
       "appliedCount": "{{count}} von {{total}} angewendet"

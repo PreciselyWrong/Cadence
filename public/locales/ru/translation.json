@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "выбрано: {{label}}",
+        "validate": "Подтвердить ({{count}})",
+        "clear": "Очистить",
+        "applied": "Применено решений: {{count}}",
+        "appliedOne": "Применено 1 решение",
         "title": "Карьера",
         "updatedAt": "обновлено в {{time}}",
         "empty": "Сегодня ничего нового",
@@ -5417,6 +5422,8 @@
       "sendCaption_few": "{{count}} применены · {{sent}} возвращено",
       "sendCaption_many": "{{count}} применено · {{sent}} возвращено",
       "sendCaption_other": "{{count}} применено · {{sent}} возвращено",
+      "answersCaption_one": "{{count}} ответ",
+      "answersCaption_other": "{{count}} ответов",
       "notesSent_one": "{{count}} задача возвращена, сообщу, когда будет готово",
       "notesSent_few": "{{count}} задачи возвращены, сообщу, когда будут готовы",
       "notesSent_many": "{{count}} задач возвращено, сообщу, когда будут готовы",

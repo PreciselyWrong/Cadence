@@ -21,15 +21,16 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,6 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.CadenceField
@@ -54,7 +57,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.proposals.CareerDecided
-import ch.nicolab.cadence.tasks.proposals.CareerDecision
+import ch.nicolab.cadence.tasks.proposals.CareerDraft
 import ch.nicolab.cadence.tasks.proposals.CareerFollowup
 import ch.nicolab.cadence.tasks.proposals.CareerKind
 import ch.nicolab.cadence.tasks.proposals.CareerModel
@@ -73,8 +76,9 @@ import kotlinx.coroutines.launch
 private val careerDay: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", tasksLocale)
 
 /**
- * Carrière : relances, offres à décider et tâches proposées par l'agent, une décision à la fois.
- * En ligne seulement ; rien n'est gardé sur le téléphone. Chaque toucher envoie une décision, puis la liste est relue.
+ * Carrière : relances, offres à décider et tâches proposées par l'agent.
+ * Un toucher ne fait que préparer un choix (bouton sélectionné) ; « Valider » envoie tous les choix en un appel.
+ * En ligne seulement ; rien n'est gardé sur le téléphone, sauf les choix préparés de cet écran.
  */
 @Composable
 fun CareerScreen(onBack: () -> Unit) {
@@ -91,14 +95,15 @@ fun CareerScreen(onBack: () -> Unit) {
     var loadError by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
     var decidedOpen by rememberSaveable { mutableStateOf(false) }
-    // Remarques par élément (clé `genre:id`) et éléments dont le champ est ouvert.
-    val notes = remember { mutableStateMapOf<String, String>() }
+    var draft by remember { mutableStateOf(CareerDraft()) }
+    var confirmLeave by remember { mutableStateOf(false) }
     var noteOpen by remember { mutableStateOf(emptySet<String>()) }
 
     suspend fun load() {
         repo.career()
             .onSuccess {
                 proposal = it
+                draft = draft.forProposal(it?.uid)
                 loadError = null
             }
             .onFailure { loadError = if (it is IOException) offline else failed }
@@ -106,24 +111,37 @@ fun CareerScreen(onBack: () -> Unit) {
     }
 
     LaunchedEffect(Unit) { load() }
-    BackHandler(onBack = onBack)
+
+    fun requestBack() {
+        if (draft.size > 0) confirmLeave = true else onBack()
+    }
+    BackHandler { requestBack() }
 
     val view = remember(proposal) { CareerModel.view(proposal) }
     val isOffline = loadError == offline
     val actionsEnabled = !busy && !isOffline && proposal != null
 
-    fun decide(kind: CareerKind, id: String, op: CareerOp, dueDate: String? = null) {
-        val key = "${kind.wire}:$id"
+    fun stage(kind: CareerKind, id: String, op: CareerOp, dueDate: String? = null) {
+        draft = draft.tap(kind, id, op, dueDate)
+    }
+
+    fun validate() {
         val uid = proposal?.uid ?: return
-        val decision = CareerDecision.of(kind, id, op, note = notes[key], dueDate = dueDate) ?: return
+        val decisions = draft.decisions()
+        if (decisions.isEmpty()) return
         scope.launch {
             busy = true
-            repo.decideCareer(uid, decision)
-                .onSuccess {
+            repo.decideCareer(uid, decisions)
+                .onSuccess { settled ->
                     tasks.requestSync()
-                    notes.remove(key)
-                    noteOpen = noteOpen - key
+                    val applied = decisions.count { CareerDraft.keyOf(it.kind, it.id) in settled }
+                    draft = draft.settle(settled)
                     load()
+                    if (draft.size == 0) {
+                        snackbar.showSnackbar(context.getString(R.string.career_applied_count, applied))
+                    } else {
+                        snackbar.showSnackbar(failed)
+                    }
                 }
                 .onFailure { snackbar.showSnackbar(if (it is IOException) offline else failed) }
             busy = false
@@ -137,12 +155,12 @@ fun CareerScreen(onBack: () -> Unit) {
                 ScreenHeader(
                     title = view.headline ?: stringResource(R.string.career_title),
                     subtitle = view.subtitle,
-                    onBack = onBack,
+                    onBack = { requestBack() },
                     backDescription = stringResource(R.string.career_back),
                 )
             }
             LazyColumn(
-                Modifier.fillMaxSize(),
+                Modifier.weight(1f),
                 contentPadding = PaddingValues(horizontal = Space.gutter, vertical = Space.sm),
                 verticalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
@@ -165,9 +183,10 @@ fun CareerScreen(onBack: () -> Unit) {
                     items(view.followups, key = { "f:${it.id}" }) { item ->
                         FollowupCard(
                             item = item,
+                            chosen = draft.choiceOf(CareerKind.FOLLOWUP, item.id)?.op,
                             enabled = actionsEnabled,
                             onOpenDraft = { uriHandler.openUri(it) },
-                            onDecide = { op -> decide(CareerKind.FOLLOWUP, item.id, op) },
+                            onStage = { op -> stage(CareerKind.FOLLOWUP, item.id, op) },
                         )
                     }
                 }
@@ -178,13 +197,14 @@ fun CareerScreen(onBack: () -> Unit) {
                         val key = "offer:${item.id}"
                         OfferCard(
                             item = item,
+                            chosen = draft.choiceOf(CareerKind.OFFER, item.id)?.op,
                             enabled = actionsEnabled,
                             noteOpen = key in noteOpen,
-                            note = notes[key].orEmpty(),
+                            note = draft.noteOf(CareerKind.OFFER, item.id),
                             onToggleNote = { noteOpen = if (key in noteOpen) noteOpen - key else noteOpen + key },
-                            onNote = { notes[key] = it.take(CareerModel.NOTE_MAX_LENGTH) },
+                            onNote = { draft = draft.withNote(CareerKind.OFFER, item.id, it) },
                             onOpen = { url -> uriHandler.openUri(url) },
-                            onDecide = { op -> decide(CareerKind.OFFER, item.id, op) },
+                            onStage = { op -> stage(CareerKind.OFFER, item.id, op) },
                         )
                     }
                 }
@@ -194,8 +214,9 @@ fun CareerScreen(onBack: () -> Unit) {
                     items(view.tasks, key = { "t:${it.id}" }) { item ->
                         TaskCard(
                             item = item,
+                            chosen = draft.choiceOf(CareerKind.TASK, item.id)?.op,
                             enabled = actionsEnabled,
-                            onDecide = { op -> decide(CareerKind.TASK, item.id, op, dueDate = item.dueDate?.toString()) },
+                            onStage = { op -> stage(CareerKind.TASK, item.id, op, dueDate = item.dueDate?.toString()) },
                         )
                     }
                 }
@@ -210,7 +231,40 @@ fun CareerScreen(onBack: () -> Unit) {
                     if (decidedOpen) items(view.decided, key = { "d:${it.kind.wire}:${it.id}" }) { DecidedRow(it) }
                 }
             }
+
+            if (draft.size > 0) {
+                Row(
+                    Modifier.fillMaxWidth().padding(horizontal = Space.gutter, vertical = Space.sm),
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    SecondaryAction(stringResource(R.string.career_clear), enabled = !busy, onClick = { draft = draft.cleared() })
+                    PrimaryAction(
+                        stringResource(R.string.career_validate, draft.size),
+                        modifier = Modifier.weight(1f),
+                        enabled = actionsEnabled,
+                        onClick = { validate() },
+                    )
+                }
+            }
         }
+    }
+
+    if (confirmLeave) {
+        AlertDialog(
+            onDismissRequest = { confirmLeave = false },
+            title = { Text(stringResource(R.string.career_discard_title)) },
+            text = { Text(stringResource(R.string.career_discard_text)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmLeave = false
+                    onBack()
+                }) { Text(stringResource(R.string.career_discard_confirm)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmLeave = false }) { Text(stringResource(R.string.career_stay)) }
+            },
+        )
     }
 }
 
@@ -245,8 +299,31 @@ private fun StatTiles(stats: List<CareerStat>) {
     }
 }
 
+/** Bouton de choix : plein quand il est le choix préparé, neutre sinon. Un toucher ne fait que le préparer. */
 @Composable
-private fun FollowupCard(item: CareerFollowup, enabled: Boolean, onOpenDraft: (String) -> Unit, onDecide: (CareerOp) -> Unit) {
+private fun ChoiceButton(label: String, selected: Boolean, enabled: Boolean, onClick: () -> Unit) {
+    val modifier = Modifier.semantics { this.selected = selected }
+    if (selected) {
+        PrimaryAction(label, modifier = modifier, enabled = enabled, onClick = onClick)
+    } else {
+        SecondaryAction(label, modifier = modifier, enabled = enabled, onClick = onClick)
+    }
+}
+
+/** Ligne « choisi : Postuler » sous la carte, quand un choix est préparé. */
+@Composable
+private fun ChosenLine(choice: CareerOp?, kind: CareerKind) {
+    if (choice == null) return
+    val palette = cadence
+    Text(
+        stringResource(R.string.career_chosen, stringResource(choiceLabel(kind, choice))),
+        style = MaterialTheme.typography.labelLarge,
+        color = palette.primary,
+    )
+}
+
+@Composable
+private fun FollowupCard(item: CareerFollowup, chosen: CareerOp?, enabled: Boolean, onOpenDraft: (String) -> Unit, onStage: (CareerOp) -> Unit) {
     val palette = cadence
     val applied = item.appliedAt?.let { stringResource(R.string.career_applied_on, it.format(careerDay)) }
     val meta = listOfNotNull(item.company?.takeIf(String::isNotBlank), applied).joinToString(" · ")
@@ -255,11 +332,12 @@ private fun FollowupCard(item: CareerFollowup, enabled: Boolean, onOpenDraft: (S
             Text(item.title, style = MaterialTheme.typography.titleMedium, color = palette.onSurface)
             if (meta.isNotBlank()) Text(meta, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
             item.note?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant) }
+            ChosenLine(chosen, CareerKind.FOLLOWUP)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                 item.draftUrl?.let { url -> SecondaryAction(stringResource(R.string.career_open_draft), enabled = enabled, onClick = { onOpenDraft(url) }) }
-                PrimaryAction(stringResource(R.string.career_create_task), enabled = enabled, onClick = { onDecide(CareerOp.TASK) })
-                SecondaryAction(stringResource(R.string.career_done), enabled = enabled, onClick = { onDecide(CareerOp.DONE) })
-                TertiaryAction(stringResource(R.string.proposal_later), onClick = { if (enabled) onDecide(CareerOp.LATER) })
+                ChoiceButton(stringResource(R.string.career_create_task), chosen == CareerOp.TASK, enabled) { onStage(CareerOp.TASK) }
+                ChoiceButton(stringResource(R.string.career_done), chosen == CareerOp.DONE, enabled) { onStage(CareerOp.DONE) }
+                ChoiceButton(stringResource(R.string.proposal_later), chosen == CareerOp.LATER, enabled) { onStage(CareerOp.LATER) }
             }
         }
     }
@@ -268,13 +346,14 @@ private fun FollowupCard(item: CareerFollowup, enabled: Boolean, onOpenDraft: (S
 @Composable
 private fun OfferCard(
     item: CareerOffer,
+    chosen: CareerOp?,
     enabled: Boolean,
     noteOpen: Boolean,
     note: String,
     onToggleNote: () -> Unit,
     onNote: (String) -> Unit,
     onOpen: (String) -> Unit,
-    onDecide: (CareerOp) -> Unit,
+    onStage: (CareerOp) -> Unit,
 ) {
     val palette = cadence
     val expires = item.expires?.let { stringResource(R.string.career_expires, it.format(careerDay)) }
@@ -286,6 +365,7 @@ private fun OfferCard(
             Text(title, style = MaterialTheme.typography.titleMedium, color = palette.onSurface)
             if (details.isNotBlank()) Text(details, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
             if (item.fit.isNotBlank()) Text(item.fit, style = MaterialTheme.typography.bodyMedium, color = palette.onSurface)
+            ChosenLine(chosen, CareerKind.OFFER)
             if (noteOpen) {
                 CadenceField(
                     value = note,
@@ -296,9 +376,9 @@ private fun OfferCard(
                 )
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                PrimaryAction(stringResource(R.string.career_apply), enabled = enabled, onClick = { onDecide(CareerOp.APPLY) })
-                SecondaryAction(stringResource(R.string.career_skip), enabled = enabled, onClick = { onDecide(CareerOp.SKIP) })
-                TertiaryAction(stringResource(R.string.proposal_later), onClick = { if (enabled) onDecide(CareerOp.LATER) })
+                ChoiceButton(stringResource(R.string.career_apply), chosen == CareerOp.APPLY, enabled) { onStage(CareerOp.APPLY) }
+                ChoiceButton(stringResource(R.string.career_skip), chosen == CareerOp.SKIP, enabled) { onStage(CareerOp.SKIP) }
+                ChoiceButton(stringResource(R.string.proposal_later), chosen == CareerOp.LATER, enabled) { onStage(CareerOp.LATER) }
                 TertiaryAction(stringResource(R.string.career_note), onClick = onToggleNote)
             }
         }
@@ -306,7 +386,7 @@ private fun OfferCard(
 }
 
 @Composable
-private fun TaskCard(item: CareerTask, enabled: Boolean, onDecide: (CareerOp) -> Unit) {
+private fun TaskCard(item: CareerTask, chosen: CareerOp?, enabled: Boolean, onStage: (CareerOp) -> Unit) {
     val palette = cadence
     val due = item.dueDate?.let { stringResource(R.string.career_due, it.format(careerDay)) }
     Panel(Modifier.fillMaxWidth()) {
@@ -315,9 +395,10 @@ private fun TaskCard(item: CareerTask, enabled: Boolean, onDecide: (CareerOp) ->
             listOfNotNull(item.note?.takeIf(String::isNotBlank), due).forEach {
                 Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
             }
+            ChosenLine(chosen, CareerKind.TASK)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                PrimaryAction(stringResource(R.string.career_add), enabled = enabled, onClick = { onDecide(CareerOp.CREATE) })
-                TertiaryAction(stringResource(R.string.proposal_ignore), onClick = { if (enabled) onDecide(CareerOp.SKIP) })
+                ChoiceButton(stringResource(R.string.career_add), chosen == CareerOp.CREATE, enabled) { onStage(CareerOp.CREATE) }
+                ChoiceButton(stringResource(R.string.proposal_ignore), chosen == CareerOp.SKIP, enabled) { onStage(CareerOp.SKIP) }
             }
         }
     }
@@ -332,6 +413,16 @@ private fun DecidedRow(item: CareerDecided) {
         Text(label, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
         item.note?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant) }
     }
+}
+
+private fun choiceLabel(kind: CareerKind, op: CareerOp): Int = when (kind to op) {
+    CareerKind.OFFER to CareerOp.APPLY -> R.string.career_apply
+    CareerKind.OFFER to CareerOp.SKIP -> R.string.career_skip
+    CareerKind.FOLLOWUP to CareerOp.DONE -> R.string.career_done
+    CareerKind.FOLLOWUP to CareerOp.TASK -> R.string.career_create_task
+    CareerKind.TASK to CareerOp.CREATE -> R.string.career_add
+    CareerKind.TASK to CareerOp.SKIP -> R.string.proposal_ignore
+    else -> R.string.proposal_later
 }
 
 private fun decidedLabel(kind: CareerKind, op: CareerOp): Int = when (kind to op) {

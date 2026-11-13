@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "valgt: {{label}}",
+        "validate": "Bekræft ({{count}})",
+        "clear": "Ryd",
+        "applied": "{{count}} beslutninger anvendt",
+        "appliedOne": "1 beslutning anvendt",
         "title": "Karriere",
         "updatedAt": "opdateret kl. {{time}}",
         "empty": "Intet nyt i dag",
@@ -5327,6 +5332,8 @@
       "sendError": "Noterne kunne ikke sendes.",
       "sendCaption_one": "{{count}} anvendt · {{sent}} sendt tilbage",
       "sendCaption_other": "{{count}} anvendt · {{sent}} sendt tilbage",
+      "answersCaption_one": "{{count}} svar givet",
+      "answersCaption_other": "{{count}} svar givet",
       "notesSent_one": "{{count}} opgave sendt tilbage, jeg siger til, når den er klar",
       "notesSent_other": "{{count}} opgaver sendt tilbage, jeg siger til, når de er klar",
       "appliedCount": "{{count}} af {{total}} anvendt"

@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.proposals
 import java.time.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
@@ -220,21 +221,34 @@ object CareerModel {
     /** Remarque rognée à [NOTE_MAX_LENGTH] ; une remarque vide n'en est pas une. */
     fun noteOf(raw: String?): String? = text(raw)?.take(NOTE_MAX_LENGTH)
 
-    /** Corps de `POST …/apply` : une seule décision. */
-    fun applyBody(decision: CareerDecision): JsonObject = buildJsonObject {
+    /** Corps de `POST …/apply` : toutes les décisions préparées, en un appel. */
+    fun applyBody(decisions: List<CareerDecision>): JsonObject = buildJsonObject {
         put(
             "decisions",
             buildJsonArray {
-                add(buildJsonObject {
-                    put("kind", decision.kind.wire)
-                    put("id", decision.id)
-                    put("op", decision.op.wire)
-                    decision.note?.let { put("note", it) }
-                    decision.dueDate?.let { put("due_date", it) }
-                })
+                decisions.forEach { decision ->
+                    add(buildJsonObject {
+                        put("kind", decision.kind.wire)
+                        put("id", decision.id)
+                        put("op", decision.op.wire)
+                        decision.note?.let { put("note", it) }
+                        decision.dueDate?.let { put("due_date", it) }
+                    })
+                }
             },
         )
     }
+
+    /** Clés `genre:id` des décisions que le serveur a appliquées ou trouvées déjà prises ; un échec reste en attente. */
+    fun settledKeys(body: JsonObject): Set<String> =
+        (body["results"] as? JsonArray).orEmpty().mapNotNull { element ->
+            val result = element as? JsonObject ?: return@mapNotNull null
+            val state = (result["state"] as? JsonPrimitive)?.content
+            if (state != "applied" && state != "already_decided") return@mapNotNull null
+            val kind = (result["kind"] as? JsonPrimitive)?.content ?: return@mapNotNull null
+            val id = (result["id"] as? JsonPrimitive)?.content ?: return@mapNotNull null
+            "$kind:$id"
+        }.toSet()
 
     internal fun opsOf(kind: CareerKind): Set<CareerOp> = when (kind) {
         CareerKind.OFFER -> setOf(CareerOp.APPLY, CareerOp.SKIP, CareerOp.LATER)
@@ -253,4 +267,49 @@ object CareerModel {
     }
 
     private fun text(raw: String?): String? = raw?.trim()?.takeIf { it.isNotEmpty() }
+}
+
+/** Choix préparé sur un élément : rien n'est envoyé avant « Valider ». */
+data class CareerChoice(val kind: CareerKind, val id: String, val op: CareerOp, val dueDate: String? = null)
+
+/**
+ * Choix et remarques préparés pour une proposition, avant « Valider ». Un toucher prépare ou change un choix ;
+ * le même choix une seconde fois le retire. Les remarques restent attachées à leur élément.
+ */
+data class CareerDraft(
+    val uid: String? = null,
+    val choices: Map<String, CareerChoice> = emptyMap(),
+    val notes: Map<String, String> = emptyMap(),
+) {
+    val size: Int get() = choices.size
+
+    fun choiceOf(kind: CareerKind, id: String): CareerChoice? = choices[keyOf(kind, id)]
+
+    fun noteOf(kind: CareerKind, id: String): String = notes[keyOf(kind, id)].orEmpty()
+
+    fun tap(kind: CareerKind, id: String, op: CareerOp, dueDate: String?): CareerDraft {
+        val key = keyOf(kind, id)
+        return if (choices[key]?.op == op) copy(choices = choices - key)
+        else copy(choices = choices + (key to CareerChoice(kind, id, op, dueDate)))
+    }
+
+    fun withNote(kind: CareerKind, id: String, text: String): CareerDraft =
+        copy(notes = notes + (keyOf(kind, id) to text.take(CareerModel.NOTE_MAX_LENGTH)))
+
+    fun cleared(): CareerDraft = copy(choices = emptyMap(), notes = emptyMap())
+
+    /** Retire les éléments que le serveur a réglés ; les autres restent préparés. */
+    fun settle(settledKeys: Set<String>): CareerDraft = copy(choices = choices - settledKeys, notes = notes - settledKeys)
+
+    /** Un brouillon d'une autre proposition n'a rien à faire ici : il repart vide. */
+    fun forProposal(uid: String?): CareerDraft = if (uid == this.uid) this else CareerDraft(uid = uid)
+
+    /** Décisions à envoyer, dans l'ordre des touchers ; une remarque part avec son choix seulement. */
+    fun decisions(): List<CareerDecision> = choices.values.mapNotNull { choice ->
+        CareerDecision.of(choice.kind, choice.id, choice.op, note = notes[keyOf(choice.kind, choice.id)], dueDate = choice.dueDate)
+    }
+
+    companion object {
+        fun keyOf(kind: CareerKind, id: String): String = "${kind.wire}:$id"
+    }
 }

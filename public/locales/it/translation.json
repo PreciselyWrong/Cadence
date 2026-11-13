@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "scelto: {{label}}",
+        "validate": "Conferma ({{count}})",
+        "clear": "Cancella",
+        "applied": "{{count}} decisioni applicate",
+        "appliedOne": "1 decisione applicata",
         "title": "Carriera",
         "updatedAt": "aggiornato alle {{time}}",
         "empty": "Niente di nuovo oggi",
@@ -5334,6 +5339,8 @@
       "sendError": "Impossibile inviare le note.",
       "sendCaption_one": "{{count}} applicata · {{sent}} rimandate",
       "sendCaption_other": "{{count}} applicate · {{sent}} rimandate",
+      "answersCaption_one": "{{count}} risposta data",
+      "answersCaption_other": "{{count}} risposte date",
       "notesSent_one": "{{count}} attività rimandata, ti avviso quando è pronta",
       "notesSent_other": "{{count}} attività rimandate, ti avviso quando sono pronte",
       "appliedCount": "{{count}} su {{total}} applicati"

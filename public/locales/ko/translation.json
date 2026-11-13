@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "선택: {{label}}",
+        "validate": "확인 ({{count}})",
+        "clear": "지우기",
+        "applied": "{{count}}개 결정 적용됨",
+        "appliedOne": "1개 결정 적용됨",
         "title": "커리어",
         "updatedAt": "{{time}}에 업데이트됨",
         "empty": "오늘은 새로운 소식이 없습니다",
@@ -5327,6 +5332,8 @@
       "sendError": "메모를 보내지 못했어요.",
       "sendCaption_one": "{{count}}개 적용 · {{sent}}개 다시 보냄",
       "sendCaption_other": "{{count}}개 적용 · {{sent}}개 다시 보냄",
+      "answersCaption_one": "{{count}}개 답변",
+      "answersCaption_other": "{{count}}개 답변",
       "notesSent_one": "작업 {{count}}개를 다시 보냈어요. 준비되면 알려 드릴게요",
       "notesSent_other": "작업 {{count}}개를 다시 보냈어요. 준비되면 알려 드릴게요",
       "appliedCount": "{{total}}개 중 {{count}}개 적용됨"

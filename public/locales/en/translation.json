@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "chosen: {{label}}",
+        "validate": "Confirm ({{count}})",
+        "clear": "Clear",
+        "applied": "{{count}} decisions applied",
+        "appliedOne": "1 decision applied",
         "title": "Career",
         "updatedAt": "updated at {{time}}",
         "empty": "Nothing new today",
@@ -5389,6 +5394,8 @@
       "sendError": "The notes could not be sent.",
       "sendCaption_one": "{{count}} applied · {{sent}} sent back",
       "sendCaption_other": "{{count}} applied · {{sent}} sent back",
+      "answersCaption_one": "{{count}} answer given",
+      "answersCaption_other": "{{count}} answers given",
       "notesSent_one": "{{count}} task sent back, I’ll tell you when it’s ready",
       "notesSent_other": "{{count}} tasks sent back, I’ll tell you when it’s ready",
       "appliedCount": "{{count}} of {{total}} applied"

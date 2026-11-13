@@ -82,4 +82,13 @@
     <string name="career_op_task_created">Tâche créée</string>
     <string name="career_op_task_added">Tâche ajoutée</string>
     <string name="career_op_ignored">Ignorée</string>
+    <string name="career_validate">Valider (%1$d)</string>
+    <string name="career_clear">Effacer</string>
+    <string name="career_chosen">choisi : %1$s</string>
+    <string name="career_applied_count">%1$d décisions appliquées</string>
+    <string name="career_discard_title">Abandonner tes choix ?</string>
+    <string name="career_discard_text">Les choix préparés ne seront pas appliqués.</string>
+    <string name="career_discard_confirm">Abandonner</string>
+    <string name="career_stay">Rester</string>
+    <string name="proposal_sent">Envoyé</string>
 </resources>

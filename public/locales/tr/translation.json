@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "seçildi: {{label}}",
+        "validate": "Onayla ({{count}})",
+        "clear": "Temizle",
+        "applied": "{{count}} karar uygulandı",
+        "appliedOne": "1 karar uygulandı",
         "title": "Kariyer",
         "updatedAt": "{{time}} itibarıyla güncellendi",
         "empty": "Bugün yeni bir şey yok",
@@ -5327,6 +5332,8 @@
       "sendError": "Notlar gönderilemedi.",
       "sendCaption_one": "{{count}} uygulanan · {{sent}} geri gönderilen",
       "sendCaption_other": "{{count}} uygulanan · {{sent}} geri gönderilen",
+      "answersCaption_one": "{{count}} yanıt verildi",
+      "answersCaption_other": "{{count}} yanıt verildi",
       "notesSent_one": "{{count}} görev geri gönderildi, hazır olunca haber vereceğim",
       "notesSent_other": "{{count}} görev geri gönderildi, hazır olunca haber vereceğim",
       "appliedCount": "{{count}} / {{total}} uygulandı"

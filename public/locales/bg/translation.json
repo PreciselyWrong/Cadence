@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "избрано: {{label}}",
+        "validate": "Потвърди ({{count}})",
+        "clear": "Изчисти",
+        "applied": "Приложени решения: {{count}}",
+        "appliedOne": "Приложено 1 решение",
         "title": "Кариера",
         "updatedAt": "обновено в {{time}}",
         "empty": "Нищо ново днес",
@@ -5327,6 +5332,8 @@
       "sendError": "Бележките не можаха да бъдат изпратени.",
       "sendCaption_one": "{{count}} приложени · {{sent}} върнати",
       "sendCaption_other": "{{count}} приложени · {{sent}} върнати",
+      "answersCaption_one": "{{count}} отговор",
+      "answersCaption_other": "{{count}} отговора",
       "notesSent_one": "{{count}} задача върната, ще ти кажа, когато е готова",
       "notesSent_other": "{{count}} задачи върнати, ще ти кажа, когато са готови",
       "appliedCount": "Приложени: {{count}} от {{total}}"

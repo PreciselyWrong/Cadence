@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "gekozen: {{label}}",
+        "validate": "Bevestigen ({{count}})",
+        "clear": "Wissen",
+        "applied": "{{count}} beslissingen toegepast",
+        "appliedOne": "1 beslissing toegepast",
         "title": "Carrière",
         "updatedAt": "bijgewerkt om {{time}}",
         "empty": "Vandaag niets nieuws",
@@ -5327,6 +5332,8 @@
       "sendError": "De opmerkingen konden niet worden verstuurd.",
       "sendCaption_one": "{{count}} toegepast · {{sent}} teruggestuurd",
       "sendCaption_other": "{{count}} toegepast · {{sent}} teruggestuurd",
+      "answersCaption_one": "{{count}} antwoord gegeven",
+      "answersCaption_other": "{{count}} antwoorden gegeven",
       "notesSent_one": "{{count}} taak teruggestuurd, ik laat je weten wanneer ze klaar is",
       "notesSent_other": "{{count}} taken teruggestuurd, ik laat je weten wanneer ze klaar zijn",
       "appliedCount": "{{count}} van {{total}} toegepast"

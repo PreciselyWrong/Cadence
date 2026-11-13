@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "đã chọn: {{label}}",
+        "validate": "Xác nhận ({{count}})",
+        "clear": "Xóa",
+        "applied": "Đã áp dụng {{count}} quyết định",
+        "appliedOne": "Đã áp dụng 1 quyết định",
         "title": "Sự nghiệp",
         "updatedAt": "cập nhật lúc {{time}}",
         "empty": "Hôm nay không có gì mới",
@@ -5327,6 +5332,8 @@
       "sendError": "Không gửi được ghi chú.",
       "sendCaption_one": "{{count}} đã áp dụng · {{sent}} đã gửi lại",
       "sendCaption_other": "{{count}} đã áp dụng · {{sent}} đã gửi lại",
+      "answersCaption_one": "{{count}} câu trả lời",
+      "answersCaption_other": "{{count}} câu trả lời",
       "notesSent_one": "Đã gửi lại {{count}} việc, mình sẽ báo khi xong",
       "notesSent_other": "Đã gửi lại {{count}} việc, mình sẽ báo khi xong",
       "appliedCount": "Đã áp dụng {{count}} trên {{total}}"

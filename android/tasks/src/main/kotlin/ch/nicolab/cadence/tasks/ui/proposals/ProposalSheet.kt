@@ -110,6 +110,8 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
     // Remarques par tâche, et tâches dont le champ de remarque est ouvert ; remises à zéro par une réponse.
     var notes by remember(uid, version) { mutableStateOf(emptyMap<String, String>()) }
     var noteOpen by remember(uid, version) { mutableStateOf(emptySet<String>()) }
+    // Réponses préparées aux questions (question id → choix) : envoyées avec « Envoyer », jamais seules.
+    var answers by remember(uid, version) { mutableStateOf(emptyMap<String, String>()) }
 
     LaunchedEffect(uid, version) {
         while (true) {
@@ -132,6 +134,7 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
     val period = remember(current) { periodOf(current) }
     val pending = Proposals.pendingCount(changes, chosen)
     val counts = Proposals.sendCounts(changes, chosen, notes)
+    val sending = Proposals.needsSend(counts, answers)
 
     fun failure(error: Throwable): String = if (error is IOException) offline else failed
 
@@ -167,12 +170,17 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
     fun sendNotes() {
         scope.launch {
             busy = true
-            repo.send(uid, Proposals.sendBody(changes, chosen, notes))
+            repo.send(uid, Proposals.sendBody(changes, chosen, notes, answers))
                 .onSuccess {
                     tasks.requestSync()
                     val returned = counts.returned
                     onClose()
-                    snackbar.showSnackbar(context.resources.getQuantityString(R.plurals.proposal_returned, returned, returned))
+                    val message = if (returned == 0) {
+                        context.getString(R.string.proposal_sent)
+                    } else {
+                        context.resources.getQuantityString(R.plurals.proposal_returned, returned, returned)
+                    }
+                    snackbar.showSnackbar(message)
                 }
                 .onFailure { snackbar.showSnackbar(failure(it)) }
             busy = false
@@ -202,7 +210,11 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
             ready -> {
                 period?.let { PeriodPill(it, Modifier.padding(top = Space.md)) }
                 current.answer?.questions.orEmpty().forEach { question ->
-                    QuestionBlock(question, enabled = !busy) { choice -> sendReply(Proposals.questionReply(question, choice)) }
+                    QuestionBlock(
+                        question,
+                        chosen = answers[question.id],
+                        enabled = !busy,
+                    ) { choice -> answers = Proposals.chooseAnswer(answers, question.id, choice) }
                 }
                 if (changes.isEmpty()) {
                     SheetNote(stringResource(R.string.proposal_nothing))
@@ -246,7 +258,7 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
                     }
                 }
                 Spacer(Modifier.height(Space.md))
-                if (counts.returned == 0) {
+                if (!sending) {
                     PrimaryAction(
                         stringResource(R.string.proposal_apply, pending),
                         modifier = Modifier.fillMaxWidth(),
@@ -254,12 +266,14 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
                         onClick = ::applyChanges,
                     )
                 } else {
-                    Text(
-                        stringResource(R.string.proposal_send_counts, counts.applied, counts.returned),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = cadence.onSurfaceVariant,
-                        modifier = Modifier.fillMaxWidth().padding(bottom = Space.xs),
-                    )
+                    if (counts.returned > 0) {
+                        Text(
+                            stringResource(R.string.proposal_send_counts, counts.applied, counts.returned),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = cadence.onSurfaceVariant,
+                            modifier = Modifier.fillMaxWidth().padding(bottom = Space.xs),
+                        )
+                    }
                     PrimaryAction(
                         stringResource(R.string.proposal_send),
                         modifier = Modifier.fillMaxWidth(),
@@ -381,7 +395,7 @@ private fun SheetNote(text: String) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun QuestionBlock(question: QuestionDto, enabled: Boolean, onChoice: (String) -> Unit) {
+private fun QuestionBlock(question: QuestionDto, chosen: String?, enabled: Boolean, onChoice: (String) -> Unit) {
     Text(
         question.text,
         style = MaterialTheme.typography.titleSmall,
@@ -394,7 +408,7 @@ private fun QuestionBlock(question: QuestionDto, enabled: Boolean, onChoice: (St
         verticalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
         question.choices.forEach { choice ->
-            ChoiceChip(choice, selected = false, onClick = { if (enabled) onChoice(choice) })
+            ChoiceChip(choice, selected = choice == chosen, onClick = { if (enabled) onChoice(choice) })
         }
     }
 }

@@ -240,11 +240,23 @@ object Proposals {
             returned = changes.count { hasNote(it, notes) },
         )
 
+    /** Choix préparé d'une question : taper un autre choix le remplace, retaper le même le retire. Rien n'est envoyé. */
+    fun chooseAnswer(answers: Map<String, String>, questionId: String, choice: String): Map<String, String> =
+        if (answers[questionId] == choice) answers - questionId else answers + (questionId to choice)
+
+    /** « Envoyer » quand une question a une réponse ou qu'une ligne a une remarque ; sinon « Appliquer ». */
+    fun needsSend(counts: SendCounts, answers: Map<String, String>): Boolean = counts.returned > 0 || answers.isNotEmpty()
+
     /**
      * Corps de `POST …/send` : les décisions sans remarque et sans `keep`, puis les remarques de la réponse
-     * (une par tâche, texte rogné). Une remarque sur une tâche absente de la réponse n'est pas envoyée.
+     * (une par tâche, texte rogné) et les réponses aux questions. Une remarque sur une tâche absente de la réponse n'est pas envoyée.
      */
-    fun sendBody(changes: List<WeekChange>, chosen: Map<String, WeekDecision>, notes: Map<String, String>): JsonObject = buildJsonObject {
+    fun sendBody(
+        changes: List<WeekChange>,
+        chosen: Map<String, WeekDecision>,
+        notes: Map<String, String>,
+        answers: Map<String, String> = emptyMap(),
+    ): JsonObject = buildJsonObject {
         put(
             "decisions",
             buildJsonArray {
@@ -263,6 +275,17 @@ object Proposals {
                     add(buildJsonObject {
                         put("task_uid", change.taskUid)
                         put("text", text)
+                    })
+                }
+            },
+        )
+        put(
+            "answers",
+            buildJsonArray {
+                answers.forEach { (questionId, choice) ->
+                    add(buildJsonObject {
+                        put("question_id", questionId)
+                        put("choice", choice)
                     })
                 }
             },

@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "valgt: {{label}}",
+        "validate": "Bekreft ({{count}})",
+        "clear": "Tøm",
+        "applied": "{{count}} beslutninger brukt",
+        "appliedOne": "1 beslutning brukt",
         "title": "Karriere",
         "updatedAt": "oppdatert kl. {{time}}",
         "empty": "Ingenting nytt i dag",
@@ -5332,6 +5337,8 @@
       "sendError": "Notatene kunne ikke sendes.",
       "sendCaption_one": "{{count}} brukt · {{sent}} sendt tilbake",
       "sendCaption_other": "{{count}} brukt · {{sent}} sendt tilbake",
+      "answersCaption_one": "{{count}} svar gitt",
+      "answersCaption_other": "{{count}} svar gitt",
       "notesSent_one": "{{count}} oppgave sendt tilbake, jeg gir beskjed når den er klar",
       "notesSent_other": "{{count}} oppgaver sendt tilbake, jeg gir beskjed når de er klare",
       "appliedCount": "{{count}} av {{total}} brukt"

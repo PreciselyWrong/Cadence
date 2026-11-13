@@ -30,6 +30,7 @@ const {
     weekDecisionsOf,
     checkWeekDecisions,
     checkWeekNotes,
+    checkWeekAnswers,
     restrictWeekFacts,
 } = require('./core/week');
 const { reviewFacts, choicesFor } = require('./core/review');
@@ -470,6 +471,19 @@ async function replyProposal(user, uid, body = {}) {
     return serialize(row);
 }
 
+// A send of answers without notes: the decisions are done, the agent is told
+// the answers so it can remember them. Failing to emit does not fail the send.
+async function announceAnswers(userId, uid, answers) {
+    try {
+        await dispatcher.emit(userId, 'proposal.decided', {
+            text: `Week answered: ${answers.length}`,
+            data: { uid, kind: 'week', answers },
+        });
+    } catch (error) {
+        logError({ error, proposalUid: uid }, 'Proposal decision event failed');
+    }
+}
+
 // Changes of a week, by task. The operations are the ones the user can do
 // by hand: a plan line on a day (the due date stays), this week, later, a
 // new due date, dropped (cancelled, not deleted).
@@ -606,6 +620,9 @@ async function applyProposal(user, uid, body = {}) {
 // The user's send of a week sheet. Tasks with a decision are applied now, by
 // the same path as /apply. Tasks with a note go back to the agent for a second
 // pass, which only sees those tasks (docs/47-proposals.md, Send with notes).
+// Answers to the agent's questions travel with the event: with notes they go
+// to the second pass, without notes they are only announced
+// (docs/47-proposals.md, Send with answers).
 async function sendProposal(user, uid, body = {}) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
@@ -622,11 +639,18 @@ async function sendProposal(user, uid, body = {}) {
         body.notes ?? [],
         new Set(decisions.map((decision) => decision.task_uid))
     );
-    if (decisions.length === 0 && notes.length === 0) {
-        throw new ValidationError('decisions or notes must not be empty');
+    const answers = checkWeekAnswers(row.answer, body.answers ?? []);
+    if (decisions.length === 0 && notes.length === 0 && answers.length === 0) {
+        throw new ValidationError(
+            'decisions, notes or answers must not be empty'
+        );
     }
     if (notes.length === 0) {
-        return applyProposal(user, uid, { decisions });
+        const applied = await applyProposal(user, uid, { decisions });
+        if (answers.length > 0) {
+            await announceAnswers(row.user_id, uid, answers);
+        }
+        return applied;
     }
 
     const results = await applyWeekDecisions(user, decisions);
@@ -647,7 +671,7 @@ async function sendProposal(user, uid, body = {}) {
             notes,
         },
     });
-    await requestAgent(row, { previous_answer: previous });
+    await requestAgent(row, { previous_answer: previous, answers });
     return { uid: row.uid, status: row.status, round: roundOf(row), results };
 }
 

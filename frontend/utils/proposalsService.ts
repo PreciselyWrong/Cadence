@@ -193,23 +193,34 @@ export const applyProposal = (
         'Failed to apply the proposal.'
     ).then((response) => response.json());
 
-// Sends the decisions that are not noted, and a remark per noted task: the
-// agent asks again for those tasks; the proposal goes back to pending.
+// Sends the decisions that are not noted, a remark per noted task (the agent
+// asks again for those tasks; the proposal goes back to pending) and the
+// answers to the questions (one choice per question, docs/47-proposals.md,
+// Send with answers). Without remarks the proposal is applied at once.
 export interface ProposalNote {
     task_uid: string;
     text: string;
 }
 
+export interface ProposalAnswer {
+    question_id: string;
+    choice: string;
+}
+
 export const sendProposal = (
     uid: string,
-    body: { decisions: WeekDecision[]; notes: ProposalNote[] }
-): Promise<void> =>
+    body: {
+        decisions: WeekDecision[];
+        notes: ProposalNote[];
+        answers: ProposalAnswer[];
+    }
+): Promise<ApplyOutcome> =>
     request(
         `proposals/${encodeURIComponent(uid)}/send`,
         'POST',
         body,
         'Failed to send the proposal.'
-    ).then(() => undefined);
+    ).then((response) => response.json());
 
 // Asks again with the user's words; the proposal goes back to pending.
 export const replyProposal = (

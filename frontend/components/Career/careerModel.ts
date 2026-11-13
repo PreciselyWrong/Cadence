@@ -120,3 +120,21 @@ export const stateLabelOf = (decision: CareerDecision): [string, string] =>
         'career.state.later',
         'Plus tard',
     ];
+
+// The button a staged choice names, as « choisi : Postuler ».
+export const CHOICE_LABELS: Record<string, [string, string]> = {
+    'offer:apply': ['career.offers.apply', 'Postuler'],
+    'offer:skip': ['career.skip', 'Passer'],
+    'offer:later': ['career.later', 'Plus tard'],
+    'followup:done': ['career.followups.done', 'Fait'],
+    'followup:task': ['career.followups.createTask', 'Créer la tâche'],
+    'followup:later': ['career.later', 'Plus tard'],
+    'task:create': ['career.tasks.add', 'Ajouter'],
+    'task:skip': ['career.skip', 'Passer'],
+};
+
+export const choiceLabelOf = (decision: CareerDecision): [string, string] =>
+    CHOICE_LABELS[`${decision.kind}:${decision.op}`] ?? [
+        'career.later',
+        'Plus tard',
+    ];

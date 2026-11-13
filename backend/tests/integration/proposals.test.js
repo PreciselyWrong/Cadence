@@ -776,4 +776,140 @@ describe('proposals', () => {
             );
         });
     });
+
+    describe('send with answers', () => {
+        const questions = [
+            {
+                id: 'mardi',
+                text: 'Tu travailles mardi ?',
+                choices: ['Oui', 'Non'],
+            },
+            { id: 'soir', text: 'Soirs libres ?', choices: ['Oui'] },
+        ];
+
+        const sendAs = (uid, body) =>
+            agent.post(`/api/proposals/${uid}/send`).send(body);
+        const decidedEvents = () =>
+            emit.mock.calls.filter(([, event]) => event === 'proposal.decided');
+
+        const weekWithQuestions = async () => {
+            const { body: created } = await agent
+                .post('/api/proposals')
+                .send({ kind: 'week', start: today, end: day(6) });
+            await answerAs(created.uid, {
+                answer: {
+                    headline: 'Ta semaine',
+                    questions,
+                    changes: [
+                        {
+                            task_uid: taskUid(dueSoon),
+                            op: 'plan_day',
+                            date: day(1),
+                            reason: 'libre',
+                        },
+                    ],
+                },
+            });
+            return created.uid;
+        };
+
+        it('applies the decisions and emits the answers without asking the agent again', async () => {
+            const uid = await weekWithQuestions();
+            const sent = await sendAs(uid, {
+                decisions: [
+                    {
+                        task_uid: taskUid(dueSoon),
+                        op: 'plan_day',
+                        date: day(1),
+                    },
+                ],
+                notes: [],
+                answers: [{ question_id: 'mardi', choice: 'Non' }],
+            });
+            expect(sent.status).toBe(200);
+            expect(sent.body).toEqual({
+                uid,
+                status: 'applied',
+                results: [{ task_uid: taskUid(dueSoon), state: 'applied' }],
+            });
+            const plan = await dailyPlan.getPlan(user, day(1));
+            expect(plan.plan.items.map((item) => item.task_uid)).toContain(
+                taskUid(dueSoon)
+            );
+            expect(requested()).toHaveLength(1);
+            expect(decidedEvents()).toHaveLength(1);
+            expect(decidedEvents()[0][2].data).toEqual({
+                uid,
+                kind: 'week',
+                answers: [{ question_id: 'mardi', choice: 'Non' }],
+            });
+        });
+
+        it('with answers only, applies nothing new and marks the proposal applied', async () => {
+            const uid = await weekWithQuestions();
+            const sent = await sendAs(uid, {
+                answers: [{ question_id: 'soir', choice: 'Oui' }],
+            });
+            expect(sent.status).toBe(200);
+            expect(sent.body).toEqual({ uid, status: 'applied', results: [] });
+            const row = await Proposal.findOne({ where: { uid } });
+            expect(row.status).toBe('applied');
+            expect(requested()).toHaveLength(1);
+            expect(decidedEvents()[0][2].data.answers).toEqual([
+                { question_id: 'soir', choice: 'Oui' },
+            ]);
+        });
+
+        it('with notes, sends the answers with the second pass and emits no decision', async () => {
+            const uid = await weekWithQuestions();
+            const sent = await sendAs(uid, {
+                decisions: [],
+                notes: [{ task_uid: taskUid(dueSoon), text: 'Mardi non' }],
+                answers: [{ question_id: 'mardi', choice: 'Non' }],
+            });
+            expect(sent.status).toBe(200);
+            expect(sent.body).toMatchObject({
+                uid,
+                status: 'pending',
+                round: 2,
+            });
+            expect(requested().at(-1)[2].data).toMatchObject({
+                round: 2,
+                answers: [{ question_id: 'mardi', choice: 'Non' }],
+            });
+            expect(decidedEvents()).toHaveLength(0);
+        });
+
+        it('refuses an answer to an unknown question, a choice that is not offered, a repeated question, or more than three', async () => {
+            const uid = await weekWithQuestions();
+            const unknown = await sendAs(uid, {
+                answers: [{ question_id: 'inconnue', choice: 'Oui' }],
+            });
+            expect(unknown.status).toBe(400);
+            const badChoice = await sendAs(uid, {
+                answers: [{ question_id: 'soir', choice: 'Non' }],
+            });
+            expect(badChoice.status).toBe(400);
+            const repeated = await sendAs(uid, {
+                answers: [
+                    { question_id: 'soir', choice: 'Oui' },
+                    { question_id: 'soir', choice: 'Oui' },
+                ],
+            });
+            expect(repeated.status).toBe(400);
+            const many = await sendAs(uid, {
+                answers: [
+                    { question_id: 'a', choice: 'Oui' },
+                    { question_id: 'b', choice: 'Oui' },
+                    { question_id: 'c', choice: 'Oui' },
+                    { question_id: 'd', choice: 'Oui' },
+                ],
+            });
+            expect(many.status).toBe(400);
+            const row = await Proposal.findOne({ where: { uid } });
+            expect(row.status).toBe('ready');
+            expect(decidedEvents()).toHaveLength(0);
+            expect(requested()).toHaveLength(1);
+        });
+    });
 });

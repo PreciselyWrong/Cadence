@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "обрано: {{label}}",
+        "validate": "Підтвердити ({{count}})",
+        "clear": "Очистити",
+        "applied": "Застосовано рішень: {{count}}",
+        "appliedOne": "Застосовано 1 рішення",
         "title": "Кар’єра",
         "updatedAt": "оновлено о {{time}}",
         "empty": "Сьогодні нічого нового",
@@ -5417,6 +5422,8 @@
       "sendCaption_few": "{{count}} застосовано · {{sent}} повернуто",
       "sendCaption_many": "{{count}} застосовано · {{sent}} повернуто",
       "sendCaption_other": "{{count}} застосовано · {{sent}} повернуто",
+      "answersCaption_one": "{{count}} відповідь",
+      "answersCaption_other": "{{count}} відповідей",
       "notesSent_one": "{{count}} завдання повернуто, дам знати, коли буде готово",
       "notesSent_few": "{{count}} завдання повернуто, дам знати, коли будуть готові",
       "notesSent_many": "{{count}} завдань повернуто, дам знати, коли будуть готові",

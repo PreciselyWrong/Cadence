@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "wybrano: {{label}}",
+        "validate": "Zatwierdź ({{count}})",
+        "clear": "Wyczyść",
+        "applied": "Zastosowano decyzje: {{count}}",
+        "appliedOne": "Zastosowano 1 decyzję",
         "title": "Kariera",
         "updatedAt": "zaktualizowano o {{time}}",
         "empty": "Dziś nic nowego",
@@ -5417,6 +5422,8 @@
       "sendCaption_few": "{{count}} zastosowane · {{sent}} odesłane",
       "sendCaption_many": "{{count}} zastosowanych · {{sent}} odesłane",
       "sendCaption_other": "{{count}} zastosowanych · {{sent}} odesłane",
+      "answersCaption_one": "{{count}} odpowiedź",
+      "answersCaption_other": "{{count}} odpowiedzi",
       "notesSent_one": "{{count}} zadanie odesłane, dam znać, gdy będzie gotowe",
       "notesSent_few": "{{count}} zadania odesłane, dam znać, gdy będą gotowe",
       "notesSent_many": "{{count}} zadań odesłanych, dam znać, gdy będą gotowe",

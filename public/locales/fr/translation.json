@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "choisi : {{label}}",
+        "validate": "Valider ({{count}})",
+        "clear": "Effacer",
+        "applied": "{{count}} décisions appliquées",
+        "appliedOne": "1 décision appliquée",
         "title": "Carrière",
         "updatedAt": "mis à jour à {{time}}",
         "empty": "Rien de neuf aujourd’hui",
@@ -5335,6 +5340,8 @@
       "sendError": "Les remarques n’ont pas pu être envoyées.",
       "sendCaption_one": "{{count}} appliquée · {{sent}} renvoyées",
       "sendCaption_other": "{{count}} appliquées · {{sent}} renvoyées",
+      "answersCaption_one": "{{count}} réponse donnée",
+      "answersCaption_other": "{{count}} réponses données",
       "notesSent_one": "{{count}} tâche renvoyée, je te préviens quand c’est prêt",
       "notesSent_other": "{{count}} tâches renvoyées, je te préviens quand c’est prêt",
       "appliedCount": "{{count}} sur {{total}} appliqués"

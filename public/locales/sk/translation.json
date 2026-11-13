@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "vybrané: {{label}}",
+        "validate": "Potvrdiť ({{count}})",
+        "clear": "Vymazať",
+        "applied": "Uplatnených rozhodnutí: {{count}}",
+        "appliedOne": "Uplatnené 1 rozhodnutie",
         "title": "Kariéra",
         "updatedAt": "aktualizované o {{time}}",
         "empty": "Dnes nič nové",
@@ -5538,6 +5543,8 @@
       "sendCaption_few": "{{count}} použité · {{sent}} vrátené",
       "sendCaption_many": "{{count}} použitých · {{sent}} vrátené",
       "sendCaption_other": "{{count}} použitých · {{sent}} vrátené",
+      "answersCaption_one": "{{count}} odpoveď",
+      "answersCaption_other": "{{count}} odpovedí",
       "notesSent_one": "{{count}} úloha vrátená, dám vedieť, keď bude hotová",
       "notesSent_few": "{{count}} úlohy vrátené, dám vedieť, keď budú hotové",
       "notesSent_many": "{{count}} úloh vrátených, dám vedieť, keď budú hotové",

@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "επιλογή: {{label}}",
+        "validate": "Επιβεβαίωση ({{count}})",
+        "clear": "Εκκαθάριση",
+        "applied": "Εφαρμόστηκαν {{count}} αποφάσεις",
+        "appliedOne": "Εφαρμόστηκε 1 απόφαση",
         "title": "Καριέρα",
         "updatedAt": "ενημερώθηκε στις {{time}}",
         "empty": "Τίποτα νέο σήμερα",
@@ -5328,6 +5333,8 @@
       "sendError": "Δεν ήταν δυνατή η αποστολή των σημειώσεων.",
       "sendCaption_one": "{{count}} εφαρμοσμένες · {{sent}} επιστρέφονται",
       "sendCaption_other": "{{count}} εφαρμοσμένες · {{sent}} επιστρέφονται",
+      "answersCaption_one": "{{count}} απάντηση",
+      "answersCaption_other": "{{count}} απαντήσεις",
       "notesSent_one": "{{count}} εργασία επιστράφηκε, θα σε ενημερώσω όταν είναι έτοιμη",
       "notesSent_other": "{{count}} εργασίες επιστράφηκαν, θα σε ενημερώσω όταν είναι έτοιμες",
       "appliedCount": "Εφαρμόστηκαν {{count}} από {{total}}"

@@ -372,24 +372,56 @@ describe('ProposalSheet', () => {
         expect(groupOf('Ancienne idée')).toEqual(groupOf('Valider le devis'));
     });
 
-    it('sends a question answer as a reply and waits again', async () => {
-        (replyProposal as jest.Mock).mockResolvedValue(
-            detail({ status: 'pending' })
-        );
+    it('selects a question answer without sending anything', async () => {
         renderSheet();
         await screen.findByText('Tu travailles mardi ?');
 
         fireEvent.click(screen.getByRole('button', { name: 'Oui' }));
+        expect(screen.getByRole('button', { name: 'Oui' })).toHaveAttribute(
+            'aria-pressed',
+            'true'
+        );
+        expect(screen.getByText('1 réponse donnée')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Non' }));
+        expect(screen.getByRole('button', { name: 'Oui' })).toHaveAttribute(
+            'aria-pressed',
+            'false'
+        );
+        expect(screen.getByRole('button', { name: 'Non' })).toHaveAttribute(
+            'aria-pressed',
+            'true'
+        );
+
+        expect(replyProposal).not.toHaveBeenCalled();
+        expect(sendProposal).not.toHaveBeenCalled();
+        expect(applyProposal).not.toHaveBeenCalled();
+    });
+
+    it('sends the answers with Envoyer, together with the decisions', async () => {
+        (sendProposal as jest.Mock).mockResolvedValue(appliedOutcome);
+        renderSheet();
+        await screen.findByText('Tu travailles mardi ?');
+
+        fireEvent.click(screen.getByRole('button', { name: 'Oui' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Envoyer' }));
 
         await waitFor(() =>
-            expect(replyProposal).toHaveBeenCalledWith(
-                UID,
-                'Q: Tu travailles mardi ? R: Oui'
-            )
+            expect(sendProposal).toHaveBeenCalledWith(UID, {
+                decisions: [
+                    { task_uid: 't1', op: 'plan_day', date: '2026-11-17' },
+                    { task_uid: 't2', op: 'plan_day', date: '2026-11-17' },
+                    { task_uid: 't3', op: 'drop' },
+                ],
+                notes: [],
+                answers: [{ question_id: 'q1', choice: 'Oui' }],
+            })
         );
+        expect(replyProposal).not.toHaveBeenCalled();
+        expect(applyProposal).not.toHaveBeenCalled();
         expect(
-            await screen.findByText('Ta semaine se prépare…')
-        ).toBeInTheDocument();
+            screen.queryByRole('button', { name: /Appliquer/ })
+        ).not.toBeInTheDocument();
     });
 
     it('cannot apply when every row is kept', async () => {
@@ -492,6 +524,7 @@ describe('ProposalSheet', () => {
                     { task_uid: 't3', op: 'drop' },
                 ],
                 notes: [{ task_uid: 't1', text: 'Le devis est faux' }],
+                answers: [],
             })
         );
         expect(applyProposal).not.toHaveBeenCalled();

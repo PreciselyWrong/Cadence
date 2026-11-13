@@ -8,7 +8,7 @@ import {
 import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import PageHeader from '../Shared/ui/PageHeader';
 import EmptyState from '../Shared/ui/EmptyState';
-import Button from '../Shared/ui/Button';
+import Button, { type ButtonVariant } from '../Shared/ui/Button';
 import { useToast } from '../Shared/ToastContext';
 import { OfflineQueuedError } from '../../utils/authUtils';
 import {
@@ -23,6 +23,7 @@ import {
 import { useProposalChanged } from '../Proposals/useProposalChanged';
 import {
     agoText,
+    choiceLabelOf,
     clockText,
     daysLeft,
     decisionMap,
@@ -33,6 +34,7 @@ import {
     safeUrl,
     stateLabelOf,
 } from './careerModel';
+import type { CareerKind } from './careerModel';
 
 const NOTE_MAX = 500;
 
@@ -64,21 +66,31 @@ const Section: React.FC<{
     </section>
 );
 
+const choiceClass = (chosen: boolean) =>
+    chosen ? 'ring-2 ring-primary/70' : '';
+
 // The agent's career morning: follow-ups to send, offers to decide, tasks to
-// add. Every tap applies one decision at once; decided items fold into
-// « Décidé (N) », without undo (docs/47-proposals.md › Clients › Web).
+// add. A tap only stages a choice; « Valider » sends every staged choice in
+// one call, and applied items fold into « Décidé (N) », without undo
+// (docs/47-proposals.md › Clients › Web).
 const CareerPage: React.FC = () => {
     const { t, i18n } = useTranslation();
     const language = i18n?.language || 'fr';
-    const { showErrorToast } = useToast();
+    const { showErrorToast, showSuccessToast } = useToast();
     const [proposal, setProposal] = useState<CareerProposal | null>(null);
     const [state, setState] = useState<'loading' | 'ready' | 'error'>(
         'loading'
     );
-    // Decisions taken here, over the server's; removed again if they fail.
+    // Decisions applied here, over the server's.
     const [local, setLocal] = useState<Map<string, CareerDecision>>(
         () => new Map()
     );
+    // Choices made by taps, not yet sent; keyed `kind:id`, in tap order.
+    const [staged, setStaged] = useState<Map<string, CareerDecision>>(
+        () => new Map()
+    );
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [notes, setNotes] = useState<Map<string, string>>(() => new Map());
     const [noteOpen, setNoteOpen] = useState<string | null>(null);
     const [decidedOpen, setDecidedOpen] = useState(false);
@@ -107,29 +119,106 @@ const CareerPage: React.FC = () => {
     const answer = proposal?.answer ?? null;
     const now = new Date();
 
-    const decide = (decision: CareerDecision) => {
-        if (!proposal) return;
+    const stage = (decision: CareerDecision) => {
+        if (!proposal || submitting) return;
         const key = itemKey(decision.kind, decision.id);
-        setLocal((previous) => new Map(previous).set(key, decision));
+        setStaged((previous) => new Map(previous).set(key, decision));
+        setSubmitError(null);
         if (noteOpen === key) setNoteOpen(null);
-        applyCareerDecisions(proposal.uid, [decision]).catch((error) => {
-            // Queued offline: the write is replayed later, the item stays decided.
-            if (error instanceof OfflineQueuedError) return;
-            setLocal((previous) => {
-                const next = new Map(previous);
-                next.delete(key);
-                return next;
-            });
-            showErrorToast(
-                t('career.applyError', 'La décision n’a pas été enregistrée.')
-            );
-        });
     };
+
+    const isChosen = (kind: CareerKind, id: string, op: string): boolean =>
+        staged.get(itemKey(kind, id))?.op === op;
 
     const noteFor = (key: string): string | undefined => {
         const text = notes.get(key)?.trim();
         return text ? text : undefined;
     };
+
+    const clearStaged = () => {
+        setStaged(new Map());
+        setNotes(new Map());
+        setNoteOpen(null);
+        setSubmitError(null);
+    };
+
+    const validate = () => {
+        if (!proposal || submitting || staged.size === 0) return;
+        const entries = [...staged.entries()];
+        const decisions = entries.map(([key, decision]) => {
+            const note = decision.kind === 'offer' ? noteFor(key) : undefined;
+            return decision.kind === 'offer' && note
+                ? { ...decision, note }
+                : decision;
+        });
+        setSubmitting(true);
+        setSubmitError(null);
+        const finish = () => {
+            // « Plus tard » is sent but stays open on the page.
+            const decidedNow = entries.filter(
+                ([, decision]) => decision.op !== 'later'
+            );
+            setLocal((previous) => {
+                const next = new Map(previous);
+                decidedNow.forEach(([key, decision]) =>
+                    next.set(key, decision)
+                );
+                return next;
+            });
+            setStaged(new Map());
+            setNotes((previous) => {
+                const next = new Map(previous);
+                entries.forEach(([key]) => next.delete(key));
+                return next;
+            });
+            setSubmitting(false);
+            showSuccessToast(
+                entries.length === 1
+                    ? t('career.appliedOne', '1 décision appliquée')
+                    : t('career.applied', '{{count}} décisions appliquées', {
+                          count: entries.length,
+                      })
+            );
+        };
+        applyCareerDecisions(proposal.uid, decisions)
+            .then(finish)
+            .catch((error) => {
+                // Queued offline: the writes are replayed later, as if applied.
+                if (error instanceof OfflineQueuedError) return finish();
+                const message = t(
+                    'career.applyError',
+                    'La décision n’a pas été enregistrée.'
+                );
+                setSubmitting(false);
+                setSubmitError(message);
+                showErrorToast(message);
+            });
+    };
+
+    // Ctrl+Entrée (⌘+Entrée on macOS) validates the staged choices.
+    useEffect(() => {
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key !== 'Enter' || !(event.ctrlKey || event.metaKey)) {
+                return;
+            }
+            if (staged.size === 0) return;
+            event.preventDefault();
+            validate();
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    });
+
+    // Leaving with staged choices asks for confirmation; nothing else does.
+    useEffect(() => {
+        if (staged.size === 0) return;
+        const onBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = '';
+        };
+        window.addEventListener('beforeunload', onBeforeUnload);
+        return () => window.removeEventListener('beforeunload', onBeforeUnload);
+    }, [staged.size]);
 
     const header = (
         <PageHeader
@@ -217,6 +306,41 @@ const CareerPage: React.FC = () => {
         return decision ? [{ ...row, decision }] : [];
     });
 
+    // A staged choice shows under its item, as « choisi : Postuler ».
+    const choiceNote = (kind: CareerKind, id: string) => {
+        const decision = staged.get(itemKey(kind, id));
+        if (!decision) return null;
+        const [labelKey, fallback] = choiceLabelOf(decision);
+        return (
+            <p className="mt-1 text-label-m text-primary">
+                {t('career.choice', 'choisi : {{label}}', {
+                    label: t(labelKey, fallback),
+                })}
+            </p>
+        );
+    };
+
+    // A tap stages its choice; the button it names shows as selected.
+    const choiceButton = (
+        decision: CareerDecision,
+        label: string,
+        variant?: ButtonVariant,
+        icon?: React.ReactNode
+    ) => {
+        const chosen = isChosen(decision.kind, decision.id, decision.op);
+        return (
+            <Button
+                variant={variant}
+                icon={icon}
+                aria-pressed={chosen}
+                className={choiceClass(chosen)}
+                onClick={() => stage(decision)}
+            >
+                {label}
+            </Button>
+        );
+    };
+
     const renderFollowup = (followup: CareerFollowup) => {
         const sourceUrl = safeUrl(followup.source_url);
         const draftUrl = safeUrl(followup.draft_url);
@@ -265,6 +389,7 @@ const CareerPage: React.FC = () => {
                             {followup.note}
                         </p>
                     )}
+                    {choiceNote('followup', followup.id)}
                 </div>
                 <div className="flex flex-wrap gap-1.5 sm:shrink-0 sm:justify-end">
                     {draftUrl && (
@@ -280,41 +405,20 @@ const CareerPage: React.FC = () => {
                             )}
                         </a>
                     )}
-                    <Button
-                        variant="ghost"
-                        onClick={() =>
-                            decide({
-                                kind: 'followup',
-                                id: followup.id,
-                                op: 'task',
-                            })
-                        }
-                    >
-                        {t('career.followups.createTask', 'Créer la tâche')}
-                    </Button>
-                    <Button
-                        onClick={() =>
-                            decide({
-                                kind: 'followup',
-                                id: followup.id,
-                                op: 'done',
-                            })
-                        }
-                    >
-                        {t('career.followups.done', 'Fait')}
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        onClick={() =>
-                            decide({
-                                kind: 'followup',
-                                id: followup.id,
-                                op: 'later',
-                            })
-                        }
-                    >
-                        {t('career.later', 'Plus tard')}
-                    </Button>
+                    {choiceButton(
+                        { kind: 'followup', id: followup.id, op: 'task' },
+                        t('career.followups.createTask', 'Créer la tâche'),
+                        'ghost'
+                    )}
+                    {choiceButton(
+                        { kind: 'followup', id: followup.id, op: 'done' },
+                        t('career.followups.done', 'Fait')
+                    )}
+                    {choiceButton(
+                        { kind: 'followup', id: followup.id, op: 'later' },
+                        t('career.later', 'Plus tard'),
+                        'ghost'
+                    )}
                 </div>
             </li>
         );
@@ -334,12 +438,6 @@ const CareerPage: React.FC = () => {
                     });
         const editing = noteOpen === key;
         const note = noteFor(key);
-        const decideOffer = (op: 'apply' | 'skip' | 'later') =>
-            decide(
-                note
-                    ? { kind: 'offer', id: offer.id, op, note }
-                    : { kind: 'offer', id: offer.id, op }
-            );
         return (
             <li
                 key={offer.id}
@@ -377,22 +475,22 @@ const CareerPage: React.FC = () => {
                     </p>
                 )}
                 <p className="mt-2 text-body-m text-surface-on">{offer.fit}</p>
+                {choiceNote('offer', offer.id)}
                 <div className="mt-3 flex flex-wrap gap-1.5">
-                    <Button
-                        variant="primary"
-                        onClick={() => decideOffer('apply')}
-                    >
-                        {t('career.offers.apply', 'Postuler')}
-                    </Button>
-                    <Button onClick={() => decideOffer('skip')}>
-                        {t('career.skip', 'Passer')}
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        onClick={() => decideOffer('later')}
-                    >
-                        {t('career.later', 'Plus tard')}
-                    </Button>
+                    {choiceButton(
+                        { kind: 'offer', id: offer.id, op: 'apply' },
+                        t('career.offers.apply', 'Postuler'),
+                        'primary'
+                    )}
+                    {choiceButton(
+                        { kind: 'offer', id: offer.id, op: 'skip' },
+                        t('career.skip', 'Passer')
+                    )}
+                    {choiceButton(
+                        { kind: 'offer', id: offer.id, op: 'later' },
+                        t('career.later', 'Plus tard'),
+                        'ghost'
+                    )}
                     <Button
                         variant="ghost"
                         aria-expanded={editing}
@@ -470,36 +568,25 @@ const CareerPage: React.FC = () => {
                             ])}
                         </p>
                     )}
+                    {choiceNote('task', task.id)}
                 </div>
                 <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
-                    <Button
-                        onClick={() =>
-                            decide(
-                                task.due_date
-                                    ? {
-                                          kind: 'task',
-                                          id: task.id,
-                                          op: 'create',
-                                          due_date: task.due_date,
-                                      }
-                                    : {
-                                          kind: 'task',
-                                          id: task.id,
-                                          op: 'create',
-                                      }
-                            )
-                        }
-                    >
-                        {t('career.tasks.add', 'Ajouter')}
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        onClick={() =>
-                            decide({ kind: 'task', id: task.id, op: 'skip' })
-                        }
-                    >
-                        {t('career.skip', 'Passer')}
-                    </Button>
+                    {choiceButton(
+                        task.due_date
+                            ? {
+                                  kind: 'task',
+                                  id: task.id,
+                                  op: 'create',
+                                  due_date: task.due_date,
+                              }
+                            : { kind: 'task', id: task.id, op: 'create' },
+                        t('career.tasks.add', 'Ajouter')
+                    )}
+                    {choiceButton(
+                        { kind: 'task', id: task.id, op: 'skip' },
+                        t('career.skip', 'Passer'),
+                        'ghost'
+                    )}
                 </div>
             </li>
         );
@@ -642,6 +729,39 @@ const CareerPage: React.FC = () => {
                     </section>
                 )}
             </div>
+            {staged.size > 0 && (
+                <div className="sticky bottom-0 z-10 border-t border-outline-variant/50 bg-surface-card">
+                    <div
+                        className={`${PAGE_GUTTER} flex flex-wrap items-center justify-end gap-2 py-3`}
+                    >
+                        {submitError && (
+                            <p
+                                role="alert"
+                                className="mr-auto text-body-m text-danger"
+                            >
+                                {submitError}
+                            </p>
+                        )}
+                        <Button
+                            variant="ghost"
+                            disabled={submitting}
+                            onClick={clearStaged}
+                        >
+                            {t('career.clear', 'Effacer')}
+                        </Button>
+                        <Button
+                            variant="primary"
+                            disabled={submitting}
+                            aria-keyshortcuts="Control+Enter Meta+Enter"
+                            onClick={validate}
+                        >
+                            {t('career.validate', 'Valider ({{count}})', {
+                                count: staged.size,
+                            })}
+                        </Button>
+                    </div>
+                </div>
+            )}
         </PageShell>
     );
 };

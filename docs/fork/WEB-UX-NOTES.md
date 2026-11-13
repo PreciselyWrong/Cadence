@@ -933,10 +933,17 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Problème** : les relances, offres et tâches que l'agent prépare chaque matin n'avaient pas de page sur le web.
 - **Décision** : une page `/career` (icône mallette sur le rail) : « Carrière » et « mis à jour à 9 h 15 », la phrase de l'agent, 3 ou 4 tuiles de chiffres, puis « Relances » (« Ouvrir le brouillon », « Créer la tâche », « Fait », « Plus tard »), « Offres à décider » en cartes (« Postuler » seul bouton plein, « Passer », « Plus tard », « Remarque » sur une ligne envoyée avec la décision) et « Tâches proposées » (« Ajouter », « Passer »). Chaque toucher applique sa décision tout de suite ; l'élément rejoint « Décidé (N) », replié, avec un libellé d'état et sans annulation. Vide : « Rien de neuf aujourd'hui ». La notification d'une proposition carrière ouvre la page.
-- **Android à reprendre** : l'écran Carrière de Bilan a déjà les mêmes sections ; vérifier les mêmes libellés d'état dans « Décidé », la remarque envoyée avec la décision suivante de la carte, et « Postuler » comme seul bouton plein.
+- **Changement (même jour)** : un toucher ne décide plus rien ; il choisit (anneau, « choisi : Postuler ») et « Valider (N) » envoie tous les choix en un appel, « Effacer » les retire. Garder ce modèle côté Android : choix en attente, un seul envoi, « Décidé » après succès.
+- **Android à reprendre** : l'écran Carrière de Bilan a déjà les mêmes sections ; vérifier les mêmes libellés d'état dans « Décidé », la remarque envoyée avec le choix validé de la carte, et « Postuler » comme seul bouton plein.
 
 ### 2026-11-13 — « Trier mes mails » v2 : une rangée de choix, le mail lisible
 
 - **Problème** : le paquet ne proposait qu'un gros bouton de conseil et une rangée de boutons secondaires toujours identiques ; pour décider il fallait souvent ouvrir Gmail, et on ne pouvait ni demander un brouillon, ni archiver seul, ni répondre à l'agent.
 - **Décision** : progression « 4 / 17 » avec une barre fine ; carte : expéditeur · date, objet, résumé, extrait du mail lisible sur la carte (replié sous « Lire le mail » s'il est long), « Ouvrir dans Gmail », puis le brouillon cité. Une seule rangée de 2 à 5 grands boutons dans l'ordre des `options` de l'agent (icônes : envoi, case, agenda, horloge, archive, croix ; chiffre 1–5 en coin), le conseil encadré et teinté, sans phrase « Conseil : … ». En dessous, discrets : « Répondre par un mot » (champ sur place, décision `note`, « Renvoyé au Trieur »), « Discuter », « Passer », « Annuler ». Erreur de la dernière action en tête de carte. Clavier : Entrée/→ conseil, 1–5 choisir, ← plus tard, ↓ passer, Ctrl/⌘+Z annuler (`frontend/components/Triage/MailDeck.tsx`, règles `deckButtons` dans `mailDeck.ts`, `docs/43-mail-triage.md`).
 - **Android** : livré dans la même journée par une autre session (1.31.0, `docs/43-mail-triage.md` › Android deck v2) ; à comparer : sans `recommended`, le web n'encadre aucun bouton et Entrée ne fait rien.
+
+### 2026-11-13 — Questions de la semaine : un choix se garde, « Envoyer » l'envoie
+
+- **Problème** : cliquer un choix de question relançait toute la proposition par l'IA, avant même qu'on ait fini de décider.
+- **Décision** : un choix ne fait que se sélectionner (changeable, un second clic le retire) ; le pied compte les réponses et « Envoyer » les porte avec les décisions et remarques (`answers` de `POST …/send`, `docs/47-proposals.md` › Send with answers). « Répondre » en texte libre reste la seule relance par l'IA.
+- **Android** : déjà aligné (1.32.0) ; vérif sur le téléphone à faire.

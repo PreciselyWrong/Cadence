@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "dipilih: {{label}}",
+        "validate": "Terapkan ({{count}})",
+        "clear": "Hapus",
+        "applied": "{{count}} keputusan diterapkan",
+        "appliedOne": "1 keputusan diterapkan",
         "title": "Karier",
         "updatedAt": "diperbarui pukul {{time}}",
         "empty": "Tidak ada yang baru hari ini",
@@ -5327,6 +5332,8 @@
       "sendError": "Catatan tidak dapat dikirim.",
       "sendCaption_one": "{{count}} diterapkan · {{sent}} dikirim ulang",
       "sendCaption_other": "{{count}} diterapkan · {{sent}} dikirim ulang",
+      "answersCaption_one": "{{count}} jawaban diberikan",
+      "answersCaption_other": "{{count}} jawaban diberikan",
       "notesSent_one": "{{count}} tugas dikirim ulang, aku kabari saat sudah siap",
       "notesSent_other": "{{count}} tugas dikirim ulang, aku kabari saat sudah siap",
       "appliedCount": "{{count}} dari {{total}} diterapkan"

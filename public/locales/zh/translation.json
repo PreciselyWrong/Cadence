@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "已选：{{label}}",
+        "validate": "确认（{{count}}）",
+        "clear": "清除",
+        "applied": "已应用 {{count}} 项决定",
+        "appliedOne": "已应用 1 项决定",
         "title": "职业",
         "updatedAt": "更新于 {{time}}",
         "empty": "今天没有新内容",
@@ -5327,6 +5332,8 @@
       "sendError": "备注无法发送。",
       "sendCaption_one": "已应用 {{count}} 项 · 已退回 {{sent}} 项",
       "sendCaption_other": "已应用 {{count}} 项 · 已退回 {{sent}} 项",
+      "answersCaption_one": "已给出 {{count}} 个回答",
+      "answersCaption_other": "已给出 {{count}} 个回答",
       "notesSent_one": "已退回 {{count}} 项任务，准备好后我会告诉你",
       "notesSent_other": "已退回 {{count}} 项任务，准备好后我会告诉你",
       "appliedCount": "已应用 {{count}} / {{total}}"

@@ -73,10 +73,9 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
         CareerModel.newestReady(CareerModel.parseList(client.listCareer()))
     }
 
-    /** Une décision de carrière ; la liste se relit ensuite par [career]. */
-    suspend fun decideCareer(uid: String, decision: CareerDecision): Result<Unit> = attempt {
-        client.apply(uid, CareerModel.applyBody(decision))
-        Unit
+    /** Toutes les décisions de carrière préparées, en un appel ; renvoie les clés `genre:id` réglées. */
+    suspend fun decideCareer(uid: String, decisions: List<CareerDecision>): Result<Set<String>> = attempt {
+        CareerModel.settledKeys(client.apply(uid, CareerModel.applyBody(decisions)))
     }
 
     suspend fun dismiss(uid: String): Result<Unit> = attempt {

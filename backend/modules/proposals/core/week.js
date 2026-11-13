@@ -23,6 +23,9 @@ const APPLY_AFTER_END_DAYS = 30;
 // A note is the user's words on one task, sent back to the agent for a second
 // pass (docs/47-proposals.md, Send with notes).
 const NOTE_MAX = 500;
+// The answers of a send to the questions of the answer (docs/47-proposals.md,
+// Send with answers).
+const QUESTION_ANSWERS_MAX = 3;
 
 // Period from the request: a start (default today) and an end (default six
 // days later), at most 14 days.
@@ -269,6 +272,46 @@ function checkWeekNotes(facts, notes, decided) {
     });
 }
 
+// The answers to the questions of the answer: each names one question of it
+// and one of its choices, at most one per question and QUESTION_ANSWERS_MAX.
+function checkWeekAnswers(answer, answers) {
+    if (!Array.isArray(answers)) {
+        throw new ValidationError('answers must be a list');
+    }
+    if (answers.length > QUESTION_ANSWERS_MAX) {
+        throw new ValidationError(
+            `answers must be at most ${QUESTION_ANSWERS_MAX}`
+        );
+    }
+    const questions = new Map(
+        (answer?.questions ?? []).map((question) => [question.id, question])
+    );
+    const seen = new Set();
+    return answers.map((item) => {
+        if (!item || typeof item !== 'object') {
+            throw new ValidationError('Each answer must be an object');
+        }
+        const question = questions.get(item.question_id);
+        if (!question) {
+            throw new ValidationError(
+                `Question ${item.question_id} is not in this proposal`
+            );
+        }
+        if (seen.has(question.id)) {
+            throw new ValidationError(
+                `Question ${question.id} is answered twice`
+            );
+        }
+        if (!question.choices.includes(item.choice)) {
+            throw new ValidationError(
+                `Choice is not offered for question ${question.id}`
+            );
+        }
+        seen.add(question.id);
+        return { question_id: question.id, choice: item.choice };
+    });
+}
+
 // The facts of a second pass: the same period, days and context, but only the
 // noted tasks, and the days' plan lines of those tasks.
 function restrictWeekFacts(facts, uids) {
@@ -318,6 +361,7 @@ module.exports = {
     validateWeekAnswer,
     checkWeekDecisions,
     checkWeekNotes,
+    checkWeekAnswers,
     restrictWeekFacts,
     weekDecisionsOf,
     NOTE_MAX,

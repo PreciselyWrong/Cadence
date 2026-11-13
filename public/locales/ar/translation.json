@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "المختار: {{label}}",
+        "validate": "تأكيد ({{count}})",
+        "clear": "مسح",
+        "applied": "تم تطبيق {{count}} قرارات",
+        "appliedOne": "تم تطبيق قرار واحد",
         "title": "المسار المهني",
         "updatedAt": "حُدّث في {{time}}",
         "empty": "لا جديد اليوم",
@@ -5382,6 +5387,8 @@
       "sendCaption_few": "{{count}} مطبّقات · {{sent}} مُعادة",
       "sendCaption_many": "{{count}} مطبّقة · {{sent}} مُعادة",
       "sendCaption_other": "{{count}} مطبّقة · {{sent}} مُعادة",
+      "answersCaption_one": "{{count}} إجابة مُعطاة",
+      "answersCaption_other": "{{count}} إجابات مُعطاة",
       "notesSent_one": "أُعيدت مهمة واحدة، سأخبرك حين تصبح جاهزة",
       "notesSent_two": "أُعيدت مهمتان، سأخبرك حين تصبحان جاهزتين",
       "notesSent_few": "أُعيدت {{count}} مهام، سأخبرك حين تصبح جاهزة",

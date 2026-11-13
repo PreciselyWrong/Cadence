@@ -133,7 +133,7 @@ describe('CareerPage', () => {
         expect(screen.getByText('Mettre à jour le CV')).toBeInTheDocument();
     });
 
-    it('applies « Postuler » at once and moves the card to Décidé', async () => {
+    it('tapping Postuler calls nothing and only stages the choice', async () => {
         render(<CareerPage />);
         const offer = await screen.findByTestId('career-offer-o1');
 
@@ -141,20 +141,36 @@ describe('CareerPage', () => {
             within(offer).getByRole('button', { name: 'Postuler' })
         );
 
-        expect(applyMock).toHaveBeenCalledWith('c1', [
-            { kind: 'offer', id: 'o1', op: 'apply' },
-        ]);
-        expect(screen.queryByTestId('career-offer-o1')).not.toBeInTheDocument();
-        const toggle = screen.getByRole('button', { name: /Décidé \(1\)/ });
-        fireEvent.click(toggle);
-        const decided = screen.getByTestId('career-decided');
+        expect(applyMock).not.toHaveBeenCalled();
         expect(
-            within(decided).getByText('Lead frontend · Globex')
+            within(offer).getByRole('button', { name: 'Postuler' })
+        ).toHaveAttribute('aria-pressed', 'true');
+        expect(
+            within(offer).getByText('choisi : Postuler')
         ).toBeInTheDocument();
-        expect(within(decided).getByText('Postulé')).toBeInTheDocument();
+        expect(screen.getByTestId('career-offer-o1')).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Valider (1)' })
+        ).toBeEnabled();
     });
 
-    it('sends the note with the offer decision', async () => {
+    it('another tap on a button changes the staged choice', async () => {
+        render(<CareerPage />);
+        const offer = await screen.findByTestId('career-offer-o1');
+
+        fireEvent.click(
+            within(offer).getByRole('button', { name: 'Postuler' })
+        );
+        fireEvent.click(within(offer).getByRole('button', { name: 'Passer' }));
+
+        expect(applyMock).not.toHaveBeenCalled();
+        expect(within(offer).getByText('choisi : Passer')).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Valider (1)' })
+        ).toBeInTheDocument();
+    });
+
+    it('Valider sends every staged decision in one call, with notes', async () => {
         render(<CareerPage />);
         const offer = await screen.findByTestId('career-offer-o1');
 
@@ -164,34 +180,89 @@ describe('CareerPage', () => {
         fireEvent.change(within(offer).getByRole('textbox'), {
             target: { value: '  Seulement en télétravail  ' },
         });
-        fireEvent.click(within(offer).getByRole('button', { name: 'Passer' }));
+        fireEvent.click(
+            within(offer).getByRole('button', { name: 'Postuler' })
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'Fait' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Ajouter' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Valider (3)' }));
 
+        expect(applyMock).toHaveBeenCalledTimes(1);
         expect(applyMock).toHaveBeenCalledWith('c1', [
             {
                 kind: 'offer',
                 id: 'o1',
-                op: 'skip',
+                op: 'apply',
                 note: 'Seulement en télétravail',
             },
-        ]);
-    });
-
-    it('sends follow-up and task decisions', async () => {
-        render(<CareerPage />);
-        await screen.findByTestId('career-followups');
-
-        fireEvent.click(screen.getByRole('button', { name: 'Créer la tâche' }));
-        fireEvent.click(screen.getByRole('button', { name: 'Ajouter' }));
-
-        expect(applyMock).toHaveBeenNthCalledWith(1, 'c1', [
-            { kind: 'followup', id: 'f1', op: 'task' },
-        ]);
-        expect(applyMock).toHaveBeenNthCalledWith(2, 'c1', [
+            { kind: 'followup', id: 'f1', op: 'done' },
             { kind: 'task', id: 't1', op: 'create' },
         ]);
+        await waitFor(() =>
+            expect(mockToasts.showSuccessToast).toHaveBeenCalledWith(
+                '3 décisions appliquées'
+            )
+        );
+        fireEvent.click(
+            await screen.findByRole('button', { name: /Décidé \(3\)/ })
+        );
+        const decided = screen.getByTestId('career-decided');
+        expect(
+            within(decided).getByText('Lead frontend · Globex')
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: /Valider/ })
+        ).not.toBeInTheDocument();
     });
 
-    it('puts the card back and shows a toast when the apply fails', async () => {
+    it('Effacer drops the staged choices without calling the server', async () => {
+        render(<CareerPage />);
+        const offer = await screen.findByTestId('career-offer-o1');
+
+        fireEvent.click(
+            within(offer).getByRole('button', { name: 'Postuler' })
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'Effacer' }));
+
+        expect(applyMock).not.toHaveBeenCalled();
+        expect(
+            within(offer).queryByText('choisi : Postuler')
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: /Valider/ })
+        ).not.toBeInTheDocument();
+    });
+
+    it('Ctrl+Entrée validates the staged choices', async () => {
+        render(<CareerPage />);
+        const offer = await screen.findByTestId('career-offer-o1');
+
+        fireEvent.click(within(offer).getByRole('button', { name: 'Passer' }));
+        expect(applyMock).not.toHaveBeenCalled();
+        fireEvent.keyDown(window, { key: 'Enter', ctrlKey: true });
+
+        expect(applyMock).toHaveBeenCalledWith('c1', [
+            { kind: 'offer', id: 'o1', op: 'skip' },
+        ]);
+    });
+
+    it('asks to confirm leaving only while choices are staged', async () => {
+        render(<CareerPage />);
+        const offer = await screen.findByTestId('career-offer-o1');
+
+        const idle = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(idle);
+        expect(idle.defaultPrevented).toBe(false);
+
+        fireEvent.click(
+            within(offer).getByRole('button', { name: 'Postuler' })
+        );
+        const staged = new Event('beforeunload', { cancelable: true });
+        window.dispatchEvent(staged);
+        expect(staged.defaultPrevented).toBe(true);
+    });
+
+    it('keeps the staged choices and shows the error when Valider fails', async () => {
         applyMock.mockRejectedValueOnce(new Error('boom'));
         render(<CareerPage />);
         const offer = await screen.findByTestId('career-offer-o1');
@@ -199,13 +270,23 @@ describe('CareerPage', () => {
         fireEvent.click(
             within(offer).getByRole('button', { name: 'Postuler' })
         );
+        fireEvent.click(screen.getByRole('button', { name: 'Valider (1)' }));
 
         await waitFor(() =>
             expect(mockToasts.showErrorToast).toHaveBeenCalledWith(
                 'La décision n’a pas été enregistrée.'
             )
         );
-        expect(screen.getByTestId('career-offer-o1')).toBeInTheDocument();
+        expect(applyMock).toHaveBeenCalledTimes(1);
+        expect(
+            within(offer).getByText('choisi : Postuler')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Valider (1)' })
+        ).toBeInTheDocument();
+        expect(screen.getByRole('alert')).toHaveTextContent(
+            'La décision n’a pas été enregistrée.'
+        );
     });
 
     it('keeps the decisions the server already applied in Décidé', async () => {

@@ -1,3 +1,8 @@
+## [1.32.0] — 13 novembre 2026
+
+- Carrière : les choix se préparent puis « Valider » les applique d'un coup.
+- Ta semaine : répondre aux questions ne relance plus la semaine ; tout part avec « Envoyer ».
+
 ## [1.31.0] — 13 novembre 2026
 
 - La feuille « Ta semaine » a un titre court, un sous-titre et la période ; chaque tâche garde sa raison et son objectif ou domaine.

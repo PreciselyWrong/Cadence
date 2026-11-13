@@ -95,7 +95,8 @@ interface ProposalSheetProps {
 
 // The week's proposal as a sheet: a short headline, the agent's questions,
 // then each task with its decision (the agent's by default, any other one a
-// click away). Nothing changes until « Appliquer ». Nothing names the agent.
+// click away). Nothing changes until « Appliquer » or « Envoyer ». Nothing
+// names the agent.
 const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
     const { t } = useTranslation();
     const { showErrorToast, showSuccessToast } = useToast();
@@ -108,6 +109,11 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
     // Remarks by task; `noteOpen` is the row whose remark is being written.
     const [notes, setNotes] = useState<Map<string, string>>(() => new Map());
     const [noteOpen, setNoteOpen] = useState<string | null>(null);
+    // The choice picked for each question; a click picks, changes or clears it.
+    // Nothing is sent until « Envoyer ».
+    const [answers, setAnswers] = useState<Map<string, string>>(
+        () => new Map()
+    );
     const [menu, setMenu] = useState<{
         taskUid: string;
         anchor: HTMLElement;
@@ -139,6 +145,7 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
             setDecisions(new Map());
             setNotes(new Map());
             setNoteOpen(null);
+            setAnswers(new Map());
         }
     }, []);
 
@@ -215,6 +222,15 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
         () => new Set(sending.map((note) => note.task_uid)),
         [sending]
     );
+    const questions = ready ? (answer!.questions ?? []) : [];
+    const answerList = questions.flatMap((question) => {
+        const choice = answers.get(question.id);
+        return choice === undefined
+            ? []
+            : [{ question_id: question.id, choice }];
+    });
+    // Remarks or answers make « Envoyer » the primary action.
+    const sendable = sending.length > 0 || answerList.length > 0;
     const toApply = useMemo(
         () =>
             decisionsToApply(
@@ -223,6 +239,15 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
             ),
         [changes, decisions, notedUids]
     );
+
+    const pickAnswer = useCallback((questionId: string, choice: string) => {
+        setAnswers((current) => {
+            const next = new Map(current);
+            if (next.get(questionId) === choice) next.delete(questionId);
+            else next.set(questionId, choice);
+            return next;
+        });
+    }, []);
 
     // An empty remark is no remark: it is dropped as soon as it is cleared.
     const setNote = useCallback((taskUid: string, text: string) => {
@@ -367,28 +392,48 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
         }
     }, [busy, ready, toApply, uid, close, showErrorToast, t, later]);
 
-    // The remarks go with the decisions that are not noted; the agent answers
-    // again, and the header button shows it is preparing.
-    const sendNotes = useCallback(async () => {
-        if (busy || !ready || sending.length === 0) return;
+    // « Envoyer »: the decisions that are not noted, the remarks and the
+    // answers go together. With remarks the agent answers again for those
+    // tasks; without, the decisions are applied and the answers announced.
+    const send = useCallback(async () => {
+        if (busy || !ready || !sendable) return;
         setBusy(true);
         try {
-            await sendProposal(uid, { decisions: toApply, notes: sending });
+            const outcome = await sendProposal(uid, {
+                decisions: toApply,
+                notes: sending,
+                answers: answerList,
+            });
             window.dispatchEvent(new Event(PROPOSAL_CHANGED_EVENT));
-            showSuccessToast(
-                t(
-                    'proposals.sheet.notesSent',
-                    '{{count}} tâches renvoyées, je te préviens quand c’est prêt',
-                    { count: sending.length }
-                )
+            if (sending.length > 0) {
+                showSuccessToast(
+                    t(
+                        'proposals.sheet.notesSent',
+                        '{{count}} tâches renvoyées, je te préviens quand c’est prêt',
+                        { count: sending.length }
+                    )
+                );
+                close();
+                return;
+            }
+            setResults(outcome.results);
+            setDetail((current) =>
+                current ? { ...current, status: outcome.status } : current
             );
-            close();
+            if (outcome.results.every((r) => r.state === 'applied')) {
+                later(close, RESULTS_MS);
+            }
         } catch {
             showErrorToast(
-                t(
-                    'proposals.sheet.sendError',
-                    'Les remarques n’ont pas pu être envoyées.'
-                )
+                sending.length > 0
+                    ? t(
+                          'proposals.sheet.sendError',
+                          'Les remarques n’ont pas pu être envoyées.'
+                      )
+                    : t(
+                          'proposals.apply.error',
+                          'Les changements n’ont pas pu être appliqués.'
+                      )
             );
         } finally {
             setBusy(false);
@@ -396,13 +441,16 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
     }, [
         busy,
         ready,
+        sendable,
         sending,
+        answerList,
         toApply,
         uid,
         close,
         showSuccessToast,
         showErrorToast,
         t,
+        later,
     ]);
 
     // Esc or Enter leaves the remark; the row's remark button takes the focus.
@@ -517,9 +565,9 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
             if (event.key !== 'Enter') return;
             if (interactive(target)) return;
             if (!ready) return;
-            if (sending.length > 0) {
+            if (sendable) {
                 event.preventDefault();
-                void sendNotes();
+                void send();
                 return;
             }
             if (toApply.length === 0) return;
@@ -533,8 +581,8 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
         closeMenu,
         menu,
         apply,
-        sendNotes,
-        sending.length,
+        send,
+        sendable,
         sendText,
         ready,
         toApply.length,
@@ -619,7 +667,6 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
             : null;
     };
 
-    const questions = ready ? (answer!.questions ?? []) : [];
     const showChanges = ready && results === null;
     const applyLabel = t('proposals.sheet.apply', 'Appliquer ({{count}})', {
         count: toApply.length,
@@ -907,21 +954,32 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                                         {question.text}
                                     </p>
                                     <div className="mt-1.5 flex flex-wrap gap-1.5">
-                                        {question.choices.map((choice) => (
-                                            <button
-                                                key={choice}
-                                                type="button"
-                                                disabled={busy}
-                                                onClick={() =>
-                                                    void sendText(
-                                                        `Q: ${question.text} R: ${choice}`
-                                                    )
-                                                }
-                                                className="h-8 rounded-full bg-surface-card px-3 text-label text-surface-on ring-1 ring-inset ring-outline-variant transition-colors duration-150 hover:bg-surface-high active:scale-[0.97] disabled:opacity-50 max-sm:min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                                            >
-                                                {choice}
-                                            </button>
-                                        ))}
+                                        {question.choices.map((choice) => {
+                                            const picked =
+                                                answers.get(question.id) ===
+                                                choice;
+                                            return (
+                                                <button
+                                                    key={choice}
+                                                    type="button"
+                                                    aria-pressed={picked}
+                                                    disabled={busy}
+                                                    onClick={() =>
+                                                        pickAnswer(
+                                                            question.id,
+                                                            choice
+                                                        )
+                                                    }
+                                                    className={`h-8 rounded-full px-3 text-label transition-colors duration-150 active:scale-[0.97] disabled:opacity-50 max-sm:min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                                                        picked
+                                                            ? 'bg-primary-container text-primary-on-container'
+                                                            : 'bg-surface-card text-surface-on ring-1 ring-inset ring-outline-variant hover:bg-surface-high'
+                                                    }`}
+                                                >
+                                                    {choice}
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             ))}
@@ -1049,6 +1107,15 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                         )}
                         {replyText === null && (
                             <>
+                                {answerList.length > 0 && (
+                                    <p className="text-right text-label-m text-surface-on-variant">
+                                        {t(
+                                            'proposals.sheet.answersCaption',
+                                            '{{count}} réponse donnée',
+                                            { count: answerList.length }
+                                        )}
+                                    </p>
+                                )}
                                 {sending.length > 0 && (
                                     <p className="text-right text-label-m text-surface-on-variant">
                                         {t(
@@ -1080,12 +1147,12 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                                                 'Répondre'
                                             )}
                                         </Button>
-                                        {sending.length > 0 ? (
+                                        {sendable ? (
                                             <Button
                                                 variant="primary"
                                                 size="md"
                                                 disabled={busy}
-                                                onClick={() => void sendNotes()}
+                                                onClick={() => void send()}
                                             >
                                                 {t(
                                                     'proposals.sheet.send',

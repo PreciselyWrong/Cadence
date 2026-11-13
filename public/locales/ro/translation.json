@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "ales: {{label}}",
+        "validate": "Validează ({{count}})",
+        "clear": "Șterge",
+        "applied": "{{count}} decizii aplicate",
+        "appliedOne": "1 decizie aplicată",
         "title": "Carieră",
         "updatedAt": "actualizat la {{time}}",
         "empty": "Nimic nou azi",
@@ -5343,6 +5348,8 @@
       "sendCaption_one": "{{count}} aplicată · {{sent}} trimise înapoi",
       "sendCaption_few": "{{count}} aplicate · {{sent}} trimise înapoi",
       "sendCaption_other": "{{count}} de aplicate · {{sent}} trimise înapoi",
+      "answersCaption_one": "{{count}} răspuns dat",
+      "answersCaption_other": "{{count}} răspunsuri date",
       "notesSent_one": "{{count}} sarcină trimisă înapoi, te anunț când e gata",
       "notesSent_few": "{{count}} sarcini trimise înapoi, te anunț când sunt gata",
       "notesSent_other": "{{count}} de sarcini trimise înapoi, te anunț când sunt gata",

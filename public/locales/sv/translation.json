@@ -1,5 +1,10 @@
 {
     "career": {
+        "choice": "valt: {{label}}",
+        "validate": "Bekräfta ({{count}})",
+        "clear": "Rensa",
+        "applied": "{{count}} beslut tillämpade",
+        "appliedOne": "1 beslut tillämpat",
         "title": "Karriär",
         "updatedAt": "uppdaterad kl. {{time}}",
         "empty": "Inget nytt i dag",
@@ -5327,6 +5332,8 @@
       "sendError": "Anteckningarna kunde inte skickas.",
       "sendCaption_one": "{{count}} tillämpade · {{sent}} skickade tillbaka",
       "sendCaption_other": "{{count}} tillämpade · {{sent}} skickade tillbaka",
+      "answersCaption_one": "{{count}} svar givet",
+      "answersCaption_other": "{{count}} svar givet",
       "notesSent_one": "{{count}} uppgift skickad tillbaka, jag säger till när den är klar",
       "notesSent_other": "{{count}} uppgifter skickade tillbaka, jag säger till när de är klara",
       "appliedCount": "{{count}} av {{total}} tillämpade"
