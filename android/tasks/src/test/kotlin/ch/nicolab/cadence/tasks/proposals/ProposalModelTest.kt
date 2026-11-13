@@ -53,6 +53,32 @@ class ProposalModelTest {
     }
 
     @Test
+    fun `next week and month decisions are kept from the answer and sent without a date`() {
+        val answer = ProposalJson.decodeFromString<ProposalDto>(
+            """
+            {
+              "uid": "p2", "kind": "week", "status": "ready",
+              "answer": { "changes": [
+                { "task_uid": "a", "op": "next_week", "reason": "Pas urgent" },
+                { "task_uid": "b", "op": "this_month", "reason": "Ce mois" },
+                { "task_uid": "c", "op": "next_month", "reason": "Plus tard ce mois" }
+              ] }
+            }
+            """.trimIndent(),
+        ).answer
+        val changes = Proposals.weekChanges(answer)
+
+        assertEquals(listOf(ProposalOp.NEXT_WEEK, ProposalOp.THIS_MONTH, ProposalOp.NEXT_MONTH), changes.map { it.op })
+        assertEquals(listOf(null, null, null), changes.map { it.date })
+
+        val body = Proposals.sendBody(changes, emptyMap(), emptyMap())["decisions"]!!.jsonArray.map { it.jsonObject }
+
+        assertEquals(listOf("a", "b", "c"), body.map { it["task_uid"]!!.jsonPrimitive.content })
+        assertEquals(listOf("next_week", "this_month", "next_month"), body.map { it["op"]!!.jsonPrimitive.content })
+        assertEquals(listOf(false, false, false), body.map { it.containsKey("date") })
+    }
+
+    @Test
     fun `sections follow the current decision, days first then this week later due drop keep`() {
         val changes = listOf(
             change("a", ProposalOp.DROP),
@@ -62,6 +88,9 @@ class ProposalModelTest {
             change("e", ProposalOp.THIS_WEEK),
             change("f", ProposalOp.PLAN_DAY, monday),
             change("g", ProposalOp.DUE, wednesday),
+            change("h", ProposalOp.NEXT_MONTH),
+            change("i", ProposalOp.NEXT_WEEK),
+            change("j", ProposalOp.THIS_MONTH),
         )
 
         val sections = Proposals.sections(changes, emptyMap())
@@ -71,6 +100,9 @@ class ProposalModelTest {
                 DecisionGroup.Day(monday),
                 DecisionGroup.Day(tuesday),
                 DecisionGroup.ThisWeek,
+                DecisionGroup.NextWeek,
+                DecisionGroup.ThisMonth,
+                DecisionGroup.NextMonth,
                 DecisionGroup.Later,
                 DecisionGroup.Due(wednesday),
                 DecisionGroup.Drop,
@@ -219,16 +251,24 @@ class ProposalModelTest {
     }
 
     @Test
-    fun `the menu offers each day of the period, then this week, later, keep and drop`() {
+    fun `the menu offers each day of the period, then this week, next week, this month, next month, later, keep and drop`() {
         val options = Proposals.menuOptions(monday, monday.plusDays(6))
 
         assertEquals((0..6).map { WeekDecision(ProposalOp.PLAN_DAY, monday.plusDays(it.toLong())) }, options.take(7))
         assertEquals(
-            listOf(WeekDecision(ProposalOp.THIS_WEEK), WeekDecision(ProposalOp.LATER), WeekDecision(ProposalOp.KEEP), WeekDecision(ProposalOp.DROP)),
+            listOf(
+                WeekDecision(ProposalOp.THIS_WEEK),
+                WeekDecision(ProposalOp.NEXT_WEEK),
+                WeekDecision(ProposalOp.THIS_MONTH),
+                WeekDecision(ProposalOp.NEXT_MONTH),
+                WeekDecision(ProposalOp.LATER),
+                WeekDecision(ProposalOp.KEEP),
+                WeekDecision(ProposalOp.DROP),
+            ),
             options.drop(7),
         )
-        assertEquals(4, Proposals.menuOptions(null, null).size)
-        assertEquals(4, Proposals.menuOptions(tuesday, monday).size)
+        assertEquals(7, Proposals.menuOptions(null, null).size)
+        assertEquals(7, Proposals.menuOptions(tuesday, monday).size)
     }
 
     @Test

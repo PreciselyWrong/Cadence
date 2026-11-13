@@ -18,6 +18,9 @@
     <string name="proposal_nothing">Rien à changer cette semaine.</string>
     <string name="proposal_unknown_task">Tâche</string>
     <string name="proposal_op_this_week">Cette semaine</string>
+    <string name="proposal_op_next_week">Semaine prochaine</string>
+    <string name="proposal_op_this_month">Ce mois-ci</string>
+    <string name="proposal_op_next_month">Le mois prochain</string>
     <string name="proposal_op_later">Plus tard</string>
     <string name="proposal_op_due">Échéance le %1$s</string>
     <string name="proposal_op_drop">Abandonner</string>

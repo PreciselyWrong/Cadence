@@ -9,18 +9,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Comment
@@ -47,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceScrollSheet
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
@@ -82,7 +81,7 @@ private val dueDay: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", tas
 
 /**
  * Feuille de la semaine prête : titre et sous-titre de l'agent, période, puis les tâches groupées par décision
- * courante. Chaque ligne montre la décision (par défaut celle de l'agent) ; un toucher ouvre le menu des choix.
+ * courante, le tout dans un seul défilement ; « Envoyer » reste épinglé en bas. Chaque ligne montre la décision (par défaut celle de l'agent) ; un toucher ouvre le menu des choix.
  * Rien ne change avant « Appliquer » ; « Appliquer (N) » compte les décisions qui ne sont pas « garder ».
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -195,69 +194,10 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
     }
 
     val ready = status == ProposalStatus.READY
-    CadenceSheet(
-        title = Proposals.headlineOf(current?.answer) ?: stringResource(R.string.proposal_title),
-        subtitle = if (ready) Proposals.subtitleOf(current?.answer) else null,
-        dismiss = onClose,
-    ) {
-        when {
-            current == null && loadFailed -> SheetNote(offline)
-            current == null -> SheetNote(stringResource(R.string.proposal_loading))
-            status == ProposalStatus.PENDING -> {
-                SheetNote(stringResource(R.string.proposal_preparing))
-                TertiaryAction(stringResource(R.string.proposal_later), onClick = onClose)
-            }
-            ready -> {
-                period?.let { PeriodPill(it, Modifier.padding(top = Space.md)) }
-                current.answer?.questions.orEmpty().forEach { question ->
-                    QuestionBlock(
-                        question,
-                        chosen = answers[question.id],
-                        enabled = !busy,
-                    ) { choice -> answers = Proposals.chooseAnswer(answers, question.id, choice) }
-                }
-                if (changes.isEmpty()) {
-                    SheetNote(stringResource(R.string.proposal_nothing))
-                } else {
-                    LazyColumn(
-                        Modifier.fillMaxWidth().padding(top = Space.sm).heightIn(max = SECTIONS_MAX_HEIGHT),
-                        contentPadding = PaddingValues(bottom = Space.sm),
-                    ) {
-                        sections.forEach { section ->
-                            item(key = "group-${section.group}") {
-                                GroupHeader(section.group, Modifier.animateItem())
-                            }
-                            items(section.changes, key = { it.taskUid }) { change ->
-                                val task = names[change.taskUid]
-                                ChangeRow(
-                                    name = task?.name?.takeIf { it.isNotBlank() } ?: stringResource(R.string.proposal_unknown_task),
-                                    tag = task?.goal ?: task?.area,
-                                    reason = change.reason,
-                                    decision = Proposals.decision(change, chosen),
-                                    modified = Proposals.isModified(change, chosen),
-                                    noted = Proposals.hasNote(change, notes),
-                                    noteOpen = change.taskUid in noteOpen,
-                                    note = notes[change.taskUid].orEmpty(),
-                                    enabled = !busy,
-                                    onChoose = { menuFor = change.taskUid },
-                                    onRestore = { chosen = Proposals.restore(chosen, change.taskUid) },
-                                    onToggleNote = {
-                                        noteOpen = if (change.taskUid in noteOpen) noteOpen - change.taskUid else noteOpen + change.taskUid
-                                    },
-                                    onNote = { text ->
-                                        notes = if (text.isEmpty()) {
-                                            notes - change.taskUid
-                                        } else {
-                                            notes + (change.taskUid to text.take(Proposals.NOTE_MAX_LENGTH))
-                                        }
-                                    },
-                                    modifier = Modifier.animateItem(),
-                                )
-                            }
-                        }
-                    }
-                }
-                Spacer(Modifier.height(Space.md))
+    val footer: (@Composable ColumnScope.() -> Unit)? = when {
+        current == null -> null
+        ready -> {
+            {
                 if (!sending) {
                     PrimaryAction(
                         stringResource(R.string.proposal_apply, pending),
@@ -281,37 +221,103 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
                         onClick = ::sendNotes,
                     )
                 }
-                Row(
-                    Modifier.fillMaxWidth().padding(top = Space.sm),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TertiaryAction(stringResource(R.string.proposal_reply), onClick = { replying = !replying })
-                    TertiaryAction(stringResource(R.string.proposal_ignore), onClick = ::ignore)
+            }
+        }
+        else -> {
+            { TertiaryAction(stringResource(R.string.proposal_later), onClick = onClose) }
+        }
+    }
+    CadenceScrollSheet(
+        title = Proposals.headlineOf(current?.answer) ?: stringResource(R.string.proposal_title),
+        subtitle = if (ready) Proposals.subtitleOf(current?.answer) else null,
+        dismiss = onClose,
+        footer = footer,
+    ) {
+        when {
+            current == null && loadFailed -> item { SheetNote(offline) }
+            current == null -> item { SheetNote(stringResource(R.string.proposal_loading)) }
+            status == ProposalStatus.PENDING -> item { SheetNote(stringResource(R.string.proposal_preparing)) }
+            ready -> {
+                period?.let { item(key = "period") { PeriodPill(it, Modifier.padding(top = Space.md)) } }
+                current.answer?.questions.orEmpty().forEach { question ->
+                    item(key = "question-${question.id}") {
+                        Column(Modifier.fillMaxWidth()) {
+                            QuestionBlock(
+                                question,
+                                chosen = answers[question.id],
+                                enabled = !busy,
+                            ) { choice -> answers = Proposals.chooseAnswer(answers, question.id, choice) }
+                        }
+                    }
                 }
-                if (replying) {
-                    CadenceField(
-                        value = reply,
-                        onValue = { reply = it },
-                        label = stringResource(R.string.proposal_reply_hint),
-                        enabled = !busy,
-                    )
-                    SecondaryAction(
-                        stringResource(R.string.proposal_send),
-                        modifier = Modifier.fillMaxWidth().padding(top = Space.sm),
-                        enabled = reply.isNotBlank() && !busy,
-                        onClick = {
-                            sendReply(reply.trim())
-                            reply = ""
-                            replying = false
-                        },
-                    )
+                if (changes.isEmpty()) {
+                    item { SheetNote(stringResource(R.string.proposal_nothing)) }
+                } else {
+                    sections.forEach { section ->
+                        item(key = "group-${section.group}") {
+                            GroupHeader(section.group, Modifier.animateItem())
+                        }
+                        items(section.changes, key = { it.taskUid }) { change ->
+                            val task = names[change.taskUid]
+                            ChangeRow(
+                                name = task?.name?.takeIf { it.isNotBlank() } ?: stringResource(R.string.proposal_unknown_task),
+                                tag = task?.goal ?: task?.area,
+                                reason = change.reason,
+                                decision = Proposals.decision(change, chosen),
+                                modified = Proposals.isModified(change, chosen),
+                                noted = Proposals.hasNote(change, notes),
+                                noteOpen = change.taskUid in noteOpen,
+                                note = notes[change.taskUid].orEmpty(),
+                                enabled = !busy,
+                                onChoose = { menuFor = change.taskUid },
+                                onRestore = { chosen = Proposals.restore(chosen, change.taskUid) },
+                                onToggleNote = {
+                                    noteOpen = if (change.taskUid in noteOpen) noteOpen - change.taskUid else noteOpen + change.taskUid
+                                },
+                                onNote = { text ->
+                                    notes = if (text.isEmpty()) {
+                                        notes - change.taskUid
+                                    } else {
+                                        notes + (change.taskUid to text.take(Proposals.NOTE_MAX_LENGTH))
+                                    }
+                                },
+                                modifier = Modifier.animateItem(),
+                            )
+                        }
+                    }
+                }
+                item(key = "replies") {
+                    Column(Modifier.fillMaxWidth()) {
+                        Row(
+                            Modifier.fillMaxWidth().padding(top = Space.sm),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            TertiaryAction(stringResource(R.string.proposal_reply), onClick = { replying = !replying })
+                            TertiaryAction(stringResource(R.string.proposal_ignore), onClick = ::ignore)
+                        }
+                        if (replying) {
+                            CadenceField(
+                                value = reply,
+                                onValue = { reply = it },
+                                label = stringResource(R.string.proposal_reply_hint),
+                                enabled = !busy,
+                            )
+                            SecondaryAction(
+                                stringResource(R.string.proposal_send),
+                                modifier = Modifier.fillMaxWidth().padding(top = Space.sm),
+                                enabled = reply.isNotBlank() && !busy,
+                                onClick = {
+                                    sendReply(reply.trim())
+                                    reply = ""
+                                    replying = false
+                                },
+                            )
+                        }
+                    }
                 }
             }
-            else -> {
-                SheetNote(if (status == ProposalStatus.FAILED) failed else stringResource(R.string.proposal_closed))
-                TertiaryAction(stringResource(R.string.proposal_later), onClick = onClose)
-            }
+            else -> item { SheetNote(if (status == ProposalStatus.FAILED) failed else stringResource(R.string.proposal_closed)) }
         }
     }
 
@@ -565,6 +571,9 @@ private fun fadeTransition() = fadeIn(Motion.quick()).togetherWith(fadeOut(Motio
 private fun groupLabel(group: DecisionGroup): String = when (group) {
     is DecisionGroup.Day -> group.date.format(dayHeader).replaceFirstChar { it.titlecase(tasksLocale) }
     DecisionGroup.ThisWeek -> stringResource(R.string.proposal_op_this_week)
+    DecisionGroup.NextWeek -> stringResource(R.string.proposal_op_next_week)
+    DecisionGroup.ThisMonth -> stringResource(R.string.proposal_op_this_month)
+    DecisionGroup.NextMonth -> stringResource(R.string.proposal_op_next_month)
     DecisionGroup.Later -> stringResource(R.string.proposal_op_later)
     is DecisionGroup.Due -> stringResource(R.string.proposal_op_due, group.date.format(dueDay))
     DecisionGroup.Drop -> stringResource(R.string.proposal_op_drop)
@@ -576,6 +585,9 @@ private fun groupLabel(group: DecisionGroup): String = when (group) {
 private fun chipLabel(decision: WeekDecision): String = when (decision.op) {
     ProposalOp.PLAN_DAY -> decision.date?.format(dayChip).orEmpty()
     ProposalOp.THIS_WEEK -> stringResource(R.string.proposal_op_this_week)
+    ProposalOp.NEXT_WEEK -> stringResource(R.string.proposal_op_next_week)
+    ProposalOp.THIS_MONTH -> stringResource(R.string.proposal_op_this_month)
+    ProposalOp.NEXT_MONTH -> stringResource(R.string.proposal_op_next_month)
     ProposalOp.LATER -> stringResource(R.string.proposal_op_later)
     ProposalOp.DUE -> stringResource(R.string.proposal_chip_due, decision.date?.format(dueDay).orEmpty())
     ProposalOp.DROP -> stringResource(R.string.proposal_op_drop)
@@ -587,10 +599,12 @@ private fun chipLabel(decision: WeekDecision): String = when (decision.op) {
 private fun optionLabel(option: WeekDecision): String = when (option.op) {
     ProposalOp.PLAN_DAY -> option.date?.format(dayChip).orEmpty()
     ProposalOp.THIS_WEEK -> stringResource(R.string.proposal_op_this_week)
+    ProposalOp.NEXT_WEEK -> stringResource(R.string.proposal_op_next_week)
+    ProposalOp.THIS_MONTH -> stringResource(R.string.proposal_op_this_month)
+    ProposalOp.NEXT_MONTH -> stringResource(R.string.proposal_op_next_month)
     ProposalOp.LATER -> stringResource(R.string.proposal_op_later)
     ProposalOp.DUE -> stringResource(R.string.proposal_op_due, option.date?.format(dueDay).orEmpty())
     ProposalOp.DROP -> stringResource(R.string.proposal_op_drop)
     ProposalOp.KEEP -> stringResource(R.string.proposal_op_keep)
 }
 
-private val SECTIONS_MAX_HEIGHT = 460.dp

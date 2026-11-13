@@ -1,3 +1,8 @@
+## [1.34.0] — 13 novembre 2026
+
+- « Ta semaine » : le menu d'une tâche propose « Semaine prochaine », « Ce mois-ci » et « Le mois prochain », après « Cette semaine » ; l'agent peut les proposer aussi, et elles se rangent dans leur section.
+- La feuille « Ta semaine » défile en entier : titre, période, questions et tâches ensemble ; « Envoyer » (ou « Appliquer ») reste épinglé en bas.
+
 ## [1.33.0] — 13 novembre 2026
 
 - Notifications : un écran liste les notifications des agents et du classement, lues et non lues, la plus récente d'abord. Une cloche à côté des Réglages (Tâches, Agenda, Habitudes, Bilan) affiche le nombre de non lues ; un toucher marque la notification lue et l'ouvre, « Tout marquer comme lu » vide le compteur.

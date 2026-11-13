@@ -120,6 +120,9 @@ sealed interface ProposalPhase {
 enum class ProposalOp(val wire: String) {
     PLAN_DAY("plan_day"),
     THIS_WEEK("this_week"),
+    NEXT_WEEK("next_week"),
+    THIS_MONTH("this_month"),
+    NEXT_MONTH("next_month"),
     LATER("later"),
     DUE("due"),
     DROP("drop"),
@@ -140,7 +143,8 @@ data class WeekDecision(val op: ProposalOp, val date: LocalDate? = null)
 
 /**
  * Section de la feuille : les tâches dont la décision courante est [group]. L'ordre des sections est celui de
- * [Proposals.sections] : les jours d'abord, puis cette semaine, plus tard, les échéances, abandonner, garder.
+ * [Proposals.sections] : les jours d'abord, puis cette semaine, semaine prochaine, ce mois-ci, le mois prochain,
+ * plus tard, les échéances, abandonner, garder.
  */
 data class DecisionSection(val group: DecisionGroup, val changes: List<WeekChange>)
 
@@ -148,6 +152,12 @@ sealed interface DecisionGroup {
     data class Day(val date: LocalDate) : DecisionGroup
 
     data object ThisWeek : DecisionGroup
+
+    data object NextWeek : DecisionGroup
+
+    data object ThisMonth : DecisionGroup
+
+    data object NextMonth : DecisionGroup
 
     data object Later : DecisionGroup
 
@@ -205,7 +215,7 @@ object Proposals {
         return byGroup.keys.sortedWith(GROUP_ORDER).map { DecisionSection(it, byGroup.getValue(it)) }
     }
 
-    /** Options du menu d'une tâche : chaque jour de la période, puis cette semaine, plus tard, garder et abandonner. */
+    /** Options du menu d'une tâche : chaque jour de la période, puis cette semaine, la suivante, les mois, plus tard, garder et abandonner. */
     fun menuOptions(start: LocalDate?, end: LocalDate?): List<WeekDecision> {
         val days = if (start != null && end != null && !end.isBefore(start)) {
             generateSequence(start) { it.plusDays(1) }.takeWhile { !it.isAfter(end) }.take(MAX_MENU_DAYS)
@@ -215,6 +225,9 @@ object Proposals {
         }
         return days + listOf(
             WeekDecision(ProposalOp.THIS_WEEK),
+            WeekDecision(ProposalOp.NEXT_WEEK),
+            WeekDecision(ProposalOp.THIS_MONTH),
+            WeekDecision(ProposalOp.NEXT_MONTH),
             WeekDecision(ProposalOp.LATER),
             WeekDecision(ProposalOp.KEEP),
             WeekDecision(ProposalOp.DROP),
@@ -361,22 +374,28 @@ object Proposals {
     private fun groupOf(decision: WeekDecision): DecisionGroup = when (decision.op) {
         ProposalOp.PLAN_DAY -> DecisionGroup.Day(requireNotNull(decision.date))
         ProposalOp.THIS_WEEK -> DecisionGroup.ThisWeek
+        ProposalOp.NEXT_WEEK -> DecisionGroup.NextWeek
+        ProposalOp.THIS_MONTH -> DecisionGroup.ThisMonth
+        ProposalOp.NEXT_MONTH -> DecisionGroup.NextMonth
         ProposalOp.LATER -> DecisionGroup.Later
         ProposalOp.DUE -> DecisionGroup.Due(requireNotNull(decision.date))
         ProposalOp.DROP -> DecisionGroup.Drop
         ProposalOp.KEEP -> DecisionGroup.Keep
     }
 
-    /** Jours, puis cette semaine, plus tard, échéances, abandonner, garder ; dans une même catégorie, par date. */
+    /** Jours, puis cette semaine, semaine prochaine, ce mois-ci, le mois prochain, plus tard, échéances, abandonner, garder ; dans une même catégorie, par date. */
     private val GROUP_ORDER: Comparator<DecisionGroup> = compareBy({ categoryOf(it) }, { dateOf(it) })
 
     private fun categoryOf(group: DecisionGroup): Int = when (group) {
         is DecisionGroup.Day -> 0
         DecisionGroup.ThisWeek -> 1
-        DecisionGroup.Later -> 2
-        is DecisionGroup.Due -> 3
-        DecisionGroup.Drop -> 4
-        DecisionGroup.Keep -> 5
+        DecisionGroup.NextWeek -> 2
+        DecisionGroup.ThisMonth -> 3
+        DecisionGroup.NextMonth -> 4
+        DecisionGroup.Later -> 5
+        is DecisionGroup.Due -> 6
+        DecisionGroup.Drop -> 7
+        DecisionGroup.Keep -> 8
     }
 
     private fun dateOf(group: DecisionGroup): LocalDate? = when (group) {
