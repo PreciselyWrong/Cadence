@@ -6045,6 +6045,7 @@
     "testError": "La prueba ha fallado."
   },
   "today": {
+    "plannedOn": "Prevista {{day}}",
     "add": "Añadir",
     "addPlaceholder": "Añade una tarea",
     "added": "«{{name}}» añadida al día",

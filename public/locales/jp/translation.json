@@ -6045,6 +6045,7 @@
     "testError": "テストに失敗しました。"
   },
   "today": {
+        "plannedOn": "{{day}} に予定",
         "taskCount_one": "{{count}} 件のタスク",
         "organized_one": "{{count}}件のタスクを配置しました",
     "add": "追加",

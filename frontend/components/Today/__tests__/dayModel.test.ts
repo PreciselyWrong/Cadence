@@ -5,6 +5,7 @@ import {
     dayLines,
     daySummary,
     visibleLines,
+    lateTasks,
 } from '../dayModel';
 import type { DailyPlanItem } from '../../../utils/dailyPlanService';
 import type { Task } from '../../../entities/Task';
@@ -324,5 +325,28 @@ describe('visibleLines', () => {
         expect(shown.done).toEqual([]);
         expect(shown.timed.map((l) => l.uid)).toEqual(['open']);
         expect(shown.anytime).toEqual([]);
+    });
+});
+
+describe('lateTasks', () => {
+    it('lists every overdue task, those planned on a later day with that day, oldest due first', () => {
+        const free = task('free', { due_date: '2026-11-11' });
+        const planned = {
+            ...task('planned', { due_date: '2026-11-08' }),
+            planned_date: '2026-11-15',
+        };
+        expect(
+            lateTasks({ overdue: [free], overdue_planned: [planned] })
+        ).toEqual([
+            { task: planned, plannedDate: '2026-11-15' },
+            { task: free, plannedDate: null },
+        ]);
+    });
+
+    it('reads a day without overdue_planned (older server)', () => {
+        const free = task('free', { due_date: '2026-11-11' });
+        expect(lateTasks({ overdue: [free] })).toEqual([
+            { task: free, plannedDate: null },
+        ]);
     });
 });

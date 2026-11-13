@@ -6125,6 +6125,7 @@
     "testError": "فشل الاختبار."
   },
   "today": {
+    "plannedOn": "مخطط {{day}}",
     "add": "إضافة",
     "addPlaceholder": "أضف مهمة",
     "added": "تمت إضافة «{{name}}» إلى اليوم",

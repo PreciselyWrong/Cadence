@@ -115,6 +115,21 @@ describe('GET /api/daily-plan/day', () => {
         expect(uids(res.body.overdue)).toEqual([]);
     });
 
+    it('lists an overdue task planned on a future day in overdue_planned with its nearest day', async () => {
+        const task = await makeTask({ due_date: dayStart(yesterday) });
+        const later = dayOf(3);
+        await plan(later, [{ op: 'add', task_uid: task.uid }]);
+        await plan(tomorrow, [{ op: 'add', task_uid: task.uid }]);
+
+        const res = await getDay({ date: today });
+        expect(uids(res.body.overdue_planned)).toEqual([task.uid]);
+        expect(res.body.overdue_planned[0].planned_date).toBe(tomorrow);
+        expect(allSuggestionUids(res.body.suggestions)).not.toContain(task.uid);
+
+        const onTomorrow = await getDay({ date: tomorrow });
+        expect(onTomorrow.body.overdue_planned).toEqual([]);
+    });
+
     it('lists a task completed that day, not in its plan, under completed', async () => {
         const done = await makeTask({
             status: Task.STATUS.DONE,

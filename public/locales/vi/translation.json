@@ -6045,6 +6045,7 @@
     "testError": "Kiểm tra thất bại."
   },
   "today": {
+        "plannedOn": "Dự kiến {{day}}",
         "taskCount_one": "{{count}} công việc",
         "organized_one": "{{count}} công việc đã được xếp lịch",
     "add": "Thêm",

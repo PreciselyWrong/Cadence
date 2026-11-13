@@ -6045,6 +6045,7 @@
     "testError": "De test is mislukt."
   },
   "today": {
+    "plannedOn": "Gepland {{day}}",
     "add": "Toevoegen",
     "addPlaceholder": "Voeg een taak toe",
     "added": "„{{name}}“ aan de dag toegevoegd",

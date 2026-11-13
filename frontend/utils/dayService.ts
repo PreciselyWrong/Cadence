@@ -38,6 +38,10 @@ export interface DayResponse {
     // Only filled for today: open tasks due before today, not planned on a
     // day from today on.
     overdue: Task[];
+    // Only filled for today: open tasks due before today and planned on a
+    // later day, with the nearest such day. The Plan board leaves them out of
+    // its overdue strip; Today lists them under Overdue. Absent on older servers.
+    overdue_planned?: (Task & { planned_date: string })[];
     suggestions: DaySuggestions | null;
     // Done that day and not in the plan (plan items carry their own state).
     completed: Task[];

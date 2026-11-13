@@ -92,6 +92,11 @@ Tasks with a due date **before today** that are **NOT already in the Planned sec
    - If you deferred a task to tomorrow, it won't show in Overdue today
    - Even if originally overdue, deferred tasks hide until defer time passes
 
+6. **Planned on a later day: still listed, with that day**
+   - A task past due and planned on a day after today (for example spread by **Reschedule ▾ › Spread over 7 days**) leaves the Plan board's overdue strip, since it shows on its day there
+   - Today still lists it under **Overdue**, with "Planned Tue 18" (its nearest planned day) instead of the "Do today" button, so nothing past due disappears from Today
+   - The section is a fold, closed by default, titled "Overdue · N"; it is not shown when nothing is overdue (web and Android)
+
 ### Display Order
 
 Same as Planned section:

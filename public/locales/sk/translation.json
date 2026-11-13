@@ -6106,6 +6106,7 @@
     "viewTag": "Prejsť na štítok"
   },
   "today": {
+    "plannedOn": "Naplánované {{day}}",
     "add": "Pridať",
     "addPlaceholder": "Pridať úlohu",
     "added": "„{{name}}“ pridaná do dňa",

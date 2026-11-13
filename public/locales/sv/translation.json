@@ -6045,6 +6045,7 @@
     "testError": "Testet misslyckades."
   },
   "today": {
+    "plannedOn": "Planerad {{day}}",
     "add": "Lägg till",
     "addPlaceholder": "Lägg till en uppgift",
     "added": "”{{name}}” tillagd i dagen",

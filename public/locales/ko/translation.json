@@ -6045,6 +6045,7 @@
     "testError": "테스트에 실패했습니다."
   },
   "today": {
+        "plannedOn": "{{day}} 예정",
         "taskCount_one": "작업 {{count}}개",
         "organized_one": "{{count}}개 작업 배치됨",
     "add": "추가",

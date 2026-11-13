@@ -15,8 +15,18 @@ import kotlinx.serialization.json.jsonPrimitive
 /** Un élément du plan du jour du serveur (`daily_plan_items`) : [startMinute] nul pour une tâche placée sans heure. */
 data class PlanEntry(val uid: String, val day: LocalDate, val startMinute: Int?, val durationMinutes: Int?)
 
-/** Aujourd'hui une fois le plan du serveur ajouté : retard, tâches du jour, heure du plan de chaque tâche placée. */
-data class PlannedToday(val overdue: List<TaskItem>, val today: List<TaskItem>, val starts: Map<String, Instant>)
+/**
+ * Aujourd'hui une fois le plan du serveur ajouté : retard, tâches du jour, heure du plan de chaque tâche placée.
+ * [overduePlanned] : échues planifiées un jour à venir, hors du retard (Planifier les montre à leur jour) mais listées
+ * dans le repli « En retard » d'Aujourd'hui avec ce jour ([plannedDays], le plus proche).
+ */
+data class PlannedToday(
+    val overdue: List<TaskItem>,
+    val today: List<TaskItem>,
+    val starts: Map<String, Instant>,
+    val overduePlanned: List<TaskItem> = emptyList(),
+    val plannedDays: Map<String, LocalDate> = emptyMap(),
+)
 
 /**
  * Plan du jour du serveur (`GET /api/v1/daily-plan?date=`, docs/20-daily-plan.md), lu en ligne après chaque synchro
@@ -82,12 +92,18 @@ object ServerPlan {
         val elsewhere = entries.filter { it.day.isAfter(day) }.mapTo(HashSet()) { it.uid } - plannedUids
         val kept = today.filterNot { it.uid in elsewhere }
         val late = overdue.filterNot { it.uid in elsewhere || it.uid in plannedUids }
-        if (planned.isEmpty()) return PlannedToday(late, kept, emptyMap())
+        val lateElsewhere = overdue.filter { it.uid in elsewhere && it.uid !in plannedUids }
+        val plannedDays = entries.filter { it.day.isAfter(day) && it.uid in elsewhere }
+            .groupBy { it.uid }.mapValues { (_, days) -> days.minOf { it.day } }
+            .filterKeys { uid -> lateElsewhere.any { it.uid == uid } }
+        if (planned.isEmpty()) return PlannedToday(late, kept, emptyMap(), lateElsewhere, plannedDays)
         val listed = kept.mapTo(HashSet()) { it.uid }
         return PlannedToday(
             overdue = late,
             today = kept + planned.map { it.second }.filterNot { it.uid in listed },
             starts = planned.mapNotNull { (entry, _) -> entry.startMinute?.let { entry.uid to start(day, it, zone) } }.toMap(),
+            overduePlanned = lateElsewhere,
+            plannedDays = plannedDays,
         )
     }
 

@@ -150,6 +150,9 @@ internal data class TodayState(
     val completed: List<TaskItem> = emptyList(),
     val planStarts: Map<String, Instant> = emptyMap(),
     val plan: List<PlanEntry> = emptyList(),
+    /** Échues planifiées un jour à venir : hors de [overdue], montrées dans le repli « En retard » avec ce jour. */
+    val overduePlanned: List<TaskItem> = emptyList(),
+    val plannedDays: Map<String, LocalDate> = emptyMap(),
 )
 
 internal enum class DeletionKind { Note, Idea, Goal }
@@ -1170,5 +1173,7 @@ private fun todayState(all: List<TaskItem>, m: Moment, plan: List<PlanEntry>): T
         completed = TaskViews.completedToday(all, m.today, m.zone),
         planStarts = planned.starts,
         plan = plan.filter { it.day == m.today },
+        overduePlanned = planned.overduePlanned,
+        plannedDays = planned.plannedDays,
     )
 }

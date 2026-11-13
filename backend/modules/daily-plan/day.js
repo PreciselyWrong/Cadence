@@ -25,6 +25,20 @@ function blockingTaskIds(lines, { date, today }) {
     );
 }
 
+// Overdue tasks planned on a day after `today`: task id -> the nearest such
+// day. They leave `overdue` (the Plan board shows them on that day) but the
+// Today page still lists them, with that day, under `overdue_planned`.
+function laterPlanDays(lines, { today }) {
+    const days = new Map();
+    for (const line of lines) {
+        if (line.plan_date <= today) continue;
+        const known = days.get(line.task_id);
+        if (!known || line.plan_date < known)
+            days.set(line.task_id, line.plan_date);
+    }
+    return days;
+}
+
 // The suggestion lists of the day, from getCandidates. Suggested tasks of the
 // current week lead, then the ones in view, then the rest (as laterSection in
 // frontend/components/DailyPlan/autoPlace.ts). Tasks in `excludeUids` (on the
@@ -52,4 +66,9 @@ function buildSuggestions(candidates, { weekStart, excludeUids }) {
     };
 }
 
-module.exports = { planIdsOn, blockingTaskIds, buildSuggestions };
+module.exports = {
+    planIdsOn,
+    blockingTaskIds,
+    laterPlanDays,
+    buildSuggestions,
+};

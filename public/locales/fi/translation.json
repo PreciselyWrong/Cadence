@@ -6045,6 +6045,7 @@
     "testError": "Testi epäonnistui."
   },
   "today": {
+    "plannedOn": "Suunniteltu {{day}}",
     "add": "Lisää",
     "addPlaceholder": "Lisää tehtävä",
     "added": "”{{name}}” lisätty päivään",

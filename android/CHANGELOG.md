@@ -1,3 +1,8 @@
+## [1.29.0] — 13 novembre 2026
+
+- Aujourd'hui : « En retard · N » est un repli au-dessus de la liste du jour, fermé par défaut comme les sections du bas, et absent quand rien n'est en retard.
+- Il liste toutes les tâches échues, y compris celles planifiées un jour à venir (par exemple étalées sur 7 jours), avec « Prévue ven. 18 » sous leur titre. Planifier les garde à leur jour, sans les répéter dans Échues.
+
 ## [1.28.1] — 13 novembre 2026
 
 - Tâches : les boutons des plugins (« Planifier ma semaine » d'Hermes) passent sous l'en-tête ; le titre de la liste ouverte n'est plus tronqué.

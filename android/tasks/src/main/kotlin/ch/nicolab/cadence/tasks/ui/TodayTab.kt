@@ -42,7 +42,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
@@ -147,8 +146,12 @@ internal fun TodayTab(
         settings, today, localNow, closedDay, state.completed.size, unfinished.size,
     )
     val tomorrowTasks = upcoming[today.plusDays(1)].orEmpty()
-    val shownUids = remember(state.overdue, agenda) {
-        state.overdue.mapTo(HashSet()) { it.uid } + agenda.filterIsInstance<TodayItem.Task>().map { it.task.uid }
+    // Toutes les échues, planifiées un autre jour comprises (avec ce jour) : rien de passé ne disparaît d'Aujourd'hui.
+    val late = remember(state.overdue, state.overduePlanned) {
+        (state.overdue + state.overduePlanned).sortedBy { it.dueDay }
+    }
+    val shownUids = remember(late, agenda) {
+        late.mapTo(HashSet()) { it.uid } + agenda.filterIsInstance<TodayItem.Task>().map { it.task.uid }
     }
     val planBoard by viewModel.planBoard.collectAsStateWithLifecycle()
     val later = remember(suggestions, tomorrowTasks, planBoard.horizons, today, shownUids) {
@@ -253,21 +256,30 @@ internal fun TodayTab(
                 }
             }
         }
-        if (state.overdue.isEmpty() && agenda.isEmpty() && proposals == null) {
+        if (late.isNotEmpty()) {
+            // Replié comme les sections du bas (et le web) : le retard se voit d'un coup d'œil sans prendre la page.
+            val open = OVERDUE_FOLD in openFolds
+            item(key = "fold-$OVERDUE_FOLD") {
+                FoldHeader(stringResource(R.string.tasks_section_overdue), late.size, open) {
+                    openFolds = if (open) openFolds - OVERDUE_FOLD else openFolds + OVERDUE_FOLD
+                }
+            }
+            if (open) {
+                taskRows(
+                    late, projectNames, projectColors, moment, viewModel, onOpen,
+                    projectIcons = projectIcons,
+                    subtitleOf = { task ->
+                        state.plannedDays[task.uid]?.let {
+                            stringResource(R.string.tasks_overdue_planned_on, dayLabel(it, today, DayLabelStyle.SHORT))
+                        }
+                    },
+                )
+            }
+        }
+        if (late.isEmpty() && agenda.isEmpty() && proposals == null) {
             item(key = "closed") { ClosedDay(state.completed.size) }
         }
-        if (state.overdue.isNotEmpty()) {
-            item(key = "overdue-header") {
-                // Ton sans culpabilité : un titre calme, sans compteur ni rouge ; chaque ligne garde sa date.
-                SectionHeader(title = stringResource(R.string.tasks_section_overdue))
-            }
-            taskRows(state.overdue, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
-        }
         if (agenda.isNotEmpty()) {
-            // Le titre de l'écran dit déjà « Aujourd'hui » : la section ne se nomme que pour la séparer des échues.
-            if (state.overdue.isNotEmpty()) {
-                item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today)) }
-            }
             agendaRows(
                 agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents,
                 projectIcons = projectIcons,
@@ -362,6 +374,8 @@ private fun FoldHeader(title: String, count: Int, open: Boolean, onToggle: () ->
         Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
     }
 }
+
+private const val OVERDUE_FOLD = "overdue"
 
 private val minuteFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 

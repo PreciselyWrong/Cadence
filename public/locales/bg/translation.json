@@ -6045,6 +6045,7 @@
     "testError": "Тестът не успя."
   },
   "today": {
+    "plannedOn": "Планирано {{day}}",
     "add": "Добави",
     "addPlaceholder": "Добави задача",
     "added": "„{{name}}“ е добавена към деня",

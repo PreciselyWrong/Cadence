@@ -68,6 +68,7 @@ import {
     lineFromDue,
     reflowSlots,
     visibleLines,
+    lateTasks,
 } from './dayModel';
 import { useDay } from './useDay';
 import DayList from './DayList';
@@ -934,7 +935,13 @@ const NewToday: React.FC = () => {
         },
     ];
 
-    const pickRow = (task: Task, action: () => void, label: string) => (
+    // A row of the Overdue or suggestion lists: without `action`, `label` is
+    // plain text (the day an overdue task is planned on).
+    const pickRow = (
+        task: Task,
+        action: (() => void) | null,
+        label: string
+    ) => (
         <div
             key={task.uid}
             className="flex min-h-[36px] items-center gap-3 rounded-lg px-3 hover:bg-surface-high max-sm:min-h-[44px]"
@@ -954,11 +961,17 @@ const NewToday: React.FC = () => {
                     }).format(parseISO(task.due_date.slice(0, 10)))}
                 </span>
             )}
-            <Button size="sm" variant="ghost" onClick={action}>
-                {label}
-            </Button>
+            {action ? (
+                <Button size="sm" variant="ghost" onClick={action}>
+                    {label}
+                </Button>
+            ) : (
+                <span className="text-xs text-surface-on-variant">{label}</span>
+            )}
         </div>
     );
+
+    const late = useMemo(() => (day ? lateTasks(day) : []), [day]);
 
     const suggestionTasks = useMemo(() => {
         const s = day?.suggestions;
@@ -1123,32 +1136,57 @@ const NewToday: React.FC = () => {
             onToggle={toggleLine}
             onOpen={openLine}
             overdue={
-                day && day.overdue.length > 0
+                late.length > 0
                     ? {
-                          count: day.overdue.length,
-                          content: day.overdue.map((task) =>
-                              pickRow(
-                                  task,
-                                  () => take(task),
-                                  t('today.takeToday', 'Do today')
-                              )
+                          count: late.length,
+                          content: late.map(({ task, plannedDate }) =>
+                              plannedDate
+                                  ? pickRow(
+                                        task,
+                                        null,
+                                        t(
+                                            'today.plannedOn',
+                                            'Planned {{day}}',
+                                            {
+                                                day: new Intl.DateTimeFormat(
+                                                    locale,
+                                                    {
+                                                        weekday: 'short',
+                                                        day: 'numeric',
+                                                    }
+                                                ).format(parseISO(plannedDate)),
+                                            }
+                                        )
+                                    )
+                                  : pickRow(
+                                        task,
+                                        () => take(task),
+                                        t('today.takeToday', 'Do today')
+                                    )
                           ),
-                          action: {
-                              label: t('today.takeAll', 'Do all today'),
-                              onClick: () =>
-                                  run(
-                                      day.overdue
-                                          .filter((task) => task.uid)
-                                          .map((task) => ({
-                                              op: 'add' as const,
-                                              task_uid: task.uid as string,
-                                          })),
-                                      t(
-                                          'today.takenAll',
-                                          'Late tasks added to the day'
-                                      )
-                                  ),
-                          },
+                          action:
+                              day && day.overdue.length > 0
+                                  ? {
+                                        label: t(
+                                            'today.takeAll',
+                                            'Do all today'
+                                        ),
+                                        onClick: () =>
+                                            run(
+                                                day.overdue
+                                                    .filter((task) => task.uid)
+                                                    .map((task) => ({
+                                                        op: 'add' as const,
+                                                        task_uid:
+                                                            task.uid as string,
+                                                    })),
+                                                t(
+                                                    'today.takenAll',
+                                                    'Late tasks added to the day'
+                                                )
+                                            ),
+                                    }
+                                  : undefined,
                       }
                     : null
             }

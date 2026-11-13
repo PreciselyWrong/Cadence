@@ -118,4 +118,15 @@ class ServerPlanTest {
         val placement = plan.propose(listOf(free, task("x", dueDay = day, ).copy(estimatedMinutes = 60)))
         placement.blocks.forEach { block -> assertTrue(block.end <= 990 || block.start >= 990 + 45, "$block") }
     }
+
+    @Test
+    fun `une tâche en retard planifiée un jour à venir quitte le retard du Planifier mais reste dans les échues avec son jour`() {
+        val late = task("late", dueDay = day.minusDays(2))
+        val free = task("free", dueDay = day.minusDays(1))
+        val entries = listOf(PlanEntry("late", day.plusDays(3), null, null), PlanEntry("late", day.plusDays(5), null, null))
+        val result = ServerPlan.apply(listOf(late, free), emptyList(), listOf(late, free), entries, day, zone)
+        assertEquals(listOf("free"), result.overdue.map { it.uid })
+        assertEquals(listOf("late"), result.overduePlanned.map { it.uid })
+        assertEquals(mapOf("late" to day.plusDays(3)), result.plannedDays)
+    }
 }

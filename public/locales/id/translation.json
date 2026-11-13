@@ -6045,6 +6045,7 @@
     "testError": "Pengujian gagal."
   },
   "today": {
+        "plannedOn": "Direncanakan {{day}}",
         "taskCount_one": "{{count}} tugas",
         "organized_one": "{{count}} tugas ditempatkan",
     "add": "Tambah",

@@ -240,6 +240,8 @@ internal fun LazyListScope.taskRows(
     projectIcons: Map<String, String> = emptyMap(),
     /** Contenu posé sous la ligne d'une tâche (ex. « Quand ? » à classer) ; rien par défaut. */
     belowRow: (@Composable (TaskItem) -> Unit)? = null,
+    /** Ligne lue sous le titre d'une tâche (ex. jour prévu d'une échue) ; aucune par défaut. */
+    subtitleOf: (@Composable (TaskItem) -> String?)? = null,
 ) {
     items(tasks, key = { it.rowKey }) { task ->
         Column(Modifier.fillMaxWidth().animateItem()) {
@@ -255,6 +257,7 @@ internal fun LazyListScope.taskRows(
                 onSwipeAction = { viewModel.swipe(task, it) },
                 onMenu = { viewModel.openMenu(task) },
                 sectionDay = sectionDay,
+                subtitle = subtitleOf?.invoke(task),
             )
             belowRow?.invoke(task)
         }

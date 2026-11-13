@@ -6059,6 +6059,7 @@
     "testError": "Le test a échoué."
   },
   "today": {
+    "plannedOn": "Prévue {{day}}",
     "add": "Ajouter",
     "addPlaceholder": "Ajouter une tâche",
     "added": "« {{name}} » ajoutée à la journée",

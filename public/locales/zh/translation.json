@@ -6045,6 +6045,7 @@
     "testError": "测试失败。"
   },
   "today": {
+        "plannedOn": "计划于 {{day}}",
         "taskCount_one": "{{count}} 项任务",
         "organized_one": "已安排 {{count}} 项任务",
     "add": "添加",

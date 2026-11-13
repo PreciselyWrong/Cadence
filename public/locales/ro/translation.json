@@ -6067,6 +6067,7 @@
     "testError": "Testul a eșuat."
   },
   "today": {
+    "plannedOn": "Planificată {{day}}",
     "add": "Adaugă",
     "addPlaceholder": "Adaugă o sarcină",
     "added": "„{{name}}” adăugată la zi",

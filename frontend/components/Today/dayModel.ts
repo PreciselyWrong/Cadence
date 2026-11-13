@@ -271,6 +271,26 @@ export const daySummary = (
     return { open: open.length, needed, free, over: needed > free };
 };
 
+export interface LateTask {
+    task: Task;
+    plannedDate: string | null;
+}
+
+// Every overdue task of the day, oldest due first: those planned on a later
+// day keep that day, so nothing past due vanishes from Today.
+export const lateTasks = (
+    day: Pick<DayResponse, 'overdue' | 'overdue_planned'>
+): LateTask[] =>
+    [
+        ...day.overdue.map((task) => ({ task, plannedDate: null })),
+        ...(day.overdue_planned ?? []).map((task) => ({
+            task,
+            plannedDate: task.planned_date,
+        })),
+    ].sort((a, b) =>
+        (a.task.due_date ?? '').localeCompare(b.task.due_date ?? '')
+    );
+
 // Members of the day that are tasks: used to resolve ops locally.
 export const tasksOf = (day: DayResponse): Map<string, Task> => {
     const map = new Map<string, Task>();
@@ -278,6 +298,7 @@ export const tasksOf = (day: DayResponse): Map<string, Task> => {
     day.plan?.items.forEach((item) => add(item.task));
     day.due.forEach(add);
     day.overdue.forEach(add);
+    day.overdue_planned?.forEach(add);
     if (day.suggestions) {
         Object.values(day.suggestions).forEach((value) => {
             if (Array.isArray(value)) value.forEach(add);

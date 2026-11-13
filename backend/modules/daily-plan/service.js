@@ -6,7 +6,12 @@ const { Op } = require('sequelize');
 const { Task } = require('../../models');
 const repository = require('./repository');
 const slots = require('./slots');
-const { planIdsOn, blockingTaskIds, buildSuggestions } = require('./day');
+const {
+    planIdsOn,
+    blockingTaskIds,
+    laterPlanDays,
+    buildSuggestions,
+} = require('./day');
 const permissionsService = require('../../services/permissionsService');
 const scopeService = require('../../services/scopeService');
 const { serializeTasks } = require('../tasks/core/serializers');
@@ -254,8 +259,9 @@ const DAY_COMPLETED_LIMIT = 50;
 
 // The Today page for one day (GET /daily-plan/day): the plan, the tasks due
 // that day that are not planned on a day from today on, the overdue tasks
-// and the suggestions (today only), and the tasks done that day that are not
-// in its plan. Membership rules are in day.js.
+// (split: `overdue` not planned later, `overdue_planned` planned on a later
+// day, with that day) and the suggestions (today only), and the tasks done
+// that day that are not in its plan. Membership rules are in day.js.
 async function getDay(user, date, scopeQuery = null) {
     const timezone = getSafeTimezone(user.timezone);
     const today = getCurrentDateInTimezone(timezone);
@@ -281,7 +287,7 @@ async function getDay(user, date, scopeQuery = null) {
             ? repository.findOverdueBefore(
                   visibleWhere,
                   getTodayBoundsInUTC(timezone).start,
-                  blocked
+                  plannedOnDay
               )
             : [],
         repository.findCompletedBetween(
@@ -292,11 +298,22 @@ async function getDay(user, date, scopeQuery = null) {
             DAY_COMPLETED_LIMIT
         ),
     ]);
-    const [due, overdue, completed] = await Promise.all([
+    const laterDays = laterPlanDays(lines, { today });
+    const [due, overdue, overduePlannedTasks, completed] = await Promise.all([
         serialize(dueTasks),
-        serialize(overdueTasks),
+        serialize(overdueTasks.filter((task) => !laterDays.has(task.id))),
+        serialize(overdueTasks.filter((task) => laterDays.has(task.id))),
         serialize(completedTasks),
     ]);
+    const plannedDayByUid = new Map(
+        overdueTasks
+            .filter((task) => laterDays.has(task.id))
+            .map((task) => [task.uid, laterDays.get(task.id)])
+    );
+    const overduePlanned = overduePlannedTasks.map((task) => ({
+        ...task,
+        planned_date: plannedDayByUid.get(task.uid),
+    }));
 
     let suggestions = null;
     if (isToday) {
@@ -305,6 +322,7 @@ async function getDay(user, date, scopeQuery = null) {
             ...(planView.plan?.items || []).map((item) => item.task_uid),
             ...due.map((task) => task.uid),
             ...overdue.map((task) => task.uid),
+            ...overduePlanned.map((task) => task.uid),
         ]);
         suggestions = buildSuggestions(candidates, {
             weekStart: weekStartOf(today, user.first_day_of_week ?? 1),
@@ -321,6 +339,7 @@ async function getDay(user, date, scopeQuery = null) {
         etag: planEtag(planView.plan?.items || []),
         due,
         overdue,
+        overdue_planned: overduePlanned,
         suggestions,
         completed,
     };

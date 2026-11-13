@@ -6050,6 +6050,7 @@
     "testError": "Testen mislyktes."
   },
   "today": {
+    "plannedOn": "Planlagt {{day}}",
     "add": "Legg til",
     "addPlaceholder": "Legg til en oppgave",
     "added": "«{{name}}» lagt til i dagen",

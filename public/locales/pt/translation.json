@@ -6058,6 +6058,7 @@
     "testError": "O teste falhou."
   },
   "today": {
+    "plannedOn": "Prevista {{day}}",
     "add": "Adicionar",
     "addPlaceholder": "Adicione uma tarefa",
     "added": "“{{name}}” adicionada ao dia",

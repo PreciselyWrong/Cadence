@@ -38,6 +38,11 @@ const withTask = (day: DayResponse, saved: Task): DayResponse => {
         },
         due: day.due.map(swap),
         overdue: day.overdue.map(swap),
+        overdue_planned: day.overdue_planned?.map((task) =>
+            task.uid === saved.uid
+                ? { ...saved, planned_date: task.planned_date }
+                : task
+        ),
     };
 };
 

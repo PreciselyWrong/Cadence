@@ -6058,6 +6058,7 @@
     "testError": "Test non riuscito."
   },
   "today": {
+    "plannedOn": "Prevista {{day}}",
     "add": "Aggiungi",
     "addPlaceholder": "Aggiungi un'attività",
     "added": "«{{name}}» aggiunta al giorno",

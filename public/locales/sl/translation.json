@@ -6155,6 +6155,7 @@
     "testError": "Preizkus ni uspel."
   },
   "today": {
+    "plannedOn": "Načrtovano {{day}}",
     "add": "Dodaj",
     "addPlaceholder": "Dodaj nalogo",
     "added": "„{{name}}“ dodana dnevu",

@@ -6045,6 +6045,7 @@
     "testError": "Test başarısız oldu."
   },
   "today": {
+        "plannedOn": "{{day}} planlandı",
         "taskCount_one": "{{count}} görev",
         "organized_one": "{{count}} görev yerleştirildi",
     "add": "Ekle",
