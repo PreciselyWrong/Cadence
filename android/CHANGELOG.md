@@ -1,3 +1,7 @@
+## [1.35.1] — 13 novembre 2026
+
+- Week-end : la suite d'un créneau occupé (« Ensuite : … ») s'affiche ; version reconstruite depuis le code publié (la 1.35.0 en ligne venait d'un état intermédiaire).
+
 ## [1.35.0] — 13 novembre 2026
 
 - Week-end : la sortie de chaque créneau se choisit (« Mettre à l'agenda », « Autre idée », « Ignorer », remarque) puis « Valider » envoie tout d'un coup ; rien n'est ajouté à l'agenda avant. Une notification ou le Bilan › Week-end ouvre la feuille ; l'état de l'ajout à l'agenda s'y affiche.
