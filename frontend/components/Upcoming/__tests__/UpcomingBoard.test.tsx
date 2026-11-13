@@ -1111,6 +1111,56 @@ describe('UpcomingBoard', () => {
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
     });
 
+    describe('« À planifier » box', () => {
+        // Nothing of the box is left once it is empty: no header, empty
+        // state, border, reserved space nor collapsed bar.
+        const boxNodes = () =>
+            document.querySelectorAll('[data-testid^="to-plan"]');
+
+        it('disappears with no reload once its last card is planned on a day', async () => {
+            const week = task('w1', 'Prepare the meeting', {
+                week_of: isoWeekStart(TODAY),
+            } as Partial<Task>);
+            const server = fakeServer({}, { '2099-01-01': [week] });
+            mockFetchTasks.mockImplementation(async (query?: string) => ({
+                tasks: query === '?status=active' ? [week] : [],
+                metrics: {} as never,
+            }));
+            renderBoard();
+            const box = await screen.findByTestId('to-plan-box');
+            const card = within(box)
+                .getByText('Prepare the meeting')
+                .closest(CARD) as HTMLElement;
+            await settle();
+            const loads = mockFetchTasks.mock.calls.length;
+
+            fireEvent.keyDown(card, { key: 't' });
+
+            await waitFor(() => expect(boxNodes()).toHaveLength(0));
+            expect(server.uids(TODAY)).toEqual(['w1']);
+            expect(
+                within(column(TODAY)).getByText('Prepare the meeting')
+            ).toBeInTheDocument();
+            // The plan line alone hid it: the task list was not reloaded.
+            expect(
+                mockFetchTasks.mock.calls
+                    .slice(loads)
+                    .filter(([query]) => query === '?status=active')
+            ).toHaveLength(0);
+        });
+
+        it('renders nothing when every group is empty after the filters', async () => {
+            mockFetchTasks.mockResolvedValue({
+                tasks: [task('x', 'Plain task')],
+                metrics: {} as never,
+            });
+            renderBoard();
+            await within(column(TODAY)).findByText('Write report');
+            await settle();
+            expect(boxNodes()).toHaveLength(0);
+        });
+    });
+
     describe('horizon strip of the Days layout', () => {
         it('shows the horizons past this week with their counts', async () => {
             mockFetchTasks.mockResolvedValue({
