@@ -107,6 +107,16 @@ describe('TaskChipRow due chip horizons', () => {
         expect(chip).toHaveAttribute('data-tone', 'danger');
     });
 
+    it('shows an overdue date in red, not To replan', () => {
+        renderRow({
+            week_of: lastWeek,
+            due_date: '2020-03-01',
+        } as Partial<Task>);
+        const chip = screen.getByTestId('chip-due');
+        expect(chip).not.toHaveTextContent('To replan');
+        expect(chip).toHaveAttribute('data-tone', 'danger');
+    });
+
     it('keeps the date pickers without horizons elsewhere', () => {
         renderRow({}, null);
         fireEvent.click(screen.getByTestId('chip-due'));

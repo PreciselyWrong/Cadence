@@ -324,6 +324,23 @@ export interface ToPlanBox {
     month: Task[];
 }
 
+/**
+ * True when `GET /tasks?type=unsorted` (« Tâches à classer », backend
+ * modules/tasks/queries/query-builders.js) lists the task, for the fields a
+ * task of the list carries: no due date, not in view, not deferred past
+ * `now`, and filed nowhere (no project nor area) or still waiting for
+ * « Quand ? » (needs_when). The rest of that query is already a condition
+ * of « À replanifier » (open, top level, not recurring, not #someday, no
+ * plan line from today on, week before this one). Differences left: the
+ * plan lines are only those of the loaded days, and the deferral is read
+ * with the browser's clock.
+ */
+const isUnsorted = (task: HorizonTask, now: Date): boolean =>
+    !task.due_date &&
+    !task.in_view_at &&
+    (!task.defer_until || new Date(task.defer_until) <= now) &&
+    ((!task.project_id && !task.area_id) || !!task.needs_when);
+
 // Each task's open plan days among the loaded ones.
 const planDaysByTask = (days: PlanDays): Map<string, string[]> => {
     const byTask = new Map<string, string[]>();
@@ -341,7 +358,9 @@ const planDaysByTask = (days: PlanDays): Map<string, string[]> => {
  * The « À planifier » box of the Days layout, open top-level tasks without
  * #someday:
  * - replan: not recurring, with a week or month that has passed, placed in
- *   no horizon by bucketHorizons and planned on no day from today on;
+ *   no horizon by bucketHorizons and planned on no day from today on, and
+ *   not already shown elsewhere: not overdue (« En retard ») nor listed in
+ *   « Tâches à classer » (isUnsorted);
  * - week: committed to this week, planned on no day of this week;
  * - month: committed to this month (and not to this or next week), planned
  *   on no day of this week.
@@ -351,7 +370,8 @@ export const toPlan = (
     tasks: Task[],
     today: string,
     firstDayOfWeek: number,
-    days: PlanDays = {}
+    days: PlanDays = {},
+    now: Date = new Date()
 ): ToPlanBox => {
     const week = weekStartOf(today, firstDayOfWeek);
     const weekEnd = format(addDays(parseISO(week), 6), 'yyyy-MM-dd');
@@ -384,7 +404,9 @@ export const toPlan = (
             !isRecurring(task) &&
             passedCommitment(task, week, thisMonth) &&
             !placed.has(uid) &&
-            !plannedWhere(uid, (date) => date >= today)
+            !plannedWhere(uid, (date) => date >= today) &&
+            !(day(task.due_date) && (day(task.due_date) as string) < today) &&
+            !isUnsorted(task, now)
         ) {
             box.replan.push(task);
         }

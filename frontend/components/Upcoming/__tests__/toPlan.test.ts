@@ -34,8 +34,8 @@ describe('toPlan', () => {
     it('lists past commitments to replan, this week and this month', () => {
         const box = toPlan(
             [
-                task('old-week', { week_of: '2026-11-02' }),
-                task('old-month', { month_of: '2026-10-01' }),
+                task('old-week', { week_of: '2026-11-02', project_id: 1 }),
+                task('old-month', { month_of: '2026-10-01', project_id: 1 }),
                 task('week', { week_of: '2026-11-09' }),
                 task('month', { month_of: '2026-11-01' }),
                 task('next', { week_of: '2026-11-16' }),
@@ -83,8 +83,8 @@ describe('toPlan', () => {
     it('drops a stale task planned today or later, not one planned before', () => {
         const box = toPlan(
             [
-                task('later', { week_of: '2026-11-02' }),
-                task('before', { week_of: '2026-11-02' }),
+                task('later', { week_of: '2026-11-02', project_id: 1 }),
+                task('before', { week_of: '2026-11-02', project_id: 1 }),
             ],
             TODAY,
             1,
@@ -124,6 +124,38 @@ describe('toPlan', () => {
         );
         expect(uids(box.week)).toEqual(['both']);
         expect(box.month).toEqual([]);
+    });
+});
+
+describe('toPlan replan leaves out Overdue and « Tâches à classer »', () => {
+    const stale = { week_of: '2026-11-02', project_id: 1 };
+    const replan = (fields: Record<string, unknown>) =>
+        uids(toPlan([task('t', { ...stale, ...fields })], TODAY, 1).replan);
+
+    it('keeps a filed task whose week has passed', () => {
+        expect(replan({})).toEqual(['t']);
+        expect(replan({ project_id: null, area_id: 3 })).toEqual(['t']);
+    });
+
+    it('leaves out an overdue task: it is in « En retard »', () => {
+        expect(replan({ due_date: '2026-11-11' })).toEqual([]);
+    });
+
+    it('leaves out a task with no project nor area', () => {
+        expect(replan({ project_id: null })).toEqual([]);
+    });
+
+    it('leaves out a task still waiting for « Quand ? »', () => {
+        expect(replan({ needs_when: true })).toEqual([]);
+    });
+
+    it('keeps an unfiled task the unsorted list skips (in view, deferred)', () => {
+        expect(
+            replan({ project_id: null, in_view_at: '2026-11-10T08:00:00Z' })
+        ).toEqual(['t']);
+        expect(
+            replan({ project_id: null, defer_until: '2999-01-01T08:00:00Z' })
+        ).toEqual(['t']);
     });
 });
 
