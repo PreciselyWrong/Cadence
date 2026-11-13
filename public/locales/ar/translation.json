@@ -1,8 +1,8 @@
 {
     "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "agent": "الوكيل",
+        "dismiss": "تحديد كمقروء",
+        "open": "فتح"
     },
     "counts": {
         "notes_zero": "{{count}} ملاحظات",
@@ -42,6 +42,8 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_one": "عنصر أُعيد إلى قائمة الانتظار: {{count}}",
+            "failed_one": "عنصر فاشل: {{count}}",
       "retryError": "تعذرت إعادة المحاولة",
       "requeued": "أعيدت إلى قائمة الانتظار: {{count}}",
       "retry": "إعادة المحاولة",
@@ -264,11 +266,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "تعذّر حفظ هذا التغيير",
+    "hintLocked": "Enter: سطر جديد",
+    "hint": "Enter: سطر جديد · Tab / Shift+Tab: إزاحة · Alt+↑ / Alt+↓: نقل",
+    "newLine": "مهمة جديدة",
+    "title": "المخطط"
   },
   "focusStats": {
     "title": "التركيز",
@@ -734,10 +736,10 @@
             "page": {
                 "notFound": "الإضافة غير موجودة أو متوقفة"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "تعمل هذه الإضافة داخل الخادم وتطلب:",
+            "approveOutro": "الأذونات تحدّ مما تمنحه Cadence للإضافة، وليست بيئة معزولة. وافق فقط على شيفرة قرأتها.",
+            "approveTitle": "الموافقة على الأذونات؟",
+            "approve": "الموافقة والتفعيل"
         },
     "showTaskDescription": "إظهار الوصف أسفل العنوان",
     "sync": {
@@ -848,17 +850,17 @@
     "personalInfo": "المعلومات الشخصية",
     "errorMessage": "فشل في تحديث الملف الشخصي",
     "telegramIntegration": "تكامل تيليجرام",
-    "telegramDescription": "قم بربط حسابك في تودودي بروبوت تيليجرام لإضافة العناصر إلى صندوق الوارد الخاص بك عبر رسائل تيليجرام.",
+    "telegramDescription": "قم بربط حسابك في Cadence بروبوت تيليجرام لإضافة العناصر إلى صندوق الوارد الخاص بك عبر رسائل تيليجرام.",
     "telegramBotToken": "رمز بوت تيليجرام",
     "telegramTokenDescription": "قم بإنشاء بوت مع @BotFather على تيليجرام والصق الرمز هنا.",
-    "telegramConnected": "حسابك على تيليجرام متصل! أرسل رسائل إلى بوتك لإضافة العناصر إلى صندوق الوارد في تودودي.",
+    "telegramConnected": "حسابك على تيليجرام متصل! أرسل رسائل إلى بوتك لإضافة العناصر إلى صندوق الوارد في Cadence.",
     "setupTelegram": "إعداد تيليجرام",
     "setupTelegramLower": "إعداد تيليجرام",
     "settingUp": "جارٍ الإعداد...",
     "telegramSetupSuccess": "تم تكوين بوت تيليجرام \"{{botName}}\" بنجاح!",
     "telegramSetupFailed": "فشل في إعداد بوت تيليجرام.",
     "invalidTelegramToken": "تنسيق رمز بوت تيليجرام غير صالح.",
-    "telegramInstructions": "اذهب إلى https://t.me/{{botUsername}} وابدأ الدردشة مع بوتك لربطه بحسابك في تودودي.",
+    "telegramInstructions": "اذهب إلى https://t.me/{{botUsername}} وابدأ الدردشة مع بوتك لربطه بحسابك في Cadence.",
     "botConfigured": "تم تكوين البوت بنجاح!",
     "botUsername": "اسم مستخدم البوت:",
     "pollingStatus": "حالة الاستطلاع:",
@@ -909,6 +911,7 @@
     "nextTaskSuggestion": "اقتراح المهمة التالية",
     "enableNextTaskSuggestion": "تفعيل اقتراحات المهمة التالية",
     "tabs": {
+            "agents": "الوكلاء",
             "plugins": "الإضافات",
       "classify": "التصنيف",
       "sync": "المزامنة",
@@ -1154,6 +1157,7 @@
       "toggleError": "تعذّر تحديث هذا التقويم"
     },
     "planning": {
+            "maxOption_one": "{{count}} مهمة",
       "title": "التخطيط",
       "description": "كيف يرتّب «ماذا يمكنك أن تفعل اليوم؟» مهامك عندما تخطط ليومك. اسحب الصفوف بالترتيب الذي تريده؛ تظهر المهام نفسها دائمًا بالترتيب نفسه.",
       "orderTitle": "الترتيب (اسحب للتغيير)",
@@ -1319,7 +1323,7 @@
       "example4": "أضف إلى البريد الوارد تذكيرًا بفحص البريد الإلكتروني",
       "example5": "ابحث عن المهام المتعلقة بالتوثيق",
       "remote": {
-        "cloud": "الوصول إلى Cadence بعيد (خوادم سحابية)",
+        "cloud": "الوصول إلى Cadence عن بُعد (خوادم سحابية)",
         "docker": "الاستخدام من عمليات نشر Docker",
         "local": "الوصول إلى Cadence محلي (localhost)",
         "title": "الوصول عن بُعد مفعّل",
@@ -1743,8 +1747,8 @@
     "waiting": "في الانتظار"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "إخفاء الحقول الفارغة",
+    "addDetail": "إضافة تفصيل",
     "name": "اسم المشروع",
     "projectImage": "صورة المشروع",
     "uploadImageHint": "قم بتحميل صورة لمشروعك (حد أقصى 10 ميجابايت)",
@@ -1881,7 +1885,7 @@
     "projectNameTooLong": "يجب ألا يتجاوز اسم المشروع {{max}} حرفًا"
   },
   "inbox": {
-    "ideaSheet": "عنصر البريد الوارد",
+    "ideaSheet": "عنصر من صندوق الوارد",
     "toSort": "للفرز ({{count}})",
     "unsorted": {
       "noDate": "بدون تاريخ",
@@ -2053,6 +2057,12 @@
     "createError": "فشل في إنشاء الملاحظة"
   },
   "task": {
+        "minutesAgo_one": "منذ {{count}} دقيقة",
+        "inMinutes_one": "خلال {{count}} دقيقة",
+        "inHours_one": "خلال {{count}} ساعة",
+        "inDays_one": "خلال {{count}} يوم",
+        "hoursAgo_one": "منذ {{count}} ساعة",
+        "daysAgo_one": "منذ {{count}} يوم",
     "duplicateError": "تعذّر تكرار المهمة.",
     "duplicated": "تم تكرار المهمة",
     "duplicate": "تكرار",
@@ -2429,7 +2439,7 @@
     "presetWork": "العمل",
     "presetHealth": "الصحة",
     "presetFamily": "العائلة",
-    "suggestDomains": "اقتراح 5 مناطق",
+    "suggestDomains": "اقتراح 5 مجالات",
     "domains": {
       "business": "الأعمال والمال",
       "tech": "التقنية والأنظمة",
@@ -2460,7 +2470,7 @@
     "toggleDropdownMenu": "تبديل قائمة السحب المنسدلة"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "جميع الملاحظات",
     "emptyPreview": "ملاحظة فارغة",
     "loading": "جارٍ تحميل الملاحظات...",
     "error": "خطأ في تحميل الملاحظات",
@@ -2821,7 +2831,7 @@
     }
   },
   "navbar": {
-    "appName": "تودودي",
+    "appName": "Cadence",
     "quickInboxCapture": "التقاط سريع للبريد الوارد",
     "userMenu": "قائمة المستخدم",
     "collapseSidebar": "طي الشريط الجانبي",
@@ -2925,7 +2935,7 @@
     "version": "الإصدار",
     "description": "إدارة المهام المستضافة ذاتيًا مع تنظيم هرمي ودعم متعدد اللغات. تم بناؤها بحب لعشاق الإنتاجية.",
     "madeWithLove": "مصنوع بحب",
-    "appreciation": "شكرًا لاستخدامك تو دودي! دعمك يساعد في الحفاظ على هذا المشروع حيًا ومتناميًا. إذا وجدته مفيدًا، فكر في دعم التطوير.",
+    "appreciation": "شكرًا لاستخدامك Cadence! دعمك يساعد في الحفاظ على هذا المشروع حيًا ومتناميًا. إذا وجدته مفيدًا، فكر في دعم التطوير.",
     "supportDevelopment": "دعم التطوير",
     "community": "المجتمع",
     "viewOnGitHub": "عرض على GitHub",
@@ -3007,7 +3017,7 @@
     },
     "dashboard": {
       "title": "المسؤول",
-      "subtitle": "تودودي {{version}} · {{env}}",
+      "subtitle": "Cadence {{version}} · {{env}}",
       "users": "المستخدمون",
       "usersHint": "{{verified}} موثق · {{admins}} مسؤول · {{new}} اليوم",
       "paying": "دفع",
@@ -3403,7 +3413,7 @@
       "searchPlaceholder": "البحث بالبريد الإلكتروني",
       "user": "المستخدم",
       "plan": "الخطة",
-      "used": "المستخدم",
+      "used": "المُستخدَم",
       "limit": "الحد",
       "remaining": "المتبقي",
       "empty": "لا يوجد مستخدمون بعد"
@@ -3466,7 +3476,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "معرض",
     "label": "عرض",
     "list": "قائمة",
     "board": "لوحة",
@@ -3482,7 +3492,7 @@
     "status": "الحالة",
     "any": "الكل",
     "dueToday": "اليوم",
-    "dueNext7Days": "آخر 7 أيام",
+    "dueNext7Days": "الأيام السبعة القادمة",
     "dueOverdue": "متأخرة",
     "dueNoDate": "بلا تاريخ",
     "statusOpen": "مفتوحة",
@@ -3844,7 +3854,7 @@
     "done": "مكتمل",
     "done_desc": "انتهى وتم",
     "cancelled": "ملغى",
-    "cancelled_desc": "لن يكتمل",
+    "cancelled_desc": "قرار بعدم المتابعة",
     "idea": "فكرة",
     "paused": "متوقف",
     "paused_desc": "مُوقَف عمدًا، للاستئناف لاحقًا",
@@ -4314,6 +4324,8 @@
     "invalidHint": "ربما استُخدم بالفعل أو انتهت صلاحيته. اطلب رابطًا جديدًا ممن أرسله لك."
   },
   "dailyPlan": {
+        "placeAllHint_one": "ستُوضع {{count}} مهمة في أول فترة فارغة.",
+        "placeAllDone_one": "تمت جدولة {{count}} مهمة.",
     "inProgress": "قيد التنفيذ",
     "overdue": "متأخرة",
     "dueToday": "مستحقة اليوم",
@@ -4384,6 +4396,7 @@
     "beta": "تجريبي",
     "betaHint": "صفحة اليوم المخطط لها جديدة. لا تزال الصفحة الكلاسيكية متاحة أسفل هذه الصفحة.",
     "ai": {
+            "carried_one": "تمت إضافة {{count}} مهمة إلى الغد.",
       "suggested": "اقتراح الذكاء الاصطناعي",
       "estimateGuess": "تقدير الذكاء الاصطناعي",
       "nothingToAdd": "لا شيء لإضافته: لا يوجد وقت متاح أو مهام للتخطيط.",
@@ -4608,7 +4621,7 @@
       "tag": "وسم",
       "project": "مشروع",
       "person": "شخص",
-      "area": "منطقة",
+      "area": "مجال",
       "date": "تاريخ الاستحقاق",
       "repeat": "تكرار",
       "today": "اليوم",
@@ -4633,27 +4646,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "أضف أمنية إلى {{group}}",
+      "addWish": "أضف أمنية…",
+      "createTaskFor": "إنشاء مهمة لـ “{{title}}”",
+      "markDone": "تحديد “{{title}}” كمتحققة",
+      "wishFulfilled": "تحققت",
+      "wishDropped": "متروكة",
+      "allDone": "كل شيء منجز",
+      "addStep": "أضف الخطوة التالية",
+      "nextStepInline": "الخطوة التالية: {{name}}",
+      "nextStep": "الخطوة التالية",
+      "completeStep": "إنهاء “{{name}}”",
+      "nothingLinked": "لا شيء مرتبط",
+      "target": "حتى {{date}}",
+      "error": "تعذّر الحفظ، حاول مرة أخرى",
+      "wishDone": "تحققت “{{title}}”",
+      "stepDone": "تمت “{{name}}”",
+      "doneWishes": "تحققت",
+      "other": "متوقفة أو محققة أو متروكة",
+      "noMatch": "لا توجد نتائج مطابقة.",
+      "clearSearch": "امسح البحث",
+      "search": "ابحث عن هدف أو أمنية"
     },
     "newGoal": "هدف جديد",
     "noGoalsYet": "لا توجد أهداف بعد.",
@@ -4984,6 +4997,13 @@
       "instructionsOther": "يمكن الاحتفاظ بأي عمود آخر في ملاحظة المهمة، فلا يضيع شيء من الورقة."
     },
     "import": {
+            "undoneKept_one": "تم التراجع عن الاستيراد. تم الإبقاء على {{count}} مهمة عُدّلت منذ ذلك.",
+            "rowCount_one": "{{count}} صف",
+            "doneTitle_one": "تم استيراد {{count}} مهمة",
+            "countTags_one": "{{count}} وسم جديد",
+            "countProjects_one": "{{count}} مشروع جديد",
+            "countCreate_one": "{{count}} مهمة جديدة",
+            "countAreas_one": "{{count}} منطقة جديدة",
       "fieldParent": "المهمة الأم",
       "fieldWbs": "WBS / رقم التسلسل الهرمي",
       "fieldEstimate": "المدة المقدرة",
@@ -5232,22 +5252,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 للاختيار · S للتخطي · O للفتح · Esc للإيقاف",
+      "nothing": "لا شيء يحتاج نظرتك الآن.",
+      "back": "العودة إلى المراجعة",
+      "again": "جولة أخرى",
+      "saved": "كل قرار محفوظ. ما تخطّيته يعود في المرة القادمة.",
+      "done": "هذا كل شيء لهذه المرة.",
+      "position": "{{position}} من {{total}}",
+      "stop": "إيقاف",
+      "start": "ابدأ",
+      "pitch": "نحو 5 دقائق، شيئًا واحدًا في كل مرة. توقّف متى شئت.",
+      "title": "مراجعة سريعة"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "جارٍ التحميل…",
+    "calmClear": "كل شيء محدّث",
+    "calm_other": "{{count}} أشياء للنظر فيها، بوتيرتك",
+    "calm_one": "{{count}} شيء للنظر فيه، بوتيرتك",
     "cancelDate": "إلغاء",
     "choices": "الخيارات",
     "more": "المزيد…",
@@ -5362,6 +5382,7 @@
     "close": "إغلاق"
   },
   "comments": {
+        "count_one": "{{count}} تعليق",
     "count": "عدد التعليقات: {{count}}",
     "loading": "جارٍ تحميل التعليقات…",
     "failedToLoad": "تعذّر تحميل التعليقات",
@@ -6107,7 +6128,7 @@
     "add": "إضافة",
     "addPlaceholder": "أضف مهمة",
     "added": "تمت إضافة «{{name}}» إلى اليوم",
-    "appointmentLabel": "{{title}}، {{range}}",
+    "appointmentLabel": "{{title}}، الموعد {{range}}",
     "backToList": "القائمة",
     "blockLabel": "{{title}}، {{range}}",
     "calendar": "تقويم اليوم",
@@ -6218,7 +6239,7 @@
     "inboxHint": "اسحب إلى يوم لتخطيطها",
     "inboxEmpty": "صندوق الوارد فارغ.",
     "view": "العرض",
-    "layout": "التخطيط",
+    "layout": "التنسيق",
     "groupBy": "التجميع حسب",
     "group": {
       "none": "لا شيء",
@@ -6374,7 +6395,7 @@
   },
   "bookmarksImport": {
     "title": "استيراد الإشارات المرجعية",
-    "hint": "تصدير من Firefox (Library › Import and Backup › Export). يصبح المجلد الواحد صفحات مشروع.",
+    "hint": "تصدير من Firefox (المكتبة › الاستيراد والنسخ الاحتياطي › تصدير). يصبح المجلد الواحد صفحات مشروع.",
     "file": "ملف الإشارات المرجعية",
     "empty": "لا توجد إشارات مرجعية في هذا الملف.",
     "folder": "مجلد",

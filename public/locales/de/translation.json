@@ -250,18 +250,18 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Diese Änderung konnte nicht gespeichert werden",
+    "hintLocked": "Enter: neue Zeile",
+    "hint": "Enter: neue Zeile · Tab / Umschalt+Tab: einrücken · Alt+↑ / Alt+↓: verschieben",
+    "newLine": "Neue Aufgabe",
+    "title": "Gliederung"
   },
   "focusStats": {
     "title": "Fokus",
     "lastDays_one": "{{count}} Tag",
     "lastDays_other": "{{count}} Tage",
     "error": "Fokus-Statistik konnte nicht geladen werden",
-    "empty": "Noch keine Fokus-Sitzungen. Starten Sie den Pomodoro-Timer in der oberen Leiste; beendete Sitzungen werden hier gezählt.",
+    "empty": "Noch keine Fokus-Sitzungen. Starte den Pomodoro-Timer in der oberen Leiste; beendete Sitzungen werden hier gezählt.",
     "total": "Fokuszeit",
     "sessions": "Sitzungen",
     "bestHour": "Fokussierteste Stunde",
@@ -537,7 +537,7 @@
         "default": "Eisenhower (Standard)",
         "new": "Neue Matrix",
         "newName": "Neue Matrix",
-        "limit": "Sie können bis zu {{count}} Matrizen behalten.",
+        "limit": "Du kannst bis zu {{count}} Matrizen behalten.",
         "editTitle": "Matrix bearbeiten",
         "name": "Name der Matrix",
         "quadrant": "Quadrant {{number}}",
@@ -562,10 +562,10 @@
         "projects": "Projekte (optional)",
         "firstMatchHint": "Jede Aufgabe erscheint im ersten Quadranten, dessen Regel sie erfüllt. Leere Auswahl passt auf alles.",
         "deleteTitle": "Matrix löschen",
-        "deleteConfirm": "Die Matrix „{{name}}“ löschen? Ihre Aufgaben bleiben unverändert."
+        "deleteConfirm": "Die Matrix „{{name}}“ löschen? Deine Aufgaben bleiben unverändert."
       },
       "dropRefusedPriority": "Dieser Quadrant erlaubt mehrere Prioritäten, daher kann die Aufgabe nicht hierher gezogen werden.",
-      "dropRefusedDue": "Das Fälligkeitsdatum der Aufgabe passt nicht zu diesem Quadranten; ändern Sie stattdessen das Datum.",
+      "dropRefusedDue": "Das Fälligkeitsdatum der Aufgabe passt nicht zu diesem Quadranten; ändere stattdessen das Datum.",
       "dropRefusedProject": "Das Projekt der Aufgabe passt nicht zu diesem Quadranten.",
       "dropRefusedEarlier": "Nach der Änderung würde die Aufgabe weiterhin in einem früheren Quadranten landen."
     },
@@ -867,7 +867,7 @@
     "areaDeleted": "Bereich erfolgreich gelöscht!"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Alle Notizen",
     "emptyPreview": "Leere Notiz",
     "title": "Notizen",
     "loading": "Notizen werden geladen...",
@@ -1206,8 +1206,8 @@
   "profile": {
         "plugins": {
             "title": "Plugins",
-            "description": "Plugins fügen eigene Integrationen zum Server hinzu. Nur ein Administrator sieht sie. Ein Plugin bleibt aus, bis Sie es einschalten.",
-            "notConfigured": "Plugins sind aus. Setzen Sie TUDUDI_PLUGINS_DIR auf einen Ordner mit Plugin-Ordnern und starten Sie den Server neu.",
+            "description": "Plugins fügen eigene Integrationen zum Server hinzu. Nur ein Administrator sieht sie. Ein Plugin bleibt aus, bis du es einschaltest.",
+            "notConfigured": "Plugins sind aus. Setze TUDUDI_PLUGINS_DIR auf einen Ordner mit Plugin-Ordnern und starte den Server neu.",
             "reloadAll": "Alle neu laden",
             "reload": "Neu laden",
             "reloadPending": "Zum Laden von {{version}} neu laden",
@@ -1229,7 +1229,7 @@
                 "routes": "Stellt eigene Routen bereit"
             },
             "enabled": "Aktiviert",
-            "needsApproval": "Diese Version verlangt mehr als zuvor. Schalten Sie sie erneut ein, um Berechtigungen und Ereignisse zu bestätigen.",
+            "needsApproval": "Diese Version verlangt mehr als zuvor. Schalte sie erneut ein, um Berechtigungen und Ereignisse zu bestätigen.",
             "checkUpdate": "Nach Updates suchen",
             "updateAvailable": "Update verfügbar: {{version}}",
             "upToDate": "Aktuell",
@@ -1259,10 +1259,10 @@
             "page": {
                 "notFound": "Plugin nicht gefunden oder ausgeschaltet"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Dieses Plugin läuft im Server und verlangt:",
+            "approveOutro": "Berechtigungen begrenzen, was Cadence dem Plugin übergibt; sie sind keine Sandbox. Gib nur Code frei, den du gelesen hast.",
+            "approveTitle": "Berechtigungen freigeben?",
+            "approve": "Freigeben und aktivieren"
         },
     "showTaskDescription": "Beschreibung unter dem Titel anzeigen",
     "sync": {
@@ -1326,11 +1326,11 @@
     "sectionFailed": "Dieser Bereich konnte nicht angezeigt werden. Wähle einen anderen Bereich oder lade die Seite neu.",
     "taskFeed": {
       "title": "Aufgaben abonnieren",
-      "description": "Eine private Adresse, die Ihre offenen Aufgaben mit Fälligkeitsdatum in Google Kalender, Apple Kalender oder Outlook anzeigt. Wer die Adresse hat, kann diese Aufgaben lesen.",
+      "description": "Eine private Adresse, die deine offenen Aufgaben mit Fälligkeitsdatum in Google Kalender, Apple Kalender oder Outlook anzeigt. Wer die Adresse hat, kann diese Aufgaben lesen.",
       "address": "Feed-Adresse",
       "copy": "Kopieren",
       "copied": "Adresse kopiert",
-      "once": "Kopieren Sie sie jetzt: Sie wird nur einmal angezeigt. Eine neue Adresse deaktiviert die alte.",
+      "once": "Kopiere sie jetzt: Sie wird nur einmal angezeigt. Eine neue Adresse deaktiviert die alte.",
       "create": "Adresse erstellen",
       "rotate": "Neue Adresse erstellen",
       "disable": "Deaktivieren",
@@ -1376,6 +1376,7 @@
     "nextTaskSuggestion": "Nächste Aufgabenvorschlag",
     "enableNextTaskSuggestion": "Nächste Aufgabenvorschläge aktivieren",
     "tabs": {
+            "agents": "Agenten",
             "plugins": "Plugins",
       "classify": "Einordnung",
       "sync": "Synchronisation",
@@ -1430,15 +1431,15 @@
     "personalInfo": "Persönliche Informationen",
     "errorMessage": "Profilaktualisierung fehlgeschlagen",
     "telegramIntegration": "Telegram-Integration",
-    "telegramDescription": "Verbinden Sie Ihr Cadence-Konto mit einem Telegram-Bot, um Elemente über Telegram-Nachrichten zu Ihrem Posteingang hinzuzufügen.",
+    "telegramDescription": "Verbinde dein Cadence-Konto mit einem Telegram-Bot, um Elemente über Telegram-Nachrichten zu deinem Posteingang hinzuzufügen.",
     "telegramBotToken": "Telegram-Bot-Token",
     "telegramTokenDescription": "Erstellen Sie einen Bot mit @BotFather auf Telegram und fügen Sie das Token hier ein.",
-    "telegramConnected": "Ihr Telegram-Konto ist verbunden! Senden Sie Nachrichten an Ihren Bot, um Elemente zu Ihrem Cadence-Posteingang hinzuzufügen.",
+    "telegramConnected": "Dein Telegram-Konto ist verbunden! Sende Nachrichten an deinen Bot, um Elemente zu deinem Cadence-Posteingang hinzuzufügen.",
     "settingUp": "Einrichtung...",
     "telegramSetupSuccess": "Telegram-Bot \"{{botName}}\" erfolgreich konfiguriert!",
     "telegramSetupFailed": "Einrichtung des Telegram-Bots fehlgeschlagen.",
     "invalidTelegramToken": "Ungültiges Format des Telegram-Bot-Tokens.",
-    "telegramInstructions": "Gehen Sie zu https://t.me/{{botUsername}} und beginnen Sie, mit Ihrem Bot zu chatten, um ihn mit Ihrem Cadence-Konto zu verbinden.",
+    "telegramInstructions": "Geh zu https://t.me/{{botUsername}} und beginne, mit deinem Bot zu chatten, um ihn mit deinem Cadence-Konto zu verbinden.",
     "botConfigured": "Bot erfolgreich konfiguriert!",
     "botUsername": "Bot-Benutzername:",
     "pollingStatus": "Abfragestatus:",
@@ -1934,7 +1935,7 @@
     "google": {
       "error": "Google hat nicht geantwortet",
       "title": "Google Kalender und Tasks",
-      "description": "Synchronisierung in beide Richtungen: Ihre Google-Kalender erscheinen hier und lassen sich in Cadence bearbeiten, Aufgaben mit Datum landen in einem Kalender „Cadence“ bei Google, und alle Aufgaben werden mit Google Tasks abgeglichen. Änderungen auf einer Seite folgen innerhalb weniger Minuten.",
+      "description": "Synchronisierung in beide Richtungen: Deine Google-Kalender erscheinen hier und lassen sich in Cadence bearbeiten, Aufgaben mit Datum landen in einem Kalender „Cadence“ bei Google, und alle Aufgaben werden mit Google Tasks abgeglichen. Änderungen auf einer Seite folgen innerhalb weniger Minuten.",
       "notConfigured": "Auf diesem Server nicht eingerichtet: Die Administration setzt GOOGLE_CLIENT_ID und GOOGLE_CLIENT_SECRET.",
       "connect": "Google verbinden",
       "lastSync": "synchronisiert {{time}}",
@@ -1948,7 +1949,7 @@
       "syncNow": "Jetzt synchronisieren",
       "disconnect": "Trennen",
       "disconnectTitle": "Google trennen",
-      "disconnectMessage": "Synchronisierung mit Google beenden? Ihre Aufgaben bleiben in Cadence, und was schon bei Google ist, bleibt dort.",
+      "disconnectMessage": "Synchronisierung mit Google beenden? Deine Aufgaben bleiben in Cadence, und was schon bei Google ist, bleibt dort.",
       "syncMode": "Synchronisierungsmodus für {{name}}",
       "modeHidden": "Ausgeblendet",
       "modeRead": "Nur lesen",
@@ -1975,7 +1976,7 @@
     "sidebarMinimalTitle": "Minimale Seitenleiste",
     "sidebarMinimalHint": "Diese Einstellungen ändern nur die minimale Seitenleiste. Dense behält sein eigenes Layout.",
     "taskRowDetails": "Details der Aufgabenzeile",
-    "taskRowDetailsDescription": "Wählen Sie, welche Details rechts in einer minimalen Aufgabenzeile erscheinen, und in welcher Reihenfolge.",
+    "taskRowDetailsDescription": "Wähle, welche Details rechts in einer minimalen Aufgabenzeile erscheinen, und in welcher Reihenfolge.",
     "taskRowMoveUp": "Nach oben",
     "taskRowMoveDown": "Nach unten",
     "taskRowFields": {
@@ -2312,7 +2313,7 @@
       "end": "Ende",
       "location": "Ort",
       "description": "Beschreibung",
-      "recurringNote": "Wiederkehrender Termin: Änderungen gelten nur für diesen Termin. Die Serie bearbeiten Sie in Google Kalender.",
+      "recurringNote": "Wiederkehrender Termin: Änderungen gelten nur für diesen Termin. Bearbeite die Serie in Google Kalender.",
       "save": "Speichern",
       "delete": "Löschen",
       "openInGoogle": "In Google öffnen",
@@ -2444,7 +2445,7 @@
     "rateLimitedGaveUp": "Zu viele Anfragen. Die Sitzung bleibt aktiv; bitte gleich neu laden.",
     "serverBusyRetrying": "Server ausgelastet, neuer Versuch…",
     "serverBusyRetry": "Erneut versuchen",
-    "sign_up": "Anmelden"
+    "sign_up": "Registrieren"
   },
   "dropdown": {
     "createNew": "Neu erstellen",
@@ -2896,8 +2897,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 Willkommen bei Cadence!\n\nIhr persönlicher Aufgabenmanagement-Bot ist jetzt verbunden und bereit zu helfen!\n\n📝 Senden Sie mir einfach eine Nachricht und ich füge sie als Element zu Ihrem Cadence-Posteingang hinzu.\n\n✨ Befehle:\n• /help - Hilfeinformationen anzeigen\n• /start - Willkommensnachricht anzeigen\n• Geben Sie einfach einen beliebigen Text ein - Fügen Sie ihn als Posteingangselement hinzu\n\nLass uns organisiert werden! 🚀",
-    "helpMessage": "📋 Cadence Bot Hilfe\n\nSenden Sie mir eine beliebige Textnachricht und ich füge sie als Element zu Ihrem Cadence-Posteingang hinzu.\n\nBefehle:\n/start - Willkommensnachricht\n/help - Diese Hilfenachricht anzeigen\n\nGeben Sie einfach Ihr Element ein und ich kümmere mich um den Rest!",
+    "welcomeMessage": "🎉 Willkommen bei Cadence!\n\nDein persönlicher Aufgabenmanagement-Bot ist jetzt verbunden und bereit zu helfen!\n\n📝 Schick mir einfach eine Nachricht, und ich füge sie als Element zu deinem Cadence-Posteingang hinzu.\n\n✨ Befehle:\n• /help - Hilfeinformationen anzeigen\n• /start - Willkommensnachricht anzeigen\n• Gib einfach einen beliebigen Text ein - Füge ihn als Posteingangselement hinzu\n\nLass uns organisiert werden! 🚀",
+    "helpMessage": "📋 Cadence Bot Hilfe\n\nSchick mir eine beliebige Textnachricht, und ich füge sie als Element zu deinem Cadence-Posteingang hinzu.\n\nBefehle:\n/start - Willkommensnachricht\n/help - Diese Hilfenachricht anzeigen\n\nGib einfach dein Element ein, und ich kümmere mich um den Rest!",
     "commandProcessed": "Befehl erfolgreich verarbeitet",
     "messageProcessed": "Nachricht erfolgreich verarbeitet",
     "failedToAddToInbox": "❌ Hinzufügen zum Posteingang fehlgeschlagen: {{error}}"
@@ -2907,7 +2908,7 @@
     "version": "Version",
     "description": "Selbstgehostetes Aufgabenmanagement mit hierarchischer Organisation und Mehrsprachigkeit. Mit Liebe für Produktivitätsenthusiasten entwickelt.",
     "madeWithLove": "Mit Liebe gemacht",
-    "appreciation": "Danke, dass Sie Cadence verwenden! Ihre Unterstützung hilft, dieses Projekt am Leben zu erhalten und wachsen zu lassen. Wenn Sie es nützlich finden, ziehen Sie in Betracht, die Entwicklung zu unterstützen.",
+    "appreciation": "Danke, dass du Cadence verwendest! Deine Unterstützung hilft, dieses Projekt am Leben zu erhalten und wachsen zu lassen. Wenn du es nützlich findest, zieh in Betracht, die Entwicklung zu unterstützen.",
     "supportDevelopment": "Entwicklung unterstützen",
     "community": "Gemeinschaft",
     "viewOnGitHub": "Auf GitHub ansehen",
@@ -3324,7 +3325,7 @@
       "appUsersMonthHint": "{{month}} in 30 Tagen",
       "creators": "Etwas erstellt",
       "creatorsHint": "Benutzer, beliebige Art von Element",
-      "canceled": "Storniert",
+      "canceled": "Kündigungen",
       "failed": "Fehlgeschlagene Zahlungen",
       "today": "Heute",
       "thisWeek": "Diese Woche",
@@ -3571,7 +3572,7 @@
       "Project": "Projekte",
       "Area": "Bereiche",
       "Note": "Notizen",
-      "Tag": "Schlagworte"
+      "Tag": "Tags"
     },
     "moreFilters": "Weitere Filter",
     "fewerFilters": "Weniger Filter",
@@ -3807,7 +3808,7 @@
         },
         "desktopApp": {
             "title": "Benachrichtigungen dieser App",
-            "body": "Cadence für Linux zeigt Systembenachrichtigungen an, auch bei geschlossenem Fenster, solange das Symbol im Infobereich liegt. Wählen Sie unten in der Spalte Desktop aus, welche. Dafür ist ein API-Schlüssel nötig, der in den App-Einstellungen (Menü des Infobereich-Symbols) eingetragen wird."
+            "body": "Cadence für Linux zeigt Systembenachrichtigungen an, auch bei geschlossenem Fenster, solange das Symbol im Infobereich liegt. Wähle unten in der Spalte Desktop aus, welche. Dafür ist ein API-Schlüssel nötig, der in den App-Einstellungen (Menü des Infobereich-Symbols) eingetragen wird."
     }
   },
   "projectStatus": {
@@ -3822,7 +3823,7 @@
     "done": "Abgeschlossen",
     "done_desc": "Fertig und abgeschlossen",
     "cancelled": "Abgebrochen",
-    "cancelled_desc": "Wird nicht abgeschlossen",
+    "cancelled_desc": "beschlossen, nicht weiterzuverfolgen",
     "idea": "Idee",
     "paused": "Pausiert",
     "paused_desc": "bewusst zurückgestellt, später fortsetzen",
@@ -4112,9 +4113,9 @@
   },
   "subscription": {
     "title": "Abonnement",
-    "chooseForCloud": "Wählen Sie einen Plan für Cadence Cloud",
+    "chooseForCloud": "Wähle einen Plan für Cadence Cloud",
     "noActive": "Keine aktive Abonnements",
-    "chooseToContinue": "Wählen Sie einen Plan, um Cadence Cloud weiterhin zu nutzen.",
+    "chooseToContinue": "Wähle einen Plan, um Cadence Cloud weiterhin zu nutzen.",
     "monthly": "Monatlich",
     "yearly": "Jährlich",
     "priceMonthly": "{{price}} pro Monat",
@@ -4130,13 +4131,13 @@
     "notConfigured": "Abonnements sind auf dieser Instanz noch nicht verfügbar. Bitte kontaktieren Sie den Support.",
     "exportData": "Exportieren Sie Ihre Daten",
     "subscribe": "Abonnieren",
-    "readOnlyBanner": "Ihre Testphase ist abgelaufen, Ihre Daten sind jetzt schreibgeschützt. Abonnieren Sie, um Cadence weiter zu nutzen, oder exportieren Sie Ihre Daten. Das Konto wird am {{date}} gelöscht.",
+    "readOnlyBanner": "Deine Testphase ist abgelaufen, deine Daten sind jetzt schreibgeschützt. Abonniere, um Cadence weiter zu nutzen, oder exportiere deine Daten. Das Konto wird am {{date}} gelöscht.",
     "lockedAi": "Der KI-Assistent ist Teil des kostenpflichtigen Plans.",
     "lockedPublicNotes": "Öffentliche Notiz-Links sind Teil des kostenpflichtigen Plans.",
     "lockedMembers": "Das Hinzufügen von Mitgliedern ist Teil des kostenpflichtigen Plans.",
     "trialEnded": "Ihre Testphase ist abgelaufen",
     "onTrial": "Sie nutzen die kostenlose Testphase",
-    "readOnlyUntil": "Ihre Daten sind bis zum {{date}} schreibgeschützt, danach wird das Konto gelöscht. Abonnieren Sie, um Cadence Cloud weiter zu nutzen.",
+    "readOnlyUntil": "Deine Daten sind bis zum {{date}} schreibgeschützt, danach wird das Konto gelöscht. Abonniere, um Cadence Cloud weiter zu nutzen.",
     "trialIncludes": "Ihre Testphase endet am {{date}}. KI-Assistent, öffentliche Notizen und das Hinzufügen von Mitgliedern werden mit einem Abonnement freigeschaltet.",
     "backToApp": "Zurück zu Cadence",
     "trialBanner": "Kostenlose Testphase, verbleibende Tage: {{count}}",
@@ -4288,6 +4289,7 @@
     "invalidHint": "Er wurde vielleicht schon verwendet oder ist abgelaufen. Bitte die Person, die ihn gesendet hat, um einen neuen."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} Aufgabe kommt in den nächsten freien Slot.",
     "inProgress": "In Arbeit",
     "overdue": "Überfällig",
     "dueToday": "Heute fällig",
@@ -4605,27 +4607,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Wunsch zu {{group}} hinzufügen",
+      "addWish": "Wunsch hinzufügen…",
+      "createTaskFor": "Aufgabe für “{{title}}” erstellen",
+      "markDone": "“{{title}}” als erfüllt markieren",
+      "wishFulfilled": "Erfüllt",
+      "wishDropped": "Verworfen",
+      "allDone": "Alles erledigt",
+      "addStep": "Nächsten Schritt hinzufügen",
+      "nextStepInline": "Nächster Schritt: {{name}}",
+      "nextStep": "Nächster Schritt",
+      "completeStep": "“{{name}}” abschließen",
+      "nothingLinked": "Nichts verknüpft",
+      "target": "Bis {{date}}",
+      "error": "Speichern nicht möglich, versuche es erneut",
+      "wishDone": "“{{title}}” erfüllt",
+      "stepDone": "“{{name}}” erledigt",
+      "doneWishes": "Erfüllt",
+      "other": "Pausiert, erreicht oder verworfen",
+      "noMatch": "Nichts passt.",
+      "clearSearch": "Suche löschen",
+      "search": "Ziel oder Wunsch suchen"
     },
     "newGoal": "Neues Ziel",
     "noGoalsYet": "Noch keine Ziele.",
@@ -4956,6 +4958,7 @@
       "instructionsOther": "Jede andere Spalte kann in der Notiz der Aufgabe behalten werden, damit nichts aus dem Blatt verloren geht."
     },
     "import": {
+            "undoneKept_one": "Der Import wurde rückgängig gemacht. {{count}} seitdem geänderte Aufgabe wurde behalten.",
       "fieldParent": "Übergeordnete Aufgabe",
       "fieldWbs": "WBS / Gliederungsnummer",
       "fieldEstimate": "Schätzung",
@@ -5166,7 +5169,7 @@
       "project": "Projekt",
       "completed": "Erledigt am",
       "due": "Fällig",
-      "tags": "Schlagworte"
+      "tags": "Tags"
     }
   },
   "projectBoard": {
@@ -5195,7 +5198,7 @@
     "titleLabel": "Aufgabentitel",
     "project": "Projekt",
     "noProject": "Kein Projekt",
-    "tags": "Schlagworte",
+    "tags": "Tags",
     "note": "Notiz",
     "subtasks": "Unteraufgaben",
     "loadError": "Diese Aufgabe konnte nicht geladen werden.",
@@ -5261,8 +5264,8 @@
       "week": "Diese Woche"
     },
     "empty": {
-      "undecided": "Der Eingang ist leer.",
-      "pushed": "Nichts, was Sie ständig verschieben.",
+      "undecided": "Der Posteingang ist leer.",
+      "pushed": "Nichts, was du ständig verschiebst.",
       "projects": "Jedes aktive Projekt hat einen nächsten Schritt.",
       "later": "Nichts geparkt.",
       "stale": "Keine alten Aufgaben."
@@ -5283,7 +5286,7 @@
       "toTask": "Aufgabe erstellen",
       "toLater": "Für später parken",
       "discard": "Verwerfen",
-      "openInbox": "Eingang öffnen",
+      "openInbox": "Posteingang öffnen",
       "addNext": "Nächste Aufgabe hinzufügen",
       "openProject": "Projekt öffnen",
       "pauseProject": "Auf Warten setzen",
@@ -5304,7 +5307,7 @@
       "committed": "Diese Woche entschieden",
       "inView": "Im Blick",
       "emptyCommitted": "Für diese Woche ist noch nichts entschieden.",
-      "emptyInView": "Nichts im Blick. Nehmen Sie eine Aufgabe über ihr Menü in den Blick.",
+      "emptyInView": "Nichts im Blick. Nimm eine Aufgabe über ihr Menü in den Blick.",
       "choose": "Hilf mir wählen"
     },
     "routine": {
@@ -5315,7 +5318,7 @@
     }
   },
   "postponements": {
-    "summary": "{{total}}-mal verlegt, {{count}} in den letzten 30 Tagen",
+    "summary": "{{total}}-mal verschoben, {{count}} in den letzten 30 Tagen",
     "kinds": {
       "postponed": "Verschoben",
       "rescheduled": "Neu geplant",
@@ -5330,7 +5333,7 @@
   "thisOrThat": {
     "title": "Welche jetzt?",
     "skipBoth": "Keine von beiden",
-    "done": "Ihre nächste Aktion",
+    "done": "Deine nächste Aktion",
     "none": "Nichts mehr zu vergleichen.",
     "addToday": "Zu heute hinzufügen",
     "close": "Schließen"
@@ -5418,7 +5421,7 @@
     "subtitle": "Einen Fehler gefunden oder eine Idee? Sag uns Bescheid.",
     "placeholder": "Was ist passiert, oder was würde Cadence besser machen?",
     "openIssue": "Auf GitHub öffnen",
-    "issueNote": "Öffnet ein neues Issue auf GitHub mit der aktuellen Seite und der App-Version. Nichts wird gesendet, bevor Sie es dort absenden."
+    "issueNote": "Öffnet ein neues Issue auf GitHub mit der aktuellen Seite und der App-Version. Nichts wird gesendet, bevor du es dort absendest."
   },
   "onboarding": {
     "starter": {
@@ -5435,7 +5438,7 @@
     "tasks": "Aufgaben",
     "agenda": "Agenda",
     "habits": "Gewohnheiten",
-    "review": "Prüfen",
+    "review": "Rückblick",
     "newTask": "Neue Aufgabe"
   },
   "commandCenter": {
@@ -5497,7 +5500,7 @@
       "goCalendar": "Zum Kalender wechseln",
       "goProjects": "Zu Projekten wechseln",
       "taskNav": "Zwischen Aufgaben wechseln",
-      "taskComplete": "Aufgabe erledigen oder wieder öffnen (oder Space)",
+      "taskComplete": "Aufgabe erledigen oder wieder öffnen (oder Leertaste)",
       "taskEdit": "Aufgabe zum Bearbeiten öffnen (oder Enter)",
       "taskDate": "Datum festlegen",
       "taskPriority": "Priorität festlegen",
@@ -5974,12 +5977,12 @@
     "editTags": "Schlagwörter bearbeiten",
     "goToSource": "Zum Speicherort gehen",
     "open": "Link öffnen",
-    "note": "Ihre Notiz",
-    "notePlaceholder": "Warum Sie ihn gespeichert haben…",
+    "note": "Deine Notiz",
+    "notePlaceholder": "Warum du ihn gespeichert hast…",
     "addNote": "Notiz hinzufügen",
     "saveError": "Der Link konnte nicht gespeichert werden.",
     "loadError": "Die Links konnten nicht geladen werden.",
-    "empty": "Links, die Sie aus dem Posteingang behalten, erscheinen hier, mit dem, was die Seite über sich selbst sagt.",
+    "empty": "Links, die du aus dem Posteingang behältst, erscheinen hier, mit dem, was die Seite über sich selbst sagt.",
     "noMatch": "Kein Link passt zu diesen Filtern.",
     "noTheme": "Ohne Thema",
     "taskCreated": "Aufgabe erstellt: {{name}}",
@@ -5992,7 +5995,7 @@
     "field": {
       "title": "Titel",
       "url": "Adresse",
-      "tags": "Tags"
+      "tags": "Schlagworte"
     },
     "editTitle": "Link bearbeiten",
     "deleteTitle": "Diesen Link löschen?",

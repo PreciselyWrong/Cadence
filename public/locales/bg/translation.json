@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Маркирай като прочетено",
+        "open": "Отвори"
     },
     "counts": {
         "notes_other": "{{count}} бележки",
@@ -26,6 +26,8 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_one": "Отново на опашката: {{count}}",
+            "failed_one": "Неуспешен елемент: {{count}}",
       "retryError": "Повторният опит не бе възможен",
       "requeued": "Отново на опашката: {{count}}",
       "retry": "Опитай отново",
@@ -248,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Промяната не можа да се запази",
+    "hintLocked": "Enter: нов ред",
+    "hint": "Enter: нов ред · Tab / Shift+Tab: отместване · Alt+↑ / Alt+↓: преместване",
+    "newLine": "Нова задача",
+    "title": "Структура"
   },
   "focusStats": {
     "title": "Фокус",
@@ -391,7 +393,7 @@
     "next7Days": "Следващите 7 дни",
     "more": "Още",
     "toggleFolder": "Показване или скриване на проектите",
-    "customize": "Персонализиране на страničnata лента",
+    "customize": "Персонализиране на страничната лента",
     "toggleSection": "Разгъване или свиване",
     "pinned": "Закачени",
     "pinItem": "Закачи {{name}}",
@@ -681,7 +683,7 @@
             "events": "Събития",
             "permission": {
                 "events": "Слуша събития",
-                "routes": "Предоставя свои маршрути"
+                "routes": "Предоставя собствени маршрути"
             },
             "enabled": "Включен",
             "needsApproval": "Тази версия иска повече права от преди. Включете я отново, за да одобрите правата и събитията ѝ.",
@@ -714,10 +716,10 @@
             "page": {
                 "notFound": "Плъгинът не е намерен или е изключен"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Този плъгин работи в сървъра и иска:",
+            "approveOutro": "Правата ограничават какво Cadence предоставя на плъгина; те не са пясъчник. Одобрявайте само код, който сте прочели.",
+            "approveTitle": "Да се одобрят ли правата?",
+            "approve": "Одобрете и включете"
         },
     "showTaskDescription": "Показване на описанието под заглавието",
     "sync": {
@@ -889,6 +891,7 @@
     "nextTaskSuggestion": "Предложение за следваща задача",
     "enableNextTaskSuggestion": "Активирайте предложенията за следваща задача",
     "tabs": {
+            "agents": "Агенти",
             "plugins": "Плъгини",
       "classify": "Класификация",
       "sync": "Синхронизация",
@@ -1113,7 +1116,7 @@
       "addError": "Календарът не можа да се добави",
       "deleteError": "Календарът не можа да се премахне",
       "title": "Календари в „Днес“",
-      "description": "Показвай срещите си до плана за деня. Cadence само чете тези календари и никога не ги променя.",
+      "description": "Показвайте срещите си до плана за деня. Cadence само чете тези календари и никога не ги променя.",
       "empty": "Все още няма свързани календари.",
       "lastSync": "обновено {{time}}",
       "remove": "Премахни {{name}}",
@@ -1121,7 +1124,7 @@
       "name": "Име",
       "namePlaceholder": "Работа, Семейство…",
       "url": "Таен iCal адрес",
-      "googleHelp": "В Google Календар: Настройки → твоят календар → Интегриране на календара → „Таен адрес във формат iCal“. Apple Календар и Outlook имат подобни връзки. Всеки с този адрес може да чете календара, затова Cadence го пази криптиран.",
+      "googleHelp": "В Google Календар: Настройки → вашия календар → Интегриране на календара → „Таен адрес във формат iCal“. Apple Календар и Outlook имат подобни връзки. Всеки с този адрес може да чете календара, затова Cadence го пази криптиран.",
       "color": "Цвят",
       "checking": "Проверка на календара…",
       "add": "Свържи",
@@ -1293,7 +1296,7 @@
         "description": "Добавете Cadence като персонализиран конектор в claude.ai на адрес {{url}}. Cadence приема нов конектор само в рамките на 10 минути след като натиснете бутона по-долу.",
         "title": "Свързване с claude.ai"
       },
-      "description": "Свържи Cadence с всяко приложение, което поддържа Model Context Protocol (MCP). Така AI асистентите могат да работят със задачите, проектите и бележките ти, както на локален, така и на отдалечен Cadence сървър.",
+      "description": "Свържете Cadence с всяко приложение, което поддържа Model Context Protocol (MCP). Така AI асистентите могат да работят със задачите, проектите и бележките ви, както на локален, така и на отдалечен Cadence сървър.",
       "example1": "Покажи задачите ми за днес",
       "example2": "Създай задача за преглед на MCP интеграцията",
       "example3": "Кои проекти са ми в процес?",
@@ -1315,7 +1318,7 @@
       },
       "step2": {
         "copy": "Копирай",
-        "description": "Добави тази конфигурация в MCP клиента си. Замени YOUR_API_TOKEN_HERE с токена от стъпка 1. Използва се mcp-remote за връзка с Cadence сървъра през HTTP. Примерът е за Claude Desktop:",
+        "description": "Добавете тази конфигурация в MCP клиента си. Заменете YOUR_API_TOKEN_HERE с токена от стъпка 1. Използва се mcp-remote за връзка с Cadence сървъра през HTTP. Примерът е за Claude Desktop:",
         "loading": "Зареждане...",
         "locationTitle": "Местоположение на конфигурационния файл на Claude Desktop:",
         "otherClients": "Други MCP клиенти може да се настройват различно, виж документацията на клиента си.",
@@ -1326,7 +1329,7 @@
         "title": "3. Налични операции"
       },
       "step4": {
-        "description": "След като добавиш конфигурацията, рестартирай MCP клиента. След това можеш да работиш с Cadence на естествен език:",
+        "description": "След като добавите конфигурацията, рестартирайте MCP клиента. След това можете да работите с Cadence на естествен език:",
         "examplesTitle": "Примерни заявки:",
         "title": "4. Започни"
       },
@@ -1724,8 +1727,8 @@
     "waiting": "В очакване"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Скриване на празните полета",
+    "addDetail": "Добавете подробност",
     "name": "Име на проекта",
     "projectImage": "Снимка на проекта",
     "uploadImageHint": "Качете изображение за вашия проект (макс 10MB)",
@@ -2439,7 +2442,7 @@
     "toggleDropdownMenu": "Превключване на падащото меню"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Всички бележки",
     "emptyPreview": "Празна бележка",
     "loading": "Зареждане на бележки...",
     "error": "Грешка при зареждане на бележки",
@@ -2506,7 +2509,7 @@
     "outlineTaskFailed": "Задачата не можа да бъде създадена.",
     "outlinePath": "Път в структурата",
     "outlineAll": "Всичко",
-    "outlineBulletMenu": "Водещ символ",
+    "outlineBulletMenu": "Маркер",
     "backgroundImage": "Фон",
     "noBackground": "Без фон",
     "openInNotes": "Отвори в Бележки",
@@ -3352,10 +3355,10 @@
       "paidHint": "активирани и с поне един абонамент",
       "maturity": "Скорошните регистрации може още да са в пробен период, затова стъпката за плащане изостава.",
       "paidWithoutActivating": "още {{n}} платили без активиране.",
-      "stepVisitors": "посещава",
-      "stepSignups": "се регистрира",
-      "stepActivated": "активира",
-      "stepPaid": "плаща",
+      "stepVisitors": "посетители",
+      "stepSignups": "регистрирали се",
+      "stepActivated": "активирали",
+      "stepPaid": "плащащи",
       "pts": "{{diff}} т.",
       "noRate": "Има по-малко отчетени посетители от регистрациите",
       "before": "беше {{n}}"
@@ -3433,7 +3436,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Галерия",
     "label": "Изглед",
     "list": "Списък",
     "board": "Табло",
@@ -4277,6 +4280,8 @@
     "invalidHint": "Може вече да е използвана или да е изтекла. Помолете човека, който я е изпратил, за нова."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} задача ще заеме следващия свободен интервал.",
+        "placeAllDone_one": "{{count}} задача планирана.",
     "inProgress": "В процес",
     "overdue": "Просрочени",
     "dueToday": "Със срок днес",
@@ -4458,7 +4463,7 @@
     "guidedNoLeftovers": "Нищо не е останало от вчера.",
     "guidedCarry": "Пренеси за днес",
     "guidedDrop": "Премахни",
-    "guidedPick": "Избери какво да правиш днес",
+    "guidedPick": "Изберете какво да правите днес",
     "guidedNoPicks": "Няма какво да се избере.",
     "guidedAdd": "Добави",
     "guidedCapacity": "Побира ли се?",
@@ -4593,27 +4598,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Добавете желание в {{group}}",
+      "addWish": "Добавете желание…",
+      "createTaskFor": "Създайте задача за „{{title}}“",
+      "markDone": "Маркирайте „{{title}}“ като изпълнено",
+      "wishFulfilled": "Изпълнено",
+      "wishDropped": "Отхвърлено",
+      "allDone": "Всичко е готово",
+      "addStep": "Добавете следваща стъпка",
+      "nextStepInline": "Следваща стъпка: {{name}}",
+      "nextStep": "Следваща стъпка",
+      "completeStep": "Завършете „{{name}}“",
+      "nothingLinked": "Нищо не е свързано",
+      "target": "До {{date}}",
+      "error": "Не можа да се запази, опитайте отново",
+      "wishDone": "„{{title}}“ е изпълнено",
+      "stepDone": "„{{name}}“ е готово",
+      "doneWishes": "Изпълнени",
+      "other": "На пауза, постигнати или отхвърлени",
+      "noMatch": "Няма съвпадения.",
+      "clearSearch": "Изчистете търсенето",
+      "search": "Търсете цел или желание"
     },
     "newGoal": "Нова цел",
     "noGoalsYet": "Все още няма цели.",
@@ -4944,6 +4949,7 @@
       "instructionsOther": "Всяка друга колона може да се запази в бележката на задачата, така че нищо от листа не се губи."
     },
     "import": {
+            "undoneKept_one": "Импортът е отменен. Запазена е {{count}} задача, променена оттогава.",
       "fieldParent": "Родител",
       "fieldWbs": "WBS / номер в структурата",
       "fieldEstimate": "Оценка",
@@ -5194,22 +5200,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 избор · S пропускане · O отваряне · Esc спиране",
+      "nothing": "Засега нищо не изисква вашето внимание.",
+      "back": "Обратно към прегледа",
+      "again": "Още един кръг",
+      "saved": "Всяко решение се запазва. Пропуснатото ще се появи отново следващия път.",
+      "done": "Засега толкова.",
+      "position": "{{position}} от {{total}}",
+      "stop": "Спри",
+      "start": "Започни",
+      "pitch": "Около 5 минути, по едно нещо наведнъж. Спрете, когато поискате.",
+      "title": "Бърз преглед"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Зареждане…",
+    "calmClear": "Всичко е актуално",
+    "calm_other": "{{count}} неща за преглед, в собствен ритъм",
+    "calm_one": "{{count}} нещо за преглед, в собствен ритъм",
     "cancelDate": "Отказ",
     "choices": "Избори",
     "more": "Още…",
@@ -5293,7 +5299,7 @@
       "inView": "Пред очите",
       "emptyCommitted": "Още нищо не е решено за тази седмица.",
       "emptyInView": "Нищо пред очите. Добавете задача от нейното меню.",
-      "choose": "Помогни ми да избера"
+      "choose": "Помогнете ми да избера"
     },
     "routine": {
       "offer": "Планирай седмичен преглед в петък",
@@ -5581,7 +5587,7 @@
       "today": "Пропусни днес"
     },
     "abstinence": {
-      "assumption": "Този брой зависи от това, което отбелязваш. Дните на пауза не се броят и прекъсват поредицата. Тези числа не измерват здравето ти.",
+      "assumption": "Този брой зависи от това, което отбелязвате. Дните на пауза не се броят и прекъсват поредицата. Тези числа не измерват здравето ви.",
       "best": "Най-добра поредица",
       "checkIn": "Отбелязване",
       "clear90": "Чисти дни (90)",
@@ -5639,7 +5645,7 @@
       "activeDays": "Активни дни",
       "addReminder": "Добави напомняне",
       "applyFix": "Коригирай текущата версия",
-      "applyFixHint": "Презаписва версията в сила, включително минали дни. Използвай го, за да поправиш грешка.",
+      "applyFixHint": "Презаписва версията в сила, включително минали дни. Използвайте го, за да поправите грешка.",
       "applyFrom": "Важи от",
       "applyNew": "От дата (нова версия)",
       "applyNewHint": "По-ранните дни запазват целта, с която са живени.",
@@ -5679,7 +5685,7 @@
     },
     "empty": {
       "create": "Създай първия си навик",
-      "hint": "Навикът е нещо, което правиш редовно, като четене или разходка, нещо, което държиш под лимит, или нещо, без което минаваш. Отбелязвай го всеки път и следи как расте поредицата.",
+      "hint": "Навикът е нещо, което правите редовно, като четене или разходка, нещо, което държите под лимит, или нещо, без което минавате. Отбелязвайте го всеки път и следете как расте поредицата.",
       "title": "Още няма навици."
     },
     "entry": {
@@ -5699,20 +5705,20 @@
       "copy": "Навикът не можа да се копира.",
       "move": "Навикът не можа да се премести.",
       "action": "Не стана ({{code}}).",
-      "activeDays": "Избери поне един ден.",
-      "customUnit": "Назови единицата и посочи символа ѝ.",
-      "entryDate": "Избери дата, която не е в бъдещето.",
+      "activeDays": "Изберете поне един ден.",
+      "customUnit": "Назовете единицата и посочете символа ѝ.",
+      "entryDate": "Изберете дата, която не е в бъдещето.",
       "entryValue": "Стойността трябва да е по-голяма от нула.",
-      "fix": "Провери маркираните полета.",
+      "fix": "Проверете маркираните полета.",
       "frequency": "Сесиите трябва да са цяло число над нула.",
       "intervalDays": "Интервалът е поне 2 дни.",
       "load": "Навиците не можаха да се заредят.",
       "loadOne": "Този навик не можа да се зареди.",
       "minimum": "Минимумът трябва да е над нула и най-много равен на идеалното.",
-      "name": "Дай име на навика.",
+      "name": "Дайте име на навика.",
       "pauseEnd": "Последният ден не може да е преди първия.",
-      "pauseHabits": "Избери поне един навик.",
-      "pauseLabel": "Напиши за какво е паузата.",
+      "pauseHabits": "Изберете поне един навик.",
+      "pauseLabel": "Напишете за какво е паузата.",
       "reminderTimes": "Напомнянето трябва да има час.",
       "save": "Навикът не можа да се запази ({{code}}).",
       "saveEntry": "Записът не можа да се запази ({{code}}).",
@@ -5741,13 +5747,13 @@
     },
     "kind": {
       "abstinence": "Въздържане",
-      "abstinenceHint": "Броиш дните без. Всеки отбелязан срив започва броенето отначало.",
+      "abstinenceHint": "Броете дните без. Всеки отбелязан срив започва броенето отначало.",
       "goal": "Цел",
-      "goalHint": "Постигай цел във всеки период.",
+      "goalHint": "Постигайте цел във всеки период.",
       "limit": "Лимит",
-      "limitHint": "Остани на или под максимум. Оставането под лимита е успех.",
+      "limitHint": "Останете на или под максимума. Оставането под лимита е успех.",
       "tracker": "Свободна дейност",
-      "trackerHint": "Отбелязвай дейност без цел."
+      "trackerHint": "Отбелязвайте дейност без цел."
     },
     "new": "Нов навик",
     "noArchived": "Няма архивирани навици.",
@@ -5764,7 +5770,7 @@
       "habits": "Навици",
       "hint": "Дните на пауза не се броят като пропуснати и не прекъсват поредицата.",
       "illness": "Болест",
-      "label": "Причина (с твоите думи)",
+      "label": "Причина (с вашите думи)",
       "lastDay": "Последен ден (включително)",
       "manual": "На пауза",
       "noEnd": "Още без крайна дата",
@@ -5998,7 +6004,7 @@
       "open": "Отвори",
       "addAnyway": "Добави въпреки това",
       "toProject": "Проект…",
-      "keepInInbox": "Входяща поща",
+      "keepInInbox": "Входящи",
       "taskAdded": "Задачата е добавена",
       "taskToSort": "Задачата е добавена в „Задачи за подреждане“",
       "addedToProject": "Добавено към проекта"
@@ -6042,7 +6048,7 @@
     "add": "Добави",
     "addPlaceholder": "Добави задача",
     "added": "„{{name}}“ е добавена към деня",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, срок {{range}}",
     "backToList": "Списък",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Календар за деня",
@@ -6054,7 +6060,7 @@
     "details": "Подробности",
     "doneCount": "Готови · {{n}}",
     "dueAt": "Срок",
-    "empty": "Нищо не е планирано. Добави задача или избери от предложенията.",
+    "empty": "Нищо не е планирано. Добавете задача или изберете от предложенията.",
     "emptyDay": "Нищо не е планирано за този ден.",
     "goToToday": "Днес",
     "hideCalendar": "Скрий календара",
@@ -6220,8 +6226,8 @@
     "load": "{{planned}} / {{available}}",
     "done": "Готово ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInboxFailed": "Не може да се добави. Опитай отново.",
-    "addEmptyName": "Въведи име за задачата",
+    "addToInboxFailed": "Не може да се добави. Опитайте отново.",
+    "addEmptyName": "Въведете име за задачата",
     "addTaskIn": "Добави задача в {{name}}",
     "previous": "Предишен ден",
     "next": "Следващ ден",
@@ -6258,7 +6264,7 @@
     "italic": "Курсив",
     "strikethrough": "Зачертан",
     "heading": "Заглавие",
-    "bulletList": "Списък с водачи",
+    "bulletList": "Списък с маркери",
     "numberedList": "Номериран списък",
     "checklist": "Списък за отметки",
     "quote": "Цитат",

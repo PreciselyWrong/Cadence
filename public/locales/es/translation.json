@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "No se pudo guardar ese cambio",
+    "hintLocked": "Intro: nueva línea",
+    "hint": "Intro: nueva línea · Tab / Mayús+Tab: sangrar · Alt+↑ / Alt+↓: mover",
+    "newLine": "Nueva tarea",
+    "title": "Esquema"
   },
   "focusStats": {
     "title": "Enfoque",
@@ -577,10 +577,10 @@
             "page": {
                 "notFound": "Plugin no encontrado o desactivado"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Este plugin se ejecuta dentro del servidor y pide:",
+            "approveOutro": "Los permisos limitan lo que Cadence entrega al plugin; no son un entorno aislado. Aprueba solo código que hayas leído.",
+            "approveTitle": "¿Aprobar permisos?",
+            "approve": "Aprobar y activar"
         },
     "showTaskDescription": "Mostrar la descripción debajo del título",
     "sync": {
@@ -609,7 +609,7 @@
         "content": "Contenido",
         "note": "Nota",
         "title": "Título",
-        "name": "Nombre"
+        "name": "Título"
       },
       "entity": {
         "link": "Enlace",
@@ -684,6 +684,7 @@
     "nextTaskSuggestion": "Sugerencia de Próxima Tarea",
     "enableNextTaskSuggestion": "Habilitar Sugerencias de Próxima Tarea",
     "tabs": {
+            "agents": "Agentes",
             "plugins": "Plugins",
       "classify": "Clasificación",
       "sync": "Sincronización",
@@ -2188,7 +2189,7 @@
     "turnIntoProjectError": "No se pudo convertir en proyecto.",
     "turnIntoProjectMessage": "¿Convertir « {{name}} » en proyecto? Sus subtareas pasan a ser las tareas del proyecto y las direcciones de su nota, sus páginas.",
     "inDays_one": "en {{count}} día",
-    "daysAgo_one": "{{count}} día atrás",
+    "daysAgo_one": "hace {{count}} día",
     "hoursAgo_one": "hace {{count}} hora",
     "minutesAgo_one": "hace {{count}} minuto",
     "inMinutes_one": "en {{count}} minuto",
@@ -2375,7 +2376,7 @@
     "toggleDropdownMenu": "Alternar menú desplegable"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Todas las notas",
     "emptyPreview": "Nota vacía",
     "loading": "Cargando notas...",
     "error": "Error al cargar notas",
@@ -2739,7 +2740,7 @@
     "hideCalendar": "Ocultar {{name}}",
     "showCalendar": "Mostrar {{name}}",
     "feedError": "No se pudo cargar: {{names}}",
-    "moreAllDay": "{{count}} eventos de todo el día más",
+    "moreAllDay": "{{count}} eventos más de todo el día",
     "view": "Vista",
     "moreViews": "Más vistas",
     "openDay": "Abrir día",
@@ -2890,7 +2891,7 @@
     "version": "Versión",
     "description": "Gestión de tareas autohospedada con organización jerárquica y soporte multilingüe. Construido con amor para los entusiastas de la productividad.",
     "madeWithLove": "Hecho con amor",
-    "appreciation": "¡Gracias por usar Cadence! Su apoyo ayuda a mantener este proyecto vivo y en crecimiento. Si lo encuentra útil, considere apoyar el desarrollo.",
+    "appreciation": "¡Gracias por usar Cadence! Tu apoyo ayuda a mantener este proyecto vivo y en crecimiento. Si te resulta útil, considera apoyar el desarrollo.",
     "supportDevelopment": "Apoyar el Desarrollo",
     "community": "Comunidad",
     "viewOnGitHub": "Ver en GitHub",
@@ -3000,7 +3001,7 @@
       "activation": "Activación, {{days}} días",
       "activationHint": "{{n}} de {{total}} registros",
       "weeklyUsers": "Usuarios semanales",
-      "weeklyUsersHint": "creó algo",
+      "weeklyUsersHint": "que crearon algo",
       "selfHostedUsers": "autoalojado · {{n}} nuevos hoy"
     },
     "waitlist": {
@@ -3300,13 +3301,13 @@
       "blog": "Lectores del blog",
       "signupsRow": "Registros",
       "reach": "Alcance",
-      "createdAnything": "Creó algo",
+      "createdAnything": "Crearon algo",
       "firstPlanShort": "3+ tareas",
       "threeDaysShort": "registros de la semana pasada, 3 días en su primera semana",
       "newUsersGroup": "Registros de esta semana",
       "appUsers": "Usuarios de la app",
       "appUsersMonthHint": "{{month}} en 30 días",
-      "creators": "Creó algo",
+      "creators": "Crearon algo",
       "creatorsHint": "usuarios, cualquier tipo de elemento",
       "canceled": "Cancelados",
       "failed": "Pagos fallidos",
@@ -3428,7 +3429,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galería",
     "label": "Vista",
     "list": "Lista",
     "board": "Tablero",
@@ -3487,7 +3488,7 @@
     "blankSlateFilteredHint": "Prueba con otra búsqueda.",
     "blankSlateClearSearch": "Borrar búsqueda",
     "view": "Vista",
-    "progressSummary": "Ver progreso · {{done}} de {{total}} tareas completadas",
+    "progressSummary": "Progreso de la vista · {{done}} de {{total}} tareas completadas",
     "sortTasks": "Ordenar tareas",
     "filters": "filtros"
   },
@@ -4272,6 +4273,7 @@
     "invalidHint": "Puede que ya se haya usado o haya caducado. Pide uno nuevo a quien te lo envió."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} tarea ocupa el próximo hueco libre.",
     "inProgress": "En curso",
     "overdue": "Atrasadas",
     "dueToday": "Vencen hoy",
@@ -4589,27 +4591,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Añadir un deseo a {{group}}",
+      "addWish": "Añadir un deseo…",
+      "createTaskFor": "Crear una tarea para “{{title}}”",
+      "markDone": "Marcar “{{title}}” como cumplido",
+      "wishFulfilled": "Cumplido",
+      "wishDropped": "Descartado",
+      "allDone": "Todo hecho",
+      "addStep": "Añadir un próximo paso",
+      "nextStepInline": "Próximo paso: {{name}}",
+      "nextStep": "Próximo paso",
+      "completeStep": "Terminar “{{name}}”",
+      "nothingLinked": "Nada vinculado",
+      "target": "Para el {{date}}",
+      "error": "No se pudo guardar, inténtalo de nuevo",
+      "wishDone": "“{{title}}” cumplido",
+      "stepDone": "“{{name}}” completado",
+      "doneWishes": "Cumplidos",
+      "other": "En pausa, logrados o descartados",
+      "noMatch": "No hay coincidencias.",
+      "clearSearch": "Borrar la búsqueda",
+      "search": "Buscar un objetivo o un deseo"
     },
     "newGoal": "Nueva meta",
     "noGoalsYet": "Aún no hay metas.",
@@ -4940,6 +4942,7 @@
       "instructionsOther": "Cualquier otra columna se puede guardar en la nota de la tarea, así no se pierde nada de la hoja."
     },
     "import": {
+            "undoneKept_one": "Se deshizo la importación. Se conservó {{count}} tarea cambiada desde entonces.",
       "fieldParent": "Tarea padre",
       "fieldWbs": "WBS / número de esquema",
       "fieldEstimate": "Estimación",
@@ -5191,22 +5194,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 elegir · S omitir · O abrir · Esc parar",
+      "nothing": "Nada necesita tu atención ahora.",
+      "back": "Volver a la revisión",
+      "again": "Otra ronda",
+      "saved": "Cada decisión se guarda. Lo que omitas volverá la próxima vez.",
+      "done": "Eso es todo por ahora.",
+      "position": "{{position}} de {{total}}",
+      "stop": "Parar",
+      "start": "Empezar",
+      "pitch": "Unos 5 minutos, una cosa a la vez. Para cuando quieras.",
+      "title": "Revisión rápida"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Cargando…",
+    "calmClear": "Todo al día",
+    "calm_other": "{{count}} cosas por revisar, a tu ritmo",
+    "calm_one": "{{count}} cosa por revisar, a tu ritmo",
     "cancelDate": "Cancelar",
     "choices": "Opciones",
     "more": "Más…",
@@ -5431,7 +5434,7 @@
     "pickProject": "¿A qué proyecto mover?",
     "actionError": "No se pudo actualizar la tarea",
     "deleteError": "No se pudo eliminar la tarea",
-    "taskDeleted": "Eliminado “{{name}}”",
+    "taskDeleted": "Eliminada “{{name}}”",
     "taskContext": "Tarea: {{name}}",
     "completeTask": "Completar tarea",
     "reopenTask": "Reabrir tarea",
@@ -5461,7 +5464,7 @@
       "tasks": "Tareas",
       "notes": "Notas",
       "habits": "Hábitos",
-      "goals": "Metas"
+      "goals": "Objetivos"
     },
     "help": {
       "title": "Atajos de teclado",
@@ -5893,7 +5896,7 @@
         "IDEAL": "Ideal",
         "MINIMUM": "Mínimo",
         "ACTIVITY": "Actividad",
-        "MISSED": "Fallado",
+        "MISSED": "No realizado",
         "NO_ACTIVITY": "Sin actividad",
         "PAUSED": "Pausado",
         "UNPLANNED": "No planificado"
@@ -6001,7 +6004,7 @@
       "open": "Abrir",
       "addAnyway": "Añadir igualmente",
       "toProject": "Proyecto…",
-      "keepInInbox": "Bandeja de Entrada",
+      "keepInInbox": "Bandeja de entrada",
       "taskAdded": "Tarea añadida",
       "taskToSort": "Tarea añadida a « Tareas por ordenar »",
       "addedToProject": "Añadido al proyecto"
@@ -6057,8 +6060,8 @@
     "details": "Detalles",
     "doneCount": "Hechas · {{n}}",
     "dueAt": "Vence",
-    "empty": "Nada planeado. Añade una tarea o elige una de las sugerencias.",
-    "emptyDay": "Nada planeado para este día.",
+    "empty": "Nada planificado. Añade una tarea o elige una de las sugerencias.",
+    "emptyDay": "Nada planificado para este día.",
     "goToToday": "Hoy",
     "hideCalendar": "Ocultar el calendario",
     "later": "Más tarde",
@@ -6074,9 +6077,9 @@
     "organized_one": "{{count}} tarea colocada",
     "organized_other": "{{count}} tareas colocadas",
     "overdueCount": "Vencidas · {{n}}",
-    "planAction": "Programar",
+    "planAction": "Planificar",
     "planChanged": "El plan cambió en otro dispositivo. Se ha recargado.",
-    "planIt": "Planear en el próximo hueco libre",
+    "planIt": "Planificar en el próximo hueco libre",
     "planned": "«{{name}}» a las {{time}}",
     "previousDay": "Día anterior",
     "protectedTime": "Tiempo protegido",

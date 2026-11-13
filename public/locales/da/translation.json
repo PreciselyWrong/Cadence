@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Markér som læst",
+        "open": "Åbn"
     },
     "counts": {
         "notes_other": "{{count}} noter",
@@ -237,7 +237,7 @@
       "title": "Sortér min post",
       "close": "Luk",
       "done": "Alt er sorteret",
-      "back": "Tilbage til “Til sortering”",
+      "back": "Tilbage til “At sortere”",
       "createTask": "Opret opgave: {{name}}",
       "replyInGmail": "Svar i Gmail",
       "readInGmail": "Læs i Gmail",
@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Ændringen kunne ikke gemmes",
+    "hintLocked": "Enter: ny linje",
+    "hint": "Enter: ny linje · Tab / Shift+Tab: indryk · Alt+↑ / Alt+↓: flyt",
+    "newLine": "Ny opgave",
+    "title": "Disposition"
   },
   "focusStats": {
     "title": "Fokus",
@@ -316,11 +316,11 @@
     "showSearch": "Vis søgning",
     "beta": "beta",
     "comingSoon": "Kommer snart",
-    "due": "Due",
+    "due": "Forfald",
     "goal": "Mål",
     "priority": "Prioritet",
     "tags": "Tags",
-    "goToToday": "Gå til i dag",
+    "goToToday": "Gå til I dag",
     "loadMore": "Indlæs flere",
     "showAll": "Vis alle",
     "actions": "Handlinger",
@@ -393,8 +393,8 @@
     "next7Days": "Næste 7 dage",
     "more": "Mere",
     "toggleFolder": "Vis eller skjul projekter",
-    "customize": "Tilpas sidebar",
-    "toggleSection": "Expand or collapse",
+    "customize": "Tilpas sidepanelet",
+    "toggleSection": "Fold ud eller sammen",
     "pinned": "Fastgjort",
     "pinItem": "Fastgør {{name}}",
     "unpinItem": "Frigør {{name}}",
@@ -716,10 +716,10 @@
             "page": {
                 "notFound": "Pluginet blev ikke fundet eller er slået fra"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Dette plugin kører i serveren og beder om:",
+            "approveOutro": "Tilladelser begrænser, hvad Cadence giver pluginet; de er ikke en sandkasse. Godkend kun kode, du har læst.",
+            "approveTitle": "Godkend tilladelser?",
+            "approve": "Godkend og aktivér"
         },
     "showTaskDescription": "Vis beskrivelsen under titlen",
     "sync": {
@@ -899,6 +899,7 @@
     "nextTaskSuggestion": "Næste Opgaveforslag",
     "enableNextTaskSuggestion": "Aktivér forslag til næste opgave",
     "tabs": {
+            "agents": "Agenter",
             "plugins": "Plugins",
       "classify": "Sortering",
       "sync": "Synkronisering",
@@ -1726,8 +1727,8 @@
     "waiting": "Venter"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Skjul tomme felter",
+    "addDetail": "Tilføj en detalje",
     "name": "Projekt Navn",
     "projectImage": "Projektbillede",
     "uploadImageHint": "Upload et billede til dit projekt (maks 10MB)",
@@ -2184,7 +2185,7 @@
     "occurrenceSkipped": "Forekomst sprunget over",
     "skipOccurrenceError": "Forekomsten kunne ikke springes over",
     "nameRequired": "Opgavenavn er påkrævet",
-    "deferAfterDueError": "Udskydningsdato kan ikke være efter fristen",
+    "deferAfterDueError": "Udskydningsdato kan ikke være efter forfaldsdatoen",
     "untitled": "Opgave uden titel",
     "instanceOfShort": "Forekomst",
     "reminder": "Påmindelse",
@@ -2212,7 +2213,7 @@
     "noUpcomingOccurrences": "Ingen kommende forekomster.",
     "turnIntoProject": "Lav om til et projekt",
     "turnIntoProjectError": "Kunne ikke laves om til et projekt.",
-    "turnIntoProjectMessage": "Lave « {{name}} » om til et projekt? Dens underopgaver bliver projektets opgaver, og adresserne i dens note bliver dets sider.",
+    "turnIntoProjectMessage": "Lav « {{name}} » om til et projekt? Dens underopgaver bliver projektets opgaver, og adresserne i dens note bliver dets sider.",
     "inDays_one": "om {{count}} dag",
     "daysAgo_one": "{{count}} dag siden",
     "hoursAgo_one": "for {{count}} time siden",
@@ -2441,7 +2442,7 @@
     "toggleDropdownMenu": "Skift rullemenu"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Alle noter",
     "emptyPreview": "Tom note",
     "loading": "Indlæser noter...",
     "error": "Fejl ved indlæsning af noter",
@@ -2589,7 +2590,7 @@
     "noParent": "Ingen (øverste niveau)",
     "showChildTags": "Vis underordnede tags",
     "hideChildTags": "Skjul underordnede tags",
-    "progressSummary": "Mærkefremskridt · {{done}} af {{total}} opgaver udført"
+    "progressSummary": "Tag-fremskridt · {{done}} af {{total}} opgaver udført"
   },
   "recurrence": {
     "none": "Ingen",
@@ -3270,7 +3271,7 @@
       "activity": "Aktivitet",
       "created": "Har oprettet noget",
       "nothingCreated": "Intet oprettet endnu",
-      "plan": "Plan",
+      "plan": "Abonnement",
       "trial": "I prøveperiode",
       "trialEnded": "Prøveperiode afsluttet",
       "paid": "Betalende",
@@ -3435,7 +3436,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galleri",
     "label": "Visning",
     "list": "Liste",
     "board": "Tavle",
@@ -3447,13 +3448,13 @@
     "project": "Projekt",
     "tag": "Tag",
     "priority": "Prioritet",
-    "due": "Frist",
+    "due": "Forfald",
     "status": "Status",
     "any": "Alle",
     "dueToday": "I dag",
     "dueNext7Days": "Næste 7 dage",
     "dueOverdue": "Forfaldne",
-    "dueNoDate": "Ingen frist",
+    "dueNoDate": "Ingen forfaldsdato",
     "statusOpen": "Åbne",
     "statusDone": "Udførte",
     "create": "Opret visning",
@@ -3813,7 +3814,7 @@
     "done": "Færdiggjort",
     "done_desc": "Afsluttet og færdig",
     "cancelled": "Annulleret",
-    "cancelled_desc": "Vil ikke blive færdiggjort",
+    "cancelled_desc": "besluttet ikke at forfølge",
     "idea": "Idé",
     "paused": "Sat på pause",
     "paused_desc": "lagt til side med vilje, genoptages senere",
@@ -4279,6 +4280,7 @@
     "invalidHint": "Det kan allerede være brugt eller udløbet. Bed personen, der sendte det, om et nyt."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} opgave lægges i den næste ledige plads.",
     "inProgress": "I gang",
     "overdue": "Forfaldne",
     "dueToday": "Forfalder i dag",
@@ -4596,27 +4598,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Tilføj et ønske til {{group}}",
+      "addWish": "Tilføj et ønske…",
+      "createTaskFor": "Opret en opgave til “{{title}}”",
+      "markDone": "Markér “{{title}}” som opfyldt",
+      "wishFulfilled": "Opfyldt",
+      "wishDropped": "Opgivet",
+      "allDone": "Alt er udført",
+      "addStep": "Tilføj et næste skridt",
+      "nextStepInline": "Næste skridt: {{name}}",
+      "nextStep": "Næste skridt",
+      "completeStep": "Afslut “{{name}}”",
+      "nothingLinked": "Intet tilknyttet",
+      "target": "Senest {{date}}",
+      "error": "Kunne ikke gemme, prøv igen",
+      "wishDone": "“{{title}}” er opfyldt",
+      "stepDone": "“{{name}}” er udført",
+      "doneWishes": "Opfyldte",
+      "other": "På pause, nået eller opgivet",
+      "noMatch": "Intet matcher.",
+      "clearSearch": "Ryd søgningen",
+      "search": "Søg efter et mål eller et ønske"
     },
     "newGoal": "Nyt mål",
     "noGoalsYet": "Ingen mål endnu.",
@@ -4947,6 +4949,7 @@
       "instructionsOther": "Alle andre kolonner kan gemmes i opgavens note, så intet i arket går tabt."
     },
     "import": {
+            "undoneKept_one": "Importen blev fortrudt. {{count}} opgave, der er ændret siden da, blev beholdt.",
       "fieldParent": "Overordnet opgave",
       "fieldWbs": "WBS / dispositionsnummer",
       "fieldEstimate": "Estimat",
@@ -5197,22 +5200,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
+      "keys": "1–9 vælg · S spring over · O åbn · Esc stop",
+      "nothing": "Intet kræver din opmærksomhed lige nu.",
+      "back": "Tilbage til gennemgangen",
+      "again": "Endnu en runde",
+      "saved": "Hver beslutning er gemt. Det, du sprang over, kommer tilbage næste gang.",
+      "done": "Det var det for nu.",
+      "position": "{{position}} af {{total}}",
       "stop": "Stop",
       "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "pitch": "Cirka 5 minutter, én ting ad gangen. Stop, når du vil.",
+      "title": "Hurtig gennemgang"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Indlæser…",
+    "calmClear": "Alt er opdateret",
+    "calm_other": "{{count}} ting at se på, i dit eget tempo",
+    "calm_one": "{{count}} ting at se på, i dit eget tempo",
     "cancelDate": "Annuller",
     "choices": "Valg",
     "more": "Mere…",
@@ -5425,7 +5428,7 @@
     "inbox": "Indbakke",
     "tasks": "Opgaver",
     "agenda": "Agenda",
-    "habits": "Habits",
+    "habits": "Vaner",
     "review": "Gennemgang",
     "newTask": "Ny opgave"
   },
@@ -5488,7 +5491,7 @@
       "goCalendar": "Gå til Kalender",
       "goProjects": "Gå til Projekter",
       "taskNav": "Flyt mellem opgaver",
-      "taskComplete": "Fuldfør eller genåbn opgaven (eller Space)",
+      "taskComplete": "Fuldfør eller genåbn opgaven (eller mellemrum)",
       "taskEdit": "Åbn opgaven for at redigere (eller Enter)",
       "taskDate": "Angiv datoen",
       "taskPriority": "Angiv prioriteten",
@@ -5511,7 +5514,7 @@
     "titleLabel": "Opgavetitel",
     "addDescription": "Tilføj en beskrivelse (Markdown)",
     "fields": "Opgavefelter",
-    "due": "Frist",
+    "due": "Forfald",
     "project": "Projekt",
     "areaInherited": "Projektets område",
     "noArea": "Intet område",
@@ -5607,8 +5610,8 @@
       "urgeLine": "Trang, intensitet {{n}}"
     },
     "alcohol": {
-      "count_one": "{{count}} drink",
-      "count_other": "{{count}} drinks",
+      "count_one": "{{count}} standardenhed",
+      "count_other": "{{count}} standardenheder",
       "drinks": "Standardenheder",
       "editFor": "Rediger {{date}}",
       "invalid": "Standardenheder skal være et helt tal over nul.",
@@ -5934,7 +5937,7 @@
     "deep": "dyb"
   },
   "tag": {
-    "viewTag": "Gå til mærke"
+    "viewTag": "Gå til tag"
   },
   "links": {
     "addToLinks": "Føj til links",
@@ -5947,9 +5950,9 @@
     "count_other": "{{count}} links",
     "search": "Søg i links",
     "filter": {
-      "tag": "Mærke",
+      "tag": "Tag",
       "archived": "Arkiverede",
-      "allTags": "Alle mærker",
+      "allTags": "Alle tags",
       "allProjects": "Alle projekter"
     },
     "status": {
@@ -5962,7 +5965,7 @@
     },
     "lastCommit": "opdateret {{date}}",
     "fetching": "Læser siden…",
-    "editTags": "Redigér mærker",
+    "editTags": "Redigér tags",
     "goToSource": "Gå til der, hvor den blev gemt",
     "open": "Åbn linket",
     "note": "Din note",
@@ -5983,7 +5986,7 @@
     "field": {
       "title": "Titel",
       "url": "Adresse",
-      "tags": "Etiketter"
+      "tags": "Tags"
     },
     "editTitle": "Rediger linket",
     "deleteTitle": "Slet dette link?",
@@ -6154,7 +6157,7 @@
       "none": "Ingen",
       "project": "Projekt",
       "priority": "Prioritet",
-      "tag": "Mærke"
+      "tag": "Tag"
     },
     "sortBy": "Sortér efter",
     "sort": {
@@ -6169,7 +6172,7 @@
     "calendarSpan": "Kalenderdage",
     "reset": "Nulstil",
     "noProject": "Intet projekt",
-    "noTag": "Intet mærke",
+    "noTag": "Intet tag",
     "priority": {
       "none": "Ingen prioritet"
     },
