@@ -44,7 +44,7 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.cadence
 
-/** Case de tâche : carré arrondi, trait primaire ou erreur pour une priorité haute. */
+/** Case de tâche : ronde comme sur le web, trait primaire ou erreur pour une priorité haute seulement. */
 @Composable
 fun TaskCheckbox(
     checked: Boolean,

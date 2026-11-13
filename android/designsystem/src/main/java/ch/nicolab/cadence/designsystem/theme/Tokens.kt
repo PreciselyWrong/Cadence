@@ -5,6 +5,7 @@ import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
@@ -33,7 +34,6 @@ object Space {
 /** Rayons gradués selon la taille de l'objet, jamais un rayon unique partout. */
 object Radius {
     val inner = 4.dp
-    val checkbox = 8.dp
     val chip = 12.dp
     val control = 16.dp
     val fab = 18.dp
@@ -50,7 +50,7 @@ object Radius {
     val Panel = RoundedCornerShape(panel)
     val Sheet = RoundedCornerShape(topStart = sheet, topEnd = sheet)
     val Pill = RoundedCornerShape(pill)
-    val Checkbox = RoundedCornerShape(checkbox)
+    val Checkbox = CircleShape
 }
 
 /** Profondeur réservée à ce qui flotte au-dessus du contenu. */

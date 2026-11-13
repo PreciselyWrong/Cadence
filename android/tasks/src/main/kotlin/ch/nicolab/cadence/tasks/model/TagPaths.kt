@@ -105,24 +105,28 @@ object TagPaths {
         return TagEditPlan.Apply(entry(uid), subtree.filter { it.uid != uid }.map { entry(it.uid) })
     }
 
-    fun tree(tags: List<TagItem>): List<TagNode> {
+    fun tree(tags: List<TagItem>, usage: Map<String, Int> = emptyMap()): List<TagNode> {
         val byName = tags.associateBy { it.name }
         val childrenOf = HashMap<String?, MutableList<TagItem>>()
         tags.forEach { tag -> childrenOf.getOrPut(nearestListedAncestor(tag.name, byName)) { mutableListOf() }.add(tag) }
         fun build(parent: String?): List<TagNode> = childrenOf[parent].orEmpty()
-            .sortedBy { it.name.lowercase() }
+            .sortedWith(compareByDescending<TagItem> { usage[it.uid] ?: 0 }.thenBy { it.name.lowercase() })
             .map { TagNode(it, build(it.name)) }
         return build(null)
     }
 
-    /** Lignes de l'arbre en profondeur d'abord ; les enfants d'une étiquette repliée (son uid) sont omis. */
-    fun rows(tags: List<TagItem>, collapsed: Set<String> = emptySet()): List<TagTreeRow> {
+    /**
+     * Lignes de l'arbre en profondeur d'abord ; les enfants d'une étiquette repliée (son uid) sont omis. À chaque
+     * niveau, l'usage décroissant ([usage] : tâches ouvertes de l'étiquette et de ses sous-étiquettes) puis le nom,
+     * comme le web (sans les épinglées : `pinned` des étiquettes n'est pas dans Room).
+     */
+    fun rows(tags: List<TagItem>, collapsed: Set<String> = emptySet(), usage: Map<String, Int> = emptyMap()): List<TagTreeRow> {
         fun walk(nodes: List<TagNode>, parent: TagItem?, depth: Int): List<TagTreeRow> = nodes.flatMap { node ->
             val label = parent?.let { node.tag.name.removePrefix(it.name + SEPARATOR) } ?: node.tag.name
             val row = TagTreeRow(node.tag, label, depth, node.children.isNotEmpty())
             if (node.tag.uid in collapsed) listOf(row) else listOf(row) + walk(node.children, node.tag, depth + 1)
         }
-        return walk(tree(tags), null, 0)
+        return walk(tree(tags, usage), null, 0)
     }
 
     private fun nearestListedAncestor(name: String, byName: Map<String, TagItem>): String? {

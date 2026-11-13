@@ -123,6 +123,8 @@ internal fun PlanTab(
     var adding by remember { mutableStateOf<AddTarget?>(null) }
     // « Ce mois-ci » d'« À planifier » est replié par défaut ; son compte reste visible.
     var monthOpen by rememberSaveable { mutableStateOf(false) }
+    // « Tâches à classer » de l'Inbox : cinq lignes, puis « Tout afficher » (comme le web).
+    var allUnsorted by rememberSaveable { mutableStateOf(false) }
     // « Choisir une date » du menu « Replanifier » des échues.
     var pickingOverdue by remember { mutableStateOf(false) }
     // Horizon à montrer après un appui sur la bande « Plus tard » de Jours.
@@ -190,10 +192,18 @@ internal fun PlanTab(
                     onAction = { adding = AddTarget.Inbox },
                 )
             }
-            items(unsorted, key = { "inbox-task-${it.uid}" }) { task ->
+            val shownUnsorted = if (allUnsorted) unsorted else unsorted.take(UNSORTED_PREVIEW)
+            items(shownUnsorted, key = { "inbox-task-${it.uid}" }) { task ->
                 Column {
                     Row(task) { planning = PlanTarget.Task(task) }
                     if (task.needsWhen) WhenChoices(task, viewModel)
+                }
+            }
+            if (!allUnsorted && unsorted.size > UNSORTED_PREVIEW) {
+                item(key = "inbox-tasks-more") {
+                    TextButton(onClick = { allUnsorted = true }, modifier = Modifier.heightIn(min = Size.touch)) {
+                        Text(stringResource(R.string.plan_show_all, unsorted.size))
+                    }
                 }
             }
             items(ideas, key = { "inbox-idea-${it.uid}" }) { entry ->
@@ -378,6 +388,9 @@ internal fun PlanTab(
         )
     }
 }
+
+/** Lignes de « Tâches à classer » montrées avant « Tout afficher ». */
+private const val UNSORTED_PREVIEW = 5
 
 /** Les horizons après cette semaine, dans la bande « Plus tard » de Jours (web : `STRIP_KEYS`). */
 private val STRIP = listOf(Horizon.NEXT_WEEK, Horizon.THIS_MONTH, Horizon.NEXT_MONTH, Horizon.SOMEDAY)

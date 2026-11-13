@@ -60,7 +60,7 @@ internal fun TagsTab(
     val tasks by viewModel.areaTasks.collectAsStateWithLifecycle()
     var collapsed by rememberSaveable { mutableStateOf(emptyList<String>()) }
     val counts = remember(tags, tasks) { TaskOverviews.tagCards(tags, tasks).associate { it.tag.uid to it.openCount } }
-    val rows = remember(tags, collapsed) { TagPaths.rows(tags, collapsed.toSet()) }
+    val rows = remember(tags, collapsed, counts) { TagPaths.rows(tags, collapsed.toSet(), counts) }
     val colors = remember(tags) { tagBadgeColors(tags) }
     val nested = remember(rows) { rows.any { it.hasChildren } }
 

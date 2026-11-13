@@ -1,3 +1,7 @@
+## [1.28.0] — 13 novembre 2026
+
+- Style du bureau repris : cases de tâche rondes (rouges seulement pour une priorité haute), étiquettes rangées par usage puis par nom, « Tâches à classer » de Planifier limitée à cinq lignes puis « Tout afficher ».
+
 ## [1.27.1] — 13 novembre 2026
 
 - Les agendas se règlent au même endroit : la feuille « Affichage » de l'Agenda montre la même liste que Réglages › Agendas (par compte, agendas non utilisés compris, puces Agenda, Liste Tâches, Notifications, Cocher une fois passé) ; un changement fait d'un côté se voit de l'autre.

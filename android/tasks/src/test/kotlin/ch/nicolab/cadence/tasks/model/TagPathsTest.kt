@@ -140,4 +140,17 @@ class TagPathsTest {
         assertEquals("perso/sport", TagPaths.parentPath("perso/sport/course"))
         assertEquals(null, TagPaths.parentPath("perso"))
     }
+
+    @Test
+    fun `les lignes d'étiquettes suivent l'usage décroissant puis le nom, à chaque niveau`() {
+        val tags = listOf(
+            TagItem("a", "achats"), TagItem("t", "travail"), TagItem("p", "perso"),
+            TagItem("pc", "perso/course"), TagItem("pv", "perso/velo"),
+        )
+        val usage = mapOf("t" to 5, "p" to 5, "pv" to 2, "pc" to 1)
+        assertEquals(
+            listOf("perso", "velo", "course", "travail", "achats"),
+            TagPaths.rows(tags, usage = usage).map { it.label },
+        )
+    }
 }
