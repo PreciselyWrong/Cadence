@@ -19,12 +19,14 @@ class PlanCommitmentsTest {
     private val weekStart = LocalDate.of(2026, 11, 9)
     private val nextWeek = weekStart.plusDays(7)
     private val november = LocalDate.of(2026, 11, 1)
+    private val now = today.atTime(9, 0).atZone(zone).toInstant()
+    private val stale = weekStart.minusDays(7)
 
     private fun task(uid: String, due: LocalDate? = null) =
         TaskItem(uid = uid, name = uid, dueDay = due, dueDate = due?.atTime(23, 59)?.atZone(zone)?.toInstant())
 
     private fun schedule(tasks: List<TaskItem>, plan: List<PlanEntry> = emptyList()): ToSchedule =
-        PlanBoard.toSchedule(tasks, plan, today, weekStart, PlanBoard.horizons(tasks, plan, today, weekStart))
+        PlanBoard.toSchedule(tasks, plan, today, weekStart, PlanBoard.horizons(tasks, plan, today, weekStart), now)
 
     @Test
     fun `semaine prochaine est un horizon, écrit comme le web`() {
@@ -39,8 +41,8 @@ class PlanCommitmentsTest {
     @Test
     fun `à replanifier - engagement passé que rien ne place, hors série, someday, sous-tâche et plan à venir`() {
         val tasks = listOf(
-            task("semaine-passee").copy(weekOf = weekStart.minusDays(7)),
-            task("mois-passe").copy(monthOf = LocalDate.of(2026, 10, 1)),
+            task("semaine-passee").copy(weekOf = weekStart.minusDays(7), projectUid = "p"),
+            task("mois-passe").copy(monthOf = LocalDate.of(2026, 10, 1), projectUid = "p"),
             task("serie").copy(weekOf = weekStart.minusDays(7), recurrenceType = "weekly"),
             task("plus-tard").copy(weekOf = weekStart.minusDays(7), someday = true),
             task("sous-tache").copy(weekOf = weekStart.minusDays(7), parentTaskUid = "p"),
@@ -80,7 +82,7 @@ class PlanCommitmentsTest {
     @Test
     fun `tout planifié - la section est vide, dès la dernière tâche posée`() {
         val tasks = listOf(
-            task("passee").copy(weekOf = weekStart.minusDays(7)),
+            task("passee").copy(weekOf = weekStart.minusDays(7), projectUid = "p"),
             task("semaine").copy(weekOf = weekStart),
             task("mois").copy(monthOf = november),
         )
@@ -89,6 +91,25 @@ class PlanCommitmentsTest {
         val all = partly + PlanEntry("passee", today.plusDays(2), null, null)
         assertTrue(schedule(tasks, all).isEmpty)
         assertTrue(schedule(emptyList()).isEmpty)
+    }
+
+    @Test
+    fun `à replanifier ne reprend ni une échue ni une tâche que l'Inbox montre déjà`() {
+        val filed = TaskItem(uid = "x", name = "x", projectUid = "p")
+        val tasks = listOf(
+            filed.copy(uid = "rangee", weekOf = stale),
+            filed.copy(uid = "echue", weekOf = stale, dueDay = today.minusDays(1), dueDate = today.minusDays(1).atTime(23, 59).atZone(zone).toInstant()),
+            task("sans-projet").copy(weekOf = stale),
+            filed.copy(uid = "quand", weekOf = stale, needsWhen = true),
+            TaskItem(uid = "domaine", name = "domaine", areaUid = "a", monthOf = LocalDate.of(2026, 10, 1)),
+        )
+        assertEquals(listOf("rangee", "domaine"), schedule(tasks).stale.map { it.uid })
+    }
+
+    @Test
+    fun `une échue montre sa date, pas l'engagement passé`() {
+        val late = task("t", due = today.minusDays(1)).copy(weekOf = stale)
+        assertNull(PlanBoard.commitment(late, today, weekStart))
     }
 
     @Test

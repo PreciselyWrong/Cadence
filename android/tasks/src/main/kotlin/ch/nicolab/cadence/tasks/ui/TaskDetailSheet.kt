@@ -145,8 +145,8 @@ internal fun TaskDetailSheet(
     val tagColors = remember(tags) { tagBadgeColorsByName(tags) }
     val zone = moment.zone
     val today = moment.today
-    // Engagement montré à la place de la date, seulement pour une tâche sans échéance.
-    val commitment = PlanBoard.commitment(current, today, weekStart).takeIf { current.dueDay == null }
+    // Engagement montré à la place de la date ; une tâche à échéance (échue comprise) montre sa date.
+    val commitment = PlanBoard.commitment(current, today, weekStart)
     val palette = cadence
     val context = LocalContext.current
 

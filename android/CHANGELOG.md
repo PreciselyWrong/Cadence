@@ -1,3 +1,8 @@
+## [1.26.1] — 13 novembre 2026
+
+- « À replanifier » ne reprend plus une tâche déjà dans « Échues » ou dans « Tâches à classer » de l'Inbox : chaque tâche n'apparaît qu'à un endroit.
+- Une tâche échue montre sa date en rouge dans la fiche, plus « À replanifier ».
+
 ## [1.25.0] — 13 novembre 2026
 
 - Le choix de date de la fiche propose une ligne « Plus tard » : Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour. Choisir un horizon retire la date et la tâche des jours prévus ; choisir une date retire l'horizon. Le raccourci « Semaine prochaine » (lundi prochain) laisse place à l'horizon.

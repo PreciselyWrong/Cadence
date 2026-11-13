@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.planning
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -214,19 +215,29 @@ internal object PlanBoard {
     /**
      * « À planifier » (sous l'Inbox, même règle que le web) sur les tâches ouvertes de premier niveau :
      * - « À replanifier » : non récurrente, sans `#someday`, `week_of` avant cette semaine ou `month_of` avant ce mois,
-     *   que [horizons] ne place nulle part et sans ligne du plan aujourd'hui ou après ;
+     *   que [horizons] ne place nulle part et sans ligne du plan aujourd'hui ou après ; ni échue (échéance avant
+     *   aujourd'hui : elle est dans « Échues ») ni montrée par « Tâches à classer » de l'Inbox ([TaskViews.unsorted]) ;
      * - « Cette semaine » : `week_of` de cette semaine (et dans ce seau), sans ligne du plan un jour de cette semaine ;
      * - « Ce mois-ci » : `month_of` de ce mois (et dans ce seau), sans ligne du plan un jour de cette semaine.
      */
-    fun toSchedule(tasks: List<TaskItem>, plan: List<PlanEntry>, today: LocalDate, weekStart: LocalDate, horizons: PlanHorizons): ToSchedule {
+    fun toSchedule(
+        tasks: List<TaskItem>,
+        plan: List<PlanEntry>,
+        today: LocalDate,
+        weekStart: LocalDate,
+        horizons: PlanHorizons,
+        now: Instant,
+    ): ToSchedule {
         val weekEnd = weekStart.plusDays(6)
         val thisMonth = today.withDayOfMonth(1)
         val ahead = ServerPlan.plannedFrom(plan, today)
         val thisWeek = plan.filter { !it.day.isBefore(weekStart) && !it.day.isAfter(weekEnd) }.mapTo(HashSet()) { it.uid }
         val placed = horizons.buckets.values.flatten().mapTo(HashSet()) { it.uid } + horizons.plannedThisWeek.map { it.first.uid }
         val open = tasks.filter { !it.isClosed && it.parentTaskUid == null && !it.virtual }
+        val inInbox = TaskViews.unsorted(open, now, weekStart, thisMonth, ahead).mapTo(HashSet()) { it.uid }
         val stale = open.filter { task ->
             !task.isRecurring && !task.someday && task.uid !in placed && task.uid !in ahead &&
+                task.uid !in inInbox && !TaskViews.isOverdue(task, today) &&
                 (task.weekOf?.isBefore(weekStart) == true || task.monthOf?.isBefore(thisMonth) == true)
         }
         val week = horizons.buckets[Horizon.WEEK].orEmpty().filter { it.weekOf == weekStart && it.uid !in thisWeek }
@@ -242,6 +253,7 @@ internal object PlanBoard {
     fun commitment(task: TaskItem, today: LocalDate, weekStart: LocalDate): Commitment? {
         val thisMonth = today.withDayOfMonth(1)
         return when {
+            task.dueDay != null -> null
             task.someday -> Commitment.Holds(Horizon.SOMEDAY)
             task.weekOf == weekStart -> Commitment.Holds(Horizon.WEEK)
             task.weekOf == weekStart.plusDays(7) -> Commitment.Holds(Horizon.NEXT_WEEK)

@@ -960,7 +960,7 @@ internal class TasksViewModel(
                 days = PlanBoard.days(all, plan, m.today, state.today, dueByDay, m.zone),
                 overdue = PlanBoard.overdue(state.overdue, plan, m.today),
                 horizons = horizons,
-                toSchedule = PlanBoard.toSchedule(all, plan, m.today, week, horizons),
+                toSchedule = PlanBoard.toSchedule(all, plan, m.today, week, horizons, m.now),
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), PlanBoardState())
 
