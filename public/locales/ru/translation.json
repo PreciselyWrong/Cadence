@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Отметить как прочитанное",
+        "open": "Открыть"
     },
     "counts": {
         "notes_many": "{{count}} заметок",
@@ -34,6 +34,12 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_many": "Снова в очереди: {{count}}",
+            "requeued_few": "Снова в очереди: {{count}}",
+            "requeued_one": "Снова в очереди: {{count}}",
+            "failed_many": "Не удалось: {{count}}",
+            "failed_few": "Не удалось: {{count}}",
+            "failed_one": "Не удалось: {{count}}",
       "retryError": "Не удалось повторить",
       "requeued": "Снова в очереди: {{count}}",
       "retry": "Повторить",
@@ -243,7 +249,7 @@
       "title": "Разобрать почту",
       "close": "Закрыть",
       "done": "Всё разобрано",
-      "back": "Назад к «Разобрать»",
+      "back": "Назад к «На разбор»",
       "createTask": "Создать задачу: {{name}}",
       "replyInGmail": "Ответить в Gmail",
       "readInGmail": "Прочитать в Gmail",
@@ -256,11 +262,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Не удалось сохранить это изменение",
+    "hintLocked": "Enter: новая строка",
+    "hint": "Enter: новая строка · Tab / Shift+Tab: отступ · Alt+↑ / Alt+↓: переместить",
+    "newLine": "Новая задача",
+    "title": "Структура"
   },
   "focusStats": {
     "title": "Фокус",
@@ -328,7 +334,7 @@
     "goal": "Цель",
     "priority": "Приоритет",
     "tags": "Метки",
-    "goToToday": "Перейти к сегодня",
+    "goToToday": "Перейти в «Сегодня»",
     "loadMore": "Загрузить ещё",
     "showAll": "Показать все",
     "actions": "Действия",
@@ -724,10 +730,10 @@
             "page": {
                 "notFound": "Плагин не найден или выключен"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Этот плагин работает внутри сервера и запрашивает:",
+            "approveOutro": "Разрешения ограничивают то, что Cadence передаёт плагину; это не песочница. Подтверждайте только код, который вы прочитали.",
+            "approveTitle": "Подтвердить разрешения?",
+            "approve": "Подтвердить и включить"
         },
     "showTaskDescription": "Показывать описание под заголовком",
     "sync": {
@@ -840,10 +846,10 @@
     "personalInfo": "Личная информация",
     "errorMessage": "Не удалось обновить профиль",
     "telegramIntegration": "Интеграция с Telegram",
-    "telegramDescription": "Подключите свою учетную запись Cadence к боту Telegram, чтобы добавлять элементы в ваш почтовый ящик через сообщения Telegram.",
+    "telegramDescription": "Подключите свою учетную запись Cadence к боту Telegram, чтобы добавлять элементы во входящие через сообщения Telegram.",
     "telegramBotToken": "Токен бота Telegram",
     "telegramTokenDescription": "Создайте бота с @BotFather в Telegram и вставьте токен сюда.",
-    "telegramConnected": "Ваша учетная запись Telegram подключена! Отправляйте сообщения своему боту, чтобы добавлять элементы в ваш почтовый ящик Cadence.",
+    "telegramConnected": "Ваша учетная запись Telegram подключена! Отправляйте сообщения своему боту, чтобы добавлять элементы во входящие Cadence.",
     "setupTelegram": "Настроить Telegram",
     "setupTelegramLower": "настроить telegram",
     "settingUp": "Настройка...",
@@ -901,6 +907,7 @@
     "nextTaskSuggestion": "Предложение следующей задачи",
     "enableNextTaskSuggestion": "Включить предложения следующей задачи",
     "tabs": {
+            "agents": "Агенты",
             "plugins": "Плагины",
       "classify": "Классификация",
       "sync": "Синхронизация",
@@ -1146,6 +1153,8 @@
       "toggleError": "Не удалось обновить этот календарь"
     },
     "planning": {
+            "maxOption_many": "{{count}} задач",
+            "maxOption_few": "{{count}} задачи",
       "title": "Планирование",
       "description": "Как «Что вы могли бы сделать сегодня?» упорядочивает ваши задачи, когда вы планируете день. Перетащите строки в нужном порядке; одни и те же задачи всегда идут в одном порядке.",
       "orderTitle": "Порядок (перетащите, чтобы изменить)",
@@ -1738,8 +1747,8 @@
     "waiting": "Ожидание"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Скрыть пустые поля",
+    "addDetail": "Добавить деталь",
     "noteCount_many": "{{count}} заметок",
     "noteCount_few": "{{count}} заметки",
     "memberCount_many": "{{count}} участников",
@@ -2054,6 +2063,22 @@
     "createError": "Не удалось создать заметку"
   },
   "task": {
+        "minutesAgo_many": "{{count}} мин назад",
+        "minutesAgo_few": "{{count}} мин назад",
+        "minutesAgo_one": "{{count}} минуту назад",
+        "inMinutes_many": "через {{count}} мин",
+        "inMinutes_few": "через {{count}} мин",
+        "inMinutes_one": "через {{count}} минуту",
+        "inHours_many": "через {{count}} ч",
+        "inHours_few": "через {{count}} ч",
+        "inHours_one": "через {{count}} час",
+        "inDays_many": "через {{count}} дней",
+        "inDays_few": "через {{count}} дня",
+        "hoursAgo_many": "{{count}} ч назад",
+        "hoursAgo_few": "{{count}} ч назад",
+        "hoursAgo_one": "{{count}} час назад",
+        "daysAgo_many": "{{count}} дней назад",
+        "daysAgo_few": "{{count}} дня назад",
     "duplicateError": "Не удалось дублировать задачу.",
     "duplicated": "Задача продублирована",
     "duplicate": "Дублировать",
@@ -2355,7 +2380,7 @@
       "active": "{{n}} активных",
       "stash": "{{n}} в отложенных"
     },
-    "savedAsTemplate": "\"{{name}}\" сохранён как шаблон.",
+    "savedAsTemplate": "«{{name}}» сохранён как шаблон.",
     "saveAsTemplateError": "Не удалось сохранить проект как шаблон.",
     "sortTasks": "Сортировать задачи",
     "upcomingProjects": "Предстоящие проекты",
@@ -2461,7 +2486,7 @@
     "toggleDropdownMenu": "Переключить выпадающее меню"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Все заметки",
     "emptyPreview": "Пустая заметка",
     "loading": "Загрузка заметок...",
     "error": "Ошибка загрузки заметок",
@@ -2551,7 +2576,7 @@
     "backgroundColor": "Цвет фона",
     "selectProject": "Выберите проект",
     "noMatchingNotes": "Нет подходящих заметок",
-    "noPreviewContent": "Нечего показать. Перейдите в «Правка», чтобы добавить содержимое.",
+    "noPreviewContent": "Перейдите в «Изменить», чтобы добавить содержимое.",
     "mermaidError": "Не удалось показать диаграмму Mermaid",
     "mermaidRendering": "Отрисовка диаграммы…",
     "mermaidLabel": "Диаграмма Mermaid"
@@ -2911,8 +2936,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 Добро пожаловать в Cadence!\n\nВаш личный бот для управления задачами теперь подключен и готов помочь!\n\n📝 Просто отправьте мне любое сообщение, и я добавлю его в ваш почтовый ящик Cadence как элемент.\n\n✨ Команды:\n• /help - Показать информацию о помощи\n• /start - Показать приветственное сообщение\n• Просто введите любой текст - Добавить его как элемент в почтовый ящик\n\nДавайте организуемся! 🚀",
-    "helpMessage": "📋 Помощь бота Cadence\n\nОтправьте мне любое текстовое сообщение, и я добавлю его в ваш почтовый ящик Cadence как элемент.\n\nКоманды:\n/start - Приветственное сообщение\n/help - Показать это сообщение о помощи\n\nПросто введите ваш элемент, и я позабочусь об остальном!",
+    "welcomeMessage": "🎉 Добро пожаловать в Cadence!\n\nВаш личный бот для управления задачами теперь подключен и готов помочь!\n\n📝 Просто отправьте мне любое сообщение, и я добавлю его во входящие Cadence как элемент.\n\n✨ Команды:\n• /help - Показать информацию о помощи\n• /start - Показать приветственное сообщение\n• Просто введите любой текст - Добавить его как элемент во входящие\n\nДавайте организуемся! 🚀",
+    "helpMessage": "📋 Помощь бота Cadence\n\nОтправьте мне любое текстовое сообщение, и я добавлю его во входящие Cadence как элемент.\n\nКоманды:\n/start - Приветственное сообщение\n/help - Показать это сообщение о помощи\n\nПросто введите ваш элемент, и я позабочусь об остальном!",
     "commandProcessed": "Команда успешно обработана",
     "messageProcessed": "Сообщение успешно обработано",
     "failedToAddToInbox": "❌ Не удалось добавить в почтовый ящик: {{error}}"
@@ -3035,7 +3060,7 @@
       "activationHint": "{{n}} из {{total}} регистраций",
       "weeklyUsers": "Пользователи за неделю",
       "weeklyUsersHint": "создал(а) что-либо",
-      "selfHostedUsers": "self-hosted · новых сегодня: {{n}}"
+      "selfHostedUsers": "на своём сервере · новых сегодня: {{n}}"
     },
     "waitlist": {
       "title": "Список ожидания",
@@ -3467,7 +3492,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Галерея",
     "label": "Вид",
     "list": "Список",
     "board": "Доска",
@@ -4141,7 +4166,7 @@
     "trialBanner_many": "Вы на пробном периоде, осталось {{count}} дней",
     "trialBanner_few": "Вы на пробном периоде, осталось {{count}} дня",
     "title": "Подписка",
-    "chooseForCloud": "Выберите план для Cadence Cloud",
+    "chooseForCloud": "Выберите тарифный план для Cadence Cloud",
     "noActive": "Нет активной подписки",
     "chooseToContinue": "Выберите тарифный план, чтобы продолжить использование Cadence Cloud.",
     "monthly": "Ежемесячно",
@@ -4317,6 +4342,12 @@
     "invalidHint": "Возможно, она уже использована или срок её действия истёк. Попросите отправившего вас человека о новой."
   },
   "dailyPlan": {
+        "placeAllHint_many": "{{count}} задач займут ближайшие свободные слоты в порядке приоритета.",
+        "placeAllHint_few": "{{count}} задачи займут ближайшие свободные слоты в порядке приоритета.",
+        "placeAllHint_one": "{{count}} задача займёт ближайший свободный слот.",
+        "placeAllDone_many": "Распределено задач: {{count}}.",
+        "placeAllDone_few": "Распределены задачи: {{count}}.",
+        "placeAllDone_one": "{{count}} задача распределена.",
     "inProgress": "В работе",
     "overdue": "Просрочено",
     "dueToday": "Срок сегодня",
@@ -4387,6 +4418,8 @@
     "beta": "Бета",
     "betaHint": "Страница «Сегодня» с планом новая. Классическая страница по-прежнему доступна внизу этой страницы.",
     "ai": {
+            "carried_many": "{{count}} задач добавлено на завтра",
+            "carried_few": "{{count}} задачи добавлены на завтра",
       "suggested": "Предложено ИИ",
       "estimateGuess": "Оценка ИИ",
       "nothingToAdd": "Нечего добавить: нет свободного времени или задач для планирования.",
@@ -4602,7 +4635,7 @@
     },
     "addTitle": "Добавить во «Входящие», задачу, заметку или проект",
     "close": "Закрыть",
-    "button": "Захват",
+    "button": "Записать",
     "syntaxHint": "#tag  +project  !1–!3 приоритет  завтра в 15:00 для даты",
     "chainCount": "Добавлено в {{project}}: {{total}}",
     "slash": {
@@ -4637,27 +4670,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Добавить желание в «{{group}}»",
+      "addWish": "Добавить желание…",
+      "createTaskFor": "Создать задачу для «{{title}}»",
+      "markDone": "Отметить «{{title}}» исполненным",
+      "wishFulfilled": "Исполнено",
+      "wishDropped": "Отброшено",
+      "allDone": "Всё сделано",
+      "addStep": "Добавить следующий шаг",
+      "nextStepInline": "Следующий шаг: {{name}}",
+      "nextStep": "Следующий шаг",
+      "completeStep": "Завершить «{{name}}»",
+      "nothingLinked": "Ничего не связано",
+      "target": "До {{date}}",
+      "error": "Не удалось сохранить, попробуйте снова",
+      "wishDone": "«{{title}}» исполнено",
+      "stepDone": "«{{name}}» выполнено",
+      "doneWishes": "Исполненные",
+      "other": "Приостановленные, достигнутые или снятые",
+      "noMatch": "Ничего не найдено.",
+      "clearSearch": "Очистить поиск",
+      "search": "Найти цель или желание"
     },
     "newGoal": "Новая цель",
     "noGoalsYet": "Пока нет целей.",
@@ -4988,6 +5021,27 @@
       "instructionsOther": "Любую другую колонку можно сохранить в заметке задачи, чтобы ничего из листа не потерялось."
     },
     "import": {
+            "undoneKept_many": "Импорт отменён. Задач, изменённых с тех пор, сохранено: {{count}}.",
+            "undoneKept_few": "Импорт отменён. Задачи, изменённые с тех пор, сохранены: {{count}}.",
+            "undoneKept_one": "Импорт отменён. Сохранена {{count}} задача, изменённая с тех пор.",
+            "rowCount_many": "Строк: {{count}}",
+            "rowCount_few": "Строки: {{count}}",
+            "rowCount_one": "{{count}} строка",
+            "doneTitle_many": "Импортировано задач: {{count}}",
+            "doneTitle_few": "Импортированы задачи: {{count}}",
+            "doneTitle_one": "Импортирована {{count}} задача",
+            "countTags_many": "Новых тегов: {{count}}",
+            "countTags_few": "Новые теги: {{count}}",
+            "countTags_one": "{{count}} новый тег",
+            "countProjects_many": "Новых проектов: {{count}}",
+            "countProjects_few": "Новые проекты: {{count}}",
+            "countProjects_one": "{{count}} новый проект",
+            "countCreate_many": "Новых задач: {{count}}",
+            "countCreate_few": "Новые задачи: {{count}}",
+            "countCreate_one": "{{count}} новая задача",
+            "countAreas_many": "Новых областей: {{count}}",
+            "countAreas_few": "Новые области: {{count}}",
+            "countAreas_one": "{{count}} новая область",
       "fieldParent": "Родительская задача",
       "fieldWbs": "WBS / номер в структуре",
       "fieldEstimate": "Оценка",
@@ -5024,7 +5078,7 @@
       "countUpdate": "Обновлено: {{count}}",
       "countSkip": "Пропущено: {{count}}",
       "countProjects": "Новых проектов: {{count}}",
-      "countAreas": "Новых сфер: {{count}}",
+      "countAreas": "Новых областей: {{count}}",
       "countTags": "Новых тегов: {{count}}",
       "newProjectsList": "Новые проекты: {{names}}",
       "subtasksFrom": "Подзадачи определяются по",
@@ -5233,23 +5287,25 @@
     "planned": "Запланировано {{when}}"
   },
   "review": {
+        "calm_many": "{{count}} пунктов для просмотра, в своём темпе",
+        "calm_few": "{{count}} пункта для просмотра, в своём темпе",
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 выбрать · S пропустить · O открыть · Esc остановить",
+      "nothing": "Сейчас ничего не требует внимания.",
+      "back": "Назад к обзору",
+      "again": "Ещё один круг",
+      "saved": "Каждое решение сохраняется. Пропущенное вернётся в следующий раз.",
+      "done": "На сегодня всё.",
+      "position": "{{position}} из {{total}}",
+      "stop": "Остановить",
+      "start": "Начать",
+      "pitch": "Около 5 минут, по одной вещи за раз. Останавливайтесь, когда захотите.",
+      "title": "Быстрый обзор"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Загрузка…",
+    "calmClear": "Всё актуально",
+    "calm_other": "{{count}} пунктов на рассмотрение, в своём темпе",
+    "calm_one": "{{count}} пункт на рассмотрение, в своём темпе",
     "cancelDate": "Отмена",
     "choices": "Варианты",
     "more": "Ещё…",
@@ -5364,6 +5420,9 @@
     "close": "Закрыть"
   },
   "comments": {
+        "count_many": "Комментарии: {{count}}",
+        "count_few": "Комментарии: {{count}}",
+        "count_one": "Комментарий: {{count}}",
     "count": "Комментариев: {{count}}",
     "loading": "Загрузка комментариев...",
     "failedToLoad": "Не удалось загрузить комментарии",
@@ -5969,7 +6028,7 @@
     "title": "Страница не найдена",
     "description": "Страница, которую вы ищете, не существует. Возможно, её переместили или удалили, либо вы ввели неверный адрес.",
     "goBack": "Назад",
-    "goHome": "Перейти к сегодня",
+    "goHome": "Перейти к «Сегодня»",
     "quickActions": "Быстрые действия"
   },
   "colors": {
@@ -6033,7 +6092,7 @@
     "field": {
       "title": "Название",
       "url": "Адрес",
-      "tags": "Теги"
+      "tags": "Метки"
     },
     "editTitle": "Изменить ссылку",
     "deleteTitle": "Удалить эту ссылку?",
@@ -6174,8 +6233,8 @@
   },
   "upcoming": {
     "replan": "Перепланировать",
-    "toPlan": "Запланировать",
-    "expandToPlan": "Показать «Запланировать» ({{count}})",
+    "toPlan": "К планированию",
+    "expandToPlan": "Показать «К планированию» ({{count}})",
     "commitTo": "Назначить на",
     "removeCommitment": "Снять обязательство",
     "commitmentRemoved": "Обязательство снято",

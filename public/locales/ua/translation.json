@@ -1,8 +1,8 @@
 {
     "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "agent": "Агент",
+        "dismiss": "Позначити як прочитане",
+        "open": "Відкрити"
     },
     "counts": {
         "notes_many": "{{count}} нотаток",
@@ -34,6 +34,12 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_many": "Знову в черзі: {{count}}",
+            "requeued_few": "Знову в черзі: {{count}}",
+            "requeued_one": "Знову в черзі: {{count}}",
+            "failed_many": "{{count}} елементів не вдалося",
+            "failed_few": "{{count}} елементи не вдалися",
+            "failed_one": "{{count}} елемент не вдався",
       "retryError": "Не вдалося повторити",
       "requeued": "Знову в черзі: {{count}}",
       "retry": "Повторити",
@@ -243,7 +249,7 @@
       "title": "Розібрати пошту",
       "close": "Закрити",
       "done": "Усе розібрано",
-      "back": "Назад до «Розібрати»",
+      "back": "Назад до «На розбір»",
       "createTask": "Створити завдання: {{name}}",
       "replyInGmail": "Відповісти в Gmail",
       "readInGmail": "Прочитати в Gmail",
@@ -256,11 +262,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Не вдалося зберегти цю зміну",
+    "hintLocked": "Enter: новий рядок",
+    "hint": "Enter: новий рядок · Tab / Shift+Tab: відступ · Alt+↑ / Alt+↓: перемістити",
+    "newLine": "Нове завдання",
+    "title": "Структура"
   },
   "focusStats": {
     "title": "Фокус",
@@ -1036,7 +1042,7 @@
     "areaDeleted": "Область успішно видалено!"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Усі нотатки",
     "emptyPreview": "Порожня нотатка",
     "loading": "Завантаження нотаток...",
     "error": "Помилка завантаження нотаток",
@@ -1285,8 +1291,8 @@
     }
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Приховати порожні поля",
+    "addDetail": "Додати деталь",
     "noteCount_many": "{{count}} нотаток",
     "noteCount_few": "{{count}} нотатки",
     "memberCount_many": "{{count}} учасників",
@@ -1376,7 +1382,7 @@
     "allFiles": "Усі файли",
     "dropToUpload": "Відпустіть, щоб завантажити",
     "fewerFiles": "Показати менше",
-    "noTasks": "Задач немає.",
+    "noTasks": "Завдань немає.",
     "nextAction": "Наступна дія",
     "nextActionLine": "Наступна дія: {{name}}",
     "noCompletedTasks": "Немає виконаних завдань.",
@@ -1438,10 +1444,10 @@
             "page": {
                 "notFound": "Плагін не знайдено або вимкнено"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Цей плагін працює всередині сервера і запитує:",
+            "approveOutro": "Дозволи обмежують те, що Cadence передає плагіну; це не пісочниця. Схвалюйте лише код, який ви прочитали.",
+            "approveTitle": "Схвалити дозволи?",
+            "approve": "Схвалити й увімкнути"
         },
     "showTaskDescription": "Показувати опис під заголовком",
     "sync": {
@@ -1454,11 +1460,11 @@
         "week_of": "Тиждень",
         "estimated_minutes": "Тривалість",
         "recurrence_type": "Повтор",
-        "icon": "Піктограма",
+        "icon": "Значок",
         "color": "Колір",
         "tag_uids": "Теги",
         "next_task_uid": "Наступна дія",
-        "parent_task_uid": "Батьківська задача",
+        "parent_task_uid": "Батьківське завдання",
         "goal_uid": "Ціль",
         "area_uid": "Сфера",
         "parent_project_uid": "Батьківський проєкт",
@@ -1482,7 +1488,7 @@
         "goal": "Ціль",
         "area": "Сфера",
         "project": "Проєкт",
-        "task": "Задача"
+        "task": "Завдання"
       },
       "resolveError": "Не вдалося вирішити цей конфлікт",
       "loadError": "Не вдалося завантажити стан синхронізації",
@@ -1557,6 +1563,7 @@
     "nextTaskSuggestion": "Пропозиція наступного завдання",
     "enableNextTaskSuggestion": "Увімкнути пропозиції наступного завдання",
     "tabs": {
+            "agents": "Агенти",
             "plugins": "Плагіни",
       "classify": "Класифікація",
       "sync": "Синхронізація",
@@ -1564,7 +1571,7 @@
       "security": "Безпека",
       "productivity": "Продуктивність",
       "telegram": "Telegram",
-      "ai": "ШІ Функції",
+      "ai": "Функції ШІ",
       "billing": "Тариф і оплата",
       "notifications": "Налаштування сповіщень",
       "oidc": "OIDC/SSO",
@@ -1611,10 +1618,10 @@
     "personalInfo": "Особиста інформація",
     "errorMessage": "Не вдалося оновити профіль",
     "telegramIntegration": "Інтеграція з Telegram",
-    "telegramDescription": "Підключіть свій аккаунт Cadence до бота Telegram, щоб додавати елементи в свою вхідну пошту через повідомлення Telegram.",
+    "telegramDescription": "Підключіть свій обліковий запис Cadence до бота Telegram, щоб додавати елементи до вхідних через повідомлення Telegram.",
     "telegramBotToken": "Токен бота Telegram",
     "telegramTokenDescription": "Створіть бота з @BotFather в Telegram і вставте токен сюди.",
-    "telegramConnected": "Ваш аккаунт Telegram підключено! Надсилайте повідомлення своєму боту, щоб додати елементи в вашу вхідну пошту Cadence.",
+    "telegramConnected": "Ваш обліковий запис Telegram підключено! Надсилайте повідомлення своєму боту, щоб додавати елементи до вхідних Cadence.",
     "settingUp": "Налаштування...",
     "telegramSetupSuccess": "Бот Telegram \"{{botName}}\" успішно налаштовано!",
     "telegramSetupFailed": "Не вдалося налаштувати бота Telegram.",
@@ -1860,6 +1867,8 @@
       "toggleError": "Не вдалося оновити цей календар"
     },
     "planning": {
+            "maxOption_many": "{{count}} завдань",
+            "maxOption_few": "{{count}} завдання",
       "title": "Планування",
       "description": "Як «Що ви могли б зробити сьогодні?» впорядковує ваші завдання, коли ви плануєте день. Перетягніть рядки в потрібному порядку; ті самі завдання завжди йдуть в одному порядку.",
       "orderTitle": "Порядок (перетягніть, щоб змінити)",
@@ -2115,13 +2124,13 @@
     "google": {
       "error": "Google не відповів",
       "title": "Google Calendar і Google Tasks",
-      "description": "Двостороння синхронізація: ваші календарі Google з’являються тут і їх можна редагувати в Cadence, задачі з датою потрапляють до календаря «Cadence» у Google, а всі задачі синхронізуються з Google Tasks. Зміни з будь-якого боку переносяться протягом кількох хвилин.",
+      "description": "Двостороння синхронізація: ваші календарі Google з’являються тут і їх можна редагувати в Cadence, завдання з датою потрапляють до календаря «Cadence» у Google, а всі завдання синхронізуються з Google Tasks. Зміни з будь-якого боку переносяться протягом кількох хвилин.",
       "notConfigured": "Не налаштовано на цьому сервері: адміністратор задає GOOGLE_CLIENT_ID і GOOGLE_CLIENT_SECRET.",
       "connect": "Підключити Google",
       "lastSync": "синхронізовано {{time}}",
       "firstSync": "виконується перша синхронізація…",
-      "syncEvents": "Календарі та задачі з датою в календарі «Cadence»",
-      "syncTasks": "Усі задачі з Google Tasks (один список на проєкт)",
+      "syncEvents": "Календарі та завдання з датою в календарі «Cadence»",
+      "syncTasks": "Усі завдання з Google Tasks (один список на проєкт)",
       "calendars": "Показуються в Календарі та на сторінці «Сьогодні»",
       "readOnly": "лише читання",
       "synced": "Синхронізовано з Google",
@@ -2187,8 +2196,24 @@
         "sidebarPanelMonth": "Календар на місяць"
   },
   "task": {
-    "duplicateError": "Не вдалося дублювати задачу.",
-    "duplicated": "Задачу продубльовано",
+        "minutesAgo_many": "{{count}} хв тому",
+        "minutesAgo_few": "{{count}} хв тому",
+        "minutesAgo_one": "{{count}} хв тому",
+        "inMinutes_many": "через {{count}} хв",
+        "inMinutes_few": "через {{count}} хв",
+        "inMinutes_one": "через {{count}} хв",
+        "inHours_many": "через {{count}} год",
+        "inHours_few": "через {{count}} год",
+        "inHours_one": "через {{count}} год",
+        "inDays_many": "через {{count}} днів",
+        "inDays_few": "через {{count}} дні",
+        "hoursAgo_many": "{{count}} год тому",
+        "hoursAgo_few": "{{count}} год тому",
+        "hoursAgo_one": "{{count}} год тому",
+        "daysAgo_many": "{{count}} днів тому",
+        "daysAgo_few": "{{count}} дні тому",
+    "duplicateError": "Не вдалося дублювати завдання.",
+    "duplicated": "Завдання продубльовано",
     "duplicate": "Дублювати",
     "recurringScope": {
       "editTitle": "Змінити це завдання чи серію?",
@@ -2378,8 +2403,8 @@
     },
     "slot": {
       "googleEvent": "Нова подія Google",
-      "taskName": "Назва задачі",
-      "addTaskAt": "Додати задачу о {{time}}"
+      "taskName": "Назва завдання",
+      "addTaskAt": "Додати завдання о {{time}}"
     },
     "meetingJoin": "Приєднатися",
     "location": {
@@ -3467,7 +3492,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Галерея",
     "label": "Вигляд",
     "list": "Список",
     "board": "Дошка",
@@ -3525,7 +3550,7 @@
     "noViewsMatch": "Переглядів не знайдено",
     "blankSlateFilteredHint": "Спробуйте інший запит.",
     "blankSlateClearSearch": "Очистити пошук",
-    "view": "Переглянути",
+    "view": "Вигляд",
     "progressSummary": "Переглянути прогрес · виконано {{done}} із {{total}} завдань",
     "sortTasks": "Сортувати завдання",
     "filters": "фільтри"
@@ -3847,7 +3872,7 @@
     "done": "Завершено",
     "done_desc": "Закінчено і виконано",
     "cancelled": "Скасовано",
-    "cancelled_desc": "Не буде завершено",
+    "cancelled_desc": "вирішено не продовжувати",
     "idea": "Ідея",
     "paused": "На паузі",
     "paused_desc": "відкладено навмисно, щоб повернутися пізніше",
@@ -4238,7 +4263,7 @@
     "contact": "Контакт",
     "editPerson": "Редагувати людину",
     "newPerson": "Нова людина",
-    "noAssignedTasks": "Немає завдань, призначених: {{name}}.",
+    "noAssignedTasks": "Для {{name}} немає призначених завдань.",
     "notFound": "Людину не знайдено.",
     "relationship": "Стосунок",
     "phone": "Телефон",
@@ -4317,6 +4342,12 @@
     "invalidHint": "Можливо, його вже використано або строк його дії минув. Попросіть людину, яка його надіслала, про нове."
   },
   "dailyPlan": {
+        "placeAllHint_many": "{{count}} завдань займуть найближчі вільні слоти за пріоритетом.",
+        "placeAllHint_few": "{{count}} завдання займуть найближчі вільні слоти за пріоритетом.",
+        "placeAllHint_one": "{{count}} завдання займе наступний вільний слот.",
+        "placeAllDone_many": "Розподілено завдань: {{count}}.",
+        "placeAllDone_few": "Розподілено завдання: {{count}}.",
+        "placeAllDone_one": "Розподілено завдання: {{count}}.",
     "inProgress": "У роботі",
     "overdue": "Прострочено",
     "dueToday": "Термін сьогодні",
@@ -4387,6 +4418,8 @@
     "beta": "Бета",
     "betaHint": "Сторінка «Сьогодні» з планом нова. Класична сторінка й надалі доступна внизу цієї сторінки.",
     "ai": {
+            "carried_many": "{{count}} завдань додано на завтра",
+            "carried_few": "{{count}} завдання додано на завтра",
       "suggested": "Запропоновано ШІ",
       "estimateGuess": "Оцінка ШІ",
       "nothingToAdd": "Нічого додати: немає вільного часу або задач для планування.",
@@ -4401,7 +4434,7 @@
       "undo": "Скасувати",
       "keep": "Залишити",
       "wrapUpError": "Не вдалося підбити підсумки дня.",
-      "carried": "{{count}} задач додано на завтра",
+      "carried": "{{count}} завдань додано на завтра",
       "wrapUpTitle": "Як минув день?",
       "wrapUpHint": "Отримайте короткий підсумок і оберіть, що перенести на завтра.",
       "wrappingUp": "Думаю…",
@@ -4609,7 +4642,7 @@
       "priorityHigh": "Високий",
       "priorityMedium": "Середній",
       "priorityLow": "Низький",
-      "tag": "Мітка",
+      "tag": "Тег",
       "project": "Проєкт",
       "person": "Людина",
       "area": "Сфера",
@@ -4637,27 +4670,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Додати бажання до {{group}}",
+      "addWish": "Додати бажання…",
+      "createTaskFor": "Створити завдання для «{{title}}»",
+      "markDone": "Позначити «{{title}}» як здійснене",
+      "wishFulfilled": "Здійснено",
+      "wishDropped": "Відкинуто",
+      "allDone": "Усе виконано",
+      "addStep": "Додати наступний крок",
+      "nextStepInline": "Наступний крок: {{name}}",
+      "nextStep": "Наступний крок",
+      "completeStep": "Завершити «{{name}}»",
+      "nothingLinked": "Нічого не пов’язано",
+      "target": "До {{date}}",
+      "error": "Не вдалося зберегти, спробуйте ще раз",
+      "wishDone": "«{{title}}» здійснено",
+      "stepDone": "«{{name}}» виконано",
+      "doneWishes": "Здійснені",
+      "other": "На паузі, досягнуті або відкинуті",
+      "noMatch": "Нічого не знайдено.",
+      "clearSearch": "Очистити пошук",
+      "search": "Шукати ціль або бажання"
     },
     "newGoal": "Нова ціль",
     "noGoalsYet": "Поки немає цілей.",
@@ -4988,6 +5021,27 @@
       "instructionsOther": "Будь-яку іншу колонку можна зберегти в нотатці завдання, тож нічого з аркуша не загубиться."
     },
     "import": {
+            "undoneKept_many": "Імпорт скасовано. Завдань, змінених відтоді, збережено: {{count}}.",
+            "undoneKept_few": "Імпорт скасовано. Завдання, змінені відтоді, збережено: {{count}}.",
+            "undoneKept_one": "Імпорт скасовано. Збережено {{count}} завдання, змінене відтоді.",
+            "rowCount_many": "Рядків: {{count}}",
+            "rowCount_few": "Рядки: {{count}}",
+            "rowCount_one": "{{count}} рядок",
+            "doneTitle_many": "Імпортовано завдань: {{count}}",
+            "doneTitle_few": "Імпортовано завдання: {{count}}",
+            "doneTitle_one": "Імпортовано {{count}} завдання",
+            "countTags_many": "Нових тегів: {{count}}",
+            "countTags_few": "Нові теги: {{count}}",
+            "countTags_one": "{{count}} новий тег",
+            "countProjects_many": "Нових проєктів: {{count}}",
+            "countProjects_few": "Нові проєкти: {{count}}",
+            "countProjects_one": "{{count}} новий проєкт",
+            "countCreate_many": "Нових завдань: {{count}}",
+            "countCreate_few": "Нові завдання: {{count}}",
+            "countCreate_one": "{{count}} нове завдання",
+            "countAreas_many": "Нових сфер: {{count}}",
+            "countAreas_few": "Нові сфери: {{count}}",
+            "countAreas_one": "{{count}} нова сфера",
       "fieldParent": "Батьківське завдання",
       "fieldWbs": "WBS / номер у структурі",
       "fieldEstimate": "Оцінка",
@@ -5233,23 +5287,25 @@
     "planned": "Заплановано {{when}}"
   },
   "review": {
+        "calm_many": "{{count}} пунктів для перегляду, у власному темпі",
+        "calm_few": "{{count}} пункти для перегляду, у власному темпі",
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 вибрати · S пропустити · O відкрити · Esc зупинити",
+      "nothing": "Зараз нічого не потребує уваги.",
+      "back": "Назад до огляду",
+      "again": "Ще один раунд",
+      "saved": "Кожне рішення збережено. Те, що ви пропустили, повернеться наступного разу.",
+      "done": "Це все на зараз.",
+      "position": "{{position}} з {{total}}",
+      "stop": "Зупинити",
+      "start": "Почати",
+      "pitch": "Близько 5 хвилин, по одній речі. Зупиняйтеся, коли захочете.",
+      "title": "Швидкий огляд"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Завантаження…",
+    "calmClear": "Усе актуально",
+    "calm_other": "{{count}} речей, на які варто глянути, у вашому темпі",
+    "calm_one": "{{count}} річ, на яку варто глянути, у вашому темпі",
     "cancelDate": "Скасувати",
     "choices": "Варіанти",
     "more": "Ще…",
@@ -5364,6 +5420,9 @@
     "close": "Закрити"
   },
   "comments": {
+        "count_many": "Коментарі: {{count}}",
+        "count_few": "Коментарі: {{count}}",
+        "count_one": "Коментарі: {{count}}",
     "count": "Коментарі: {{count}}",
     "loading": "Завантаження коментарів...",
     "failedToLoad": "Не вдалося завантажити коментарі",
@@ -5459,11 +5518,11 @@
   "mobileNav": {
     "label": "Головна навігація",
     "inbox": "Вхідні",
-    "tasks": "Задачі",
+    "tasks": "Завдання",
     "agenda": "Порядок денний",
     "habits": "Звички",
     "review": "Огляд",
-    "newTask": "Нова задача"
+    "newTask": "Нове завдання"
   },
   "commandCenter": {
     "title": "Палітра команд",
@@ -6037,7 +6096,7 @@
     },
     "editTitle": "Редагувати посилання",
     "deleteTitle": "Видалити це посилання?",
-    "deleteMessage": "Посилання назавжди зникне зі списку. Щоб відкласти його, краще надішліть в архів.",
+    "deleteMessage": "Посилання назавжди зникне зі списку. Щоб відкласти його, краще перенесіть до архіву.",
     "deleteError": "Не вдалося видалити посилання.",
     "taskVerb": {
       "try": "Спробувати: {{title}}",
@@ -6356,7 +6415,7 @@
   },
   "bookmarksImport": {
     "title": "Імпорт закладок",
-    "hint": "Експорт з Firefox (Library › Import and Backup › Export). Одна папка стає сторінками проєкту.",
+    "hint": "Експорт з Firefox (Бібліотека › Імпорт і резервні копії › Експорт). Одна папка стає сторінками проєкту.",
     "file": "Файл закладок",
     "empty": "У цьому файлі немає закладок.",
     "folder": "Папка",

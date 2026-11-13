@@ -4981,7 +4981,7 @@
       "intoNewProject": "Uuteen projektiin",
       "byColumn": "Käytä Projekti-saraketta ja luo projektit, joita ei vielä ole",
       "noProject": "Ei projektia",
-      "updateExisting": "Päivitä tududissa jo olevat tehtävät (yhdistetään UID:n perusteella). Tyhjät solut jättävät kentän ennalleen.",
+      "updateExisting": "Päivitä Cadencessa jo olevat tehtävät (yhdistetään UID:n perusteella). Tyhjät solut jättävät kentän ennalleen.",
       "countCreate": "{{count}} uutta tehtävää",
       "countUpdate": "{{count}} päivitetty",
       "countSkip": "{{count}} ohitettu",

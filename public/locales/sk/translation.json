@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Označiť ako prečítané",
+        "open": "Otvoriť"
     },
     "counts": {
         "notes_many": "{{count}} poznámok",
@@ -34,6 +34,10 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_few": "Znova vo fronte: {{count}}",
+            "requeued_one": "Znova vo fronte: {{count}}",
+            "failed_few": "Neúspešné položky: {{count}}",
+            "failed_one": "Neúspešná položka: {{count}}",
       "retryError": "Opakovanie zlyhalo",
       "requeued": "Znova vo fronte: {{count}}",
       "retry": "Skúsiť znova",
@@ -159,7 +163,7 @@
       "assistant": "AI asistent",
       "assistantEnabled": "Návrhy AI na roztriedenie",
       "assistantLimit": "Prezreté úlohy za deň",
-      "llmProvider": "Poskytovateľ AI: Profil › Asistent AI",
+      "llmProvider": "Poskytovateľ AI: Profil › AI asistent",
       "save": "Uložiť",
       "saved": "Nastavenia uložené",
       "saveError": "Nastavenia sa nepodarilo uložiť.",
@@ -256,11 +260,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Túto zmenu sa nepodarilo uložiť",
+    "hintLocked": "Enter: nový riadok",
+    "hint": "Enter: nový riadok · Tab / Shift+Tab: odsadiť · Alt+↑ / Alt+↓: presunúť",
+    "newLine": "Nová úloha",
+    "title": "Osnova"
   },
   "calendar": {
     "feed": {
@@ -476,7 +480,7 @@
       "open": "Otvoriť",
       "addAnyway": "Pridať napriek tomu",
       "toProject": "Projekt…",
-      "keepInInbox": "Schránka",
+      "keepInInbox": "Doručená pošta",
       "taskAdded": "Úloha pridaná",
       "taskToSort": "Úloha pridaná do « Úlohy na roztriedenie »",
       "addedToProject": "Pridané do projektu"
@@ -582,7 +586,7 @@
     "goal": "Cieľ",
     "priority": "Priorita",
     "tags": "Štítky",
-    "goToToday": "Prejsť na dnes",
+    "goToToday": "Prejsť na Dnes",
     "loadMore": "Načítať ďalšie",
     "showAll": "Zobraziť všetko",
     "actions": "Akcie",
@@ -878,6 +882,8 @@
     "noTasksScheduled": "Žiadne naplánované úlohy"
   },
   "comments": {
+        "count_few": "Komentáre: {{count}}",
+        "count_one": "Komentár: {{count}}",
     "count": "Komentáre: {{count}}",
     "loading": "Načítavajú sa komentáre...",
     "failedToLoad": "Komentáre sa nepodarilo načítať",
@@ -999,10 +1005,10 @@
             "page": {
                 "notFound": "Plugin sa nenašiel alebo je vypnutý"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Tento plugin beží v rámci servera a žiada:",
+            "approveOutro": "Oprávnenia obmedzujú, čo Cadence pluginu poskytne; nie je to izolované prostredie. Schvaľujte iba kód, ktorý ste prečítali.",
+            "approveTitle": "Schváliť oprávnenia?",
+            "approve": "Schváliť a zapnúť"
         },
     "showTaskDescription": "Zobraziť popis pod názvom",
     "sync": {
@@ -1135,10 +1141,10 @@
     "personalInfo": "Osobné údaje",
     "errorMessage": "Profil sa nepodarilo aktualizovať",
     "telegramIntegration": "Integrácia s Telegramom",
-    "telegramDescription": "Prepojte svoj účet Cadence s botom v Telegrame a pridávajte položky do schránky prostredníctvom správ v Telegrame.",
+    "telegramDescription": "Prepojte svoj účet Cadence s botom v Telegrame a pridávajte položky do doručenej pošty prostredníctvom správ v Telegrame.",
     "telegramBotToken": "Token bota Telegram",
     "telegramTokenDescription": "Vytvorte bota pomocou @BotFather v Telegrame a vložte sem token.",
-    "telegramConnected": "Váš účet Telegram je pripojený! Posielajte správy svojmu botovi a pridávajte tak položky do schránky Cadence.",
+    "telegramConnected": "Váš účet Telegram je pripojený! Posielajte správy svojmu botovi a pridávajte tak položky do doručenej pošty Cadence.",
     "setupTelegram": "Nastaviť Telegram",
     "setupTelegramLower": "nastaviť telegram",
     "settingUp": "Nastavuje sa...",
@@ -1219,6 +1225,7 @@
     "enableNextTaskSuggestion": "Povoliť návrhy ďalších úloh",
     "featuresAddons": "Funkcie a doplnky",
     "tabs": {
+            "agents": "Agenti",
             "plugins": "Doplnky",
       "classify": "Zaradenie",
       "ai": "Funkcie AI",
@@ -1427,6 +1434,7 @@
       "missingFields": "Pridajte názov a adresu kalendára"
     },
     "planning": {
+            "maxOption_few": "{{count}} úlohy",
       "hoursTitle": "Váš deň",
       "hoursDescription": "Hodiny, ktoré časová os zobrazuje na stránke Dnes a pri plánovaní dňa. Nové úlohy a návrhy od AI dostanú čas v tomto rozmedzí. Časy sú vo vašom časovom pásme ({{timezone}}).",
       "hoursFrom": "Od",
@@ -2022,8 +2030,8 @@
     "unknown": "Stav {{status}}"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Skryť prázdne polia",
+    "addDetail": "Pridať podrobnosť",
     "noteCount_many": "{{count}} poznámok",
     "noteCount_few": "{{count}} poznámky",
     "memberCount_many": "{{count}} členov",
@@ -2166,7 +2174,7 @@
     "projectNameTooLong": "Názov projektu môže mať najviac {{max}} znakov"
   },
   "inbox": {
-    "ideaSheet": "Inbox item",
+    "ideaSheet": "Položka doručenej pošty",
     "toSort": "Na roztriedenie ({{count}})",
     "unsorted": {
       "noDate": "Bez dátumu",
@@ -2252,7 +2260,7 @@
       "delete": "Odstrániť",
       "keptLater": "Ponechané v doručenej pošte na neskôr",
       "madeTask": "Úloha vytvorená",
-      "madeLink": "Pridané do Odkazov",
+      "madeLink": "Pridané do odkazov",
       "madeProject": "Projekt vytvorený",
       "madeNote": "Poznámka vytvorená",
       "error": "Túto položku sa nepodarilo spracovať. Stále je v doručenej pošte.",
@@ -2336,6 +2344,16 @@
     "createError": "Poznámku sa nepodarilo vytvoriť"
   },
   "task": {
+        "minutesAgo_few": "pred {{count}} min.",
+        "minutesAgo_one": "pred {{count}} minútou",
+        "inMinutes_few": "o {{count}} min.",
+        "inMinutes_one": "o {{count}} minútu",
+        "inHours_few": "o {{count}} hod.",
+        "inHours_one": "o {{count}} hodinu",
+        "inDays_few": "o {{count}} dni",
+        "hoursAgo_few": "pred {{count}} hod.",
+        "hoursAgo_one": "pred {{count}} hodinou",
+        "daysAgo_few": "pred {{count}} dňami",
     "duplicateError": "Úlohu sa nepodarilo duplikovať.",
     "duplicated": "Úloha duplikovaná",
     "duplicate": "Duplikovať",
@@ -2751,7 +2769,7 @@
     "toggleDropdownMenu": "Prepnúť rozbaľovaciu ponuku"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Všetky poznámky",
     "emptyPreview": "Prázdna poznámka",
     "addNote": "Pridať poznámku",
     "loading": "Načítavajú sa poznámky...",
@@ -2911,7 +2929,7 @@
       "clean": "čisté {{unit}}",
       "best": "najlepšie",
       "strength": "sila",
-      "cleanFor": "{{count}} {{unit}} bez"
+      "cleanFor": "{{count}} {{unit}} bez výpadku"
     },
     "quit": "Zbaviť sa",
     "confirmSlip": "Zaznamenať zlyhanie",
@@ -3200,8 +3218,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 Vitajte v Cadence!\n\nVáš osobný bot na správu úloh je pripojený a pripravený pomáhať!\n\n📝 Stačí mi poslať akúkoľvek správu a pridám ju ako položku do vašej Schránky v Cadence.\n\n✨ Príkazy:\n• /help - Zobraziť pomocníka\n• /start - Zobraziť uvítaciu správu\n• Napíšte ľubovoľný text - Pridá sa ako položka Schránky\n\nPoďme sa zorganizovať! 🚀",
-    "helpMessage": "📋 Pomocník Cadence bota\n\nPošlite mi akúkoľvek textovú správu a pridám ju ako položku do vašej Schránky v Cadence.\n\nPríkazy:\n/start - Uvítacia správa\n/help - Zobraziť tohto pomocníka\n\nStačí napísať položku a o zvyšok sa postarám!",
+    "welcomeMessage": "🎉 Vitajte v Cadence!\n\nVáš osobný bot na správu úloh je pripojený a pripravený pomáhať!\n\n📝 Stačí mi poslať akúkoľvek správu a pridám ju ako položku do vašej doručenej pošty v Cadence.\n\n✨ Príkazy:\n• /help - Zobraziť pomocníka\n• /start - Zobraziť uvítaciu správu\n• Napíšte ľubovoľný text - Pridá sa ako položka doručenej pošty\n\nPoďme sa zorganizovať! 🚀",
+    "helpMessage": "📋 Pomocník Cadence bota\n\nPošlite mi akúkoľvek textovú správu a pridám ju ako položku do vašej doručenej pošty v Cadence.\n\nPríkazy:\n/start - Uvítacia správa\n/help - Zobraziť tohto pomocníka\n\nStačí napísať položku a o zvyšok sa postarám!",
     "commandProcessed": "Príkaz bol úspešne spracovaný",
     "messageProcessed": "Správa bola úspešne spracovaná",
     "failedToAddToInbox": "❌ Pridanie do Schránky zlyhalo: {{error}}"
@@ -3315,7 +3333,7 @@
       "activationHint": "{{n}} z {{total}} registrácií",
       "weeklyUsers": "Týždenní používatelia",
       "weeklyUsersHint": "vytvorili niečo",
-      "selfHostedUsers": "self-hosted · {{n}} nových dnes"
+      "selfHostedUsers": "vlastný hosting · {{n}} nových dnes"
     },
     "waitlist": {
       "title": "Čakacia listina",
@@ -3625,7 +3643,7 @@
       "newUsersGroup": "Registrácie tento týždeň",
       "appUsers": "Používatelia aplikácie",
       "appUsersMonthHint": "{{month}} za 30 dní",
-      "creators": "Vytvoril niečo",
+      "creators": "Vytvorili niečo",
       "creatorsHint": "používateľov, akýkoľvek typ položky",
       "canceled": "Zrušené",
       "failed": "Neúspešné platby",
@@ -3816,10 +3834,10 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galéria",
     "label": "Zobrazenie",
     "list": "Zoznam",
-    "board": "Nástenka",
+    "board": "Tabuľa",
     "calendar": "Kalendár"
   },
   "newView": {
@@ -4250,7 +4268,7 @@
   "subscription": {
     "trialBanner_many": "Používate bezplatnú skúšobnú verziu, zostáva {{count}} dní",
     "trialBanner_few": "Používate bezplatnú skúšobnú verziu, zostávajú {{count}} dni",
-    "trialBanner": "Bezplatná skúška, zostáva dní: {{count}}",
+    "trialBanner": "Bezplatná skúška, zostáva {{count}} dní",
     "title": "Predplatné",
     "chooseForCloud": "Vyberte si plán pre Cadence Cloud",
     "noActive": "Žiadne aktívne predplatné",
@@ -4348,7 +4366,7 @@
     "contact": "Kontakt",
     "editPerson": "Upraviť osobu",
     "newPerson": "Nová osoba",
-    "noAssignedTasks": "Žiadne úlohy priradené: {{name}}.",
+    "noAssignedTasks": "Žiadne úlohy nie sú priradené osobe {{name}}.",
     "notFound": "Osoba sa nenašla.",
     "relationship": "Vzťah",
     "phone": "Telefón",
@@ -4440,6 +4458,10 @@
     "linkedNoteNotShared": "Táto poznámka nie je zdieľaná verejne."
   },
   "dailyPlan": {
+        "placeAllHint_few": "{{count}} úlohy pôjdu do najbližších voľných termínov podľa priority.",
+        "placeAllHint_one": "{{count}} úloha pôjde do najbližšieho voľného termínu.",
+        "placeAllDone_few": "Naplánované úlohy: {{count}}.",
+        "placeAllDone_one": "{{count}} úloha naplánovaná.",
     "addTask": "Pridať úlohu",
     "taggedToday": "So štítkom #today",
     "inProgress": "Prebieha",
@@ -4514,6 +4536,8 @@
     "beta": "Beta",
     "betaHint": "Plánovaná stránka Dnes je nová. Klasická stránka je stále v dolnej časti tejto stránky.",
     "ai": {
+            "carried_few": "Úlohy pridané na zajtra: {{count}}",
+            "carried_one": "{{count}} úloha pridaná na zajtra",
       "suggested": "Navrhnuté AI",
       "estimateGuess": "Odhad AI",
       "nothingToAdd": "Nie je čo pridať: nie je voľný čas alebo žiadna úloha na naplánovanie.",
@@ -4798,32 +4822,32 @@
     "viaProject": "cez projekt",
     "viewArea": "Prejsť na oblasť",
     "searchAreas": "Hľadať oblasti…",
-    "clearArea": "Odstrániť oblasť",
+    "clearArea": "Odobrať oblasť",
     "noAreasFound": "Nenašli sa žiadne oblasti"
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Pridať prianie do {{group}}",
+      "addWish": "Pridať prianie…",
+      "createTaskFor": "Vytvoriť úlohu pre „{{title}}“",
+      "markDone": "Označiť „{{title}}“ ako splnené",
+      "wishFulfilled": "Splnené",
+      "wishDropped": "Zrušené",
+      "allDone": "Všetko hotové",
+      "addStep": "Pridať ďalší krok",
+      "nextStepInline": "Ďalší krok: {{name}}",
+      "nextStep": "Ďalší krok",
+      "completeStep": "Dokončiť „{{name}}“",
+      "nothingLinked": "Nič nie je prepojené",
+      "target": "Do {{date}}",
+      "error": "Uloženie zlyhalo, skúste to znova",
+      "wishDone": "„{{title}}“ splnené",
+      "stepDone": "„{{name}}“ hotovo",
+      "doneWishes": "Splnené",
+      "other": "Pozastavené, dosiahnuté alebo zrušené",
+      "noMatch": "Nič nezodpovedá.",
+      "clearSearch": "Vymazať hľadanie",
+      "search": "Hľadať cieľ alebo prianie"
     },
     "newGoal": "Nový cieľ",
     "noGoalsYet": "Zatiaľ žiadne ciele.",
@@ -5125,6 +5149,20 @@
       "instructionsOther": "Ktorýkoľvek ďalší stĺpec sa dá ponechať v poznámke úlohy, aby sa z hárka nič nestratilo."
     },
     "import": {
+            "undoneKept_few": "Import bol vrátený späť. Úlohy zmenené odvtedy boli zachované: {{count}}.",
+            "undoneKept_one": "Import bol vrátený späť. Zachovaná bola {{count}} úloha zmenená od tej doby.",
+            "rowCount_few": "Riadky: {{count}}",
+            "rowCount_one": "{{count}} riadok",
+            "doneTitle_few": "Importované úlohy: {{count}}",
+            "doneTitle_one": "Importovaná {{count}} úloha",
+            "countTags_few": "Nové štítky: {{count}}",
+            "countTags_one": "{{count}} nový štítok",
+            "countProjects_few": "Nové projekty: {{count}}",
+            "countProjects_one": "{{count}} nový projekt",
+            "countCreate_few": "Nové úlohy: {{count}}",
+            "countCreate_one": "{{count}} nová úloha",
+            "countAreas_few": "Nové oblasti: {{count}}",
+            "countAreas_one": "{{count}} nová oblasť",
       "fieldParent": "Nadradená úloha",
       "fieldWbs": "WBS / číslo v štruktúre",
       "fieldEstimate": "Odhad",
@@ -5370,23 +5408,24 @@
     "planned": "Naplánované {{when}}"
   },
   "review": {
+        "calm_few": "{{count}} veci na pozretie, vo vlastnom tempe",
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 vybrať · S preskočiť · O otvoriť · Esc zastaviť",
+      "nothing": "Momentálne nič nevyžaduje pozornosť.",
+      "back": "Späť na prehľad",
+      "again": "Ešte jedno kolo",
+      "saved": "Každé rozhodnutie je uložené. To, čo ste preskočili, sa vráti nabudúce.",
+      "done": "To je zatiaľ všetko.",
+      "position": "{{position}} z {{total}}",
+      "stop": "Zastaviť",
+      "start": "Začať",
+      "pitch": "Asi 5 minút, jedna vec naraz. Zastavte, kedykoľvek chcete.",
+      "title": "Rýchly prehľad"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Načítava sa…",
+    "calmClear": "Všetko je aktuálne",
+    "calm_other": "{{count}} vecí na prezretie, vo vlastnom tempe",
+    "calm_one": "{{count}} vec na prezretie, vo vlastnom tempe",
     "cancelDate": "Zrušiť",
     "choices": "Možnosti",
     "more": "Viac…",
@@ -5438,7 +5477,7 @@
       "shortSession": "Krátka relácia dnes (25 min)",
       "split": "Rozdeliť na kroky",
       "later": "Neskôr",
-      "drop": "Vzdať",
+      "drop": "Opustiť",
       "keep": "Ponechať tak",
       "thisWeek": "Tento týždeň",
       "inView": "Na očiach",
@@ -5469,7 +5508,7 @@
       "committed": "Rozhodnuté tento týždeň",
       "inView": "Na očiach",
       "emptyCommitted": "Na tento týždeň zatiaľ nič rozhodnuté.",
-      "emptyInView": "Nič na očiach. Dajte úlohu na oči z jej ponuky.",
+      "emptyInView": "Nič nie je na očiach. Úlohu tam dáte z jej ponuky.",
       "choose": "Pomôžte mi vybrať"
     },
     "routine": {
@@ -5540,7 +5579,7 @@
   },
   "mobileNav": {
     "label": "Hlavná navigácia",
-    "inbox": "Schránka",
+    "inbox": "Doručená pošta",
     "tasks": "Úlohy",
     "agenda": "Program",
     "habits": "Návyky",
@@ -5786,7 +5825,7 @@
       "limit": "Limit",
       "maximum": "Maximum za obdobie",
       "measure": "Miera",
-      "measureBy": "Meria sa v",
+      "measureBy": "Meraná pomocou",
       "minimum": "Minimum, ktoré sa počíta (voliteľné)",
       "name": "Názov",
       "newTitle": "Nový návyk",
@@ -6070,7 +6109,7 @@
     "add": "Pridať",
     "addPlaceholder": "Pridať úlohu",
     "added": "„{{name}}“ pridaná do dňa",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, termín {{range}}",
     "backToList": "Zoznam",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Denný kalendár",
@@ -6331,7 +6370,7 @@
   },
   "bookmarksImport": {
     "title": "Importovať záložky",
-    "hint": "Export z Firefoxu (Library › Import and Backup › Export). Jeden priečinok sa stane stránkami projektu.",
+    "hint": "Export z Firefoxu (Knižnica › Import a záloha › Exportovať). Jeden priečinok sa stane stránkami projektu.",
     "file": "Súbor so záložkami",
     "empty": "Tento súbor neobsahuje žiadne záložky.",
     "folder": "Priečinok",

@@ -1,10 +1,14 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Označi kot prebrano",
+        "open": "Odpri"
     },
     "counts": {
+        "tasks_two": "{{count}} nalogi",
+        "projects_two": "{{count}} projekta",
+        "notes_two": "{{count}} opombi",
+        "goals_two": "{{count}} cilja",
         "notes_many": "{{count}} opomb",
         "tasks_many": "{{count}} nalog",
         "goals_many": "{{count}} ciljev",
@@ -34,10 +38,16 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_few": "Znova v čakalni vrsti: {{count}}",
+            "requeued_two": "Znova v čakalni vrsti: {{count}}",
+            "requeued_one": "Znova v čakalni vrsti: {{count}}",
+            "failed_few": "Neuspeli elementi: {{count}}",
+            "failed_two": "Neuspela elementa: {{count}}",
+            "failed_one": "Neuspel element: {{count}}",
       "retryError": "Ponovni poskus ni uspel",
       "requeued": "Znova v čakalni vrsti: {{count}}",
       "retry": "Poskusi znova",
-      "failed": "Neuspeli elementi: {{count}}",
+      "failed": "Neuspelih elementov: {{count}}",
       "title": "Zadnji klic UI ni uspel"
     },
     "number": {
@@ -70,7 +80,7 @@
     "entity": {
       "task": "Opravilo",
       "link": "Povezava",
-      "note": "Zapisek"
+      "note": "Opomba"
     },
     "history": {
       "undoRun": "Razveljavi zagon",
@@ -157,9 +167,9 @@
       "postponements": "Odlogi pred kartico",
       "closedLookback": "Pregledane zaključene naloge (dni)",
       "assistant": "AI pomočnik",
-      "assistantEnabled": "Predlogi UI za razvrstitev",
+      "assistantEnabled": "Predlogi AI v »Za razvrstitev«",
       "assistantLimit": "Pregledane naloge na dan",
-      "llmProvider": "Ponudnik UI: Profil › Pomočnik UI",
+      "llmProvider": "Ponudnik AI: Profil › AI pomočnik",
       "save": "Shrani",
       "saved": "Nastavitve shranjene",
       "saveError": "Nastavitev ni mogoče shraniti.",
@@ -213,7 +223,7 @@
     "action": {
       "habit": "Pretvori v navado",
       "project": "Pretvori v projekt",
-      "note": "Pretvori v zapisek",
+      "note": "Pretvori v opombo",
       "reclass": "Razvrsti",
       "delete": "Izbriši",
       "cancel": "Prekliči nalogo",
@@ -256,11 +266,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Te spremembe ni bilo mogoče shraniti.",
+    "hintLocked": "Enter: nova vrstica",
+    "hint": "Enter: nova vrstica · Tab / Shift+Tab: zamik · Alt+↑ / Alt+↓: premik",
+    "newLine": "Nova naloga",
+    "title": "Oris"
   },
   "focusStats": {
     "title": "Osredotočenost",
@@ -328,7 +338,7 @@
     "goal": "Cilj",
     "priority": "Prioriteta",
     "tags": "Oznake",
-    "goToToday": "Pojdi na danes",
+    "goToToday": "Pojdi na Danes",
     "loadMore": "Naloži več",
     "showAll": "Prikaži vse",
     "actions": "Dejanja",
@@ -431,8 +441,8 @@
     "templates": "Predloge",
     "today": "Danes",
     "projects": "Projekti",
-    "inbox": "Prejemni predal",
-    "notes": "Zapiski"
+    "inbox": "Prejeto",
+    "notes": "Opombe"
   },
   "settings": {
     "todayPageSettings": "Nastavitve strani Danes",
@@ -697,13 +707,13 @@
             "needsApproval": "Ta različica zahteva več kot prej. Znova ga vklopite, da odobrite njegova dovoljenja in dogodke.",
             "checkUpdate": "Preveri posodobitve",
             "updateAvailable": "Na voljo je posodobitev: {{version}}",
-            "upToDate": "Posodobljeno",
+            "upToDate": "Najnovejša različica",
             "updateError": "Naslova za posodobitve ni mogoče prebrati",
             "settings": "Nastavitve",
             "saveSettings": "Shrani nastavitve",
             "saved": "Nastavitve shranjene",
             "secretSaved": "Shranjeno",
-            "clearSecret": "Izbriši",
+            "clearSecret": "Počisti",
             "required": "obvezno",
             "reloaded": "Vtičniki znova naloženi",
             "loadError": "Vtičnikov ni mogoče naložiti",
@@ -724,10 +734,10 @@
             "page": {
                 "notFound": "Vtičnik ni najden ali je izklopljen"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Ta vtičnik se izvaja v strežniku in zahteva:",
+            "approveOutro": "Dovoljenja omejujejo, kaj Cadence da vtičniku; niso peskovnik. Odobrite samo kodo, ki ste jo prebrali.",
+            "approveTitle": "Odobrim dovoljenja?",
+            "approve": "Odobri in vklopi"
         },
     "showTaskDescription": "Prikaži opis pod naslovom",
     "sync": {
@@ -735,7 +745,7 @@
       "pending_two": "{{count}} spremembi, narejeni brez povezave v tem brskalniku, čakata na pošiljanje.",
       "field": {
         "review_at": "Datum pregleda",
-        "review_on": "Pregled na",
+        "review_on": "Datum pregleda",
         "in_view_at": "Prikazano",
         "week_of": "Teden",
         "estimated_minutes": "Trajanje",
@@ -743,10 +753,10 @@
         "icon": "Ikona",
         "color": "Barva",
         "tag_uids": "Oznake",
-        "next_task_uid": "Naslednje dejanje",
+        "next_task_uid": "Naslednji korak",
         "parent_task_uid": "Nadrejena naloga",
         "goal_uid": "Cilj",
-        "area_uid": "Območje",
+        "area_uid": "Področje",
         "parent_project_uid": "Nadrejeni projekt",
         "project_uid": "Projekt",
         "completed_at": "Zaključeno",
@@ -766,7 +776,7 @@
         "note": "Opomba",
         "tag": "Oznaka",
         "goal": "Cilj",
-        "area": "Območje",
+        "area": "Področje",
         "project": "Projekt",
         "task": "Naloga"
       },
@@ -792,7 +802,7 @@
     },
     "sectionFailed": "Tega razdelka ni bilo mogoče prikazati. Izberite drug razdelek ali ponovno naložite stran.",
     "taskFeed": {
-      "title": "Naroči se na svoje naloge",
+      "title": "Naročite se na svoje naloge",
       "description": "Zasebni naslov, ki prikaže odprte naloge z rokom v Google Koledarju, Apple Koledarju ali Outlooku. Vsak, ki ima naslov, lahko bere te naloge.",
       "address": "Naslov vira",
       "copy": "Kopiraj",
@@ -848,10 +858,10 @@
     "personalInfo": "Osebni podatki",
     "errorMessage": "Posodobitev profila ni uspela",
     "telegramIntegration": "Telegram integracija",
-    "telegramDescription": "Povežite svoj Cadence račun z Telegram botom, da dodate elemente v svoj nabiralnik preko Telegram sporočil.",
+    "telegramDescription": "Povežite svoj Cadence račun z Telegram botom, da dodate elemente v prejeto preko Telegram sporočil.",
     "telegramBotToken": "Žeton Telegram bota",
     "telegramTokenDescription": "Ustvarite bota z @BotFather na Telegramu in prilepite token tukaj.",
-    "telegramConnected": "Vaš Telegram račun je povezan! Pošljite sporočila svojemu botu, da dodate elemente v svoj Cadence nabiralnik.",
+    "telegramConnected": "Vaš Telegram račun je povezan! Pošljite sporočila svojemu botu, da dodate elemente v prejeto v Cadence.",
     "setupTelegram": "Nastavi Telegram",
     "setupTelegramLower": "nastavi telegram",
     "settingUp": "Nastavljanje...",
@@ -909,6 +919,7 @@
     "nextTaskSuggestion": "Predlog naslednje naloge",
     "enableNextTaskSuggestion": "Omogoči predloge naslednjih nalog",
     "tabs": {
+            "agents": "Agenti",
             "plugins": "Vtičniki",
       "classify": "Razvrstitev",
       "sync": "Sinhronizacija",
@@ -916,7 +927,7 @@
       "security": "Varnost",
       "productivity": "Produktivnost",
       "telegram": "Telegram",
-      "ai": "AI Funkcije",
+      "ai": "Funkcije AI",
       "billing": "Paket in obračun",
       "notifications": "Nastavitve obvestil",
       "oidc": "OIDC/SSO",
@@ -1133,7 +1144,7 @@
       "name": "Ime",
       "namePlaceholder": "Služba, Družina…",
       "url": "Skrivni naslov iCal",
-      "googleHelp": "V Google Koledarju: Nastavitve → tvoj koledar → Integracija koledarja → »Skrivni naslov v formatu iCal«. Apple Koledar in Outlook imata podobne povezave. Kdor ima ta naslov, lahko bere koledar, zato ga Cadence hrani šifriranega.",
+      "googleHelp": "V Google Koledarju: Nastavitve → vaš koledar → Integracija koledarja → »Skrivni naslov v formatu iCal«. Apple Koledar in Outlook imata podobne povezave. Kdor ima ta naslov, lahko bere koledar, zato ga Cadence hrani šifriranega.",
       "color": "Barva",
       "checking": "Preverjanje koledarja…",
       "add": "Poveži",
@@ -1146,6 +1157,8 @@
       "toggleError": "Koledarja ni bilo mogoče posodobiti"
     },
     "planning": {
+            "maxOption_few": "{{count}} opravila",
+            "maxOption_two": "{{count}} opravili",
       "title": "Načrtovanje",
       "description": "Kako »Kaj bi lahko naredil danes?« razvrsti tvoja opravila, ko načrtuješ dan. Povleci vrstice v želeni vrstni red; ista opravila se vedno pojavijo v enakem vrstnem redu.",
       "orderTitle": "Vrstni red (povleci za spremembo)",
@@ -1216,7 +1229,7 @@
       "hoursTo": "do",
       "taggedToday": "Označeno #danes",
       "taggedTodayDetail": "Odprte naloge, ki ste jih označili z #danes, ne glede na datume.",
-      "maxOption_one": "{{count}} opravilo"
+      "maxOption_one": "{{count}} naloga"
     },
     "aiApiKey": "API ključ",
     "aiApiKeyClear": "Počisti",
@@ -1299,13 +1312,13 @@
       "connector": {
         "error": "Okna za seznanitev ni bilo mogoče odpreti.",
         "notAllowed": "Pomočnike s Cadence lahko povezuje le skrbnik.",
-        "mfaRequired": "Pred povezavo pomočnika vklopi dvostopenjsko preverjanje (Varnost).",
-        "open": "Čakanje na konektor do {{time}}. Dodaj ali znova poveži konektor v claude.ai zdaj.",
+        "mfaRequired": "Pred povezavo pomočnika vklopite dvostopenjsko preverjanje (Varnost).",
+        "open": "Čakanje na konektor do {{time}}. Dodajte ali znova povežite konektor v claude.ai zdaj.",
         "authorize": "Odobri nov konektor",
         "description": "Dodaj Cadence kot prilagojen konektor v claude.ai na naslovu {{url}}. Cadence sprejme nov konektor le v 10 minutah po kliku na spodnji gumb.",
         "title": "Poveži claude.ai"
       },
-      "description": "Poveži Cadence s katero koli aplikacijo, ki podpira Model Context Protocol (MCP). Tako lahko AI pomočniki delajo s tvojimi opravili, projekti in zapiski, na lokalnem ali oddaljenem strežniku Cadence.",
+      "description": "Povežite Cadence s katero koli aplikacijo, ki podpira Model Context Protocol (MCP). Tako lahko AI pomočniki delajo z vašimi nalogami, projekti in opombami, na lokalnem ali oddaljenem strežniku Cadence.",
       "example1": "Pokaži moja opravila za danes",
       "example2": "Ustvari opravilo za pregled integracije MCP",
       "example3": "Katere projekte imam v teku?",
@@ -1327,7 +1340,7 @@
       },
       "step2": {
         "copy": "Kopiraj",
-        "description": "To nastavitev dodaj v svojega odjemalca MCP. YOUR_API_TOKEN_HERE zamenjaj z žetonom iz 1. koraka. Za povezavo s strežnikom Cadence prek HTTP se uporablja mcp-remote. Primer za Claude Desktop:",
+        "description": "To nastavitev dodajte v svojega odjemalca MCP. YOUR_API_TOKEN_HERE zamenjajte z žetonom iz 1. koraka. Za povezavo s strežnikom Cadence prek HTTP se uporablja mcp-remote. Primer za Claude Desktop:",
         "loading": "Nalaganje...",
         "locationTitle": "Mesto nastavitvene datoteke Claude Desktop:",
         "otherClients": "Drugi odjemalci MCP se morda nastavljajo drugače, preveri dokumentacijo svojega odjemalca.",
@@ -1338,7 +1351,7 @@
         "title": "3. Razpoložljive operacije"
       },
       "step4": {
-        "description": "Ko dodaš nastavitev, znova zaženi odjemalca MCP. Nato lahko s Cadence govoriš v naravnem jeziku:",
+        "description": "Ko dodate nastavitev, znova zaženite odjemalca MCP. Nato lahko s Cadence govorite v naravnem jeziku:",
         "examplesTitle": "Primeri pozivov:",
         "title": "4. Začni uporabljati"
       },
@@ -1400,7 +1413,7 @@
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
       "error": "Google ni odgovoril",
-      "title": "Google Calendar in Google Tasks",
+      "title": "Google Koledar in Google Tasks",
       "description": "Dvosmerna sinhronizacija: vaši koledarji Google so vidni tukaj in jih je mogoče urejati v Cadence, datirane naloge gredo v koledar »Cadence« v Googlu, vse naloge pa se sinhronizirajo z Google Tasks. Spremembe na eni ali drugi strani se prenesejo v nekaj minutah.",
       "notConfigured": "Na tem strežniku ni nastavljeno: skrbnik nastavi GOOGLE_CLIENT_ID in GOOGLE_CLIENT_SECRET.",
       "connect": "Poveži Google",
@@ -1420,7 +1433,7 @@
       "modeHidden": "Skrit",
       "modeRead": "Samo branje",
       "modeTwoWay": "Dvosmerno",
-      "taskCalendar": "Koledar za opravila s časom",
+      "taskCalendar": "Koledar za naloge s časom",
       "taskCalendarDefault": "Cadence (ustvarila sinhronizacija)",
       "log": "Dnevnik sinhronizacije",
       "logEmpty": "Še nič zabeleženo",
@@ -1440,7 +1453,7 @@
     "sidebarMoveDown": "Premakni {{name}} navzdol",
     "sidebarReset": "Ponastavi na privzeto",
     "sidebarMinimalTitle": "Minimalna stranska vrstica",
-    "sidebarMinimalHint": "Te nastavitve spreminjajo samo minimalno stransko vrstico. Dense ohranja svoj izgled.",
+    "sidebarMinimalHint": "Te nastavitve spreminjajo samo minimalno stransko vrstico. Gosto ohranja svoj izgled.",
     "taskRowDetails": "Podrobnosti vrstice naloge",
     "taskRowDetailsDescription": "Izberite, katere podrobnosti se prikažejo na desni strani minimalne vrstice naloge, in vrstni red.",
     "taskRowMoveUp": "Premakni gor",
@@ -1700,7 +1713,7 @@
     "rateLimitedGaveUp": "Preveč zahtevkov. Seja je še vedno aktivna; čez trenutek osvežite stran.",
     "serverBusyRetrying": "Strežnik je zaseden, ponovno poskušam…",
     "serverBusyRetry": "Poskusi znova",
-    "sign_up": "Prijavite se"
+    "sign_up": "Registrirajte se"
   },
   "dropdown": {
     "createNew": "Ustvari novo",
@@ -1738,8 +1751,8 @@
     "waiting": "Čaka"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Skrij prazna polja",
+    "addDetail": "Dodaj podrobnost",
     "noteCount_few": "{{count}} opombe",
     "noteCount_two": "{{count}} opombi",
     "memberCount_few": "{{count}} člani",
@@ -1882,7 +1895,7 @@
     "projectNameTooLong": "Ime projekta sme imeti največ {{max}} znakov"
   },
   "inbox": {
-    "ideaSheet": "Inbox item",
+    "ideaSheet": "Element v prejetem",
     "toSort": "Za razvrstitev ({{count}})",
     "unsorted": {
       "noDate": "Brez datuma",
@@ -1960,14 +1973,14 @@
       "done": "Prejeto je prazno. Ni ničesar za razvrščanje.",
       "doneLater": "{{count}} shranjenih za pozneje. Vse ostalo je razvrščeno.",
       "suggested": "Predlagano: {{kind}}",
-      "task": "Opravilo",
+      "task": "Naloga",
       "link": "Povezave",
       "project": "Projekt",
       "note": "Opomba",
       "later": "Pozneje",
       "delete": "Izbriši",
       "keptLater": "Shranjeno v prejetem za pozneje",
-      "madeTask": "Opravilo ustvarjeno",
+      "madeTask": "Naloga ustvarjena",
       "madeLink": "Dodano v Povezave",
       "madeProject": "Projekt ustvarjen",
       "madeNote": "Opomba ustvarjena",
@@ -2054,6 +2067,19 @@
     "createError": "Ustvarjanje opombe ni uspelo"
   },
   "task": {
+        "minutesAgo_few": "pred {{count}} minutami",
+        "minutesAgo_two": "pred {{count}} minutama",
+        "inMinutes_few": "čez {{count}} minute",
+        "inMinutes_two": "čez {{count}} minuti",
+        "inMinutes_one": "čez {{count}} minuto",
+        "inHours_few": "čez {{count}} ure",
+        "inHours_two": "čez {{count}} uri",
+        "inDays_few": "v {{count}} dneh",
+        "inDays_two": "v {{count}} dneh",
+        "hoursAgo_few": "pred {{count}} urami",
+        "hoursAgo_two": "pred {{count}} urama",
+        "daysAgo_few": "{{count}} dnevi nazaj",
+        "daysAgo_two": "{{count}} dneva nazaj",
     "duplicateError": "Naloge ni bilo mogoče podvojiti.",
     "duplicated": "Naloga podvojena",
     "duplicate": "Podvoji",
@@ -2094,7 +2120,7 @@
       "vague": "Poskusite začeti z glagolom, kot je \"Pokliči\", \"Napiši\", \"Načrtuj\" ali \"Raziskuj\""
     },
     "overdueAlert": "Ta naloga je bila v včerajšnjem načrtu.",
-    "overdueYesterday": "Načrtuj jo znova ali jo razdeli na manjše korake.",
+    "overdueYesterday": "Načrtujte jo znova ali jo razdelite na manjše korake.",
     "content": "Vsebina",
     "noNotes": "Še ni dodane vsebine",
     "subtasks": "Podnaloge",
@@ -2464,7 +2490,7 @@
     "toggleDropdownMenu": "Preklopi spustni meni"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Vse opombe",
     "emptyPreview": "Prazna opomba",
     "loading": "Nalaganje opomb...",
     "error": "Napaka pri nalaganju opomb",
@@ -2526,9 +2552,9 @@
     "outlineZoomIn": "Povečaj",
     "outlineExpand": "Razširi",
     "outlineCollapse": "Strni",
-    "outlineMakeTask": "Ustvari opravilo",
-    "outlineTaskCreated": "Opravilo ustvarjeno: {{name}}",
-    "outlineTaskFailed": "Opravila ni bilo mogoče ustvariti.",
+    "outlineMakeTask": "Ustvari nalogo",
+    "outlineTaskCreated": "Naloga ustvarjena: {{name}}",
+    "outlineTaskFailed": "Naloge ni bilo mogoče ustvariti.",
     "outlinePath": "Pot v orisu",
     "outlineAll": "Vse",
     "outlineBulletMenu": "Oznaka",
@@ -2544,7 +2570,7 @@
     },
     "edit": "Uredi",
     "delete": "Izbriši",
-    "saveBeforeFiles": "Najprej dajte zapiski naslov ali besedilo, nato dodajte datoteke.",
+    "saveBeforeFiles": "Najprej dajte opombi naslov ali besedilo, nato dodajte datoteke.",
     "fileUploadError": "Datoteke {{name}} ni bilo mogoče naložiti",
     "slashFile": "Slika ali datoteka",
     "slashFileHint": "Naloži in postavi sem",
@@ -2914,8 +2940,8 @@
     }
   },
   "telegram": {
-    "welcomeMessage": "🎉 Dobrodošli v Cadence!\n\nVaš osebni bot za upravljanje nalog je zdaj povezan in pripravljen pomagati!\n\n📝 Preprosto mi pošljite katero koli sporočilo in ga bom dodal v vaš Cadence predal kot element.\n\n✨ Ukazi:\n• /help - Prikaži informacije o pomoči\n• /start - Prikaži dobrodošlo sporočilo\n• Preprosto vpišite katero koli besedilo - Dodajte ga kot element v predalu\n\nOrganizirajmo se! 🚀",
-    "helpMessage": "📋 Cadence Bot Pomoč\n\nPošlji mi katero koli besedilno sporočilo in ga bom dodal v tvojo Cadence vhodno mapo kot element vhodne mape.\n\nUkazi:\n/start - Pozdravno sporočilo\n/help - Prikaži to pomoč\n\nSamo vpiši svoj element in poskrbel bom za ostalo!",
+    "welcomeMessage": "🎉 Dobrodošli v Cadence!\n\nVaš osebni bot za upravljanje nalog je zdaj povezan in pripravljen pomagati!\n\n📝 Preprosto mi pošljite katero koli sporočilo in ga bom dodal v vaše Prejeto v Cadence kot element.\n\n✨ Ukazi:\n• /help - Prikaži informacije o pomoči\n• /start - Prikaži dobrodošlo sporočilo\n• Preprosto vpišite katero koli besedilo - Dodajte ga kot element v Prejetem\n\nOrganizirajmo se! 🚀",
+    "helpMessage": "📋 Cadence Bot Pomoč\n\nPošljite mi katero koli besedilno sporočilo in ga bom dodal v vaše Prejeto v Cadence kot element.\n\nUkazi:\n/start - Pozdravno sporočilo\n/help - Prikaži to pomoč\n\nSamo vpišite svoj element in poskrbel bom za ostalo!",
     "commandProcessed": "Ukaz je bil uspešno obdelan",
     "messageProcessed": "Sporočilo je bilo uspešno obdelano",
     "failedToAddToInbox": "❌ Dodajanje v vhodno mapo ni uspelo: {{error}}"
@@ -3470,7 +3496,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galerija",
     "label": "Pogled",
     "list": "Seznam",
     "board": "Tabla",
@@ -3483,7 +3509,7 @@
     "tag": "Oznaka",
     "priority": "Prioriteta",
     "due": "Rok",
-    "status": "Stanje",
+    "status": "Status",
     "any": "Vse",
     "dueToday": "Danes",
     "dueNext7Days": "Naslednjih 7 dni",
@@ -3528,8 +3554,8 @@
     "noViewsMatch": "Ni najdenih pogledov",
     "blankSlateFilteredHint": "Poskusite z drugim iskanjem.",
     "blankSlateClearSearch": "Počisti iskanje",
-    "view": "Ogled",
-    "progressSummary": "Ogled napredka · opravljenih {{done}} od {{total}} nalog",
+    "view": "Pogled",
+    "progressSummary": "Pogled napredka · opravljenih {{done}} od {{total}} nalog",
     "sortTasks": "Razvrsti naloge",
     "filters": "filtri"
   },
@@ -3687,7 +3713,7 @@
       "taskReminders": "Opomniki za naloge"
     },
     "descriptions": {
-      "dueTasks": "Opravila brez ure z rokom v 24 urah",
+      "dueTasks": "Naloge brez ure z rokom v 24 urah",
       "overdueTasks": "Naloge, ki so prešle rok",
       "deferUntil": "Naloge, ki so zdaj na voljo za delo",
       "dueProjects": "Projekti, ki zapadejo v 24 urah",
@@ -3737,7 +3763,7 @@
         "taskUpdated": "Naloga spremenjena",
         "taskCompleted": "Naloga dokončana",
         "taskDeleted": "Naloga izbrisana",
-        "noteCreated": "Zapisek ustvarjen",
+        "noteCreated": "Opomba ustvarjena",
         "linkCreated": "Povezava shranjena",
         "dailySummary": "Dnevni povzetek",
         "test": "Preizkus",
@@ -3826,9 +3852,9 @@
     "markAsRead": "Označi kot prebrano",
     "delete": "Izbriši",
     "timedTasks": {
-      "title": "Opravila z uro",
-      "description": "Opravilo z uro zazvoni ob tej uri, ne dan prej. Telefon in računalnik si delita to nastavitev; kanali so enaki kot pri opomnikih opravil.",
-      "enable": "Opomni na opravila z uro",
+      "title": "Naloge z uro",
+      "description": "Naloga z uro zazvoni ob tej uri, ne dan prej. Telefon in računalnik si delita to nastavitev; kanali so enaki kot pri opomnikih nalog.",
+      "enable": "Opomni na naloge z uro",
       "lead": "Kdaj",
       "atTime": "Ob uri",
       "minutesBefore": "{{count}} min prej"
@@ -3850,7 +3876,7 @@
     "done": "Dokončano",
     "done_desc": "Končano in opravljeno",
     "cancelled": "Preklicano",
-    "cancelled_desc": "Ne bo dokončano",
+    "cancelled_desc": "odločeno, da ne bo nadaljevano",
     "idea": "Ideja",
     "paused": "Na čakanju",
     "paused_desc": "namenoma odložen, za nadaljevanje kasneje",
@@ -4141,7 +4167,7 @@
     "planChanged": "Vaš paket je bil zamenjan."
   },
   "subscription": {
-    "trialBanner_few": "Uporabljate brezplačni preizkus, še {{count}} dni",
+    "trialBanner_few": "Uporabljate brezplačni preizkus, še {{count}} dnevi",
     "trialBanner_two": "Uporabljate brezplačni preizkus, še {{count}} dneva",
     "title": "Naročnina",
     "chooseForCloud": "Izberite načrt za Cadence Cloud",
@@ -4241,7 +4267,7 @@
     "contact": "Stik",
     "editPerson": "Uredi osebo",
     "newPerson": "Nova oseba",
-    "noAssignedTasks": "Ni opravil, dodeljenih: {{name}}.",
+    "noAssignedTasks": "Ni nalog, dodeljenih: {{name}}.",
     "notFound": "Osebe ni mogoče najti.",
     "relationship": "Odnos",
     "phone": "Telefon",
@@ -4320,6 +4346,12 @@
     "invalidHint": "Morda je bila že uporabljena ali je potekla. Prosite osebo, ki vam jo je poslala, za novo."
   },
   "dailyPlan": {
+        "placeAllHint_few": "{{count}} naloge bodo zasedle naslednje proste termine po prednosti.",
+        "placeAllHint_two": "{{count}} nalogi bosta zasedli naslednja prosta termina po prednosti.",
+        "placeAllHint_one": "{{count}} naloga bo zasedla naslednji prosti termin.",
+        "placeAllDone_few": "Razporejene naloge: {{count}}.",
+        "placeAllDone_two": "Razporejeni nalogi: {{count}}.",
+        "placeAllDone_one": "Razporejena je {{count}} naloga.",
     "inProgress": "V teku",
     "overdue": "Zamujeno",
     "dueToday": "Rok danes",
@@ -4390,6 +4422,8 @@
     "beta": "Beta",
     "betaHint": "Stran Danes z načrtom je nova. Klasična stran je še vedno na dnu te strani.",
     "ai": {
+            "carried_few": "{{count}} opravila dodana za jutri",
+            "carried_two": "{{count}} opravili dodani za jutri",
       "suggested": "Predlog UI",
       "estimateGuess": "Ocena UI",
       "nothingToAdd": "Ničesar za dodati: ni prostega časa ali opravil za načrtovanje.",
@@ -4415,7 +4449,7 @@
       "regenerate": "Ustvari znova",
       "draftTitle": "Osnutek UI",
       "skippedCount": "Izpuščeno ({{count}})",
-      "carried_one": "{{count}} opravilo dodano za jutri"
+      "carried_one": "{{count}} naloga dodana za jutri"
     },
     "lateWarning": "Čas je minil, opravilo pa ni opravljeno",
     "movedOffPlan": "'{{name}}' ni več zapadla danes, zato je izstopila iz današnjega načrta.",
@@ -4606,7 +4640,7 @@
     "addTitle": "Dodaj v Prejeto, Nalogo, Opombo ali Projekt",
     "close": "Zapri",
     "button": "Zajem",
-    "syntaxHint": "#tag  +project  !1 do !3 prednost  jutri ob 15:00 za datum",
+    "syntaxHint": "#oznaka  +projekt  !1 do !3 prednost  jutri ob 15:00 za datum",
     "chainCount": "Dodano v {{project}}: {{total}}",
     "slash": {
       "priorityHigh": "Visoka",
@@ -4640,27 +4674,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Dodaj željo v {{group}}",
+      "addWish": "Dodaj željo…",
+      "createTaskFor": "Ustvari nalogo za “{{title}}”",
+      "markDone": "Označi “{{title}}” kot uresničeno",
+      "wishFulfilled": "Uresničena",
+      "wishDropped": "Opuščena",
+      "allDone": "Vse opravljeno",
+      "addStep": "Dodaj naslednji korak",
+      "nextStepInline": "Naslednji korak: {{name}}",
+      "nextStep": "Naslednji korak",
+      "completeStep": "Dokončaj “{{name}}”",
+      "nothingLinked": "Ni povezano",
+      "target": "Do {{date}}",
+      "error": "Shranjevanje ni uspelo, poskusite znova",
+      "wishDone": "“{{title}}” uresničena",
+      "stepDone": "“{{name}}” opravljena",
+      "doneWishes": "Uresničene",
+      "other": "Na pavzi, doseženi ali opuščeni",
+      "noMatch": "Ni zadetkov.",
+      "clearSearch": "Počisti iskanje",
+      "search": "Išči cilj ali željo"
     },
     "newGoal": "Nov cilj",
     "noGoalsYet": "Še ni ciljev.",
@@ -4704,7 +4738,7 @@
       "do": "Narediti",
       "add": "+ Dodaj",
       "none": "Ni na seznamu želja",
-      "linkedTasks": "Povezana opravila: {{count}}"
+      "linkedTasks": "Povezane naloge: {{count}}"
     },
     "keyResults": {
       "title": "Ključni rezultati",
@@ -4716,7 +4750,7 @@
     "sort": {
       "titleAsc": "Naslov od A do Z",
       "titleDesc": "Naslov od Z do A",
-      "status": "Stanje",
+      "status": "Status",
       "horizon": "Obzorje",
       "area": "Področje",
       "projects": "Največ projektov",
@@ -4991,11 +5025,32 @@
       "instructionsOther": "Vsak drug stolpec lahko ohranite v opombi naloge, tako da se iz preglednice nič ne izgubi."
     },
     "import": {
+            "undoneKept_few": "Uvoz je bil razveljavljen. Ohranjene naloge, spremenjene od takrat: {{count}}.",
+            "undoneKept_two": "Uvoz je bil razveljavljen. Ohranjeni nalogi, spremenjeni od takrat: {{count}}.",
+            "undoneKept_one": "Uvoz je bil razveljavljen. Ohranjena je {{count}} naloga, spremenjena od takrat.",
+            "rowCount_few": "Vrstice: {{count}}",
+            "rowCount_two": "Vrstici: {{count}}",
+            "rowCount_one": "{{count}} vrstica",
+            "doneTitle_few": "Uvožene naloge: {{count}}",
+            "doneTitle_two": "Uvoženi nalogi: {{count}}",
+            "doneTitle_one": "Uvožena je {{count}} naloga",
+            "countTags_few": "Nove oznake: {{count}}",
+            "countTags_two": "Novi oznaki: {{count}}",
+            "countTags_one": "{{count}} nova oznaka",
+            "countProjects_few": "Novi projekti: {{count}}",
+            "countProjects_two": "Nova projekta: {{count}}",
+            "countProjects_one": "{{count}} nov projekt",
+            "countCreate_few": "Nove naloge: {{count}}",
+            "countCreate_two": "Novi nalogi: {{count}}",
+            "countCreate_one": "{{count}} nova naloga",
+            "countAreas_few": "Nova področja: {{count}}",
+            "countAreas_two": "Novi področji: {{count}}",
+            "countAreas_one": "{{count}} novo področje",
       "fieldParent": "Nadrejena naloga",
       "fieldWbs": "WBS / številka v strukturi",
       "fieldEstimate": "Ocena",
       "encodingHint": "Črke so videti napačno? Preberite datoteko kot:",
-      "undoneKept": "Uvoz je bil razveljavljen. Naloge, spremenjene od takrat, so ohranjene: {{count}}.",
+      "undoneKept": "Uvoz je bil razveljavljen. Ohranjenih nalog, spremenjenih od takrat: {{count}}.",
       "actionCreate": "Nova",
       "actionUpdate": "Posodobi",
       "actionSkip": "Preskočena",
@@ -5236,23 +5291,25 @@
     "planned": "Načrtovano {{when}}"
   },
   "review": {
+        "calm_few": "{{count}} stvari za pregled, v vašem tempu",
+        "calm_two": "{{count}} stvari za pregled, v vašem tempu",
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 izberi · S preskoči · O odpri · Esc ustavi",
+      "nothing": "Trenutno ničesar ne zahteva pozornosti.",
+      "back": "Nazaj na pregled",
+      "again": "Še en krog",
+      "saved": "Vsaka odločitev je shranjena. Kar ste preskočili, se vrne naslednjič.",
+      "done": "Za zdaj je dovolj.",
+      "position": "{{position}} od {{total}}",
+      "stop": "Ustavi",
+      "start": "Začni",
+      "pitch": "Približno 5 minut, ena stvar naenkrat. Ustavite se, kadar želite.",
+      "title": "Hitri pregled"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Nalaganje…",
+    "calmClear": "Vse je posodobljeno",
+    "calm_other": "{{count}} stvari za ogled, v vašem tempu",
+    "calm_one": "{{count}} stvar za ogled, v vašem tempu",
     "cancelDate": "Prekliči",
     "choices": "Možnosti",
     "more": "Več…",
@@ -5367,7 +5424,10 @@
     "close": "Zapri"
   },
   "comments": {
-    "count": "Komentarji: {{count}}",
+        "count_few": "Komentarji: {{count}}",
+        "count_two": "Komentarja: {{count}}",
+        "count_one": "Komentar: {{count}}",
+    "count": "Komentarjev: {{count}}",
     "loading": "Nalagam komentarje...",
     "failedToLoad": "Komentarjev ni bilo mogoče naložiti",
     "empty": "Še ni komentarjev",
@@ -5693,7 +5753,7 @@
       "applyNewHint": "Prejšnji dnevi ohranijo cilj, s katerim so bili preživeti.",
       "applyTitle": "Uporabi spremembo",
       "color": "Barva",
-      "conditional": "Opominjaj le, dokler obdobje ni dosežano",
+      "conditional": "Opominjaj le, dokler obdobje ni doseženo",
       "create": "Ustvari navado",
       "description": "Opis",
       "editTitle": "Uredi navado",
@@ -5753,7 +5813,7 @@
       "entryValue": "Količina mora biti večja od nič.",
       "fix": "Preverite označena polja.",
       "frequency": "Seje morajo biti celo število, večje od nič.",
-      "intervalDays": "Interval je najmanj 2 dni.",
+      "intervalDays": "Interval je najmanj 2 dneva.",
       "load": "Navad ni bilo mogoče naložiti.",
       "loadOne": "Te navade ni bilo mogoče naložiti.",
       "minimum": "Najmanj mora biti večje od nič in največ enako idealu.",
@@ -5863,7 +5923,7 @@
     "schedule": {
       "everyDay": "Vsak dan",
       "everyN_one": "Vsak {{count}}. dan",
-      "everyN_two": "Vsaka {{count}}. dneva",
+      "everyN_two": "Vsak {{count}}. dan",
       "everyN_few": "Vsake {{count}} dni",
       "everyN_other": "Vsakih {{count}} dni",
       "flexible": "Kateri koli dan obdobja",
@@ -5898,7 +5958,7 @@
       "current_few": "{{count}} obdobja zapored",
       "current_other": "{{count}} obdobij zapored"
     },
-    "tabArchived": "Arhivirano",
+    "tabArchived": "Arhivirane",
     "tabHabits": "Navade",
     "tabs": "Seznami navad",
     "title": "Navade",
@@ -5946,7 +6006,7 @@
         "ACTIVITY": "Aktivnost",
         "MISSED": "Zamujeno",
         "NO_ACTIVITY": "Brez aktivnosti",
-        "PAUSED": "Zaustavljeno",
+        "PAUSED": "Na premoru",
         "UNPLANNED": "Ni načrtovano"
       }
     }
@@ -5963,12 +6023,12 @@
     "tasks": "Nalaganje nalog…",
     "subtasks": "Nalaganje podnalog..."
   },
-  "noteCreation": "Ustvari nov zapisek",
+  "noteCreation": "Ustvari novo opombo",
   "notFound": {
     "todayDescription": "Oglejte si današnje naloge",
     "projectsDescription": "Brskajte po projektih",
-    "inboxDescription": "Preverite elemente v prejemnem predalu",
-    "notesDescription": "Brskajte po zapiskih",
+    "inboxDescription": "Preverite elemente v prejetem",
+    "notesDescription": "Brskajte po opombah",
     "title": "Stran ni najdena",
     "description": "Stran, ki jo iščete, ne obstaja. Morda je bila premaknjena, izbrisana ali pa ste vnesli napačen URL.",
     "goBack": "Nazaj",
@@ -6018,9 +6078,9 @@
     "editTags": "Uredi oznake",
     "goToSource": "Pojdi na mesto shranjevanja",
     "open": "Odpri povezavo",
-    "note": "Vaš zapis",
+    "note": "Vaša opomba",
     "notePlaceholder": "Zakaj ste jo shranili…",
-    "addNote": "Dodaj zapis",
+    "addNote": "Dodaj opombo",
     "saveError": "Povezave ni bilo mogoče shraniti.",
     "loadError": "Povezav ni bilo mogoče naložiti.",
     "empty": "Povezave, ki jih obdržite iz prejetih, se prikažejo tukaj, s tem, kar stran pove o sebi.",
@@ -6210,14 +6270,14 @@
     "group": {
       "none": "Brez",
       "project": "Projekt",
-      "priority": "Prednost",
+      "priority": "Prioriteta",
       "tag": "Oznaka"
     },
     "sortBy": "Uredi po",
     "sort": {
       "plan": "Vrstni red načrta",
       "time": "Čas",
-      "priority": "Prednost",
+      "priority": "Prioriteta",
       "name": "Ime",
       "project": "Projekt"
     },
@@ -6280,8 +6340,8 @@
     "load": "{{planned}} / {{available}}",
     "done": "Opravljeno ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInboxFailed": "Dodajanje ni uspelo. Poskusi znova.",
-    "addEmptyName": "Vnesi ime opravila",
+    "addToInboxFailed": "Dodajanje ni uspelo. Poskusite znova.",
+    "addEmptyName": "Vnesite ime opravila",
     "addTaskIn": "Dodaj opravilo v {{name}}",
     "previous": "Prejšnji dan",
     "next": "Naslednji dan",
@@ -6307,12 +6367,12 @@
     "dismiss": "V redu"
   },
   "contentLinks": {
-    "note": "Zapisek",
+    "note": "Opomba",
     "task": "Naloga",
     "backlinks": "Povratne povezave",
     "untitled": "Brez naslova",
-    "createNote": "Ustvari zapisek »{{title}}«",
-    "createTask": "Ustvari opravilo »{{title}}«"
+    "createNote": "Ustvari opombo »{{title}}«",
+    "createTask": "Ustvari nalogo »{{title}}«"
   },
   "editorToolbar": {
     "label": "Oblikovanje",
@@ -6326,7 +6386,7 @@
     "quote": "Citat",
     "code": "Koda",
     "link": "Povezava",
-    "noteLink": "Povezava do zapiska",
+    "noteLink": "Povezava do opombe",
     "mention": "Omeni osebo",
     "table": "Tabela",
     "insertTable": "Vstavi tabelo",

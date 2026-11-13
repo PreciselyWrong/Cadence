@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Markera som läst",
+        "open": "Öppna"
     },
     "counts": {
         "notes_other": "{{count}} anteckningar",
@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Det gick inte att spara ändringen",
+    "hintLocked": "Enter: ny rad",
+    "hint": "Enter: ny rad · Tab / Skift+Tab: indrag · Alt+↑ / Alt+↓: flytta",
+    "newLine": "Ny uppgift",
+    "title": "Disposition"
   },
   "focusStats": {
     "title": "Fokus",
@@ -716,10 +716,10 @@
             "page": {
                 "notFound": "Pluginet hittades inte eller är avstängt"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Det här pluginet körs i servern och begär:",
+            "approveOutro": "Behörigheterna begränsar vad Cadence ger pluginet; de är ingen sandlåda. Godkänn bara kod du har läst.",
+            "approveTitle": "Godkänn behörigheter?",
+            "approve": "Godkänn och aktivera"
         },
     "showTaskDescription": "Visa beskrivningen under rubriken",
     "sync": {
@@ -899,6 +899,7 @@
     "nextTaskSuggestion": "Förslag på nästa uppgift",
     "enableNextTaskSuggestion": "Aktivera förslag på nästa uppgift",
     "tabs": {
+            "agents": "Agenter",
             "plugins": "Tillägg",
       "classify": "Sortering",
       "sync": "Synk",
@@ -1302,7 +1303,7 @@
       "example4": "Lägg till en påminnelse i inkorgen om att kolla e-post",
       "example5": "Sök efter uppgifter som rör dokumentation",
       "remote": {
-        "cloud": "Åtkomst till fjärr-tududi (molnservrar)",
+        "cloud": "Åtkomst till fjärr-Cadence (molnservrar)",
         "docker": "Användning från Docker-installationer",
         "local": "Åtkomst till lokal Cadence (localhost)",
         "title": "Fjärråtkomst aktiverad",
@@ -1726,8 +1727,8 @@
     "waiting": "Väntar"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Dölj tomma fält",
+    "addDetail": "Lägg till en detalj",
     "name": "Projektnamn",
     "projectImage": "Projektbild",
     "uploadImageHint": "Ladda upp en bild för ditt projekt (max 10 MB)",
@@ -2441,7 +2442,7 @@
     "toggleDropdownMenu": "Växla rullgardinsmeny"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Alla anteckningar",
     "emptyPreview": "Tom anteckning",
     "loading": "Laddar anteckningar...",
     "error": "Fel vid inläsning av anteckningar",
@@ -3270,7 +3271,7 @@
       "activity": "Aktivitet",
       "created": "Skapade något",
       "nothingCreated": "Inget skapat än",
-      "plan": "Plan",
+      "plan": "Abonnemang",
       "trial": "I provperiod",
       "trialEnded": "Provperioden slutade",
       "paid": "Betalande",
@@ -3371,7 +3372,7 @@
       "totalCredits": "Använda krediter denna månad (alla användare)",
       "searchPlaceholder": "Sök på e-post",
       "user": "Användare",
-      "plan": "Plan",
+      "plan": "Abonnemang",
       "used": "Använt",
       "limit": "Gräns",
       "remaining": "Återstår",
@@ -3435,7 +3436,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galleri",
     "label": "Vy",
     "list": "Lista",
     "board": "Tavla",
@@ -3493,8 +3494,8 @@
     "noViewsMatch": "Inga vyer hittades",
     "blankSlateFilteredHint": "Prova en annan sökning.",
     "blankSlateClearSearch": "Rensa sökning",
-    "view": "Visa",
-    "progressSummary": "Visa framsteg · {{done}} av {{total}} uppgifter klara",
+    "view": "Vy",
+    "progressSummary": "Vyns framsteg · {{done}} av {{total}} uppgifter klara",
     "sortTasks": "Sortera uppgifter",
     "filters": "filter"
   },
@@ -3813,7 +3814,7 @@
     "done": "Slutförd",
     "done_desc": "Avslutad och klar",
     "cancelled": "Avbruten",
-    "cancelled_desc": "Kommer inte att slutföras",
+    "cancelled_desc": "Beslutat att inte fortsätta",
     "idea": "Idé",
     "paused": "Pausad",
     "paused_desc": "pausat med avsikt, att återuppta senare",
@@ -4279,6 +4280,7 @@
     "invalidHint": "Den kan redan ha använts eller gått ut. Be personen som skickade den om en ny."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} uppgift tar nästa lediga lucka.",
     "inProgress": "Pågår",
     "overdue": "Försenade",
     "dueToday": "Förfaller idag",
@@ -4459,7 +4461,7 @@
     "guidedLeftovers": "Kvarlämnat från igår",
     "guidedNoLeftovers": "Inget kvar från igår.",
     "guidedCarry": "Flytta till idag",
-    "guidedDrop": "Ta bort",
+    "guidedDrop": "Släpp",
     "guidedPick": "Välj vad du ska göra idag",
     "guidedNoPicks": "Inget mer att välja.",
     "guidedAdd": "Lägg till",
@@ -4596,27 +4598,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Lägg till en önskan till {{group}}",
+      "addWish": "Lägg till en önskan…",
+      "createTaskFor": "Skapa en uppgift för “{{title}}”",
+      "markDone": "Markera “{{title}}” som uppfylld",
+      "wishFulfilled": "Uppfylld",
+      "wishDropped": "Avbruten",
+      "allDone": "Allt är klart",
+      "addStep": "Lägg till ett nästa steg",
+      "nextStepInline": "Nästa steg: {{name}}",
+      "nextStep": "Nästa steg",
+      "completeStep": "Slutför “{{name}}”",
+      "nothingLinked": "Inget kopplat",
+      "target": "Senast {{date}}",
+      "error": "Kunde inte spara, försök igen",
+      "wishDone": "“{{title}}” uppfylld",
+      "stepDone": "“{{name}}” klar",
+      "doneWishes": "Uppfyllda",
+      "other": "Pausade, uppnådda eller avbrutna",
+      "noMatch": "Inget matchar.",
+      "clearSearch": "Rensa sökningen",
+      "search": "Sök efter ett mål eller en önskan"
     },
     "newGoal": "Nytt mål",
     "noGoalsYet": "Inga mål än.",
@@ -4757,7 +4759,7 @@
   "publicNote": {
     "linkedNoteNotShared": "Den här anteckningen är inte delad offentligt.",
     "toggleTheme": "Växla mörkt läge",
-    "openApp": "Open Cadence",
+    "openApp": "Öppna Cadence",
     "updated": "Senast uppdaterad {{date}}",
     "unavailableTitle": "Den här anteckningen är inte tillgänglig",
     "unavailableBody": "Länken kan vara fel, eller ägaren slutade dela anteckningen. Be om en ny länk.",
@@ -4947,6 +4949,7 @@
       "instructionsOther": "Alla andra kolumner kan sparas i uppgiftens anteckning, så inget i bladet går förlorat."
     },
     "import": {
+            "undoneKept_one": "Importen ångrades. {{count}} uppgift som ändrats sedan dess behölls.",
       "fieldParent": "Överordnad uppgift",
       "fieldWbs": "WBS / disposition-nummer",
       "fieldEstimate": "Uppskattning",
@@ -5197,22 +5200,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 välj · S hoppa över · O öppna · Esc stoppa",
+      "nothing": "Inget behöver din uppmärksamhet just nu.",
+      "back": "Tillbaka till genomgången",
+      "again": "Ett varv till",
+      "saved": "Varje beslut sparas. Det du hoppade över kommer tillbaka nästa gång.",
+      "done": "Det var allt för den här gången.",
+      "position": "{{position}} av {{total}}",
+      "stop": "Stoppa",
+      "start": "Starta",
+      "pitch": "Ungefär 5 minuter, en sak i taget. Sluta när du vill.",
+      "title": "Snabbgenomgång"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Laddar…",
+    "calmClear": "Allt är uppdaterat",
+    "calm_other": "{{count}} saker att titta på, i din egen takt",
+    "calm_one": "{{count}} sak att titta på, i din egen takt",
     "cancelDate": "Avbryt",
     "choices": "Val",
     "more": "Mer…",
@@ -5545,7 +5548,7 @@
     "green": "Grön",
     "amber": "Bärnsten",
     "coral": "Korall",
-    "rose": "Ros"
+    "rose": "Rosa"
   },
   "todoMd": {
     "repoDiscard": "Kasta",
@@ -5607,7 +5610,7 @@
       "urgeLine": "Längtan, intensitet {{n}}"
     },
     "alcohol": {
-      "count_one": "{{count}} drink",
+      "count_one": "{{count}} glas",
       "count_other": "{{count}} drinkar",
       "drinks": "Standardglas",
       "editFor": "Redigera {{date}}",
@@ -5947,9 +5950,9 @@
     "count_other": "{{count}} länkar",
     "search": "Sök i länkar",
     "filter": {
-      "tag": "Etikett",
+      "tag": "Tagg",
       "archived": "Arkiverade",
-      "allTags": "Alla etiketter",
+      "allTags": "Alla taggar",
       "allProjects": "Alla projekt"
     },
     "status": {
@@ -5962,7 +5965,7 @@
     },
     "lastCommit": "uppdaterad {{date}}",
     "fetching": "Läser sidan…",
-    "editTags": "Redigera etiketter",
+    "editTags": "Redigera taggar",
     "goToSource": "Gå till där den sparades",
     "open": "Öppna länken",
     "note": "Din anteckning",
@@ -5983,7 +5986,7 @@
     "field": {
       "title": "Titel",
       "url": "Adress",
-      "tags": "Etiketter"
+      "tags": "Taggar"
     },
     "editTitle": "Redigera länken",
     "deleteTitle": "Ta bort den här länken?",
@@ -6147,7 +6150,7 @@
     "loadFailed": "Kunde inte läsa in dagarna.",
     "inboxHint": "Dra till en dag för att planera den",
     "inboxEmpty": "Inkorgen är tom.",
-    "view": "Visa",
+    "view": "Visning",
     "layout": "Layout",
     "groupBy": "Gruppera efter",
     "group": {
