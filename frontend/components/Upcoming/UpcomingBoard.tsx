@@ -116,8 +116,15 @@ import {
     leaveDayWrites,
     plannedThisWeek,
     STRIP_KEYS,
+    toPlan,
     weekDates,
 } from './horizons';
+import ToPlanBox, {
+    TO_PLAN_CARD_DATE,
+    loadToPlanCollapsed,
+    saveToPlanCollapsed,
+    toPlanCount,
+} from './ToPlanBox';
 import { applyFilters } from './filters';
 import {
     PlanFilters,
@@ -172,7 +179,7 @@ const OVERDUE = 'overdue';
 const CARD = '[data-testid="upcoming-card"]';
 const COLUMN =
     '[data-testid="upcoming-column"], [data-testid="horizon-column"]';
-const CONTAINER = `${COLUMN}, [data-testid="upcoming-overdue"], [data-testid="inbox-column"]`;
+const CONTAINER = `${COLUMN}, [data-testid="upcoming-overdue"], [data-testid="inbox-column"], [data-testid="to-plan-box"]`;
 
 // Pointer first, rectangles when the pointer is between targets (keyboard).
 const collision: CollisionDetection = (args) => {
@@ -430,6 +437,15 @@ const UpcomingBoard: React.FC = () => {
     // them unsorted (a plan line is no moment), the inbox column does not.
     // Read from the days after they load, hence state.
     const [plannedSoon, setPlannedSoon] = useState('');
+    // How many tasks « À planifier » holds, read after the days load: an
+    // empty inbox column stays open while the box under it has some.
+    const [toPlanTotal, setToPlanTotal] = useState(0);
+    const [toPlanCollapsed, setToPlanCollapsedState] =
+        useState(loadToPlanCollapsed);
+    const setToPlanCollapsed = (collapsed: boolean) => {
+        setToPlanCollapsedState(collapsed);
+        saveToPlanCollapsed(collapsed);
+    };
     const inboxTasks = useMemo(() => {
         const planned = new Set(plannedSoon.split(','));
         return (unsorted.tasks ?? []).filter(
@@ -443,7 +459,7 @@ const UpcomingBoard: React.FC = () => {
     const inboxIsCollapsed =
         !inboxLoading &&
         unsorted.tasks !== null &&
-        inboxCollapsed(openInboxCount, inboxChoice);
+        inboxCollapsed(openInboxCount + toPlanTotal, inboxChoice);
     const inboxWidth = inboxIsCollapsed ? INBOX_COLLAPSED_WIDTH : INBOX_WIDTH;
     const minBoard = minBoardWidth(inboxWidth);
     const placement = narrow
@@ -516,6 +532,33 @@ const UpcomingBoard: React.FC = () => {
     );
     const bucketsRef = useRef(buckets);
     bucketsRef.current = buckets;
+    // « À planifier » under the inbox, in the Days layout only.
+    const toPlanBox = useMemo(
+        () =>
+            horizon.tasks && !horizonsMode
+                ? toPlan(
+                      filterTasks(horizon.tasks, options.filters),
+                      today,
+                      firstDayOfWeek,
+                      shownDays
+                  )
+                : null,
+        [
+            horizon.tasks,
+            horizonsMode,
+            today,
+            firstDayOfWeek,
+            options.filters,
+            shownDays,
+        ]
+    );
+    const toPlanTasksRef = useRef<Task[]>([]);
+    toPlanTasksRef.current = toPlanBox
+        ? [...toPlanBox.replan, ...toPlanBox.week, ...toPlanBox.month]
+        : [];
+    useEffect(() => {
+        setToPlanTotal(toPlanCount(toPlanBox));
+    }, [toPlanBox]);
     const overdue = horizonsMode ? [] : (shownDays[today]?.overdue ?? []);
 
     useInboxPolling();
@@ -1128,6 +1171,12 @@ const UpcomingBoard: React.FC = () => {
 
     const nameOf = (data: DragData): string => {
         if (data.kind === 'inbox') return data.title;
+        if (data.date === TO_PLAN_CARD_DATE) {
+            return (
+                toPlanTasksRef.current.find((task) => task.uid === data.uid)
+                    ?.name ?? ''
+            );
+        }
         if (data.date === INBOX_CARD_DATE) {
             return (
                 inboxTasksRef.current.find((task) => task.uid === data.uid)
@@ -1183,6 +1232,9 @@ const UpcomingBoard: React.FC = () => {
      * back.
      */
     const sendToHorizon = async (card: CardData, to: HorizonKey) => {
+        if (card.date === TO_PLAN_CARD_DATE) {
+            return commitToPlanCard(card.uid, to);
+        }
         const current = bucketsRef.current;
         const from = current ? horizonOf(current, card.uid) : null;
         const patch = horizonPatch(from, to);
@@ -1229,6 +1281,51 @@ const UpcomingBoard: React.FC = () => {
         );
     };
 
+    /**
+     * A card of « À planifier » committed to a horizon, or (null) its week
+     * and month taken off. Undo writes back the week and month it held,
+     * passed ones included, so a task to replan returns there.
+     */
+    const commitToPlanCard = async (uid: string, to: HorizonKey | null) => {
+        const task = toPlanTasksRef.current.find((item) => item.uid === uid);
+        const box = toPlanBox;
+        if (!task || !box) return;
+        const from: HorizonKey | null = box.week.includes(task)
+            ? 'week'
+            : box.month.includes(task)
+              ? 'this_month'
+              : null;
+        const patch = to
+            ? horizonPatch(from, to)
+            : { week_of: null, month_of: null };
+        if (!patch) return;
+        const held = task as Task & { month_of?: string | null };
+        const before = {
+            week_of: held.week_of ? String(held.week_of).slice(0, 10) : null,
+            month_of: held.month_of ? String(held.month_of).slice(0, 10) : null,
+            ...(to === 'someday' ? { later: false } : {}),
+        };
+        try {
+            await updateTask(uid, patch as Partial<Task>);
+            await reloadHorizons();
+        } catch (err) {
+            fail(err);
+            return;
+        }
+        showUndoToast(
+            to
+                ? t('upcoming.sentToHorizon', 'Sent to {{name}}', {
+                      name: horizonTitles[to],
+                  })
+                : t('upcoming.commitmentRemoved', 'Commitment removed'),
+            () => {
+                updateTask(uid, before as Partial<Task>)
+                    .then(() => reloadHorizons())
+                    .catch(fail);
+            }
+        );
+    };
+
     // A strip target clicked: Horizons, scrolled to that column.
     const [revealHorizon, setRevealHorizon] = useState<HorizonKey | null>(null);
     const openHorizon = (key: HorizonKey) => {
@@ -1256,23 +1353,44 @@ const UpcomingBoard: React.FC = () => {
         if (!cardMenu) return;
         document.querySelector<HTMLElement>('[data-card-menu-anchor]')?.click();
     }, [cardMenu]);
-    const cardMenuEntries: MenuEntry[] = cardMenu
-        ? [
-              { heading: t('upcoming.stripLabel', 'Send to a horizon') },
-              ...STRIP_KEYS.map((key) => ({
-                  key,
-                  label: horizonTitles[key],
-                  hint:
-                      key === 'next_week'
-                          ? '⇧W'
-                          : key === 'this_month'
-                            ? '⇧M'
-                            : undefined,
-                  testId: `card-send-${key}`,
-                  onSelect: () => void sendToHorizon(cardMenu.card, key),
-              })),
-          ]
-        : [];
+    const cardMenuEntries: MenuEntry[] = !cardMenu
+        ? []
+        : cardMenu.card.date === TO_PLAN_CARD_DATE
+          ? [
+                { heading: t('upcoming.commitTo', 'Commit to') },
+                ...HORIZON_KEYS.map((key) => ({
+                    key,
+                    label: horizonTitles[key],
+                    testId: `card-commit-${key}`,
+                    onSelect: () =>
+                        void commitToPlanCard(cardMenu.card.uid, key),
+                })),
+                {
+                    key: 'uncommit',
+                    label: t(
+                        'upcoming.removeCommitment',
+                        'Remove the commitment'
+                    ),
+                    testId: 'card-commit-none',
+                    onSelect: () =>
+                        void commitToPlanCard(cardMenu.card.uid, null),
+                },
+            ]
+          : [
+                { heading: t('upcoming.stripLabel', 'Send to a horizon') },
+                ...STRIP_KEYS.map((key) => ({
+                    key,
+                    label: horizonTitles[key],
+                    hint:
+                        key === 'next_week'
+                            ? '⇧W'
+                            : key === 'this_month'
+                              ? '⇧M'
+                              : undefined,
+                    testId: `card-send-${key}`,
+                    onSelect: () => void sendToHorizon(cardMenu.card, key),
+                })),
+            ];
 
     // Where a drop target is, in words, for screen readers.
     const placeOf = (over: OverData | undefined): string | null => {
@@ -1286,6 +1404,7 @@ const UpcomingBoard: React.FC = () => {
         if (over.date === OVERDUE) return t('upcoming.overdue', 'Overdue');
         // An inbox card takes no drop: the card is over no day.
         if (over.date === INBOX_CARD_DATE) return null;
+        if (over.date === TO_PLAN_CARD_DATE) return null;
         const key = horizonFromCardDate(over.date);
         return key ? horizonTitles[key] : longDay(over.date);
     };
@@ -1373,7 +1492,9 @@ const UpcomingBoard: React.FC = () => {
         // Nor does the inbox: a plan line is taken back by undo, not a drop.
         if (
             over.kind !== 'grid' &&
-            (over.date === OVERDUE || over.date === INBOX_CARD_DATE)
+            (over.date === OVERDUE ||
+                over.date === INBOX_CARD_DATE ||
+                over.date === TO_PLAN_CARD_DATE)
         )
             return { writes: [] };
         const fromHorizon = horizonFromCardDate(data.date) !== null;
@@ -1452,7 +1573,9 @@ const UpcomingBoard: React.FC = () => {
     const sourceDays = (data: Exclude<DragData, InboxDragData>): string[] =>
         data.date === OVERDUE
             ? [today]
-            : horizonFromCardDate(data.date) || data.date === INBOX_CARD_DATE
+            : horizonFromCardDate(data.date) ||
+                data.date === INBOX_CARD_DATE ||
+                data.date === TO_PLAN_CARD_DATE
               ? []
               : [data.date];
 
@@ -1460,7 +1583,9 @@ const UpcomingBoard: React.FC = () => {
     const inboxTaskOf = (data: Exclude<DragData, InboxDragData>): Task[] =>
         data.date === INBOX_CARD_DATE
             ? inboxTasksRef.current.filter((task) => task.uid === data.uid)
-            : [];
+            : data.date === TO_PLAN_CARD_DATE
+              ? toPlanTasksRef.current.filter((task) => task.uid === data.uid)
+              : [];
 
     const onDragEnd = (event: DragEndEvent) => {
         endDrag();
@@ -2061,23 +2186,45 @@ const UpcomingBoard: React.FC = () => {
                             </section>
                         )}
                         <div className="flex min-h-0 min-w-0 flex-1 gap-3">
-                            <div className="flex min-h-0 shrink-0 p-1">
-                                <InboxColumn
-                                    items={inboxItems}
-                                    tasks={inboxTasks}
-                                    today={today}
-                                    loading={
-                                        inboxLoading || unsorted.tasks === null
-                                    }
-                                    openTaskUid={openTaskUid}
-                                    onAdd={addToInbox}
-                                    onOpenTask={(line) => openLine(line)}
-                                    onToggleTask={toggle}
-                                    onToggleSubtask={toggleSubtask}
-                                    collapsed={inboxIsCollapsed}
-                                    onCollapsedChange={setInboxCollapsed}
-                                    onIdeaToTask={() => void reloadUnsorted()}
-                                />
+                            <div className="flex min-h-0 shrink-0 flex-col gap-2 p-1">
+                                <div className="flex min-h-0 flex-1">
+                                    <InboxColumn
+                                        items={inboxItems}
+                                        tasks={inboxTasks}
+                                        today={today}
+                                        loading={
+                                            inboxLoading ||
+                                            unsorted.tasks === null
+                                        }
+                                        openTaskUid={openTaskUid}
+                                        onAdd={addToInbox}
+                                        onOpenTask={(line) => openLine(line)}
+                                        onToggleTask={toggle}
+                                        onToggleSubtask={toggleSubtask}
+                                        collapsed={inboxIsCollapsed}
+                                        onCollapsedChange={setInboxCollapsed}
+                                        onIdeaToTask={() =>
+                                            void reloadUnsorted()
+                                        }
+                                    />
+                                </div>
+                                {toPlanBox && (
+                                    <ToPlanBox
+                                        box={toPlanBox}
+                                        today={today}
+                                        openTaskUid={openTaskUid}
+                                        collapsed={toPlanCollapsed}
+                                        onCollapsedChange={setToPlanCollapsed}
+                                        thin={inboxIsCollapsed}
+                                        onExpand={() => {
+                                            setInboxCollapsed(false);
+                                            setToPlanCollapsed(false);
+                                        }}
+                                        onOpenTask={(line) => openLine(line)}
+                                        onToggleTask={toggle}
+                                        onToggleSubtask={toggleSubtask}
+                                    />
+                                )}
                             </div>
                             <div
                                 ref={boardRef}
