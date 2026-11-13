@@ -254,6 +254,16 @@ class TaskViewsTest {
     }
 
     @Test
+    fun `une routine n'est jamais suggérée, elle vient le jour de son échéance`() {
+        val week = LocalDate.of(2026, 10, 26)
+        val tasks = listOf(
+            TaskItem("sport-demain", "a", weekOf = week, dueDay = today.plusDays(1), recurrenceType = "weekly"),
+            TaskItem("semaine", "b", weekOf = week),
+        )
+        assertEquals(listOf("semaine"), TaskViews.suggestions(tasks, today, now, week).map { it.uid })
+    }
+
+    @Test
     fun `en retard seulement pour une échéance passée d'une tâche ouverte qui n'est pas mise de côté`() {
         val past = LocalDate.of(2026, 10, 28)
         assertTrue(TaskViews.isOverdue(task("retard", due = past), today))

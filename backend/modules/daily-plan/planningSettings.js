@@ -124,7 +124,13 @@ const projectStatusOf = (task) =>
 // Whether an open task may be suggested under these settings. Only the
 // suggested group uses this: overdue, due-today and started tasks always
 // show.
+// A routine (recurring task) already shows on the day it is due; suggesting
+// its next occurrence early would plan tomorrow's session today.
+const isRecurring = (task) =>
+    Boolean(task.recurrence_type) && task.recurrence_type !== 'none';
+
 function isSuggestible(task, settings, now = Date.now()) {
+    if (isRecurring(task)) return false;
     const deferUntil = timeOf(task.defer_until);
     if (deferUntil !== null && deferUntil > now) return false;
 
@@ -149,6 +155,7 @@ function isSuggestible(task, settings, now = Date.now()) {
 }
 
 module.exports = {
+    isRecurring,
     PROJECT_STATUSES,
     TIE_BREAKS,
     STALE_AFTER_DAYS,

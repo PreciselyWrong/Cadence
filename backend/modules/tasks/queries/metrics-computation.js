@@ -19,7 +19,10 @@ const {
 } = require('./metrics-queries');
 const { compareCandidates } = require('../../daily-plan/ranking');
 const { comparePinned } = require('../core/comparators');
-const { isSuggestible } = require('../../daily-plan/planningSettings');
+const {
+    isSuggestible,
+    isRecurring,
+} = require('../../daily-plan/planningSettings');
 
 const { keepDesignated } = require('../../projects/nextAction');
 
@@ -162,6 +165,7 @@ async function computeSuggestedTasks(
 
     const DUE_DATE_HORIZON_MS = 3 * 24 * 60 * 60 * 1000;
     const filteredTasks = combinedTasks.filter((task) => {
+        if (isRecurring(task)) return false;
         if (task.defer_until) {
             const deferUntil = new Date(task.defer_until).getTime();
             if (!Number.isNaN(deferUntil) && deferUntil > now) return false;

@@ -148,8 +148,9 @@ If none of these are true, no suggestions are shown.
    - A project with a next action picked by the user ([Projects](06-projects.md)) suggests only that task; the others of that project stay out of Suggested
    - Inactive (done/cancelled) projects are excluded entirely
 
-6. **No subtasks or recurring templates**
+6. **No subtasks and no recurring tasks**
    - Only parent tasks you can directly act on are shown
+   - A recurring task (a routine such as sport) is never suggested: it shows in Due Today or Overdue on its own day, so tomorrow's session is never offered today (`isRecurring` in `backend/modules/daily-plan/planningSettings.js`)
 
 ### Scoring
 

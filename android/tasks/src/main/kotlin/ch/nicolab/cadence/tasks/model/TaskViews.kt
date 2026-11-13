@@ -33,7 +33,7 @@ object TaskViews {
     /**
      * Suggestions du jour : la prochaine action choisie de chaque projet, puis les tâches décidées pour la
      * semaine [weekStart], puis celles en vue (la plus récemment mise en vue d'abord), hors « Plus tard » et
-     * hors ce qu'Aujourd'hui montre déjà. Un projet qui a choisi sa prochaine action ([nextByProject],
+     * hors ce qu'Aujourd'hui montre déjà, et jamais une routine (tâche récurrente) : elle vient le jour de son échéance, comme le web. Un projet qui a choisi sa prochaine action ([nextByProject],
      * projet vers tâche) ne propose que celle-là.
      */
     fun suggestions(
@@ -48,7 +48,7 @@ object TaskViews {
             tasks.any { it.uid == uid && it.projectUid == project && !it.isClosed }
         }
         val open = tasks.filter { task ->
-            visibleNow(task, now) && !task.someday && task.uid !in shown &&
+            visibleNow(task, now) && !task.someday && !task.isRecurring && task.uid !in shown &&
                 (task.projectUid == null || task.projectUid !in picks || picks[task.projectUid] == task.uid)
         }
         val designated = open.filter { it.projectUid != null && picks[it.projectUid] == it.uid }.sortedBy { it.name.lowercase() }

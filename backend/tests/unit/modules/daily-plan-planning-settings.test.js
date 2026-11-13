@@ -128,6 +128,24 @@ describe('isSuggestible', () => {
         ...attrs,
     });
 
+    it('never suggests a recurring task: a routine shows when it is due', () => {
+        const tomorrow = new Date(now + DAY);
+        expect(
+            isSuggestible(
+                task({ recurrence_type: 'weekly', due_date: tomorrow }),
+                settings(),
+                now
+            )
+        ).toBe(false);
+        expect(
+            isSuggestible(
+                task({ recurrence_type: 'none', due_date: tomorrow }),
+                settings(),
+                now
+            )
+        ).toBe(true);
+    });
+
     it('follows the project status, the no-project switch and exclusions', () => {
         expect(isSuggestible(task(), settings(), now)).toBe(true);
         expect(
