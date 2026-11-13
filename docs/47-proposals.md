@@ -21,7 +21,7 @@ Kind `weekend` (« Week-end ») : voir `docs/48-weekend.md`.
 
 ### `week` (« Planifier ma semaine »)
 
-`POST /api/proposals { "kind": "week", "start"?, "end"? }`. The period defaults to today and six days after; it is at most 14 days, `end` not before `start`.
+`POST /api/proposals { "kind": "week", "start"?, "end"? }`. The period defaults to today and six days after (tomorrow and six days after once the user's day hours are over, Profil › Planning, so nothing lands on an evening already gone); it is at most 14 days, `end` not before `start`.
 
 Tasks sent: open tasks that are overdue, due in the period, planned in the period, decided for this week (`week_of` = this week's first day) or in view. Never recurring tasks, subtasks, closed or habit tasks. Overdue first, then by due date, at most 40. Calendar events come from the calendars shown on the agenda (`calendar-feeds`, the same reading as the agenda). Load is the sum of the planned durations of a day.
 

@@ -38,8 +38,10 @@ const QUESTION_ANSWERS_MAX = 3;
 
 // Period from the request: a start (default today) and an end (default six
 // days later), at most 14 days.
-function resolvePeriod({ today, start, end }) {
-    const from = start ?? today;
+// `dayOver`: the user's working day has ended, so the default period starts
+// tomorrow and nothing is planned on an evening already gone.
+function resolvePeriod({ today, start, end, dayOver = false }) {
+    const from = start ?? (dayOver ? addDays(today, 1) : today);
     if (!isDay(from)) {
         throw new ValidationError('start must be YYYY-MM-DD');
     }

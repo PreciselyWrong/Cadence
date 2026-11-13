@@ -237,7 +237,10 @@ function linkOf(task) {
 }
 
 async function computeWeek(user, { start, end }, timezone, today) {
-    const period = resolvePeriod({ today, start, end });
+    const hours = await dailyPlan.getDayHours(user);
+    const now = moment.tz(timezone);
+    const dayOver = now.hours() * 60 + now.minutes() >= hours.end;
+    const period = resolvePeriod({ today, start, end, dayOver });
     const weekStart = reviewService.weekStartOf(
         today,
         user.first_day_of_week ?? 1

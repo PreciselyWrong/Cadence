@@ -50,6 +50,19 @@ describe('resolvePeriod', () => {
         });
     });
 
+    it('starts tomorrow once the working day is over', () => {
+        expect(resolvePeriod({ today: TODAY, dayOver: true })).toEqual({
+            start: '2026-11-17',
+            end: '2026-11-23',
+        });
+    });
+
+    it('keeps an explicit start even late in the day', () => {
+        expect(
+            resolvePeriod({ today: TODAY, start: TODAY, dayOver: true }).start
+        ).toBe(TODAY);
+    });
+
     it('accepts a period of up to 14 days', () => {
         expect(
             resolvePeriod({
