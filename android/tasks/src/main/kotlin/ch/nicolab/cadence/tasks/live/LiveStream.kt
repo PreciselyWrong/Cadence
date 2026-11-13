@@ -70,6 +70,9 @@ data class LiveNotification(
     val kind: String? = null,
     /** Niveau de la notification : `info`, `success`, `warning` ou `error`. */
     val level: String? = null,
+    /** Proposition d'agent (`data.proposal_uid`, `docs/47-proposals.md`) : son uid et son statut. */
+    val proposalUid: String? = null,
+    val proposalStatus: String? = null,
 ) {
     /** Routée vers le téléphone : le serveur envoie aussi au flux ce qui ne va qu'au bureau. */
     val forMobile: Boolean get() = MOBILE in sources
@@ -97,6 +100,8 @@ data class LiveNotification(
                 agentLabel = data?.text("agentLabel"),
                 kind = data?.text("kind"),
                 level = body.text("level"),
+                proposalUid = data?.text("proposal_uid"),
+                proposalStatus = data?.text("status"),
             )
         }
 

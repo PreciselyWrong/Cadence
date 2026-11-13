@@ -87,6 +87,8 @@ fun TasksScreen(
     onOpenSearch: () -> Unit = {},
     onOpenSettings: () -> Unit,
     routineStrip: @Composable () -> Unit = {},
+    showPlan: Boolean = false,
+    onPlanShown: () -> Unit = {},
 ) {
     val viewModel: TasksViewModel = viewModel()
     val snackbar = rememberAppSnackbarHostState()
@@ -114,6 +116,13 @@ fun TasksScreen(
         if (openTaskUid != null) {
             selectedTaskUid = openTaskUid
             onTaskOpened()
+        }
+    }
+    // Une notification de proposition échouée ouvre Planifier.
+    LaunchedEffect(showPlan) {
+        if (showPlan) {
+            tab = TasksTab.UPCOMING
+            onPlanShown()
         }
     }
     LaunchedEffect(showProjectUid) {

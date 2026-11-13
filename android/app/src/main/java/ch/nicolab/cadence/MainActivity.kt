@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.tasks.autoclassify.EXTRA_OPEN_TRIAGE
 import ch.nicolab.cadence.tasks.links.ProvideCadenceUriHandler
+import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.widget.EXTRA_OPEN_TASK_UID
 
 class MainActivity : ComponentActivity() {
@@ -27,6 +28,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // Un tap sur « Ta semaine est prête » ou un échec : la feuille ou l'onglet, une seule fois par lancement.
+        if (savedInstanceState == null) ProposalRepository.of(this).route(intent)
         setContent {
             CadenceTheme {
                 ProvideCadenceUriHandler {

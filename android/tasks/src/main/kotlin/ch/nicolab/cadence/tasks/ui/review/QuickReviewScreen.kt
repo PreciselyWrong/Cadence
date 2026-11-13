@@ -8,6 +8,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,7 +42,10 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.proposals.ReviewJudgement
+import ch.nicolab.cadence.tasks.proposals.ProposalKind
 import ch.nicolab.cadence.tasks.review.QuickEntry
+import ch.nicolab.cadence.tasks.ui.proposals.ProposalButton
 import ch.nicolab.cadence.tasks.review.ReviewBacklog
 import ch.nicolab.cadence.tasks.review.ReviewStep
 import ch.nicolab.cadence.tasks.ui.LinkPreviewCard
@@ -67,6 +72,8 @@ internal fun QuickReviewCard(modifier: Modifier = Modifier, onStart: () -> Unit)
             }
             PrimaryAction(stringResource(R.string.review_quick_start), onClick = onStart)
         }
+        // « Préparer ma revue » : l'agent juge la file ; prête, un tap ouvre la revue avec ses conseils.
+        ProposalButton(ProposalKind.REVIEW, modifier = Modifier.padding(top = Space.sm), onReady = onStart)
     }
 }
 
@@ -82,6 +89,7 @@ internal fun QuickReviewScreen(
     viewModel: ReviewViewModel,
     previews: LinkPreviews,
     choices: ReviewChoices,
+    judgements: Map<String, ReviewJudgement>,
     onOpenTask: (String) -> Unit,
 ) {
     val palette = cadence
@@ -116,7 +124,16 @@ internal fun QuickReviewScreen(
                 label = "quickReview",
             ) { shown ->
                 when (shown) {
-                    is QuickEntry -> QuickCard(shown, rows, previews, choices, onSkip = viewModel::skipQuick, onOpenTask = onOpenTask)
+                    is QuickEntry -> QuickCard(
+                        shown,
+                        rows,
+                        previews,
+                        choices,
+                        judgement = (shown as? QuickEntry.Task)?.let { judgements[it.item.uid] },
+                        onJudge = { choice -> (shown as? QuickEntry.Task)?.let { viewModel.judge(it, choice) } },
+                        onSkip = viewModel::skipQuick,
+                        onOpenTask = onOpenTask,
+                    )
                     LoadingTarget -> Message(stringResource(R.string.review_quick_loading), null)
                     else -> Finished(total = view.total, onAgain = viewModel::againQuick, onClose = viewModel::stopQuick)
                 }
@@ -131,6 +148,8 @@ private fun QuickCard(
     rows: RowContext,
     previews: LinkPreviews,
     choices: ReviewChoices,
+    judgement: ReviewJudgement?,
+    onJudge: (String) -> Unit,
     onSkip: () -> Unit,
     onOpenTask: (String) -> Unit,
 ) {
@@ -141,6 +160,15 @@ private fun QuickCard(
         is QuickEntry.Project -> choices.project(entry.item)
         is QuickEntry.Task -> if (entry.step == ReviewStep.LATER) choices.quickLater(entry.item) else choices.task(entry.item, entry.step)
     }.filterNot { it.label == open }
+    // Le choix de l'agent est en tête, plein, et sa raison s'affiche ; un tap le valide tout de suite.
+    val agentLabel = judgement?.let { agentChoiceLabel(it.choice) }?.let { stringResource(it) }
+    val shownChoices = if (judgement != null && agentLabel != null) {
+        val icon = entryChoices.firstOrNull { it.label == agentLabel }?.icon ?: Icons.Outlined.Check
+        listOf(Choice(icon, agentLabel, primary = true) { onJudge(judgement.choice) }) +
+            entryChoices.filterNot { it.label == agentLabel }
+    } else {
+        entryChoices
+    }
     val kind = when (entry) {
         is QuickEntry.Inbox -> stepLabel(ReviewStep.UNDECIDED)
         is QuickEntry.Project -> stepLabel(ReviewStep.PROJECTS)
@@ -183,6 +211,10 @@ private fun QuickCard(
                         rows.local[item.uid]?.note?.takeIf { it.isNotBlank() && it.trim() != link?.text }?.let {
                             Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant, maxLines = NOTE_LINES)
                         }
+                        judgement?.reason?.takeIf { it.isNotBlank() }?.let {
+                            Meta(stringResource(R.string.proposal_advice))
+                            Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
+                        }
                         taskMeta(item, entry.step).takeIf { it.isNotEmpty() }?.let { Meta(it) }
                         TextButton(onClick = { onOpenTask(item.uid) }) { Text(open) }
                     }
@@ -193,12 +225,24 @@ private fun QuickCard(
             Modifier.fillMaxWidth().padding(horizontal = Space.gutter, vertical = Space.md),
             verticalArrangement = Arrangement.spacedBy(Space.sm),
         ) {
-            ChoicePills(entryChoices, enabled = true, tall = true)
+            ChoicePills(shownChoices, enabled = true, tall = true)
             TextButton(onClick = onSkip, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(R.string.review_triage_skip))
             }
         }
     }
+}
+
+/** Libellé d'un choix de l'agent dans la revue (`docs/47-proposals.md`), null pour une valeur inconnue. */
+private fun agentChoiceLabel(choice: String): Int? = when (choice) {
+    "do_today" -> R.string.proposal_choice_do_today
+    "later" -> R.string.proposal_choice_later
+    "drop" -> R.string.proposal_choice_drop
+    "keep" -> R.string.proposal_choice_keep
+    "this_week" -> R.string.proposal_choice_this_week
+    "in_view" -> R.string.proposal_choice_in_view
+    "done" -> R.string.proposal_choice_done
+    else -> null
 }
 
 @Composable

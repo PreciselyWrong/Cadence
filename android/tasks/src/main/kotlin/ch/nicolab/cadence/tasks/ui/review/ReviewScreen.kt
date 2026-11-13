@@ -147,6 +147,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
     val busy by viewModel.busy.collectAsStateWithLifecycle()
     val routineMissing by viewModel.routineMissing.collectAsStateWithLifecycle()
     val quick by viewModel.quick.collectAsStateWithLifecycle()
+    val judgements by viewModel.judgements.collectAsStateWithLifecycle()
     val local by viewModel.local.collectAsStateWithLifecycle()
     val links by tasksViewModel.links.collectAsStateWithLifecycle()
     val tags by tasksViewModel.tags.collectAsStateWithLifecycle()
@@ -381,6 +382,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
             viewModel = viewModel,
             previews = tasksViewModel.linkPreviews,
             choices = choices,
+            judgements = judgements,
             onOpenTask = { openTaskUid = it },
         )
     }

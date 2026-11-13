@@ -25,6 +25,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.data.currentServerSession
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
+import ch.nicolab.cadence.tasks.proposals.ProposalNotifications
 import ch.nicolab.cadence.tasks.plugins.PluginsStore
 import ch.nicolab.cadence.tasks.plugins.pluginsClient
 import ch.nicolab.cadence.tasks.reminder.TaskReminderScheduler
@@ -342,6 +343,11 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
     suspend fun show(notification: LiveNotification) {
         val next = SeenUids.add(store.seen(), notification.uid) ?: return
         store.saveSeen(next)
+        val proposal = notification.proposalUid
+        if (proposal != null) {
+            ProposalNotifications.post(context, notification, proposal)
+            return
+        }
         post(notification)
     }
 

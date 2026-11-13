@@ -1,3 +1,10 @@
+## [1.30.0] — 13 novembre 2026
+
+- Planifier et Aujourd'hui : « Planifier ma semaine » prépare la semaine en fond ; « En préparation… » se met à jour seul, puis « Ta semaine est prête ».
+- Une notification « Ta semaine est prête » (ou « n'a pas pu être préparée », qui ouvre Planifier) ; un tap ouvre la feuille de la semaine : résumé, questions de l'agent, changements par jour à cocher, « Appliquer », « Répondre », « Plus tard », « Ignorer ».
+- Bilan › Revue rapide : « Préparer ma revue » ; une fois prête, chaque élément montre le conseil de l'agent et sa raison, un tap sur le conseil le valide.
+- Hors ligne, ces actions disent « Hors ligne » : rien n'est gardé sur le téléphone.
+
 ## [1.29.0] — 13 novembre 2026
 
 - Aujourd'hui : « Échues N » est un repli au-dessus de la liste du jour, fermé par défaut comme les sections du bas, et absent quand rien n'est échu.

@@ -96,6 +96,9 @@ import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
 import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
+import ch.nicolab.cadence.tasks.proposals.ProposalRepository
+import ch.nicolab.cadence.tasks.proposals.ProposalTab
+import ch.nicolab.cadence.tasks.ui.proposals.ProposalSheet
 import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.ui.icon.HabitIconPicker
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
@@ -177,6 +180,26 @@ internal fun CadenceAppScreen(
         if (openTriage) {
             triageOpen = true
             settingsOpen = false
+        }
+    }
+    // Propositions d'agent : une notification ouvre la feuille de la semaine (sur tout onglet), Planifier ou la revue.
+    val proposalContext = androidx.compose.ui.platform.LocalContext.current
+    val proposals = androidx.compose.runtime.remember(proposalContext) { ProposalRepository.of(proposalContext) }
+    val proposalSheet by proposals.sheet.collectAsStateWithLifecycle()
+    val proposalTab by proposals.tab.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(proposalTab) {
+        when (proposalTab) {
+            ProposalTab.PLAN -> {
+                tab = Tab.TASKS
+                settingsOpen = false
+            }
+            ProposalTab.REVIEW -> {
+                tab = Tab.BILAN
+                settingsOpen = false
+                reviewOpen = true
+                proposals.consumeTab()
+            }
+            null -> Unit
         }
     }
     val backdrop = rememberBackdrop()
@@ -284,6 +307,8 @@ internal fun CadenceAppScreen(
                         Tab.TASKS -> TasksScreen(
                             openTaskUid = opening.pending,
                             onTaskOpened = { opening = opening.consumed() },
+                            showPlan = proposalTab == ProposalTab.PLAN,
+                            onPlanShown = proposals::consumeTab,
                             showProjectUid = projectToShow,
                             onProjectShown = { projectToShow = null },
                             onOpenSearch = { searchOpen = true },
@@ -368,6 +393,7 @@ internal fun CadenceAppScreen(
             )
             if (goalsOpen) GoalsScreen(onBack = { goalsOpen = false })
             if (triageOpen) TriageRoute(onBack = { triageOpen = false })
+            proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
             NavigationBarScrim()
             if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen && !triageOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]

@@ -57,6 +57,8 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
+import ch.nicolab.cadence.tasks.proposals.ProposalKind
+import ch.nicolab.cadence.tasks.ui.proposals.ProposalButton
 
 /**
  * Aujourd'hui : entrée vers Ma journée, charge de la journée, carte du soir (terminer), puis le retard,
@@ -212,6 +214,7 @@ internal fun TodayTab(
     }
 
     LazyColumn(modifier = modifier, state = listState, contentPadding = tasksListPadding()) {
+        item(key = "proposal-week") { ProposalButton(ProposalKind.WEEK, Modifier.padding(bottom = Space.sm)) }
         if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }

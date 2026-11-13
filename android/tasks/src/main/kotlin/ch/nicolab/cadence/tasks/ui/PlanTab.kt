@@ -62,6 +62,8 @@ import ch.nicolab.cadence.tasks.ui.triage.TriageScreen
 import ch.nicolab.cadence.tasks.ui.triage.TriageViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import ch.nicolab.cadence.tasks.proposals.ProposalKind
+import ch.nicolab.cadence.tasks.ui.proposals.ProposalButton
 
 /** Ce que la feuille « Planifier » déplace : une carte d'un jour, une tâche sans jour, ou une idée de l'Inbox. */
 private sealed interface PlanTarget {
@@ -180,6 +182,7 @@ internal fun PlanTab(
                 modifier = Modifier.padding(bottom = Space.xs),
             )
         }
+        item(key = "proposal-week") { ProposalButton(ProposalKind.WEEK, Modifier.padding(bottom = Space.sm)) }
         if (!horizons) {
             if (triageCount > 0) {
                 item(key = "triage") { TriageEntry(triageCount, onOpen = { triageOpen = true }) }

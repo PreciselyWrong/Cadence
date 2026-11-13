@@ -28,6 +28,11 @@ import ch.nicolab.cadence.tasks.review.ReviewStep
 import ch.nicolab.cadence.tasks.review.ReviewSummary
 import ch.nicolab.cadence.tasks.review.ReviewBacklog
 import ch.nicolab.cadence.tasks.review.ReviewTask
+import ch.nicolab.cadence.tasks.proposals.ProposalKind
+import ch.nicolab.cadence.tasks.proposals.ProposalRepository
+import ch.nicolab.cadence.tasks.proposals.Proposals
+import ch.nicolab.cadence.tasks.proposals.ReviewJudgement
+import java.io.IOException
 import ch.nicolab.cadence.tasks.ui.UndoNotice
 import ch.nicolab.cadence.tasks.review.ReviewWeek
 import java.time.DayOfWeek
@@ -74,6 +79,7 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
     private val tasks = TasksGraph.repository(application)
     private val review = TasksGraph.review(application)
     private val connection = TasksGraph.connection(application)
+    private val proposals = ProposalRepository.of(application)
     private val prefs = application.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     private val _step = MutableStateFlow(ReviewStep.restore(prefs.getString(KEY_STEP, null)))
@@ -180,7 +186,7 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
                 loading = it.loading,
                 view = QuickReview.view(it.entries, it.skipped) { entry ->
                     when (entry) {
-                        is QuickEntry.Task -> ReviewLists.pending(listOf(entry.item), local).isNotEmpty()
+                        is QuickEntry.Task -> entry.key !in gone && ReviewLists.pending(listOf(entry.item), local).isNotEmpty()
                         else -> entry.key !in gone
                     }
                 },
@@ -221,6 +227,20 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
         _quick.value = null
         quickGone.value = emptySet()
         load()
+    }
+
+    /** Jugements de l'agent sur la revue prête (`docs/47-proposals.md`) : la revue rapide les montre, un tap les valide. */
+    val judgements: StateFlow<Map<String, ReviewJudgement>> = proposals.judgements
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
+
+    /** Valide le conseil de l'agent sur cette entrée d'une seule décision ; la revue rapide passe à la suivante. */
+    fun judge(entry: QuickEntry.Task, choice: String) = run(entry.item.uid) {
+        val review = proposals.latest.value[ProposalKind.REVIEW] ?: return@run
+        val decision = ReviewJudgement(entry.item.uid, choice, reason = "")
+        proposals.apply(review.uid, Proposals.reviewApplyBody(listOf(decision))).fold(
+            onSuccess = { gone(entry.key) },
+            onFailure = { _messages.tryEmit(getString(if (it is IOException) R.string.proposal_offline else R.string.proposal_error)) },
+        )
     }
 
     private fun gone(key: String) {

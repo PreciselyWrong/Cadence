@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="proposal_week_button">Planifier ma semaine</string>
+    <string name="proposal_week_ready">Ta semaine est prête</string>
+    <string name="proposal_week_ready_text">Ouvre pour voir ce qui est proposé.</string>
+    <string name="proposal_week_failed">Ta semaine n\'a pas pu être préparée</string>
+    <string name="proposal_review_button">Préparer ma revue</string>
+    <string name="proposal_review_ready">Ta revue est prête</string>
+    <string name="proposal_review_ready_text">Ouvre la revue rapide pour valider les conseils.</string>
+    <string name="proposal_review_failed">Ta revue n\'a pas pu être préparée</string>
+    <string name="proposal_failed_text">Réessaie ensuite.</string>
+    <string name="proposal_preparing">En préparation…</string>
+    <string name="proposal_loading">Chargement…</string>
+    <string name="proposal_offline">Hors ligne</string>
+    <string name="proposal_error">Ta demande n\'a pas abouti.</string>
+    <string name="proposal_title">Ta semaine</string>
+    <string name="proposal_closed">Cette proposition n\'est plus disponible.</string>
+    <string name="proposal_nothing">Rien à changer cette semaine.</string>
+    <string name="proposal_unknown_task">Tâche</string>
+    <string name="proposal_group_week">Cette semaine</string>
+    <string name="proposal_op_plan_day">Planifier ce jour</string>
+    <string name="proposal_op_this_week">Cette semaine</string>
+    <string name="proposal_op_later">Plus tard</string>
+    <string name="proposal_op_due">Échéance le %1$s</string>
+    <string name="proposal_op_drop">Abandonner</string>
+    <string name="proposal_apply">Appliquer (%1$d)</string>
+    <string name="proposal_reply">Répondre</string>
+    <string name="proposal_reply_hint">Ta réponse à l\'agent</string>
+    <string name="proposal_send">Envoyer</string>
+    <string name="proposal_later">Plus tard</string>
+    <string name="proposal_ignore">Ignorer</string>
+    <plurals name="proposal_applied">
+        <item quantity="one">%1$d changement appliqué</item>
+        <item quantity="other">%1$d changements appliqués</item>
+    </plurals>
+    <string name="proposal_applied_partial">%1$d appliqué(s), %2$d non appliqué(s)</string>
+    <string name="proposal_advice">Conseil</string>
+    <string name="proposal_choice_do_today">Aujourd\'hui</string>
+    <string name="proposal_choice_later">Plus tard</string>
+    <string name="proposal_choice_drop">Abandonner</string>
+    <string name="proposal_choice_keep">Garder</string>
+    <string name="proposal_choice_this_week">Cette semaine</string>
+    <string name="proposal_choice_in_view">En vue</string>
+    <string name="proposal_choice_done">Terminer</string>
+</resources>
