@@ -31,6 +31,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
@@ -85,21 +94,24 @@ fun CadenceNavigation(
     } else {
         Modifier.background(tint)
     }
-    // L'île garde sa place au centre pour le + ; le + est posé par-dessus, hors de l'île, et dépasse de son bord haut.
+    // L'île se soulève en bosse autour du + : un seul cadre (verre, liseré, ombre) qui l'englobe.
+    val shape = if (action != null) IslandWithBump else Radius.Pill
+    val top = if (action != null) BumpRise else 0.dp
     Box(
         modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(start = Space.gutter, end = Space.gutter, bottom = Space.sm),
-        contentAlignment = Alignment.BottomCenter,
+            .padding(start = Space.gutter, end = Space.gutter, bottom = Space.sm)
+            .height(Size.navBar + top)
+            .shadow(Elevation.floating, shape)
+            .clip(shape)
+            .then(surface)
+            .border(Size.hairline, palette.glassBorder, shape),
     ) {
         Row(
             Modifier
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .shadow(Elevation.floating, Radius.Pill)
-                .clip(Radius.Pill)
-                .then(surface)
-                .border(Size.hairline, palette.glassBorder, Radius.Pill)
                 .height(Size.navBar)
                 .padding(horizontal = Space.xs),
             verticalAlignment = Alignment.CenterVertically,
@@ -107,22 +119,54 @@ fun CadenceNavigation(
         ) {
             val middle = (destinations.size + 1) / 2
             destinations.forEachIndexed { index, destination ->
-                if (index == middle && action != null) Spacer(Modifier.width(AddSize))
+                if (index == middle && action != null) Spacer(Modifier.width(BumpRadius * 2))
                 NavItem(destination, index == selected, Modifier.weight(1f)) { onSelect(index) }
             }
         }
-        action?.let { NavAddButton(it, Modifier.padding(bottom = Size.navBar - AddSize + AddRaise)) }
+        action?.let { NavAddButton(it, Modifier.align(Alignment.TopCenter).padding(top = BumpRadius - AddSize / 2)) }
     }
 }
 
-/** Le + mesure 60 dp et dépasse de 20 dp au-dessus de l'île. */
-private val AddSize = 60.dp
-private val AddRaise = 20.dp
+/** Le + : 50 dp, au centre d'une bosse de 32 dp de rayon qui dépasse de 16 dp au-dessus de l'île. */
+private val AddSize = 50.dp
+private val BumpRadius = 32.dp
+private val BumpRise = 16.dp
 
 /**
- * Le + de l'onglet ouvert, au centre de la barre : une bulle de verre teintée à l'accent (le flou de la barre passe au
- * travers), un reflet en haut et un liseré clair ; elle s'enfonce un peu sous le doigt.
+ * Forme de l'île avec sa bosse : la capsule (sous [BumpRise]) unie à un disque de rayon [BumpRadius] centré en haut ;
+ * les deux raccords sont adoucis par un congé, pour que le cadre décroche en douceur au lieu de faire un angle.
  */
+private val IslandWithBump = object : Shape {
+    override fun createOutline(size: androidx.compose.ui.geometry.Size, layoutDirection: LayoutDirection, density: Density): Outline {
+        with(density) {
+            val rise = BumpRise.toPx()
+            val r = BumpRadius.toPx()
+            val fillet = 10.dp.toPx()
+            val cx = size.width / 2
+            val pillH = size.height - rise
+            val pill = Path().apply {
+                addRoundRect(RoundRect(0f, rise, size.width, size.height, CornerRadius(pillH / 2, pillH / 2)))
+            }
+            // Bosse : un disque plus deux congés (rectangles creusés de cercles) aux points où il rejoint le bord haut.
+            val dy = rise - r
+            val dx = kotlin.math.sqrt((r + fillet) * (r + fillet) - (dy - fillet) * (dy - fillet))
+            val bump = Path().apply {
+                addOval(Rect(cx - r, 0f, cx + r, 2 * r))
+                // Le raccord commence au point de contact du congé et du disque : au-dessus, il dépasserait en crochet.
+                val contactY = (rise - fillet) + (r - (rise - fillet)) * fillet / (r + fillet)
+                addRect(Rect(cx - dx, contactY, cx + dx, rise + 1f))
+            }
+            val holes = Path().apply {
+                addOval(Rect(cx - dx - fillet, rise - 2 * fillet, cx - dx + fillet, rise))
+                addOval(Rect(cx + dx - fillet, rise - 2 * fillet, cx + dx + fillet, rise))
+            }
+            val carved = Path().apply { op(bump, holes, PathOperation.Difference) }
+            val outline = Path().apply { op(pill, carved, PathOperation.Union) }
+            return Outline.Generic(outline)
+        }
+    }
+}
+
 @Composable
 private fun NavAddButton(action: NavAction, modifier: Modifier = Modifier) {
     val palette = cadence
@@ -133,31 +177,13 @@ private fun NavAddButton(action: NavAction, modifier: Modifier = Modifier) {
     Box(
         modifier
             .size(AddSize)
-            .shadow(Elevation.floating, CircleShape)
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale
             }
             .clip(CircleShape)
-            .background(
-                androidx.compose.ui.graphics.Brush.verticalGradient(
-                    listOf(
-                        palette.primary.copy(alpha = Glass.AddAlpha * 0.85f),
-                        palette.primary.copy(alpha = Glass.AddAlpha),
-                    ),
-                ),
-            )
-            .drawBehind {
-                // Reflet doux en haut à gauche, relatif à la taille de la bulle.
-                drawCircle(
-                    androidx.compose.ui.graphics.Brush.radialGradient(
-                        listOf(Color.White.copy(alpha = 0.30f), Color.Transparent),
-                        center = androidx.compose.ui.geometry.Offset(size.width * 0.35f, size.height * 0.22f),
-                        radius = size.minDimension * 0.55f,
-                    ),
-                )
-            }
-            .border(Size.hairline, Color.White.copy(alpha = 0.35f), CircleShape)
+            // Couleur pleine de l'accent : le bouton reste le seul aplat coloré de la barre.
+            .background(palette.primary)
             .clickable(interactionSource = interactionSource, indication = null, role = Role.Button, onClickLabel = action.label) {
                 haptic.tap()
                 action.onClick()
@@ -195,7 +221,7 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
     // le libellé passe à l'accent.
     Column(
         modifier
-            .height(Size.navItem + Space.sm)
+            .height(Size.navItem + Space.xs)
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale

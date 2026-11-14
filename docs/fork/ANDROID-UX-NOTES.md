@@ -487,3 +487,4 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **1.37.5** : toute la journée visible (plus de limite à cinq, seul le passé replié) ; le + au centre de l'île, seulement sur Tâches et Agenda (Agenda : tâche du jour affiché), Habitudes crée par le + de son en-tête.
 - **1.37.6** : barre du bas en verre (fond 42 % clair, 50 % sombre, flou 28 dp), + en bulle de verre teintée, onglet choisi en pastille derrière l'icône (l'ancien bloc touchait le bord de l'île).
 - **1.37.7** : le + revient sur tous les onglets (le voir disparaître était déroutant) et dépasse de la barre ; « Replanifier » de Planifier ouvre la feuille complète d'Aujourd'hui (toutes les options, cachées sous « Plus… »).
+  Puis : le + qui chevauchait l'île « dépassait bêtement » ; l'île se soulève en bosse autour de lui (`IslandWithBump`, congés aux raccords), barre 58 dp, + plein à l'accent sans dégradé.

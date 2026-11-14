@@ -120,7 +120,7 @@ object Size {
     val badge = 44.dp
     val calendarMark = 36.dp
     val statisticsPulse = 48.dp
-    val navBar = 64.dp
+    val navBar = 58.dp
     /** Largeur maximale d'un raccourci épinglé de Tâches : un long nom est rogné, pas la rangée. */
     val pinnedChipMax = 200.dp
     val sheetContent = 760.dp
