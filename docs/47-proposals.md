@@ -33,7 +33,7 @@ Facts sent in `proposal.requested` (`data.facts`):
   "today": "2026-11-16",
   "days": [
     { "date": "2026-11-17", "events": [{ "title": "Dentiste", "start": "...", "end": "..." }],
-      "planned": ["abc123"], "load_minutes": 45 }
+      "planned": ["abc123"], "due": ["def456"], "task_count": 3, "load_minutes": 45 }
   ],
   "tasks": [
     { "uid": "abc123", "name": "Valider le devis", "due": "2026-11-17", "project": "Cuisine",
@@ -68,7 +68,7 @@ Answer (`POST /api/proposals/:uid/answer`, `answer` object, contract v2):
 
 Operations the agent may propose:
 
-**Daily cap**: a day holds at most `facts.max_tasks_per_day` tasks (`ui_settings.planning.maxTasksPerDay`, default 5), counting `facts.days[].task_count`. The answer's `plan_day` changes over the cap, in the agent's order, become `this_week`.
+**Daily cap**: a day holds at most `facts.max_tasks_per_day` tasks (`ui_settings.planning.maxTasksPerDay`, default 5), counting `facts.days[].task_count`: what the Today page already lists that day, i.e. its plan lines, the unplanned tasks due that day (recurring ones included, though never sent) and, on `facts.today`, the unplanned overdue tasks. `facts.days[].due` names those due or overdue tasks that are in `facts.tasks`. The answer's `plan_day` changes over the cap, in the agent's order, become `this_week`; a change that takes a task off its day (a plan line moved, a `plan_day`, `due` or `drop` on a task due there, any operation on an overdue one) frees its place first. The agent plans a task with a due date close to it, never days ahead, and keeps today light.
 
 **Overdue tasks** (`facts.tasks[].overdue`): a `plan_day` also sets the due date to that day, and a horizon (`this_week`, `next_week`, `this_month`, `next_month`, `later`) clears it, so a task the user places again is no longer overdue. Other tasks keep their due date.
 

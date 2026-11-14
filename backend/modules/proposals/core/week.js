@@ -134,6 +134,22 @@ function weekFacts({
         plannedUids,
     });
     const shown = new Set(selected.map((task) => task.uid));
+    // A task planned on a day from today on leaves the due and overdue lists
+    // of every day (backend/modules/daily-plan/day.js, blockingTaskIds).
+    const plannedAhead = new Set();
+    for (const [date, items] of plans) {
+        if (date < today) continue;
+        for (const item of items) plannedAhead.add(item.task_uid);
+    }
+    const isOverdue = (task) => task.due && task.due < today;
+    // The unplanned tasks the Today page lists on a day: due that day, and on
+    // today the overdue ones too. Recurring tasks count, though never sent.
+    const dueOn = (date) =>
+        tasks.filter(
+            (task) =>
+                !plannedAhead.has(task.uid) &&
+                (task.due === date || (date === today && isOverdue(task)))
+        );
     const eventsByDay = new Map();
     for (const event of events) {
         const list = eventsByDay.get(event.date) ?? [];
@@ -148,13 +164,15 @@ function weekFacts({
     }
     const days = listDays(period.start, period.end).map((date) => {
         const items = plans.get(date) ?? [];
+        const due = dueOn(date);
         return {
             date,
             events: eventsByDay.get(date) ?? [],
             planned: items
                 .map((item) => item.task_uid)
                 .filter((uid) => shown.has(uid)),
-            task_count: items.length,
+            due: due.map((task) => task.uid).filter((uid) => shown.has(uid)),
+            task_count: items.length + due.length,
             load_minutes: items.reduce(
                 (sum, item) => sum + (item.duration_minutes || 0),
                 0
@@ -186,19 +204,31 @@ function cleanQuestion(raw) {
     return { id, text, choices };
 }
 
+// Operations that take a task off the due list of its day: a plan line hides
+// it there, a new due date or a drop moves it. An overdue task leaves on any
+// operation, since placing it again also sets or clears its due date
+// (service.js, applyWeekDecisions).
+const LEAVES_DUE_DAY = new Set(['plan_day', 'due', 'drop']);
+
 // A day never holds more than the daily cap: the tasks staying on it (those
-// of other plans, and the facts' tasks that no change moves) count first,
-// then the agent's plan_day changes in its order; the ones over the cap go to
-// this week instead.
+// of other plans, the tasks due there and, today, the overdue ones, minus
+// the ones a change moves away) count first, then the agent's plan_day
+// changes in its order; the ones over the cap go to this week instead.
 function capDays(facts, changes) {
     const cap = facts.max_tasks_per_day;
     if (!Number.isInteger(cap) || cap < 1) return;
-    const moved = new Set(changes.map((change) => change.task_uid));
+    const opOf = new Map(changes.map((change) => [change.task_uid, change.op]));
+    const overdue = new Set(
+        (facts.tasks ?? []).filter((task) => task.overdue).map((t) => t.uid)
+    );
+    const leavesDueDay = (uid) =>
+        opOf.has(uid) &&
+        (overdue.has(uid) || LEAVES_DUE_DAY.has(opOf.get(uid)));
     const used = new Map(
         (facts.days ?? []).map((day) => {
-            const leaving = (day.planned ?? []).filter((uid) =>
-                moved.has(uid)
-            ).length;
+            const leaving =
+                (day.planned ?? []).filter((uid) => opOf.has(uid)).length +
+                (day.due ?? []).filter(leavesDueDay).length;
             return [day.date, (day.task_count ?? 0) - leaving];
         })
     );

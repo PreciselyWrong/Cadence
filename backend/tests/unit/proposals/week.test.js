@@ -165,6 +165,7 @@ describe('weekFacts', () => {
             date: '2026-11-17',
             events: [{ title: 'Dentiste', start: 'a', end: 'b' }],
             planned: ['a'],
+            due: [],
             task_count: 2,
             load_minutes: 60,
         });
@@ -213,7 +214,8 @@ describe('validateWeekAnswer', () => {
             maxTasksPerDay: 5,
         });
         expect(capped.max_tasks_per_day).toBe(5);
-        expect(capped.days[0].task_count).toBe(3);
+        // x, y and a on the plan, b, c and d due that day.
+        expect(capped.days[0].task_count).toBe(6);
         const { answer } = validateAnswer('week', capped, {
             headline: 'Plein',
             changes: ['b', 'c', 'd'].map((uid) => ({
@@ -228,6 +230,55 @@ describe('validateWeekAnswer', () => {
             ['c', 'plan_day'],
             ['d', 'this_week'],
         ]);
+    });
+
+    it('counts the tasks the Today page shows on a day, not only its plan', () => {
+        const day = PERIOD.start;
+        const full = weekFacts({
+            today: TODAY,
+            period: PERIOD,
+            weekStart: WEEK,
+            tasks: [
+                task('late', { due: '2026-11-13' }),
+                task('sport', { due: day, recurring: true }),
+                task('mail', { due: day }),
+                task('swim', { due: day }),
+                task('moved', { due: day }),
+                task('tyres', { due: '2026-11-18' }),
+            ],
+            plans: new Map([
+                [day, [{ task_uid: 'plan', duration_minutes: 30 }]],
+                ['2026-11-19', [{ task_uid: 'moved', duration_minutes: 30 }]],
+            ]),
+            events: [],
+            maxTasksPerDay: 5,
+        });
+        expect(full.days[0].task_count).toBe(5);
+        expect(full.days[0].due).toEqual(['late', 'mail', 'swim']);
+        expect(full.days[2].task_count).toBe(1);
+        expect(full.days[3].task_count).toBe(1);
+        const { answer } = validateAnswer('week', full, {
+            headline: 'Plein',
+            changes: [
+                { task_uid: 'tyres', op: 'plan_day', date: day, reason: 'r' },
+                { task_uid: 'late', op: 'later', reason: 'r' },
+                { task_uid: 'mail', op: 'this_week', reason: 'r' },
+            ],
+        });
+        // 'late' leaves today (its due date is cleared), 'mail' stays due
+        // there: one place, then the day is full again.
+        expect(answer.changes.map((c) => [c.task_uid, c.op])).toEqual([
+            ['tyres', 'plan_day'],
+            ['late', 'later'],
+            ['mail', 'this_week'],
+        ]);
+        const { answer: second } = validateAnswer('week', full, {
+            headline: 'Plein',
+            changes: [
+                { task_uid: 'tyres', op: 'plan_day', date: day, reason: 'r' },
+            ],
+        });
+        expect(second.changes[0].op).toBe('this_week');
     });
 
     it('keeps valid changes and drops the rest', () => {
