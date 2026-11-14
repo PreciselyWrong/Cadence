@@ -715,4 +715,5 @@
     <string name="habit_patterns_no_rate">–</string>
     <string name="habit_patterns_no_counted_day">aucun jour compté</string>
     <string name="habit_patterns_bar_description">%1$s : %2$s</string>
+    <string name="agenda_add_task">Ajouter une tâche ce jour</string>
 </resources>

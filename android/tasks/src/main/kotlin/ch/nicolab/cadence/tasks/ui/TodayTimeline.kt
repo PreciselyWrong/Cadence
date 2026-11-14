@@ -11,11 +11,10 @@ import java.time.ZoneId
 /** Une tâche d'« À caser » ; [missedAt] : l'heure passée sans qu'elle soit faite (« prévue 10:30 »), sinon null. */
 data class ToPlace(val task: TaskItem, val missedAt: Instant? = null)
 
-/** « Ma journée » coupée pour l'écran : [shown] d'emblée, [past] et [later] repliés. */
+/** « Ma journée » coupée pour l'écran : [shown] d'emblée, [past] replié. */
 data class TimelineSplit(
     val shown: List<TimelineEntry>,
     val past: List<TimelineEntry.Item>,
-    val later: List<TimelineEntry.Item>,
 )
 
 /** Une ligne de « Ma journée ». */
@@ -61,22 +60,15 @@ data class TodayTimeline(val toPlace: List<ToPlace>, val entries: List<TimelineE
         fun splitToPlace(toPlace: List<ToPlace>): Pair<List<ToPlace>, List<ToPlace>> =
             toPlace.take(TO_PLACE_SHOWN) to toPlace.drop(TO_PLACE_SHOWN)
 
-        /** Éléments à venir montrés dans « Ma journée » ; la suite attend repliée derrière « Ensuite · N ». */
-        const val UPCOMING_SHOWN = 5
-
         /**
-         * Ce que « Ma journée » montre d'emblée : la journée entière, ce qui est en cours, le trait maintenant, le
-         * créneau libre et les [UPCOMING_SHOWN] prochains éléments. Le passé (fini ou coché) et la suite sont repliés.
+         * Ce que « Ma journée » montre d'emblée : toute la journée (journée entière, en cours, trait maintenant,
+         * créneau libre, tout ce qui vient). Seul le passé (fini ou coché) attend replié derrière « N passés ».
          */
         fun split(entries: List<TimelineEntry>): TimelineSplit {
             val nowIndex = entries.indexOf(TimelineEntry.Now).takeIf { it >= 0 } ?: entries.size
-            val before = entries.take(nowIndex)
-            val after = entries.drop(nowIndex)
-            val past = before.filterIsInstance<TimelineEntry.Item>().filter { it.past && it.start != null }
-            val upcoming = after.filterIsInstance<TimelineEntry.Item>()
-            val later = upcoming.drop(UPCOMING_SHOWN)
-            val hidden = (past + later).toSet()
-            return TimelineSplit(entries.filterNot { it in hidden }, past, later)
+            val past = entries.take(nowIndex).filterIsInstance<TimelineEntry.Item>().filter { it.past && it.start != null }
+            val hidden = past.toSet()
+            return TimelineSplit(entries.filterNot { it in hidden }, past)
         }
 
         /** Demain et les suggestions ne s'affichent qu'une fois la journée vide : Aujourd'hui ne parle que d'aujourd'hui. */

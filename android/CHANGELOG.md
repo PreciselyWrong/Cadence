@@ -1,3 +1,8 @@
+## [1.37.5] — 14 novembre 2026
+
+- « Ma journée » montre de nouveau toute la journée ; seul ce qui est passé reste replié (« N passés »).
+- Le + est au centre de la barre du bas, et seulement sur Tâches et Agenda (sur l'Agenda, il ajoute une tâche au jour affiché). Habitudes crée une habitude par le + de son en-tête.
+
 ## [1.37.4] — 14 novembre 2026
 
 - Le bouton + passe dans la barre du bas, à droite des onglets (Tâches et Habitudes) : le coin bas droit de l'écran reste au contenu.

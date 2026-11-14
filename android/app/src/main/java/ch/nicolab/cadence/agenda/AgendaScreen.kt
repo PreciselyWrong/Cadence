@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.ChevronRight
@@ -63,6 +64,7 @@ import ch.nicolab.cadence.tasks.ui.QuickAddSheet
 import ch.nicolab.cadence.tasks.ui.TaskSheetHost
 import ch.nicolab.cadence.tasks.ui.RecurringScopeDialog
 import ch.nicolab.cadence.tasks.ui.notifications.NotificationsBellButton
+import ch.nicolab.cadence.designsystem.components.PrimaryAdd
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
@@ -240,6 +242,13 @@ fun AgendaScreen(
             }
         }
         DragGhost(drag = drag, origin = boxOrigin)
+    }
+
+    // Le + au centre de la barre : une tâche pour le jour affiché, sans heure.
+    var addOnDay by remember { mutableStateOf(false) }
+    PrimaryAdd(icon = Icons.Outlined.Add, label = stringResource(R.string.agenda_add_task), onClick = { addOnDay = true })
+    if (addOnDay) {
+        QuickAddSheet(onDismiss = { addOnDay = false }, initialDate = state.selected)
     }
 
     slotAt?.let { at ->

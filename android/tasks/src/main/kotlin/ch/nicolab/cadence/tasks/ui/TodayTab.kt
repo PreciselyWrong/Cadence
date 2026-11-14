@@ -333,7 +333,6 @@ internal fun TodayTab(
             item(key = "day-title") { TimelineSectionTitle(stringResource(R.string.today_section_day)) }
             val split = TodayTimeline.split(timeline.entries)
             val pastOpen = PAST_FOLD in openFolds
-            val laterOpen = LATER_FOLD in openFolds
             if (split.past.isNotEmpty()) {
                 item(key = "fold-$PAST_FOLD") {
                     TimelineFoldRow(pluralStringResource(R.plurals.today_past_fold, split.past.size, split.past.size), pastOpen) {
@@ -341,7 +340,7 @@ internal fun TodayTab(
                     }
                 }
             }
-            val dayRows = (if (pastOpen) split.past else emptyList()) + split.shown + (if (laterOpen) split.later else emptyList())
+            val dayRows = (if (pastOpen) split.past else emptyList()) + split.shown
             items(dayRows, key = { entry ->
                 when (entry) {
                     is TimelineEntry.Item -> entry.item.key
@@ -380,15 +379,6 @@ internal fun TodayTab(
                             modifier = Modifier.animateItem(),
                         )
                     }
-                }
-            }
-            if (split.later.isNotEmpty()) {
-                item(key = "fold-$LATER_FOLD") {
-                    TimelineFoldRow(
-                        if (laterOpen) stringResource(R.string.today_later_fold_open)
-                        else pluralStringResource(R.plurals.today_later_fold, split.later.size, split.later.size),
-                        laterOpen,
-                    ) { openFolds = if (laterOpen) openFolds - LATER_FOLD else openFolds + LATER_FOLD }
                 }
             }
         }
@@ -503,7 +493,6 @@ private fun FoldHeader(
 private const val OVERDUE_FOLD = "overdue"
 private const val TO_PLACE_FOLD = "to-place"
 private const val PAST_FOLD = "past"
-private const val LATER_FOLD = "later"
 
 private val minuteFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 

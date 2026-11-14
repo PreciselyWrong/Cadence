@@ -161,7 +161,7 @@ class TodayTimelineTest {
     }
 
     @Test
-    fun `la journée montre cinq éléments à venir, le passé et la suite attendent repliés`() {
+    fun `la journée montre tout ce qui vient, seul le passé attend replié`() {
         val timeline = build(
             (10..17).map { timed("t$it", it) },
             events = listOf(event("Café", 7, 8), allDay("Anniversaire")),
@@ -169,7 +169,6 @@ class TodayTimelineTest {
         )
         val split = TodayTimeline.split(timeline.entries)
         assertEquals(listOf("Café"), split.past.map { it.label })
-        assertEquals(listOf("t15", "t16", "t17"), split.later.map { it.label })
         val shown = split.shown.map { entry ->
             when (entry) {
                 is TimelineEntry.Item -> entry.label
@@ -177,7 +176,7 @@ class TodayTimelineTest {
                 is TimelineEntry.Free -> "free"
             }
         }
-        assertEquals(listOf("Anniversaire", "now", "free", "t10", "t11", "t12", "t13", "t14"), shown)
+        assertEquals(listOf("Anniversaire", "now", "free", "t10", "t11", "t12", "t13", "t14", "t15", "t16", "t17"), shown)
     }
 
     @Test

@@ -60,7 +60,7 @@ fun CadenceNavigation(
     selected: Int,
     modifier: Modifier = Modifier,
     backdrop: Backdrop? = null,
-    /** Bouton « ajouter » de l'onglet ouvert, rond, à droite des onglets ; aucun s'il est null. */
+    /** Bouton « ajouter » de l'onglet ouvert, rond, au centre de l'île entre les onglets ; aucun s'il est null. */
     action: NavAction? = null,
     onSelect: (Int) -> Unit,
 ) {
@@ -94,14 +94,15 @@ fun CadenceNavigation(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+        val middle = (destinations.size + 1) / 2
         destinations.forEachIndexed { index, destination ->
+            if (index == middle) action?.let { NavAddButton(it) }
             NavItem(destination, index == selected, Modifier.weight(1f)) { onSelect(index) }
         }
-        action?.let { NavAddButton(it) }
     }
 }
 
-/** Le + de l'onglet ouvert, rond et plein à l'accent, au bout de la barre. */
+/** Le + de l'onglet ouvert, rond et plein à l'accent, au centre de la barre. */
 @Composable
 private fun NavAddButton(action: NavAction) {
     val palette = cadence
