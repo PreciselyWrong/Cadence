@@ -1,3 +1,10 @@
+## [1.37.1] — 14 novembre 2026
+
+- Aujourd'hui plus fin, au plus près de la maquette : lignes de 40 dp, titres en 15 sp, petits cercles de 18 dp sur l'axe, un trait « maintenant » continu, heures et durées en petit.
+- Les événements de l'agenda gardent l'icône calendrier de l'app, à la couleur de leur agenda, posée sur l'axe.
+- Les habitudes du moment en pastilles avec l'hexagone de l'app (anneau de progrès), le nom et la valeur.
+- Bandeau des échues détouré d'un trait fin, titres de section (Demain, Terminées) dans la même voix que « À caser » et « Ma journée ».
+
 ## [1.37.0] — 14 novembre 2026
 
 - Aujourd'hui plus léger : le bouton « Planifier ma semaine » passe dans Planifier, seuls « Demain » et « Suggérées » restent repliés sous la journée (Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain et Un jour vivent dans Planifier), et la poignée de rangement est plus discrète.

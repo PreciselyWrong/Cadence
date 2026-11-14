@@ -15,7 +15,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,19 +36,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
-import ch.nicolab.cadence.designsystem.components.TaskCheckbox
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Radius
-import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
@@ -57,80 +69,122 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-private val HourWidth = 44.dp
-private val AxisWidth = 44.dp
-private val TimelineRowHeight = 44.dp
+// Mesures de la maquette « ligne du temps compacte » : lignes de 40 dp, titre 15 sp, repères de 18 dp.
+private val HourWidth = 40.dp
+private val AxisWidth = 28.dp
+private val RowHeight = 40.dp
+private val MarkSize = 18.dp
 private const val PAST_ALPHA = 0.38f
 private val hourFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("H:mm")
+
+@Composable
+private fun titleStyle(): TextStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp, lineHeight = 20.sp)
+
+@Composable
+internal fun sideStyle(): TextStyle = MaterialTheme.typography.labelMedium.copy(fontSize = 12.5.sp)
 
 /** Titre de section discret : « À CASER », « MA JOURNÉE », et un complément à droite. */
 @Composable
 internal fun TimelineSectionTitle(text: String, trailing: String? = null) {
-    Row(Modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().padding(top = Space.md, bottom = 2.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             text.uppercase(),
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.4.sp),
             color = cadence.onSurfaceVariant,
             modifier = Modifier.weight(1f),
         )
-        trailing?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = cadence.onSurfaceVariant) }
+        trailing?.let { Text(it, style = sideStyle(), color = cadence.onSurfaceVariant) }
     }
 }
 
-/** Squelette d'une ligne : heure, axe (trait vertical et repère), contenu. */
+/**
+ * Case de la ligne du temps : un cercle de 18 dp (bord rouge pour la priorité haute, seul signal de priorité), plein
+ * et coché une fois faite ; zone tactile de la hauteur de la ligne. Son fond masque l'axe dessous.
+ */
+@Composable
+private fun SmallCheck(checked: Boolean, highPriority: Boolean, onToggle: () -> Unit) {
+    val palette = cadence
+    val haptic = rememberCadenceHaptic()
+    val label = stringResource(if (checked) R.string.tasks_mark_undone else R.string.tasks_mark_done)
+    Box(
+        Modifier
+            .size(RowHeight)
+            .toggleable(value = checked, role = Role.Checkbox, onValueChange = {
+                if (it) haptic.confirm() else haptic.tap()
+                onToggle()
+            })
+            .semantics { contentDescription = label },
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(
+            Modifier
+                .size(MarkSize)
+                .clip(CircleShape)
+                .background(if (checked) palette.primary else MaterialTheme.colorScheme.surface)
+                .border(1.75.dp, if (checked) palette.primary else if (highPriority) palette.error else palette.outline, CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (checked) Icon(Icons.Outlined.Check, null, tint = palette.onPrimary, modifier = Modifier.size(12.dp))
+        }
+    }
+}
+
+/** Décale l'élément de [inset] vers la gauche sans changer la place qu'il laisse aux suivants. */
+private fun Modifier.bleedStart(inset: Dp): Modifier = layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints)
+    val extra = inset.roundToPx()
+    layout(placeable.width - extra, placeable.height) { placeable.placeRelative(-extra, 0) }
+}
+
+/** Squelette d'une ligne de la journée : heure, axe (trait continu et repère), contenu. */
 @Composable
 private fun TimelineScaffold(
     hour: String?,
     modifier: Modifier = Modifier,
     hourColor: Color = cadence.onSurfaceVariant,
-    axis: Boolean = true,
     marker: @Composable () -> Unit = {},
     content: @Composable RowScope.() -> Unit,
 ) {
     val line = cadence.outlineVariant
-    // L'axe se trace sur toute la hauteur de la ligne, au milieu de sa colonne : il se raccorde à la ligne suivante.
     Row(
         modifier
             .fillMaxWidth()
-            .heightIn(min = TimelineRowHeight)
+            .heightIn(min = RowHeight)
             .drawBehind {
-                if (axis) {
-                    val x = (HourWidth + AxisWidth / 2).toPx()
-                    drawLine(line, Offset(x, 0f), Offset(x, size.height), strokeWidth = 2.dp.toPx())
-                }
+                val x = (HourWidth + AxisWidth / 2).toPx()
+                drawLine(line, Offset(x, 0f), Offset(x, size.height), strokeWidth = 1.5.dp.toPx())
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             hour.orEmpty(),
-            style = MaterialTheme.typography.labelMedium,
+            style = sideStyle(),
             color = hourColor,
             textAlign = TextAlign.End,
             maxLines = 1,
             modifier = Modifier.width(HourWidth),
         )
-        Box(Modifier.width(AxisWidth), contentAlignment = Alignment.Center        ) { marker() }
+        Box(Modifier.width(AxisWidth), contentAlignment = Alignment.Center) { marker() }
+        Spacer(Modifier.width(Space.sm))
         content()
     }
 }
 
-/** Le trait « maintenant » : l'heure en rouge et une ligne qui traverse. */
+/** Le trait « maintenant » : l'heure en rouge, un point sur l'axe et une ligne qui traverse. */
 @Composable
 internal fun TimelineNowRow(now: Instant, zone: ZoneId) {
     val red = cadence.error
+    // Un seul trait, du point de l'axe jusqu'au bord droit.
     TimelineScaffold(
         hour = now.atZone(zone).format(hourFormat),
         hourColor = red,
-        marker = {
-            // Le trait part du point, au milieu de l'axe, et traverse la ligne.
-            Box(Modifier.size(AxisWidth, 10.dp).drawBehind {
-                drawLine(red, Offset(size.width / 2, size.height / 2), Offset(size.width, size.height / 2), strokeWidth = 2.dp.toPx())
-            })
-            Box(Modifier.size(10.dp).clip(CircleShape).background(red))
+        marker = { Box(Modifier.size(8.dp).clip(CircleShape).background(red)) },
+        modifier = Modifier.heightIn(max = 22.dp).drawBehind {
+            val x = (HourWidth + AxisWidth / 2).toPx()
+            drawLine(red, Offset(x, size.height / 2), Offset(size.width, size.height / 2), strokeWidth = 1.5.dp.toPx())
         },
-        modifier = Modifier.heightIn(max = 24.dp),
     ) {
-        Box(Modifier.weight(1f).height(2.dp).background(red))
+        Spacer(Modifier.weight(1f))
     }
 }
 
@@ -140,25 +194,20 @@ internal fun TimelineFreeRow(free: TimelineEntry.Free, placeCount: Int, onPlace:
     TimelineScaffold(hour = null) {
         Text(
             stringResource(R.string.today_free_time, durationText(free.minutes)),
-            style = MaterialTheme.typography.bodySmall,
+            style = sideStyle(),
             color = cadence.onSurfaceVariant,
             modifier = Modifier.weight(1f),
         )
         if (placeCount > 0) {
-            Box(
-                Modifier
-                    .heightIn(min = Size.touch)
-                    .clickable(role = Role.Button, onClick = onPlace),
-                contentAlignment = Alignment.Center,
-            ) {
+            Box(Modifier.heightIn(min = RowHeight).clickable(role = Role.Button, onClick = onPlace), contentAlignment = Alignment.Center) {
                 Text(
-                    pluralStringResourceSafe(R.plurals.today_place_here, placeCount),
-                    style = MaterialTheme.typography.labelLarge,
+                    pluralStringResource(R.plurals.today_place_here, placeCount, placeCount),
+                    style = sideStyle(),
                     color = cadence.primary,
                     modifier = Modifier
                         .clip(Radius.Pill)
-                        .border(1.dp, cadence.primary.copy(alpha = 0.5f), Radius.Pill)
-                        .padding(horizontal = Space.md, vertical = Space.xs),
+                        .border(1.dp, cadence.primary.copy(alpha = 0.45f), Radius.Pill)
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
                 )
             }
         }
@@ -176,7 +225,7 @@ private fun RightMark(entry: TimelineEntry.Item, now: Instant, fallback: String?
     text?.let {
         Text(
             it,
-            style = MaterialTheme.typography.labelMedium,
+            style = sideStyle(),
             color = if (entry.next) cadence.primary else cadence.onSurfaceVariant,
             fontWeight = if (entry.next) FontWeight.SemiBold else null,
             maxLines = 1,
@@ -185,26 +234,74 @@ private fun RightMark(entry: TimelineEntry.Item, now: Instant, fallback: String?
     }
 }
 
-/** Titre de l'élément, en gras pour la prochaine chose, suivi de « en même temps » s'il chevauche. */
+/** Titre, en demi-gras pour la prochaine chose, suivi de « en même temps » s'il chevauche. */
 @Composable
 private fun TimelineTitle(title: String, entry: TimelineEntry.Item, struck: Boolean, modifier: Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
             title,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (entry.next) FontWeight.Bold else null,
-            textDecoration = if (struck) androidx.compose.ui.text.style.TextDecoration.LineThrough else null,
+            style = titleStyle(),
+            fontWeight = if (entry.next) FontWeight.SemiBold else null,
+            textDecoration = if (struck) TextDecoration.LineThrough else null,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f, fill = false),
         )
         if (entry.overlaps) {
+            Text(" · " + stringResource(R.string.today_overlap), style = MaterialTheme.typography.labelSmall, color = cadence.warning, maxLines = 1)
+        }
+    }
+}
+
+/** Ligne d'« À caser » : case, titre, repère à droite (« 15 min », « prévue 10:30 »), aux mesures de la journée. */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+internal fun ToPlaceRow(
+    task: TaskItem,
+    mark: String?,
+    onToggle: () -> Unit,
+    onOpen: () -> Unit,
+    onMenu: () -> Unit,
+    onSwipeAction: (SwipeAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val haptic = rememberCadenceHaptic()
+    val swipeConfig = rememberSwipeConfig()
+    var checking by remember { mutableStateOf(false) }
+    SwipeActionContainer(
+        config = remember(task.fileBacked, swipeConfig) { FileBackedActions.swipeConfig(task, swipeConfig) },
+        closed = task.isClosed,
+        onAction = onSwipeAction,
+        shape = Radius.Control,
+        modifier = modifier,
+    ) { swipeSemantics ->
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = RowHeight)
+                .background(MaterialTheme.colorScheme.surface)
+                .then(swipeSemantics)
+                .combinedClickable(onClick = onOpen, onLongClick = { haptic.longPress(); onMenu() }),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // Le cercle s'aligne sur la marge : la zone tactile déborde à gauche de son vide.
+            Box(Modifier.bleedStart((RowHeight - MarkSize) / 2)) {
+                SmallCheck(checking || task.isClosed, task.priority == TaskPriority.HIGH) {
+                    checking = !checking
+                    onToggle()
+                }
+            }
+            Spacer(Modifier.width(2.dp))
             Text(
-                " · " + stringResource(R.string.today_overlap),
-                style = MaterialTheme.typography.labelSmall,
-                color = cadence.warning,
+                task.name,
+                style = titleStyle(),
+                textDecoration = if (checking || task.isClosed) TextDecoration.LineThrough else null,
                 maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
             )
+            val right = mark ?: task.estimatedMinutes?.takeIf { it > 0 }?.let { durationText(it) }
+            right?.let { Text(it, style = sideStyle(), color = cadence.onSurfaceVariant, modifier = Modifier.padding(start = Space.sm)) }
         }
     }
 }
@@ -225,7 +322,6 @@ internal fun TimelineTaskRow(
     val haptic = rememberCadenceHaptic()
     val swipeConfig = rememberSwipeConfig()
     var checking by remember { mutableStateOf(false) }
-    val minutes = task.estimatedMinutes?.takeIf { it > 0 }
     SwipeActionContainer(
         config = remember(task.fileBacked, swipeConfig) { FileBackedActions.swipeConfig(task, swipeConfig) },
         closed = task.isClosed,
@@ -241,27 +337,19 @@ internal fun TimelineTaskRow(
                 .combinedClickable(onClick = onOpen, onLongClick = { haptic.longPress(); onMenu() })
                 .alpha(if (entry.past) PAST_ALPHA else 1f),
             marker = {
-                Box(contentAlignment = Alignment.Center) {
-                    // Masque l'axe sous le cercle visible seulement (24 dp), pas sous toute la zone tactile.
-                    Box(Modifier.size(26.dp).background(MaterialTheme.colorScheme.surface, CircleShape))
-                    TaskCheckbox(
-                        checked = checking || task.isClosed,
-                        onCheckedChange = {
-                            checking = !checking
-                            onToggle()
-                        },
-                        highPriority = task.priority == TaskPriority.HIGH,
-                        contentDescription = stringResource(R.string.tasks_mark_done),
-                    )
+                SmallCheck(checking || task.isClosed, task.priority == TaskPriority.HIGH) {
+                    checking = !checking
+                    onToggle()
                 }
             },
         ) {
             TimelineTitle(task.name, entry, struck = checking || task.isClosed, modifier = Modifier.weight(1f))
-            RightMark(entry, now, minutes?.let { durationText(it) })
+            RightMark(entry, now, task.estimatedMinutes?.takeIf { it > 0 }?.let { durationText(it) })
         }
     }
 }
 
+/** Un événement : l'icône d'agenda de l'app, à la couleur du calendrier, posée sur l'axe. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun TimelineEventRow(
@@ -278,9 +366,11 @@ internal fun TimelineEventRow(
 ) {
     val haptic = rememberCadenceHaptic()
     val swipeConfig = rememberSwipeConfig()
-    val color = readableTintOf(Color(event.calendar.colorArgb), MaterialTheme.colorScheme.surface, ICON_CONTRAST)
+    val surface = MaterialTheme.colorScheme.surface
+    val color = readableTintOf(Color(event.calendar.colorArgb), surface, ICON_CONTRAST)
     val title = event.event.title.ifBlank { stringResource(R.string.tasks_event_untitled) }
     val end = entry.end?.atZone(zone)?.format(hourFormat)
+    val markLabel = stringResource(if (event.done) R.string.tasks_event_done else R.string.tasks_event_mark_done)
     SwipeActionContainer(
         config = remember(swipeConfig, checkable) { EventActions.swipeConfig(swipeConfig, checkable) },
         closed = event.done,
@@ -292,23 +382,28 @@ internal fun TimelineEventRow(
         TimelineScaffold(
             hour = if (event.event.allDay) stringResource(R.string.today_all_day) else entry.start?.atZone(zone)?.format(hourFormat),
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
+                .background(surface)
                 .then(swipeSemantics)
                 .combinedClickable(onClick = onOpen, onLongClick = { haptic.longPress(); onMenu() })
                 .alpha(if (entry.past) PAST_ALPHA else 1f),
             marker = {
-                val dot = Modifier
-                    .size(if (checkable) Size.touch else 12.dp)
-                    .then(if (checkable) Modifier.clickable(role = Role.Checkbox, onClick = onToggle) else Modifier)
-                Box(dot, contentAlignment = Alignment.Center) {
-                    Box(
-                        Modifier
-                            .size(12.dp)
-                            .background(MaterialTheme.colorScheme.surface, CircleShape)
-                            .padding(1.dp)
-                            .clip(CircleShape)
-                            .background(color),
-                    )
+                val touch = if (checkable) {
+                    Modifier
+                        .size(RowHeight)
+                        .toggleable(value = event.done, role = Role.Checkbox, onValueChange = { onToggle() })
+                        .semantics { contentDescription = markLabel }
+                } else {
+                    Modifier.size(RowHeight)
+                }
+                Box(touch, contentAlignment = Alignment.Center) {
+                    Box(Modifier.size(MarkSize + 2.dp).background(surface), contentAlignment = Alignment.Center) {
+                        Icon(
+                            if (event.done) Icons.Outlined.EventAvailable else Icons.Outlined.CalendarToday,
+                            contentDescription = null,
+                            tint = color,
+                            modifier = Modifier.size(16.dp),
+                        )
+                    }
                 }
             },
         ) {
@@ -328,7 +423,3 @@ internal fun durationText(minutes: Int): String {
         else -> "$h h ${m.toString().padStart(2, '0')}"
     }
 }
-
-@Composable
-private fun pluralStringResourceSafe(id: Int, count: Int): String =
-    androidx.compose.ui.res.pluralStringResource(id, count, count)

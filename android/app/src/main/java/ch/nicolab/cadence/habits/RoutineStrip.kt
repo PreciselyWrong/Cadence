@@ -1,6 +1,15 @@
 package ch.nicolab.cadence.habits
 
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -60,45 +69,37 @@ internal fun RoutineStrip(
     val haptic = rememberCadenceHaptic()
     val openLabel = stringResource(R.string.routine_open_habits)
 
+    // Les habitudes du moment en pastilles : l'hexagone de l'app (anneau de progrès), le nom et la valeur.
     Row(
-        Modifier.fillMaxWidth().padding(vertical = Space.xs),
+        Modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
         Text(
-            stringResource(R.string.routine_title_short, moment.group.name, moment.done, moment.due),
-            style = MaterialTheme.typography.labelLarge,
+            stringResource(R.string.routine_title_short, moment.group.name, moment.done, moment.due).uppercase(),
+            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
             color = palette.onSurfaceVariant,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.widthIn(max = Size.routineFacet * 2),
-        )
-        Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-            moment.facetIds.forEach { id -> byId[id]?.let { item -> RoutineFacet(item) { quick(item) } } }
-        }
-        Box(
-            Modifier
-                .size(Size.touch)
+            modifier = Modifier
+                .weight(1f)
                 .clickable(role = Role.Button) {
                     haptic.tap()
                     openHabits()
                 }
                 .semantics { contentDescription = openLabel },
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-                null,
-                tint = palette.onSurfaceVariant,
-                modifier = Modifier.size(Size.icon),
-            )
-        }
+        )
+    }
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(Space.sm),
+    ) {
+        moment.facetIds.forEach { id -> byId[id]?.let { item -> RoutinePill(item) { quick(item) } } }
     }
 }
 
-/** Une facette compacte : l'anneau seul, à toucher ; nom et progrès dans sa description. */
+/** Pastille d'une habitude : petit hexagone de progrès, nom et valeur ; un toucher ouvre la saisie rapide. */
 @Composable
-private fun RoutineFacet(item: HabitCardState, onClick: () -> Unit) {
+private fun RoutinePill(item: HabitCardState, onClick: () -> Unit) {
+    val palette = cadence
     val tint = habitTint(item)
     val goal = item.stored.goal
     val icon = HabitIconRegistry.getIcon(item.stored.iconId)
@@ -107,21 +108,29 @@ private fun RoutineFacet(item: HabitCardState, onClick: () -> Unit) {
     val ratio = if (goal.isAbstinence || goal.isTracker) 0f else (evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
     val compact = HabitFormatter.formatCompactProgress(evaluation.progressMinor, target, goal.goalType, goal.unit)
     val value = if (goal.isLimit) stringResource(R.string.routine_limit_value, compact) else compact
-    val description = "${item.stored.name}, $value"
-    Box(
+    Row(
         Modifier
-            .size(Size.touch)
+            .heightIn(min = 40.dp)
+            .clip(RoundedCornerShape(50))
             .clickable(role = Role.Button, onClick = onClick)
-            .semantics { contentDescription = description },
-        contentAlignment = Alignment.Center,
+            .border(1.dp, palette.outlineVariant, RoundedCornerShape(50))
+            .padding(start = 4.dp, end = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         HabitFacet(
             icon = icon.imageVector,
-            label = icon.labelFr,
+            label = null,
             progress = ratio,
             tint = tint,
             trackColor = tint.copy(alpha = 0.20f),
-            size = Size.icon + Space.md,
+            size = 24.dp,
+        )
+        Text(
+            "${item.stored.name} $value",
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.5.sp),
+            color = if (evaluation.isCompleted) palette.success else palette.onSurface,
+            maxLines = 1,
         )
     }
 }

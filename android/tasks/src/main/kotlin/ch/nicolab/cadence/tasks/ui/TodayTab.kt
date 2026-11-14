@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -275,20 +277,14 @@ internal fun TodayTab(
             }
             items(timeline.toPlace, key = { "task:${it.task.uid}" }) { entry ->
                 val task = entry.task
-                TaskRow(
-                    modifier = Modifier.animateItem(),
-                    calm = true,
-                    calmMark = entry.missedAt?.let { stringResource(R.string.today_missed_at, minuteFormat.format(it.atZone(zone))) },
+                ToPlaceRow(
                     task = task,
-                    projectName = task.projectUid?.let { projectNames[it] },
-                    projectIcon = task.projectUid?.let { projectIcons[it] },
-                    projectColor = task.projectUid?.let { projectColors[it] },
-                    today = today,
-                    zone = zone,
+                    mark = entry.missedAt?.let { stringResource(R.string.today_missed_at, minuteFormat.format(it.atZone(zone))) },
                     onToggle = { viewModel.toggle(task, hold = true) },
                     onOpen = { onOpen(task) },
-                    onSwipeAction = { viewModel.swipe(task, it) },
                     onMenu = { viewModel.openMenu(task, toPlaceTasks) },
+                    onSwipeAction = { viewModel.swipe(task, it) },
+                    modifier = Modifier.animateItem(),
                 )
             }
         }
@@ -376,8 +372,8 @@ internal fun TodayTab(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = stringResource(R.string.tasks_section_completed, state.completed.size),
-                        style = MaterialTheme.typography.labelLarge,
+                        text = stringResource(R.string.tasks_section_completed, state.completed.size).uppercase(),
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, letterSpacing = 0.4.sp),
                         color = cadence.onSurfaceVariant,
                         modifier = Modifier.weight(1f),
                     )
@@ -429,8 +425,8 @@ private fun FoldHeader(
     ) {
         // Même voix que la routine et la bande des événements : petit, discret, à la même marge.
         Text(
-            text = "$title $count",
-            style = MaterialTheme.typography.labelLarge,
+            text = "${title.uppercase()} $count",
+            style = MaterialTheme.typography.labelMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, letterSpacing = 0.4.sp),
             color = cadence.onSurfaceVariant,
             modifier = Modifier.weight(1f),
         )
@@ -457,18 +453,19 @@ private fun OverdueBanner(count: Int, open: Boolean, onReplan: () -> Unit, onTog
             .fillMaxWidth()
             .padding(vertical = Space.xs)
             .clip(Radius.Control)
-            .background(cadence.containerLow)
+            // Un trait fin plutôt qu'un fond : calme en clair, et noir sur noir en AMOLED.
+            .border(1.dp, cadence.outlineVariant, Radius.Control)
             .clickable(role = Role.Button, onClick = onToggle)
-            .padding(start = Space.lg, end = Space.xs),
+            .padding(start = Space.md, end = Space.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = pluralStringResource(R.plurals.today_overdue_banner, count, count),
-            style = MaterialTheme.typography.labelLarge,
+            style = sideStyle().copy(fontSize = 13.5.sp),
             color = cadence.onSurfaceVariant,
             modifier = Modifier.weight(1f),
         )
-        TextButton(onClick = onReplan) { Text(stringResource(R.string.overdue_replan_button)) }
+        TextButton(onClick = onReplan) { Text(stringResource(R.string.overdue_replan_button), style = sideStyle().copy(fontSize = 13.5.sp)) }
         Icon(
             if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
             contentDescription = null,
