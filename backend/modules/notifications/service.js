@@ -29,17 +29,27 @@ class NotificationsService {
     }
 
     async getAll(userId, options) {
-        const { limit = 10, offset = 0, includeRead = 'true', type } = options;
+        const {
+            limit = 10,
+            offset = 0,
+            includeRead = 'true',
+            type,
+            scope,
+        } = options;
         return notificationsRepository.getUserNotifications(userId, {
             limit: parseInt(limit),
             offset: parseInt(offset),
             includeRead: includeRead === 'true',
             type: type || null,
+            scope: scope === 'agents' ? 'agents' : null,
         });
     }
 
-    async getUnreadCount(userId) {
-        const count = await notificationsRepository.getUnreadCount(userId);
+    // `scope=agents`: only what an agent asks of the user (core/agents.js).
+    async getUnreadCount(userId, options = {}) {
+        const count = await notificationsRepository.getUnreadCount(userId, {
+            scope: options.scope === 'agents' ? 'agents' : null,
+        });
         return { count };
     }
 

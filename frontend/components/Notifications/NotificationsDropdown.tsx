@@ -70,7 +70,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
     const fetchUnreadCount = async () => {
         try {
             const response = await fetch(
-                getApiPath('notifications/unread-count'),
+                getApiPath('notifications/unread-count?scope=agents'),
                 {
                     credentials: 'include',
                 }
@@ -88,7 +88,9 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
         setLoading(true);
         try {
             const response = await fetch(
-                getApiPath('notifications?limit=20&includeRead=true'),
+                getApiPath(
+                    'notifications?limit=20&includeRead=true&scope=agents'
+                ),
                 {
                     credentials: 'include',
                 }

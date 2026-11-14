@@ -114,13 +114,11 @@ data class CenterNotification(
 )
 
 object CenterNotifications {
-    /** Seules les notifications des agents (décisions, mails à trier, propositions) : rappels d'habitude et de tâche restent sur le téléphone. */
     fun parse(body: JsonObject): List<CenterNotification> =
         (body["notifications"] as? JsonArray).orEmpty().mapNotNull { element ->
             val item = element as? JsonObject ?: return@mapNotNull null
             val uid = item.text("uid") ?: return@mapNotNull null
             val data = item["data"] as? JsonObject
-            if (!isAgentItem(data)) return@mapNotNull null
             CenterNotification(
                 uid = uid,
                 title = item.text("title").orEmpty(),
@@ -138,10 +136,6 @@ object CenterNotifications {
                 ),
             )
         }
-
-    private fun isAgentItem(data: JsonObject?): Boolean =
-        data != null && listOf("pluginId", "agentLabel", "proposal_uid").any { data.text(it) != null } ||
-            data?.text("kind") == "mail_ready"
 
     private fun JsonObject.text(key: String): String? = (this[key] as? JsonPrimitive)?.takeIf { it.isString }?.contentOrNull?.ifBlank { null }
 }

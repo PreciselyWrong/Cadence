@@ -89,7 +89,10 @@ const notificationsController = {
     async getUnreadCount(req, res, next) {
         try {
             const userId = requireUserId(req);
-            const result = await notificationsService.getUnreadCount(userId);
+            const result = await notificationsService.getUnreadCount(
+                userId,
+                req.query
+            );
             res.json(result);
         } catch (error) {
             next(error);

@@ -17,7 +17,7 @@ import kotlinx.serialization.json.intOrNull
  */
 object NotificationCenter {
     private const val TAG = "NotificationCenter"
-    private const val LIST_PATH = "/api/notifications?limit=50"
+    private const val LIST_PATH = "/api/notifications?limit=50&scope=agents"
 
     private val _unread = MutableStateFlow(0)
     val unread: StateFlow<Int> = _unread.asStateFlow()
@@ -25,7 +25,7 @@ object NotificationCenter {
     /** Le compteur reste à sa dernière valeur hors ligne. */
     suspend fun refreshUnread(context: Context) {
         try {
-            val count = liveRequest(context, "GET", "/api/notifications/unread-count")["count"] as? JsonPrimitive
+            val count = liveRequest(context, "GET", "/api/notifications/unread-count?scope=agents")["count"] as? JsonPrimitive
             count?.intOrNull?.let { _unread.value = it }
         } catch (error: CancellationException) {
             throw error
