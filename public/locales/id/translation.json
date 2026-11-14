@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Perkecil",
+        "maximize": "Perbesar",
+        "close": "Tutup"
+    },
     "weekend": {
         "title": "Akhir pekan",
         "loadError": "Akhir pekan tidak dapat dibuka.",

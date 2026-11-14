@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Réduire",
+        "maximize": "Agrandir",
+        "close": "Fermer"
+    },
     "weekend": {
         "title": "Week-end",
         "loadError": "Impossible d’ouvrir le week-end.",

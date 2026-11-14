@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Thu nhỏ",
+        "maximize": "Phóng to",
+        "close": "Đóng"
+    },
     "weekend": {
         "title": "Cuối tuần",
         "loadError": "Không mở được đề xuất cuối tuần.",

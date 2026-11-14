@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Minimizează",
+        "maximize": "Maximizează",
+        "close": "Închide"
+    },
     "weekend": {
         "title": "Week-end",
         "loadError": "Week-endul nu a putut fi deschis.",

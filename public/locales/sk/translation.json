@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Minimalizovať",
+        "maximize": "Maximalizovať",
+        "close": "Zavrieť"
+    },
     "weekend": {
         "title": "Víkend",
         "loadError": "Víkend sa nepodarilo otvoriť.",

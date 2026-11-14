@@ -1,136 +1,96 @@
 use gtk::prelude::*;
 use javascriptcore::ValueExt;
-use std::time::Duration;
 use webkit2gtk::WebViewExt;
 
-const STYLE: &str = r#"
-#cadence-titlebar {
-  background: #f4f4f6;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  min-height: 32px;
-  padding: 0 7px;
-}
-#cadence-titlebar button {
-  background: transparent;
-  border: 0;
-  border-radius: 6px;
-  box-shadow: none;
-  color: #46464f;
-  min-height: 28px;
-  min-width: 32px;
-  padding: 0;
-}
-#cadence-titlebar button:hover { background: #e4e4e8; }
-#cadence-titlebar button:active { background: #d9d9df; }
-#cadence-titlebar button:focus { outline: 2px solid #5e5ce6; outline-offset: -2px; }
-#cadence-titlebar #cadence-close:hover { background: #f9dfe1; color: #a72f3c; }
-#cadence-titlebar.cadence-dark { background: #1f2129; }
-#cadence-titlebar.cadence-dark button { color: #ececf2; }
-#cadence-titlebar.cadence-dark button:hover { background: #30333f; }
-#cadence-titlebar.cadence-dark button:active { background: #414453; }
-#cadence-titlebar.cadence-dark button:focus { outline-color: #a9a6ff; }
-#cadence-titlebar.cadence-dark #cadence-close:hover { background: #653039; color: #fff; }
-"#;
+// The web UI draws the window controls in its own top bar and marks them with
+// `data-desktop-window` (`drag`, `minimize`, `maximize`, `close`). The page
+// gets no channel to the app: on a real primary mouse press GTK asks the page,
+// in an isolated script world the page's scripts cannot patch, which marked
+// element is under the pointer, then acts on the window itself.
+const HIT_TEST: &str = r#"(() => {
+  const el = document.elementFromPoint(%X%, %Y%);
+  const marked = el && el.closest('[data-desktop-window]');
+  if (!marked) return '';
+  const action = marked.getAttribute('data-desktop-window');
+  if (action !== 'drag') return action;
+  const control = el.closest('a,button,input,textarea,select,label,[role],[contenteditable],[tabindex]');
+  return control && marked.contains(control) && control !== marked ? '' : 'drag';
+})()"#;
+const WORLD: &str = "cadence-window-controls";
+// Themes give `.titlebar` a height, padding and border; this one must take none.
+const STYLE: &str = "#cadence-titlebar { min-height: 0; padding: 0; margin: 0; border: 0; box-shadow: none; background: none; }";
 
 pub fn attach(window: &tauri::WebviewWindow) -> Result<(), Box<dyn std::error::Error>> {
     let gtk_window = window.gtk_window()?;
-    let header = gtk::HeaderBar::new();
-    header.set_widget_name("cadence-titlebar");
-    header.set_show_close_button(false);
-
-    let minimize = button("window-minimize-symbolic", "Réduire");
-    let maximize = button("window-maximize-symbolic", "Agrandir ou restaurer");
-    let close = button("window-close-symbolic", "Fermer");
-    close.set_widget_name("cadence-close");
-
-    let min_window = window.clone();
-    minimize.connect_clicked(move |_| {
-        let _ = min_window.minimize();
-    });
-    let max_window = window.clone();
-    maximize.connect_clicked(move |_| {
-        if max_window.is_maximized().unwrap_or(false) {
-            let _ = max_window.unmaximize();
-        } else {
-            let _ = max_window.maximize();
-        }
-    });
-    let close_window = window.clone();
-    close.connect_clicked(move |_| {
-        let _ = close_window.close();
-    });
-
-    // GTK places end-packed widgets from the outside in.
-    header.pack_end(&close);
-    header.pack_end(&maximize);
-    header.pack_end(&minimize);
-
+    // An empty titlebar keeps GTK's client-side frame (shadow, resize edges)
+    // without the system bar; the controls live in the web UI's top bar.
+    let empty = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    empty.set_widget_name("cadence-titlebar");
     let provider = gtk::CssProvider::new();
     provider.load_from_data(STYLE.as_bytes())?;
-    if let Some(screen) = gtk::gdk::Screen::default() {
-        gtk::StyleContext::add_provider_for_screen(
-            &screen,
-            &provider,
-            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
-        );
-    }
-    gtk_window.set_titlebar(Some(&header));
+    empty
+        .style_context()
+        .add_provider(&provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
+    gtk_window.set_titlebar(Some(&empty));
     if gtk_window.titlebar().is_none() {
-        return Err("failed to attach the Cadence titlebar".into());
+        return Err("failed to replace the system titlebar".into());
     }
-    header.show_all();
-    sync_theme(window)?;
-    Ok(())
-}
+    empty.show();
 
-fn sync_theme(window: &tauri::WebviewWindow) -> tauri::Result<()> {
-    let window_for_webview = window.clone();
+    let target = window.clone();
     window.with_webview(move |platform| {
-        let Ok(gtk_window) = window_for_webview.gtk_window() else {
-            return;
-        };
-        let Some(header) = gtk_window
-            .titlebar()
-            .and_then(|widget| widget.downcast::<gtk::HeaderBar>().ok())
-        else {
-            return;
-        };
         let webview = platform.inner();
-        let weak = webview.downgrade();
-        gtk::glib::timeout_add_local(Duration::from_secs(1), move || {
-            let Some(webview) = weak.upgrade() else {
-                return gtk::glib::ControlFlow::Break;
-            };
-            let header = header.clone();
-            webview.evaluate_javascript(
-                "document.documentElement.classList.contains('dark')",
-                None,
+        webview.connect_button_press_event(move |view, event| {
+            if event.button() != 1 {
+                return gtk::glib::Propagation::Proceed;
+            }
+            let double = event.event_type() == gtk::gdk::EventType::DoubleButtonPress;
+            let (x, y) = event.position();
+            let (root_x, root_y) = event.root();
+            let zoom = view.zoom_level().max(0.1);
+            let script = HIT_TEST
+                .replace("%X%", &format!("{:.1}", x / zoom))
+                .replace("%Y%", &format!("{:.1}", y / zoom));
+            let time = event.time();
+            let target = target.clone();
+            view.evaluate_javascript(
+                &script,
+                Some(WORLD),
                 None,
                 None::<&webkit2gtk::gio::Cancellable>,
                 move |result| {
-                    if let Ok(value) = result {
-                        if value.is_boolean() {
-                            let context = header.style_context();
-                            if value.to_boolean() {
-                                context.add_class("cadence-dark");
-                            } else {
-                                context.remove_class("cadence-dark");
-                            }
-                        }
-                    }
+                    let Ok(value) = result else { return };
+                    act(&target, &value.to_str(), double, root_x, root_y, time);
                 },
             );
-            gtk::glib::ControlFlow::Continue
+            gtk::glib::Propagation::Proceed
         });
     })?;
     Ok(())
 }
 
-fn button(icon: &str, label: &str) -> gtk::Button {
-    let button = gtk::Button::from_icon_name(Some(icon), gtk::IconSize::Button);
-    button.set_tooltip_text(Some(label));
-    button.set_can_focus(true);
-    button
+fn act(window: &tauri::WebviewWindow, action: &str, double: bool, x: f64, y: f64, time: u32) {
+    let toggle_maximize = || {
+        if window.is_maximized().unwrap_or(false) {
+            let _ = window.unmaximize();
+        } else {
+            let _ = window.maximize();
+        }
+    };
+    match action {
+        "minimize" if !double => {
+            let _ = window.minimize();
+        }
+        "maximize" if !double => toggle_maximize(),
+        "close" if !double => {
+            let _ = window.close();
+        }
+        "drag" if double => toggle_maximize(),
+        "drag" => {
+            if let Ok(gtk_window) = window.gtk_window() {
+                gtk_window.begin_move_drag(1, x as i32, y as i32, time);
+            }
+        }
+        _ => {}
+    }
 }

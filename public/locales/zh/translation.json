@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "最小化",
+        "maximize": "最大化",
+        "close": "关闭"
+    },
     "weekend": {
         "title": "周末",
         "loadError": "无法打开周末安排。",

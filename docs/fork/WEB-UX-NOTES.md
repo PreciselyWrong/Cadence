@@ -970,3 +970,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Décision** : toutes les tâches des faits sont là, une sans changement sur « Garder tel quel ». Trois sections : Échues (retard « hier » ou « N j », en orange), Par jour, Plus loin. Sous le sous-titre, une bande des sept jours (charge, « Occupé » si un événement sur la journée, barre orange quand c'est plein). Le menu de la ligne devient un choix en ligne : le jour choisi montre ce qui y est prévu (tâches, agenda, heures de travail), puis les jours avec leur charge, puis les horizons.
 - **Android à reprendre** : mêmes sections et même bande des jours ; le détail du jour vient de `days` (serveur, Ta semaine), absent sur un ancien serveur (charges seules).
+
+### 2026-11-14 — Client Linux : plus de barre de titre système
+
+- **Décision** : dans le client Linux (`CadenceDesktop/`), la barre du haut de Cadence sert de barre de titre : Réduire, Agrandir et Fermer à droite après l'avatar, glisser et double-clic sur ses vides et sur la rangée du logo (`Desktop/WindowControls.tsx`, `desktop/src-tauri/src/titlebar.rs`).
+- **Android à reprendre** : rien, propre au bureau Linux.

@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Minimaliseren",
+        "maximize": "Maximaliseren",
+        "close": "Sluiten"
+    },
     "weekend": {
         "title": "Weekend",
         "loadError": "Het weekend kon niet worden geopend.",

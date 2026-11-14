@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Минимизиране",
+        "maximize": "Максимизиране",
+        "close": "Затваряне"
+    },
     "weekend": {
         "title": "Уикенд",
         "loadError": "Уикендът не можа да се отвори.",

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { desktopDragRegion } from './Desktop/WindowControls';
 import { useTranslation } from 'react-i18next';
 import { getAssetPath } from '../config/paths';
 import { Area } from '../entities/Area';
@@ -392,7 +393,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 }
                             >
                                 <SidebarResizeHandle />
-                                <div className="relative h-14 mt-2 flex-shrink-0 flex items-center justify-center px-5">
+                                <div
+                                    className="relative h-14 mt-2 flex-shrink-0 flex items-center justify-center px-5"
+                                    {...desktopDragRegion()}
+                                >
                                     <Link
                                         to="/"
                                         className="flex items-center no-underline"

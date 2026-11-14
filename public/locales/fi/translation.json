@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Pienennä",
+        "maximize": "Suurenna",
+        "close": "Sulje"
+    },
     "weekend": {
         "title": "Viikonloppu",
         "loadError": "Viikonloppua ei voitu avata.",

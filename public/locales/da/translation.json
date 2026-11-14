@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Minimer",
+        "maximize": "Maksimer",
+        "close": "Luk"
+    },
     "weekend": {
         "title": "Weekend",
         "loadError": "Weekenden kunne ikke åbnes.",

@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Pomanjšaj",
+        "maximize": "Povečaj",
+        "close": "Zapri"
+    },
     "weekend": {
         "title": "Konec tedna",
         "loadError": "Konca tedna ni bilo mogoče odpreti.",

@@ -18,6 +18,7 @@ import UniversalSearch from './UniversalSearch/UniversalSearch';
 import SidebarPanelIcon from './Sidebar/SidebarPanelIcon';
 import NotificationsDropdown from './Notifications/NotificationsDropdown';
 import { isDesktopApp } from '../utils/desktopApp';
+import WindowControls, { desktopDragRegion } from './Desktop/WindowControls';
 import FocusChip from './Focus/FocusChip';
 import { getApiPath, getAssetPath } from '../config/paths';
 import { getFeatureFlags, FeatureFlags } from '../utils/featureFlags';
@@ -199,7 +200,10 @@ const Navbar: React.FC<NavbarProps> = ({
     return (
         <nav className="relative z-30 has-[[data-testid=universal-search][data-state=open]]:z-50 flex-shrink-0 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800">
             {/* Main bar row */}
-            <div className="h-14 flex items-center justify-between">
+            <div
+                className="h-14 flex items-center justify-between"
+                {...desktopDragRegion()}
+            >
                 {/* On phones with the sidebar closed, the button that brings
                     it back and the logo (the sidebar's logo is off screen);
                     then the Focus chip that scopes the app */}
@@ -379,6 +383,7 @@ const Navbar: React.FC<NavbarProps> = ({
                             </div>
                         )}
                     </div>
+                    <WindowControls />
                 </div>
             </div>
 

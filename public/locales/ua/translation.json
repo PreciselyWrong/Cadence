@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Згорнути",
+        "maximize": "Розгорнути",
+        "close": "Закрити"
+    },
     "weekend": {
         "title": "Вихідні",
         "loadError": "Не вдалося відкрити вихідні.",

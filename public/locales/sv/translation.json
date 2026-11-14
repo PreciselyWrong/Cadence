@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Minimera",
+        "maximize": "Maximera",
+        "close": "Stäng"
+    },
     "weekend": {
         "title": "Helgen",
         "loadError": "Det gick inte att öppna helgen.",

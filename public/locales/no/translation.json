@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Minimer",
+        "maximize": "Maksimer",
+        "close": "Lukk"
+    },
     "weekend": {
         "title": "Helg",
         "loadError": "Helgen kunne ikke åpnes.",

@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "최소화",
+        "maximize": "최대화",
+        "close": "닫기"
+    },
     "weekend": {
         "title": "주말",
         "loadError": "주말 계획을 열 수 없습니다.",

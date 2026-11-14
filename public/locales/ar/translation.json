@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "تصغير",
+        "maximize": "تكبير",
+        "close": "إغلاق"
+    },
     "weekend": {
         "title": "عطلة نهاية الأسبوع",
         "loadError": "تعذّر فتح عطلة نهاية الأسبوع.",

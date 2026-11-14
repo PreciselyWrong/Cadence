@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Свернуть",
+        "maximize": "Развернуть",
+        "close": "Закрыть"
+    },
     "weekend": {
         "title": "Выходные",
         "loadError": "Не удалось открыть выходные.",

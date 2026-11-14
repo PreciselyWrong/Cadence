@@ -1,4 +1,9 @@
 {
+    "desktopWindow": {
+        "minimize": "Simge durumuna küçült",
+        "maximize": "Ekranı kapla",
+        "close": "Kapat"
+    },
     "weekend": {
         "title": "Hafta sonu",
         "loadError": "Hafta sonu açılamadı.",
