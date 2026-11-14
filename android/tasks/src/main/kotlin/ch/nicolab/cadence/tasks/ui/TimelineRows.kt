@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.ui.semantics.onLongClick
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -323,6 +324,8 @@ internal fun ToPlaceRow(
     onSwipeAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
     background: Color = MaterialTheme.colorScheme.surface,
+    /** Faux quand l'appui long sert à glisser la ligne : le menu s'ouvre alors au relâcher, sans bouger. */
+    longPressMenu: Boolean = true,
     trailing: (@Composable () -> Unit)? = null,
 ) {
     val haptic = rememberCadenceHaptic()
@@ -341,7 +344,7 @@ internal fun ToPlaceRow(
                 .heightIn(min = RowHeight)
                 .background(background)
                 .then(swipeSemantics)
-                .combinedClickable(onClick = onOpen, onLongClick = { haptic.longPress(); onMenu() }),
+                .rowPress(longPressMenu, onOpen) { haptic.longPress(); onMenu() },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Le cercle s'aligne sur la marge : la zone tactile déborde à gauche de son vide.
@@ -382,6 +385,7 @@ internal fun TimelineTaskRow(
     onMenu: () -> Unit,
     onSwipeAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
+    longPressMenu: Boolean = true,
 ) {
     val haptic = rememberCadenceHaptic()
     val swipeConfig = rememberSwipeConfig()
@@ -398,7 +402,7 @@ internal fun TimelineTaskRow(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .then(swipeSemantics)
-                .combinedClickable(onClick = onOpen, onLongClick = { haptic.longPress(); onMenu() })
+                .rowPress(longPressMenu, onOpen) { haptic.longPress(); onMenu() }
                 .alpha(if (entry.past) PAST_ALPHA else 1f),
             marker = {
                 TaskDot(checking || task.isClosed, task.priority == TaskPriority.HIGH) {
@@ -493,3 +497,15 @@ internal fun durationText(minutes: Int): String {
         else -> "$h h ${m.toString().padStart(2, '0')}"
     }
 }
+
+/**
+ * Toucher qui ouvre ; appui long qui ouvre le menu, sauf quand il sert à glisser la ligne ([longPressMenu] faux) : le
+ * menu reste alors une action d'accessibilité, et s'ouvre au relâcher d'un appui long sans mouvement.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+internal fun Modifier.rowPress(longPressMenu: Boolean, onClick: () -> Unit, onMenu: () -> Unit): Modifier =
+    if (longPressMenu) {
+        combinedClickable(onClick = onClick, onLongClick = onMenu)
+    } else {
+        semantics { onLongClick { onMenu(); true } }.combinedClickable(onClick = onClick)
+    }

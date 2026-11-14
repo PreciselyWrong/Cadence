@@ -614,6 +614,26 @@ internal class TasksViewModel(
         applyPlan(TodayReorder.writes(moment.value.today, untimed, planned, task.uid, toIndex), getString(R.string.today_reordered_notice, task.name))
     }
 
+    /**
+     * Ligne glissée dans Aujourd'hui ([TodayDrop]) : une échue passe d'abord à aujourd'hui comme « Aujourd'hui » de
+     * Replanifier, puis [edits] la placent dans le plan du jour ; un seul « Annuler » défait tout.
+     */
+    internal fun dropInToday(task: TaskItem, late: Boolean, edits: List<PlanEdit>, message: String) {
+        if (!late && edits.isEmpty()) return
+        launchAction {
+            val undoLate = if (late) replanOverdue(task, ReplanChoice.Day(moment.value.today)) else null
+            val undoPlan = if (edits.isEmpty()) null else planEdits.apply(edits)
+            _notices.tryEmit(
+                UndoNotice(message) {
+                    launchAction {
+                        undoPlan?.invoke()
+                        undoLate?.invoke()
+                    }
+                },
+            )
+        }
+    }
+
     /** Les tâches d'Aujourd'hui que l'on range à la main : ni à heure (créneau ou échéance horaire) ni occurrence à venir. */
     fun todayUntimed(list: List<TaskItem>): List<String> {
         val starts = today.value.planStarts

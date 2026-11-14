@@ -13,6 +13,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.ui.semantics.onLongClick
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -118,6 +119,8 @@ internal fun TaskRow(
     trailing: (@Composable () -> Unit)? = null,
     /** La ligne se montre cochée et barrée avant que la tâche le soit (geste du résumé, tâche récurrente qui reste ouverte). */
     forceClosed: Boolean = false,
+    /** Faux quand l'appui long sert à glisser la ligne (Aujourd'hui). */
+    longPressMenu: Boolean = true,
     /**
      * Ligne calme d'Aujourd'hui : le titre seul, et l'heure à droite quand la tâche en a une ; projet, source, lien,
      * note et image restent dans la fiche.
@@ -161,14 +164,18 @@ internal fun TaskRow(
                 .background(MaterialTheme.colorScheme.surface, RowShape)
                 .then(swipeSemantics)
                 .alpha(if (task.virtual) VIRTUAL_ALPHA else 1f)
+                // Glissée dans Aujourd'hui, l'appui long déplace la ligne : le menu s'ouvre au relâcher (voir rowPress).
+                .then(if (longPressMenu) Modifier else Modifier.semantics { onLongClick { onMenu(); true } })
                 .combinedClickable(
                     interactionSource = interaction,
                     indication = null,
                     onClick = onOpen,
                     // Une occurrence à venir n'a pas d'actions propres : le menu agirait sur la tâche enregistrée.
-                    onLongClick = {
-                        haptic.longPress()
-                        if (task.virtual) onOpen() else onMenu()
+                    onLongClick = if (!longPressMenu) null else {
+                        {
+                            haptic.longPress()
+                            if (task.virtual) onOpen() else onMenu()
+                        }
                     },
                 )
                 .padding(vertical = if (calm) 0.dp else 4.dp),

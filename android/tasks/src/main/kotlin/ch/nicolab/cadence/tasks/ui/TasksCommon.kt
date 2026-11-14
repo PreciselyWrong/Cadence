@@ -246,9 +246,11 @@ internal fun LazyListScope.taskRows(
     subtitleOf: (@Composable (TaskItem) -> String?)? = null,
     /** Lignes calmes d'Aujourd'hui (titre et repère à droite seuls, voir [TaskRow]). */
     calm: Boolean = false,
+    /** Ligne que l'on glisse (Aujourd'hui) : son modificateur ; l'appui long la déplace au lieu d'ouvrir le menu. */
+    dragOf: (@Composable (TaskItem) -> Modifier)? = null,
 ) {
     items(tasks, key = { it.rowKey }) { task ->
-        Column(Modifier.fillMaxWidth().animateItem()) {
+        Column(Modifier.fillMaxWidth().animateItem().then(dragOf?.invoke(task) ?: Modifier)) {
             TaskRow(
                 task = task,
                 projectName = task.projectUid?.let { projectNames[it] },
@@ -263,6 +265,7 @@ internal fun LazyListScope.taskRows(
                 sectionDay = sectionDay,
                 subtitle = subtitleOf?.invoke(task),
                 calm = calm,
+                longPressMenu = dragOf == null,
             )
             belowRow?.invoke(task)
         }

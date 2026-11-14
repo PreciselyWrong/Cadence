@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-14 — Aujourd'hui : glisser les tâches
+
+- **Problème** : depuis la ligne du temps, plus aucune ligne d'Aujourd'hui ne se déplaçait au doigt : ni ranger « À caser », ni décaler une tâche de « Ma journée », ni tirer une échue dans la journée.
+- **Décision** : appui long puis glisser, sur toutes les tâches d'Aujourd'hui (échues ouvertes comprises) ; un trait à l'accent et une étiquette disent où elle tombe (« 18:30 » ou « À caser »). Dans « À caser », elle se range ; dans « Ma journée », elle prend un créneau qui commence à la fin de ce qui la précède, au quart d'heure, jamais avant maintenant ; une échue passe à aujourd'hui. Relâchée sans bouger, la ligne ouvre son menu comme avant. Les événements de l'agenda du téléphone ne bougent pas.
+- **Web** : rien à reprendre ; Aujourd'hui du web se glisse déjà.
+
 ### 2026-11-13 — Une seule liste des agendas, Réglages depuis chaque onglet
 
 - **Problème** : la feuille « Affichage » de l'Agenda et Réglages › Agendas réglaient les mêmes agendas autrement (puces « Masquer partout » d'un côté, « Utiliser dans Cadence » et agendas inutilisés de l'autre) ; les Réglages ne s'ouvraient que depuis Habitudes et le sélecteur de listes de Tâches.

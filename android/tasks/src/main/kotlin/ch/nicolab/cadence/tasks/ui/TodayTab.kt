@@ -11,6 +11,14 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.unit.IntOffset
+import ch.nicolab.cadence.tasks.planning.TodayDrop
+import kotlin.math.roundToInt
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -203,7 +211,65 @@ internal fun TodayTab(
     }
 
     val weekAction = rememberProposalAction(ProposalKind.WEEK)
-    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+    val listState = rememberLazyListState()
+    val drag = remember(listState) { TodayDragState(listState) }
+    val nowMinute = minuteOfDay(moment.now, zone)
+    // Les lignes que le glisser lit, par clé de la liste ; les tâches qu'on peut soulever, et si elles sont échues.
+    val dropRows: TodayDropRows = buildMap {
+        if (late.isNotEmpty()) {
+            put("fold-$OVERDUE_FOLD", TodayDrop.Row.Late)
+            late.forEach { put(it.rowKey, TodayDrop.Row.Late) }
+        }
+        put("to-place-title", TodayDrop.Row.ToPlaceTitle)
+        timeline.toPlace.forEach { put("task:${it.task.uid}", TodayDrop.Row.ToPlace(it.task.uid)) }
+        put("to-place-more", TodayDrop.Row.ToPlaceMore)
+        put("day-title", TodayDrop.Row.DayTitle)
+        put("fold-$PAST_FOLD", TodayDrop.Row.PastFold)
+        timeline.entries.forEach { entry ->
+            when (entry) {
+                is TimelineEntry.Item -> put(
+                    entry.item.key,
+                    TodayDrop.Row.DayItem(entry.start?.let { minuteOfDay(it, zone) }, entry.end?.let { minuteOfDay(it, zone) }),
+                )
+                TimelineEntry.Now -> put("now", TodayDrop.Row.Now(nowMinute))
+                is TimelineEntry.Free -> put("free", TodayDrop.Row.Free(entry.startMinute, entry.endMinute))
+            }
+        }
+    }
+    val liftable: Map<Any, Pair<TaskItem, Boolean>> = buildMap {
+        late.forEach { put(it.rowKey, it to true) }
+        timeline.toPlace.forEach { put("task:${it.task.uid}", it.task to false) }
+        dayItems.forEach { entry -> (entry.item as? TodayItem.Task)?.let { put(it.key, it.task to false) } }
+    }.filterValues { (task, _) -> !task.virtual && !task.isClosed }
+
+    /** Où tombe la ligne soulevée, d'après ses deux voisines. */
+    fun dropTarget(task: TaskItem): TodayDrop.Target? {
+        val line = state.plan.firstOrNull { it.uid == task.uid && it.day == today }
+        val duration = line?.durationMinutes ?: task.estimatedMinutes?.takeIf { it > 0 } ?: TodayTimeline.DEFAULT_TASK_MINUTES
+        return TodayDrop.target(
+            drag.above?.let(dropRows::get), drag.below?.let(dropRows::get),
+            task.uid, toPlaceTasks.map { it.uid }, plannedToday, nowMinute, duration,
+        )
+    }
+
+    fun drop(key: Any) {
+        val (task, isLate) = liftable[key] ?: return
+        val target = dropTarget(task) ?: return
+        val line = state.plan.firstOrNull { it.uid == task.uid && it.day == today }
+        val edits = TodayDrop.writes(task.uid, target, today, line, dueHasTime = task.dueHasTime && !isLate, estimate = task.estimatedMinutes)
+        val message = when (target) {
+            is TodayDrop.Target.At -> context.getString(R.string.timeline_moved_notice, task.name, minuteText(target.minute))
+            is TodayDrop.Target.Untimed -> context.getString(R.string.today_reordered_notice, task.name)
+        }
+        viewModel.dropInToday(task, isLate, edits, message)
+    }
+
+    @Composable
+    fun Modifier.lift(key: Any, onMenu: () -> Unit): Modifier =
+        if (key in liftable) todayDraggable(drag, key, onDrop = { drop(key) }, onMenu = onMenu) else this
+
+    Box(modifier) {
+    LazyColumn(modifier = Modifier.fillMaxSize(), state = listState, contentPadding = tasksListPadding()) {
         // « Planifier ma semaine (IA) » : un lien discret le dimanche et le lundi, ou quand la semaine est prête ou en
         // préparation ; le reste du temps, dans le menu ⋯ de l'en-tête.
         if (WeekPlanning.linkVisible(today, weekAction.phase)) {
@@ -280,6 +346,7 @@ internal fun TodayTab(
                     late, projectNames, projectColors, moment, viewModel, onOpen,
                     projectIcons = projectIcons,
                     calm = true,
+                    dragOf = { task -> Modifier.lift(task.rowKey) { viewModel.openMenu(task) } },
                     subtitleOf = { task ->
                         state.plannedDays[task.uid]?.let {
                             stringResource(R.string.tasks_overdue_planned_on, dayLabel(it, today, DayLabelStyle.SHORT))
@@ -307,7 +374,8 @@ internal fun TodayTab(
                     onOpen = { onOpen(task) },
                     onMenu = { viewModel.openMenu(task, toPlaceTasks) },
                     onSwipeAction = { viewModel.swipe(task, it) },
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem().lift("task:${task.uid}") { viewModel.openMenu(task, toPlaceTasks) },
+                    longPressMenu = "task:${task.uid}" !in liftable,
                 )
             }
             // Trois tâches à la fois : le reste attend derrière une ligne discrète.
@@ -364,7 +432,8 @@ internal fun TodayTab(
                             onOpen = { onOpen(item.task) },
                             onMenu = { viewModel.openMenu(item.task) },
                             onSwipeAction = { viewModel.swipe(item.task, it) },
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier.animateItem().lift(item.key) { viewModel.openMenu(item.task) },
+                            longPressMenu = item.key !in liftable,
                         )
                         is TodayItem.Event -> TimelineEventRow(
                             event = item.event,
@@ -439,6 +508,33 @@ internal fun TodayTab(
             }
         }
     }
+    // Où la ligne tomberait : un trait à l'accent et l'heure (ou « À caser »).
+    val lifted = drag.key?.let(liftable::get)?.first
+    if (lifted != null && !drag.lineY.isNaN()) {
+        val target = dropTarget(lifted)
+        val label = when (target) {
+            is TodayDrop.Target.At -> minuteText(target.minute)
+            is TodayDrop.Target.Untimed -> stringResource(R.string.today_section_to_place)
+            null -> null
+        }
+        if (label != null) {
+            Row(
+                Modifier.offset { IntOffset(0, drag.lineY.roundToInt() - 1.dp.roundToPx()) }.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(Modifier.weight(1f).height(2.dp).background(cadence.primary))
+                Text(
+                    label,
+                    style = sideStyle(),
+                    color = cadence.onPrimary,
+                    modifier = Modifier
+                        .background(cadence.primary, Radius.Control)
+                        .padding(horizontal = Space.sm, vertical = 2.dp),
+                )
+            }
+        }
+    }
+    }
     if (replanOpen) {
         // Le matin d'abord : les échues se replacent d'un toucher chacune, sans passer par Planifier.
         OverdueReplanSheet(
@@ -495,6 +591,9 @@ private const val TO_PLACE_FOLD = "to-place"
 private const val PAST_FOLD = "past"
 
 private val minuteFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+private fun minuteOfDay(instant: Instant, zone: java.time.ZoneId): Int =
+    instant.atZone(zone).toLocalTime().let { it.hour * 60 + it.minute }
 
 private fun minuteText(minute: Int): String = LocalTime.of(minute / 60, minute % 60).format(minuteFormat)
 
