@@ -38,7 +38,7 @@ internal data class HeaderToggle(val label: String, val onToggle: () -> Unit)
 internal fun HeaderMoreMenu(
     notesToggle: HeaderToggle?,
     doneToggle: HeaderToggle?,
-    /** Action propre à l'écran ouvert, en tête du menu (Aujourd'hui : « Planifier ma semaine (IA) »). */
+    /** Action propre à l'écran ouvert, en tête du menu (Aujourd'hui et Planifier : « Planifier ma semaine (IA) »). */
     screenAction: HeaderToggle? = null,
     onOpenNotifications: () -> Unit,
     onOpenSettings: () -> Unit,

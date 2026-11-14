@@ -149,10 +149,12 @@ internal fun TaskOverlays(
 private fun EventSheets(viewModel: TasksViewModel) {
     val sheet by viewModel.eventSheet.collectAsStateWithLifecycle()
     val events by viewModel.todayEvents.collectAsStateWithLifecycle()
+    // Planifier ouvre aussi les événements des autres jours de sa semaine.
+    val weekEvents by viewModel.weekEvents.collectAsStateWithLifecycle()
     val settings by viewModel.calendarSettings.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val open = sheet ?: return
-    val item = events.firstOrNull { it.event.key == open.key }
+    val item = (events + weekEvents).firstOrNull { it.event.key == open.key }
     if (item == null) {
         // L'événement a disparu (masqué, agenda retiré) : rien à montrer.
         LaunchedEffect(open) { viewModel.dismissEventSheet() }

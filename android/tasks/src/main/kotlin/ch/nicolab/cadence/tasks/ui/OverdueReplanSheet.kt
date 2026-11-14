@@ -31,14 +31,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import ch.nicolab.cadence.designsystem.components.GlassWindowBlur
-import ch.nicolab.cadence.designsystem.components.glassy
+import ch.nicolab.cadence.designsystem.components.glassScrim
+import ch.nicolab.cadence.designsystem.components.glassWindow
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -128,14 +129,16 @@ internal fun OverdueReplanSheet(
         }
     }
 
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = palette.background.glassy,
+        sheetState = sheetState,
+        shape = Radius.Sheet,
+        containerColor = Color.Transparent,
+        modifier = Modifier.glassWindow(Radius.Sheet, palette.background, sheetOffset = sheetState::requireOffset),
         contentColor = palette.onSurface,
-        scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
+        scrimColor = glassScrim(),
     ) {
-        GlassWindowBlur()
         Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = Space.gutter)) {
             Text(stringResource(R.string.overdue_replan_title), style = MaterialTheme.typography.titleLarge)
             Text(

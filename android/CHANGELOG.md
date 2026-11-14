@@ -1,3 +1,9 @@
+## [1.38.0] — 14 novembre 2026
+
+- Planifier refait : bande de la semaine (charge, tâches, points des événements, semaine suivante), journée choisie avec ses tâches et ses événements, tiroir « À placer » (échues, Inbox, à planifier) et une feuille de choix par tâche : jour, Cette semaine, Ce mois-ci, Plus tard, date, Fait, Abandonner.
+- « Planifier ma journée avec l'IA » sur le jour choisi.
+- Verre dépoli : seul le fond des feuilles et des menus floute ce qui est dessous, la barre du bas comprise ; barre du bas plus transparente, avec un léger halo à l'accent.
+
 ## [1.37.7] — 14 novembre 2026
 
 - Le + est de nouveau sur tous les onglets : Tâches et Bilan ajoutent une tâche, Agenda une tâche du jour affiché, Habitudes une habitude. La barre se soulève en bosse autour de lui (même verre, même liseré, raccords arrondis), le + est un disque plein à l'accent, et la barre est un peu plus basse.

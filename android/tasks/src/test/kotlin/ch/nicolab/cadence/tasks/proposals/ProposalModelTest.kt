@@ -474,6 +474,26 @@ class ProposalModelTest {
         assertNull(ProposalNotifications.present("week", "pending"))
     }
 
+    @Test
+    fun `a period is a single day only when start equals end`() {
+        assertTrue(Proposals.isSingleDay(monday, monday))
+        assertFalse(Proposals.isSingleDay(monday, tuesday))
+        assertFalse(Proposals.isSingleDay(null, monday))
+        assertFalse(Proposals.isSingleDay(monday, null))
+    }
+
+    @Test
+    fun `the create body carries start and end only when given`() {
+        assertEquals(
+            """{"kind":"week"}""",
+            createBody(ProposalKind.WEEK, null, null).toString(),
+        )
+        assertEquals(
+            """{"kind":"week","start":"2026-11-16","end":"2026-11-16"}""",
+            createBody(ProposalKind.WEEK, monday, monday).toString(),
+        )
+    }
+
     private fun proposal(status: String) = ProposalDto(uid = "p1", kind = "week", status = status)
 
     private fun review(status: String, answer: ProposalAnswerDto) = ProposalDto(uid = "r1", kind = "review", status = status, answer = answer)

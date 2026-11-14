@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,12 +52,10 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
-import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkLists
 import ch.nicolab.cadence.tasks.model.ProjectChoices
-import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.quickadd.ShareCapture
 
 /** L'idée à trier et le titre de sa page s'il est connu à l'appui. */
@@ -306,37 +303,3 @@ internal fun QuickPill(
 }
 
 private const val IDEA_COLLAPSED_LINES = 3
-
-/**
- * « Quand ? » sous une tâche classée sans moment choisi. Chaque choix passe par le ViewModel, donc part en file hors
- * ligne ; la tâche sort de la liste dès qu'un moment est posé.
- */
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-internal fun WhenChoices(task: TaskItem, viewModel: TasksViewModel) {
-    val moment by viewModel.moment.collectAsStateWithLifecycle()
-    var picking by remember(task.uid) { mutableStateOf(false) }
-    FlowRow(
-        Modifier.fillMaxWidth().padding(start = Space.lg, end = Space.lg, bottom = Space.sm),
-        horizontalArrangement = Arrangement.spacedBy(Space.sm),
-        verticalArrangement = Arrangement.spacedBy(Space.sm),
-    ) {
-        Text(
-            stringResource(R.string.tasks_when_label),
-            style = MaterialTheme.typography.labelLarge,
-            color = cadence.onSurfaceVariant,
-            modifier = Modifier.padding(end = Space.xs),
-        )
-        QuickPill(stringResource(R.string.funnel_this_week), onClick = { viewModel.funnel(task, FunnelStage.THIS_WEEK) }, quiet = true)
-        QuickPill(stringResource(R.string.tasks_when_pick_date), onClick = { picking = true }, quiet = true)
-        QuickPill(stringResource(R.string.funnel_later), onClick = { viewModel.funnel(task, FunnelStage.LATER) }, quiet = true)
-        QuickPill(stringResource(R.string.tasks_no_due_date), onClick = { viewModel.clearWhen(task) }, quiet = true)
-    }
-    if (picking) {
-        TaskDatePickerDialog(
-            initial = moment.today,
-            onConfirm = { picking = false; viewModel.reschedule(task, it) },
-            onDismiss = { picking = false },
-        )
-    }
-}

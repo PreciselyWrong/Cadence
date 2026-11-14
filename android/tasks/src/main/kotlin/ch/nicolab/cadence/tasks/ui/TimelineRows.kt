@@ -308,7 +308,10 @@ private fun TimelineTitle(title: String, entry: TimelineEntry.Item, struck: Bool
     }
 }
 
-/** Ligne d'« À caser » : case, titre, repère à droite (« 15 min », « prévue 10:30 »), aux mesures de la journée. */
+/**
+ * Ligne d'« À caser » : case, titre, repère à droite (« 15 min », « prévue 10:30 »), aux mesures de la journée.
+ * [trailing] remplace le repère (le « ⋯ » du tiroir de Planifier) ; [background] : le fond de la surface qui la porte.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun ToPlaceRow(
@@ -319,6 +322,8 @@ internal fun ToPlaceRow(
     onMenu: () -> Unit,
     onSwipeAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
+    background: Color = MaterialTheme.colorScheme.surface,
+    trailing: (@Composable () -> Unit)? = null,
 ) {
     val haptic = rememberCadenceHaptic()
     val swipeConfig = rememberSwipeConfig()
@@ -334,7 +339,7 @@ internal fun ToPlaceRow(
             Modifier
                 .fillMaxWidth()
                 .heightIn(min = RowHeight)
-                .background(MaterialTheme.colorScheme.surface)
+                .background(background)
                 .then(swipeSemantics)
                 .combinedClickable(onClick = onOpen, onLongClick = { haptic.longPress(); onMenu() }),
             verticalAlignment = Alignment.CenterVertically,
@@ -355,8 +360,12 @@ internal fun ToPlaceRow(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
-            val right = mark ?: task.estimatedMinutes?.takeIf { it > 0 }?.let { durationText(it) }
-            right?.let { Text(it, style = sideStyle(), color = cadence.onSurfaceVariant, modifier = Modifier.padding(start = Space.sm)) }
+            if (trailing != null) {
+                trailing()
+            } else {
+                val right = mark ?: task.estimatedMinutes?.takeIf { it > 0 }?.let { durationText(it) }
+                right?.let { Text(it, style = sideStyle(), color = cadence.onSurfaceVariant, modifier = Modifier.padding(start = Space.sm)) }
+            }
         }
     }
 }

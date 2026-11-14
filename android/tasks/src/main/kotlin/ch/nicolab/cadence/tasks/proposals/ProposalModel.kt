@@ -226,6 +226,9 @@ object Proposals {
     /** Capacité supposée d'une journée quand le serveur n'en donne pas : 8 h. */
     const val FALLBACK_CAPACITY_MINUTES = 480
 
+    /** Une proposition sur un seul jour (début == fin) : « Planifier ma journée ». Une date manquante ne compte pas. */
+    fun isSingleDay(start: LocalDate?, end: LocalDate?): Boolean = start != null && start == end
+
     /** Changements de l'agent. Une date manquante pour `plan_day` ou `due` ôte le changement. */
     fun weekChanges(answer: ProposalAnswerDto?): List<WeekChange> =
         answer?.changes.orEmpty().mapNotNull { change ->

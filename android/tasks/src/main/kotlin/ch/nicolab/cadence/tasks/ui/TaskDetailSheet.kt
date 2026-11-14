@@ -78,8 +78,8 @@ import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.components.TaskCheckbox
-import ch.nicolab.cadence.designsystem.components.GlassWindowBlur
-import ch.nicolab.cadence.designsystem.components.glassy
+import ch.nicolab.cadence.designsystem.components.glassScrim
+import ch.nicolab.cadence.designsystem.components.glassWindow
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -210,15 +210,17 @@ internal fun TaskDetailSheet(
         picker = Picker.Dates
     }
 
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
         onDismissRequest = close,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = palette.background.glassy,
+        sheetState = sheetState,
+        shape = Radius.Sheet,
+        containerColor = Color.Transparent,
+        modifier = Modifier.glassWindow(Radius.Sheet, palette.background, sheetOffset = sheetState::requireOffset),
         contentColor = palette.onSurface,
-        scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
+        scrimColor = glassScrim(),
         dragHandle = null,
     ) {
-        GlassWindowBlur()
         Column(
             Modifier
                 .fillMaxWidth()

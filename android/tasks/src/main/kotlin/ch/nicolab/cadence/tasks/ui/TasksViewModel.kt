@@ -71,11 +71,11 @@ import ch.nicolab.cadence.tasks.planning.Horizon
 import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.planning.OverdueReplan
 import ch.nicolab.cadence.tasks.planning.ReplanChoice
-import ch.nicolab.cadence.tasks.planning.PlanCard
 import ch.nicolab.cadence.tasks.planning.PlanEdit
 import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.PlanEntry
 import ch.nicolab.cadence.tasks.planning.PlanHorizons
+import ch.nicolab.cadence.tasks.planning.PlanWeek
 import ch.nicolab.cadence.tasks.planning.ToSchedule
 import ch.nicolab.cadence.tasks.planning.TodayReorder
 import ch.nicolab.cadence.tasks.planning.ServerPlan
@@ -302,6 +302,21 @@ internal class TasksViewModel(
         .map { it.today to it.zone }
         .distinctUntilChanged()
         .flatMapLatest { (day, zone) -> calendar.events(TimeRange.ofDays(day, 1, zone), CalendarSurface.TASKS) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Premier jour de la semaine montrée par Planifier ; null : aujourd'hui. */
+    private val planWeekStart = MutableStateFlow<LocalDate?>(null)
+
+    /** Planifier montre la semaine qui commence à [start] : [weekEvents] la suit. */
+    fun showPlanWeek(start: LocalDate) {
+        planWeekStart.value = start
+    }
+
+    /** Événements de l'agenda des 7 jours montrés par Planifier ; relancé au changement de semaine ou de fuseau. */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val weekEvents: StateFlow<List<EventWithDone>> = combine(planWeekStart, moment) { start, m -> (start ?: m.today) to m.zone }
+        .distinctUntilChanged()
+        .flatMapLatest { (start, zone) -> calendar.events(TimeRange.ofDays(start, PlanWeek.DAYS, zone), CalendarSurface.TASKS) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val calendarSettings: StateFlow<CalendarGlobalSettings> = calendar.globalSettings
@@ -571,12 +586,6 @@ internal class TasksViewModel(
         val on = !Funnel.has(task, stage, ctx.weekStart)
         val message = getString(funnelNotice(stage, on), task.name)
         changeWithUndo(task, ReviewDecisions.toggle(stage, task, ctx), UndoChanges.restoreFunnel(task), message)
-    }
-
-    /** « Quand ? » → « Sans date » : la tâche garde son projet ou son domaine et sort de « À classer » ; annulable. */
-    fun clearWhen(task: TaskItem) {
-        val message = getString(R.string.swipe_notice_unscheduled, task.name)
-        changeWithUndo(task, TaskChange(needsWhen = false), TaskChange(needsWhen = true), message)
     }
 
     /** Date de réexamen d'une idée mise de côté ; null la retire. Ni rappel ni agenda. */
@@ -969,14 +978,6 @@ internal class TasksViewModel(
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), PlanBoardState())
 
-    /** Pose [card] sur [to] par le plan du jour (jamais l'échéance), avec « Annuler ». */
-    fun planMove(card: PlanCard, to: LocalDate) =
-        applyPlan(PlanBoard.moveWrites(card, to), format(R.string.plan_moved_notice, card.task.name, dayLabel(to)))
-
-    /** Retire [card] du plan de son jour, avec « Annuler ». */
-    fun planRemove(card: PlanCard) =
-        applyPlan(PlanBoard.removeWrites(card), getString(R.string.plan_removed_notice, card.task.name))
-
     /** Prévoit [tasks] le jour [day] (le retard ramené à aujourd'hui), avec « Annuler ». */
     fun planOn(tasks: List<TaskItem>, day: LocalDate) {
         val message = if (tasks.size == 1) format(R.string.plan_moved_notice, tasks.single().name, dayLabel(day))
@@ -990,27 +991,6 @@ internal class TasksViewModel(
         val from = planBoard.value.horizons.of(task.uid)
         val change = PlanBoard.horizonChange(task, from, to, m.today, weekStart.value) ?: return
         changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to))))
-    }
-
-    /**
-     * Une carte de Jours envoyée vers l'horizon [to] : l'horizon est posé, sa ligne quitte le jour, l'échéance ne
-     * bouge pas ; « Annuler » rend les deux.
-     */
-    fun sendToHorizon(card: PlanCard, to: Horizon) = launchAction {
-        val task = card.task
-        val from = planBoard.value.horizons.of(task.uid)
-        val writes = PlanBoard.sendToHorizon(card, from, to, moment.value.today, weekStart.value) ?: return@launchAction
-        val restore = UndoChanges.restoreFunnel(task)
-        if (writes.change != TaskChange()) repository.updateTask(task.uid, writes.change)
-        val undoPlan = if (writes.plan.isEmpty()) null else planEdits.apply(writes.plan)
-        _notices.tryEmit(
-            UndoNotice(format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to)))) {
-                launchAction {
-                    if (writes.change != TaskChange()) repository.updateTask(task.uid, restore)
-                    undoPlan?.invoke()
-                }
-            },
-        )
     }
 
 
@@ -1045,12 +1025,6 @@ internal class TasksViewModel(
     /** « Étaler sur 7 jours » des échues de la feuille, sur les lignes du plan connues de l'appareil. */
     suspend fun overdueSpread(tasks: List<TaskItem>): List<Pair<TaskItem, ReplanChoice>> =
         OverdueReplan.spread(tasks, planSlots.entries(), repository.observeTasks().first(), moment.value.today)
-
-    /** « Retirer l'engagement » d'« À planifier » : semaine et mois effacés, avec « Annuler ». */
-    fun dropCommitment(task: TaskItem) {
-        val change = PlanBoard.dropCommitment(task) ?: return
-        changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_commitment_dropped_notice, task.name))
-    }
 
     /**
      * Horizon choisi dans le choix de date de la fiche : engagement posé comme dans Planifier, échéance vidée et
@@ -1096,23 +1070,6 @@ internal class TasksViewModel(
 
     /** La tâche d'un lien `[[task:Nom]]`, cherchée parmi toutes les tâches de l'appareil. */
     suspend fun taskNamed(name: String): TaskItem? = WikiLinks.findTask(name, repository.observeTasks().first())
-
-    /**
-     * « + » d'un jour ([day]) ou de l'Inbox (null) de Planifier : la tâche est créée sans échéance, puis prévue le jour
-     * que la saisie nomme, sinon [day] ; sans jour elle reste dans « Tâches à classer » (`PlanBoard.planAdd`).
-     */
-    suspend fun addToPlan(draft: TaskDraft, day: LocalDate?) {
-        val add = PlanBoard.planAdd(draft, day, moment.value.today)
-        val uid = repository.createTask(add.draft)
-        add.edits(uid).takeIf { it.isNotEmpty() }?.let { planEdits.apply(it) }
-    }
-
-    /** « + » d'un horizon : la tâche est créée puis engagée dans l'horizon. */
-    suspend fun addToHorizon(draft: TaskDraft, horizon: Horizon) {
-        val uid = repository.createTask(draft)
-        val created = TaskItem(uid = uid, name = draft.name)
-        PlanBoard.horizonChange(created, null, horizon, moment.value.today, weekStart.value)?.let { repository.updateTask(uid, it) }
-    }
 
     /**
      * Une idée de l'Inbox planifiée depuis Planifier : elle devient une tâche (nom et note comme « Tâche » de l'Inbox),

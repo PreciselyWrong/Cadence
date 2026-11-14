@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Page Planifier (ex « À venir ») -->
-    <string name="plan_mode_days">Jours</string>
-    <string name="plan_mode_horizons">Horizons</string>
-    <string name="plan_inbox">Inbox</string>
     <string name="plan_inbox_empty">Rien à planifier.</string>
-    <string name="plan_overdue">Échues</string>
-    <string name="plan_overdue_reschedule">Replanifier</string>
     <string name="plan_strip_title">Plus tard</string>
-    <string name="plan_show_all">Tout afficher (%1$d)</string>
-    <string name="plan_add">Ajouter</string>
     <string name="plan_day_empty">Rien de prévu.</string>
     <string name="plan_done_count">Terminées (%d)</string>
     <string name="plan_horizon_week">Cette semaine</string>
@@ -17,20 +10,10 @@
     <string name="plan_horizon_this_month">Ce mois-ci</string>
     <string name="plan_horizon_next_month">Mois prochain</string>
     <string name="plan_horizon_someday">Un jour</string>
-    <string name="plan_horizon_empty">Rien ici.</string>
-    <string name="plan_planned_on_day">Prévues un jour</string>
     <string name="plan_sheet_title">Planifier</string>
-    <string name="plan_sheet_days">Jour</string>
-    <string name="plan_sheet_horizons">Horizon</string>
-    <string name="plan_sheet_remove">Retirer de ce jour</string>
-    <string name="plan_sheet_drop_commitment">Retirer l\'engagement</string>
-    <string name="plan_commitment_dropped_notice">« %1$s » : engagement retiré</string>
-    <string name="plan_to_schedule">À planifier</string>
     <string name="plan_to_reschedule">À replanifier</string>
-    <string name="plan_sheet_more">Plus d\'actions</string>
     <string name="plan_sheet_open">Ouvrir la tâche</string>
     <string name="plan_moved_notice">« %1$s » → %2$s</string>
-    <string name="plan_removed_notice">« %1$s » retirée du jour</string>
     <string name="plan_horizon_notice">« %1$s » → %2$s</string>
     <plurals name="plan_moved_many">
         <item quantity="one">%1$d tâche → %2$s</item>
@@ -67,4 +50,24 @@
     <string name="tasks_source_description">Origine : %1$s</string>
     <string name="plan_hide_done">Masquer les terminées</string>
     <string name="plan_show_done">Afficher les terminées</string>
+    <!-- Planifier v2 : bande de la semaine, tiroir « À placer », feuille de choix -->
+    <string name="plan_week_of">Semaine du %1$s</string>
+    <string name="plan_week_load">%1$s sur %2$s</string>
+    <string name="plan_week_previous">Semaine précédente</string>
+    <string name="plan_week_next">Semaine suivante</string>
+    <string name="plan_day_load">%1$s / %2$s</string>
+    <string name="plan_tray_title">À placer · %1$d</string>
+    <string name="plan_tray_replan">Replanifier les échues · %1$d</string>
+    <string name="plan_tray_expand">Déplier « À placer »</string>
+    <string name="plan_tray_collapse">Replier « À placer »</string>
+    <string name="plan_filter_to_place">À placer</string>
+    <string name="plan_filter_count">%1$s · %2$d</string>
+    <string name="plan_choice_open_sheet">Choix pour « %1$s »</string>
+    <string name="plan_choice_when">Quand</string>
+    <string name="plan_choice_other">Autre</string>
+    <string name="plan_choice_free_day">%1$s · libre</string>
+    <string name="plan_choice_date">Date…</string>
+    <string name="plan_choice_done">Fait</string>
+    <string name="plan_choice_open">Ouvrir la fiche</string>
+    <string name="plan_choice_drop">Abandonner</string>
 </resources>

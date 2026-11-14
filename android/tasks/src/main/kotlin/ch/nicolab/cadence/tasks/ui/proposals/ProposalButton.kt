@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import ch.nicolab.cadence.tasks.ui.dayLabel
+import java.time.LocalDate
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,10 +31,11 @@ internal class ProposalAction(val label: String, val phase: ProposalPhase, val o
 /**
  * « Planifier ma semaine » ou « Préparer ma revue » : idle, « En préparation… » (relu toutes les [PROPOSAL_POLL_MS]
  * tant qu'il est affiché), puis « … est prête ». Un appui en préparation ne fait rien ; prête, il ouvre la feuille de
- * la semaine ou appelle [onReady] (la revue rapide). Hors ligne : « Hors ligne ».
+ * la semaine ou appelle [onReady] (la revue rapide). Hors ligne : « Hors ligne ». Avec [day], l'idle planifie ce seul
+ * jour (« Planifier demain avec l'IA », « Planifier ma journée avec l'IA » pour aujourd'hui).
  */
 @Composable
-internal fun rememberProposalAction(kind: ProposalKind, onReady: () -> Unit = {}): ProposalAction {
+internal fun rememberProposalAction(kind: ProposalKind, onReady: () -> Unit = {}, day: LocalDate? = null): ProposalAction {
     val context = LocalContext.current
     val repo = remember(context) { ProposalRepository.of(context) }
     val latest by repo.latest.collectAsStateWithLifecycle()
@@ -53,15 +56,20 @@ internal fun rememberProposalAction(kind: ProposalKind, onReady: () -> Unit = {}
         }
     }
 
+    val today = LocalDate.now()
     val label = when (phase) {
-        ProposalPhase.Idle -> stringResource(if (week) R.string.proposal_week_button else R.string.proposal_review_button)
+        ProposalPhase.Idle -> when {
+            day == null -> stringResource(if (week) R.string.proposal_week_button else R.string.proposal_review_button)
+            day == today -> stringResource(R.string.proposal_today_button)
+            else -> stringResource(R.string.proposal_day_button, dayLabel(day, today).replaceFirstChar { it.lowercase() })
+        }
         is ProposalPhase.Preparing -> stringResource(R.string.proposal_preparing)
         is ProposalPhase.Ready -> stringResource(if (week) R.string.proposal_week_ready else R.string.proposal_review_ready)
     }
     return ProposalAction(label, phase) {
         when (phase) {
             ProposalPhase.Idle -> scope.launch {
-                repo.create(kind).onFailure { snackbar.showSnackbar(if (it is IOException) offline else failed) }
+                repo.create(kind, day, day).onFailure { snackbar.showSnackbar(if (it is IOException) offline else failed) }
             }
             is ProposalPhase.Preparing -> Unit
             is ProposalPhase.Ready -> {

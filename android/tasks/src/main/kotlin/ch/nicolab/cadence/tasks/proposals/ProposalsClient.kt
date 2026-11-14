@@ -6,6 +6,7 @@ import ch.nicolab.cadence.tasks.plugins.NotConnected
 import ch.nicolab.cadence.tasks.sync.ServerSession
 import java.io.IOException
 import java.net.HttpURLConnection
+import java.time.LocalDate
 import java.net.URL
 import java.net.URLEncoder
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +27,9 @@ class ProposalError(val code: Int, message: String?) : IOException(message ?: "H
 class ProposalsClient(private val session: suspend () -> ServerSession?) {
     suspend fun list(): JsonObject = request("GET", "/api/proposals")
 
-    suspend fun create(kind: ProposalKind): JsonObject =
-        request("POST", "/api/proposals", buildJsonObject { put("kind", kind.wire) })
+    /** Demande une proposition ; [start] et [end] (ISO) ne partent que s'ils sont donnés (une journée : start == end). */
+    suspend fun create(kind: ProposalKind, start: LocalDate? = null, end: LocalDate? = null): JsonObject =
+        request("POST", "/api/proposals", createBody(kind, start, end))
 
     suspend fun get(uid: String): JsonObject = request("GET", path(uid))
 
@@ -83,6 +85,13 @@ class ProposalsClient(private val session: suspend () -> ServerSession?) {
         const val TIMEOUT_MS = 15_000
         val EMPTY = JsonObject(emptyMap())
     }
+}
+
+/** Corps de `POST /api/proposals` : `start` et `end` seulement quand ils sont donnés. */
+internal fun createBody(kind: ProposalKind, start: LocalDate?, end: LocalDate?): JsonObject = buildJsonObject {
+    put("kind", kind.wire)
+    start?.let { put("start", it.toString()) }
+    end?.let { put("end", it.toString()) }
 }
 
 internal fun proposalsClient(context: Context): ProposalsClient {

@@ -1,5 +1,9 @@
 package ch.nicolab.cadence.designsystem.components
 
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.addOutline
+import androidx.compose.ui.graphics.Paint
+import android.graphics.BlurMaskFilter
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -61,6 +65,7 @@ import ch.nicolab.cadence.designsystem.theme.glassSelected
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 
 data class NavDestination(val label: String, val icon: ImageVector, val selectedIcon: ImageVector = icon)
 
@@ -103,6 +108,9 @@ fun CadenceNavigation(
             .navigationBarsPadding()
             .padding(start = Space.gutter, end = Space.gutter, bottom = Space.sm)
             .height(Size.navBar + top)
+            // La barre est elle-même floutable, au-dessus du contenu : le verre d'un modal la floute aussi.
+            .then(if (backdrop != null) Modifier.hazeSource(backdrop.haze, zIndex = 1f) else Modifier)
+            .accentHalo(shape, palette.primary.copy(alpha = if (palette.isDark) Glass.HaloAlphaDark else Glass.HaloAlpha))
             .shadow(Elevation.floating, shape)
             .clip(shape)
             .then(surface)
@@ -270,4 +278,13 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
             textAlign = TextAlign.Center,
         )
     }
+}
+
+/** Halo très léger de la couleur d'accent autour de la barre : un contour flouté dessiné derrière le verre. */
+private fun Modifier.accentHalo(shape: Shape, color: Color): Modifier = drawBehind {
+    val outline = shape.createOutline(size, layoutDirection, this)
+    val path = Path().apply { addOutline(outline) }
+    val paint = Paint().apply { this.color = color }
+    paint.asFrameworkPaint().maskFilter = BlurMaskFilter(Glass.haloSpread.toPx(), BlurMaskFilter.Blur.NORMAL)
+    drawIntoCanvas { it.drawPath(path, paint) }
 }

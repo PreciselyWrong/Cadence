@@ -239,8 +239,10 @@ fun ProposalSheet(uid: String, onClose: () -> Unit) {
             { TertiaryAction(stringResource(R.string.proposal_later), onClick = onClose) }
         }
     }
+    val dayTitle = period?.takeIf { Proposals.isSingleDay(it.first, it.second) }
+        ?.let { stringResource(R.string.proposal_day_title, dayChip.format(it.first)) }
     CadenceScrollSheet(
-        title = Proposals.headlineOf(current?.answer) ?: stringResource(R.string.proposal_title),
+        title = Proposals.headlineOf(current?.answer) ?: dayTitle ?: stringResource(R.string.proposal_title),
         subtitle = if (ready) Proposals.subtitleOf(current?.answer) else null,
         dismiss = onClose,
         footer = footer,

@@ -1,60 +1,113 @@
 package ch.nicolab.cadence.designsystem.components
 
-import android.content.Context
-import android.os.Build
-import android.view.View
-import android.view.WindowManager
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.toSize
+import kotlin.math.roundToInt
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogWindowProvider
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.cadence
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.hazeEffect
+
+/** Contenu flouable de l'écran, fourni par l'écran principal ; null hors de lui (le fond devient alors presque opaque). */
+val LocalBackdrop = staticCompositionLocalOf<Backdrop?> { null }
 
 /**
- * Floute ce qui est derrière la fenêtre qui porte ce contenu (une feuille modale ou un menu), Android 12 et plus, quand
- * l'appareil le permet (`isCrossWindowBlurEnabled`). Ailleurs, rien : le fond translucide et le voile suffisent.
+ * Fond en verre d'une feuille modale ou d'un menu. Une feuille vit dans sa propre fenêtre, où le flou de l'écran ne
+ * l'atteint pas : elle annonce sa place, et [GlassPanels] dessine dans la fenêtre principale, juste dessous, le voile
+ * puis le verre flouté. Seul le fond du modal est flou, le reste de l'écran reste net sous le voile. Le conteneur doit
+ * être transparent, voile compris ([glassScrim]). Sans [LocalBackdrop], fond presque opaque.
  */
 @Composable
-fun GlassWindowBlur(radius: Dp = Glass.windowBlur) {
-    val view = LocalView.current
-    val px = with(LocalDensity.current) { radius.roundToPx() }
-    DisposableEffect(view, px) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) blurBehind(view, px)
-        onDispose {}
+fun Modifier.glassWindow(
+    shape: Shape,
+    base: Color,
+    blur: Dp = Glass.windowBlur,
+    dims: Boolean = true,
+    /** Décalage réel d'une feuille depuis le haut de sa fenêtre (`sheetState.requireOffset()`). */
+    sheetOffset: (() -> Float)? = null,
+): Modifier {
+    val backdrop = LocalBackdrop.current ?: return background(base.copy(alpha = Glass.FallbackAlpha), shape)
+    val panel = remember(backdrop) { GlassPanel(shape, base, blur, dims) }
+    panel.shape = shape
+    panel.base = base
+    // Une feuille se mesure avant de glisser : sa place réelle est son décalage depuis le haut de la fenêtre.
+    panel.shift = sheetOffset?.let { read -> { runCatching(read).getOrDefault(Float.NaN) } }
+    DisposableEffect(backdrop, panel) {
+        backdrop.panels += panel
+        onDispose { backdrop.panels -= panel }
     }
+    return onGloballyPositioned { panel.bounds = Rect(it.positionOnScreen(), it.size.toSize()) }
 }
 
-private fun blurBehind(view: View, px: Int) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
-    val manager = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    if (!manager.isCrossWindowBlurEnabled) return
-    // Une feuille modale vit dans une fenêtre de dialogue : on règle la fenêtre elle-même.
-    var parent: Any? = view.parent
-    while (parent != null) {
-        if (parent is DialogWindowProvider) {
-            val window = parent.window
-            window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-            window.attributes = window.attributes.apply { blurBehindRadius = px }
-            return
+/** Voile d'une feuille en verre : transparent quand [GlassPanels] le dessine, sinon le voile habituel. */
+@Composable
+fun glassScrim(): Color =
+    if (LocalBackdrop.current != null) Color.Transparent else cadence.scrim.copy(alpha = Glass.ScrimAlpha)
+
+/** Dessine, dans la fenêtre principale et hors de la source du flou, le voile et le verre des modals ouverts. */
+@Composable
+fun GlassPanels(backdrop: Backdrop, modifier: Modifier = Modifier) {
+    if (backdrop.panels.isEmpty()) return
+    val density = LocalDensity.current
+    var origin by remember { mutableStateOf(Offset.Zero) }
+    Box(modifier.fillMaxSize().onGloballyPositioned { origin = it.positionOnScreen() }) {
+        if (backdrop.panels.any { it.dims }) {
+            Box(Modifier.fillMaxSize().background(cadence.scrim.copy(alpha = Glass.ScrimAlpha)))
         }
-        parent = (parent as? View)?.parent
+        backdrop.panels.forEach { panel ->
+            val rect = panel.bounds ?: return@forEach
+            with(density) {
+                Box(
+                    Modifier
+                        .offset {
+                            val top = rect.top + (panel.shift?.invoke() ?: 0f)
+                            if (top.isNaN()) IntOffset(0, Int.MAX_VALUE / 2)
+                            else IntOffset((rect.left - origin.x).roundToInt(), (top - origin.y).roundToInt())
+                        }
+                        .size(rect.width.toDp(), rect.height.toDp())
+                        .clip(panel.shape)
+                        .hazeEffect(
+                            state = backdrop.haze,
+                            style = HazeStyle(
+                                backgroundColor = panel.base,
+                                tint = HazeTint(panel.base.glassy),
+                                blurRadius = panel.blur,
+                                fallbackTint = HazeTint(panel.base.copy(alpha = Glass.FallbackAlpha)),
+                            ),
+                        ),
+                )
+            }
+        }
     }
-    // Un menu vit dans une fenêtre de popup ajoutée au gestionnaire de fenêtres : on met à jour ses paramètres.
-    val root = view.rootView
-    val params = root.layoutParams as? WindowManager.LayoutParams ?: return
-    params.flags = params.flags or WindowManager.LayoutParams.FLAG_BLUR_BEHIND
-    params.blurBehindRadius = px
-    runCatching { manager.updateViewLayout(root, params) }
 }
 
 /** Fond translucide des feuilles et menus : le flou de l'arrière-plan se devine au travers. */
@@ -75,12 +128,11 @@ fun CadenceMenu(
         modifier = modifier,
         offset = offset,
         shape = Radius.Control,
-        containerColor = cadence.card.glassy,
+        containerColor = Color.Transparent,
         tonalElevation = 0.dp,
         shadowElevation = 6.dp,
     ) {
-        GlassWindowBlur(Glass.menuBlur)
-        content()
+        Column(Modifier.glassWindow(Radius.Control, cadence.card, Glass.menuBlur, dims = false)) { content() }
     }
 }
 

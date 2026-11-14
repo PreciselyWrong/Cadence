@@ -162,7 +162,8 @@ fun TasksScreen(
         else -> emptyMap()
     }
     val subtitle = when {
-        tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
+        // Planifier dit sa semaine et sa charge sous la bande des jours.
+        tab == TasksTab.UPCOMING -> null
         tab == TasksTab.PROJECTS -> projectCounterLine(projects)
         tab == TasksTab.TAGS -> null
         // Pas de phrase d'explication sous le titre (comme le web, qui a retiré ses boutons « i »).
@@ -199,7 +200,7 @@ fun TasksScreen(
                             contentDescription = stringResource(R.string.tasks_search_open),
                             onClick = onOpenSearch,
                         )
-                        val weekAction = if (tab == TasksTab.TODAY && openProjectUid == null) rememberProposalAction(ProposalKind.WEEK) else null
+                        val weekAction = if ((tab == TasksTab.TODAY || tab == TasksTab.UPCOMING) && openProjectUid == null) rememberProposalAction(ProposalKind.WEEK) else null
                         HeaderMoreMenu(
                             screenAction = weekAction?.let { HeaderToggle(it.label, it.onClick) },
                             notesToggle = if (tab == TasksTab.NOTES && openProjectUid == null) {

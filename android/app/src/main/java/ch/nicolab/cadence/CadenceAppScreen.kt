@@ -70,6 +70,8 @@ import ch.nicolab.cadence.designsystem.components.NavigationBarScrim
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.GlassPanels
+import ch.nicolab.cadence.designsystem.components.LocalBackdrop
 import ch.nicolab.cadence.designsystem.components.backdropSource
 import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.components.rememberBackdrop
@@ -358,6 +360,7 @@ internal fun CadenceAppScreen(
         CompositionLocalProvider(
             LocalAppSnackbarHostState provides snackbar,
             LocalNavActionHost provides navActionHost,
+            LocalBackdrop provides backdrop,
             LocalEntityIcons provides { id -> HabitIconRegistry.getIcon(id).imageVector },
             LocalEntityIconPicker provides { selected, onPick -> HabitIconPicker(selected, onPick) },
         ) {
@@ -495,6 +498,7 @@ internal fun CadenceAppScreen(
                 ),
                 backdrop = backdrop,
             )
+            GlassPanels(backdrop)
         }
     }
 

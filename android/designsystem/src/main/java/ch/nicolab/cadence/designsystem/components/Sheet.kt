@@ -27,6 +27,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -118,9 +119,9 @@ private fun CadenceSheetShell(
         onDismissRequest = dismiss,
         sheetState = sheetState,
         shape = Radius.Sheet,
-        containerColor = palette.card.glassy,
+        containerColor = Color.Transparent,
         contentColor = palette.onSurface,
-        scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
+        scrimColor = glassScrim(),
         dragHandle = {
             Box(Modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs), contentAlignment = Alignment.Center) {
                 Box(
@@ -131,9 +132,8 @@ private fun CadenceSheetShell(
                 )
             }
         },
-        modifier = modifier,
+        modifier = modifier.glassWindow(Radius.Sheet, palette.card, sheetOffset = sheetState::requireOffset),
     ) {
-        GlassWindowBlur()
         content()
     }
 }

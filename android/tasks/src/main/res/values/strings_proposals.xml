@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="proposal_week_button">Planifier ma semaine (IA)</string>
+    <string name="proposal_day_button">Planifier %1$s avec l\'IA</string>
+    <string name="proposal_today_button">Planifier ma journée avec l\'IA</string>
+    <string name="proposal_day_title">Ta journée · %1$s</string>
     <string name="proposal_week_ready">Ta semaine est prête</string>
     <string name="proposal_week_ready_text">Ouvre pour voir ce qui est proposé.</string>
     <string name="proposal_week_failed">Ta semaine n\'a pas pu être préparée</string>

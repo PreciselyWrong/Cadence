@@ -22,7 +22,6 @@ internal class LayoutStore(context: Context) {
         const val HIDE_DONE_PLAN = "hide_done_plan"
 
         /** Planifier : Horizons au lieu des jours. */
-        const val PLAN_HORIZONS = "plan_horizons"
         private const val PREFS = "cadence_layouts"
     }
 }

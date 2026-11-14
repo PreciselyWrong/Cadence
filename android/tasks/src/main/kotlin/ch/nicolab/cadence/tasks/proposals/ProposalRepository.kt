@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 
@@ -43,8 +44,8 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
     }
 
     /** « Planifier ma semaine » : une seule demande en attente par sorte ; le serveur renvoie celle qui existe. */
-    suspend fun create(kind: ProposalKind): Result<Unit> = attempt {
-        client.create(kind)
+    suspend fun create(kind: ProposalKind, start: LocalDate? = null, end: LocalDate? = null): Result<Unit> = attempt {
+        client.create(kind, start, end)
         refresh().getOrThrow()
     }
 
