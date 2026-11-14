@@ -1,6 +1,7 @@
 ## [1.37.7] — 14 novembre 2026
 
 - Le + est de nouveau sur tous les onglets : Tâches et Bilan ajoutent une tâche, Agenda une tâche du jour affiché, Habitudes une habitude. La barre se soulève en bosse autour de lui (même verre, même liseré, raccords arrondis), le + est un disque plein à l'accent, et la barre est un peu plus basse.
+- Menus et feuilles en verre : fond translucide et arrière-plan flouté (Android 12+), voile plus léger.
 - « Replanifier » des échues de Planifier ouvre la même feuille qu'Aujourd'hui (Aujourd'hui, Demain, Fait, « Plus… » avec les jours, horizons, une date, Abandonner ; Tout à demain, Étaler sur 7 jours) au lieu d'un petit menu.
 
 ## [1.37.6] — 14 novembre 2026

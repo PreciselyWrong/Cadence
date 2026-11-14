@@ -38,7 +38,7 @@ import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material.icons.outlined.UnfoldLess
 import androidx.compose.material.icons.outlined.UnfoldMore
 import androidx.compose.material.icons.outlined.ZoomIn
-import androidx.compose.material3.DropdownMenu
+import ch.nicolab.cadence.designsystem.components.CadenceMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -476,7 +476,7 @@ private fun TableButton(state: OutlineEditorState) {
     val context = LocalContext.current
     Box {
         ToolButton(Icons.Outlined.TableChart, R.string.format_table) { open = true }
-        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        CadenceMenu(expanded = open, onDismissRequest = { open = false }) {
             TABLE_SIZES.forEach { (rows, cols) ->
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.format_table_size, rows, cols)) },

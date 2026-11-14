@@ -78,6 +78,8 @@ import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.components.TaskCheckbox
+import ch.nicolab.cadence.designsystem.components.GlassWindowBlur
+import ch.nicolab.cadence.designsystem.components.glassy
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -211,11 +213,12 @@ internal fun TaskDetailSheet(
     ModalBottomSheet(
         onDismissRequest = close,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = palette.background,
+        containerColor = palette.background.glassy,
         contentColor = palette.onSurface,
         scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
         dragHandle = null,
     ) {
+        GlassWindowBlur()
         Column(
             Modifier
                 .fillMaxWidth()

@@ -68,14 +68,18 @@ object Glass {
     const val BarAlphaLight = 0.42f
     const val BarAlphaDark = 0.50f
 
-    /** Le + de la barre : accent translucide, le flou de la barre passe au travers. */
-    const val AddAlpha = 0.72f
+    /** Flou de l'arrière-plan derrière une feuille modale, puis derrière un menu. */
+    val windowBlur = 20.dp
+    val menuBlur = 12.dp
+
+    /** Opacité du fond des feuilles et des menus : du verre, l'arrière-plan flouté se devine dessous. */
+    const val WindowAlpha = 0.82f
 
     /** Opacité de repli quand le flou n'est pas disponible (API < 31). */
     const val FallbackAlpha = 0.92f
 
-    /** Voile de fond d'un modal. */
-    const val ScrimAlpha = 0.50f
+    /** Voile de fond d'un modal ; plus léger qu'avant, le flou fait le reste. */
+    const val ScrimAlpha = 0.32f
 
     /** Poignée de feuille modale. */
     const val HandleAlpha = 0.40f

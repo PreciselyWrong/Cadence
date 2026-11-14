@@ -27,7 +27,7 @@ import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Today
-import androidx.compose.material3.DropdownMenu
+import ch.nicolab.cadence.designsystem.components.CadenceMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -154,7 +154,7 @@ internal fun ChoicePills(choices: List<Choice>, enabled: Boolean, modifier: Modi
             var open by remember { mutableStateOf(false) }
             Box {
                 QuickPill(stringResource(R.string.review_action_more), { open = true }, quiet = true, tall = tall)
-                DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+                CadenceMenu(expanded = open, onDismissRequest = { open = false }) {
                     extra.forEach { choice ->
                         DropdownMenuItem(
                             text = { Text(choice.label, color = if (choice.danger) cadence.error else cadence.onSurface) },

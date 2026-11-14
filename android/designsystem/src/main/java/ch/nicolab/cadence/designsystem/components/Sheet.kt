@@ -118,7 +118,7 @@ private fun CadenceSheetShell(
         onDismissRequest = dismiss,
         sheetState = sheetState,
         shape = Radius.Sheet,
-        containerColor = palette.card,
+        containerColor = palette.card.glassy,
         contentColor = palette.onSurface,
         scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
         dragHandle = {
@@ -132,8 +132,10 @@ private fun CadenceSheetShell(
             }
         },
         modifier = modifier,
-        content = content,
-    )
+    ) {
+        GlassWindowBlur()
+        content()
+    }
 }
 
 @Composable

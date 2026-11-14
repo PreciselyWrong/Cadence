@@ -35,7 +35,7 @@ import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material3.DropdownMenu
+import ch.nicolab.cadence.designsystem.components.CadenceMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -424,7 +424,7 @@ internal fun ProjectTasksPane(
                         IconButton(onClick = { menuOpen = true }) {
                             Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.tasks_project_more))
                         }
-                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        CadenceMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(if (project.pinToSidebar) R.string.tasks_action_unpin else R.string.tasks_action_pin)) },
                                 leadingIcon = { Icon(if (project.pinToSidebar) Icons.Filled.PushPin else Icons.Outlined.PushPin, contentDescription = null) },

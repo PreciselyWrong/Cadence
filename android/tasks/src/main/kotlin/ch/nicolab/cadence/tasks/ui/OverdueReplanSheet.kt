@@ -37,6 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import ch.nicolab.cadence.designsystem.components.GlassWindowBlur
+import ch.nicolab.cadence.designsystem.components.glassy
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -129,10 +131,11 @@ internal fun OverdueReplanSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = palette.background,
+        containerColor = palette.background.glassy,
         contentColor = palette.onSurface,
         scrimColor = palette.scrim.copy(alpha = Glass.ScrimAlpha),
     ) {
+        GlassWindowBlur()
         Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = Space.gutter)) {
             Text(stringResource(R.string.overdue_replan_title), style = MaterialTheme.typography.titleLarge)
             Text(

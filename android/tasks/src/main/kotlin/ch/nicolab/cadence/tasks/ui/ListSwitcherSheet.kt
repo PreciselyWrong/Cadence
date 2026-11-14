@@ -28,7 +28,7 @@ import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.WbSunny
-import androidx.compose.material3.DropdownMenu
+import ch.nicolab.cadence.designsystem.components.CadenceMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -101,7 +101,7 @@ internal fun ListSwitcherSheet(
                             onClick = { onOpenPinned(shortcut) },
                             onLongClick = { menu = true },
                         )
-                        DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                        CadenceMenu(expanded = menu, onDismissRequest = { menu = false }) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.tasks_action_unpin)) },
                                 leadingIcon = { Icon(Icons.Outlined.PushPin, contentDescription = null) },

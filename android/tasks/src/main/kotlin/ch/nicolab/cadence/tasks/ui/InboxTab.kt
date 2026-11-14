@@ -16,7 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DropdownMenu
+import ch.nicolab.cadence.designsystem.components.CadenceMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -230,7 +230,7 @@ internal fun IdeaRow(
                             tint = palette.onSurfaceVariant,
                         )
                     }
-                    DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                    CadenceMenu(expanded = menu, onDismissRequest = { menu = false }) {
                         listOf(
                             R.string.plan_sheet_title to onPlan,
                             R.string.tasks_idea_edit to onEdit,

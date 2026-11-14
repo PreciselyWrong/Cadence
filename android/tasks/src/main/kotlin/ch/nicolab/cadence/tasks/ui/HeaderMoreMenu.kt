@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material3.DropdownMenu
+import ch.nicolab.cadence.designsystem.components.CadenceMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,7 +62,7 @@ internal fun HeaderMoreMenu(
                     .background(cadence.primary, CircleShape),
             )
         }
-        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        CadenceMenu(expanded = open, onDismissRequest = { open = false }) {
             listOfNotNull(screenAction, notesToggle, doneToggle).forEach { toggle ->
                 DropdownMenuItem(text = { Text(toggle.label) }, onClick = {
                     open = false
