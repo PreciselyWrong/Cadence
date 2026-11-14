@@ -450,3 +450,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : une tâche qui vient d'un `TODO.md` était figée (seule la case) ; impossible de la dater, la prioriser ou l'étiqueter depuis Cadence.
 - **Décision** : titre, note, projet et suppression restent au fichier (la suppression = retirer la ligne) ; tout le reste s'édite comme une tâche ordinaire, dans la fiche, les balayages et le menu. Le bandeau dit que titre et note viennent du fichier ; le badge « TODO.md » reste. Sous-tâches : toujours pas. Lecture : `swipe/FileBackedActions.kt`.
 - **Web** : déjà pareil (bbcdba68, même règle `FILE_OWNED_TASK_FIELDS` côté serveur). Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-14 — Aujourd'hui allégé
+
+- **Problème** : l'écran Aujourd'hui donnait l'impression d'être débordé : gros bouton « Planifier ma semaine » en tête, sept replis sous la journée (Demain, Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, Suggérées) avec leurs comptes, une poignée bien visible sur chaque ligne.
+- **Décision** : Aujourd'hui ne parle que de la journée. « Planifier ma semaine » reste dans Planifier ; sous la journée, seuls Demain et Suggérées, repliés ; les horizons vivent dans Planifier ; la poignée de rangement passe à 35 % d'opacité (1.37.0).
+- **Web** : déjà sans replis d'horizons ; reste le repli « Demain » (`TODO.md` › Now). Le bouton de la semaine reste dans l'en-tête d'Aujourd'hui du web (petit bouton secondaire, pas une carte). Reste : rien d'essayé sur le téléphone (non branché), vérifié sur l'émulateur.

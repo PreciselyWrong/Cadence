@@ -181,7 +181,7 @@ class PlanBoardTest {
     }
 
     @Test
-    fun `aujourd'hui range ce qui suit par horizons, chaque tâche une fois et jamais une tâche déjà montrée`() {
+    fun `aujourd'hui ne garde que demain et les suggestions, chaque tâche une fois et jamais une tâche déjà montrée`() {
         val montree = task("montree")
         val demain = task("demain")
         val semaine = task("semaine")
@@ -205,12 +205,8 @@ class PlanBoardTest {
             tomorrow = listOf(demain), horizons = horizons, today = today,
             suggestions = listOf(semaine, suggeree, montree), shown = setOf("montree"),
         )
+        // Aujourd'hui ne montre que Demain et les suggestions : les horizons restent dans Planifier.
         assertEquals(listOf("demain"), later.tomorrow.map { it.uid })
-        assertEquals(listOf("samedi", "semaine"), later.week.map { it.uid })
-        assertEquals(listOf("prochaine"), later.nextWeek.map { it.uid })
-        assertEquals(listOf("mois"), later.thisMonth.map { it.uid })
-        assertEquals(listOf("suivant"), later.nextMonth.map { it.uid })
-        assertEquals(listOf("unjour"), later.someday.map { it.uid })
-        assertEquals(listOf("sugg"), later.suggested.map { it.uid })
+        assertEquals(listOf("semaine", "sugg"), later.suggested.map { it.uid })
     }
 }

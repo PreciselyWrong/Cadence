@@ -71,11 +71,6 @@ internal data class PlanAdd(val draft: TaskDraft, val day: LocalDate?, val start
 /** Ce qui suit sous la liste d'Aujourd'hui, replié, par horizon (même appartenance que Planifier) puis Suggérées. */
 internal data class TodayLater(
     val tomorrow: List<TaskItem> = emptyList(),
-    val week: List<TaskItem> = emptyList(),
-    val nextWeek: List<TaskItem> = emptyList(),
-    val thisMonth: List<TaskItem> = emptyList(),
-    val nextMonth: List<TaskItem> = emptyList(),
-    val someday: List<TaskItem> = emptyList(),
     val suggested: List<TaskItem> = emptyList(),
 )
 
@@ -234,10 +229,9 @@ internal object PlanBoard {
     private fun spreadMinutes(minutes: Int?): Int = minutes?.takeIf { it > 0 } ?: DEFAULT_MINUTES
 
     /**
-     * Sections repliées d'Aujourd'hui, chaque tâche une seule fois et jamais une de [shown] (déjà à l'écran), dans
-     * l'ordre : Demain ([tomorrow], plus les tâches prévues demain), Cette semaine (prévues un jour suivant de cette
-     * semaine, puis le seau Cette semaine de [horizons]), Semaine prochaine, Ce mois-ci, Mois prochain, Un jour (les
-     * seaux de [horizons], règle `horizons`), puis Suggérées (le reste de [suggestions]).
+     * Sections repliées d'Aujourd'hui, chaque tâche une seule fois et jamais une de [shown] (déjà à l'écran) : Demain
+     * ([tomorrow], plus les tâches prévues demain), puis Suggérées (le reste de [suggestions]). Les horizons (cette
+     * semaine, le mois…) restent dans Planifier : Aujourd'hui ne montre que ce qui se fait aujourd'hui et demain.
      */
     fun todayLater(
         tomorrow: List<TaskItem>,
@@ -250,15 +244,8 @@ internal object PlanBoard {
         fun take(tasks: List<TaskItem>): List<TaskItem> = tasks.filter { taken.add(it.uid) }
         val day1 = today.plusDays(1)
         val plannedTomorrow = horizons.plannedThisWeek.filter { it.second == day1 }.map { it.first }
-        val plannedLater = horizons.plannedThisWeek.filter { it.second.isAfter(day1) }.sortedBy { it.second }.map { it.first }
-        fun bucket(h: Horizon) = horizons.buckets[h].orEmpty()
         return TodayLater(
             tomorrow = take(tomorrow + plannedTomorrow),
-            week = take(plannedLater + bucket(Horizon.WEEK)),
-            nextWeek = take(bucket(Horizon.NEXT_WEEK)),
-            thisMonth = take(bucket(Horizon.THIS_MONTH)),
-            nextMonth = take(bucket(Horizon.NEXT_MONTH)),
-            someday = take(bucket(Horizon.SOMEDAY)),
             suggested = take(suggestions),
         )
     }

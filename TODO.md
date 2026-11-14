@@ -12,8 +12,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
   Raison : le calendrier d'Aujourd'hui du web suit `ui_settings.calendar.visibleHours` (journée entière par défaut) et grise ce qui sort des heures de travail (`planning.dayHours`) ; l'Agenda Android (`agenda/AgendaTimeViews.kt`) dessine toujours 0-24 sans bande. Vérif : mêmes heures et même bande sur le web et le téléphone avec le même compte.
 - Android : panneaux Notes, Objectifs et Habitudes (2026-11-13)
   Raison : la barre latérale du web suit l'icône du rail (`sidebarMinimal.panels`, `docs/32-sidebar.md`) ; Android n'a pas de barre latérale, l'équivalent est la liste de l'onglet ouvert. Vérif : mêmes sections, dans le même ordre, sur le web et le téléphone.
-- Web : sections d'Aujourd'hui par horizons (2026-11-13)
-  Raison : Android range ce qui suit sous la liste du jour en Demain, Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour puis Suggérées (`PlanBoard.todayLater`, 1.27.0) ; la page Aujourd'hui du web n'a que « Suggestions ». Vérif : mêmes sections, mêmes tâches, sans doublon avec la liste du jour, sur le web et le téléphone avec la même base.
+- Web : repli « Demain » d'Aujourd'hui (2026-11-14)
+  Raison : Android 1.37.0 ne garde sous la liste du jour que Demain puis Suggérées (`PlanBoard.todayLater`, les horizons restent dans Planifier pour ne pas charger la journée) ; la page Aujourd'hui du web n'a que « Suggestions ». Vérif : même repli Demain, mêmes tâches, sans doublon avec la liste du jour, sur le web et le téléphone avec la même base.
 - Android : écran Réglages › À trier (parité de Profil › À trier, 2026-11-12)
   Raison : Android 1.21.0 a retiré Réglages › Résumé, qui portait aussi les réglages d'« À trier » ; le web les a dans Profil › À trier (`GET`/`PUT /api/v1/triage/settings`, `docs/40-triage.md` › Settings). Vérif : cocher un calendrier et couper les propositions de l'IA sur le téléphone ; le web montre les mêmes réglages, et inversement.
 - Retirer l'alias `POST /daily-plan/:date/brief/answers` (2026-11-12)

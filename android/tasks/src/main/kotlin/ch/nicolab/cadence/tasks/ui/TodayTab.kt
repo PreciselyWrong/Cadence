@@ -57,12 +57,10 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
-import ch.nicolab.cadence.tasks.proposals.ProposalKind
-import ch.nicolab.cadence.tasks.ui.proposals.ProposalButton
 
 /**
- * Aujourd'hui : entrée vers Ma journée, charge de la journée, carte du soir (terminer), puis le retard,
- * les tâches et événements du jour mêlés par heure, et les tâches terminées (repliées par défaut).
+ * Aujourd'hui : charge de la journée, carte du matin, le retard replié, les tâches et événements du jour mêlés par
+ * heure, carte du soir, puis Demain, Suggérées et les terminées, repliés. « Planifier ma semaine » vit dans Planifier.
  */
 @Composable
 internal fun TodayTab(
@@ -214,7 +212,6 @@ internal fun TodayTab(
     }
 
     LazyColumn(modifier = modifier, state = listState, contentPadding = tasksListPadding()) {
-        item(key = "proposal-week") { ProposalButton(ProposalKind.WEEK, Modifier.padding(bottom = Space.sm)) }
         if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }
@@ -313,14 +310,10 @@ internal fun TodayTab(
             }
         }
         item(key = "routine") { routineStrip() }
-        // Aujourd'hui sert à faire : ce qui pourrait suivre attend replié, à dérouler une fois le jour fini.
+        // Aujourd'hui sert à faire : seuls demain et les suggestions attendent repliés ; la semaine et au-delà vivent dans
+        // Planifier, pour ne pas peser sur la journée.
         listOf(
             Triple("tomorrow", R.string.planning_closed_tomorrow, later.tomorrow),
-            Triple("week", R.string.plan_horizon_week, later.week),
-            Triple("next-week", R.string.plan_horizon_next_week, later.nextWeek),
-            Triple("month", R.string.plan_horizon_this_month, later.thisMonth),
-            Triple("next-month", R.string.plan_horizon_next_month, later.nextMonth),
-            Triple("someday", R.string.plan_horizon_someday, later.someday),
             Triple("suggested", R.string.today_fold_suggested, later.suggested),
         ).filter { (_, _, tasks) -> tasks.isNotEmpty() }.forEach { (key, label, tasks) ->
             val open = key in openFolds
@@ -452,7 +445,8 @@ private fun DragHandle(uid: String, drag: TodayDrag) {
     Icon(
         Icons.Outlined.DragIndicator,
         contentDescription = stringResource(R.string.today_drag_handle),
-        tint = cadence.onSurfaceVariant,
+        // Discrète : la poignée se répète sur chaque ligne, elle ne doit pas peser plus que le titre.
+        tint = cadence.onSurfaceVariant.copy(alpha = 0.35f),
         modifier = Modifier
             .size(Size.touch)
             .pointerInput(uid) {
