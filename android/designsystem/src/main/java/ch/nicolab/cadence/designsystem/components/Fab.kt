@@ -34,8 +34,6 @@ fun CadenceFab(
     icon: ImageVector,
     contentDescription: String,
     modifier: Modifier = Modifier,
-    /** 48 dp au lieu de 56 : pour un écran dense où le bouton cache moins de contenu. */
-    compact: Boolean = false,
     onClick: () -> Unit,
 ) {
     val palette = cadence
@@ -53,7 +51,7 @@ fun CadenceFab(
                 scaleX = scale
                 scaleY = scale
             }
-            .size(if (compact) Size.touch else Size.fab)
+            .size(Size.fab)
             .shadow(Elevation.floating, Radius.Fab)
             .clip(Radius.Fab)
             .background(palette.primary)
@@ -69,6 +67,6 @@ fun CadenceFab(
             .semantics { this.contentDescription = contentDescription },
         contentAlignment = Alignment.Center,
     ) {
-        Icon(icon, null, tint = palette.onPrimary, modifier = Modifier.size(if (compact) Size.icon else Size.iconLarge))
+        Icon(icon, null, tint = palette.onPrimary, modifier = Modifier.size(Size.iconLarge))
     }
 }

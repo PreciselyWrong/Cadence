@@ -61,6 +61,8 @@ import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.CadenceSnackbarHost
 import ch.nicolab.cadence.designsystem.components.LocalAppSnackbarHostState
 import ch.nicolab.cadence.designsystem.components.NavDestination
+import ch.nicolab.cadence.designsystem.components.LocalNavActionHost
+import ch.nicolab.cadence.designsystem.components.NavActionHost
 import ch.nicolab.cadence.designsystem.components.NavigationBarScrim
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
@@ -344,9 +346,12 @@ internal fun CadenceAppScreen(
         configureHealth = { healthConnectRulesOpen = true },
     )
 
+    // Le + de l'onglet ouvert vit dans la barre du bas, pas en bouton flottant au-dessus du contenu.
+    val navActionHost = remember { NavActionHost() }
     CadenceScreen {
         CompositionLocalProvider(
             LocalAppSnackbarHostState provides snackbar,
+            LocalNavActionHost provides navActionHost,
             LocalEntityIcons provides { id -> HabitIconRegistry.getIcon(id).imageVector },
             LocalEntityIconPicker provides { selected, onPick -> HabitIconPicker(selected, onPick) },
         ) {
@@ -467,7 +472,7 @@ internal fun CadenceAppScreen(
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
             if (weekendOpen) WeekendSheet(weekendUid, onClose = { weekendOpen = false })
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen && !notificationsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen && !notificationsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }

@@ -44,7 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.annotation.StringRes
-import ch.nicolab.cadence.designsystem.components.CadenceFab
+import ch.nicolab.cadence.designsystem.components.PrimaryAdd
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.components.navigationClearance
@@ -312,11 +312,10 @@ fun TasksScreen(
                     }
                 }
             }
-            CadenceFab(
-                // Plus petit sur Aujourd'hui : il cache moins la fin des lignes de la journée.
-                compact = tab == TasksTab.TODAY,
+            // Dans la barre du bas : le coin bas droit reste au contenu.
+            PrimaryAdd(
                 icon = Icons.Outlined.Add,
-                contentDescription = stringResource(
+                label = stringResource(
                     if (tab == TasksTab.NOTES) R.string.tasks_note_new else R.string.tasks_fab_add,
                 ),
                 onClick = {
@@ -327,7 +326,7 @@ fun TasksScreen(
                         quickAddOpen = true
                     }
                 },
-                modifier = Modifier
+                fabModifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Space.gutter, bottom = navigationClearance() + Space.lg),
             )

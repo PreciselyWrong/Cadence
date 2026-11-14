@@ -8,6 +8,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +60,8 @@ fun CadenceNavigation(
     selected: Int,
     modifier: Modifier = Modifier,
     backdrop: Backdrop? = null,
+    /** Bouton « ajouter » de l'onglet ouvert, rond, à droite des onglets ; aucun s'il est null. */
+    action: NavAction? = null,
     onSelect: (Int) -> Unit,
 ) {
     val palette = cadence
@@ -92,6 +97,29 @@ fun CadenceNavigation(
         destinations.forEachIndexed { index, destination ->
             NavItem(destination, index == selected, Modifier.weight(1f)) { onSelect(index) }
         }
+        action?.let { NavAddButton(it) }
+    }
+}
+
+/** Le + de l'onglet ouvert, rond et plein à l'accent, au bout de la barre. */
+@Composable
+private fun NavAddButton(action: NavAction) {
+    val palette = cadence
+    val haptic = rememberCadenceHaptic()
+    Box(
+        Modifier
+            .padding(start = Space.xs, end = Space.xs)
+            .size(Size.navItem + Space.xs)
+            .clip(CircleShape)
+            .background(palette.primary)
+            .clickable(role = Role.Button, onClickLabel = action.label) {
+                haptic.tap()
+                action.onClick()
+            }
+            .semantics { contentDescription = action.label },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(action.icon, contentDescription = null, tint = palette.onPrimary, modifier = Modifier.size(Size.iconLarge))
     }
 }
 

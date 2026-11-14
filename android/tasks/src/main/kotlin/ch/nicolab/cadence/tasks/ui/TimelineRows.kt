@@ -77,6 +77,7 @@ private val AxisWidth = 28.dp
 private val RowHeight = 40.dp
 private val MarkSize = 18.dp
 private const val PAST_ALPHA = 0.38f
+private val NowRedDark = Color(0xFFFF6B6B)
 private val hourFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("H:mm")
 
 @Composable
@@ -225,7 +226,9 @@ private fun TimelineScaffold(
 /** Le trait « maintenant » : l'heure en rouge, un point sur l'axe et une ligne qui traverse. */
 @Composable
 internal fun TimelineNowRow(now: Instant, zone: ZoneId) {
-    val red = cadence.error
+    // L'erreur du thème sombre est un saumon pâle (fait pour du texte sur fond d'erreur) : le trait veut un rouge vif,
+    // 6:1 sur le noir pur et le fond sombre.
+    val red = if (cadence.isDark) NowRedDark else cadence.error
     // Un seul trait, du point de l'axe jusqu'au bord droit.
     TimelineScaffold(
         hour = now.atZone(zone).format(hourFormat),

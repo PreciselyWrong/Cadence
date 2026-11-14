@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
-import ch.nicolab.cadence.designsystem.components.CadenceFab
+import ch.nicolab.cadence.designsystem.components.PrimaryAdd
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
@@ -73,7 +73,7 @@ internal fun HabitsTab(
             }
         }
     }
-    // Même geste d'ajout que partout ailleurs : le bouton flottant en bas à droite, pas un + dans l'en-tête.
+    // Même geste d'ajout que partout ailleurs : le + de la barre du bas, pas un + dans l'en-tête.
     Box(Modifier.fillMaxSize()) {
         if (segment == SEGMENT_TODAY) {
             HabitsTodayScreen(
@@ -82,11 +82,11 @@ internal fun HabitsTab(
         } else {
             HabitsScreen(header, habits, groups, selectedGroupId, onSelectGroup, options, quick)
         }
-        CadenceFab(
+        PrimaryAdd(
             icon = Icons.Outlined.Add,
-            contentDescription = stringResource(R.string.create_habit_button),
+            label = stringResource(R.string.create_habit_button),
             onClick = create,
-            modifier = Modifier
+            fabModifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Space.gutter, bottom = navigationClearance() + Space.lg),
         )

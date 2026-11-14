@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.navigationClearance
-import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.NextAction
@@ -43,7 +42,8 @@ internal fun tasksListPadding(): PaddingValues = PaddingValues(
     start = Space.gutter,
     top = Space.sm,
     end = Space.gutter,
-    bottom = navigationClearance() + Size.fab + Space.xl,
+    // Plus de bouton flottant au-dessus de la barre : la liste s'arrête juste au-dessus d'elle.
+    bottom = navigationClearance() + Space.lg,
 )
 
 @Composable

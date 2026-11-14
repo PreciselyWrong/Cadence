@@ -1,3 +1,8 @@
+## [1.37.4] — 14 novembre 2026
+
+- Le bouton + passe dans la barre du bas, à droite des onglets (Tâches et Habitudes) : le coin bas droit de l'écran reste au contenu.
+- Trait « maintenant » d'Aujourd'hui en rouge vif en thème sombre et noir pur.
+
 ## [1.37.3] — 14 novembre 2026
 
 - « Ma journée » montre les cinq prochains éléments ; ce qui est passé (« N passés ») et la suite (« Ensuite · N ») attendent repliés : la journée tient sur un écran.
