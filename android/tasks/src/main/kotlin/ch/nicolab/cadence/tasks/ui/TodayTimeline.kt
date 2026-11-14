@@ -47,6 +47,15 @@ data class TodayTimeline(val toPlace: List<ToPlace>, val entries: List<TimelineE
         /** Durée d'une tâche sans estimation, pour le chevauchement et « Caser ici ». */
         const val DEFAULT_TASK_MINUTES = 30
         private const val QUARTER = 15
+        /** Tâches d'« À caser » visibles ; les autres attendent repliées derrière « N autres ». */
+        const val TO_PLACE_SHOWN = 3
+
+        /** « À caser » : les [TO_PLACE_SHOWN] premières (les manquées d'abord) et le reste, replié. */
+        fun splitToPlace(toPlace: List<ToPlace>): Pair<List<ToPlace>, List<ToPlace>> =
+            toPlace.take(TO_PLACE_SHOWN) to toPlace.drop(TO_PLACE_SHOWN)
+
+        /** Demain et les suggestions ne s'affichent qu'une fois la journée vide : Aujourd'hui ne parle que d'aujourd'hui. */
+        fun showsWhatsNext(openToday: Int): Boolean = openToday == 0
 
         fun of(
             tasks: List<TaskItem>,

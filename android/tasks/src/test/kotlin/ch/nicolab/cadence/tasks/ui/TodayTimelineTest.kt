@@ -142,4 +142,21 @@ class TodayTimelineTest {
         val later = build(listOf(timed("chien", 9, 15, minutes = 30)), now = at(9, 46))
         assertEquals(listOf("chien"), later.toPlace.map { it.task.uid })
     }
+
+    @Test
+    fun `à caser montre trois tâches, le reste attend replié, les manquées d'abord`() {
+        val toPlace = listOf(ToPlace(untimed("a")), ToPlace(untimed("b")), ToPlace(untimed("c")), ToPlace(untimed("d")), ToPlace(untimed("e")))
+        val (shown, hidden) = TodayTimeline.splitToPlace(toPlace)
+        assertEquals(listOf("a", "b", "c"), shown.map { it.task.uid })
+        assertEquals(listOf("d", "e"), hidden.map { it.task.uid })
+        val (few, none) = TodayTimeline.splitToPlace(toPlace.take(3))
+        assertEquals(3, few.size)
+        assertEquals(emptyList<ToPlace>(), none)
+    }
+
+    @Test
+    fun `demain et les suggestions n'apparaissent qu'une fois la journée vide`() {
+        assertTrue(TodayTimeline.showsWhatsNext(openToday = 0))
+        assertFalse(TodayTimeline.showsWhatsNext(openToday = 2))
+    }
 }

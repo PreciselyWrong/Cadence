@@ -8,6 +8,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -275,7 +276,9 @@ internal fun TodayTab(
                 val minutes = toPlaceTasks.sumOf { it.estimatedMinutes?.takeIf { m -> m > 0 } ?: TodayTimeline.DEFAULT_TASK_MINUTES }
                 TimelineSectionTitle(stringResource(R.string.today_section_to_place), "~" + durationText(minutes))
             }
-            items(timeline.toPlace, key = { "task:${it.task.uid}" }) { entry ->
+            val (shownToPlace, moreToPlace) = TodayTimeline.splitToPlace(timeline.toPlace)
+            val moreOpen = TO_PLACE_FOLD in openFolds
+            items(if (moreOpen) timeline.toPlace else shownToPlace, key = { "task:${it.task.uid}" }) { entry ->
                 val task = entry.task
                 ToPlaceRow(
                     task = task,
@@ -286,6 +289,24 @@ internal fun TodayTab(
                     onSwipeAction = { viewModel.swipe(task, it) },
                     modifier = Modifier.animateItem(),
                 )
+            }
+            // Trois tâches à la fois : le reste attend derrière une ligne discrète.
+            if (moreToPlace.isNotEmpty()) {
+                item(key = "to-place-more") {
+                    Text(
+                        text = if (moreOpen) stringResource(R.string.today_to_place_less)
+                        else pluralStringResource(R.plurals.today_to_place_more, moreToPlace.size, moreToPlace.size),
+                        style = sideStyle(),
+                        color = cadence.primary,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 36.dp)
+                            .clickable(role = Role.Button) {
+                                openFolds = if (moreOpen) openFolds - TO_PLACE_FOLD else openFolds + TO_PLACE_FOLD
+                            }
+                            .padding(start = 28.dp, top = Space.sm),
+                    )
+                }
             }
         }
         if (dayItems.isNotEmpty()) {
@@ -349,7 +370,7 @@ internal fun TodayTab(
         listOf(
             Triple("tomorrow", R.string.planning_closed_tomorrow, later.tomorrow),
             Triple("suggested", R.string.today_fold_suggested, later.suggested),
-        ).filter { (_, _, tasks) -> tasks.isNotEmpty() }.forEach { (key, label, tasks) ->
+        ).filter { (_, _, tasks) -> tasks.isNotEmpty() && TodayTimeline.showsWhatsNext(state.today.size) }.forEach { (key, label, tasks) ->
             val open = key in openFolds
             item(key = "fold-$key") {
                 FoldHeader(stringResource(label), tasks.size, open) {
@@ -440,6 +461,7 @@ private fun FoldHeader(
 }
 
 private const val OVERDUE_FOLD = "overdue"
+private const val TO_PLACE_FOLD = "to-place"
 
 private val minuteFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
@@ -456,6 +478,7 @@ private fun OverdueBanner(count: Int, open: Boolean, onReplan: () -> Unit, onTog
             // Un trait fin plutôt qu'un fond : calme en clair, et noir sur noir en AMOLED.
             .border(1.dp, cadence.outlineVariant, Radius.Control)
             .clickable(role = Role.Button, onClick = onToggle)
+            .heightIn(min = 40.dp)
             .padding(start = Space.md, end = Space.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -465,12 +488,16 @@ private fun OverdueBanner(count: Int, open: Boolean, onReplan: () -> Unit, onTog
             color = cadence.onSurfaceVariant,
             modifier = Modifier.weight(1f),
         )
-        TextButton(onClick = onReplan) { Text(stringResource(R.string.overdue_replan_button), style = sideStyle().copy(fontSize = 13.5.sp)) }
-        Icon(
-            if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-            contentDescription = null,
-            tint = cadence.onSurfaceVariant,
-            modifier = Modifier.padding(end = Space.sm),
+        // Lien texte plutôt qu'un bouton : le bandeau garde la hauteur d'une ligne de la maquette.
+        Text(
+            stringResource(R.string.overdue_replan_button),
+            style = sideStyle().copy(fontSize = 13.5.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold),
+            color = cadence.primary,
+            modifier = Modifier
+                .heightIn(min = 40.dp)
+                .clickable(role = Role.Button, onClick = onReplan)
+                .wrapContentHeight()
+                .padding(horizontal = Space.sm),
         )
     }
 }

@@ -344,7 +344,13 @@ internal fun TimelineTaskRow(
             },
         ) {
             TimelineTitle(task.name, entry, struck = checking || task.isClosed, modifier = Modifier.weight(1f))
-            RightMark(entry, now, task.estimatedMinutes?.takeIf { it > 0 }?.let { durationText(it) })
+            // Une tâche commencée et pas encore échue le dit, plutôt qu'une durée.
+            val ongoing = entry.start != null && entry.end != null && !entry.start.isAfter(now) && entry.end.isAfter(now)
+            if (ongoing) {
+                Text(stringResource(R.string.today_in_progress), style = sideStyle(), color = cadence.primary, modifier = Modifier.padding(start = Space.sm))
+            } else {
+                RightMark(entry, now, task.estimatedMinutes?.takeIf { it > 0 }?.let { durationText(it) })
+            }
         }
     }
 }

@@ -1,3 +1,9 @@
+## [1.37.2] — 14 novembre 2026
+
+- Aujourd'hui encore plus léger : « À caser » montre trois tâches, le reste attend derrière « N autres » ; « Demain » et « Suggérées » n'apparaissent qu'une fois la journée vide.
+- Sous le titre, la date seule (« · N faites » une fois qu'il y en a) ; bandeau « N échues · Replanifier » de la hauteur d'une ligne, sans flèche ; habitudes en petites pastilles sans titre, flèche vers Habitudes au bout.
+- Une tâche commencée et pas encore échue dit « en cours ».
+
 ## [1.37.1] — 14 novembre 2026
 
 - Aujourd'hui plus fin, au plus près de la maquette : lignes de 40 dp, titres en 15 sp, petits cercles de 18 dp sur l'axe, un trait « maintenant » continu, heures et durées en petit.

@@ -43,6 +43,12 @@
     </plurals>
     <string name="today_reordered_notice">« %1$s » rangée</string>
     <string name="today_section_to_place">À caser</string>
+    <plurals name="today_to_place_more">
+        <item quantity="one">%1$d autre</item>
+        <item quantity="other">%1$d autres</item>
+    </plurals>
+    <string name="today_to_place_less">Moins</string>
+    <string name="today_in_progress">en cours</string>
     <string name="today_section_day">Ma journée</string>
     <string name="today_missed_at">prévue %1$s</string>
     <string name="today_free_time">%1$s libres</string>

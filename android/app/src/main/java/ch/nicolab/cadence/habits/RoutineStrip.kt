@@ -3,7 +3,6 @@ package ch.nicolab.cadence.habits
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.heightIn
@@ -69,30 +68,24 @@ internal fun RoutineStrip(
     val haptic = rememberCadenceHaptic()
     val openLabel = stringResource(R.string.routine_open_habits)
 
-    // Les habitudes du moment en pastilles : l'hexagone de l'app (anneau de progrès), le nom et la valeur.
+    // Les habitudes du moment en pastilles, sans titre : l'hexagone dit déjà ce que c'est.
     Row(
-        Modifier.fillMaxWidth().padding(top = Space.md, bottom = Space.xs),
-        verticalAlignment = Alignment.CenterVertically,
+        Modifier.fillMaxWidth().padding(top = Space.md).horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Text(
-            stringResource(R.string.routine_title_short, moment.group.name, moment.done, moment.due).uppercase(),
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-            color = palette.onSurfaceVariant,
-            maxLines = 1,
-            modifier = Modifier
-                .weight(1f)
+        moment.facetIds.forEach { id -> byId[id]?.let { item -> RoutinePill(item) { quick(item) } } }
+        Box(
+            Modifier
+                .size(36.dp)
                 .clickable(role = Role.Button) {
                     haptic.tap()
                     openHabits()
                 }
                 .semantics { contentDescription = openLabel },
-        )
-    }
-    Row(
-        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(Space.sm),
-    ) {
-        moment.facetIds.forEach { id -> byId[id]?.let { item -> RoutinePill(item) { quick(item) } } }
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, null, tint = palette.onSurfaceVariant, modifier = Modifier.size(Size.icon))
+        }
     }
 }
 
@@ -110,7 +103,7 @@ private fun RoutinePill(item: HabitCardState, onClick: () -> Unit) {
     val value = if (goal.isLimit) stringResource(R.string.routine_limit_value, compact) else compact
     Row(
         Modifier
-            .heightIn(min = 40.dp)
+            .heightIn(min = 36.dp)
             .clip(RoundedCornerShape(50))
             .clickable(role = Role.Button, onClick = onClick)
             .border(1.dp, palette.outlineVariant, RoundedCornerShape(50))
@@ -124,11 +117,11 @@ private fun RoutinePill(item: HabitCardState, onClick: () -> Unit) {
             progress = ratio,
             tint = tint,
             trackColor = tint.copy(alpha = 0.20f),
-            size = 24.dp,
+            size = 20.dp,
         )
         Text(
             "${item.stored.name} $value",
-            style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.5.sp),
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp),
             color = if (evaluation.isCompleted) palette.success else palette.onSurface,
             maxLines = 1,
         )
