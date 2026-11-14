@@ -65,7 +65,10 @@ fun Modifier.glassWindow(
         backdrop.panels += panel
         onDispose { backdrop.panels -= panel }
     }
-    return onGloballyPositioned { panel.bounds = Rect(it.positionOnScreen(), it.size.toSize()) }
+    // Le fond reste peint dans la fenêtre du modal, opaque pour rester lisible : le verre de la fenêtre principale
+    // peut ne pas se dessiner dessous, et ce qui est derrière ne doit pas transparaître.
+    return background(base.copy(alpha = Glass.FallbackAlpha), shape)
+        .onGloballyPositioned { panel.bounds = Rect(it.positionOnScreen(), it.size.toSize()) }
 }
 
 /** Voile d'une feuille en verre : transparent quand [GlassPanels] le dessine, sinon le voile habituel. */
