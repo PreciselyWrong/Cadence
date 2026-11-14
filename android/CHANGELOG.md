@@ -1,3 +1,11 @@
+## [1.37.3] — 14 novembre 2026
+
+- « Ma journée » montre les cinq prochains éléments ; ce qui est passé (« N passés ») et la suite (« Ensuite · N ») attendent repliés : la journée tient sur un écran.
+- Sur l'axe, une tâche est un point discret (un toucher la coche, rouge pour la priorité haute) et un événement garde l'icône calendrier de son agenda.
+- « en même temps » seulement quand une tâche tombe pendant un événement, en gris.
+- « Planifier ma semaine (IA) » revient dans Aujourd'hui : dans le menu ⋯, et en lien en haut le dimanche et le lundi, ou dès qu'une semaine est en préparation ou prête.
+- Bouton + plus petit sur Aujourd'hui.
+
 ## [1.37.2] — 14 novembre 2026
 
 - Aujourd'hui encore plus léger : « À caser » montre trois tâches, le reste attend derrière « N autres » ; « Demain » et « Suggérées » n'apparaissent qu'une fois la journée vide.

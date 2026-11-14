@@ -21,6 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -126,6 +128,56 @@ private fun SmallCheck(checked: Boolean, highPriority: Boolean, onToggle: () -> 
         ) {
             if (checked) Icon(Icons.Outlined.Check, null, tint = palette.onPrimary, modifier = Modifier.size(12.dp))
         }
+    }
+}
+
+/**
+ * Repère d'une tâche sur l'axe : un point discret (rouge pour la priorité haute), plein à l'accent une fois cochée.
+ * Un toucher le coche ; la zone tactile a la hauteur de la ligne. Les événements gardent leur icône d'agenda colorée.
+ */
+@Composable
+private fun TaskDot(checked: Boolean, highPriority: Boolean, onToggle: () -> Unit) {
+    val palette = cadence
+    val haptic = rememberCadenceHaptic()
+    val label = stringResource(if (checked) R.string.tasks_mark_undone else R.string.tasks_mark_done)
+    Box(
+        Modifier
+            .size(RowHeight)
+            .toggleable(value = checked, role = Role.Checkbox, onValueChange = {
+                if (it) haptic.confirm() else haptic.tap()
+                onToggle()
+            })
+            .semantics { contentDescription = label },
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(Modifier.size(14.dp).background(MaterialTheme.colorScheme.surface, CircleShape), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(
+                        when {
+                            checked -> palette.primary
+                            highPriority -> palette.error
+                            else -> palette.outline
+                        },
+                    ),
+            )
+        }
+    }
+}
+
+/** Ligne repliable de la journée (« 2 passés », « Ensuite · 4 »), sur l'axe, discrète. */
+@Composable
+internal fun TimelineFoldRow(text: String, open: Boolean, onToggle: () -> Unit) {
+    TimelineScaffold(hour = null, modifier = Modifier.clickable(role = Role.Button, onClick = onToggle)) {
+        Text(text, style = sideStyle(), color = cadence.onSurfaceVariant, modifier = Modifier.weight(1f))
+        Icon(
+            if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+            contentDescription = null,
+            tint = cadence.onSurfaceVariant,
+            modifier = Modifier.size(18.dp),
+        )
     }
 }
 
@@ -248,7 +300,7 @@ private fun TimelineTitle(title: String, entry: TimelineEntry.Item, struck: Bool
             modifier = Modifier.weight(1f, fill = false),
         )
         if (entry.overlaps) {
-            Text(" · " + stringResource(R.string.today_overlap), style = MaterialTheme.typography.labelSmall, color = cadence.warning, maxLines = 1)
+            Text(" · " + stringResource(R.string.today_overlap), style = MaterialTheme.typography.labelSmall, color = cadence.onSurfaceVariant, maxLines = 1)
         }
     }
 }
@@ -337,7 +389,7 @@ internal fun TimelineTaskRow(
                 .combinedClickable(onClick = onOpen, onLongClick = { haptic.longPress(); onMenu() })
                 .alpha(if (entry.past) PAST_ALPHA else 1f),
             marker = {
-                SmallCheck(checking || task.isClosed, task.priority == TaskPriority.HIGH) {
+                TaskDot(checking || task.isClosed, task.priority == TaskPriority.HIGH) {
                     checking = !checking
                     onToggle()
                 }

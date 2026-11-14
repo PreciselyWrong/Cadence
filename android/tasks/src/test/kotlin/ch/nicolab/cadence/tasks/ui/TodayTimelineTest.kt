@@ -159,4 +159,38 @@ class TodayTimelineTest {
         assertTrue(TodayTimeline.showsWhatsNext(openToday = 0))
         assertFalse(TodayTimeline.showsWhatsNext(openToday = 2))
     }
+
+    @Test
+    fun `la journée montre cinq éléments à venir, le passé et la suite attendent repliés`() {
+        val timeline = build(
+            (10..17).map { timed("t$it", it) },
+            events = listOf(event("Café", 7, 8), allDay("Anniversaire")),
+            now = at(9, 30),
+        )
+        val split = TodayTimeline.split(timeline.entries)
+        assertEquals(listOf("Café"), split.past.map { it.label })
+        assertEquals(listOf("t15", "t16", "t17"), split.later.map { it.label })
+        val shown = split.shown.map { entry ->
+            when (entry) {
+                is TimelineEntry.Item -> entry.label
+                TimelineEntry.Now -> "now"
+                is TimelineEntry.Free -> "free"
+            }
+        }
+        assertEquals(listOf("Anniversaire", "now", "free", "t10", "t11", "t12", "t13", "t14"), shown)
+    }
+
+    @Test
+    fun `seule une tâche pendant un événement est signalée, pas deux événements ni deux tâches`() {
+        val timeline = build(
+            listOf(timed("a", 10, minutes = 60), timed("b", 10, 30)),
+            events = listOf(event("Réunion", 12, 14), event("Déjeuner", 13, 14), event("Sport", 16, 17)),
+            now = at(8),
+        )
+        val items = timeline.entries.filterIsInstance<TimelineEntry.Item>().associateBy { it.label }
+        assertFalse(items.getValue("b").overlaps)
+        assertFalse(items.getValue("Déjeuner").overlaps)
+        val during = build(listOf(timed("c", 16, 15)), events = listOf(event("Sport", 16, 17)), now = at(8))
+        assertTrue(during.entries.filterIsInstance<TimelineEntry.Item>().single { it.label == "c" }.overlaps)
+    }
 }

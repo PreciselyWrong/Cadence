@@ -23,13 +23,16 @@ import kotlinx.coroutines.launch
 /** Intervalle de relecture tant qu'une proposition est en préparation. */
 internal const val PROPOSAL_POLL_MS = 5_000L
 
+/** État et geste d'une proposition, partagés par le bouton, le lien d'Aujourd'hui et l'entrée du menu ⋯. */
+internal class ProposalAction(val label: String, val phase: ProposalPhase, val onClick: () -> Unit)
+
 /**
- * Bouton « Planifier ma semaine » ou « Préparer ma revue » : idle, « En préparation… » (relu toutes les
- * [PROPOSAL_POLL_MS] tant qu'il est affiché), puis « … est prête ». Un appui en préparation ne fait rien ;
- * prête, il ouvre la feuille de la semaine ou appelle [onReady] (la revue rapide). Hors ligne : « Hors ligne ».
+ * « Planifier ma semaine » ou « Préparer ma revue » : idle, « En préparation… » (relu toutes les [PROPOSAL_POLL_MS]
+ * tant qu'il est affiché), puis « … est prête ». Un appui en préparation ne fait rien ; prête, il ouvre la feuille de
+ * la semaine ou appelle [onReady] (la revue rapide). Hors ligne : « Hors ligne ».
  */
 @Composable
-internal fun ProposalButton(kind: ProposalKind, modifier: Modifier = Modifier, onReady: () -> Unit = {}) {
+internal fun rememberProposalAction(kind: ProposalKind, onReady: () -> Unit = {}): ProposalAction {
     val context = LocalContext.current
     val repo = remember(context) { ProposalRepository.of(context) }
     val latest by repo.latest.collectAsStateWithLifecycle()
@@ -55,7 +58,7 @@ internal fun ProposalButton(kind: ProposalKind, modifier: Modifier = Modifier, o
         is ProposalPhase.Preparing -> stringResource(R.string.proposal_preparing)
         is ProposalPhase.Ready -> stringResource(if (week) R.string.proposal_week_ready else R.string.proposal_review_ready)
     }
-    val onClick: () -> Unit = {
+    return ProposalAction(label, phase) {
         when (phase) {
             ProposalPhase.Idle -> scope.launch {
                 repo.create(kind).onFailure { snackbar.showSnackbar(if (it is IOException) offline else failed) }
@@ -66,9 +69,15 @@ internal fun ProposalButton(kind: ProposalKind, modifier: Modifier = Modifier, o
             }
         }
     }
-    if (phase is ProposalPhase.Ready) {
-        PrimaryAction(label, modifier = modifier, onClick = onClick)
+}
+
+/** Bouton de la proposition (Planifier, revue rapide) : principal quand elle est prête, secondaire sinon. */
+@Composable
+internal fun ProposalButton(kind: ProposalKind, modifier: Modifier = Modifier, onReady: () -> Unit = {}) {
+    val action = rememberProposalAction(kind, onReady)
+    if (action.phase is ProposalPhase.Ready) {
+        PrimaryAction(action.label, modifier = modifier, onClick = action.onClick)
     } else {
-        SecondaryAction(label, modifier = modifier, enabled = phase !is ProposalPhase.Preparing, onClick = onClick)
+        SecondaryAction(action.label, modifier = modifier, enabled = action.phase !is ProposalPhase.Preparing, onClick = action.onClick)
     }
 }

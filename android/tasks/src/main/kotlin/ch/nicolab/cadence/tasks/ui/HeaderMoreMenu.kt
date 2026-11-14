@@ -38,6 +38,8 @@ internal data class HeaderToggle(val label: String, val onToggle: () -> Unit)
 internal fun HeaderMoreMenu(
     notesToggle: HeaderToggle?,
     doneToggle: HeaderToggle?,
+    /** Action propre à l'écran ouvert, en tête du menu (Aujourd'hui : « Planifier ma semaine (IA) »). */
+    screenAction: HeaderToggle? = null,
     onOpenNotifications: () -> Unit,
     onOpenSettings: () -> Unit,
 ) {
@@ -61,7 +63,7 @@ internal fun HeaderMoreMenu(
             )
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
-            listOfNotNull(notesToggle, doneToggle).forEach { toggle ->
+            listOfNotNull(screenAction, notesToggle, doneToggle).forEach { toggle ->
                 DropdownMenuItem(text = { Text(toggle.label) }, onClick = {
                     open = false
                     toggle.onToggle()

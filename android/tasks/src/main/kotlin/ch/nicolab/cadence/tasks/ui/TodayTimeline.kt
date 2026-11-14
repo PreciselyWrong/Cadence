@@ -11,6 +11,13 @@ import java.time.ZoneId
 /** Une tâche d'« À caser » ; [missedAt] : l'heure passée sans qu'elle soit faite (« prévue 10:30 »), sinon null. */
 data class ToPlace(val task: TaskItem, val missedAt: Instant? = null)
 
+/** « Ma journée » coupée pour l'écran : [shown] d'emblée, [past] et [later] repliés. */
+data class TimelineSplit(
+    val shown: List<TimelineEntry>,
+    val past: List<TimelineEntry.Item>,
+    val later: List<TimelineEntry.Item>,
+)
+
 /** Une ligne de « Ma journée ». */
 sealed interface TimelineEntry {
     /**
@@ -54,6 +61,24 @@ data class TodayTimeline(val toPlace: List<ToPlace>, val entries: List<TimelineE
         fun splitToPlace(toPlace: List<ToPlace>): Pair<List<ToPlace>, List<ToPlace>> =
             toPlace.take(TO_PLACE_SHOWN) to toPlace.drop(TO_PLACE_SHOWN)
 
+        /** Éléments à venir montrés dans « Ma journée » ; la suite attend repliée derrière « Ensuite · N ». */
+        const val UPCOMING_SHOWN = 5
+
+        /**
+         * Ce que « Ma journée » montre d'emblée : la journée entière, ce qui est en cours, le trait maintenant, le
+         * créneau libre et les [UPCOMING_SHOWN] prochains éléments. Le passé (fini ou coché) et la suite sont repliés.
+         */
+        fun split(entries: List<TimelineEntry>): TimelineSplit {
+            val nowIndex = entries.indexOf(TimelineEntry.Now).takeIf { it >= 0 } ?: entries.size
+            val before = entries.take(nowIndex)
+            val after = entries.drop(nowIndex)
+            val past = before.filterIsInstance<TimelineEntry.Item>().filter { it.past && it.start != null }
+            val upcoming = after.filterIsInstance<TimelineEntry.Item>()
+            val later = upcoming.drop(UPCOMING_SHOWN)
+            val hidden = (past + later).toSet()
+            return TimelineSplit(entries.filterNot { it in hidden }, past, later)
+        }
+
         /** Demain et les suggestions ne s'affichent qu'une fois la journée vide : Aujourd'hui ne parle que d'aujourd'hui. */
         fun showsWhatsNext(openToday: Int): Boolean = openToday == 0
 
@@ -83,13 +108,17 @@ data class TodayTimeline(val toPlace: List<ToPlace>, val entries: List<TimelineE
                 val end = Instant.ofEpochMilli(it.event.localEnd(zone))
                 TimelineEntry.Item(TodayItem.Event(it), start, end, past = it.done || !end.isAfter(now))
             }
-            // Ordre des heures ; à heure égale l'événement d'abord : c'est la tâche qui tombe « en même temps ».
-            var latestEnd: Instant? = null
+            // Ordre des heures ; à heure égale l'événement d'abord. Seule une tâche qui tombe pendant un événement est
+            // « en même temps » : deux événements ou deux tâches qui se touchent ne disent rien d'utile.
+            var eventEnd: Instant? = null
             val sorted = dated.sortedWith(compareBy<TimelineEntry.Item> { it.start }.thenBy { it.item is TodayItem.Task })
                 .map { entry ->
-                    val overlaps = latestEnd?.let { entry.start!!.isBefore(it) } == true
-                    if (latestEnd == null || entry.end!!.isAfter(latestEnd)) latestEnd = entry.end
-                    entry.copy(overlaps = overlaps)
+                    if (entry.item is TodayItem.Event) {
+                        if (eventEnd == null || entry.end!!.isAfter(eventEnd)) eventEnd = entry.end
+                        entry
+                    } else {
+                        entry.copy(overlaps = eventEnd?.let { entry.start!!.isBefore(it) } == true)
+                    }
                 }
             // Avant le trait : ce qui a commencé (passé ou en cours) ; après : ce qui commence plus tard.
             val (before, after) = sorted.partition { !it.start!!.isAfter(now) }

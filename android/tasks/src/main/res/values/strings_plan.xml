@@ -49,6 +49,15 @@
     </plurals>
     <string name="today_to_place_less">Moins</string>
     <string name="today_in_progress">en cours</string>
+    <plurals name="today_past_fold">
+        <item quantity="one">%1$d passé</item>
+        <item quantity="other">%1$d passés</item>
+    </plurals>
+    <plurals name="today_later_fold">
+        <item quantity="one">Ensuite · %1$d</item>
+        <item quantity="other">Ensuite · %1$d</item>
+    </plurals>
+    <string name="today_later_fold_open">Moins</string>
     <string name="today_section_day">Ma journée</string>
     <string name="today_missed_at">prévue %1$s</string>
     <string name="today_free_time">%1$s libres</string>

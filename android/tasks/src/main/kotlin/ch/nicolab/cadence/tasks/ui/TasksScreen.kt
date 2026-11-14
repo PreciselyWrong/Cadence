@@ -28,6 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
+import ch.nicolab.cadence.tasks.proposals.ProposalKind
+import ch.nicolab.cadence.tasks.ui.proposals.rememberProposalAction
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
 import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
 import androidx.compose.runtime.getValue
@@ -197,7 +199,9 @@ fun TasksScreen(
                             contentDescription = stringResource(R.string.tasks_search_open),
                             onClick = onOpenSearch,
                         )
+                        val weekAction = if (tab == TasksTab.TODAY && openProjectUid == null) rememberProposalAction(ProposalKind.WEEK) else null
                         HeaderMoreMenu(
+                            screenAction = weekAction?.let { HeaderToggle(it.label, it.onClick) },
                             notesToggle = if (tab == TasksTab.NOTES && openProjectUid == null) {
                                 HeaderToggle(
                                     stringResource(if (notesGallery) R.string.links_show_list else R.string.links_show_gallery),
@@ -309,6 +313,8 @@ fun TasksScreen(
                 }
             }
             CadenceFab(
+                // Plus petit sur Aujourd'hui : il cache moins la fin des lignes de la journée.
+                compact = tab == TasksTab.TODAY,
                 icon = Icons.Outlined.Add,
                 contentDescription = stringResource(
                     if (tab == TasksTab.NOTES) R.string.tasks_note_new else R.string.tasks_fab_add,

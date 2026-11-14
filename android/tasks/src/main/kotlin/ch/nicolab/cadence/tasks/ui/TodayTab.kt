@@ -49,6 +49,10 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.planning.PlanBoard
+import ch.nicolab.cadence.tasks.proposals.ProposalKind
+import ch.nicolab.cadence.tasks.proposals.ProposalPhase
+import ch.nicolab.cadence.tasks.proposals.WeekPlanning
+import ch.nicolab.cadence.tasks.ui.proposals.rememberProposalAction
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.planning.DayPlans
@@ -198,7 +202,23 @@ internal fun TodayTab(
         )
     }
 
+    val weekAction = rememberProposalAction(ProposalKind.WEEK)
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+        // « Planifier ma semaine (IA) » : un lien discret le dimanche et le lundi, ou quand la semaine est prête ou en
+        // préparation ; le reste du temps, dans le menu ⋯ de l'en-tête.
+        if (WeekPlanning.linkVisible(today, weekAction.phase)) {
+            item(key = "week-link") {
+                Text(
+                    weekAction.label,
+                    style = sideStyle().copy(fontSize = 13.5.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold),
+                    color = cadence.primary,
+                    modifier = Modifier
+                        .heightIn(min = 40.dp)
+                        .clickable(role = Role.Button, enabled = weekAction.phase !is ProposalPhase.Preparing, onClick = weekAction.onClick)
+                        .wrapContentHeight(),
+                )
+            }
+        }
         if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }
@@ -311,7 +331,18 @@ internal fun TodayTab(
         }
         if (dayItems.isNotEmpty()) {
             item(key = "day-title") { TimelineSectionTitle(stringResource(R.string.today_section_day)) }
-            items(timeline.entries, key = { entry ->
+            val split = TodayTimeline.split(timeline.entries)
+            val pastOpen = PAST_FOLD in openFolds
+            val laterOpen = LATER_FOLD in openFolds
+            if (split.past.isNotEmpty()) {
+                item(key = "fold-$PAST_FOLD") {
+                    TimelineFoldRow(pluralStringResource(R.plurals.today_past_fold, split.past.size, split.past.size), pastOpen) {
+                        openFolds = if (pastOpen) openFolds - PAST_FOLD else openFolds + PAST_FOLD
+                    }
+                }
+            }
+            val dayRows = (if (pastOpen) split.past else emptyList()) + split.shown + (if (laterOpen) split.later else emptyList())
+            items(dayRows, key = { entry ->
                 when (entry) {
                     is TimelineEntry.Item -> entry.item.key
                     TimelineEntry.Now -> "now"
@@ -349,6 +380,15 @@ internal fun TodayTab(
                             modifier = Modifier.animateItem(),
                         )
                     }
+                }
+            }
+            if (split.later.isNotEmpty()) {
+                item(key = "fold-$LATER_FOLD") {
+                    TimelineFoldRow(
+                        if (laterOpen) stringResource(R.string.today_later_fold_open)
+                        else pluralStringResource(R.plurals.today_later_fold, split.later.size, split.later.size),
+                        laterOpen,
+                    ) { openFolds = if (laterOpen) openFolds - LATER_FOLD else openFolds + LATER_FOLD }
                 }
             }
         }
@@ -462,6 +502,8 @@ private fun FoldHeader(
 
 private const val OVERDUE_FOLD = "overdue"
 private const val TO_PLACE_FOLD = "to-place"
+private const val PAST_FOLD = "past"
+private const val LATER_FOLD = "later"
 
 private val minuteFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
