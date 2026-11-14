@@ -595,10 +595,6 @@
         <item quantity="one">%1$d agenda</item>
         <item quantity="other">%1$d agendas</item>
     </plurals>
-    <plurals name="routine_to_complete">
-        <item quantity="one">%1$d à compléter</item>
-        <item quantity="other">%1$d à compléter</item>
-    </plurals>
     <string name="settings_page_calendars">Agendas</string>
     <string name="calendars_intro">Pour chaque agenda, choisissez où ses événements apparaissent.</string>
     <string name="calendars_source_google">Google</string>
@@ -619,7 +615,7 @@
     <string name="calendars_use">Utiliser dans Cadence</string>
     <string name="calendars_use_hint">Les agendas non utilisés n’apparaissent nulle part dans Cadence. Un même événement présent sur plusieurs agendas n’est montré qu’une fois.</string>
     <string name="calendars_unused_header">Non utilisés (%1$d)</string>
-    <string name="routine_title">Routine · %1$s %2$d/%3$d</string>
+    <string name="routine_title_short">%1$s %2$d/%3$d</string>
     <string name="routine_open_habits">Ouvrir les habitudes</string>
     <string name="routine_limit_value">%1$s max</string>
 

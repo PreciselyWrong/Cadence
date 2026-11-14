@@ -26,8 +26,6 @@ import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.material.icons.automirrored.outlined.ViewList
-import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.ui.platform.LocalContext
 import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
@@ -54,7 +52,6 @@ import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.PinnedShortcut
 import ch.nicolab.cadence.tasks.model.PinnedShortcuts
 import ch.nicolab.cadence.tasks.model.SyncStatus
-import ch.nicolab.cadence.tasks.ui.notifications.NotificationsBellButton
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -169,6 +166,12 @@ fun TasksScreen(
         // Pas de phrase d'explication sous le titre (comme le web, qui a retiré ses boutons « i »).
         tab == TasksTab.NOTES -> null
         tab == TasksTab.DONE -> null
+        // Aujourd'hui : la date et l'avancée du jour ; les événements ont leur bande en tête de liste.
+        tab == TasksTab.TODAY -> {
+            val done = todayState.completed.size
+            val total = done + todayState.today.size
+            if (total == 0) dateLine else "$dateLine · ${pluralStringResource(R.plurals.tasks_done_of, done, done, total)}"
+        }
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
         else -> dateLine
     }
@@ -188,22 +191,26 @@ fun TasksScreen(
                     onTitleClick = { switcherOpen = true },
                     titleClickLabel = stringResource(R.string.tasks_lists_open),
                     actions = {
-                        if (tab == TasksTab.NOTES && openProjectUid == null) {
-                            RoundHeaderButton(
-                                icon = if (notesGallery) Icons.AutoMirrored.Outlined.ViewList else Icons.Outlined.GridView,
-                                contentDescription = stringResource(if (notesGallery) R.string.links_show_list else R.string.links_show_gallery),
-                                onClick = {
+                        // Deux boutons seulement : la recherche, et « ⋯ » pour l'affichage, les notifications et les réglages.
+                        RoundHeaderButton(
+                            icon = Icons.Outlined.Search,
+                            contentDescription = stringResource(R.string.tasks_search_open),
+                            onClick = onOpenSearch,
+                        )
+                        HeaderMoreMenu(
+                            notesToggle = if (tab == TasksTab.NOTES && openProjectUid == null) {
+                                HeaderToggle(
+                                    stringResource(if (notesGallery) R.string.links_show_list else R.string.links_show_gallery),
+                                ) {
                                     notesGallery = !notesGallery
                                     layouts.set(LayoutStore.NOTES, notesGallery)
-                                },
-                            )
-                        }
-                        if ((tab == TasksTab.TODAY || tab == TasksTab.UPCOMING) && openProjectUid == null) {
-                            val hidden = if (tab == TasksTab.TODAY) hideDoneToday else hideDonePlan
-                            RoundHeaderButton(
-                                icon = if (hidden) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                                contentDescription = stringResource(if (hidden) R.string.plan_show_done else R.string.plan_hide_done),
-                                onClick = {
+                                }
+                            } else {
+                                null
+                            },
+                            doneToggle = if ((tab == TasksTab.TODAY || tab == TasksTab.UPCOMING) && openProjectUid == null) {
+                                val hidden = if (tab == TasksTab.TODAY) hideDoneToday else hideDonePlan
+                                HeaderToggle(stringResource(if (hidden) R.string.plan_show_done else R.string.plan_hide_done)) {
                                     if (tab == TasksTab.TODAY) {
                                         hideDoneToday = !hideDoneToday
                                         layouts.set(LayoutStore.HIDE_DONE_TODAY, hideDoneToday)
@@ -211,19 +218,12 @@ fun TasksScreen(
                                         hideDonePlan = !hideDonePlan
                                         layouts.set(LayoutStore.HIDE_DONE_PLAN, hideDonePlan)
                                     }
-                                },
-                            )
-                        }
-                        RoundHeaderButton(
-                            icon = Icons.Outlined.Search,
-                            contentDescription = stringResource(R.string.tasks_search_open),
-                            onClick = onOpenSearch,
-                        )
-                        NotificationsBellButton(onClick = onOpenNotifications)
-                        RoundHeaderButton(
-                            icon = Icons.Outlined.Settings,
-                            contentDescription = stringResource(R.string.tasks_open_settings),
-                            onClick = onOpenSettings,
+                                }
+                            } else {
+                                null
+                            },
+                            onOpenNotifications = onOpenNotifications,
+                            onOpenSettings = onOpenSettings,
                         )
                     },
                 )

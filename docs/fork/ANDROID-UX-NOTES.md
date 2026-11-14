@@ -463,3 +463,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : « Replanifier » sur l'en-tête « Échues » d'Aujourd'hui ouvre une feuille : chaque échue avec Aujourd'hui, Demain, Semaine pro., Plus tard, Abandonner (une série : Passer cette fois). Un toucher écrit tout de suite, la ligne garde son choix et « Annuler ». Une échue replacée n'est plus échue (jour = échéance, horizon = échéance vidée), comme la semaine proposée. Le bouton de la semaine devient « Planifier ma semaine (IA) » (web aussi).
 - **Web** : à reprendre (`TODO.md` › Now). Reste : vérifié sur l'émulateur, pas sur le téléphone.
 
+### 2026-11-14 — Aujourd'hui en liste calme, échues avec toutes les options
+
+- **Problème** : la feuille « Replanifier » manquait de choix (un jour précis, cette semaine, ce mois, fait, une date, tout d'un coup) ; chaque ligne d'Aujourd'hui portait projet, source, lien, poignée, et les événements se mêlaient aux tâches ; en-tête à quatre icônes, grosse carte de routine.
+- **Décision** : feuille : Aujourd'hui, Demain, Fait, « Plus… » (cinq jours suivants avec leur charge, Cette semaine, Semaine prochaine, Ce mois-ci, Plus tard, Choisir une date, Abandonner), « Tout à demain » et « Étaler sur 7 jours » en tête. Liste calme : titre et heure seuls, sans poignée (Monter/Descendre à l'appui long), bande des événements à dérouler ; en-tête recherche + « ⋯ » ; « N faites sur M » sous la date ; routine sur une ligne (anneaux seuls, nom et valeur lus par TalkBack) (1.37.0).
+- **Web** : à reprendre (`TODO.md` › Now). Reste : vérifié sur l'émulateur (sans événements d'agenda : la bande est couverte par `TodayAgendaTest`), pas sur le téléphone.
+

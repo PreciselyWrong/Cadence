@@ -196,4 +196,9 @@
     <string name="link_task_try">Essayer : %1$s</string>
     <string name="link_task_read">Lire : %1$s</string>
     <string name="link_task_watch">Regarder : %1$s</string>
+    <string name="tasks_header_more">Plus d\'options</string>
+    <plurals name="tasks_done_of">
+        <item quantity="one">%1$d faite sur %2$d</item>
+        <item quantity="other">%1$d faites sur %2$d</item>
+    </plurals>
 </resources>

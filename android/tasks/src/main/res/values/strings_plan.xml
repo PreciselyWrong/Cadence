@@ -42,7 +42,11 @@
         <item quantity="other">%1$d tâches → %2$s</item>
     </plurals>
     <string name="today_reordered_notice">« %1$s » rangée</string>
-    <string name="today_drag_handle">Glisser pour ranger</string>
+    <plurals name="today_events_count">
+        <item quantity="one">%1$d événement</item>
+        <item quantity="other">%1$d événements</item>
+    </plurals>
+    <string name="today_events_next">prochain %1$s %2$s</string>
     <string name="timeline_moved_notice">« %1$s » à %2$s</string>
     <string name="timeline_resized_notice">« %1$s » : %2$s</string>
     <string name="backlinks_title">Rétroliens</string>

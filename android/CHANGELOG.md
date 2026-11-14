@@ -1,7 +1,9 @@
 ## [1.37.0] — 14 novembre 2026
 
 - Aujourd'hui plus léger : le bouton « Planifier ma semaine » passe dans Planifier, seuls « Demain » et « Suggérées » restent repliés sous la journée (Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain et Un jour vivent dans Planifier), et la poignée de rangement est plus discrète.
-- « Replanifier » sur l'en-tête « Échues » : une feuille liste les échues avec un choix d'un toucher chacune (Aujourd'hui, Demain, Semaine pro., Plus tard, Abandonner ; « Passer cette fois » pour une série) et « Annuler » sur place ; une échue replacée n'est plus échue.
+- « Replanifier » sur l'en-tête « Échues » : une feuille liste les échues avec Aujourd'hui, Demain, Fait et « Plus… » (les cinq jours suivants avec leur charge, Cette semaine, Semaine prochaine, Ce mois-ci, Plus tard, Choisir une date, Abandonner ; une série : Fait ou Passer cette fois), « Tout à demain » et « Étaler sur 7 jours » en tête, et « Annuler » sur place ; une échue replacée n'est plus échue.
+- Aujourd'hui en liste calme : une ligne par tâche (titre et heure ; projet, source, lien et note dans la fiche), plus de poignée (ranger par appui long), événements de l'agenda réunis dans une bande « 3 événements · prochain 14:00 … » à dérouler.
+- En-tête des Tâches à deux boutons : recherche et « ⋯ » (terminées, notifications avec un point s'il y a du non lu, réglages) ; sous la date, « 2 faites sur 7 » ; routine du moment sur une seule ligne.
 - Le bouton s'appelle « Planifier ma semaine (IA) ».
 - « Planifier ma semaine » compte ce qu'Aujourd'hui montre déjà (tâches dues, échues) avant de remplir un jour, et garde une tâche près de son échéance (serveur et agent).
 

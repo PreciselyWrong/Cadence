@@ -172,4 +172,19 @@ class TodayAgendaTest {
         )
         assertEquals(listOf("a", "b", "libre"), labels(items))
     }
+
+    @Test
+    fun `la bande des événements compte ceux à faire et donne le prochain à heure`() {
+        val events = listOf(
+            allDayEvent("Anniversaire"),
+            timedEvent("Passé", 8),
+            timedEvent("Natation", 16),
+            timedEvent("Dentiste", 14),
+            timedEvent("Fait", 15).copy(done = true),
+        )
+        val band = EventsBand.of(events, now = at(10), zone = zone)
+        assertEquals(4, band.count)
+        assertEquals("Dentiste", band.next?.event?.title)
+        assertEquals(null, EventsBand.of(listOf(timedEvent("Passé", 8)), now = at(10), zone = zone).next)
+    }
 }

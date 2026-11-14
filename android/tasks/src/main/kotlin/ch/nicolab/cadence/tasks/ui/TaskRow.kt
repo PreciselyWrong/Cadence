@@ -106,6 +106,11 @@ internal fun TaskRow(
     trailing: (@Composable () -> Unit)? = null,
     /** La ligne se montre cochée et barrée avant que la tâche le soit (geste du résumé, tâche récurrente qui reste ouverte). */
     forceClosed: Boolean = false,
+    /**
+     * Ligne calme d'Aujourd'hui : le titre seul, et l'heure à droite quand la tâche en a une ; projet, source, lien,
+     * note et image restent dans la fiche.
+     */
+    calm: Boolean = false,
 ) {
     val haptic = rememberCadenceHaptic()
     val interaction = remember { MutableInteractionSource() }
@@ -120,7 +125,7 @@ internal fun TaskRow(
     val showClosed = task.isClosed || completing || forceClosed
     // Une adresse dans la note se lit par son site et l'image de sa page, pas par l'adresse brute.
     val link = remember(task.note, task.source, task.sourceUrl) { TaskLinks.of(task) }
-    val preview = rememberLinkPreview(link?.url)
+    val preview = rememberLinkPreview(link?.url.takeUnless { calm })
 
     val swipeConfig = rememberSwipeConfig()
     SwipeActionContainer(
@@ -179,8 +184,10 @@ internal fun TaskRow(
             Spacer(Modifier.width(8.dp))
             Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
                 StrikingTitle(task.name, struck = showClosed)
-                TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor, plannedAt)
-                link?.let { SiteLine(it, preview?.siteName, Modifier.padding(top = 2.dp)) }
+                if (!calm) {
+                    TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor, plannedAt)
+                    link?.let { SiteLine(it, preview?.siteName, Modifier.padding(top = 2.dp)) }
+                }
                 subtitle?.let {
                     Text(
                         text = it,
@@ -191,7 +198,7 @@ internal fun TaskRow(
                         modifier = Modifier.padding(top = 2.dp),
                     )
                 }
-                if (decor.showDescription) {
+                if (decor.showDescription && !calm) {
                     TaskRowMeta.notePreview(link?.noteRest ?: task.note)?.let { notePreview ->
                         Text(
                             text = notePreview,
@@ -207,6 +214,16 @@ internal fun TaskRow(
             preview?.imageUrl?.let {
                 Spacer(Modifier.width(8.dp))
                 LinkThumb(it)
+            }
+            if (calm) {
+                (plannedAt ?: task.dueDate?.takeIf { task.dueHasTime })?.let {
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = wireTime(instantTime(it, zone)),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
             trailing?.let {
                 Spacer(Modifier.width(8.dp))

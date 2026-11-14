@@ -52,3 +52,18 @@ fun mergeTodayItems(
 
 /** Instant de l'échéance seulement si elle porte une heure : sans heure, le serveur stocke la fin du jour. */
 private fun TaskItem.dueTimeMillis(): Long? = dueDate?.takeIf { dueHasTime }?.toEpochMilli()
+
+/**
+ * Bande des événements d'Aujourd'hui : les événements du jour ne se mêlent plus aux tâches, une ligne les résume.
+ * [count] : ceux qui restent à faire (non cochés) ; [next] : le prochain à heure qui n'a pas commencé, sinon null.
+ */
+data class EventsBand(val count: Int, val next: EventWithDone?) {
+    companion object {
+        fun of(events: List<EventWithDone>, now: Instant, zone: ZoneId): EventsBand {
+            val open = events.filterNot { it.done }
+            val next = open.filter { !it.event.allDay && it.event.localStart(zone) >= now.toEpochMilli() }
+                .minByOrNull { it.event.localStart(zone) }
+            return EventsBand(open.size, next)
+        }
+    }
+}

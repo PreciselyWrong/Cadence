@@ -1024,7 +1024,7 @@ internal class TasksViewModel(
 
     /**
      * Feuille « Replanifier » des échues d'Aujourd'hui : écrit [choice] pour [task] ([OverdueReplan]) et rend son
-     * « Annuler » (tâche puis lignes du plan), ou null pour un saut d'occurrence, qui ne s'annule pas.
+     * « Annuler » (tâche puis lignes du plan ; « Fait » rouvre la tâche), ou null pour un saut d'occurrence.
      */
     suspend fun replanOverdue(task: TaskItem, choice: ReplanChoice): (suspend () -> Unit)? {
         val m = moment.value
@@ -1032,6 +1032,10 @@ internal class TasksViewModel(
         if (writes.skip) {
             repository.skipOccurrence(task.uid)
             return null
+        }
+        if (writes.complete) {
+            repository.completeTask(task.uid)
+            return { repository.reopenTask(task.uid) }
         }
         val restore = OverdueReplan.restore(task, m.zone)
         writes.change?.let { repository.updateTask(task.uid, it) }
@@ -1041,6 +1045,14 @@ internal class TasksViewModel(
             undoPlan?.invoke()
         }
     }
+
+    /** Actions groupées de la feuille (« Tout à demain », « Étaler sur 7 jours ») : un « Annuler » par tâche écrite. */
+    suspend fun replanOverdue(choices: List<Pair<TaskItem, ReplanChoice>>): Map<String, suspend () -> Unit> =
+        choices.mapNotNull { (task, choice) -> replanOverdue(task, choice)?.let { task.uid to it } }.toMap()
+
+    /** « Étaler sur 7 jours » des échues de la feuille, sur les lignes du plan connues de l'appareil. */
+    suspend fun overdueSpread(tasks: List<TaskItem>): List<Pair<TaskItem, ReplanChoice>> =
+        OverdueReplan.spread(tasks, planSlots.entries(), repository.observeTasks().first(), moment.value.today)
 
     /** « Retirer l'engagement » d'« À planifier » : semaine et mois effacés, avec « Annuler ». */
     fun dropCommitment(task: TaskItem) {

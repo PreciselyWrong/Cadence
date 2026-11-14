@@ -1,16 +1,8 @@
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.outlined.DragIndicator
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.zIndex
 import ch.nicolab.cadence.designsystem.theme.cadence
-import kotlin.math.abs
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -19,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Event
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.Icon
@@ -39,7 +32,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -111,30 +107,10 @@ internal fun TodayTab(
     }
     val proposedUids = proposals?.uids.orEmpty()
     val agenda = remember(state.today, state.planStarts, proposedUids, events, zone) {
-        mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, events, zone, state.planStarts, state.plan.map { it.uid })
+        // Les événements ne se mêlent plus aux tâches : la bande du haut les résume (liste calme).
+        mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, emptyList(), zone, state.planStarts, state.plan.map { it.uid })
     }
-    val agendaTasks = remember(agenda) { agenda.filterIsInstance<TodayItem.Task>().map { it.task } }
-    val reorderable = remember(agendaTasks, state.planStarts) { viewModel.todayUntimed(agendaTasks) }
-    val listState = rememberLazyListState()
-    var dragUid by remember { mutableStateOf<String?>(null) }
-    var dragOffset by remember { mutableFloatStateOf(0f) }
-
-    /** Fin d'un glisser de poignée : la tâche prend le rang de la ligne rangeable la plus proche de son centre. */
-    fun finishDrag() {
-        val uid = dragUid
-        val offset = dragOffset
-        dragUid = null
-        dragOffset = 0f
-        if (uid == null) return
-        val visible = listState.layoutInfo.visibleItemsInfo
-        val dragged = visible.firstOrNull { it.key == "task:$uid" } ?: return
-        val center = dragged.offset + dragged.size / 2f + offset
-        val target = visible
-            .filter { (it.key as? String)?.removePrefix("task:") in reorderable }
-            .minByOrNull { abs(it.offset + it.size / 2f - center) } ?: return
-        val toIndex = reorderable.indexOf((target.key as String).removePrefix("task:"))
-        agendaTasks.firstOrNull { it.uid == uid }?.let { viewModel.reorderToday(it, reorderable, toIndex) }
-    }
+    val band = remember(events, moment.now, zone) { EventsBand.of(events, moment.now, zone) }
     val plannedToday = remember(state.plan) { state.plan.mapTo(HashSet()) { it.uid } }
     val triageable = remember(state.overdue) { PlanningChanges.movable(state.overdue) }
     val unfinished = remember(state.today) { PlanningChanges.movable(state.today) }
@@ -213,7 +189,29 @@ internal fun TodayTab(
         )
     }
 
-    LazyColumn(modifier = modifier, state = listState, contentPadding = tasksListPadding()) {
+    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+        if (events.isNotEmpty()) {
+            val open = EVENTS_FOLD in openFolds
+            item(key = "fold-$EVENTS_FOLD") {
+                EventsBandRow(band, zone, open) {
+                    openFolds = if (open) openFolds - EVENTS_FOLD else openFolds + EVENTS_FOLD
+                }
+            }
+            if (open) {
+                items(events, key = { TodayItem.Event(it).key }) { event ->
+                    EventRow(
+                        item = event,
+                        zone = zone,
+                        checkable = calendarSettings.checkEvents,
+                        onToggle = { viewModel.toggleEvent(event.event.key) },
+                        onOpen = { viewModel.openEventDetail(event.event.key) },
+                        onMenu = { viewModel.openEventMenu(event.event.key) },
+                        onSwipeAction = { viewModel.swipeEvent(event, it) },
+                        modifier = Modifier.animateItem(),
+                    )
+                }
+            }
+        }
         if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }
@@ -293,17 +291,6 @@ internal fun TodayTab(
                 agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents,
                 projectIcons = projectIcons,
                 planStarts = state.planStarts,
-                drag = TodayDrag(
-                    reorderable = reorderable.toSet(),
-                    uid = dragUid,
-                    offset = { dragOffset },
-                    onStart = {
-                        dragUid = it
-                        dragOffset = 0f
-                    },
-                    onMove = { dragOffset += it },
-                    onEnd = ::finishDrag,
-                ),
             )
         }
         if (eveningVisible) {
@@ -366,7 +353,11 @@ internal fun TodayTab(
         // Le matin d'abord : les échues se replacent d'un toucher chacune, sans passer par Planifier.
         OverdueReplanSheet(
             tasks = late,
+            today = today,
+            dayCounts = planBoard.days.associate { it.date to it.open.size },
             onChoose = { task, choice -> viewModel.replanOverdue(task, choice) },
+            onChooseMany = { viewModel.replanOverdue(it) },
+            onSpread = { viewModel.overdueSpread(it) },
             onOpen = {
                 replanOpen = false
                 onOpen(it)
@@ -400,6 +391,7 @@ private fun FoldHeader(
 }
 
 private const val OVERDUE_FOLD = "overdue"
+private const val EVENTS_FOLD = "events"
 
 private val minuteFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
@@ -416,17 +408,13 @@ private fun LazyListScope.agendaRows(
     checkEvents: Boolean,
     projectIcons: Map<String, String> = emptyMap(),
     planStarts: Map<String, Instant> = emptyMap(),
-    drag: TodayDrag? = null,
 ) {
     items(agenda, key = { it.key }) { item ->
         when (item) {
+            // Ligne calme : titre et heure ; ranger passe par l'appui long (Monter, Descendre).
             is TodayItem.Task -> TaskRow(
-                modifier = if (drag != null && drag.uid == item.task.uid) {
-                    Modifier.zIndex(1f).graphicsLayer { translationY = drag.offset() }
-                } else {
-                    Modifier.animateItem()
-                },
-                trailing = drag?.takeIf { item.task.uid in it.reorderable }?.let { { DragHandle(item.task.uid, it) } },
+                modifier = Modifier.animateItem(),
+                calm = true,
                 task = item.task,
                 projectName = item.task.projectUid?.let { projectNames[it] },
                 projectIcon = item.task.projectUid?.let { projectIcons[it] },
@@ -454,40 +442,31 @@ private fun LazyListScope.agendaRows(
     }
 }
 
-/** Glisser d'Aujourd'hui : les tâches rangeables (sans heure), la ligne tenue et son décalage, les rappels du geste. */
-private class TodayDrag(
-    val reorderable: Set<String>,
-    val uid: String?,
-    val offset: () -> Float,
-    val onStart: (String) -> Unit,
-    val onMove: (Float) -> Unit,
-    val onEnd: () -> Unit,
-)
-
-/**
- * Poignée de rangement : un glisser vertical sur elle seule range la ligne. Elle ne réagit qu'à la verticale, donc ne
- * gêne ni les balayages horizontaux de la ligne ni l'appui long du menu ; Monter et Descendre restent dans le menu.
- */
+/** Bande des événements du jour : « 3 événements · prochain 14:00 Dentiste », un toucher déroule la liste. */
 @Composable
-private fun DragHandle(uid: String, drag: TodayDrag) {
-    Icon(
-        Icons.Outlined.DragIndicator,
-        contentDescription = stringResource(R.string.today_drag_handle),
-        // Discrète : la poignée se répète sur chaque ligne, elle ne doit pas peser plus que le titre.
-        tint = cadence.onSurfaceVariant.copy(alpha = 0.35f),
+private fun EventsBandRow(band: EventsBand, zone: java.time.ZoneId, open: Boolean, onToggle: () -> Unit) {
+    val count = pluralStringResource(R.plurals.today_events_count, band.count, band.count)
+    val next = band.next?.let {
+        val time = Instant.ofEpochMilli(it.event.instanceBegin).atZone(zone).toLocalTime().format(minuteFormat)
+        stringResource(R.string.today_events_next, time, it.event.title)
+    }
+    Row(
         modifier = Modifier
-            .size(Size.touch)
-            .pointerInput(uid) {
-                detectVerticalDragGestures(
-                    onDragStart = { drag.onStart(uid) },
-                    onVerticalDrag = { change, amount ->
-                        change.consume()
-                        drag.onMove(amount)
-                    },
-                    onDragEnd = drag.onEnd,
-                    onDragCancel = drag.onEnd,
-                )
-            }
-            .padding(Space.md),
-    )
+            .fillMaxWidth()
+            .heightIn(min = Size.touch)
+            .clickable(role = Role.Button, onClick = onToggle)
+            .padding(vertical = Space.sm),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(Icons.Outlined.Event, contentDescription = null, tint = cadence.onSurfaceVariant, modifier = Modifier.size(18.dp))
+        Text(
+            text = listOfNotNull(count, next).joinToString(" · "),
+            style = MaterialTheme.typography.bodyMedium,
+            color = cadence.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f).padding(start = Space.sm),
+        )
+        Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
+    }
 }
