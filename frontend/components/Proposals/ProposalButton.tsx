@@ -28,7 +28,7 @@ const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
 
     const label =
         kind === 'week'
-            ? t('proposals.week.button', 'Planifier ma semaine')
+            ? t('proposals.week.button', 'Planifier ma semaine (IA)')
             : t('proposals.review.button', 'Préparer ma revue');
     const readyLabel =
         kind === 'week'

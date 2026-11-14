@@ -5358,7 +5358,7 @@
       "groupKeep": "そのまま"
     },
     "week": {
-      "button": "今週を計画",
+      "button": "今週を計画 (AI)",
       "ready": "今週の計画ができました",
       "preparing": "準備中…"
     },

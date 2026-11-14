@@ -5358,7 +5358,7 @@
       "groupKeep": "不变"
     },
     "week": {
-      "button": "规划我的一周",
+      "button": "规划我的一周 (AI)",
       "ready": "你的一周已准备好",
       "preparing": "准备中…"
     },

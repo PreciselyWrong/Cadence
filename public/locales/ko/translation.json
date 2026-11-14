@@ -5358,7 +5358,7 @@
       "groupKeep": "그대로"
     },
     "week": {
-      "button": "이번 주 계획하기",
+      "button": "이번 주 계획하기 (AI)",
       "ready": "이번 주 계획이 준비됐어요",
       "preparing": "준비 중…"
     },
