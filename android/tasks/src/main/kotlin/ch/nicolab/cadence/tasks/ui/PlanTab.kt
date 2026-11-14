@@ -128,7 +128,7 @@ internal fun PlanTab(
     // « Tâches à classer » de l'Inbox : cinq lignes, puis « Tout afficher » (comme le web).
     var allUnsorted by rememberSaveable { mutableStateOf(false) }
     // « Choisir une date » du menu « Replanifier » des échues.
-    var pickingOverdue by remember { mutableStateOf(false) }
+    var replanOpen by rememberSaveable { mutableStateOf(false) }
     // Horizon à montrer après un appui sur la bande « Plus tard » de Jours.
     var focusHorizon by remember { mutableStateOf<Horizon?>(null) }
     val listState = rememberLazyListState()
@@ -249,13 +249,7 @@ internal fun PlanTab(
             }
             if (board.overdue.isNotEmpty()) {
                 item(key = "overdue-header") {
-                    OverdueHeader(
-                        count = board.overdue.size,
-                        today = today,
-                        onDay = { viewModel.planOn(board.overdue, it) },
-                        onSpread = { viewModel.spreadOverdue() },
-                        onPick = { pickingOverdue = true },
-                    )
+                    OverdueHeader(count = board.overdue.size, today = today, onReplan = { replanOpen = true })
                 }
                 items(board.overdue, key = { "overdue-${it.rowKey}" }) { task ->
                     Row(task) { planning = PlanTarget.Task(task) }
@@ -365,14 +359,19 @@ internal fun PlanTab(
         )
     }
 
-    if (pickingOverdue) {
-        TaskDatePickerDialog(
-            initial = today,
-            onConfirm = { date ->
-                pickingOverdue = false
-                viewModel.planOn(board.overdue, date)
+    if (replanOpen) {
+        OverdueReplanSheet(
+            tasks = board.overdue,
+            today = today,
+            dayCounts = board.days.associate { it.date to it.open.size },
+            onChoose = { task, choice -> viewModel.replanOverdue(task, choice) },
+            onChooseMany = { viewModel.replanOverdue(it) },
+            onSpread = { viewModel.overdueSpread(it) },
+            onOpen = {
+                replanOpen = false
+                onOpen(it)
             },
-            onDismiss = { pickingOverdue = false },
+            onDismiss = { replanOpen = false },
         )
     }
 
@@ -411,18 +410,12 @@ private fun horizonHeaderIndex(board: PlanBoardState, horizon: Horizon): Int {
 }
 
 /**
- * En-tête des échues : titre, boutons des plugins du lieu `overdue` (web : « Proposer un plan »), puis
- * « Replanifier » : Aujourd'hui, Demain, Étaler sur 7 jours, Choisir une date. Rien n'y touche l'échéance.
+ * En-tête des échues : titre, boutons des plugins du lieu `overdue`, puis « Replanifier », qui ouvre la feuille commune
+ * avec Aujourd'hui ([OverdueReplanSheet]) : un choix par tâche (Aujourd'hui, Demain, Fait ; sous « Plus… » les jours,
+ * horizons, une date, Abandonner) et les actions groupées (Tout à demain, Étaler sur 7 jours).
  */
 @Composable
-private fun OverdueHeader(
-    count: Int,
-    today: LocalDate,
-    onDay: (LocalDate) -> Unit,
-    onSpread: () -> Unit,
-    onPick: () -> Unit,
-) {
-    var open by remember { mutableStateOf(false) }
+private fun OverdueHeader(count: Int, today: LocalDate, onReplan: () -> Unit) {
     androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
         SectionHeader(
             title = stringResource(R.string.plan_overdue),
@@ -432,17 +425,8 @@ private fun OverdueHeader(
         )
         androidx.compose.foundation.layout.Row(verticalAlignment = Alignment.CenterVertically) {
             PluginActionButtons(place = "overdue", context = mapOf("date" to today.toString()))
-            Box {
-                TextButton(onClick = { open = true }, modifier = Modifier.heightIn(min = Size.touch)) {
-                    Text(stringResource(R.string.plan_overdue_reschedule), style = MaterialTheme.typography.labelLarge)
-                    Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = null, modifier = Modifier.size(Size.icon))
-                }
-                DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
-                    DropdownMenuItem(text = { Text(stringResource(R.string.tasks_day_today)) }, onClick = { open = false; onDay(today) })
-                    DropdownMenuItem(text = { Text(stringResource(R.string.tasks_day_tomorrow)) }, onClick = { open = false; onDay(today.plusDays(1)) })
-                    DropdownMenuItem(text = { Text(stringResource(R.string.plan_overdue_spread)) }, onClick = { open = false; onSpread() })
-                    DropdownMenuItem(text = { Text(stringResource(R.string.tasks_chip_custom_date)) }, onClick = { open = false; onPick() })
-                }
+            TextButton(onClick = onReplan, modifier = Modifier.heightIn(min = Size.touch)) {
+                Text(stringResource(R.string.plan_overdue_reschedule), style = MaterialTheme.typography.labelLarge)
             }
         }
     }

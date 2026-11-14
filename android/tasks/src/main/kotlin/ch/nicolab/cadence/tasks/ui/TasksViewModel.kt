@@ -1013,14 +1013,6 @@ internal class TasksViewModel(
         )
     }
 
-    /** « Étaler sur 7 jours » des échues : chacune au jour le moins chargé d'aujourd'hui à J+6, avec « Annuler ». */
-    fun spreadOverdue() = launchAction {
-        val edits = PlanBoard.spreadWrites(planBoard.value.overdue, planSlots.entries(), repository.observeTasks().first(), moment.value.today)
-        if (edits.isEmpty()) return@launchAction
-        val undo = planEdits.apply(edits)
-        val message = getApplication<Application>().resources.getQuantityString(R.plurals.plan_spread_notice, edits.size, edits.size)
-        _notices.tryEmit(UndoNotice(message) { launchAction { undo() } })
-    }
 
     /**
      * Feuille « Replanifier » des échues d'Aujourd'hui : écrit [choice] pour [task] ([OverdueReplan]) et rend son

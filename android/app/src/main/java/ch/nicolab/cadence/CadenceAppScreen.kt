@@ -62,6 +62,9 @@ import ch.nicolab.cadence.designsystem.components.CadenceSnackbarHost
 import ch.nicolab.cadence.designsystem.components.LocalAppSnackbarHostState
 import ch.nicolab.cadence.designsystem.components.NavDestination
 import ch.nicolab.cadence.designsystem.components.LocalNavActionHost
+import ch.nicolab.cadence.designsystem.components.NavAction
+import ch.nicolab.cadence.tasks.ui.QuickAddSheet
+import androidx.compose.material.icons.outlined.Add
 import ch.nicolab.cadence.designsystem.components.NavActionHost
 import ch.nicolab.cadence.designsystem.components.NavigationBarScrim
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
@@ -346,8 +349,11 @@ internal fun CadenceAppScreen(
         configureHealth = { healthConnectRulesOpen = true },
     )
 
-    // Le + de l'onglet ouvert vit dans la barre du bas, pas en bouton flottant au-dessus du contenu.
+    // Le + vit au centre de la barre du bas, sur tous les onglets : celui de l'onglet ouvert s'il en déclare un
+    // (Tâches, Agenda, Habitudes), sinon l'ajout d'une tâche.
     val navActionHost = remember { NavActionHost() }
+    var addTaskOpen by remember { mutableStateOf(false) }
+    val defaultAdd = NavAction(Icons.Outlined.Add, stringResource(ch.nicolab.cadence.tasks.R.string.tasks_fab_add)) { addTaskOpen = true }
     CadenceScreen {
         CompositionLocalProvider(
             LocalAppSnackbarHostState provides snackbar,
@@ -471,8 +477,9 @@ internal fun CadenceAppScreen(
             if (notificationsOpen) NotificationsScreen(onBack = { notificationsOpen = false }, onOpen = openTarget)
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
             if (weekendOpen) WeekendSheet(weekendUid, onClose = { weekendOpen = false })
+            if (addTaskOpen) QuickAddSheet(onDismiss = { addTaskOpen = false })
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen && !notificationsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen && !notificationsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action ?: defaultAdd) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }

@@ -1,3 +1,8 @@
+## [1.37.7] — 14 novembre 2026
+
+- Le + est de nouveau sur tous les onglets, en grosse bulle qui dépasse de la barre : Tâches et Bilan ajoutent une tâche, Agenda une tâche du jour affiché, Habitudes une habitude.
+- « Replanifier » des échues de Planifier ouvre la même feuille qu'Aujourd'hui (Aujourd'hui, Demain, Fait, « Plus… » avec les jours, horizons, une date, Abandonner ; Tout à demain, Étaler sur 7 jours) au lieu d'un petit menu.
+
 ## [1.37.6] — 14 novembre 2026
 
 - Barre du bas plus en verre : plus transparente et plus floue, le contenu se devine dessous.

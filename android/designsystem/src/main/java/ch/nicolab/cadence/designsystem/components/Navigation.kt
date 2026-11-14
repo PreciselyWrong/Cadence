@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -83,43 +85,55 @@ fun CadenceNavigation(
     } else {
         Modifier.background(tint)
     }
-    Row(
+    // L'île garde sa place au centre pour le + ; le + est posé par-dessus, hors de l'île, et dépasse de son bord haut.
+    Box(
         modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(start = Space.gutter, end = Space.gutter, bottom = Space.sm)
-            .shadow(Elevation.floating, Radius.Pill)
-            .clip(Radius.Pill)
-            .then(surface)
-            .border(Size.hairline, palette.glassBorder, Radius.Pill)
-            .height(Size.navBar)
-            .padding(horizontal = Space.xs),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(start = Space.gutter, end = Space.gutter, bottom = Space.sm),
+        contentAlignment = Alignment.BottomCenter,
     ) {
-        val middle = (destinations.size + 1) / 2
-        destinations.forEachIndexed { index, destination ->
-            if (index == middle) action?.let { NavAddButton(it) }
-            NavItem(destination, index == selected, Modifier.weight(1f)) { onSelect(index) }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .shadow(Elevation.floating, Radius.Pill)
+                .clip(Radius.Pill)
+                .then(surface)
+                .border(Size.hairline, palette.glassBorder, Radius.Pill)
+                .height(Size.navBar)
+                .padding(horizontal = Space.xs),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            val middle = (destinations.size + 1) / 2
+            destinations.forEachIndexed { index, destination ->
+                if (index == middle && action != null) Spacer(Modifier.width(AddSize))
+                NavItem(destination, index == selected, Modifier.weight(1f)) { onSelect(index) }
+            }
         }
+        action?.let { NavAddButton(it, Modifier.padding(bottom = Size.navBar - AddSize + AddRaise)) }
     }
 }
+
+/** Le + mesure 60 dp et dépasse de 20 dp au-dessus de l'île. */
+private val AddSize = 60.dp
+private val AddRaise = 20.dp
 
 /**
  * Le + de l'onglet ouvert, au centre de la barre : une bulle de verre teintée à l'accent (le flou de la barre passe au
  * travers), un reflet en haut et un liseré clair ; elle s'enfonce un peu sous le doigt.
  */
 @Composable
-private fun NavAddButton(action: NavAction) {
+private fun NavAddButton(action: NavAction, modifier: Modifier = Modifier) {
     val palette = cadence
     val haptic = rememberCadenceHaptic()
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(if (pressed) 0.90f else 1f, Motion.interactive(), label = "navAddPress")
     Box(
-        Modifier
-            .padding(start = Space.xs, end = Space.xs)
-            .size(Size.navItem + Space.xs)
+        modifier
+            .size(AddSize)
+            .shadow(Elevation.floating, CircleShape)
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale

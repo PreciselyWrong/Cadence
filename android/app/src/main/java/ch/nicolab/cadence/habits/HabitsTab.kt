@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.PrimaryAdd
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
@@ -58,8 +59,6 @@ internal fun HabitsTab(
             ScreenHeader(
                 title = stringResource(R.string.habits_title),
                 actions = {
-                    // Créer une habitude depuis l'en-tête : le gros + de la barre reste aux Tâches et à l'Agenda.
-                    RoundHeaderButton(Icons.Outlined.Add, stringResource(R.string.create_habit_button), onClick = create)
                     NotificationsBellButton(onClick = openNotifications)
                     RoundHeaderButton(Icons.Outlined.Settings, stringResource(R.string.tab_settings), onClick = openSettings)
                 },
@@ -82,6 +81,15 @@ internal fun HabitsTab(
         } else {
             HabitsScreen(header, habits, groups, selectedGroupId, onSelectGroup, options, quick)
         }
+        // Le + de la barre du bas crée une habitude sur cet onglet.
+        PrimaryAdd(
+            icon = Icons.Outlined.Add,
+            label = stringResource(R.string.create_habit_button),
+            onClick = create,
+            fabModifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Space.gutter, bottom = navigationClearance() + Space.lg),
+        )
     }
 }
 
