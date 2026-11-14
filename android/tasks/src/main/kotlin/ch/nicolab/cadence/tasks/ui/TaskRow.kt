@@ -39,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
@@ -69,10 +70,21 @@ import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.delay
 
 private val RowShape = Radius.Control
 private val RailWidth = 3.dp
+/** Marge intérieure de la case : (48 dp de zone tactile − 24 dp de cercle) / 2. */
+private val CheckInset = 12.dp
+
+/** Élargit l'élément de [inset] vers la gauche, hors de la marge du parent, sans décaler ce qui le suit. */
+private fun Modifier.bleedStart(inset: androidx.compose.ui.unit.Dp): Modifier = layout { measurable, constraints ->
+    val extra = inset.roundToPx()
+    val wide = if (constraints.hasBoundedWidth) constraints.copy(maxWidth = constraints.maxWidth + extra, minWidth = constraints.minWidth + extra) else constraints
+    val placeable = measurable.measure(wide)
+    layout(placeable.width - extra, placeable.height) { placeable.placeRelative(-extra, 0) }
+}
 private const val VIRTUAL_ALPHA = 0.6f
 
 /** Temps pendant lequel la ligne reste cochée et barrée avant de quitter la liste. */
@@ -140,6 +152,8 @@ internal fun TaskRow(
     ) { swipeSemantics ->
         Row(
             modifier = Modifier
+                // Ligne calme : la case (zone de 48 dp, cercle de 24) s'aligne sur la marge des titres de section.
+                .then(if (calm) Modifier.bleedStart(CheckInset) else Modifier)
                 .fillMaxWidth()
                 .pressable(interaction, RowShape)
                 .background(MaterialTheme.colorScheme.surface, RowShape)
@@ -158,14 +172,16 @@ internal fun TaskRow(
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                Modifier
-                    .padding(start = 4.dp)
-                    .width(RailWidth)
-                    .height(32.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .background(TaskRowMeta.railColor(projectColor, decor.showProjectRail)?.let { Color(it) } ?: Color.Transparent),
-            )
+            if (!calm) {
+                Box(
+                    Modifier
+                        .padding(start = 4.dp)
+                        .width(RailWidth)
+                        .height(32.dp)
+                        .clip(RoundedCornerShape(2.dp))
+                        .background(TaskRowMeta.railColor(projectColor, decor.showProjectRail)?.let { Color(it) } ?: Color.Transparent),
+                )
+            }
             TaskCheckbox(
                 checked = showClosed,
                 onCheckedChange = {
@@ -216,10 +232,19 @@ internal fun TaskRow(
                 LinkThumb(it)
             }
             if (calm) {
-                (plannedAt ?: task.dueDate?.takeIf { task.dueHasTime })?.let {
+                // Un seul repère à droite : l'heure du jour, ou le jour d'une échue (« lun. 9 », « Hier »).
+                val dueDay = task.dueDay
+                val mark = when {
+                    // Un jour passé porte sa date : « lun. » seul se lirait comme lundi prochain.
+                    dueDay != null && TaskViews.isOverdue(task, today) ->
+                        if (dueDay == today.minusDays(1)) dayLabel(dueDay, today, DayLabelStyle.SHORT)
+                        else dueDay.format(DateTimeFormatter.ofPattern("EEE d", tasksLocale))
+                    else -> (plannedAt ?: task.dueDate?.takeIf { task.dueHasTime })?.let { wireTime(instantTime(it, zone)) }
+                }
+                mark?.let {
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = wireTime(instantTime(it, zone)),
+                        text = it,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

@@ -469,3 +469,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : feuille : Aujourd'hui, Demain, Fait, « Plus… » (cinq jours suivants avec leur charge, Cette semaine, Semaine prochaine, Ce mois-ci, Plus tard, Choisir une date, Abandonner), « Tout à demain » et « Étaler sur 7 jours » en tête. Liste calme : titre et heure seuls, sans poignée (Monter/Descendre à l'appui long), bande des événements à dérouler ; en-tête recherche + « ⋯ » ; « N faites sur M » sous la date ; routine sur une ligne (anneaux seuls, nom et valeur lus par TalkBack) (1.37.0).
 - **Web** : à reprendre (`TODO.md` › Now). Reste : vérifié sur l'émulateur (sans événements d'agenda : la bande est couverte par `TodayAgendaTest`), pas sur le téléphone.
 
+### 2026-11-14 — Aujourd'hui : passe de design
+
+- **Problème** : le repli « Échues 3 » se lisait comme le titre des tâches du jour ; les lignes calmes étaient décalées de la marge des titres ; trois voix de titre différentes ; « 0 faites sur 6 » au réveil.
+- **Décision** : bandeau des échues à part (fond `containerLow`, « 3 tâches échues », « Replanifier », flèche) ; case d'une ligne calme alignée sur la marge (`bleedStart`) ; titres repliés en `labelLarge` discret ; jour d'une échue à droite (« lun. 9 », « Hier ») ; « N à faire » tant que rien n'est fait. Deux critiques à froid sur capture (6 puis 6,5/10) : laissés de côté le rouge de priorité haute (signal unique de l'app), les facettes d'habitudes, la barre de navigation et le bouton +, hors de cet écran.
+- **Web** : à reprendre avec la liste calme (`TODO.md` › Now). Reste : vérifié sur l'émulateur avec une journée de démo (`app/src/debug/.../DummyTasks.kt`), pas sur le téléphone.
+

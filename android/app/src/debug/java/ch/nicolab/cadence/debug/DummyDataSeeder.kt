@@ -14,5 +14,6 @@ internal object DummyDataSeeder {
             app.repository.replaceQuickValues(habit.id, data.quickValues.getValue(habit.id))
         }
         data.entries.forEach { app.repository.addEntry(it, source = "DUMMY") }
+        DummyTasks.seed(app, today)
     }
 }

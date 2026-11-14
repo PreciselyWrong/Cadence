@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -31,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
@@ -260,21 +263,19 @@ internal fun TodayTab(
             // Replié comme les sections du bas (et le web) : le retard se voit d'un coup d'œil sans prendre la page.
             val open = OVERDUE_FOLD in openFolds
             item(key = "fold-$OVERDUE_FOLD") {
-                FoldHeader(
-                    stringResource(R.string.tasks_section_overdue),
-                    late.size,
-                    open,
-                    action = {
-                        TextButton(onClick = { replanOpen = true }) { Text(stringResource(R.string.overdue_replan_button)) }
-                    },
-                ) {
-                    openFolds = if (open) openFolds - OVERDUE_FOLD else openFolds + OVERDUE_FOLD
-                }
+                // Un bandeau posé à part, pas un titre de section : la liste du jour qui suit ne se lit pas comme les échues.
+                OverdueBanner(
+                    count = late.size,
+                    open = open,
+                    onReplan = { replanOpen = true },
+                    onToggle = { openFolds = if (open) openFolds - OVERDUE_FOLD else openFolds + OVERDUE_FOLD },
+                )
             }
             if (open) {
                 taskRows(
                     late, projectNames, projectColors, moment, viewModel, onOpen,
                     projectIcons = projectIcons,
+                    calm = true,
                     subtitleOf = { task ->
                         state.plannedDays[task.uid]?.let {
                             stringResource(R.string.tasks_overdue_planned_on, dayLabel(it, today, DayLabelStyle.SHORT))
@@ -335,7 +336,8 @@ internal fun TodayTab(
                 ) {
                     Text(
                         text = stringResource(R.string.tasks_section_completed, state.completed.size),
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = cadence.onSurfaceVariant,
                         modifier = Modifier.weight(1f),
                     )
                     Icon(
@@ -384,9 +386,19 @@ private fun FoldHeader(
             .padding(vertical = Space.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = "$title $count", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+        // Même voix que la routine et la bande des événements : petit, discret, à la même marge.
+        Text(
+            text = "$title $count",
+            style = MaterialTheme.typography.labelLarge,
+            color = cadence.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
+        )
         action?.invoke()
-        Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
+        Icon(
+            if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+            contentDescription = null,
+            tint = cadence.onSurfaceVariant,
+        )
     }
 }
 
@@ -468,5 +480,34 @@ private fun EventsBandRow(band: EventsBand, zone: java.time.ZoneId, open: Boolea
             modifier = Modifier.weight(1f).padding(start = Space.sm),
         )
         Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
+    }
+}
+
+/** Bandeau des échues : « 3 tâches échues », « Replanifier », et la flèche qui déroule la liste ; neutre, jamais alarmant. */
+@Composable
+private fun OverdueBanner(count: Int, open: Boolean, onReplan: () -> Unit, onToggle: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Space.xs)
+            .clip(Radius.Control)
+            .background(cadence.containerLow)
+            .clickable(role = Role.Button, onClick = onToggle)
+            .padding(start = Space.lg, end = Space.xs),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = pluralStringResource(R.plurals.today_overdue_banner, count, count),
+            style = MaterialTheme.typography.labelLarge,
+            color = cadence.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
+        )
+        TextButton(onClick = onReplan) { Text(stringResource(R.string.overdue_replan_button)) }
+        Icon(
+            if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+            contentDescription = null,
+            tint = cadence.onSurfaceVariant,
+            modifier = Modifier.padding(end = Space.sm),
+        )
     }
 }

@@ -170,7 +170,12 @@ fun TasksScreen(
         tab == TasksTab.TODAY -> {
             val done = todayState.completed.size
             val total = done + todayState.today.size
-            if (total == 0) dateLine else "$dateLine · ${pluralStringResource(R.plurals.tasks_done_of, done, done, total)}"
+            when {
+                total == 0 -> dateLine
+                // En début de journée, ce qui reste à faire ; « 0 faite » se lirait comme un retard.
+                done == 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_left_today, total, total)}"
+                else -> "$dateLine · ${pluralStringResource(R.plurals.tasks_done_of, done, done, total)}"
+            }
         }
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
         else -> dateLine

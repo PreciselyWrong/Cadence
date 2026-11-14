@@ -201,4 +201,12 @@
         <item quantity="one">%1$d faite sur %2$d</item>
         <item quantity="other">%1$d faites sur %2$d</item>
     </plurals>
+    <plurals name="tasks_left_today">
+        <item quantity="one">%1$d à faire</item>
+        <item quantity="other">%1$d à faire</item>
+    </plurals>
+    <plurals name="today_overdue_banner">
+        <item quantity="one">%1$d tâche échue</item>
+        <item quantity="other">%1$d tâches échues</item>
+    </plurals>
 </resources>

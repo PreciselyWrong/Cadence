@@ -242,6 +242,8 @@ internal fun LazyListScope.taskRows(
     belowRow: (@Composable (TaskItem) -> Unit)? = null,
     /** Ligne lue sous le titre d'une tâche (ex. jour prévu d'une échue) ; aucune par défaut. */
     subtitleOf: (@Composable (TaskItem) -> String?)? = null,
+    /** Lignes calmes d'Aujourd'hui (titre et repère à droite seuls, voir [TaskRow]). */
+    calm: Boolean = false,
 ) {
     items(tasks, key = { it.rowKey }) { task ->
         Column(Modifier.fillMaxWidth().animateItem()) {
@@ -258,6 +260,7 @@ internal fun LazyListScope.taskRows(
                 onMenu = { viewModel.openMenu(task) },
                 sectionDay = sectionDay,
                 subtitle = subtitleOf?.invoke(task),
+                calm = calm,
             )
             belowRow?.invoke(task)
         }
