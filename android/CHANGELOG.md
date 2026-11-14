@@ -1,3 +1,7 @@
+## [1.38.1] — 14 novembre 2026
+
+- Feuilles et menus en verre : le fond reste lisible même quand le flou de l'écran ne s'affiche pas (feuille Actions de la tâche, Replanifier, Planifier, menus, feuille « Nouvelle tâche » du widget : un fond translucide opaque est peint dans la fenêtre du modal).
+
 ## [1.38.0] — 14 novembre 2026
 
 - Planifier refait : bande de la semaine (charge, tâches, points des événements, semaine suivante), journée choisie avec ses tâches et ses événements, tiroir « À placer » (échues, Inbox, à planifier) et une feuille de choix par tâche : jour, Cette semaine, Ce mois-ci, Plus tard, date, Fait, Abandonner.
