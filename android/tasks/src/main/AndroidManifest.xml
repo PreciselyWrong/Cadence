@@ -99,7 +99,7 @@
             android:excludeFromRecents="true"
             android:label="@string/tasks_share_label"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:theme="@style/Theme.Cadence.QuickAdd"
             android:windowSoftInputMode="adjustResize|stateVisible">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

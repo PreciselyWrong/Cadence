@@ -49,7 +49,7 @@ class TaskQuickAddActivity : ComponentActivity() {
     private fun showQuickAdd(target: QuickAddTarget) {
         setContent {
             CadenceTheme {
-                QuickAddSheet(onDismiss = { finish() }, targets = target.captureTargets)
+                QuickAddSheet(onDismiss = { finish() }, targets = target.captureTargets, slideIn = true)
             }
         }
     }

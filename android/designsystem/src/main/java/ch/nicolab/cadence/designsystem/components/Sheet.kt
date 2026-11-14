@@ -119,7 +119,7 @@ private fun CadenceSheetShell(
         onDismissRequest = dismiss,
         sheetState = sheetState,
         shape = Radius.Sheet,
-        containerColor = Color.Transparent,
+        containerColor = palette.card.copy(alpha = Glass.FallbackAlpha),
         contentColor = palette.onSurface,
         scrimColor = glassScrim(),
         dragHandle = {
@@ -132,7 +132,7 @@ private fun CadenceSheetShell(
                 )
             }
         },
-        modifier = modifier.glassWindow(Radius.Sheet, palette.card, sheetOffset = sheetState::requireOffset),
+        modifier = modifier.glassWindow(Radius.Sheet, palette.card, sheetOffset = sheetState::requireOffset, paints = false),
     ) {
         content()
     }

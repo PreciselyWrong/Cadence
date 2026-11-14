@@ -1,3 +1,9 @@
+## [1.38.2] — 14 novembre 2026
+
+- Plus de bloc noir derrière la feuille « Nouvelle tâche » du widget quand le clavier s'ouvre : le fond suit la feuille. Même correction pour la fiche tâche, Replanifier et la feuille de choix de Planifier. La barre d'état n'est plus noire au-dessus du widget.
+- « Nouvelle tâche » dans l'app apparaît directement en place, sans glisser depuis le bas : elle ne bouge plus qu'une fois, avec le clavier.
+- Notifications : l'écran et son compteur ne montrent que les messages des agents (propositions, mails à trier, messages des plugins) ; les rappels d'habitude et de tâche sonnent toujours mais n'y apparaissent plus. Le serveur doit être redéployé.
+
 ## [1.38.1] — 14 novembre 2026
 
 - Feuilles et menus en verre : le fond reste lisible même quand le flou de l'écran ne s'affiche pas (feuille Actions de la tâche, Replanifier, Planifier, menus, feuille « Nouvelle tâche » du widget : un fond translucide opaque est peint dans la fenêtre du modal).

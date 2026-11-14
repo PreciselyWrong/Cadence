@@ -49,6 +49,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -144,6 +148,11 @@ fun QuickAddSheet(
     initialTagUids: List<String> = emptyList(),
     /** Ouvre la saisie avec le projet et les étiquettes visibles : trier une idée, c'est d'abord les choisir. */
     expanded: Boolean = false,
+    /**
+     * Faux dans l'app : la feuille apparaît déjà en place et ne monte qu'une fois, avec le clavier. Vrai pour l'ajout
+     * rapide des widgets, au-dessus d'une activité vide.
+     */
+    slideIn: Boolean = false,
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -190,7 +199,7 @@ fun QuickAddSheet(
     var tagOverrides by remember { mutableStateOf(initialTagUids.toSet()) }
     var pickingDate by remember { mutableStateOf(false) }
     val focus = remember { FocusRequester() }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = if (slideIn) rememberModalBottomSheetState(skipPartiallyExpanded = true) else appearingSheetState()
     val scope = rememberCoroutineScope()
     var saving by remember { mutableStateOf(false) }
     var saveError by remember { mutableStateOf<String?>(null) }
@@ -826,3 +835,17 @@ private fun SuggestionStrip(suggestions: List<Suggestion>, onPick: (Suggestion) 
 
 /** Au-delà, le champ défile : le titre reste lisible sans pousser les pastilles hors de la feuille. */
 private const val CAPTURE_MAX_LINES = 6
+
+/** Feuille ouverte d'emblée, sans glissement d'entrée ; seuils de [rememberModalBottomSheetState]. */
+@Composable
+private fun appearingSheetState(): SheetState {
+    val density = LocalDensity.current
+    return remember(density) {
+        SheetState(
+            skipPartiallyExpanded = true,
+            positionalThreshold = { with(density) { 56.dp.toPx() } },
+            velocityThreshold = { with(density) { 125.dp.toPx() } },
+            initialValue = SheetValue.Expanded,
+        )
+    }
+}

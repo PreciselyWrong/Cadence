@@ -54,8 +54,11 @@ fun Modifier.glassWindow(
     dims: Boolean = true,
     /** Décalage réel d'une feuille depuis le haut de sa fenêtre (`sheetState.requireOffset()`). */
     sheetOffset: (() -> Float)? = null,
+    /** Faux pour une feuille : son conteneur peint le fond, car ce modificateur n'en suit pas le glissement. */
+    paints: Boolean = true,
 ): Modifier {
-    val backdrop = LocalBackdrop.current ?: return background(base.copy(alpha = Glass.FallbackAlpha), shape)
+    val fill = if (paints) background(base.copy(alpha = Glass.FallbackAlpha), shape) else this
+    val backdrop = LocalBackdrop.current ?: return fill
     val panel = remember(backdrop) { GlassPanel(shape, base, blur, dims) }
     panel.shape = shape
     panel.base = base
@@ -67,8 +70,7 @@ fun Modifier.glassWindow(
     }
     // Le fond reste peint dans la fenêtre du modal, opaque pour rester lisible : le verre de la fenêtre principale
     // peut ne pas se dessiner dessous, et ce qui est derrière ne doit pas transparaître.
-    return background(base.copy(alpha = Glass.FallbackAlpha), shape)
-        .onGloballyPositioned { panel.bounds = Rect(it.positionOnScreen(), it.size.toSize()) }
+    return fill.onGloballyPositioned { panel.bounds = Rect(it.positionOnScreen(), it.size.toSize()) }
 }
 
 /** Voile d'une feuille en verre : transparent quand [GlassPanels] le dessine, sinon le voile habituel. */

@@ -696,8 +696,8 @@ private fun PlanChoiceSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         shape = Radius.Sheet,
-        containerColor = Color.Transparent,
-        modifier = Modifier.glassWindow(Radius.Sheet, palette.background, sheetOffset = sheetState::requireOffset),
+        containerColor = palette.background.copy(alpha = Glass.FallbackAlpha),
+        modifier = Modifier.glassWindow(Radius.Sheet, palette.background, sheetOffset = sheetState::requireOffset, paints = false),
         contentColor = palette.onSurface,
         scrimColor = glassScrim(),
     ) {
