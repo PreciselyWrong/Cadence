@@ -42,11 +42,17 @@
         <item quantity="other">%1$d tâches → %2$s</item>
     </plurals>
     <string name="today_reordered_notice">« %1$s » rangée</string>
-    <plurals name="today_events_count">
-        <item quantity="one">%1$d événement</item>
-        <item quantity="other">%1$d événements</item>
+    <string name="today_section_to_place">À caser</string>
+    <string name="today_section_day">Ma journée</string>
+    <string name="today_missed_at">prévue %1$s</string>
+    <string name="today_free_time">%1$s libres</string>
+    <plurals name="today_place_here">
+        <item quantity="one">Caser ici</item>
+        <item quantity="other">Caser les %1$d ici</item>
     </plurals>
-    <string name="today_events_next">prochain %1$s %2$s</string>
+    <string name="today_in">dans %1$s</string>
+    <string name="today_overlap">en même temps</string>
+    <string name="today_all_day">journée</string>
     <string name="timeline_moved_notice">« %1$s » à %2$s</string>
     <string name="timeline_resized_notice">« %1$s » : %2$s</string>
     <string name="backlinks_title">Rétroliens</string>

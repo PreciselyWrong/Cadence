@@ -123,6 +123,8 @@ internal fun TaskRow(
      * note et image restent dans la fiche.
      */
     calm: Boolean = false,
+    /** Repère de droite d'une ligne calme à la place de l'heure (ex. « prévue 10:30 »). */
+    calmMark: String? = null,
 ) {
     val haptic = rememberCadenceHaptic()
     val interaction = remember { MutableInteractionSource() }
@@ -169,7 +171,7 @@ internal fun TaskRow(
                         if (task.virtual) onOpen() else onMenu()
                     },
                 )
-                .padding(vertical = 4.dp),
+                .padding(vertical = if (calm) 0.dp else 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (!calm) {
@@ -198,7 +200,7 @@ internal fun TaskRow(
                 contentDescription = stringResource(if (task.isClosed) R.string.tasks_mark_undone else R.string.tasks_mark_done),
             )
             Spacer(Modifier.width(8.dp))
-            Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
+            Column(Modifier.weight(1f).padding(vertical = if (calm) 0.dp else 6.dp)) {
                 StrikingTitle(task.name, struck = showClosed)
                 if (!calm) {
                     TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor, plannedAt)
@@ -235,6 +237,7 @@ internal fun TaskRow(
                 // Un seul repère à droite : l'heure du jour, ou le jour d'une échue (« lun. 9 », « Hier »).
                 val dueDay = task.dueDay
                 val mark = when {
+                    calmMark != null -> calmMark
                     // Un jour passé porte sa date : « lun. » seul se lirait comme lundi prochain.
                     dueDay != null && TaskViews.isOverdue(task, today) ->
                         if (dueDay == today.minusDays(1)) dayLabel(dueDay, today, DayLabelStyle.SHORT)

@@ -475,3 +475,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : bandeau des échues à part (fond `containerLow`, « 3 tâches échues », « Replanifier », flèche) ; case d'une ligne calme alignée sur la marge (`bleedStart`) ; titres repliés en `labelLarge` discret ; jour d'une échue à droite (« lun. 9 », « Hier ») ; « N à faire » tant que rien n'est fait. Deux critiques à froid sur capture (6 puis 6,5/10) : laissés de côté le rouge de priorité haute (signal unique de l'app), les facettes d'habitudes, la barre de navigation et le bouton +, hors de cet écran.
 - **Web** : à reprendre avec la liste calme (`TODO.md` › Now). Reste : vérifié sur l'émulateur avec une journée de démo (`app/src/debug/.../DummyTasks.kt`), pas sur le téléphone.
 
+### 2026-11-14 — Aujourd'hui en ligne du temps compacte
+
+- **Problème** : après la liste calme, l'écran restait « bof » (retour sur le téléphone) ; trois maquettes (widget en grand, ligne du temps, une chose à la fois) puis un hybride choisi par l'utilisateur.
+- **Décision** : « À caser » (sans heure ; une tâche dont l'heure et la durée sont passées sans être faite y remonte en tête avec « prévue 10:30 », rien ne disparaît) puis « Ma journée » : heure, axe, case ou point d'agenda, titre ; journée entière en tête, passé atténué avant le trait rouge « maintenant », tâche en cours au-dessus du trait, prochaine chose en gras avec « dans X », « en même temps » en ambre, créneau libre de 30 min et plus avec « Caser les N ici » (blocs à la suite dès le quart d'heure, `TodayTimeline.fill`, un seul Annuler). Lignes de 48 dp. Le noir pur existait déjà (Réglages › Apparence) et sert de rendu de référence.
+- **Web** : à reprendre (`TODO.md` › Now). Reste : vérifié sur l'émulateur avec des tâches à heure (les événements d'agenda n'ont pas pu y être créés : `TodayTimelineTest` les couvre), pas sur le téléphone.
+

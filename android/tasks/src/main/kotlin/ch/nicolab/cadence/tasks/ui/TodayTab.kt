@@ -109,11 +109,14 @@ internal fun TodayTab(
         )
     }
     val proposedUids = proposals?.uids.orEmpty()
-    val agenda = remember(state.today, state.planStarts, proposedUids, events, zone) {
-        // Les événements ne se mêlent plus aux tâches : la bande du haut les résume (liste calme).
-        mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, emptyList(), zone, state.planStarts, state.plan.map { it.uid })
+    // « À caser » (sans heure, ou heure passée sans être faite) puis « Ma journée » sur une ligne du temps.
+    val timeline = remember(state.today, state.planStarts, state.plan, proposedUids, events, moment.now, zone) {
+        TodayTimeline.of(
+            state.today.filterNot { it.uid in proposedUids }, events, state.planStarts, state.plan.map { it.uid }, moment.now, zone,
+        )
     }
-    val band = remember(events, moment.now, zone) { EventsBand.of(events, moment.now, zone) }
+    val toPlaceTasks = remember(timeline) { timeline.toPlace.map { it.task } }
+    val dayItems = remember(timeline) { timeline.entries.filterIsInstance<TimelineEntry.Item>() }
     val plannedToday = remember(state.plan) { state.plan.mapTo(HashSet()) { it.uid } }
     val triageable = remember(state.overdue) { PlanningChanges.movable(state.overdue) }
     val unfinished = remember(state.today) { PlanningChanges.movable(state.today) }
@@ -130,8 +133,8 @@ internal fun TodayTab(
     val late = remember(state.overdue, state.overduePlanned) {
         (state.overdue + state.overduePlanned).sortedBy { it.dueDay }
     }
-    val shownUids = remember(late, agenda) {
-        late.mapTo(HashSet()) { it.uid } + agenda.filterIsInstance<TodayItem.Task>().map { it.task.uid }
+    val shownUids = remember(late, state.today) {
+        late.mapTo(HashSet()) { it.uid } + state.today.map { it.uid }
     }
     val planBoard by viewModel.planBoard.collectAsStateWithLifecycle()
     val later = remember(suggestions, tomorrowTasks, planBoard.horizons, today, shownUids) {
@@ -193,28 +196,6 @@ internal fun TodayTab(
     }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
-        if (events.isNotEmpty()) {
-            val open = EVENTS_FOLD in openFolds
-            item(key = "fold-$EVENTS_FOLD") {
-                EventsBandRow(band, zone, open) {
-                    openFolds = if (open) openFolds - EVENTS_FOLD else openFolds + EVENTS_FOLD
-                }
-            }
-            if (open) {
-                items(events, key = { TodayItem.Event(it).key }) { event ->
-                    EventRow(
-                        item = event,
-                        zone = zone,
-                        checkable = calendarSettings.checkEvents,
-                        onToggle = { viewModel.toggleEvent(event.event.key) },
-                        onOpen = { viewModel.openEventDetail(event.event.key) },
-                        onMenu = { viewModel.openEventMenu(event.event.key) },
-                        onSwipeAction = { viewModel.swipeEvent(event, it) },
-                        modifier = Modifier.animateItem(),
-                    )
-                }
-            }
-        }
         if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }
@@ -284,15 +265,75 @@ internal fun TodayTab(
                 )
             }
         }
-        if (late.isEmpty() && agenda.isEmpty() && proposals == null) {
+        if (late.isEmpty() && timeline.toPlace.isEmpty() && dayItems.isEmpty() && proposals == null) {
             item(key = "closed") { ClosedDay(state.completed.size) }
         }
-        if (agenda.isNotEmpty()) {
-            agendaRows(
-                agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents,
-                projectIcons = projectIcons,
-                planStarts = state.planStarts,
-            )
+        if (timeline.toPlace.isNotEmpty()) {
+            item(key = "to-place-title") {
+                val minutes = toPlaceTasks.sumOf { it.estimatedMinutes?.takeIf { m -> m > 0 } ?: TodayTimeline.DEFAULT_TASK_MINUTES }
+                TimelineSectionTitle(stringResource(R.string.today_section_to_place), "~" + durationText(minutes))
+            }
+            items(timeline.toPlace, key = { "task:${it.task.uid}" }) { entry ->
+                val task = entry.task
+                TaskRow(
+                    modifier = Modifier.animateItem(),
+                    calm = true,
+                    calmMark = entry.missedAt?.let { stringResource(R.string.today_missed_at, minuteFormat.format(it.atZone(zone))) },
+                    task = task,
+                    projectName = task.projectUid?.let { projectNames[it] },
+                    projectIcon = task.projectUid?.let { projectIcons[it] },
+                    projectColor = task.projectUid?.let { projectColors[it] },
+                    today = today,
+                    zone = zone,
+                    onToggle = { viewModel.toggle(task, hold = true) },
+                    onOpen = { onOpen(task) },
+                    onSwipeAction = { viewModel.swipe(task, it) },
+                    onMenu = { viewModel.openMenu(task, toPlaceTasks) },
+                )
+            }
+        }
+        if (dayItems.isNotEmpty()) {
+            item(key = "day-title") { TimelineSectionTitle(stringResource(R.string.today_section_day)) }
+            items(timeline.entries, key = { entry ->
+                when (entry) {
+                    is TimelineEntry.Item -> entry.item.key
+                    TimelineEntry.Now -> "now"
+                    is TimelineEntry.Free -> "free"
+                }
+            }) { entry ->
+                when (entry) {
+                    TimelineEntry.Now -> TimelineNowRow(moment.now, zone)
+                    is TimelineEntry.Free -> TimelineFreeRow(entry, toPlaceTasks.size) {
+                        val edits = TodayTimeline.fill(toPlaceTasks, entry).map { PlanningChanges.place(today, it) }
+                        commit(edits, context.resources.getQuantityString(R.plurals.planning_placed_message, edits.size, edits.size))
+                    }
+                    is TimelineEntry.Item -> when (val item = entry.item) {
+                        is TodayItem.Task -> TimelineTaskRow(
+                            task = item.task,
+                            entry = entry,
+                            now = moment.now,
+                            zone = zone,
+                            onToggle = { viewModel.toggle(item.task, hold = true) },
+                            onOpen = { onOpen(item.task) },
+                            onMenu = { viewModel.openMenu(item.task) },
+                            onSwipeAction = { viewModel.swipe(item.task, it) },
+                            modifier = Modifier.animateItem(),
+                        )
+                        is TodayItem.Event -> TimelineEventRow(
+                            event = item.event,
+                            entry = entry,
+                            now = moment.now,
+                            zone = zone,
+                            checkable = calendarSettings.checkEvents,
+                            onToggle = { viewModel.toggleEvent(item.event.event.key) },
+                            onOpen = { viewModel.openEventDetail(item.event.event.key) },
+                            onMenu = { viewModel.openEventMenu(item.event.event.key) },
+                            onSwipeAction = { viewModel.swipeEvent(item.event, it) },
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
+                }
+            }
         }
         if (eveningVisible) {
             item(key = "evening") {
@@ -403,85 +444,10 @@ private fun FoldHeader(
 }
 
 private const val OVERDUE_FOLD = "overdue"
-private const val EVENTS_FOLD = "events"
 
 private val minuteFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
 private fun minuteText(minute: Int): String = LocalTime.of(minute / 60, minute % 60).format(minuteFormat)
-
-/** Tâches et événements d'Aujourd'hui, dans l'ordre fourni par [mergeTodayItems]. */
-private fun LazyListScope.agendaRows(
-    agenda: List<TodayItem>,
-    projectNames: Map<String, String>,
-    projectColors: Map<String, Int>,
-    moment: Moment,
-    viewModel: TasksViewModel,
-    onOpen: (TaskItem) -> Unit,
-    checkEvents: Boolean,
-    projectIcons: Map<String, String> = emptyMap(),
-    planStarts: Map<String, Instant> = emptyMap(),
-) {
-    items(agenda, key = { it.key }) { item ->
-        when (item) {
-            // Ligne calme : titre et heure ; ranger passe par l'appui long (Monter, Descendre).
-            is TodayItem.Task -> TaskRow(
-                modifier = Modifier.animateItem(),
-                calm = true,
-                task = item.task,
-                projectName = item.task.projectUid?.let { projectNames[it] },
-                projectIcon = item.task.projectUid?.let { projectIcons[it] },
-                projectColor = item.task.projectUid?.let { projectColors[it] },
-                today = moment.today,
-                zone = moment.zone,
-                onToggle = { viewModel.toggle(item.task, hold = true) },
-                onOpen = { onOpen(item.task) },
-                onSwipeAction = { viewModel.swipe(item.task, it) },
-                onMenu = { viewModel.openMenu(item.task, agenda.filterIsInstance<TodayItem.Task>().map { it.task }) },
-                sectionDay = moment.today,
-                plannedAt = planStarts[item.task.uid],
-            )
-            is TodayItem.Event -> EventRow(
-                item = item.event,
-                zone = moment.zone,
-                checkable = checkEvents,
-                onToggle = { viewModel.toggleEvent(item.event.event.key) },
-                onOpen = { viewModel.openEventDetail(item.event.event.key) },
-                onMenu = { viewModel.openEventMenu(item.event.event.key) },
-                onSwipeAction = { viewModel.swipeEvent(item.event, it) },
-                modifier = Modifier.animateItem(),
-            )
-        }
-    }
-}
-
-/** Bande des événements du jour : « 3 événements · prochain 14:00 Dentiste », un toucher déroule la liste. */
-@Composable
-private fun EventsBandRow(band: EventsBand, zone: java.time.ZoneId, open: Boolean, onToggle: () -> Unit) {
-    val count = pluralStringResource(R.plurals.today_events_count, band.count, band.count)
-    val next = band.next?.let {
-        val time = Instant.ofEpochMilli(it.event.instanceBegin).atZone(zone).toLocalTime().format(minuteFormat)
-        stringResource(R.string.today_events_next, time, it.event.title)
-    }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = Size.touch)
-            .clickable(role = Role.Button, onClick = onToggle)
-            .padding(vertical = Space.sm),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(Icons.Outlined.Event, contentDescription = null, tint = cadence.onSurfaceVariant, modifier = Modifier.size(18.dp))
-        Text(
-            text = listOfNotNull(count, next).joinToString(" · "),
-            style = MaterialTheme.typography.bodyMedium,
-            color = cadence.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f).padding(start = Space.sm),
-        )
-        Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
-    }
-}
 
 /** Bandeau des échues : « 3 tâches échues », « Replanifier », et la flèche qui déroule la liste ; neutre, jamais alarmant. */
 @Composable
