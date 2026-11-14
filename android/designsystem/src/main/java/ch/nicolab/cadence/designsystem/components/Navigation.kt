@@ -123,14 +123,18 @@ fun CadenceNavigation(
                 NavItem(destination, index == selected, Modifier.weight(1f)) { onSelect(index) }
             }
         }
-        action?.let { NavAddButton(it, Modifier.align(Alignment.TopCenter).padding(top = BumpRadius - AddSize / 2)) }
+        // Posé sur la même base que les onglets : plus grand qu'eux, il ne dépasse que vers le haut, dans la bosse.
+        action?.let { NavAddButton(it, Modifier.align(Alignment.BottomCenter).padding(bottom = BumpRadius - AddSize / 2)) }
     }
 }
 
-/** Le + : 50 dp, au centre d'une bosse de 32 dp de rayon qui dépasse de 16 dp au-dessus de l'île. */
-private val AddSize = 50.dp
-private val BumpRadius = 32.dp
-private val BumpRise = 16.dp
+/**
+ * Le + : 62 dp, posé en bas de la barre (58 dp) comme les onglets ; la bosse (rayon 35 dp, même centre, son bas sur
+ * le bas de la barre) l'entoure et dépasse de 12 dp au-dessus de l'île.
+ */
+private val AddSize = 62.dp
+private val BumpRadius = 35.dp
+private val BumpRise = 12.dp
 
 /**
  * Forme de l'île avec sa bosse : la capsule (sous [BumpRise]) unie à un disque de rayon [BumpRadius] centré en haut ;
@@ -141,19 +145,22 @@ private val IslandWithBump = object : Shape {
         with(density) {
             val rise = BumpRise.toPx()
             val r = BumpRadius.toPx()
-            val fillet = 10.dp.toPx()
+            val fillet = 8.dp.toPx()
             val cx = size.width / 2
             val pillH = size.height - rise
             val pill = Path().apply {
                 addRoundRect(RoundRect(0f, rise, size.width, size.height, CornerRadius(pillH / 2, pillH / 2)))
             }
-            // Bosse : un disque plus deux congés (rectangles creusés de cercles) aux points où il rejoint le bord haut.
-            val dy = rise - r
-            val dx = kotlin.math.sqrt((r + fillet) * (r + fillet) - (dy - fillet) * (dy - fillet))
+            // Bosse : un disque de même centre que le + (son bas sur le bas de la barre), plus deux congés là où il
+            // rejoint le bord haut.
+            // Un congé de rayon `fillet` touche le bord (centre à rise − fillet) et le disque (distance r + fillet).
+            val cy = size.height - r
+            val fy = rise - fillet
+            val dx = kotlin.math.sqrt((r + fillet) * (r + fillet) - (cy - fy) * (cy - fy))
             val bump = Path().apply {
-                addOval(Rect(cx - r, 0f, cx + r, 2 * r))
-                // Le raccord commence au point de contact du congé et du disque : au-dessus, il dépasserait en crochet.
-                val contactY = (rise - fillet) + (r - (rise - fillet)) * fillet / (r + fillet)
+                addOval(Rect(cx - r, cy - r, cx + r, cy + r))
+                // Le raccord part du point de contact congé-disque : au-dessus, il ferait un crochet.
+                val contactY = fy + (cy - fy) * fillet / (r + fillet)
                 addRect(Rect(cx - dx, contactY, cx + dx, rise + 1f))
             }
             val holes = Path().apply {
