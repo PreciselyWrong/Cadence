@@ -62,11 +62,14 @@ object Elevation {
 
 /** Verre translucide : flou de la barre de navigation et voiles associés. */
 object Glass {
-    val blur = 24.dp
+    val blur = 28.dp
 
-    /** Opacité du fond de la barre de navigation, claire puis sombre. */
-    const val BarAlphaLight = 0.60f
-    const val BarAlphaDark = 0.72f
+    /** Opacité du fond de la barre de navigation, claire puis sombre : du verre, le contenu se devine dessous. */
+    const val BarAlphaLight = 0.42f
+    const val BarAlphaDark = 0.50f
+
+    /** Le + de la barre : accent translucide, le flou de la barre passe au travers. */
+    const val AddAlpha = 0.72f
 
     /** Opacité de repli quand le flou n'est pas disponible (API < 31). */
     const val FallbackAlpha = 0.92f

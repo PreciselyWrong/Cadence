@@ -1,3 +1,9 @@
+## [1.37.6] — 14 novembre 2026
+
+- Barre du bas plus en verre : plus transparente et plus floue, le contenu se devine dessous.
+- Le + devient une bulle de verre teintée (reflet, liseré clair), qui s'enfonce sous le doigt.
+- Onglet choisi : une petite pastille derrière l'icône et le libellé à l'accent, au lieu d'un bloc qui touchait le bord de la barre.
+
 ## [1.37.5] — 14 novembre 2026
 
 - « Ma journée » montre de nouveau toute la journée ; seul ce qui est passé reste replié (« N passés »).

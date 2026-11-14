@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -36,6 +37,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.designsystem.theme.Elevation
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Motion
@@ -44,6 +46,7 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.glassBorder
+import ch.nicolab.cadence.designsystem.theme.glassSelected
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
@@ -102,18 +105,46 @@ fun CadenceNavigation(
     }
 }
 
-/** Le + de l'onglet ouvert, rond et plein à l'accent, au centre de la barre. */
+/**
+ * Le + de l'onglet ouvert, au centre de la barre : une bulle de verre teintée à l'accent (le flou de la barre passe au
+ * travers), un reflet en haut et un liseré clair ; elle s'enfonce un peu sous le doigt.
+ */
 @Composable
 private fun NavAddButton(action: NavAction) {
     val palette = cadence
     val haptic = rememberCadenceHaptic()
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (pressed) 0.90f else 1f, Motion.interactive(), label = "navAddPress")
     Box(
         Modifier
             .padding(start = Space.xs, end = Space.xs)
             .size(Size.navItem + Space.xs)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .clip(CircleShape)
-            .background(palette.primary)
-            .clickable(role = Role.Button, onClickLabel = action.label) {
+            .background(
+                androidx.compose.ui.graphics.Brush.verticalGradient(
+                    listOf(
+                        palette.primary.copy(alpha = Glass.AddAlpha * 0.85f),
+                        palette.primary.copy(alpha = Glass.AddAlpha),
+                    ),
+                ),
+            )
+            .drawBehind {
+                // Reflet doux en haut à gauche, relatif à la taille de la bulle.
+                drawCircle(
+                    androidx.compose.ui.graphics.Brush.radialGradient(
+                        listOf(Color.White.copy(alpha = 0.30f), Color.Transparent),
+                        center = androidx.compose.ui.geometry.Offset(size.width * 0.35f, size.height * 0.22f),
+                        radius = size.minDimension * 0.55f,
+                    ),
+                )
+            }
+            .border(Size.hairline, Color.White.copy(alpha = 0.35f), CircleShape)
+            .clickable(interactionSource = interactionSource, indication = null, role = Role.Button, onClickLabel = action.label) {
                 haptic.tap()
                 action.onClick()
             }
@@ -129,12 +160,13 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
     val palette = cadence
     val haptic = rememberCadenceHaptic()
     val container by animateColorAsState(
-        targetValue = if (active) palette.primaryContainer else Color.Transparent,
+        // Onglet choisi en verre teinté, comme la barre : le contenu reste deviné dessous.
+        targetValue = if (active) palette.glassSelected else Color.Transparent,
         animationSpec = Motion.color(),
         label = "navContainer",
     )
     val content by animateColorAsState(
-        targetValue = if (active) palette.onPrimaryContainer else palette.onSurfaceVariant,
+        targetValue = if (active) palette.primary else palette.onSurfaceVariant,
         animationSpec = Motion.color(),
         label = "navContent",
     )
@@ -145,15 +177,16 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
         animationSpec = Motion.interactive(),
         label = "navPress",
     )
+    // Onglet choisi : une petite pastille de verre derrière l'icône seule (pas un bloc qui touche le bord de l'île),
+    // le libellé passe à l'accent.
     Column(
         modifier
-            .height(Size.navItem)
+            .height(Size.navItem + Space.sm)
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale
             }
             .clip(Radius.Pill)
-            .background(container)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -167,15 +200,23 @@ private fun NavItem(destination: NavDestination, active: Boolean, modifier: Modi
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Icon(
-            if (active) destination.selectedIcon else destination.icon,
-            contentDescription = null,
-            tint = content,
-            modifier = Modifier.size(Size.iconLarge),
-        )
+        Box(
+            Modifier
+                .size(width = 52.dp, height = 28.dp)
+                .clip(Radius.Pill)
+                .background(container),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                if (active) destination.selectedIcon else destination.icon,
+                contentDescription = null,
+                tint = content,
+                modifier = Modifier.size(Size.icon),
+            )
+        }
         Text(
             destination.label,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelMedium.copy(fontWeight = if (active) androidx.compose.ui.text.font.FontWeight.SemiBold else null),
             color = content,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
