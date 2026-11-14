@@ -108,6 +108,7 @@ Same as Planned section:
 
 - Can be hidden entirely via Today Settings
 - Collapse/expand state is remembered in your browser
+- **Replan sheet (Android, 1.37.0)**: a « Replanifier » button on the fold header opens a sheet listing every overdue task with one-tap choices: Today, Tomorrow, Next week, Later, Drop (`android/.../planning/OverdueReplan.kt`). As in the week proposal (`docs/47-proposals.md`), a replaced overdue task stops being overdue: a day becomes its due date, a horizon (next week, `#someday`) clears it, Drop cancels it; its plan lines from today on (except the chosen day) are removed so it sits in one place. A recurring task only offers « Passer cette fois » (skips the occurrence); a `TODO.md` task cannot be dropped. Each choice is written at once and shows « Annuler » in place; the list keeps its rows until the sheet closes. Web: `TODO.md` › Now.
 
 ---
 

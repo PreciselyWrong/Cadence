@@ -27,6 +27,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -158,6 +159,7 @@ internal fun TodayTab(
         PlanBoard.todayLater(tomorrowTasks, planBoard.horizons, today, suggestions, shownUids)
     }
     var openFolds by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    var replanOpen by rememberSaveable { mutableStateOf(false) }
 
     /** Le plan d'aujourd'hui tient déjà [task] : Reporter la déplace, sinon l'ajoute au jour visé. L'échéance ne bouge pas. */
     fun report(task: TaskItem, day: LocalDate): PlanEdit =
@@ -260,7 +262,14 @@ internal fun TodayTab(
             // Replié comme les sections du bas (et le web) : le retard se voit d'un coup d'œil sans prendre la page.
             val open = OVERDUE_FOLD in openFolds
             item(key = "fold-$OVERDUE_FOLD") {
-                FoldHeader(stringResource(R.string.tasks_section_overdue), late.size, open) {
+                FoldHeader(
+                    stringResource(R.string.tasks_section_overdue),
+                    late.size,
+                    open,
+                    action = {
+                        TextButton(onClick = { replanOpen = true }) { Text(stringResource(R.string.overdue_replan_button)) }
+                    },
+                ) {
                     openFolds = if (open) openFolds - OVERDUE_FOLD else openFolds + OVERDUE_FOLD
                 }
             }
@@ -353,11 +362,29 @@ internal fun TodayTab(
             }
         }
     }
+    if (replanOpen) {
+        // Le matin d'abord : les échues se replacent d'un toucher chacune, sans passer par Planifier.
+        OverdueReplanSheet(
+            tasks = late,
+            onChoose = { task, choice -> viewModel.replanOverdue(task, choice) },
+            onOpen = {
+                replanOpen = false
+                onOpen(it)
+            },
+            onDismiss = { replanOpen = false },
+        )
+    }
 }
 
 /** Titre d'une section repliée : son nom, son compte, et la flèche qui dit si elle est ouverte. */
 @Composable
-private fun FoldHeader(title: String, count: Int, open: Boolean, onToggle: () -> Unit) {
+private fun FoldHeader(
+    title: String,
+    count: Int,
+    open: Boolean,
+    action: (@Composable () -> Unit)? = null,
+    onToggle: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -367,6 +394,7 @@ private fun FoldHeader(title: String, count: Int, open: Boolean, onToggle: () ->
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = "$title $count", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+        action?.invoke()
         Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
     }
 }

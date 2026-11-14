@@ -69,6 +69,8 @@ import kotlinx.coroutines.flow.first
 import ch.nicolab.cadence.tasks.notes.WikiLinks
 import ch.nicolab.cadence.tasks.planning.Horizon
 import ch.nicolab.cadence.tasks.planning.PlanBoard
+import ch.nicolab.cadence.tasks.planning.OverdueReplan
+import ch.nicolab.cadence.tasks.planning.ReplanChoice
 import ch.nicolab.cadence.tasks.planning.PlanCard
 import ch.nicolab.cadence.tasks.planning.PlanEdit
 import ch.nicolab.cadence.tasks.planning.PlanDay
@@ -1018,6 +1020,26 @@ internal class TasksViewModel(
         val undo = planEdits.apply(edits)
         val message = getApplication<Application>().resources.getQuantityString(R.plurals.plan_spread_notice, edits.size, edits.size)
         _notices.tryEmit(UndoNotice(message) { launchAction { undo() } })
+    }
+
+    /**
+     * Feuille « Replanifier » des échues d'Aujourd'hui : écrit [choice] pour [task] ([OverdueReplan]) et rend son
+     * « Annuler » (tâche puis lignes du plan), ou null pour un saut d'occurrence, qui ne s'annule pas.
+     */
+    suspend fun replanOverdue(task: TaskItem, choice: ReplanChoice): (suspend () -> Unit)? {
+        val m = moment.value
+        val writes = OverdueReplan.writes(task, choice, planSlots.entries(), m.today, weekStart.value, m.zone)
+        if (writes.skip) {
+            repository.skipOccurrence(task.uid)
+            return null
+        }
+        val restore = OverdueReplan.restore(task, m.zone)
+        writes.change?.let { repository.updateTask(task.uid, it) }
+        val undoPlan = if (writes.plan.isEmpty()) null else planEdits.apply(writes.plan)
+        return {
+            repository.updateTask(task.uid, restore)
+            undoPlan?.invoke()
+        }
     }
 
     /** « Retirer l'engagement » d'« À planifier » : semaine et mois effacés, avec « Annuler ». */

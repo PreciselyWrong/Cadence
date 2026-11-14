@@ -456,3 +456,10 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : l'écran Aujourd'hui donnait l'impression d'être débordé : gros bouton « Planifier ma semaine » en tête, sept replis sous la journée (Demain, Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, Suggérées) avec leurs comptes, une poignée bien visible sur chaque ligne.
 - **Décision** : Aujourd'hui ne parle que de la journée. « Planifier ma semaine » reste dans Planifier ; sous la journée, seuls Demain et Suggérées, repliés ; les horizons vivent dans Planifier ; la poignée de rangement passe à 35 % d'opacité (1.37.0).
 - **Web** : déjà sans replis d'horizons ; reste le repli « Demain » (`TODO.md` › Now). Le bouton de la semaine reste dans l'en-tête d'Aujourd'hui du web (petit bouton secondaire, pas une carte). Reste : rien d'essayé sur le téléphone (non branché), vérifié sur l'émulateur.
+
+### 2026-11-14 — Replanifier les échues d'un toucher
+
+- **Problème** : le matin, trier les échues demandait d'aller dans Planifier ou d'ouvrir chaque fiche.
+- **Décision** : « Replanifier » sur l'en-tête « Échues » d'Aujourd'hui ouvre une feuille : chaque échue avec Aujourd'hui, Demain, Semaine pro., Plus tard, Abandonner (une série : Passer cette fois). Un toucher écrit tout de suite, la ligne garde son choix et « Annuler ». Une échue replacée n'est plus échue (jour = échéance, horizon = échéance vidée), comme la semaine proposée. Le bouton de la semaine devient « Planifier ma semaine (IA) » (web aussi).
+- **Web** : à reprendre (`TODO.md` › Now). Reste : vérifié sur l'émulateur, pas sur le téléphone.
+
