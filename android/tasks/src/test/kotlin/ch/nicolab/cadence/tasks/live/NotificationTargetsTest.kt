@@ -103,6 +103,23 @@ class NotificationTargetsTest {
     }
 
     @Test
+    fun centerKeepsOnlyAgentItemsAndDropsHabitAndTaskReminders() {
+        val body = Json.parseToJsonElement(
+            """
+            {"notifications":[
+              {"uid":"h1","title":"Habitude","message":"Rappel : Sport","created_at":"2026-11-14T07:00:00.000Z","read_at":null,
+               "data":{"habitUid":"x","reminderUid":"r","reason":"habit_reminder","date":"2026-11-14"}},
+              {"uid":"t1","title":"Tâche","message":"","created_at":"2026-11-14T08:00:00.000Z","read_at":null,
+               "data":{"taskUid":"t"}},
+              {"uid":"a1","title":"Décision","message":"","created_at":"2026-11-14T09:00:00.000Z","read_at":null,
+               "data":{"pluginId":"hermes","agentLabel":"Hermes"}}
+            ],"total":3}
+            """.trimIndent(),
+        ).jsonObject
+        assertEquals(listOf("a1"), CenterNotifications.parse(body).map { it.uid })
+    }
+
+    @Test
     fun liveNotificationCarriesProjectUidForTheTapTarget() {
         val event = SseEvent(
             "notification",
