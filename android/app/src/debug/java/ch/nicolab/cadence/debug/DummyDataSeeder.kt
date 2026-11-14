@@ -15,5 +15,7 @@ internal object DummyDataSeeder {
         }
         data.entries.forEach { app.repository.addEntry(it, source = "DUMMY") }
         DummyTasks.seed(app, today)
+        // Sans la permission (non accordée par adb), l'agenda de démo est simplement absent.
+        runCatching { DummyEvents.seed(app, today, zone) }
     }
 }

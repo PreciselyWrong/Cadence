@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Debug seulement : les données de démonstration créent un agenda local et ses événements. -->
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <application>
         <receiver
             android:name="ch.nicolab.cadence.debug.DummyDataReceiver"
