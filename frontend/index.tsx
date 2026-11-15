@@ -15,6 +15,7 @@ import { prefetchNoteFromPath } from './utils/notesService';
 import { captureSharedPayload } from './utils/shareTargetService';
 import BlogApp from './components/Blog/BlogApp';
 import OfflineStatus from './components/Offline/OfflineStatus';
+import { installDesktopReload } from './utils/desktopApp';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -120,6 +121,7 @@ if (isDarkMode) {
 
 applyAppearance();
 watchThemeMode();
+installDesktopReload();
 
 const container = document.getElementById('root');
 

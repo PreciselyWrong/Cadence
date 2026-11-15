@@ -1,4 +1,4 @@
-import { isDesktopApp } from '../desktopApp';
+import { isDesktopApp, isReloadShortcut } from '../desktopApp';
 
 describe('isDesktopApp', () => {
     it('recognises the desktop client by its user agent marker', () => {
@@ -16,5 +16,24 @@ describe('isDesktopApp', () => {
             )
         ).toBe(false);
         expect(isDesktopApp('')).toBe(false);
+    });
+});
+
+describe('isReloadShortcut', () => {
+    const key = (init: KeyboardEventInit) => new KeyboardEvent('keydown', init);
+
+    it('matches F5, Ctrl+R and Ctrl+Shift+R', () => {
+        expect(isReloadShortcut(key({ key: 'F5' }))).toBe(true);
+        expect(isReloadShortcut(key({ key: 'r', ctrlKey: true }))).toBe(true);
+        expect(
+            isReloadShortcut(key({ key: 'R', ctrlKey: true, shiftKey: true }))
+        ).toBe(true);
+    });
+
+    it('ignores a plain r and Ctrl+Alt+R', () => {
+        expect(isReloadShortcut(key({ key: 'r' }))).toBe(false);
+        expect(
+            isReloadShortcut(key({ key: 'r', ctrlKey: true, altKey: true }))
+        ).toBe(false);
     });
 });
