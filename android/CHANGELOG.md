@@ -1,3 +1,8 @@
+## [1.39.1] — 15 novembre 2026
+
+- Le widget Aujourd'hui montre les mêmes tâches que l'app : il suit le plan du jour. Une tâche prévue aujourd'hui y apparaît même en retard ou sans échéance du jour, une tâche prévue un autre jour en sort, et le widget se met à jour quand le plan change.
+- Une tâche n'a plus qu'un jour prévu : la poser sur un jour la retire de ses autres jours à venir. Le serveur doit être redéployé.
+
 ## [1.39.0] — 15 novembre 2026
 
 - Trier mes mails : « Modifier la tâche » est toujours là et propose le jour ou, à défaut, un horizon (Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour), préremplis par l'agent.
