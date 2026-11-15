@@ -1,3 +1,8 @@
+## [1.39.0] — 15 novembre 2026
+
+- Trier mes mails : « Modifier la tâche » est toujours là et propose le jour ou, à défaut, un horizon (Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour), préremplis par l'agent.
+- Nouveau « Supprimer » sur les mails : le fil part à la corbeille Gmail (récupérable 30 jours), dans le paquet comme sur la carte d'« À trier ». Le serveur doit être redéployé.
+
 ## [1.38.2] — 14 novembre 2026
 
 - Plus de bloc noir derrière la feuille « Nouvelle tâche » du widget quand le clavier s'ouvre : le fond suit la feuille. Même correction pour la fiche tâche, Replanifier et la feuille de choix de Planifier. La barre d'état n'est plus noire au-dessus du widget.
