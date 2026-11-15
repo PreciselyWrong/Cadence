@@ -14,6 +14,7 @@ import {
 import { useToast } from '../Shared/ToastContext';
 import MarkdownRenderer from '../Shared/MarkdownRenderer';
 import { findMeetingLink, locationHref } from './eventLocation';
+import { eventDescriptionText } from './eventDescription';
 
 export interface GoogleEventDraft {
     // Set when editing an existing event.
@@ -77,7 +78,11 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
             : toLocalInput(draft.end)
     );
     const [location, setLocation] = useState(draft.location || '');
-    const [description, setDescription] = useState(draft.description || '');
+    // Google's HTML is edited as plain text; left untouched, it is not sent
+    // back, so its formatting stays in Google.
+    const shownDescription = eventDescriptionText(draft.description);
+    const [description, setDescription] = useState(shownDescription);
+    const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [saving, setSaving] = useState(false);
     const meetingLink = findMeetingLink(location, description);
 
@@ -118,9 +123,11 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
         const input: GoogleEventInput = {
             title,
             location,
-            description,
             all_day: allDay,
         };
+        if (!editing || description !== shownDescription) {
+            input.description = description;
+        }
         if (allDay) {
             const endDay = end && end >= start ? end : start;
             input.start_date = start;
@@ -153,6 +160,10 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
 
     const remove = async () => {
         if (!onDelete) return;
+        if (!confirmingDelete) {
+            setConfirmingDelete(true);
+            return;
+        }
         setSaving(true);
         try {
             await onDelete();
@@ -343,7 +354,12 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                             onClick={() => void remove()}
                             className="inline-flex min-h-[36px] items-center rounded-md px-3 text-sm font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 disabled:opacity-50"
                         >
-                            {t('calendar.google.delete', 'Delete')}
+                            {confirmingDelete
+                                ? t(
+                                      'calendar.google.confirmDelete',
+                                      'Delete for good?'
+                                  )
+                                : t('calendar.google.delete', 'Delete')}
                         </button>
                     )}
                     {draft.htmlLink && (

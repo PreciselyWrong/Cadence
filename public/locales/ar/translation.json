@@ -2921,6 +2921,7 @@
     "time": "الوقت",
     "allDay": "طوال اليوم",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "وقت الانتهاء قبل وقت البداية",
       "editEvent": "تعديل الحدث",
       "newEvent": "حدث جديد",

@@ -21,7 +21,8 @@ Two-way sync with one Google account per Cadence user, in the spirit of TickTick
   - **Two-way**: editable from the Calendar page as below. Offered only when Google lets the account write (owner/writer).
 - Events created in Google stay events (they never become tasks); only the "Cadence" calendar turns events into tasks. The show/hide switch next to the mode only toggles display.
 
-- On a two-way calendar: click an empty hour (week/day view) to create a one-hour event, a day (month view, week header) for an all-day event, an event to edit or delete it. Drag to move, drag the bottom edge to change the end.
+- On a two-way calendar: click an empty hour (week/day view) to create a one-hour event, a day (month view, week header) for an all-day event, an event to edit or delete it (on the Calendar page, Today and Plan alike; Delete asks a second click). Drag to move, drag the bottom edge to change the end.
+- Descriptions: Google keeps them as HTML; Cadence shows and edits them as plain text (paragraphs, line breaks, list items; `Calendar/eventDescription.ts`). An unchanged description is not sent back on save, so its formatting stays in Google. An event Cadence cannot write opens a read-only card with the same plain text. Android reads the phone's calendar and edits through the calendar app.
 - A repeating event is changed one occurrence at a time (Google keeps it as an exception). Edit the whole series in Google.
 - Each calendar can be shown or hidden (chip on the Calendar page, or Profile → Calendars). A hidden calendar is also left out of Today, Plan my day and the AI draft. The first time, calendars hidden in Google stay hidden.
 - Copies are stored in `google_events`; the first sync reads 90 days back and everything ahead.

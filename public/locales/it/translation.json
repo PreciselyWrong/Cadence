@@ -2890,6 +2890,7 @@
     "time": "Ora",
     "allDay": "Tutto il giorno",
     "google": {
+            "confirmDelete": "Eliminare definitivamente?",
       "endBeforeStart": "La fine è prima dell'inizio",
       "editEvent": "Modifica evento",
       "newEvent": "Nuovo evento",

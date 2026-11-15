@@ -2885,6 +2885,7 @@
     "time": "时间",
     "allDay": "全天",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "结束时间早于开始时间",
       "editEvent": "编辑事件",
       "newEvent": "新建事件",

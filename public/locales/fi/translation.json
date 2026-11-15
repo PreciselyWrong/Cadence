@@ -2885,6 +2885,7 @@
     "time": "Aika",
     "allDay": "Koko päivä",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Loppu on ennen alkua",
       "editEvent": "Muokkaa tapahtumaa",
       "newEvent": "Uusi tapahtuma",

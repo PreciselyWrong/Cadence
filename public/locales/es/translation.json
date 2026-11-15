@@ -2851,6 +2851,7 @@
     "time": "Tiempo",
     "allDay": "Todo el día",
     "google": {
+            "confirmDelete": "¿Eliminar definitivamente?",
       "endBeforeStart": "El final es anterior al inicio",
       "editEvent": "Editar evento",
       "newEvent": "Nuevo evento",

@@ -511,6 +511,7 @@
     "showCalendar": "Zobraziť {{name}}",
     "feedError": "Nepodarilo sa načítať: {{names}}",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Koniec je pred začiatkom",
       "editEvent": "Upraviť udalosť",
       "newEvent": "Nová udalosť",

@@ -75,9 +75,7 @@ import {
 } from './dayModel';
 import { useDay } from './useDay';
 import DayList from './DayList';
-import FeedEventPopover, {
-    FeedEventDetail,
-} from '../Calendar/FeedEventPopover';
+import CalendarEventDetail from '../Calendar/CalendarEventDetail';
 import DayCalendar, {
     DayColumnData,
     PX_PER_MINUTE,
@@ -222,9 +220,10 @@ const NewToday: React.FC = () => {
             // Private mode: lasts until reload.
         }
     };
-    const [eventDetail, setEventDetail] = useState<FeedEventDetail | null>(
-        null
-    );
+    const [eventDetail, setEventDetail] = useState<{
+        event: CalendarEvent;
+        onDate: string;
+    } | null>(null);
     const locale = intlLocale(i18n.language);
 
     const items = useMemo(() => day?.plan?.items ?? [], [day]);
@@ -1375,18 +1374,7 @@ const NewToday: React.FC = () => {
                       }
                     : null
             }
-            onOpenEvent={(event, onDate) =>
-                setEventDetail({
-                    title: event.title,
-                    calendarName: event.feed_name,
-                    day: parseISO(onDate),
-                    start: event.start ? new Date(event.start) : null,
-                    end: event.end ? new Date(event.end) : null,
-                    allDay: event.all_day,
-                    location: event.location ?? null,
-                    description: event.description ?? null,
-                })
-            }
+            onOpenEvent={(event, onDate) => setEventDetail({ event, onDate })}
         />
     );
 
@@ -1463,9 +1451,11 @@ const NewToday: React.FC = () => {
                 )}
             </div>
             {eventDetail && (
-                <FeedEventPopover
-                    detail={eventDetail}
+                <CalendarEventDetail
+                    event={eventDetail.event}
+                    onDate={eventDetail.onDate}
                     onClose={() => setEventDetail(null)}
+                    onChanged={() => void reload()}
                 />
             )}
             <DragOverlay dropAnimation={null}>

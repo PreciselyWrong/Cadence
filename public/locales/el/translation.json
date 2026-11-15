@@ -2886,6 +2886,7 @@
     "time": "Ώρα",
     "allDay": "Όλη μέρα",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Το τέλος είναι πριν από την έναρξη",
       "editEvent": "Επεξεργασία συμβάντος",
       "newEvent": "Νέο συμβάν",

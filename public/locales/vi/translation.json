@@ -2885,6 +2885,7 @@
     "time": "Thời gian",
     "allDay": "Cả ngày",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Kết thúc trước khi bắt đầu",
       "editEvent": "Sửa sự kiện",
       "newEvent": "Sự kiện mới",

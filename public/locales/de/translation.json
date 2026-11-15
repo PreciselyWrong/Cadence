@@ -2437,6 +2437,7 @@
     "time": "Zeit",
     "allDay": "Ganztägig",
     "google": {
+            "confirmDelete": "Endgültig löschen?",
       "endBeforeStart": "Das Ende liegt vor dem Beginn",
       "editEvent": "Termin bearbeiten",
       "newEvent": "Neuer Termin",

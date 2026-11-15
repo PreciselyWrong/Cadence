@@ -5,6 +5,7 @@ import { ClipboardDocumentIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { useToast } from '../Shared/ToastContext';
 import { getCurrentLocale } from '../../utils/dateUtils';
 import { findMeetingLink, locationHref } from './eventLocation';
+import { eventDescriptionText } from './eventDescription';
 
 export interface FeedEventDetail {
     title: string;
@@ -23,8 +24,8 @@ interface FeedEventPopoverProps {
     onClose: () => void;
 }
 
-// A read-only card for an event of an ICS feed: the feed is not ours to
-// edit, so the event shows what it says and where to go.
+// A read-only card for an event Cadence cannot write (an iCal feed, a
+// read-only Google calendar): what it says and where to go.
 const FeedEventPopover: React.FC<FeedEventPopoverProps> = ({
     detail,
     onClose,
@@ -32,6 +33,7 @@ const FeedEventPopover: React.FC<FeedEventPopoverProps> = ({
     const { t } = useTranslation();
     const { showSuccessToast, showErrorToast } = useToast();
     const location = detail.location?.trim() ?? '';
+    const description = eventDescriptionText(detail.description);
     const meetingLink = findMeetingLink(location, detail.description);
 
     useEffect(() => {
@@ -123,9 +125,9 @@ const FeedEventPopover: React.FC<FeedEventPopoverProps> = ({
                         {t('calendar.meetingJoin', 'Join')}
                     </a>
                 )}
-                {detail.description?.trim() && (
+                {description && (
                     <p className="whitespace-pre-line text-gray-700 dark:text-gray-300">
-                        {detail.description.trim()}
+                        {description}
                     </p>
                 )}
                 <div className="flex justify-end pt-1">

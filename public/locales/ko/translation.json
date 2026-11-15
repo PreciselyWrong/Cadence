@@ -2885,6 +2885,7 @@
     "time": "시간",
     "allDay": "종일",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "종료 시각이 시작 시각보다 빠릅니다.",
       "editEvent": "일정 편집",
       "newEvent": "새 일정",

@@ -3070,6 +3070,7 @@
     "showCalendar": "Show {{name}}",
     "feedError": "Could not load: {{names}}",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "The end is before the start",
       "editEvent": "Edit event",
       "newEvent": "New event",

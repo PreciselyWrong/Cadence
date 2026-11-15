@@ -2816,6 +2816,7 @@
     "time": "時刻",
     "allDay": "終日",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "終了が開始より前です",
       "editEvent": "予定を編集",
       "newEvent": "新しい予定",

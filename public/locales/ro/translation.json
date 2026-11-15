@@ -2896,6 +2896,7 @@
     "time": "Timp",
     "allDay": "Toată ziua",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Sfârșitul este înaintea începutului",
       "editEvent": "Editează evenimentul",
       "newEvent": "Eveniment nou",

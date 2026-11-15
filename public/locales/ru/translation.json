@@ -2933,6 +2933,7 @@
     "time": "Время",
     "allDay": "Весь день",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Окончание раньше начала",
       "editEvent": "Изменить событие",
       "newEvent": "Новое событие",

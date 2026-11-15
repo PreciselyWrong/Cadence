@@ -2886,6 +2886,7 @@
     "time": "Tid",
     "allDay": "Hele dagen",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Slutten er før starten",
       "editEvent": "Rediger hendelse",
       "newEvent": "Ny hendelse",

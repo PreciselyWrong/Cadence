@@ -2933,6 +2933,7 @@
     "time": "Czas",
     "allDay": "Cały dzień",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Koniec jest przed początkiem",
       "editEvent": "Edytuj wydarzenie",
       "newEvent": "Nowe wydarzenie",

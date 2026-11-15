@@ -2885,6 +2885,7 @@
     "time": "Време",
     "allDay": "Цял ден",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Краят е преди началото",
       "editEvent": "Редактиране на събитие",
       "newEvent": "Ново събитие",

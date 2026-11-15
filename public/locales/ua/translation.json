@@ -2642,6 +2642,7 @@
     "time": "Час",
     "allDay": "Весь день",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Кінець раніше за початок",
       "editEvent": "Редагувати подію",
       "newEvent": "Нова подія",

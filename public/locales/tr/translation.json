@@ -2885,6 +2885,7 @@
     "time": "Zaman",
     "allDay": "Tüm gün",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Bitiş, başlangıçtan önce",
       "editEvent": "Etkinliği düzenle",
       "newEvent": "Yeni etkinlik",

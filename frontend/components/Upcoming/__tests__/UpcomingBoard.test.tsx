@@ -34,6 +34,11 @@ let mockOpenTaskUid: string | null = null;
 const mockOpenTask = jest.fn();
 const mockCloseTask = jest.fn();
 
+jest.mock('../../Shared/MarkdownRenderer', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 jest.mock('react-i18next', () => ({
     initReactI18next: { type: '3rdParty', init: () => undefined },
     useTranslation: () => ({

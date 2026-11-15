@@ -132,8 +132,14 @@ export const useDays = (dates: string[]) => {
  * useDays, a new set of days fetches only the days not fetched yet (moving
  * the calendar by a day costs one request) and drops the ones that left.
  */
-export const useCalendarEvents = (dates: string[], enabled: boolean) => {
+// A new `version` (an event saved or deleted) fetches every shown day again.
+export const useCalendarEvents = (
+    dates: string[],
+    enabled: boolean,
+    version = 0
+) => {
     const key = dates.join(',');
+    const seenVersion = useRef(version);
     const [events, setEvents] = useState<Record<string, CalendarEvent[]>>({});
     // Days asked for, in this generation (a new one when feeds go off).
     const asked = useRef<Set<string>>(new Set());
@@ -141,6 +147,11 @@ export const useCalendarEvents = (dates: string[], enabled: boolean) => {
     useEffect(() => {
         const wanted = enabled && key ? key.split(',') : [];
         if (!enabled) generation.current += 1;
+        if (seenVersion.current !== version) {
+            seenVersion.current = version;
+            generation.current += 1;
+            asked.current = new Set();
+        }
         asked.current = new Set(
             [...asked.current].filter((date) => wanted.includes(date))
         );
@@ -170,7 +181,7 @@ export const useCalendarEvents = (dates: string[], enabled: boolean) => {
                         setEvents((current) => ({ ...current, [date]: list }));
                     });
             });
-    }, [key, enabled]);
+    }, [key, enabled, version]);
     return events;
 };
 

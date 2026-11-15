@@ -2885,6 +2885,7 @@
     "time": "Waktu",
     "allDay": "Sepanjang hari",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Waktu selesai lebih awal daripada waktu mulai",
       "editEvent": "Ubah acara",
       "newEvent": "Acara baru",

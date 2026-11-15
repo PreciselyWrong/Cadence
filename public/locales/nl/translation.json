@@ -2885,6 +2885,7 @@
     "time": "Tijd",
     "allDay": "De hele dag",
     "google": {
+            "confirmDelete": "Definitief verwijderen?",
       "endBeforeStart": "Het einde ligt vóór het begin",
       "editEvent": "Afspraak bewerken",
       "newEvent": "Nieuwe afspraak",

@@ -62,8 +62,8 @@ import {
     restorePlan,
 } from '../../utils/dayService';
 import type { PlanOp } from '../../utils/dayService';
-import type { FeedEventDetail } from '../Calendar/FeedEventPopover';
-import FeedEventPopover from '../Calendar/FeedEventPopover';
+import CalendarEventDetail from '../Calendar/CalendarEventDetail';
+import type { CalendarEvent } from '../../utils/calendarFeedsService';
 import { intlLocale, minuteOfDay } from '../DailyPlan/planUtils';
 import {
     DayLine,
@@ -405,9 +405,11 @@ const UpcomingBoard: React.FC = () => {
     const [dragging, setDragging] = useState<Dragging | null>(null);
     const draggingRef = useRef(false);
     const [ghost, setGhost] = useState<DropPreview | null>(null);
-    const [eventDetail, setEventDetail] = useState<FeedEventDetail | null>(
-        null
-    );
+    const [eventDetail, setEventDetail] = useState<{
+        event: CalendarEvent;
+        onDate: string;
+    } | null>(null);
+    const [eventsVersion, setEventsVersion] = useState(0);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [inboxChoice, setInboxChoice] = useState(loadInboxCollapsed);
     const [overdueCollapsed, setOverdueCollapsed] = useState(
@@ -522,7 +524,11 @@ const UpcomingBoard: React.FC = () => {
             ),
         [days, options.filters]
     );
-    const events = useCalendarEvents(calendarDates, calendarEnabled);
+    const events = useCalendarEvents(
+        calendarDates,
+        calendarEnabled,
+        eventsVersion
+    );
     const buckets = useMemo(
         () =>
             horizon.tasks
@@ -2003,18 +2009,7 @@ const UpcomingBoard: React.FC = () => {
                 )
             }
             drop={ghost}
-            onOpenEvent={(event, onDate) =>
-                setEventDetail({
-                    title: event.title,
-                    calendarName: event.feed_name,
-                    day: parseISO(onDate),
-                    start: event.start ? new Date(event.start) : null,
-                    end: event.end ? new Date(event.end) : null,
-                    allDay: event.all_day,
-                    location: event.location ?? null,
-                    description: event.description ?? null,
-                })
-            }
+            onOpenEvent={(event, onDate) => setEventDetail({ event, onDate })}
         />
     );
 
@@ -2548,9 +2543,11 @@ const UpcomingBoard: React.FC = () => {
                 </div>
             )}
             {eventDetail && (
-                <FeedEventPopover
-                    detail={eventDetail}
+                <CalendarEventDetail
+                    event={eventDetail.event}
+                    onDate={eventDetail.onDate}
                     onClose={() => setEventDetail(null)}
+                    onChanged={() => setEventsVersion((v) => v + 1)}
                 />
             )}
             <DragOverlay dropAnimation={null}>

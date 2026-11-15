@@ -2937,6 +2937,7 @@
     "time": "Čas",
     "allDay": "Ves dan",
     "google": {
+            "confirmDelete": "Delete for good?",
       "endBeforeStart": "Konec je pred začetkom",
       "editEvent": "Uredi dogodek",
       "newEvent": "Nov dogodek",

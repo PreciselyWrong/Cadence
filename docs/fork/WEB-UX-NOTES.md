@@ -986,3 +986,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Problème** : la fiche flottante (`TaskPane`), seule vue d'une tâche en mode épuré, n'offrait aucun moyen de supprimer la tâche.
 - **Décision** : corbeille dans l'en-tête de la fiche, à côté de Fermer : la fiche se ferme, la ligne disparaît et le toast propose Annuler (6 s) ; une tâche récurrente demande la portée ; absente pour une tâche suivie par un `TODO.md`. Android : suppression déjà présente.
+
+## Événements d'agenda : texte lisible, modifier et supprimer partout (2026-11-15)
+
+- **Problème** : sur Aujourd'hui et Planifier, un clic sur un événement Google ouvrait une carte en lecture seule, description en HTML brut (`<p>…</p>`) ; seule la page Agenda permettait de le modifier.
+- **Décision** : un seul composant `Calendar/CalendarEventDetail.tsx` pour les trois pages : éditeur (Enregistrer, Supprimer en deux clics) pour un agenda Google en deux sens, carte en lecture seule sinon ; la description s'affiche et s'édite en texte (`eventDescription.ts`), et n'est renvoyée à Google que si elle a changé. Android : description déjà en texte, modification par l'app Agenda du téléphone.
