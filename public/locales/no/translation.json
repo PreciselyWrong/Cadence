@@ -241,7 +241,18 @@
       "project": "Prosjekt"
     }
   },
+  "pluginRun": {
+    "done": "Startet.",
+    "failed": "Programtillegget kunne ikke handle."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} e-poster å arkivere",
+      "hint": "Sortereren ser ingenting å gjøre. Fjern haken for dem du vil beholde.",
+      "archive": "Arkiver {{count}}",
+      "oneByOne": "Se dem én og én",
+      "done": "{{count}} arkiveringer bedt om"
+    },
     "settings": {
       "calendars": "Leste kalendere",
       "noCalendars": "Ingen kalender. Legg til en under Profil › Kalendere.",

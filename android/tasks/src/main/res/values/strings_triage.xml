@@ -92,4 +92,18 @@
     <string name="triage_answer_precise">Préciser</string>
     <string name="triage_precise_label">Votre réponse</string>
     <string name="triage_precise_send">Envoyer</string>
+    <plurals name="triage_batch_title">
+        <item quantity="one">%1$d mail à archiver</item>
+        <item quantity="other">%1$d mails à archiver</item>
+    </plurals>
+    <string name="triage_batch_hint">Le Trieur n’y voit rien à faire. Décoche ceux à garder.</string>
+    <plurals name="triage_batch_archive">
+        <item quantity="one">Archiver %1$d</item>
+        <item quantity="other">Archiver les %1$d</item>
+    </plurals>
+    <string name="triage_batch_one_by_one">Les voir un par un</string>
+    <plurals name="triage_batch_archived">
+        <item quantity="one">%1$d archivage demandé</item>
+        <item quantity="other">%1$d archivages demandés</item>
+    </plurals>
 </resources>

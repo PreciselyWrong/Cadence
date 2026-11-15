@@ -241,7 +241,18 @@
       "project": "Projekti"
     }
   },
+  "pluginRun": {
+    "done": "Käynnistetty.",
+    "failed": "Laajennus ei voinut toimia."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} viestiä arkistoitavaksi",
+      "hint": "Lajittelija ei näe tehtävää. Poista valinta niistä, jotka haluat pitää.",
+      "archive": "Arkistoi {{count}}",
+      "oneByOne": "Käy läpi yksi kerrallaan",
+      "done": "{{count}} arkistointia pyydetty"
+    },
     "settings": {
       "calendars": "Luetut kalenterit",
       "noCalendars": "Ei kalenteria. Lisää kalenteri kohdassa Profiili › Kalenterit.",

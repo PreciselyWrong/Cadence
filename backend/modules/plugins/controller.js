@@ -24,8 +24,26 @@ const sdk = (req, res) => {
 const menu = (req, res) =>
     res.json({ items: registry.menuItems(), actions: registry.pageActions() });
 
+const runAction = async (req, res, next) => {
+    try {
+        const { status, body } = await registry.runAction(
+            req.params.id,
+            req.params.action,
+            {
+                user: req.currentUser,
+                place: req.body?.place,
+                context: req.body?.context,
+            }
+        );
+        res.status(status).json(body);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     menu,
+    runAction,
     sdk,
     install: handle((userId, req) => service.install(userId, req.body?.url)),
     remove: handle((userId, req) => service.remove(userId, req.params.id)),

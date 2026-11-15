@@ -241,7 +241,18 @@
       "project": "Projekt"
     }
   },
+  "pluginRun": {
+    "done": "Startat.",
+    "failed": "Tillägget kunde inte agera."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} mejl att arkivera",
+      "hint": "Sorteraren ser inget att göra. Avmarkera dem du vill behålla.",
+      "archive": "Arkivera {{count}}",
+      "oneByOne": "Gå igenom dem en i taget",
+      "done": "{{count}} arkiveringar begärda"
+    },
     "settings": {
       "calendars": "Lästa kalendrar",
       "noCalendars": "Ingen kalender. Lägg till en under Profil › Kalendrar.",

@@ -56,4 +56,6 @@
     <string name="plugins_approve_intro">Ce plugin s\'exécute dans le serveur et demande :</string>
     <string name="plugins_approve_outro">Les permissions limitent ce que Cadence donne au plugin ; ce n\'est pas un bac à sable. N\'approuvez que du code que vous avez lu.</string>
     <string name="plugins_approve">Approuver et activer</string>
+    <string name="plugins_run_done">C’est lancé.</string>
+    <string name="plugins_run_failed">Le plugin n’a pas pu agir.</string>
 </resources>

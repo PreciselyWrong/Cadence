@@ -396,4 +396,57 @@ describe('MailDeck', () => {
         expect(choices()).toEqual(['reply', 'task', 'later', 'dismiss']);
         expect(screen.queryByTestId('mail-deck-excerpt')).toBeNull();
     });
+
+    describe('batch of mails to archive', () => {
+        const noise = (uid: string) =>
+            v2(uid, {
+                options: ['archive', 'later', 'dismiss'],
+                recommended: 'archive',
+                draft: undefined,
+            });
+
+        it('offers the mails the agent advises to archive first, all checked', () => {
+            renderDeck([v2('a'), noise('n1'), noise('n2')]);
+            expect(screen.getByTestId('mail-batch')).toHaveTextContent(
+                '2 mails à archiver'
+            );
+            expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+            expect(screen.getByTestId('mail-batch-archive')).toHaveTextContent(
+                'Archiver les 2'
+            );
+            // The card keys wait for the batch.
+            press('Enter');
+            expect(decide).not.toHaveBeenCalled();
+            expect(screen.queryByText('Objet a')).not.toBeInTheDocument();
+        });
+
+        it('archives the checked mails at once and leaves the unchecked one to the deck', async () => {
+            renderDeck([v2('a'), noise('n1'), noise('n2'), noise('n3')]);
+            fireEvent.click(screen.getByRole('checkbox', { name: /Objet n2/ }));
+            fireEvent.click(screen.getByTestId('mail-batch-archive'));
+            await waitFor(() => expect(decide).toHaveBeenCalledTimes(2));
+            expect(decide).toHaveBeenCalledWith('n1', 'archive', {}, false);
+            expect(decide).toHaveBeenCalledWith('n3', 'archive', {}, false);
+            expect(screen.queryByTestId('mail-batch')).not.toBeInTheDocument();
+            expect(screen.getByText('Objet a')).toBeInTheDocument();
+            expect(screen.getByTestId('mail-deck-progress')).toHaveTextContent(
+                '3 / 4'
+            );
+        });
+
+        it('goes through them one by one on request, without asking again', () => {
+            renderDeck([noise('n1'), noise('n2')]);
+            fireEvent.click(
+                screen.getByRole('button', { name: 'Les voir un par un' })
+            );
+            expect(screen.queryByTestId('mail-batch')).not.toBeInTheDocument();
+            expect(screen.getByText('Objet n1')).toBeInTheDocument();
+            expect(decide).not.toHaveBeenCalled();
+        });
+
+        it('is not offered for a single mail to archive', () => {
+            renderDeck([v2('a'), noise('n1')]);
+            expect(screen.queryByTestId('mail-batch')).not.toBeInTheDocument();
+        });
+    });
 });

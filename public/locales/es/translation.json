@@ -241,7 +241,18 @@
       "project": "Proyecto"
     }
   },
+  "pluginRun": {
+    "done": "En marcha.",
+    "failed": "El complemento no pudo actuar."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} correos para archivar",
+      "hint": "El Clasificador no ve nada que hacer. Desmarca los que quieras conservar.",
+      "archive": "Archivar {{count}}",
+      "oneByOne": "Verlos uno a uno",
+      "done": "{{count}} archivados solicitados"
+    },
     "settings": {
       "calendars": "Calendarios leídos",
       "noCalendars": "No hay calendario. Añade uno en Perfil › Calendarios.",

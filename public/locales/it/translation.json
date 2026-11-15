@@ -241,7 +241,18 @@
       "project": "Progetto"
     }
   },
+  "pluginRun": {
+    "done": "Avviato.",
+    "failed": "Il plugin non ha potuto agire."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} email da archiviare",
+      "hint": "Lo Smistatore non vede nulla da fare. Deseleziona quelle da tenere.",
+      "archive": "Archivia {{count}}",
+      "oneByOne": "Vederle una per una",
+      "done": "{{count}} archiviazioni richieste"
+    },
     "settings": {
       "calendars": "Calendari letti",
       "noCalendars": "Nessun calendario. Aggiungine uno in Profilo › Calendari.",

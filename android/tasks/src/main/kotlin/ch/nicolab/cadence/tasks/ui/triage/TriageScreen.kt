@@ -118,8 +118,12 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolea
         viewModel.notices.collect { notice ->
             snackbar.currentSnackbarData?.dismiss()
             launch {
-                val result = snackbar.showSnackbar(notice.message, undoLabel, duration = SnackbarDuration.Short)
-                if (result == SnackbarResult.ActionPerformed) notice.undo()
+                val result = snackbar.showSnackbar(
+                    notice.message,
+                    if (notice.undo != null) undoLabel else null,
+                    duration = SnackbarDuration.Short,
+                )
+                if (result == SnackbarResult.ActionPerformed) notice.undo?.invoke()
             }
         }
     }
@@ -131,6 +135,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolea
             today = today,
             undoable = undoable,
             onDecide = { item, decision, payload, archive -> viewModel.decideMail(item, decision, payload, archive) },
+            onArchiveBatch = viewModel::archiveMailBatch,
             onSkip = { item -> viewModel.skip(item) },
             onUndo = viewModel::undoLast,
             onClose = { deckOpen = false },
@@ -146,7 +151,10 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolea
                 subtitle = items.size.takeIf { it > 0 }?.let { stringResource(R.string.triage_left, it) },
                 onBack = onBack,
                 backDescription = stringResource(R.string.tasks_back),
-                actions = { PluginActionButtons(place = "triage", context = emptyMap()) },
+                actions = {
+                    PluginActionButtons(place = "mail", context = emptyMap())
+                    PluginActionButtons(place = "triage", context = emptyMap())
+                },
             )
             if (mailCount > 0) {
                 PrimaryAction(

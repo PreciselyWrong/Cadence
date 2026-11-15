@@ -41,6 +41,13 @@ internal class TriageHolds(
         }
     }
 
+    /** Envoie [call] tout de suite (sans fenêtre d'annulation) et garde [itemKey] masquée jusqu'à la prochaine synchro. */
+    fun sendNow(itemKey: String, call: DeferredCall) {
+        sent[itemKey] = call.key
+        publish()
+        scope.launch { send(call) }
+    }
+
     /** Arrête les fenêtres ouvertes et rend leurs appels, à envoyer sans attendre. */
     fun takeHeld(): List<DeferredCall> {
         val calls = held.values.map { it.job.cancel(); it.call }

@@ -130,9 +130,27 @@ A plugin adds buttons to the header of some Cadence pages, on the web and on And
 | `project` | A project's page                                           | `project` (its uid)                                     |
 | `triage`  | À trier                                                    | none                                                    |
 | `overdue` | Plan's « En retard » band (web), « Échues » (Android)      | `date` (today, `YYYY-MM-DD`)                            |
+| `mail`    | À trier, next to « Trier mes mails », and the end of the deck | none                                                 |
+| `career`  | Carrière                                                   | none                                                    |
 
 - `GET /api/plugins/menu` returns `{ items, actions }`; an action shows only while its plugin runs. Rules in `backend/modules/plugins/core/actions.js`; web `frontend/components/Plugins/PluginActions.tsx`; Android `tasks/plugins/PluginActionButtons.kt`.
 - A new place is added to `ACTION_PLACES` and drawn by both clients in the same change.
+
+### Run actions
+
+`"run": true` on an action makes it a button handled in the server instead of a link to the page, so it needs no `menu` page (2026-11-15; the Hermes plugin's « Relever les mails » and « Relancer le Point emploi »):
+
+```js
+ctx.actions.onRun('mail-run', async ({ user, place, context }) => {
+    // user: { id, email }; context: the page's short strings
+    return { ok: true, message: 'Tri lancé.' };   // ok: false → 409, with the message
+}, { available: () => Boolean(ctx.settings.get('mailJob')) });
+```
+
+- `ctx.actions.onRun(id, handler, { available? })` only for an action the manifest declares with `run: true`, else it throws. No permission is needed: the plugin already runs in the server.
+- `GET /api/plugins/menu` lists a run action (with `run: true`) only while its handler is registered and `available()` returns `true` (an error counts as false): a plugin hides its button until it is set up.
+- A click posts `POST /api/plugins/:id/actions/:action/run { place, context }` (signed in). The place must be one of the action's (400), the action must be listed (404). `context` keeps at most 10 string values of 200 characters. The handler has 10 s. Answer: 200 `{ ok: true, message }` or 409 `{ ok: false, message }`, `message` cut to 200 characters and shown as is in a toast (web) or a snackbar (Android); a handler that throws or times out answers 500 `{ error: 'action_failed' }` (not 502, which the offline layer reads as an unreachable server), its message kept in the plugin's error and the log only.
+- One click at a time: the button is disabled while its call runs. Never queued offline (`public/sw.js` `NO_QUEUE_PATTERNS`, Android: direct call): replayed later, a run would start work nobody asked for at that time.
 
 ## Notifications
 

@@ -68,14 +68,30 @@ export interface PluginMenuItem {
 
 // Where a plugin can add a button to the page header (backend/modules/plugins/core/actions.js)
 export type PluginActionPlace =
-    'plan' | 'today' | 'inbox' | 'project' | 'triage' | 'overdue';
+    | 'plan'
+    | 'today'
+    | 'inbox'
+    | 'project'
+    | 'triage'
+    | 'overdue'
+    | 'mail'
+    | 'career';
 
-// A button a running plugin adds to some page headers; a click opens its page
+// A button a running plugin adds to some page headers; a click opens its
+// page, or with `run` asks the plugin to act in the server (runPluginAction)
 export interface PluginPageAction {
     plugin: string;
     id: string;
     label: string;
     places: PluginActionPlace[];
+    run?: boolean;
+}
+
+// What the plugin said about a run: `ok` false when it declined (409), with
+// its reason; an error is thrown for anything else.
+export interface PluginRunResult {
+    ok: boolean;
+    message: string;
 }
 
 export interface PluginsResponse {
@@ -172,3 +188,32 @@ export const fetchPluginMenu = () =>
         'GET',
         'Could not load the plugin menu'
     );
+
+export const runPluginAction = async (
+    action: Pick<PluginPageAction, 'plugin' | 'id'>,
+    place: PluginActionPlace,
+    context: Record<string, string> = {}
+): Promise<PluginRunResult> => {
+    const response = await fetch(
+        getApiPath(
+            `plugins/${encodeURIComponent(action.plugin)}/actions/${encodeURIComponent(action.id)}/run`
+        ),
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-csrf-token': await getCsrfToken(),
+            },
+            body: JSON.stringify({ place, context }),
+        }
+    );
+    const data = await response.json().catch(() => ({}));
+    if (response.ok || response.status === 409) {
+        return {
+            ok: response.ok,
+            message: typeof data.message === 'string' ? data.message : '',
+        };
+    }
+    throw new Error(data.error || 'Could not run the action');
+};

@@ -128,8 +128,28 @@ class PluginsTest {
     fun theStoredMenuKeepsItsActions() {
         val menu = PluginMenu(
             items = listOf(PluginMenuItem("hermes", "Hermes", "/plugins/hermes", "ui/index.html")),
-            actions = listOf(PluginAction("hermes", "plan-week", "Planifier", listOf("plan"))),
+            actions = listOf(
+                PluginAction("hermes", "plan-week", "Planifier", listOf("plan")),
+                PluginAction("hermes", "check-mail", "Relever les mails", listOf("mail"), run = true),
+            ),
         )
+        assertEquals(menu, PluginJson.menu(PluginJson.menuBody(menu)))
+    }
+
+    @Test
+    fun readsRunFlagOnlyWhenTrueAndRoundTripsIt() {
+        val menu = PluginJson.menu(
+            obj(
+                """
+                {"items": [], "actions": [
+                  {"plugin": "hermes", "id": "check-mail", "label": "Relever", "places": ["mail"], "run": true},
+                  {"plugin": "hermes", "id": "not-bool", "label": "Autre", "places": ["mail"], "run": "yes"},
+                  {"plugin": "hermes", "id": "open-page", "label": "Ouvrir", "places": ["triage"], "run": false}
+                ]}
+                """,
+            ),
+        )
+        assertEquals(listOf(true, false, false), menu.actions.map { it.run })
         assertEquals(menu, PluginJson.menu(PluginJson.menuBody(menu)))
     }
 
@@ -156,11 +176,13 @@ class PluginsTest {
                 PluginAction("hermes", "plan-week", "Planifier", listOf("plan", "today")),
                 PluginAction("hermes", "triage-help", "Trier", listOf("triage")),
                 PluginAction("nopage", "ghost", "Fantôme", listOf("plan")),
+                PluginAction("nopage", "run-now", "Lancer", listOf("plan", "mail"), run = true),
             ),
         )
-        assertEquals(listOf("plan-week"), PluginActions.forPlace(menu, "plan").map { it.id })
+        assertEquals(listOf("plan-week", "run-now"), PluginActions.forPlace(menu, "plan").map { it.id })
         assertEquals(listOf("plan-week"), PluginActions.forPlace(menu, "today").map { it.id })
         assertEquals(listOf("triage-help"), PluginActions.forPlace(menu, "triage").map { it.id })
+        assertEquals(listOf("run-now"), PluginActions.forPlace(menu, "mail").map { it.id })
         assertTrue(PluginActions.forPlace(menu, "project").isEmpty())
         assertTrue(PluginActions.forPlace(PluginMenu.EMPTY, "plan").isEmpty())
     }

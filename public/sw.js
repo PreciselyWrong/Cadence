@@ -48,6 +48,9 @@ const NO_QUEUE_PATHS = [
     '/api/admin',
     '/api/billing',
 ];
+// A plugin's run button (a Hermes job started now): replayed later, it would
+// start the job at a time nobody asked for.
+const NO_QUEUE_PATTERNS = [/\/api\/plugins\/[^/]+\/actions\/[^/]+\/run$/];
 
 // The development build registers this worker as /sw.js?push-only so push
 // notifications can be tried on the dev server. In that mode nothing is
@@ -202,7 +205,10 @@ self.addEventListener('fetch', (event) => {
     if (url.pathname.includes('/api/')) {
         if (request.method === 'GET') {
             event.respondWith(handleApiGet(request));
-        } else if (NO_QUEUE_PATHS.some((p) => url.pathname.includes(p))) {
+        } else if (
+            NO_QUEUE_PATHS.some((p) => url.pathname.includes(p)) ||
+            NO_QUEUE_PATTERNS.some((pattern) => pattern.test(url.pathname))
+        ) {
             event.respondWith(handleApiNoQueue(request));
         } else {
             event.respondWith(handleApiMutation(request));

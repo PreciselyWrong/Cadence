@@ -83,7 +83,55 @@ describe('plugin page actions', () => {
             'project',
             'triage',
             'overdue',
+            'mail',
+            'career',
         ]);
+    });
+
+    it('reads a button that runs in the server, without a page', () => {
+        expect(
+            parseActions(
+                [
+                    {
+                        id: 'mail-run',
+                        label: 'Relever les mails',
+                        places: ['mail', 'triage'],
+                        run: true,
+                    },
+                ],
+                false
+            )
+        ).toEqual({
+            actions: [
+                {
+                    id: 'mail-run',
+                    label: 'Relever les mails',
+                    places: ['triage', 'mail'],
+                    run: true,
+                },
+            ],
+        });
+    });
+
+    it('still needs a page for a button that opens it, beside a run button', () => {
+        expect(
+            parseActions(
+                [
+                    { id: 'a', label: 'A', places: ['mail'], run: true },
+                    { id: 'b', label: 'B', places: ['plan'] },
+                ],
+                false
+            ).error
+        ).toMatch(/menu/);
+    });
+
+    it('refuses a run flag that is not true', () => {
+        expect(
+            parseActions(
+                [{ id: 'a', label: 'A', places: ['mail'], run: 'yes' }],
+                true
+            ).error
+        ).toMatch(/run/);
     });
 
     it('reads a button for the overdue band of Plan', () => {

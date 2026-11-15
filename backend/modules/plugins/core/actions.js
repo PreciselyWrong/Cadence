@@ -1,10 +1,11 @@
 'use strict';
 
-// Page actions: buttons a plugin adds to the header of Cadence pages
-// (docs/46-plugins.md). A click opens the plugin's own page with the action
-// and what the page shows in the query, so the plugin needs a `menu` page.
-// Each place is drawn by the web and Android clients; a new place is added
-// here and on both clients in the same change.
+// Page actions: buttons a plugin adds to Cadence pages (docs/46-plugins.md).
+// A click opens the plugin's own page with the action and what the page shows
+// in the query, so the plugin needs a `menu` page; a `run` action is handled
+// in the server instead (ctx.actions.onRun) and needs no page. Each place is
+// drawn by the web and Android clients; a new place is added here and on both
+// clients in the same change.
 const ACTION_PLACES = [
     'plan',
     'today',
@@ -12,6 +13,8 @@ const ACTION_PLACES = [
     'project',
     'triage',
     'overdue',
+    'mail',
+    'career',
 ];
 const ACTION_ID = /^[a-z][a-z0-9-]{0,31}$/;
 const MAX_ACTIONS = 10;
@@ -39,11 +42,15 @@ function parseAction(raw) {
             error: `action "${id}" places can only be: ${ACTION_PLACES.join(', ')}`,
         };
     }
+    if (raw.run !== undefined && raw.run !== true) {
+        return { error: `action "${id}" run can only be true` };
+    }
     return {
         action: {
             id,
             label,
             places: ACTION_PLACES.filter((p) => places.includes(p)),
+            ...(raw.run === true ? { run: true } : {}),
         },
     };
 }
@@ -55,13 +62,15 @@ function parseActions(raw, hasPage) {
             error: `actions must be a list of at most ${MAX_ACTIONS} buttons`,
         };
     }
-    if (raw.length > 0 && !hasPage) {
-        return { error: 'actions open the plugin page: declare a menu page' };
-    }
     const actions = [];
     for (const entry of raw) {
         const { action, error } = parseAction(entry);
         if (error) return { error };
+        if (!action.run && !hasPage) {
+            return {
+                error: 'actions open the plugin page: declare a menu page',
+            };
+        }
         if (actions.some((a) => a.id === action.id)) {
             return { error: `action "${action.id}" is declared twice` };
         }

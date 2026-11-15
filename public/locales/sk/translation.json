@@ -251,7 +251,18 @@
       "project": "Projekt"
     }
   },
+  "pluginRun": {
+    "done": "Spustené.",
+    "failed": "Doplnok nemohol konať."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} e-mailov na archiváciu",
+      "hint": "Triedič nevidí nič na práci. Zruš označenie tých, ktoré chceš ponechať.",
+      "archive": "Archivovať {{count}}",
+      "oneByOne": "Prejsť jeden po druhom",
+      "done": "Vyžiadané archivácie: {{count}}"
+    },
     "settings": {
       "calendars": "Čítané kalendáre",
       "noCalendars": "Žiadny kalendár. Pridajte ho v Profil › Kalendáre.",

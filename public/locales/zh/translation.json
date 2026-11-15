@@ -241,7 +241,18 @@
       "project": "项目"
     }
   },
+  "pluginRun": {
+    "done": "已启动。",
+    "failed": "插件无法执行。"
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} 封邮件待归档",
+      "hint": "分拣员认为无需处理。取消勾选要保留的邮件。",
+      "archive": "归档 {{count}} 封",
+      "oneByOne": "逐封查看",
+      "done": "已请求归档 {{count}} 封"
+    },
     "settings": {
       "calendars": "读取的日历",
       "noCalendars": "没有日历。请在“个人资料 › 日历”中添加。",

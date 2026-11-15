@@ -241,7 +241,18 @@
       "project": "Projekt"
     }
   },
+  "pluginRun": {
+    "done": "Startet.",
+    "failed": "Pluginnet kunne ikke handle."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} mails til arkivering",
+      "hint": "Sortereren ser intet at gøre. Fjern fluebenet ved dem, du vil beholde.",
+      "archive": "Arkivér {{count}}",
+      "oneByOne": "Se dem én ad gangen",
+      "done": "{{count}} arkiveringer anmodet"
+    },
     "settings": {
       "calendars": "Læste kalendere",
       "noCalendars": "Ingen kalender. Tilføj en under Profil › Kalendere.",

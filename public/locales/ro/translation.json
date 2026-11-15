@@ -245,7 +245,18 @@
       "project": "Proiect"
     }
   },
+  "pluginRun": {
+    "done": "Pornit.",
+    "failed": "Pluginul nu a putut acționa."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} e-mailuri de arhivat",
+      "hint": "Sortatorul nu vede nimic de făcut. Debifează-le pe cele de păstrat.",
+      "archive": "Arhivează {{count}}",
+      "oneByOne": "Vezi-le pe rând",
+      "done": "{{count}} arhivări cerute"
+    },
     "settings": {
       "calendars": "Calendare citite",
       "noCalendars": "Niciun calendar. Adaugă unul în Profil › Calendare.",

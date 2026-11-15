@@ -56,6 +56,7 @@ import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.proposals.CareerDecided
 import ch.nicolab.cadence.tasks.proposals.CareerDraft
 import ch.nicolab.cadence.tasks.proposals.CareerFollowup
@@ -157,6 +158,7 @@ fun CareerScreen(onBack: () -> Unit) {
                     subtitle = view.subtitle,
                     onBack = { requestBack() },
                     backDescription = stringResource(R.string.career_back),
+                    actions = { PluginActionButtons(place = "career", context = emptyMap()) },
                 )
             }
             LazyColumn(

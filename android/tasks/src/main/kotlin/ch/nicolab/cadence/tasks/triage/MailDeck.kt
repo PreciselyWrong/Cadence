@@ -25,11 +25,28 @@ object MailDeck {
     /** Longueur maximale d'une remarque « Répondre par un mot ». */
     const val NOTE_MAX_LENGTH = 500
 
+    /** Sous ce seuil, archiver un par un dans le paquet est aussi rapide. */
+    const val BATCH_MIN = 2
+
     private val EMPTY = JsonObject(emptyMap())
 
     /** Les cartes Mail lisibles, dans l'ordre de la file (cartes passées en dernier, fait par la file). */
     fun cards(items: List<TriageItemDto>): List<Pair<TriageItemDto, MailCardData>> =
         items.filter { it.type == MAIL_TYPE }.mapNotNull { item -> MailPayload.parse(item.payload)?.let { item to it } }
+
+    /**
+     * Les cartes que l'agent conseille d'archiver (newsletters, reçus…), proposées ensemble à l'ouverture : un geste
+     * pour le bruit, puis l'essentiel. Une carte dont la dernière action a échoué reste dans le paquet, où son erreur
+     * s'affiche.
+     */
+    fun archiveBatch(cards: List<Pair<TriageItemDto, MailCardData>>): List<Pair<TriageItemDto, MailCardData>> {
+        val batch = cards.filter { (_, card) ->
+            card.recommended == MailOption.ARCHIVE &&
+                MailOption.ARCHIVE in card.options &&
+                card.actionError == null
+        }
+        return if (batch.size >= BATCH_MIN) batch else emptyList()
+    }
 
     /** Le conseil d'un glissement droit : l'option recommandée, sinon la première ; sans options, l'ancien conseil. */
     fun recommendation(card: MailCardData): MailAdvice {

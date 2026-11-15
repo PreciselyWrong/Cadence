@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import PageHeader from '../Shared/ui/PageHeader';
+import PluginActions from '../Plugins/PluginActions';
 import EmptyState from '../Shared/ui/EmptyState';
 import Button, { type ButtonVariant } from '../Shared/ui/Button';
 import { useToast } from '../Shared/ToastContext';
@@ -230,6 +231,7 @@ const CareerPage: React.FC = () => {
                       })
                     : undefined
             }
+            actions={<PluginActions place="career" />}
         />
     );
 

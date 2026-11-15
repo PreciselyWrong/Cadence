@@ -241,7 +241,18 @@
       "project": "Proyek"
     }
   },
+  "pluginRun": {
+    "done": "Dimulai.",
+    "failed": "Plugin tidak dapat bertindak."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} email untuk diarsipkan",
+      "hint": "Penyortir tidak melihat yang perlu dilakukan. Hapus centang yang ingin disimpan.",
+      "archive": "Arsipkan {{count}}",
+      "oneByOne": "Lihat satu per satu",
+      "done": "{{count}} pengarsipan diminta"
+    },
     "settings": {
       "calendars": "Kalender yang dibaca",
       "noCalendars": "Belum ada kalender. Tambahkan di Profil › Kalender.",

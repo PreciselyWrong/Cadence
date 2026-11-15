@@ -36,8 +36,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
-/** Annonce d'un geste, avec son annulation tant qu'il n'est pas parti. */
-internal class TriageNotice(val message: String, val undo: () -> Unit)
+/** Annonce d'un geste, avec son annulation tant qu'il n'est pas parti (null quand le geste est déjà confirmé). */
+internal class TriageNotice(val message: String, val undo: (() -> Unit)? = null)
 
 /**
  * File « À trier » : une proposition à la fois. Un geste retire la carte tout de suite et ne part qu'après la fenêtre
@@ -128,6 +128,26 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
         )
         val key = UUID.randomUUID().toString()
         hold(item, message, MailRequests.decide(card.mailUid, decision, payload, archive, key, string(R.string.triage_title)))
+    }
+
+    /** Archivage en lot depuis le paquet : confirmé par la liste cochée, donc envoyé sans fenêtre d'annulation. */
+    fun archiveMailBatch(items: List<TriageItemDto>) {
+        var count = 0
+        val empty = JsonObject(emptyMap())
+        val label = string(R.string.triage_title)
+        items.forEach { item ->
+            val card = MailPayload.parse(item.payload) ?: return@forEach
+            val key = UUID.randomUUID().toString()
+            holds.sendNow(
+                item.key,
+                MailRequests.decide(card.mailUid, MailDecision.ARCHIVE, empty, archive = false, key = key, label = label),
+            )
+            count++
+        }
+        if (count > 0) {
+            val message = getApplication<Application>().resources.getQuantityString(R.plurals.triage_batch_archived, count, count)
+            _notices.tryEmit(TriageNotice(message))
+        }
     }
 
     /** « Annuler » du paquet : rend la dernière décision encore dans sa fenêtre, sa carte revient en tête. */

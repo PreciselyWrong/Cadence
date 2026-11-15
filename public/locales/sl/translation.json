@@ -257,7 +257,18 @@
       "project": "Projekt"
     }
   },
+  "pluginRun": {
+    "done": "Zagnano.",
+    "failed": "Vtičnik ni mogel ukrepati."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} e-poštnih sporočil za arhiviranje",
+      "hint": "Razvrščevalnik ne vidi ničesar za storiti. Odznači tiste, ki jih želiš obdržati.",
+      "archive": "Arhiviraj {{count}}",
+      "oneByOne": "Poglej jih enega za drugim",
+      "done": "Zahtevana arhiviranja: {{count}}"
+    },
     "settings": {
       "calendars": "Prebrani koledarji",
       "noCalendars": "Ni koledarja. Dodajte ga v Profil › Koledarji.",

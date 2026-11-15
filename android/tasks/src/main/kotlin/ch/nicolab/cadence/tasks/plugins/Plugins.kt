@@ -83,8 +83,14 @@ data class PluginList(val configured: Boolean, val plugins: List<Plugin>)
 /** Entrée de menu d'un plugin actif (`GET /api/plugins/menu`) ; sa page est servie à `/api/plugins/<id>/ui/<file>`. */
 data class PluginMenuItem(val id: String, val label: String, val path: String, val file: String)
 
-/** Bouton qu'un plugin ajoute en haut d'un écran ; [places] parmi plan, today, inbox, project, triage, overdue. */
-data class PluginAction(val plugin: String, val id: String, val label: String, val places: List<String>)
+/** Bouton qu'un plugin ajoute en haut d'un écran ; [places] parmi plan, today, inbox, project, triage, overdue, mail, career. */
+data class PluginAction(
+    val plugin: String,
+    val id: String,
+    val label: String,
+    val places: List<String>,
+    val run: Boolean = false,
+)
 
 /** Réponse de `GET /api/plugins/menu` : les pages des plugins actifs et leurs boutons d'action. */
 data class PluginMenu(val items: List<PluginMenuItem>, val actions: List<PluginAction>) {
@@ -107,9 +113,9 @@ object PluginActions {
         }
     }
 
-    /** Les actions de [place] dont le plugin a une page dans le menu : sans page, rien à ouvrir. */
+    /** Les actions de [place] qui s'exécutent côté serveur (`run`) ou dont le plugin a une page dans le menu. */
     fun forPlace(menu: PluginMenu, place: String): List<PluginAction> =
-        menu.actions.filter { action -> place in action.places && menu.items.any { it.id == action.plugin } }
+        menu.actions.filter { action -> place in action.places && (action.run || menu.items.any { it.id == action.plugin }) }
 
     private fun encode(value: String): String = URLEncoder.encode(value, "UTF-8")
 }
@@ -173,7 +179,7 @@ object PluginJson {
         val plugin = body.text("plugin") ?: return null
         val id = body.text("id") ?: return null
         val label = body.text("label")?.takeIf { it.isNotBlank() } ?: return null
-        return PluginAction(plugin, id, label, body.texts("places"))
+        return PluginAction(plugin, id, label, body.texts("places"), run = body.bool("run") == true)
     }
 
     /** Forme gardée en préférences, relue par [menu]. */
@@ -206,6 +212,7 @@ object PluginJson {
                                 "places",
                                 buildJsonArray { action.places.forEach { add(JsonPrimitive(it)) } },
                             )
+                            if (action.run) put("run", true)
                         },
                     )
                 }

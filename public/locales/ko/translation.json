@@ -241,7 +241,18 @@
       "project": "프로젝트"
     }
   },
+  "pluginRun": {
+    "done": "시작했습니다.",
+    "failed": "플러그인이 작업하지 못했습니다."
+  },
   "triage": {
+    "batch": {
+      "title": "보관할 메일 {{count}}개",
+      "hint": "분류기가 할 일이 없다고 봅니다. 남길 메일은 선택을 해제하세요.",
+      "archive": "{{count}}개 보관",
+      "oneByOne": "하나씩 보기",
+      "done": "보관 요청 {{count}}건"
+    },
     "settings": {
       "calendars": "읽는 캘린더",
       "noCalendars": "캘린더가 없습니다. 프로필 › 캘린더에서 추가하세요.",

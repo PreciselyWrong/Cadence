@@ -241,7 +241,18 @@
       "project": "Projeto"
     }
   },
+  "pluginRun": {
+    "done": "Iniciado.",
+    "failed": "O plugin não conseguiu agir."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} e-mails para arquivar",
+      "hint": "O Triador não vê nada a fazer. Desmarque os que quer manter.",
+      "archive": "Arquivar {{count}}",
+      "oneByOne": "Ver um por um",
+      "done": "{{count}} arquivamentos pedidos"
+    },
     "settings": {
       "calendars": "Calendários lidos",
       "noCalendars": "Nenhum calendário. Adicione um em Perfil › Calendários.",

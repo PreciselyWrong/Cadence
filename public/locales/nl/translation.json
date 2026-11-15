@@ -241,7 +241,18 @@
       "project": "Project"
     }
   },
+  "pluginRun": {
+    "done": "Gestart.",
+    "failed": "De plug-in kon niets doen."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} mails om te archiveren",
+      "hint": "De Sorteerder ziet niets te doen. Vink uit wat je wilt houden.",
+      "archive": "{{count}} archiveren",
+      "oneByOne": "Een voor een bekijken",
+      "done": "{{count}} archiveringen gevraagd"
+    },
     "settings": {
       "calendars": "Gelezen agenda's",
       "noCalendars": "Geen agenda. Voeg er een toe via Profiel › Agenda's.",

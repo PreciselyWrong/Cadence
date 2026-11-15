@@ -1,4 +1,5 @@
 import {
+    archiveBatch,
     deckButtons,
     deckCards,
     deckProgress,
@@ -434,5 +435,74 @@ describe('mail deck › progress', () => {
             key: 'mail:b',
         }).state;
         expect(deckProgress(items, skipped).position).toBe(2);
+    });
+});
+
+describe('archiveBatch', () => {
+    const card = (uid: string, fields: Partial<MailPayload>): TriageItem =>
+        ({
+            ...mailItem(uid),
+            payload: payload({ mail_uid: uid, ...fields }),
+        }) as unknown as TriageItem;
+    const noise = (uid: string) =>
+        card(uid, {
+            options: ['archive', 'later', 'dismiss'],
+            recommended: 'archive',
+        });
+
+    it('gathers the cards the agent advises to archive, in deck order', () => {
+        const cards = [
+            noise('a'),
+            card('b', { options: ['draft', 'archive'], recommended: 'draft' }),
+            noise('c'),
+        ];
+        expect(archiveBatch(cards).map((item) => item.key)).toEqual([
+            'mail:a',
+            'mail:c',
+        ]);
+    });
+
+    it('leaves out a card whose last action failed, or without an Archive choice', () => {
+        const cards = [
+            noise('a'),
+            card('b', {
+                options: ['archive', 'later'],
+                recommended: 'archive',
+                action_error: 'gmail_down',
+            }),
+            card('c', {
+                options: ['later', 'dismiss'],
+                recommended: 'archive',
+            }),
+            noise('d'),
+        ];
+        expect(archiveBatch(cards).map((item) => item.key)).toEqual([
+            'mail:a',
+            'mail:d',
+        ]);
+    });
+
+    it('is empty under two cards: one card is quicker in the deck', () => {
+        expect(archiveBatch([noise('a'), mailItem('b')])).toEqual([]);
+    });
+});
+
+describe('deckReducer batch', () => {
+    it('takes the archived cards out of the deck and sends what was held', () => {
+        const held = {
+            key: 'mail:x',
+            mailUid: 'x',
+            decision: 'dismiss' as const,
+            payload: {},
+            archive: false,
+        };
+        const start = deckReducer(initialDeck, { type: 'decide', held }).state;
+        const step = deckReducer(start, {
+            type: 'batch',
+            keys: ['mail:a', 'mail:b'],
+        });
+        expect(step.state.gone).toEqual(['mail:x', 'mail:a', 'mail:b']);
+        expect(step.state.held).toBeNull();
+        expect(step.flush).toEqual(held);
     });
 });

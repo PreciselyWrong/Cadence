@@ -241,7 +241,18 @@
       "project": "Project"
     }
   },
+  "pluginRun": {
+    "done": "It's started.",
+    "failed": "The plugin could not act."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} emails to archive",
+      "hint": "The Sorter sees nothing to do. Uncheck the ones to keep.",
+      "archive": "Archive {{count}}",
+      "oneByOne": "Go through them one by one",
+      "done": "{{count}} archive requests sent"
+    },
     "settings": {
       "calendars": "Calendars read",
       "noCalendars": "No calendar. Add one in Profile › Calendars.",

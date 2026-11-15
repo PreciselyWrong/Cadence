@@ -449,6 +449,16 @@ describe('service worker offline writes', () => {
         expect(response.headers.get('X-Tududi-Queued')).toBe('1');
     });
 
+    it('never queues a plugin run button: running a job later is not what was asked', async () => {
+        const sw = loadWorker(down);
+        const response = await sw.request(
+            '/api/plugins/hermes/actions/mail-run/run',
+            post({ place: 'mail' })
+        );
+        expect(response.status).toBe(503);
+        expect(sw.outbox()).toHaveLength(0);
+    });
+
     it('never queues a sign-in or an AI call', async () => {
         const sw = loadWorker(down);
         const response = await sw.request('/api/login', post({ email: 'a' }));

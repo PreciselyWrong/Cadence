@@ -249,4 +249,42 @@ class MailDeckTest {
         assertFalse(advice.opensMail)
         assertFalse(MailDecision.TRASH.canArchive)
     }
+
+    private fun batchPair(uid: String, fields: String): Pair<TriageItemDto, MailCardData> {
+        val payload = json.parseToJsonElement(
+            """{"mail_uid":"$uid","summary":"Valider le devis","subject":"Devis cuisine",
+               "received_at":"2026-11-10T09:00:00Z","gmail_url":"https://mail.google.com/mail/u/0/#inbox/abc",$fields}""",
+        ).jsonObject
+        val dto = item("mail:$uid").copy(payload = payload)
+        return dto to MailPayload.parse(payload)!!
+    }
+
+    private fun noisePair(uid: String) = batchPair(uid, """"options":["archive","later","dismiss"],"recommended":"archive"""")
+
+    @Test
+    fun `le lot d'archivage rassemble les cartes conseillées à archiver dans l'ordre du paquet`() {
+        val cards = listOf(
+            noisePair("a"),
+            batchPair("b", """"options":["draft","archive"],"recommended":"draft""""),
+            noisePair("c"),
+        )
+        assertEquals(listOf("mail:a", "mail:c"), MailDeck.archiveBatch(cards).map { it.first.key })
+    }
+
+    @Test
+    fun `le lot d'archivage écarte les cartes en erreur ou sans option Archiver`() {
+        val cards = listOf(
+            noisePair("a"),
+            batchPair("b", """"options":["archive","later"],"recommended":"archive","action_error":"gmail_down""""),
+            batchPair("c", """"options":["later","dismiss"],"recommended":"archive""""),
+            noisePair("d"),
+        )
+        assertEquals(listOf("mail:a", "mail:d"), MailDeck.archiveBatch(cards).map { it.first.key })
+    }
+
+    @Test
+    fun `le lot d'archivage est vide sous deux cartes`() {
+        val single = listOf(noisePair("a"), item("b") to card())
+        assertTrue(MailDeck.archiveBatch(single).isEmpty())
+    }
 }

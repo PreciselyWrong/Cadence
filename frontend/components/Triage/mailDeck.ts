@@ -36,7 +36,8 @@ export type DeckAction =
     | { type: 'undo' }
     | { type: 'skip'; key: string }
     | { type: 'sent'; key: string }
-    | { type: 'failed'; key: string };
+    | { type: 'failed'; key: string }
+    | { type: 'batch'; keys: string[] };
 
 export interface DeckStep {
     state: DeckState;
@@ -101,6 +102,24 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckStep {
                         : state,
                 flush: null,
             };
+        case 'batch':
+            // Archived together: out of the deck, and what was held is sent.
+            return {
+                state: {
+                    ...state,
+                    gone: [
+                        ...state.gone.filter(
+                            (key) => !action.keys.includes(key)
+                        ),
+                        ...action.keys,
+                    ],
+                    held: null,
+                    front: action.keys.includes(state.front ?? '')
+                        ? null
+                        : state.front,
+                },
+                flush: state.held,
+            };
         case 'failed':
             return {
                 state: {
@@ -114,6 +133,25 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckStep {
         default:
             return { state, flush: null };
     }
+}
+
+// Under this many, archiving one by one in the deck is as quick.
+const BATCH_MIN = 2;
+
+// The cards the agent advises to archive (newsletters, receipts…), offered
+// together before the deck: one gesture for the noise, then what matters.
+// A card whose last action failed is left to the deck, where its error shows.
+export function archiveBatch(cards: TriageItem[]): TriageItem[] {
+    const batch = cards.filter((item) => {
+        const mail = item.payload as unknown as MailPayload;
+        return (
+            item.type === 'mail' &&
+            mail.recommended === 'archive' &&
+            (mail.options ?? []).includes('archive') &&
+            !mail.action_error
+        );
+    });
+    return batch.length >= BATCH_MIN ? batch : [];
 }
 
 // « 4 / 17 »: the card shown among all the mail cards of the deck.

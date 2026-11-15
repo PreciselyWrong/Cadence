@@ -290,6 +290,28 @@ function buildContext(plugin, entry, row) {
         onDispose: (fn) => {
             if (typeof fn === 'function') plugin.disposers.push(fn);
         },
+        actions: {
+            // A `run` action of the manifest, handled here when clicked
+            // (runAction). `available` hides the button while it is false.
+            onRun: (id, handler, { available } = {}) => {
+                const declared = (manifest.actions || []).some(
+                    (action) => action.id === id && action.run
+                );
+                if (!declared) {
+                    throw new Error(
+                        `The manifest does not declare the run action ${id}`
+                    );
+                }
+                if (typeof handler !== 'function') {
+                    throw new Error('ctx.actions.onRun needs a function');
+                }
+                plugin.runHandlers.set(id, {
+                    handler,
+                    available:
+                        typeof available === 'function' ? available : null,
+                });
+            },
+        },
     };
 
     if (manifest.permissions.includes('events')) {
@@ -359,6 +381,7 @@ async function activate(entry, row) {
         folderPath: entry.folderPath,
         mod: null,
         handlers: new Map(),
+        runHandlers: new Map(),
         router: null,
         disposers: [],
         storage: { ...(row?.storage || {}) },
@@ -504,16 +527,90 @@ function menuItems() {
         }));
 }
 
-// Header buttons of the plugins that run and have a page to open them in.
+function canRun(plugin, id) {
+    const entry = plugin.runHandlers.get(id);
+    if (!entry) return false;
+    if (!entry.available) return true;
+    try {
+        return entry.available() === true;
+    } catch {
+        return false;
+    }
+}
+
+// Buttons of the plugins that run: those that open the plugin's page (it has
+// one), and the run buttons the plugin handles and says it can run now.
 function pageActions() {
-    return [...running.values()]
-        .filter((plugin) => plugin.manifest.menu)
-        .flatMap((plugin) =>
-            (plugin.manifest.actions || []).map((action) => ({
-                plugin: plugin.manifest.id,
-                ...action,
-            }))
+    return [...running.values()].flatMap((plugin) =>
+        (plugin.manifest.actions || [])
+            .filter((action) =>
+                action.run
+                    ? canRun(plugin, action.id)
+                    : Boolean(plugin.manifest.menu)
+            )
+            .map((action) => ({ plugin: plugin.manifest.id, ...action }))
+    );
+}
+
+const MAX_CONTEXT_KEYS = 10;
+const MAX_CONTEXT_TEXT = 200;
+const MAX_RUN_MESSAGE = 200;
+
+// What the page shows, as short strings only.
+function cleanContext(raw) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+    const context = {};
+    for (const [key, value] of Object.entries(raw)) {
+        if (Object.keys(context).length >= MAX_CONTEXT_KEYS) break;
+        if (!/^[a-zA-Z][a-zA-Z0-9_]{0,31}$/.test(key)) continue;
+        if (typeof value !== 'string') continue;
+        context[key] = value.slice(0, MAX_CONTEXT_TEXT);
+    }
+    return context;
+}
+
+// A click on a run button: { status, body }. The handler's error stays in
+// the plugin's error and the log; the client only gets a code (500, not
+// 502: the offline layer reads 502 as an unreachable server).
+async function runAction(pluginId, actionId, { user, place, context } = {}) {
+    const plugin = running.get(pluginId);
+    const action = (plugin?.manifest.actions || []).find(
+        (entry) => entry.id === actionId && entry.run
+    );
+    if (!plugin || !action || !canRun(plugin, actionId)) {
+        return { status: 404, body: { error: 'Action not found' } };
+    }
+    if (!action.places.includes(place)) {
+        return {
+            status: 400,
+            body: { error: 'This action is not shown here' },
+        };
+    }
+    const { handler } = plugin.runHandlers.get(actionId);
+    try {
+        const result = await withTimeout(
+            () =>
+                handler({
+                    user: { id: user.id, email: user.email || null },
+                    place,
+                    context: cleanContext(context),
+                }),
+            HANDLER_TIMEOUT_MS,
+            `action ${actionId}`
         );
+        const ok = result?.ok !== false;
+        const message = String(result?.message ?? '')
+            .trim()
+            .slice(0, MAX_RUN_MESSAGE);
+        return { status: ok ? 200 : 409, body: { ok, message } };
+    } catch (error) {
+        logger.warn(
+            { plugin: pluginId, action: actionId },
+            'Plugin action failed'
+        );
+        noteError(pluginId, messageOf(error));
+        return { status: 500, body: { error: 'action_failed' } };
+    }
 }
 
 // Starts what was left on at the last shutdown. Called once at boot, and by
@@ -557,6 +654,7 @@ module.exports = {
     uiHandler,
     menuItems,
     pageActions,
+    runAction,
     refreshSettings,
     isRunning,
     runningVersion,

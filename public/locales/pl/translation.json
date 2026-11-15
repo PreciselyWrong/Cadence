@@ -253,7 +253,18 @@
       "project": "Projekt"
     }
   },
+  "pluginRun": {
+    "done": "Uruchomiono.",
+    "failed": "Wtyczka nie mogła zadziałać."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} maili do archiwizacji",
+      "hint": "Sortownik nie widzi nic do zrobienia. Odznacz te, które chcesz zachować.",
+      "archive": "Archiwizuj {{count}}",
+      "oneByOne": "Przejrzyj po kolei",
+      "done": "Zlecono archiwizację: {{count}}"
+    },
     "settings": {
       "calendars": "Odczytywane kalendarze",
       "noCalendars": "Brak kalendarza. Dodaj go w Profil › Kalendarze.",

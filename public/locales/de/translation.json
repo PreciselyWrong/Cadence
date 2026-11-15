@@ -241,7 +241,18 @@
       "project": "Projekt"
     }
   },
+  "pluginRun": {
+    "done": "Gestartet.",
+    "failed": "Das Plugin konnte nicht handeln."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} E-Mails zum Archivieren",
+      "hint": "Der Sortierer sieht nichts zu tun. Hake die ab, die du behalten willst.",
+      "archive": "{{count}} archivieren",
+      "oneByOne": "Einzeln ansehen",
+      "done": "{{count}} Archivierungen angefordert"
+    },
     "settings": {
       "calendars": "Gelesene Kalender",
       "noCalendars": "Kein Kalender. Füge einen unter Profil › Kalender hinzu.",

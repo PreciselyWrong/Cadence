@@ -29,6 +29,7 @@ import {
     deckCards,
     DeckChoice,
     deckProgress,
+    archiveBatch,
     deckReducer,
     DeckState,
     GMAIL,
@@ -37,6 +38,8 @@ import {
     taskPayload,
 } from './mailDeck';
 import MailTaskForm from './MailTaskForm';
+import MailBatch from './MailBatch';
+import PluginActions from '../Plugins/PluginActions';
 
 // How long « Annuler » can take the last decision back before it is sent.
 const UNDO_MS = 5000;
@@ -180,7 +183,7 @@ const MailDeck: React.FC<MailDeckProps> = ({
     onClose,
 }) => {
     const { t } = useTranslation();
-    const { showErrorToast } = useToast();
+    const { showErrorToast, showSuccessToast } = useToast();
     const chat = usePluginMenuStore((state) =>
         state.items.find((entry) => entry.id === CHAT_PLUGIN)
     );
@@ -192,6 +195,8 @@ const MailDeck: React.FC<MailDeckProps> = ({
     const [note, setNote] = useState('');
     const [mailOpen, setMailOpen] = useState(false);
     const [taskOpen, setTaskOpen] = useState(false);
+    // The batch of mails to archive is offered once, when the deck opens.
+    const [batchSeen, setBatchSeen] = useState(false);
     const busy = useRef(false);
 
     const send = useCallback(
@@ -269,6 +274,7 @@ const MailDeck: React.FC<MailDeckProps> = ({
     }, [phase]);
 
     const cards = deckCards(items, deck);
+    const batch = batchSeen ? [] : archiveBatch(cards);
     const progress = deckProgress(items, deck);
     const item = cards[0];
     const mail = item?.payload as unknown as MailPayload | undefined;
@@ -352,6 +358,32 @@ const MailDeck: React.FC<MailDeckProps> = ({
 
     const close = () => onClose(release());
 
+    // The mails checked in the batch: archived by Hermes, like one by one.
+    const archiveAll = (keys: string[]) => {
+        setBatchSeen(true);
+        const chosen = batch.filter((entry) => keys.includes(entry.key));
+        if (chosen.length === 0) return;
+        step({ type: 'batch', keys: chosen.map((entry) => entry.key) });
+        Promise.all(
+            chosen.map((entry) =>
+                send({
+                    key: entry.key,
+                    mailUid: (entry.payload as unknown as MailPayload).mail_uid,
+                    decision: 'archive',
+                    payload: {},
+                    archive: false,
+                })
+            )
+        ).then(() =>
+            showSuccessToast(
+                t('triage.batch.done', '{{count}} archivages demandés', {
+                    count: chosen.length,
+                })
+            )
+        );
+        setPhase('enter');
+    };
+
     useEffect(() => {
         const onKey = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
@@ -370,6 +402,8 @@ const MailDeck: React.FC<MailDeckProps> = ({
                 return;
             }
             if (event.altKey || event.ctrlKey || event.metaKey) return;
+            // The batch screen has its own buttons; the card keys wait.
+            if (batch.length > 0) return;
             if (!item) return;
             // A focused button keeps its own Enter.
             const onButton =
@@ -511,16 +545,23 @@ const MailDeck: React.FC<MailDeckProps> = ({
             </div>
 
             <main className="flex flex-1 items-start justify-center overflow-y-auto px-6 pb-6 pt-4 max-sm:px-4 sm:items-center">
-                {!item || !mail || buttons.length === 0 ? (
+                {batch.length > 0 ? (
+                    <MailBatch
+                        cards={batch}
+                        onArchive={archiveAll}
+                        onOneByOne={() => setBatchSeen(true)}
+                    />
+                ) : !item || !mail || buttons.length === 0 ? (
                     <div className="text-center" data-testid="mail-deck-done">
                         <p className="text-title-m font-semibold">
                             {t('triage.deck.done', 'Tout est trié')}
                         </p>
-                        <div className="mt-4 flex justify-center gap-2">
+                        <div className="mt-4 flex flex-wrap justify-center gap-2">
                             {deck.held && undoButton}
                             <Button variant="primary" size="md" onClick={close}>
                                 {t('triage.deck.back', 'Retour à « À trier »')}
                             </Button>
+                            <PluginActions place="mail" />
                         </div>
                     </div>
                 ) : (
@@ -814,12 +855,14 @@ const MailDeck: React.FC<MailDeckProps> = ({
                     </span>
                 )}
                 <span className="flex-1" />
-                <span className="text-label-m text-surface-on-variant max-sm:hidden">
-                    {t(
-                        'triage.deck.keys',
-                        'Entrée ou → : conseil · 1–5 : choisir · ← : plus tard · ↓ : passer · Ctrl+Z : annuler · Échap : fermer'
-                    )}
-                </span>
+                {batch.length === 0 && (
+                    <span className="text-label-m text-surface-on-variant max-sm:hidden">
+                        {t(
+                            'triage.deck.keys',
+                            'Entrée ou → : conseil · 1–5 : choisir · ← : plus tard · ↓ : passer · Ctrl+Z : annuler · Échap : fermer'
+                        )}
+                    </span>
+                )}
             </footer>
         </div>
     );

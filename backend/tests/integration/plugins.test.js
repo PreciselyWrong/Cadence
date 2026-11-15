@@ -710,6 +710,169 @@ describe('Plugins', () => {
         });
     });
 
+    describe('run actions', () => {
+        const RUN_CODE = `
+module.exports = {
+  activate(ctx) {
+    ctx.actions.onRun('fetch', async ({ user, place, context }) => {
+      globalThis.__pluginRuns.push({ user: user.id, email: user.email, place, context });
+      if (context.fail === 'yes') throw new Error('boom');
+      if (context.busy === 'yes') return { ok: false, message: ' Déjà en cours. ' };
+      return { message: 'Tri lancé.' + 'x'.repeat(300) };
+    }, { available: () => ctx.settings.get('ready') === true });
+    let thrown = null;
+    try { ctx.actions.onRun('undeclared', () => ({})); } catch (error) { thrown = error.message; }
+    ctx.storage.set('thrown', thrown);
+  },
+};
+`;
+        const runManifest = () =>
+            manifestOf('hello', {
+                permissions: [],
+                events: [],
+                settings: [
+                    {
+                        key: 'ready',
+                        type: 'boolean',
+                        label: 'Ready',
+                        default: true,
+                    },
+                ],
+                actions: [
+                    {
+                        id: 'fetch',
+                        label: 'Relever',
+                        places: ['mail'],
+                        run: true,
+                    },
+                ],
+            });
+
+        beforeEach(() => {
+            globalThis.__pluginRuns = [];
+        });
+
+        it('lists a run button without a page while the plugin says it can run', async () => {
+            writePlugin('hello', runManifest(), RUN_CODE);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: true });
+            expect(
+                (await otherAgent.get('/api/plugins/menu')).body.actions
+            ).toEqual([
+                {
+                    plugin: 'hello',
+                    id: 'fetch',
+                    label: 'Relever',
+                    places: ['mail'],
+                    run: true,
+                },
+            ]);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ settings: { ready: false } });
+            expect(
+                (await otherAgent.get('/api/plugins/menu')).body.actions
+            ).toEqual([]);
+            expect(
+                (
+                    await otherAgent
+                        .post('/api/plugins/hello/actions/fetch/run')
+                        .send({ place: 'mail' })
+                ).status
+            ).toBe(404);
+        });
+
+        it('runs the handler for the signed-in user and returns its message', async () => {
+            writePlugin('hello', runManifest(), RUN_CODE);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: true });
+            const res = await otherAgent
+                .post('/api/plugins/hello/actions/fetch/run')
+                .send({
+                    place: 'mail',
+                    context: { count: '3', nested: { a: 1 } },
+                });
+            expect(res.status).toBe(200);
+            expect(res.body.ok).toBe(true);
+            expect(res.body.message).toMatch(/^Tri lancé\./);
+            expect(res.body.message.length).toBe(200);
+            expect(globalThis.__pluginRuns).toEqual([
+                {
+                    user: other.id,
+                    email: other.email,
+                    place: 'mail',
+                    context: { count: '3' },
+                },
+            ]);
+            expect(registry.runtimeError('hello')).toBeNull();
+        });
+
+        it('answers 409 with the message when the plugin declines', async () => {
+            writePlugin('hello', runManifest(), RUN_CODE);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: true });
+            const res = await otherAgent
+                .post('/api/plugins/hello/actions/fetch/run')
+                .send({ place: 'mail', context: { busy: 'yes' } });
+            expect(res.status).toBe(409);
+            expect(res.body).toEqual({ ok: false, message: 'Déjà en cours.' });
+        });
+
+        it('answers 500 with a code when the handler fails, without its message', async () => {
+            writePlugin('hello', runManifest(), RUN_CODE);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: true });
+            const res = await otherAgent
+                .post('/api/plugins/hello/actions/fetch/run')
+                .send({ place: 'mail', context: { fail: 'yes' } });
+            expect(res.status).toBe(500);
+            expect(res.body).toEqual({ error: 'action_failed' });
+        });
+
+        it('refuses a place the action does not show in, an unknown action and a signed-out call', async () => {
+            writePlugin('hello', runManifest(), RUN_CODE);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: true });
+            expect(
+                (
+                    await otherAgent
+                        .post('/api/plugins/hello/actions/fetch/run')
+                        .send({ place: 'plan' })
+                ).status
+            ).toBe(400);
+            expect(
+                (
+                    await otherAgent
+                        .post('/api/plugins/hello/actions/nope/run')
+                        .send({ place: 'mail' })
+                ).status
+            ).toBe(404);
+            expect(
+                (
+                    await request(app)
+                        .post('/api/plugins/hello/actions/fetch/run')
+                        .send({ place: 'mail' })
+                ).status
+            ).toBe(401);
+            expect(globalThis.__pluginRuns).toEqual([]);
+        });
+
+        it('refuses a handler for an action the manifest does not declare as run', async () => {
+            writePlugin('hello', runManifest(), RUN_CODE);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: true });
+            const row = await Plugin.findOne({ where: { slug: 'hello' } });
+            await registry.deactivate('hello');
+            expect(row.storage.thrown).toMatch(/undeclared/);
+        });
+    });
+
     describe('sidebar entry and page', () => {
         const withMenu = (extra = {}) =>
             manifestOf('hello', {

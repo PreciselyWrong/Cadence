@@ -991,3 +991,10 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Problème** : sur Aujourd'hui et Planifier, un clic sur un événement Google ouvrait une carte en lecture seule, description en HTML brut (`<p>…</p>`) ; seule la page Agenda permettait de le modifier.
 - **Décision** : un seul composant `Calendar/CalendarEventDetail.tsx` pour les trois pages : éditeur (Enregistrer, Supprimer en deux clics) pour un agenda Google en deux sens, carte en lecture seule sinon ; la description s'affiche et s'édite en texte (`eventDescription.ts`), et n'est renvoyée à Google que si elle a changé. Android : description déjà en texte, modification par l'app Agenda du téléphone.
+
+## Tri des mails : relever maintenant, archiver le bruit d'un coup (2026-11-15)
+
+- **Problème** : les cartes Mail n'arrivaient qu'avec le job de 6 h 30 ; et le paquet faisait passer une à une les newsletters que l'agent conseillait déjà d'archiver.
+- **Décision** : bouton « Relever les mails » (action `run` du plugin Hermes) dans l'en-tête d'« À trier » et en fin de paquet : le job tourne tout de suite, un message dit ce qui se passe ; à l'ouverture du paquet, dès deux mails conseillés « Archiver », un écran « N mails à archiver » avec une case cochée par mail, « Archiver les N » et « Les voir un par un ». « Relancer le Point emploi » dans l'en-tête de Carrière. Les boutons `run` sont désactivés pendant l'appel et jamais mis en file hors ligne.
+- **Android** : même comportement dans la même étape (Triage, fin du paquet, Carrière).
+

@@ -241,7 +241,18 @@
       "project": "Dự án"
     }
   },
+  "pluginRun": {
+    "done": "Đã bắt đầu.",
+    "failed": "Tiện ích không thể thực hiện."
+  },
   "triage": {
+    "batch": {
+      "title": "{{count}} email cần lưu trữ",
+      "hint": "Bộ phân loại không thấy việc cần làm. Bỏ chọn những thư muốn giữ.",
+      "archive": "Lưu trữ {{count}}",
+      "oneByOne": "Xem từng thư",
+      "done": "Đã yêu cầu lưu trữ {{count}}"
+    },
     "settings": {
       "calendars": "Lịch được đọc",
       "noCalendars": "Chưa có lịch. Thêm lịch trong Hồ sơ › Lịch.",

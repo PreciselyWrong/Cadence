@@ -14,7 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
 
@@ -26,6 +29,9 @@ class PluginError(val code: Int, message: String?) : IOException(message ?: "HTT
 
 /** Aucun serveur configuré sur cet appareil. */
 class NotConnected : IOException("Aucun serveur configuré")
+
+/** Réponse d'une action `run` : `ok` vaut faux quand le plugin décline (409) avec sa raison. */
+data class PluginRunResult(val ok: Boolean, val message: String)
 
 /**
  * API des plugins (`backend/modules/plugins/`), en ligne seulement : ce sont des réglages du serveur, rien n'est
@@ -58,9 +64,38 @@ class PluginsClient(private val session: suspend () -> ServerSession?) {
     suspend fun install(url: String): Result<Unit> =
         unit { request("POST", "/api/plugins/install", buildJsonObject { put("url", url.trim()) }) }
 
+    suspend fun runAction(
+        plugin: String,
+        actionId: String,
+        place: String,
+        context: Map<String, String> = emptyMap(),
+    ): Result<PluginRunResult> = attempt {
+        val payload = buildJsonObject {
+            put("place", place)
+            put("context", buildJsonObject { context.forEach { (key, value) -> put(key, value) } })
+        }
+        val (code, json) = requestRaw(
+            method = "POST",
+            path = plugin(plugin) + "/actions/" + URLEncoder.encode(actionId, "UTF-8") + "/run",
+            body = payload,
+            allowConflict = true,
+        )
+        val ok = (json["ok"] as? JsonPrimitive)?.booleanOrNull ?: (code in 200..299)
+        val message = (json["message"] as? JsonPrimitive)?.contentOrNull.orEmpty()
+        PluginRunResult(ok = ok, message = message)
+    }
+
     private fun plugin(id: String) = "/api/plugins/" + URLEncoder.encode(id, "UTF-8")
 
-    private suspend fun request(method: String, path: String, body: JsonObject? = null): JsonObject = withContext(Dispatchers.IO) {
+    private suspend fun request(method: String, path: String, body: JsonObject? = null): JsonObject =
+        requestRaw(method, path, body, allowConflict = false).second
+
+    private suspend fun requestRaw(
+        method: String,
+        path: String,
+        body: JsonObject?,
+        allowConflict: Boolean,
+    ): Pair<Int, JsonObject> = withContext(Dispatchers.IO) {
         val server = server()
         val connection = (URL(server.baseUrl.trimEnd('/') + path).openConnection() as HttpURLConnection).apply {
             requestMethod = method
@@ -77,11 +112,14 @@ class PluginsClient(private val session: suspend () -> ServerSession?) {
         try {
             if (body != null) connection.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
             val code = connection.responseCode
-            if (code !in 200..299) {
+            val isConflict = allowConflict && code == HttpURLConnection.HTTP_CONFLICT
+            if (code !in 200..299 && !isConflict) {
                 val text = runCatching { connection.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } }.getOrNull()
                 throw PluginError(code, PluginJson.error(parse(text)))
             }
-            parse(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }) ?: JsonObject(emptyMap())
+            val stream = if (isConflict) connection.errorStream ?: connection.inputStream else connection.inputStream
+            val json = parse(stream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }) ?: JsonObject(emptyMap())
+            code to json
         } finally {
             connection.disconnect()
         }

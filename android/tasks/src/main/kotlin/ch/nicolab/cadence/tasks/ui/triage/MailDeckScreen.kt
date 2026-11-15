@@ -63,6 +63,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
@@ -83,6 +84,7 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
 import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
 import ch.nicolab.cadence.tasks.triage.DeckProgress
@@ -117,6 +119,7 @@ internal fun MailDeckScreen(
     today: LocalDate,
     undoable: Boolean,
     onDecide: (TriageItemDto, MailDecision, JsonObject, Boolean) -> Unit,
+    onArchiveBatch: (List<TriageItemDto>) -> Unit,
     onSkip: (TriageItemDto) -> Unit,
     onUndo: () -> Unit,
     onClose: () -> Unit,
@@ -124,6 +127,8 @@ internal fun MailDeckScreen(
     BackHandler(onBack = onClose)
     val cards = MailDeck.cards(items)
     val current = cards.firstOrNull()
+    var batchSeen by rememberSaveable { mutableStateOf(false) }
+    val batch = if (batchSeen) emptyList() else MailDeck.archiveBatch(cards)
     // Le total est celui de l'ouverture : chaque carte décidée fait avancer « 4 / 17 ».
     var total by remember { mutableIntStateOf(0) }
     LaunchedEffect(cards.size) { total = maxOf(total, cards.size) }
@@ -136,42 +141,149 @@ internal fun MailDeckScreen(
                 backDescription = stringResource(R.string.triage_deck_close),
             )
             if (current != null) DeckProgressBar(MailDeck.progress(cards.size, total))
-            AnimatedContent(
-                targetState = current,
-                contentKey = { it?.first?.key },
-                transitionSpec = {
-                    (fadeIn(tween(ENTER_MS)) + slideInVertically(tween(ENTER_MS)) { it / 16 }) togetherWith fadeOut(tween(LEAVE_MS))
-                },
-                label = "mail-deck",
-                modifier = Modifier.weight(1f),
-            ) { pair ->
-                if (pair == null) {
-                    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-                        EmptyState(
-                            icon = Icons.Outlined.DoneAll,
-                            title = stringResource(R.string.triage_deck_done),
-                            message = stringResource(R.string.triage_deck_done_message),
-                        )
-                        PrimaryAction(
-                            stringResource(R.string.triage_deck_back),
-                            Modifier.fillMaxWidth().padding(horizontal = Space.gutter),
-                            onClick = onClose,
+            if (batch.isNotEmpty()) {
+                MailBatchPanel(
+                    batch = batch,
+                    onArchive = { chosen ->
+                        batchSeen = true
+                        onArchiveBatch(chosen)
+                    },
+                    onOneByOne = { batchSeen = true },
+                    modifier = Modifier.weight(1f),
+                )
+            } else {
+                AnimatedContent(
+                    targetState = current,
+                    contentKey = { it?.first?.key },
+                    transitionSpec = {
+                        (fadeIn(tween(ENTER_MS)) + slideInVertically(tween(ENTER_MS)) { it / 16 }) togetherWith fadeOut(tween(LEAVE_MS))
+                    },
+                    label = "mail-deck",
+                    modifier = Modifier.weight(1f),
+                ) { pair ->
+                    if (pair == null) {
+                        Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+                            EmptyState(
+                                icon = Icons.Outlined.DoneAll,
+                                title = stringResource(R.string.triage_deck_done),
+                                message = stringResource(R.string.triage_deck_done_message),
+                            )
+                            PrimaryAction(
+                                stringResource(R.string.triage_deck_back),
+                                Modifier.fillMaxWidth().padding(horizontal = Space.gutter),
+                                onClick = onClose,
+                            )
+                            Row(
+                                Modifier.fillMaxWidth().padding(horizontal = Space.gutter, vertical = Space.sm),
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+                                PluginActionButtons(place = "mail", context = emptyMap())
+                            }
+                        }
+                    } else {
+                        val (item, card) = pair
+                        DeckCard(
+                            card = card,
+                            archiveAvailable = archiveAvailable,
+                            today = today,
+                            undoable = undoable,
+                            onDecide = { decision, payload, archive -> onDecide(item, decision, payload, archive) },
+                            onSkip = { onSkip(item) },
+                            onUndo = onUndo,
                         )
                     }
-                } else {
-                    val (item, card) = pair
-                    DeckCard(
-                        card = card,
-                        archiveAvailable = archiveAvailable,
-                        today = today,
-                        undoable = undoable,
-                        onDecide = { decision, payload, archive -> onDecide(item, decision, payload, archive) },
-                        onSkip = { onSkip(item) },
-                        onUndo = onUndo,
-                    )
                 }
             }
         }
+    }
+}
+
+/**
+ * Avant le paquet : les mails que l'agent conseille d'archiver, tous cochés. Un geste vide le bruit ; décocher garde
+ * le mail dans le paquet.
+ */
+@Composable
+private fun MailBatchPanel(
+    batch: List<Pair<TriageItemDto, MailCardData>>,
+    onArchive: (List<TriageItemDto>) -> Unit,
+    onOneByOne: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var kept by rememberSaveable { mutableStateOf(emptySet<String>()) }
+    val chosen = batch.map { it.first }.filter { it.key !in kept }
+    Column(
+        modifier.fillMaxSize().padding(horizontal = Space.gutter, vertical = Space.md),
+        verticalArrangement = Arrangement.spacedBy(Space.md),
+    ) {
+        Panel(Modifier.fillMaxWidth().weight(1f, fill = false)) {
+            Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+                Text(
+                    pluralStringResource(R.plurals.triage_batch_title, batch.size, batch.size),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = cadence.onSurface,
+                )
+                Text(
+                    stringResource(R.string.triage_batch_hint),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = cadence.onSurfaceVariant,
+                )
+                Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState())) {
+                    batch.forEach { (item, card) ->
+                        val checked = item.key !in kept
+                        val title = listOfNotNull(
+                            card.sender,
+                            card.subject ?: stringResource(R.string.triage_mail_no_subject),
+                        ).joinToString(" · ")
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = Size.touch)
+                                .toggleable(
+                                    value = checked,
+                                    role = Role.Checkbox,
+                                    onValueChange = { nowChecked ->
+                                        kept = if (nowChecked) kept - item.key else kept + item.key
+                                    },
+                                )
+                                .padding(vertical = Space.xs),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                        ) {
+                            Checkbox(checked = checked, onCheckedChange = null)
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    title,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = cadence.onSurface,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                if (card.summary.isNotBlank()) {
+                                    Text(
+                                        card.summary,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = cadence.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        PrimaryAction(
+            pluralStringResource(R.plurals.triage_batch_archive, chosen.size, chosen.size),
+            Modifier.fillMaxWidth(),
+            enabled = chosen.isNotEmpty(),
+            onClick = { onArchive(chosen) },
+        )
+        SecondaryAction(
+            stringResource(R.string.triage_batch_one_by_one),
+            Modifier.fillMaxWidth(),
+            onClick = onOneByOne,
+        )
     }
 }
 

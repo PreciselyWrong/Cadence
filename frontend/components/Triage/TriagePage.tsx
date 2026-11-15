@@ -321,6 +321,7 @@ const TriagePage: React.FC = () => {
                                 )}
                             </Button>
                         )}
+                        <PluginActions place="mail" />
                         <PluginActions place="triage" />
                     </>
                 }
