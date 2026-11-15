@@ -76,6 +76,7 @@ import ch.nicolab.cadence.tasks.model.TagColors
 import ch.nicolab.cadence.tasks.model.RelativeDay
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity
+import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.ui.TodayItem
 import ch.nicolab.cadence.tasks.widget.WidgetCompletions
 import ch.nicolab.cadence.tasks.widget.WidgetTrace
@@ -157,7 +158,8 @@ class TodayWidget : GlanceAppWidget() {
         val tagColors = TagColors.byUid(tagList)
         val firstDayOfWeek = TasksGraph.connection(app).observe().first()?.firstDayOfWeek ?: DayOfWeek.MONDAY
         val weekStart = Funnel.weekStart(today, firstDayOfWeek)
-        val selection = selectWidgetTasks(tasks, eventsOf(app, config, today, zone), config, today, zone, now, tagList, weekStart)
+        val plan = PlanSlotsStore(app).entries()
+        val selection = selectWidgetTasks(tasks, eventsOf(app, config, today, zone), config, today, zone, now, tagList, weekStart, plan)
         val facets = if (config.habitPlacement == HabitPlacement.HIDDEN) {
             emptyList()
         } else {
@@ -196,6 +198,7 @@ class TodayWidget : GlanceAppWidget() {
             add(app.repository.observeWidgetRevisions())
             add(calendar.globalSettings)
             add(TodayWidgetReloads.requests)
+            add(PlanSlotsStore(app).entryChanges())
             if (showEvents) add(calendar.events(todayRange(today, zone), CalendarSurface.TASKS))
         }
         return sources.merge().map { }

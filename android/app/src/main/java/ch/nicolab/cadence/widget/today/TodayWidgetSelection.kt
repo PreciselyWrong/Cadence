@@ -7,6 +7,8 @@ import ch.nicolab.cadence.tasks.model.TagPaths
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.planning.PlanEntry
+import ch.nicolab.cadence.tasks.planning.ServerPlan
 import ch.nicolab.cadence.tasks.ui.TodayItem
 import ch.nicolab.cadence.tasks.ui.mergeTodayItems
 import java.time.Instant
@@ -23,9 +25,17 @@ data class TodaySelection(
     val overdue: List<TaskItem>,
     val tasks: List<TaskItem>,
     val events: List<EventWithDone>,
-)
+    /** Tâches au plan d'aujourd'hui : elles sont du jour, quelle que soit leur échéance. */
+    val plannedToday: Set<String> = emptySet(),
+) {
+    /** Jour où la tâche se range : aujourd'hui si le plan l'y place, sinon son échéance. */
+    fun dayOf(task: TaskItem, today: LocalDate): LocalDate? = if (task.uid in plannedToday) today else task.dueDay
+}
 
-/** Filtre et trie les tâches et événements du jour selon [config]. Fonction pure. */
+/**
+ * Filtre et trie les tâches et événements du jour selon [config]. Fonction pure. [plan] : le plan du jour du serveur
+ * gardé sur l'appareil ; les périmètres du jour le suivent comme Aujourd'hui dans l'app ([ServerPlan.apply]).
+ */
 fun selectWidgetTasks(
     tasks: List<TaskItem>,
     events: List<EventWithDone>,
@@ -35,18 +45,25 @@ fun selectWidgetTasks(
     now: Instant = Instant.now(),
     tags: List<TagItem> = emptyList(),
     weekStart: LocalDate,
+    plan: List<PlanEntry> = emptyList(),
 ): TodaySelection {
     // Filtrer par une étiquette parente inclut ses sous-étiquettes, comme sur le web.
     val tagScope = TagPaths.withDescendants(tags, config.tagUids)
-    val candidates = scopeTasks(tasks, config.taskScope, today, now, zone, weekStart)
+    val plannedToday = if (config.taskScope.isToday) {
+        plan.filter { it.day == today }.mapTo(HashSet()) { it.uid }
+    } else {
+        emptySet()
+    }
+    val isLate = { task: TaskItem -> task.uid !in plannedToday && task.isOverdue(today) }
+    val candidates = scopeTasks(tasks, config.taskScope, today, now, zone, weekStart, plan)
         .filter { !config.highPriorityOnly || it.priority == TaskPriority.HIGH }
         .filter { config.projectUids.isEmpty() || it.projectUid in config.projectUids }
         .filter { tagScope.isEmpty() || it.tagUids.any(tagScope::contains) }
         .filter { !config.hideRecurring || !it.isRecurring }
         .sortedWith(comparatorOf(config.sort))
     val overdueFirst = config.showOverdueSection
-    val overdue = if (overdueFirst) candidates.filter { it.isOverdue(today) }.sortedWith(dueOrder) else emptyList()
-    val others = candidates.filterNot { overdueFirst && it.isOverdue(today) }
+    val overdue = if (overdueFirst) candidates.filter(isLate).sortedWith(dueOrder) else emptyList()
+    val others = candidates.filterNot { overdueFirst && isLate(it) }
     val shownEvents = if (config.showEvents) {
         events.sortedWith(compareBy<EventWithDone>({ !it.event.allDay }, { it.event.localStart(zone) }, { it.event.title }))
     } else {
@@ -58,6 +75,7 @@ fun selectWidgetTasks(
         overdue = overdue,
         tasks = others,
         events = shownEvents,
+        plannedToday = plannedToday,
     )
 }
 
@@ -90,7 +108,7 @@ fun taskSections(selection: TodaySelection, config: TodayWidgetConfig, today: Lo
                 ?.let { TodaySection(null, overdue = false, labelled = false, tasks = it, items = merged(it, withEvents = true)) },
         )
     }
-    val byDay = (selection.overdue + selection.tasks).groupBy { it.dueDay }.toMutableMap()
+    val byDay = (selection.overdue + selection.tasks).groupBy { selection.dayOf(it, today) }.toMutableMap()
     if (events.isNotEmpty() && today !in byDay) byDay[today] = emptyList()
     val days = byDay.keys.sortedWith(nullsLast())
     val single = days.size == 1 && days.single()?.isBefore(today) != true
@@ -122,12 +140,19 @@ private fun scopeTasks(
     now: Instant,
     zone: ZoneId,
     weekStart: LocalDate,
+    plan: List<PlanEntry>,
 ): List<TaskItem> =
     when (scope) {
-        TaskScope.OVERDUE_AND_TODAY -> TaskViews.today(tasks, today, now)
+        TaskScope.OVERDUE_AND_TODAY -> {
+            val (late, due) = TaskViews.today(tasks, today, now).partition { it.isOverdue(today) }
+            ServerPlan.apply(late, due, tasks, plan, today, zone).let { it.overdue + it.overduePlanned + it.today }
+        }
         // Une série en retard est exclue d'« aujourd'hui seulement » par son occurrence enregistrée ; son occurrence du jour y reste.
-        TaskScope.TODAY -> TaskViews.today(tasks, today, now).filterNot { it.isOverdue(today) } +
-            TaskViews.todayOccurrences(tasks, today, now, zone)
+        TaskScope.TODAY -> {
+            val due = TaskViews.today(tasks, today, now).filterNot { it.isOverdue(today) } +
+                TaskViews.todayOccurrences(tasks, today, now, zone)
+            ServerPlan.apply(emptyList(), due, tasks, plan, today, zone).today
+        }
         TaskScope.TOMORROW -> TaskViews.upcoming(tasks, today, now, zone, days = 1).values.flatten()
         TaskScope.NEXT_3 -> TaskViews.upcoming(tasks, today, now, zone, days = 3).values.flatten()
         TaskScope.NEXT_7 -> TaskViews.upcoming(tasks, today, now, zone, days = 7).values.flatten()
@@ -138,6 +163,8 @@ private fun scopeTasks(
         }
         TaskScope.INBOX -> TaskViews.unsorted(tasks, now, weekStart, today.withDayOfMonth(1))
     }
+
+private val TaskScope.isToday: Boolean get() = this == TaskScope.OVERDUE_AND_TODAY || this == TaskScope.TODAY
 
 private fun TaskItem.isOverdue(today: LocalDate): Boolean = dueDay?.isBefore(today) == true
 

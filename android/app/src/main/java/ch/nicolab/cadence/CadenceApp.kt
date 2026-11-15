@@ -64,6 +64,12 @@ class CadenceApp : Application() {
                 .debounce(100)
                 .collect { ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this@CadenceApp) }
         }
+        // Un plan du jour relu ou modifié range autrement les tâches du widget du jour, comme Aujourd'hui dans l'app.
+        applicationScope.launch {
+            ch.nicolab.cadence.tasks.reminder.PlanSlotsStore(this@CadenceApp).entryChanges()
+                .drop(1)
+                .collect { ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this@CadenceApp) }
+        }
         // Masquer ou rétablir un événement le retire ou le rend aussitôt au widget du jour.
         applicationScope.launch {
             ch.nicolab.cadence.calendar.CalendarGraph.repository(this@CadenceApp).hiddenEvents()

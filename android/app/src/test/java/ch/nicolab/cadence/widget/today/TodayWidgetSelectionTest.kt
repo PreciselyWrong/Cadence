@@ -4,6 +4,7 @@ import ch.nicolab.cadence.calendar.CalendarEvent
 import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.planning.PlanEntry
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.ui.mergeTodayItems
 import java.time.Instant
@@ -252,12 +253,56 @@ class TodayWidgetSelectionTest {
         assertEquals(emptyList<String>(), both.tasks.map { it.uid })
     }
 
+    @Test
+    fun `le plan du jour range les taches comme l'app`() {
+        val tasks = listOf(
+            task("lateToday", today.minusDays(1)),
+            task("dueLater", today),
+            task("plannedOnly", today.plusDays(5)),
+            task("dueToday", today),
+        )
+        val plan = listOf(
+            PlanEntry("lateToday", today, null, null),
+            PlanEntry("plannedOnly", today, null, null),
+            PlanEntry("dueLater", today.plusDays(2), null, null),
+        )
+
+        val selection = select(tasks, TodayWidgetConfig(showOverdueSection = true), plan = plan)
+
+        assertEquals(emptyList<String>(), selection.overdue.map { it.uid })
+        assertEquals(setOf("lateToday", "plannedOnly", "dueToday"), selection.tasks.map { it.uid }.toSet())
+    }
+
+    @Test
+    fun `une tache en retard prevue aujourd'hui rejoint la section du jour`() {
+        val tasks = listOf(task("lateToday", today.minusDays(1)), task("dueToday", today))
+        val plan = listOf(PlanEntry("lateToday", today, null, null))
+        val config = TodayWidgetConfig(groupByDay = true)
+
+        val selection = select(tasks, config, plan = plan)
+        val sections = taskSections(selection, config, today, zone)
+
+        assertEquals(listOf(today), sections.map { it.day })
+        assertEquals(setOf("lateToday", "dueToday"), sections.single().tasks.map { it.uid }.toSet())
+    }
+
+    @Test
+    fun `la portee Aujourd'hui seulement suit aussi le plan`() {
+        val tasks = listOf(task("lateToday", today.minusDays(1)), task("dueLater", today))
+        val plan = listOf(PlanEntry("lateToday", today, null, null), PlanEntry("dueLater", today.plusDays(1), null, null))
+
+        val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.TODAY), plan = plan)
+
+        assertEquals(listOf("lateToday"), selection.tasks.map { it.uid })
+    }
+
     private fun select(
         tasks: List<TaskItem>,
         config: TodayWidgetConfig,
         events: List<EventWithDone> = emptyList(),
         tags: List<ch.nicolab.cadence.tasks.model.TagItem> = emptyList(),
-    ) = selectWidgetTasks(tasks, events, config, today, zone, now, tags, weekStart)
+        plan: List<PlanEntry> = emptyList(),
+    ) = selectWidgetTasks(tasks, events, config, today, zone, now, tags, weekStart, plan)
 
     private fun task(
         uid: String,
