@@ -245,6 +245,31 @@
     "done": "已启动。",
     "failed": "插件无法执行。"
   },
+  "decisions": {
+    "deck": {
+      "open": "决定 ({{count}})",
+      "title": "决定",
+      "close": "关闭",
+      "progressLabel": "第 {{position}} / {{total}} 项决定",
+      "loadError": "无法加载决定。",
+      "back": "返回「待整理」",
+      "done": "全部决定完成",
+      "readMore": "展开阅读",
+      "collapse": "收起",
+      "openUrl": "打开",
+      "recommended": "推荐",
+      "noteOpen": "附言回复",
+      "notePlaceholder": "给助手的留言",
+      "noteSend": "发送",
+      "later": "稍后",
+      "skip": "跳过",
+      "undo": "撤销",
+      "decided": "已保存决定",
+      "postponed": "明天再来",
+      "noteSent": "已退回助手",
+      "keys": "Enter 或 →：推荐 · 1–5：选择 · ←：稍后 · ↓：跳过 · Ctrl+Z：撤销 · Esc：关闭"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} 封邮件待归档",
@@ -254,6 +279,9 @@
       "done": "已请求归档 {{count}} 封"
     },
     "settings": {
+      "mailRules": "始终归档的发件人",
+      "noMailRules": "暂无发件人。",
+      "removeRule": "移除",
       "calendars": "读取的日历",
       "noCalendars": "没有日历。请在“个人资料 › 日历”中添加。",
       "lookahead": "向前查看的天数",
@@ -285,6 +313,7 @@
       "delete": "删除"
     },
     "mail": {
+      "alwaysArchive": "始终归档此发件人",
             "horizon": {
                 "someday": "某天",
                 "nextMonth": "下月",

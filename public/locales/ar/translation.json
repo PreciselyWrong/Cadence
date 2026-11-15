@@ -261,6 +261,31 @@
     "done": "بدأ التشغيل.",
     "failed": "تعذّر على الإضافة التنفيذ."
   },
+  "decisions": {
+    "deck": {
+      "open": "تقرير ({{count}})",
+      "title": "القرارات",
+      "close": "إغلاق",
+      "progressLabel": "القرار {{position}} من {{total}}",
+      "loadError": "تعذر تحميل القرارات.",
+      "back": "العودة إلى «للفرز»",
+      "done": "تم اتخاذ جميع القرارات",
+      "readMore": "اقرأ المزيد",
+      "collapse": "طي",
+      "openUrl": "فتح",
+      "recommended": "موصى به",
+      "noteOpen": "الرد بملاحظة",
+      "notePlaceholder": "كلمة للوكيل",
+      "noteSend": "إرسال",
+      "later": "لاحقًا",
+      "skip": "تخطي",
+      "undo": "تراجع",
+      "decided": "تم حفظ القرار",
+      "postponed": "يعود غدًا",
+      "noteSent": "أُعيد إلى الوكيل",
+      "keys": "Enter أو →: الموصى به · 1–5: اختر · ←: لاحقًا · ↓: تخطي · Ctrl+Z: تراجع · Esc: إغلاق"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} رسائل للأرشفة",
@@ -270,6 +295,9 @@
       "done": "طُلبت {{count}} عمليات أرشفة"
     },
     "settings": {
+      "mailRules": "المرسلون المؤرشفون دائمًا",
+      "noMailRules": "لا يوجد مرسل.",
+      "removeRule": "إزالة",
       "calendars": "التقويمات المقروءة",
       "noCalendars": "لا يوجد تقويم. أضِف واحدًا من الملف الشخصي › التقويمات.",
       "lookahead": "أيام للنظر إلى الأمام",
@@ -301,6 +329,7 @@
       "delete": "حذف"
     },
     "mail": {
+      "alwaysArchive": "أرشفة هذا المرسل دائمًا",
             "horizon": {
                 "someday": "يومًا ما",
                 "nextMonth": "الشهر القادم",

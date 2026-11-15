@@ -45,6 +45,7 @@ module.exports = (sequelize) => {
                             'share_invitation',
                             'proposal',
                             'mail_ready',
+                            'decisions_ready',
                         ],
                     ],
                 },

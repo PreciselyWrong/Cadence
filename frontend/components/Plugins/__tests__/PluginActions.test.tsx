@@ -157,5 +157,16 @@ describe('PluginActions', () => {
                 await screen.findByText('Le plugin n’a pas pu agir.')
             ).toBeInTheDocument();
         });
+
+        it('shows action status as muted text right after the run button', () => {
+            usePluginMenuStore.setState({
+                items: [],
+                actions: [{ ...mailRun, status: 'relevé à 9 h 12' }],
+            });
+            renderRun();
+            expect(
+                screen.getByTestId('plugin-action-status-hermes-mail-run')
+            ).toHaveTextContent('relevé à 9 h 12');
+        });
     });
 });

@@ -249,6 +249,31 @@
     "done": "Pornit.",
     "failed": "Pluginul nu a putut acționa."
   },
+  "decisions": {
+    "deck": {
+      "open": "Decide ({{count}})",
+      "title": "Decizii",
+      "close": "Închide",
+      "progressLabel": "Decizia {{position}} din {{total}}",
+      "loadError": "Deciziile nu au putut fi încărcate.",
+      "back": "Înapoi la „De sortat”",
+      "done": "Totul este decis",
+      "readMore": "Citește mai mult",
+      "collapse": "Restrânge",
+      "openUrl": "Deschide",
+      "recommended": "Recomandat",
+      "noteOpen": "Răspunde cu o notă",
+      "notePlaceholder": "Un cuvânt pentru agent",
+      "noteSend": "Trimite",
+      "later": "Mai târziu",
+      "skip": "Sari peste",
+      "undo": "Anulează",
+      "decided": "Decizie salvată",
+      "postponed": "Revine mâine",
+      "noteSent": "Trimis înapoi agentului",
+      "keys": "Enter sau →: recomandat · 1–5: alege · ←: mai târziu · ↓: sari · Ctrl+Z: anulează · Esc: închide"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} e-mailuri de arhivat",
@@ -258,6 +283,9 @@
       "done": "{{count}} arhivări cerute"
     },
     "settings": {
+      "mailRules": "Expeditori arhivați mereu",
+      "noMailRules": "Niciun expeditor.",
+      "removeRule": "Elimină",
       "calendars": "Calendare citite",
       "noCalendars": "Niciun calendar. Adaugă unul în Profil › Calendare.",
       "lookahead": "Zile de urmărit înainte",
@@ -289,6 +317,7 @@
       "delete": "Șterge"
     },
     "mail": {
+      "alwaysArchive": "Arhivează mereu acest expeditor",
             "horizon": {
                 "someday": "Cândva",
                 "nextMonth": "Luna viitoare",

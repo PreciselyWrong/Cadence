@@ -245,6 +245,31 @@
     "done": "Startat.",
     "failed": "Tillägget kunde inte agera."
   },
+  "decisions": {
+    "deck": {
+      "open": "Besluta ({{count}})",
+      "title": "Beslut",
+      "close": "Stäng",
+      "progressLabel": "Beslut {{position}} av {{total}}",
+      "loadError": "Kunde inte läsa in besluten.",
+      "back": "Tillbaka till ”Att sortera”",
+      "done": "Allt beslutat",
+      "readMore": "Läs mer",
+      "collapse": "Fäll ihop",
+      "openUrl": "Öppna",
+      "recommended": "Rekommenderat",
+      "noteOpen": "Svara med en anteckning",
+      "notePlaceholder": "Ett ord till agenten",
+      "noteSend": "Skicka",
+      "later": "Senare",
+      "skip": "Hoppa över",
+      "undo": "Ångra",
+      "decided": "Beslut sparat",
+      "postponed": "Tillbaka i morgon",
+      "noteSent": "Skickat tillbaka till agenten",
+      "keys": "Enter eller →: rekommenderat · 1–5: välj · ←: senare · ↓: hoppa over · Ctrl+Z: ångra · Esc: stäng"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} mejl att arkivera",
@@ -254,6 +279,9 @@
       "done": "{{count}} arkiveringar begärda"
     },
     "settings": {
+      "mailRules": "Avsändare som alltid arkiveras",
+      "noMailRules": "Ingen avsändare.",
+      "removeRule": "Ta bort",
       "calendars": "Lästa kalendrar",
       "noCalendars": "Ingen kalender. Lägg till en under Profil › Kalendrar.",
       "lookahead": "Dagar framåt",
@@ -285,6 +313,7 @@
       "delete": "Ta bort"
     },
     "mail": {
+      "alwaysArchive": "Arkivera alltid denna avsändare",
             "horizon": {
                 "someday": "Någon gång",
                 "nextMonth": "Nästa månad",

@@ -1,3 +1,9 @@
+## [1.40.0] : 15 novembre 2026
+
+- Nouveau paquet « Décider » dans « À trier » : les agents y posent ce qu'ils te demandent de trancher (abonnements à garder ou résilier, mises à jour risquées, qui accompagne les enfants, contrats à renouveler, souvenirs contradictoires). Le conseil est mis en avant, un geste décide, l'agent applique ensuite. Une notification « N décisions à prendre » ouvre le paquet.
+- Trier mes mails : « Relever les mails » lance le tri tout de suite, avec l'heure du dernier relevé ; au début du paquet, « Archiver les N » vide d'un geste les mails sans intérêt ; « Toujours archiver cet expéditeur » (règles dans Réglages) ; rendez-vous et réponses passent en tête ; les cartes d'« À trier » montrent les mêmes choix que le paquet.
+- Carrière : « Relancer le Point emploi ». Le serveur doit être redéployé.
+
 ## [1.39.1] — 15 novembre 2026
 
 - Le widget Aujourd'hui montre les mêmes tâches que l'app : il suit le plan du jour. Une tâche prévue aujourd'hui y apparaît même en retard ou sans échéance du jour, une tâche prévue un autre jour en sort, et le widget se met à jour quand le plan change.

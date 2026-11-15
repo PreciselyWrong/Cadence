@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.triage
 
 import ch.nicolab.cadence.tasks.sync.DeferredCall
+import ch.nicolab.cadence.tasks.sync.encodePath
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -8,10 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.put
 
 @Serializable
@@ -46,6 +49,7 @@ data class TriageQueueDto(
     val count: Int = 0,
     /** La passerelle Gmail est réglée : une carte Mail peut archiver son fil. */
     @SerialName("mail_archive") val mailArchive: Boolean = false,
+    @SerialName("decisions_count") val decisionsCount: Int = 0,
 )
 
 /** Les actions proposées et celles que « Corriger » permet de choisir à la place. */
@@ -143,9 +147,44 @@ class TriageRepository internal constructor(
     /** Clés des appels encore gardés pour le prochain passage. */
     internal suspend fun pendingCallKeys(): Set<String> = pendingCalls()
 
+    /** Règles d'expéditeurs archivés automatiquement (`GET /api/triage/mail/rules`), en ligne seulement. */
+    suspend fun listMailRules(): Result<List<MailSenderRule>> = try {
+        val body = call("GET", "/api/triage/mail/rules", emptyMap(), null)
+        Result.success(MailRulesParser.parse(body))
+    } catch (error: CancellationException) {
+        throw error
+    } catch (error: Exception) {
+        Result.failure(error)
+    }
+
+    /** Retire une règle d'expéditeur (`DELETE /api/triage/mail/rules/:address`), en ligne seulement. */
+    suspend fun deleteMailRule(address: String): Result<Unit> = try {
+        call("DELETE", "/api/triage/mail/rules/${encodePath(address)}", emptyMap(), null)
+        Result.success(Unit)
+    } catch (error: CancellationException) {
+        throw error
+    } catch (error: Exception) {
+        Result.failure(error)
+    }
+
     private fun decode(raw: String): TriageQueueDto? = runCatching { JSON.decodeFromString<TriageQueueDto>(raw) }.getOrNull()
 
     private companion object {
         val JSON = Json { ignoreUnknownKeys = true }
+    }
+}
+
+/** Règle d'expéditeur archivé automatiquement (`GET /api/triage/mail/rules`). */
+data class MailSenderRule(val address: String, val action: String = "archive")
+
+internal object MailRulesParser {
+    fun parse(body: JsonObject): List<MailSenderRule> {
+        val array = (body["rules"] as? JsonArray) ?: (body["items"] as? JsonArray) ?: return emptyList()
+        return array.mapNotNull { element ->
+            val obj = element as? JsonObject ?: return@mapNotNull null
+            val address = (obj["address"] as? JsonPrimitive)?.contentOrNull?.trim()?.takeIf(String::isNotBlank) ?: return@mapNotNull null
+            val action = (obj["action"] as? JsonPrimitive)?.contentOrNull?.trim()?.takeIf(String::isNotBlank) ?: "archive"
+            MailSenderRule(address = address, action = action)
+        }
     }
 }

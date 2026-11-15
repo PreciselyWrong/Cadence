@@ -64,6 +64,8 @@ internal fun createPlanEdits(context: Context): PlanEdits = TasksRuntime.get(con
 
 internal fun createTriage(context: Context): ch.nicolab.cadence.tasks.triage.TriageRepository = TasksRuntime.get(context).triage
 
+internal fun createDecisions(context: Context): ch.nicolab.cadence.tasks.decisions.DecisionsRepository = TasksRuntime.get(context).decisions
+
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
 
@@ -155,6 +157,13 @@ internal class TasksRuntime private constructor(context: Context) {
 
     val triage = ch.nicolab.cadence.tasks.triage.TriageRepository(
         store = ch.nicolab.cadence.tasks.triage.TriageStore.of(appContext),
+        call = api::call,
+        pendingCalls = { database.deferredCallDao().all().map { it.key }.toSet() },
+        defer = { call -> repository.defer(call).getOrThrow() },
+    )
+
+    val decisions = ch.nicolab.cadence.tasks.decisions.DecisionsRepository(
+        store = ch.nicolab.cadence.tasks.decisions.DecisionsStore.of(appContext),
         call = api::call,
         pendingCalls = { database.deferredCallDao().all().map { it.key }.toSet() },
         defer = { call -> repository.defer(call).getOrThrow() },

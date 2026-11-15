@@ -245,6 +245,31 @@
     "done": "Gestartet.",
     "failed": "Das Plugin konnte nicht handeln."
   },
+  "decisions": {
+    "deck": {
+      "open": "Entscheiden ({{count}})",
+      "title": "Entscheidungen",
+      "close": "Schließen",
+      "progressLabel": "Entscheidung {{position}} von {{total}}",
+      "loadError": "Entscheidungen konnten nicht geladen werden.",
+      "back": "Zurück zu „Zu sortieren“",
+      "done": "Alles entschieden",
+      "readMore": "Mehr lesen",
+      "collapse": "Einklappen",
+      "openUrl": "Öffnen",
+      "recommended": "Empfohlen",
+      "noteOpen": "Mit einer Notiz antworten",
+      "notePlaceholder": "Ein Wort für den Agenten",
+      "noteSend": "Senden",
+      "later": "Später",
+      "skip": "Überspringen",
+      "undo": "Rückgängig",
+      "decided": "Entscheidung gespeichert",
+      "postponed": "Morgen wieder",
+      "noteSent": "An den Agenten zurückgesendet",
+      "keys": "Eingabe oder →: Empfehlung · 1–5: wählen · ←: später · ↓: überspringen · Strg+Z: rückgängig · Esc: schließen"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} E-Mails zum Archivieren",
@@ -254,6 +279,9 @@
       "done": "{{count}} Archivierungen angefordert"
     },
     "settings": {
+      "mailRules": "Immer archivierte Absender",
+      "noMailRules": "Kein Absender.",
+      "removeRule": "Entfernen",
       "calendars": "Gelesene Kalender",
       "noCalendars": "Kein Kalender. Füge einen unter Profil › Kalender hinzu.",
       "lookahead": "Vorausschau in Tagen",
@@ -285,6 +313,7 @@
       "delete": "Löschen"
     },
     "mail": {
+      "alwaysArchive": "Diesen Absender immer archivieren",
             "horizon": {
                 "someday": "Irgendwann",
                 "nextMonth": "Nächsten Monat",

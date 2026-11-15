@@ -18,6 +18,10 @@ jest.mock('../../../utils/triageService', () => ({
     applyTriage: jest.fn(),
     decideMail: jest.fn(),
 }));
+jest.mock('../../../utils/decisionsService', () => ({
+    fetchDecisions: jest.fn(() => Promise.resolve({ items: [], count: 0 })),
+    decideDecision: jest.fn(() => Promise.resolve({ ok: true })),
+}));
 const mockToasts = {
     showErrorToast: jest.fn(),
     showSuccessToast: jest.fn(),
@@ -325,5 +329,33 @@ describe('TriagePage', () => {
         expect(applyTriage).not.toHaveBeenCalled();
         expect(await screen.findByText('Payer')).toBeInTheDocument();
         jest.useRealTimers();
+    });
+
+    it('shows Décider (N) when decisions_count > 0, opens the deck and reloads on close', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue({
+            ...QUEUE,
+            decisions_count: 3,
+        });
+        renderPage();
+        const btn = await screen.findByTestId('triage-decisions-deck');
+        expect(btn).toHaveTextContent('Décider (3)');
+        const callsBefore = (fetchTriageQueue as jest.Mock).mock.calls.length;
+        fireEvent.click(btn);
+        expect(await screen.findByTestId('decision-deck')).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+        await waitFor(() =>
+            expect(
+                (fetchTriageQueue as jest.Mock).mock.calls.length
+            ).toBeGreaterThan(callsBefore)
+        );
+    });
+
+    it('opens the decisions deck directly from ?deck=decisions', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue({
+            ...QUEUE,
+            decisions_count: 2,
+        });
+        renderPage('/triage?deck=decisions');
+        expect(await screen.findByTestId('decision-deck')).toBeInTheDocument();
     });
 });

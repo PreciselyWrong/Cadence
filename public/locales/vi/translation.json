@@ -245,6 +245,31 @@
     "done": "Đã bắt đầu.",
     "failed": "Tiện ích không thể thực hiện."
   },
+  "decisions": {
+    "deck": {
+      "open": "Quyết định ({{count}})",
+      "title": "Quyết định",
+      "close": "Đóng",
+      "progressLabel": "Quyết định {{position}} / {{total}}",
+      "loadError": "Không thể tải các quyết định.",
+      "back": "Quay lại «Cần phân loại»",
+      "done": "Đã quyết định xong",
+      "readMore": "Đọc thêm",
+      "collapse": "Thu gọn",
+      "openUrl": "Mở",
+      "recommended": "Đề xuất",
+      "noteOpen": "Trả lời bằng ghi chú",
+      "notePlaceholder": "Lời nhắn cho tác nhân",
+      "noteSend": "Gửi",
+      "later": "Để sau",
+      "skip": "Bỏ qua",
+      "undo": "Hoàn tác",
+      "decided": "Đã lưu quyết định",
+      "postponed": "Quay lại vào ngày mai",
+      "noteSent": "Đã gửi lại cho tác nhân",
+      "keys": "Enter hoặc →: đề xuất · 1–5: chọn · ←: để sau · ↓: bỏ qua · Ctrl+Z: hoàn tác · Esc: đóng"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} email cần lưu trữ",
@@ -254,6 +279,9 @@
       "done": "Đã yêu cầu lưu trữ {{count}}"
     },
     "settings": {
+      "mailRules": "Người gửi luôn lưu trữ",
+      "noMailRules": "Không có người gửi.",
+      "removeRule": "Gỡ",
       "calendars": "Lịch được đọc",
       "noCalendars": "Chưa có lịch. Thêm lịch trong Hồ sơ › Lịch.",
       "lookahead": "Số ngày xem trước",
@@ -285,6 +313,7 @@
       "delete": "Xóa"
     },
     "mail": {
+      "alwaysArchive": "Luôn lưu trữ người gửi này",
             "horizon": {
                 "someday": "Một ngày nào đó",
                 "nextMonth": "Tháng sau",

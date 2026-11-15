@@ -323,7 +323,10 @@ describe('MailDeck', () => {
     });
 
     it('does nothing on Enter when the agent advised nothing', async () => {
-        renderDeck([v2('a', { recommended: null }), v2('b')]);
+        renderDeck([
+            v2('a', { recommended: null }),
+            v2('b', { recommended: null }),
+        ]);
         expect(
             screen
                 .getAllByRole('button')
@@ -448,5 +451,25 @@ describe('MailDeck', () => {
             renderDeck([v2('a'), noise('n1')]);
             expect(screen.queryByTestId('mail-batch')).not.toBeInTheDocument();
         });
+    });
+
+    it('always archives the sender when requested', () => {
+        jest.useFakeTimers();
+        renderDeck([v2('a')]);
+        fireEvent.click(
+            screen.getByRole('button', {
+                name: 'Toujours archiver cet expéditeur',
+            })
+        );
+        act(() => {
+            jest.advanceTimersByTime(200);
+        });
+        act(() => {
+            jest.advanceTimersByTime(5000);
+        });
+        expect(decide).toHaveBeenCalledWith('a', 'archive', {}, false, {
+            always_archive: true,
+        });
+        jest.useRealTimers();
     });
 });

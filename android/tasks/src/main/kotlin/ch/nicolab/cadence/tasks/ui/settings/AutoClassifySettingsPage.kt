@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,6 +24,7 @@ import ch.nicolab.cadence.designsystem.components.CadenceField
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.components.ToggleRow
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -31,6 +34,7 @@ import ch.nicolab.cadence.tasks.autoclassify.ClassifyForm
 import ch.nicolab.cadence.tasks.autoclassify.ClassifySettings
 import ch.nicolab.cadence.tasks.autoclassify.ClassifySettingsForm
 import ch.nicolab.cadence.tasks.sync.HttpError
+import ch.nicolab.cadence.tasks.triage.MailSenderRule
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -220,6 +224,70 @@ fun AutoClassifySettingsPage(modifier: Modifier = Modifier) {
             }
         }
         dryResult?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface) }
+        MailSenderRulesSection()
+    }
+}
+
+/** Règles d'expéditeurs archivés automatiquement (`GET /api/triage/mail/rules`), en ligne seulement. */
+@Composable
+private fun MailSenderRulesSection() {
+    val context = LocalContext.current
+    val triage = remember(context) { TasksGraph.triage(context) }
+    val scope = rememberCoroutineScope()
+    var rules by remember { mutableStateOf<List<MailSenderRule>?>(null) }
+    var error by remember { mutableStateOf<String?>(null) }
+    var removing by remember { mutableStateOf<String?>(null) }
+    val offlineLabel = stringResource(R.string.triage_mail_rules_offline)
+    val removeErrorLabel = stringResource(R.string.triage_mail_rules_remove_error)
+
+    LaunchedEffect(triage) {
+        triage.listMailRules()
+            .onSuccess {
+                rules = it
+                error = null
+            }
+            .onFailure { error = offlineLabel }
+    }
+
+    Panel {
+        Text(stringResource(R.string.triage_mail_rules_title), style = MaterialTheme.typography.labelLarge, color = cadence.onSurface)
+        Text(stringResource(R.string.triage_mail_rules_intro), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
+        val current = rules
+        when {
+            current == null && error != null -> {
+                Text(error!!, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+            }
+            current != null && current.isEmpty() -> {
+                Text(stringResource(R.string.triage_mail_rules_empty), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+            }
+            current != null -> {
+                current.forEach { rule ->
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                    ) {
+                        Text(rule.address, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface, modifier = Modifier.weight(1f))
+                        TertiaryAction(
+                            stringResource(R.string.triage_mail_rules_remove),
+                        ) {
+                            if (removing != null) return@TertiaryAction
+                            removing = rule.address
+                            scope.launch {
+                                triage.deleteMailRule(rule.address)
+                                    .onSuccess {
+                                        rules = rules?.filterNot { it.address == rule.address }
+                                        error = null
+                                    }
+                                    .onFailure { error = removeErrorLabel }
+                                removing = null
+                            }
+                        }
+                    }
+                }
+                error?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = cadence.error) }
+            }
+        }
     }
 }
 

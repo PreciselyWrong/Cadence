@@ -32,6 +32,9 @@ const SUMMARY_EVENTS = ['daily_summary'];
 // proposed it.
 const MAIL_EVENTS = ['mail.decided'];
 
+// A decision on an agent decision card (docs/49-agent-decisions.md).
+const DECISION_EVENTS = ['decision.made'];
+
 // A week or a review asked for (docs/47-proposals.md): the agent answers
 // through POST /api/proposals/:uid/answer.
 const PROPOSAL_EVENTS = ['proposal.requested', 'proposal.decided'];
@@ -42,6 +45,7 @@ const ALL_EVENTS = [
     ...CAPTURE_EVENTS,
     ...SUMMARY_EVENTS,
     ...MAIL_EVENTS,
+    ...DECISION_EVENTS,
     ...PROPOSAL_EVENTS,
 ];
 
@@ -83,6 +87,7 @@ module.exports = {
     CAPTURE_EVENTS,
     SUMMARY_EVENTS,
     MAIL_EVENTS,
+    DECISION_EVENTS,
     PROPOSAL_EVENTS,
     ALL_EVENTS,
     eventForNotification,

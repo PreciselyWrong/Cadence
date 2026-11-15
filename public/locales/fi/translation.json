@@ -245,6 +245,31 @@
     "done": "Käynnistetty.",
     "failed": "Laajennus ei voinut toimia."
   },
+  "decisions": {
+    "deck": {
+      "open": "Päätä ({{count}})",
+      "title": "Päätökset",
+      "close": "Sulje",
+      "progressLabel": "Päätös {{position}} / {{total}}",
+      "loadError": "Päätöksiä ei voitu ladata.",
+      "back": "Takaisin \"Lajiteltaviin\"",
+      "done": "Kaikki päätetty",
+      "readMore": "Lue lisää",
+      "collapse": "Tiivistä",
+      "openUrl": "Avaa",
+      "recommended": "Suositeltu",
+      "noteOpen": "Vastaa viestillä",
+      "notePlaceholder": "Viesti agentille",
+      "noteSend": "Lähetä",
+      "later": "Myöhemmin",
+      "skip": "Ohita",
+      "undo": "Kumoa",
+      "decided": "Päätös tallennettu",
+      "postponed": "Palaa huomenna",
+      "noteSent": "Palautettu agentille",
+      "keys": "Enter tai →: suositeltu · 1–5: valitse · ←: myöhemmin · ↓: ohita · Ctrl+Z: kumoa · Esc: sulje"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} viestiä arkistoitavaksi",
@@ -254,6 +279,9 @@
       "done": "{{count}} arkistointia pyydetty"
     },
     "settings": {
+      "mailRules": "Aina arkistoitavat lähettäjät",
+      "noMailRules": "Ei lähettäjiä.",
+      "removeRule": "Poista",
       "calendars": "Luetut kalenterit",
       "noCalendars": "Ei kalenteria. Lisää kalenteri kohdassa Profiili › Kalenterit.",
       "lookahead": "Päivää eteenpäin",
@@ -285,6 +313,7 @@
       "delete": "Poista"
     },
     "mail": {
+      "alwaysArchive": "Arkistoi tämä lähettäjä aina",
             "horizon": {
                 "someday": "Joskus",
                 "nextMonth": "Ensi kuussa",

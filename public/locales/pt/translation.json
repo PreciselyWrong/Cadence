@@ -245,6 +245,31 @@
     "done": "Iniciado.",
     "failed": "O plugin não conseguiu agir."
   },
+  "decisions": {
+    "deck": {
+      "open": "Decidir ({{count}})",
+      "title": "Decisões",
+      "close": "Fechar",
+      "progressLabel": "Decisão {{position}} de {{total}}",
+      "loadError": "Não foi possível carregar as decisões.",
+      "back": "Voltar para «A triar»",
+      "done": "Tudo decidido",
+      "readMore": "Ler mais",
+      "collapse": "Recolher",
+      "openUrl": "Abrir",
+      "recommended": "Recomendado",
+      "noteOpen": "Responder com uma nota",
+      "notePlaceholder": "Uma palavra para o agente",
+      "noteSend": "Enviar",
+      "later": "Mais tarde",
+      "skip": "Pular",
+      "undo": "Desfazer",
+      "decided": "Decisão salva",
+      "postponed": "Volta amanhã",
+      "noteSent": "Enviado de volta ao agente",
+      "keys": "Enter ou →: recomendado · 1–5: escolher · ←: mais tarde · ↓: pular · Ctrl+Z: desfazer · Esc: fechar"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} e-mails para arquivar",
@@ -254,6 +279,9 @@
       "done": "{{count}} arquivamentos pedidos"
     },
     "settings": {
+      "mailRules": "Remetentes sempre arquivados",
+      "noMailRules": "Nenhum remetente.",
+      "removeRule": "Remover",
       "calendars": "Calendários lidos",
       "noCalendars": "Nenhum calendário. Adicione um em Perfil › Calendários.",
       "lookahead": "Dias de antecedência",
@@ -285,6 +313,7 @@
       "delete": "Excluir"
     },
     "mail": {
+      "alwaysArchive": "Arquivar sempre este remetente",
             "horizon": {
                 "someday": "Algum dia",
                 "nextMonth": "Próximo mês",

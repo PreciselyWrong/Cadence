@@ -18,6 +18,7 @@ export interface HeldDecision {
     decision: MailDecision;
     payload: Record<string, unknown>;
     archive: boolean;
+    alwaysArchive?: boolean;
 }
 
 export interface DeckState {
@@ -165,8 +166,18 @@ export function deckProgress(
     return { position: Math.min(decided + 1, total), total, done: decided };
 }
 
-// The mail cards still to decide: the queue's order, a card brought back
-// first, skipped ones last.
+const recommendedGroup = (item: TriageItem): number => {
+    const recommended = (item.payload as unknown as MailPayload | null)
+        ?.recommended;
+    if (recommended === 'event') return 0;
+    if (recommended === 'draft' || recommended === 'reply') return 1;
+    if (recommended === 'task') return 2;
+    return 3;
+};
+
+// The mail cards still to decide: a card brought back first, then
+// recommended event, draft/reply, task, then the rest (queue order inside
+// each group), skipped ones last.
 export function deckCards(items: TriageItem[], state: DeckState): TriageItem[] {
     const rank = (key: string) =>
         key === state.front ? -2 : state.skipped.indexOf(key);
@@ -176,7 +187,10 @@ export function deckCards(items: TriageItem[], state: DeckState): TriageItem[] {
         )
         .map((item, index) => ({ item, index }))
         .sort(
-            (a, b) => rank(a.item.key) - rank(b.item.key) || a.index - b.index
+            (a, b) =>
+                rank(a.item.key) - rank(b.item.key) ||
+                recommendedGroup(a.item) - recommendedGroup(b.item) ||
+                a.index - b.index
         )
         .map(({ item }) => item);
 }

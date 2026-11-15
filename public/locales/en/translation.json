@@ -245,6 +245,31 @@
     "done": "It's started.",
     "failed": "The plugin could not act."
   },
+  "decisions": {
+    "deck": {
+      "open": "Decide ({{count}})",
+      "title": "Decisions",
+      "close": "Close",
+      "progressLabel": "Decision {{position}} of {{total}}",
+      "loadError": "Could not load the decisions.",
+      "back": "Back to \"To sort\"",
+      "done": "All decided",
+      "readMore": "Read more",
+      "collapse": "Collapse",
+      "openUrl": "Open",
+      "recommended": "Recommended",
+      "noteOpen": "Reply with a note",
+      "notePlaceholder": "A word for the agent",
+      "noteSend": "Send",
+      "later": "Later",
+      "skip": "Skip",
+      "undo": "Undo",
+      "decided": "Decision saved",
+      "postponed": "Back tomorrow",
+      "noteSent": "Sent back to the agent",
+      "keys": "Enter or →: recommended · 1–5: choose · ←: later · ↓: skip · Ctrl+Z: undo · Esc: close"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} emails to archive",
@@ -254,6 +279,9 @@
       "done": "{{count}} archive requests sent"
     },
     "settings": {
+      "mailRules": "Always-archived senders",
+      "noMailRules": "No sender.",
+      "removeRule": "Remove",
       "calendars": "Calendars read",
       "noCalendars": "No calendar. Add one in Profile › Calendars.",
       "lookahead": "Days to look ahead",
@@ -285,6 +313,7 @@
       "delete": "Delete"
     },
     "mail": {
+      "alwaysArchive": "Always archive this sender",
             "horizon": {
                 "someday": "Someday",
                 "nextMonth": "Next month",

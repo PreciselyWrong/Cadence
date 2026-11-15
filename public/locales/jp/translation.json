@@ -245,6 +245,31 @@
     "done": "開始しました。",
     "failed": "プラグインが実行できませんでした。"
   },
+  "decisions": {
+    "deck": {
+      "open": "決定する ({{count}})",
+      "title": "決定",
+      "close": "閉じる",
+      "progressLabel": "決定 {{position}} / {{total}}",
+      "loadError": "決定を読み込めませんでした。",
+      "back": "「整理待ち」に戻る",
+      "done": "すべて決定済み",
+      "readMore": "続きを読む",
+      "collapse": "折りたたむ",
+      "openUrl": "開く",
+      "recommended": "おすすめ",
+      "noteOpen": "メモで返信",
+      "notePlaceholder": "エージェントへの一言",
+      "noteSend": "送信",
+      "later": "あとで",
+      "skip": "スキップ",
+      "undo": "元に戻す",
+      "decided": "決定を保存しました",
+      "postponed": "明日また表示",
+      "noteSent": "エージェントに返送しました",
+      "keys": "Enter / →: おすすめ · 1–5: 選択 · ←: あとで · ↓: スキップ · Ctrl+Z: 元に戻す · Esc: 閉じる"
+    }
+  },
   "triage": {
     "batch": {
       "title": "アーカイブするメール {{count}} 件",
@@ -254,6 +279,9 @@
       "done": "{{count}} 件のアーカイブを依頼しました"
     },
     "settings": {
+      "mailRules": "常にアーカイブする送信者",
+      "noMailRules": "送信者はありません。",
+      "removeRule": "削除",
       "calendars": "読み取るカレンダー",
       "noCalendars": "カレンダーがありません。プロフィール › カレンダーで追加してください。",
       "lookahead": "先読みする日数",
@@ -285,6 +313,7 @@
       "delete": "削除"
     },
     "mail": {
+      "alwaysArchive": "この送信者を常にアーカイブ",
             "horizon": {
                 "someday": "いつか",
                 "nextMonth": "来月",

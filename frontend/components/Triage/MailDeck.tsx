@@ -201,7 +201,21 @@ const MailDeck: React.FC<MailDeckProps> = ({
 
     const send = useCallback(
         (held: HeldDecision): Promise<void> =>
-            decideMail(held.mailUid, held.decision, held.payload, held.archive)
+            (held.alwaysArchive
+                ? decideMail(
+                      held.mailUid,
+                      held.decision,
+                      held.payload,
+                      held.archive,
+                      { always_archive: true }
+                  )
+                : decideMail(
+                      held.mailUid,
+                      held.decision,
+                      held.payload,
+                      held.archive
+                  )
+            )
                 .then((outcome) => {
                     if (held.archive && outcome?.archived === false) {
                         showErrorToast(
@@ -311,7 +325,8 @@ const MailDeck: React.FC<MailDeckProps> = ({
     const decide = (
         decision: MailDecision,
         payload: Record<string, unknown>,
-        direction: Phase = LEFT.includes(decision) ? 'left' : 'right'
+        direction: Phase = LEFT.includes(decision) ? 'left' : 'right',
+        alwaysArchive = false
     ) => {
         if (!item || !mail) return;
         const held: HeldDecision = {
@@ -327,6 +342,7 @@ const MailDeck: React.FC<MailDeckProps> = ({
                 !['later', 'draft', 'archive', 'trash', 'note'].includes(
                     decision
                 ),
+            ...(alwaysArchive ? { alwaysArchive: true } : {}),
         };
         leave(direction, () => step({ type: 'decide', held }));
     };
@@ -760,6 +776,20 @@ const MailDeck: React.FC<MailDeckProps> = ({
                                     })}`}
                                     label={t('triage.deck.chat', 'Discuter')}
                                 />
+                            )}
+                            {mail.from_address && (
+                                <Button
+                                    variant="ghost"
+                                    size="md"
+                                    onClick={() =>
+                                        decide('archive', {}, 'left', true)
+                                    }
+                                >
+                                    {t(
+                                        'triage.mail.alwaysArchive',
+                                        'Toujours archiver cet expéditeur'
+                                    )}
+                                </Button>
                             )}
                             <span className="flex-1" />
                             <Button variant="ghost" size="md" onClick={skip}>

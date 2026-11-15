@@ -11,7 +11,10 @@ import {
     GoogleCalendar,
 } from '../../../utils/googleSyncService';
 import {
+    deleteMailRule,
+    fetchMailRules,
     fetchTriageSettings,
+    MailSenderRule,
     saveTriageSettings,
     TriageSettings,
     TRIAGE_ALERT_TYPES,
@@ -83,6 +86,7 @@ const TriageTab: React.FC<TriageTabProps> = ({ isActive }) => {
     const [googleCalendars, setGoogleCalendars] = useState<GoogleCalendar[]>(
         []
     );
+    const [mailRules, setMailRules] = useState<MailSenderRule[]>([]);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [saveError, setSaveError] = useState<string | null>(null);
     const [savedNotice, setSavedNotice] = useState(false);
@@ -94,11 +98,13 @@ const TriageTab: React.FC<TriageTabProps> = ({ isActive }) => {
             fetchTriageSettings(),
             fetchCalendarFeeds().catch(() => []),
             fetchGoogleStatus().catch(() => null),
+            fetchMailRules().catch(() => []),
         ])
-            .then(([settings, calendarFeeds, google]) => {
+            .then(([settings, calendarFeeds, google, rules]) => {
                 setDraft(settings);
                 setFeeds(calendarFeeds);
                 setGoogleCalendars(google?.calendars ?? []);
+                setMailRules(rules);
             })
             .catch((error: Error) =>
                 setLoadError(
@@ -151,6 +157,23 @@ const TriageTab: React.FC<TriageTabProps> = ({ isActive }) => {
             );
         } finally {
             setSaving(false);
+        }
+    };
+
+    const removeRule = async (address: string) => {
+        try {
+            await deleteMailRule(address);
+            setMailRules((prev) =>
+                prev.filter((rule) => rule.address !== address)
+            );
+        } catch (error) {
+            setSaveError(
+                (error as Error).message ||
+                    t(
+                        'triage.settings.saveError',
+                        'Impossible d’enregistrer les réglages.'
+                    )
+            );
         }
     };
 
@@ -295,6 +318,37 @@ const TriageTab: React.FC<TriageTabProps> = ({ isActive }) => {
                         )}
                     </Link>
                 </p>
+            </Card>
+
+            <Card
+                title={t(
+                    'triage.settings.mailRules',
+                    'Expéditeurs toujours archivés'
+                )}
+            >
+                {mailRules.length === 0 ? (
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        {t('triage.settings.noMailRules', 'Aucun expéditeur.')}
+                    </p>
+                ) : (
+                    <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                        {mailRules.map((rule) => (
+                            <li
+                                key={rule.address}
+                                className="flex items-center justify-between gap-3 py-2 text-sm text-gray-800 dark:text-gray-200"
+                            >
+                                <span className="truncate">{rule.address}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => removeRule(rule.address)}
+                                    className="text-xs font-medium text-red-600 hover:underline dark:text-red-400"
+                                >
+                                    {t('triage.settings.removeRule', 'Retirer')}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </Card>
 
             {saveError && (

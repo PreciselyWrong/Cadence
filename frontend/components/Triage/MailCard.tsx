@@ -3,7 +3,19 @@ import { useTranslation } from 'react-i18next';
 import { MailDecision, MailPayload } from '../../utils/triageService';
 import Button from '../Shared/ui/Button';
 import MailTaskForm from './MailTaskForm';
-import { GMAIL } from './mailDeck';
+import { DeckButton, deckButtons, DeckChoice, GMAIL } from './mailDeck';
+
+const CHOICE_LABEL: Record<DeckChoice, [string, string]> = {
+    draft: ['triage.deck.option.draft', 'Brouillon'],
+    reply: ['triage.mail.reply', 'Répondre'],
+    read: ['triage.deck.option.read', 'Lire'],
+    task: ['triage.mail.task', 'Tâche'],
+    event: ['triage.deck.option.event', 'Agenda'],
+    later: ['triage.mail.later', 'Plus tard'],
+    archive: ['triage.deck.option.archive', 'Archiver'],
+    trash: ['triage.deck.option.trash', 'Supprimer'],
+    dismiss: ['triage.mail.dismiss', 'Ignorer'],
+};
 
 // The reply link is an anchor, which Button cannot render: it keeps Button's look.
 const linkBase =
@@ -17,7 +29,8 @@ interface MailCardProps {
     onDecide: (
         decision: MailDecision,
         payload: Record<string, unknown>,
-        archive: boolean
+        archive: boolean,
+        options?: { always_archive?: boolean }
     ) => void;
 }
 
@@ -58,7 +71,19 @@ const MailCard: React.FC<MailCardProps> = ({
             archive && decision !== 'later' && decision !== 'trash'
         );
 
+    const hasOptions = (payload.options ?? []).length > 0;
+    const buttons = hasOptions ? deckButtons(payload) : [];
+    const showArchiveBox =
+        archiveAvailable &&
+        (!hasOptions || !buttons.some((button) => button.choice === 'archive'));
     const taskFirst = suggested?.kind !== 'reply';
+
+    const chooseDeckButton = (button: DeckButton) => {
+        if (button.opensMail && replyUrl) {
+            window.open(replyUrl, '_blank', 'noopener,noreferrer');
+        }
+        decide(button.decision, button.payload);
+    };
 
     return (
         <div data-testid="mail-card">
@@ -82,49 +107,94 @@ const MailCard: React.FC<MailCardProps> = ({
                 </p>
             )}
 
-            <div className="mt-3 flex flex-wrap gap-2">
-                <Button
-                    variant={taskFirst ? 'primary' : 'secondary'}
-                    size="md"
-                    aria-expanded={taskForm}
-                    onClick={() => setTaskForm((open) => !open)}
-                >
-                    {t('triage.mail.task', 'Tâche')}
-                </Button>
-                {replyUrl && (
-                    <a
-                        href={replyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={taskFirst ? linkSecondary : linkPrimary}
-                        onClick={() => decide('reply')}
+            {hasOptions ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                    {buttons.map((button) => {
+                        const [key, fallback] = CHOICE_LABEL[button.choice];
+                        return (
+                            <Button
+                                key={button.choice}
+                                variant="secondary"
+                                size="md"
+                                data-choice={button.choice}
+                                data-recommended={
+                                    button.recommended || undefined
+                                }
+                                className={
+                                    button.recommended
+                                        ? 'bg-primary/10 text-surface-on ring-2 ring-inset ring-primary hover:bg-primary/15'
+                                        : ''
+                                }
+                                onClick={() => chooseDeckButton(button)}
+                            >
+                                {t(key, fallback)}
+                            </Button>
+                        );
+                    })}
+                </div>
+            ) : (
+                <div className="mt-3 flex flex-wrap gap-2">
+                    <Button
+                        variant={taskFirst ? 'primary' : 'secondary'}
+                        size="md"
+                        aria-expanded={taskForm}
+                        onClick={() => setTaskForm((open) => !open)}
                     >
-                        {t('triage.mail.reply', 'Répondre')}
-                    </a>
-                )}
-                <Button
-                    variant="secondary"
-                    size="md"
-                    onClick={() => decide('later')}
-                >
-                    {t('triage.mail.later', 'Plus tard')}
-                </Button>
-                <Button
-                    variant="secondary"
-                    size="md"
-                    onClick={() => decide('dismiss')}
-                >
-                    {t('triage.mail.dismiss', 'Ignorer')}
-                </Button>
-                <Button
-                    variant="secondary"
-                    size="md"
-                    onClick={() => decide('trash')}
-                >
-                    {t('triage.deck.option.trash', 'Supprimer')}
-                </Button>
-            </div>
-            {archiveAvailable && (
+                        {t('triage.mail.task', 'Tâche')}
+                    </Button>
+                    {replyUrl && (
+                        <a
+                            href={replyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={taskFirst ? linkSecondary : linkPrimary}
+                            onClick={() => decide('reply')}
+                        >
+                            {t('triage.mail.reply', 'Répondre')}
+                        </a>
+                    )}
+                    <Button
+                        variant="secondary"
+                        size="md"
+                        onClick={() => decide('later')}
+                    >
+                        {t('triage.mail.later', 'Plus tard')}
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        size="md"
+                        onClick={() => decide('dismiss')}
+                    >
+                        {t('triage.mail.dismiss', 'Ignorer')}
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        size="md"
+                        onClick={() => decide('trash')}
+                    >
+                        {t('triage.deck.option.trash', 'Supprimer')}
+                    </Button>
+                </div>
+            )}
+            {payload.from_address && (
+                <div className="mt-1">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                            onDecide('archive', {}, false, {
+                                always_archive: true,
+                            })
+                        }
+                    >
+                        {t(
+                            'triage.mail.alwaysArchive',
+                            'Toujours archiver cet expéditeur'
+                        )}
+                    </Button>
+                </div>
+            )}
+            {showArchiveBox && (
                 <label className="mt-2 flex min-h-[40px] items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
                     <input
                         type="checkbox"

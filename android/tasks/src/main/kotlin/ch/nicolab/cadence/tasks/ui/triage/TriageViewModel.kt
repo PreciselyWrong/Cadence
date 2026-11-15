@@ -6,6 +6,9 @@ import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRequests
+import ch.nicolab.cadence.tasks.decisions.DecisionCardData
+import ch.nicolab.cadence.tasks.decisions.DecisionDeck
+import ch.nicolab.cadence.tasks.decisions.DecisionRequests
 import ch.nicolab.cadence.tasks.triage.QuestionDto
 import ch.nicolab.cadence.tasks.triage.questionAnswerCall
 import ch.nicolab.cadence.tasks.sync.DeferredCall
@@ -23,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,8 +50,11 @@ internal class TriageNotice(val message: String, val undo: (() -> Unit)? = null)
  */
 internal class TriageViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = TasksGraph.triage(application)
+    private val decisionsRepository = TasksGraph.decisions(application)
     private val holds = TriageHolds(viewModelScope, UNDO_WINDOW_MS) { call -> repository.send(call) }
+    private val decisionHolds = TriageHolds(viewModelScope, UNDO_WINDOW_MS) { call -> decisionsRepository.send(call) }
     private val skipped = MutableStateFlow<List<String>>(emptyList())
+    private val skippedDecisions = MutableStateFlow<List<String>>(emptyList())
     private val _notices = MutableSharedFlow<TriageNotice>(extraBufferCapacity = 1)
     val notices: SharedFlow<TriageNotice> = _notices
 
@@ -54,12 +62,30 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
     private var undoWindow: Job? = null
     private val _undoable = MutableStateFlow(false)
 
+    private var lastDecisionUndo: (() -> Unit)? = null
+    private var decisionUndoWindow: Job? = null
+    private val _decisionUndoable = MutableStateFlow(false)
+
     /** Vrai tant que la dernière décision est encore dans sa fenêtre d'annulation. */
     val undoable: StateFlow<Boolean> = _undoable.asStateFlow()
+
+    /** Vrai tant que la dernière décision d'agent est encore dans sa fenêtre d'annulation. */
+    val decisionUndoable: StateFlow<Boolean> = _decisionUndoable.asStateFlow()
 
     /** Les propositions à traiter ; celles passées reviennent en fin de file. */
     val items: StateFlow<List<TriageItemDto>> = combine(repository.queue, holds.hidden, skipped) { queue, gone, later ->
         order(queue, gone, later)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val skippedKeys: StateFlow<List<String>> = skipped.asStateFlow()
+
+    /** Les cartes de décision d'agent ordonnées ; celles passées reviennent en fin de paquet. */
+    val decisions: StateFlow<List<DecisionCardData>> = combine(
+        decisionsRepository.cards,
+        decisionHolds.hidden,
+        skippedDecisions,
+    ) { cards, gone, later ->
+        DecisionDeck.cards(cards, gone, later)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val queue: StateFlow<TriageQueueDto?> = repository.queue
@@ -71,9 +97,15 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
 
     fun refresh() {
         viewModelScope.launch {
-            val result = repository.refresh()
-            _online.value = result.isSuccess
-            if (result.isSuccess) holds.settle(repository.pendingCallKeys())
+            coroutineScope {
+                val triageJob = async { repository.refresh() }
+                val decisionsJob = async { decisionsRepository.refresh() }
+                val result = triageJob.await()
+                val decisionsResult = decisionsJob.await()
+                _online.value = result.isSuccess
+                if (result.isSuccess) holds.settle(repository.pendingCallKeys())
+                if (decisionsResult.isSuccess) decisionHolds.settle(decisionsRepository.pendingCallKeys())
+            }
         }
     }
 
@@ -111,7 +143,13 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
     }
 
     /** Décision sur un mail : la carte disparaît, la décision part après la fenêtre d'annulation (hors ligne compris). */
-    fun decideMail(item: TriageItemDto, decision: MailDecision, payload: JsonObject, archive: Boolean) {
+    fun decideMail(
+        item: TriageItemDto,
+        decision: MailDecision,
+        payload: JsonObject,
+        archive: Boolean,
+        alwaysArchive: Boolean = false,
+    ) {
         val card = MailPayload.parse(item.payload) ?: return
         val message = string(
             when (decision) {
@@ -127,7 +165,11 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
             },
         )
         val key = UUID.randomUUID().toString()
-        hold(item, message, MailRequests.decide(card.mailUid, decision, payload, archive, key, string(R.string.triage_title)))
+        hold(
+            item,
+            message,
+            MailRequests.decide(card.mailUid, decision, payload, archive, key, string(R.string.triage_title), alwaysArchive = alwaysArchive),
+        )
     }
 
     /** Archivage en lot depuis le paquet : confirmé par la liste cochée, donc envoyé sans fenêtre d'annulation. */
@@ -190,10 +232,51 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
+    fun skipDecision(card: DecisionCardData) {
+        skippedDecisions.value = skippedDecisions.value - card.uid + card.uid
+    }
+
+    fun decideDecision(card: DecisionCardData, decision: String, note: String? = null) {
+        val message = string(
+            when (decision) {
+                DecisionRequests.DECISION_LATER -> R.string.decisions_sent_later
+                DecisionRequests.DECISION_NOTE -> R.string.decisions_sent_note
+                else -> R.string.decisions_sent_choice
+            },
+        )
+        val key = UUID.randomUUID().toString()
+        val call = DecisionRequests.decide(
+            uid = card.uid,
+            decision = decision,
+            note = note,
+            key = key,
+            label = string(R.string.decisions_deck_title),
+        )
+        val undo = decisionHolds.hold(card.uid, call)
+        _notices.tryEmit(TriageNotice(message, undo))
+        lastDecisionUndo = undo
+        decisionUndoWindow?.cancel()
+        _decisionUndoable.value = true
+        decisionUndoWindow = viewModelScope.launch {
+            delay(UNDO_WINDOW_MS)
+            lastDecisionUndo = null
+            _decisionUndoable.value = false
+        }
+    }
+
+    fun undoLastDecision() {
+        lastDecisionUndo?.invoke()
+        lastDecisionUndo = null
+        decisionUndoWindow?.cancel()
+        _decisionUndoable.value = false
+    }
+
     /** Quitter l'écran n'annule pas un geste validé : la fenêtre d'annulation s'arrête là et l'appel part. */
     override fun onCleared() {
         val calls = holds.takeHeld()
         if (calls.isNotEmpty()) LEAVING.launch { calls.forEach { repository.send(it) } }
+        val decisionCalls = decisionHolds.takeHeld()
+        if (decisionCalls.isNotEmpty()) LEAVING.launch { decisionCalls.forEach { decisionsRepository.send(it) } }
     }
 
     private fun string(id: Int) = getApplication<Application>().getString(id)

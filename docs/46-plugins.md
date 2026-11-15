@@ -147,8 +147,8 @@ ctx.actions.onRun('mail-run', async ({ user, place, context }) => {
 }, { available: () => Boolean(ctx.settings.get('mailJob')) });
 ```
 
-- `ctx.actions.onRun(id, handler, { available? })` only for an action the manifest declares with `run: true`, else it throws. No permission is needed: the plugin already runs in the server.
-- `GET /api/plugins/menu` lists a run action (with `run: true`) only while its handler is registered and `available()` returns `true` (an error counts as false): a plugin hides its button until it is set up.
+- `ctx.actions.onRun(id, handler, { available?, status? })` only for an action the manifest declares with `run: true`, else it throws. No permission is needed: the plugin already runs in the server.
+- `GET /api/plugins/menu` lists a run action (with `run: true`) only while its handler is registered and `available()` returns `true` (an error counts as false): a plugin hides its button until it is set up. When `status()` is provided, its return value (if a string) is trimmed and cut to 40 characters and included as `status` when non-empty; errors and non-strings are ignored.
 - A click posts `POST /api/plugins/:id/actions/:action/run { place, context }` (signed in). The place must be one of the action's (400), the action must be listed (404). `context` keeps at most 10 string values of 200 characters. The handler has 10 s. Answer: 200 `{ ok: true, message }` or 409 `{ ok: false, message }`, `message` cut to 200 characters and shown as is in a toast (web) or a snackbar (Android); a handler that throws or times out answers 500 `{ error: 'action_failed' }` (not 502, which the offline layer reads as an unreachable server), its message kept in the plugin's error and the log only.
 - One click at a time: the button is disabled while its call runs. Never queued offline (`public/sw.js` `NO_QUEUE_PATTERNS`, Android: direct call): replayed later, a run would start work nobody asked for at that time.
 

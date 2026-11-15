@@ -257,6 +257,31 @@
     "done": "Uruchomiono.",
     "failed": "Wtyczka nie mogła zadziałać."
   },
+  "decisions": {
+    "deck": {
+      "open": "Zdecyduj ({{count}})",
+      "title": "Decyzje",
+      "close": "Zamknij",
+      "progressLabel": "Decyzja {{position}} z {{total}}",
+      "loadError": "Nie udało się wczytać decyzji.",
+      "back": "Wróć do „Do posortowania”",
+      "done": "Wszystko zdecydowane",
+      "readMore": "Czytaj dalej",
+      "collapse": "Zwiń",
+      "openUrl": "Otwórz",
+      "recommended": "Zalecane",
+      "noteOpen": "Odpowiedz notatką",
+      "notePlaceholder": "Słowo do agenta",
+      "noteSend": "Wyślij",
+      "later": "Później",
+      "skip": "Pomiń",
+      "undo": "Cofnij",
+      "decided": "Decyzja zapisana",
+      "postponed": "Wraca jutro",
+      "noteSent": "Odesłano do agenta",
+      "keys": "Enter lub →: zalecane · 1–5: wybierz · ←: później · ↓: pomiń · Ctrl+Z: cofnij · Esc: zamknij"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} maili do archiwizacji",
@@ -266,6 +291,9 @@
       "done": "Zlecono archiwizację: {{count}}"
     },
     "settings": {
+      "mailRules": "Zawsze archiwizowani nadawcy",
+      "noMailRules": "Brak nadawcy.",
+      "removeRule": "Usuń",
       "calendars": "Odczytywane kalendarze",
       "noCalendars": "Brak kalendarza. Dodaj go w Profil › Kalendarze.",
       "lookahead": "Dni do przodu",
@@ -297,6 +325,7 @@
       "delete": "Usuń"
     },
     "mail": {
+      "alwaysArchive": "Zawsze archiwizuj tego nadawcę",
             "horizon": {
                 "someday": "Kiedyś",
                 "nextMonth": "W przyszłym miesiącu",

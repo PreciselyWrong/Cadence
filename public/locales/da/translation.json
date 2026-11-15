@@ -245,6 +245,31 @@
     "done": "Startet.",
     "failed": "Pluginnet kunne ikke handle."
   },
+  "decisions": {
+    "deck": {
+      "open": "Beslut ({{count}})",
+      "title": "Beslutninger",
+      "close": "Luk",
+      "progressLabel": "Beslutning {{position}} af {{total}}",
+      "loadError": "Kunne ikke indlæse beslutninger.",
+      "back": "Tilbage til \"At sortere\"",
+      "done": "Alt er besluttet",
+      "readMore": "Læs mere",
+      "collapse": "Skjul",
+      "openUrl": "Åbn",
+      "recommended": "Anbefalet",
+      "noteOpen": "Svar med en note",
+      "notePlaceholder": "Et ord til agenten",
+      "noteSend": "Send",
+      "later": "Senere",
+      "skip": "Spring over",
+      "undo": "Fortryd",
+      "decided": "Beslutning gemt",
+      "postponed": "Tilbage i morgen",
+      "noteSent": "Sendt tilbage til agenten",
+      "keys": "Enter eller →: anbefalet · 1–5: vælg · ←: senere · ↓: spring over · Ctrl+Z: fortryd · Esc: luk"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} mails til arkivering",
@@ -254,6 +279,9 @@
       "done": "{{count}} arkiveringer anmodet"
     },
     "settings": {
+      "mailRules": "Altid arkiverede afsendere",
+      "noMailRules": "Ingen afsender.",
+      "removeRule": "Fjern",
       "calendars": "Læste kalendere",
       "noCalendars": "Ingen kalender. Tilføj en under Profil › Kalendere.",
       "lookahead": "Dage at kigge frem",
@@ -285,6 +313,7 @@
       "delete": "Slet"
     },
     "mail": {
+      "alwaysArchive": "Arkiver altid denne afsender",
             "horizon": {
                 "someday": "En dag",
                 "nextMonth": "Næste måned",

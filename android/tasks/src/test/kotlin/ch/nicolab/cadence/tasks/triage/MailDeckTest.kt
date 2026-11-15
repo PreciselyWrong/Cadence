@@ -287,4 +287,49 @@ class MailDeckTest {
         val single = listOf(noisePair("a"), item("b") to card())
         assertTrue(MailDeck.archiveBatch(single).isEmpty())
     }
+
+    @Test
+    fun `le paquet ordonne event puis draft ou reply puis task puis le reste, plus récent d'abord`() {
+        fun mailItem(uid: String, receivedAt: String, extra: String): TriageItemDto {
+            val payload = json.parseToJsonElement(
+                """{"mail_uid":"$uid","summary":"S","received_at":"$receivedAt","gmail_url":"https://mail.google.com/mail/u/0/#inbox/$uid",$extra}""",
+            ).jsonObject
+            return item("mail:$uid").copy(payload = payload)
+        }
+
+        val input = listOf(
+            mailItem("arch", "2026-11-15T10:00:00Z", """"options":["archive","later"],"recommended":"archive""""),
+            mailItem("taskOld", "2026-11-10T10:00:00Z", """"options":["task","later"],"recommended":"task""""),
+            mailItem("taskNew", "2026-11-14T10:00:00Z", """"options":["task","later"],"recommended":"task""""),
+            mailItem("draft", "2026-11-11T10:00:00Z", """"options":["draft","later"],"recommended":"draft""""),
+            mailItem("replyNew", "2026-11-13T10:00:00Z", """"options":["reply","later"],"recommended":"reply""""),
+            mailItem("ev", "2026-11-09T10:00:00Z", """"options":["event","later"],"recommended":"event""""),
+        )
+
+        val ordered = MailDeck.cards(input).map { it.second.mailUid }
+        assertEquals(listOf("ev", "replyNew", "draft", "taskNew", "taskOld", "arch"), ordered)
+    }
+
+    @Test
+    fun `alwaysArchive ajoute always_archive dans le corps de décision`() {
+        val call = MailRequests.decide(
+            mailUid = "m1",
+            decision = MailDecision.ARCHIVE,
+            payload = JsonObject(emptyMap()),
+            archive = false,
+            key = "k1",
+            label = "À trier",
+            alwaysArchive = true,
+        )
+        assertEquals(true, call.body?.get("always_archive")?.jsonPrimitive?.boolean)
+        val regular = MailRequests.decide(
+            mailUid = "m1",
+            decision = MailDecision.ARCHIVE,
+            payload = JsonObject(emptyMap()),
+            archive = false,
+            key = "k2",
+            label = "À trier",
+        )
+        assertFalse("always_archive" in (regular.body ?: emptyMap()))
+    }
 }

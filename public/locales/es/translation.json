@@ -245,6 +245,31 @@
     "done": "En marcha.",
     "failed": "El complemento no pudo actuar."
   },
+  "decisions": {
+    "deck": {
+      "open": "Decidir ({{count}})",
+      "title": "Decisiones",
+      "close": "Cerrar",
+      "progressLabel": "Decisión {{position}} de {{total}}",
+      "loadError": "No se pudieron cargar las decisiones.",
+      "back": "Volver a «Por ordenar»",
+      "done": "Todo decidido",
+      "readMore": "Leer más",
+      "collapse": "Contraer",
+      "openUrl": "Abrir",
+      "recommended": "Recomendado",
+      "noteOpen": "Responder con una nota",
+      "notePlaceholder": "Un mensaje para el agente",
+      "noteSend": "Enviar",
+      "later": "Más tarde",
+      "skip": "Omitir",
+      "undo": "Deshacer",
+      "decided": "Decisión guardada",
+      "postponed": "Vuelve mañana",
+      "noteSent": "Devuelto al agente",
+      "keys": "Intro o →: recomendado · 1–5: elegir · ←: más tarde · ↓: omitir · Ctrl+Z: deshacer · Esc: cerrar"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} correos para archivar",
@@ -254,6 +279,9 @@
       "done": "{{count}} archivados solicitados"
     },
     "settings": {
+      "mailRules": "Remitentes siempre archivados",
+      "noMailRules": "Ningún remitente.",
+      "removeRule": "Quitar",
       "calendars": "Calendarios leídos",
       "noCalendars": "No hay calendario. Añade uno en Perfil › Calendarios.",
       "lookahead": "Días a revisar hacia adelante",
@@ -285,6 +313,7 @@
       "delete": "Eliminar"
     },
     "mail": {
+      "alwaysArchive": "Archivar siempre este remitente",
             "horizon": {
                 "someday": "Algún día",
                 "nextMonth": "Próximo mes",

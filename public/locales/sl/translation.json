@@ -261,6 +261,31 @@
     "done": "Zagnano.",
     "failed": "Vtičnik ni mogel ukrepati."
   },
+  "decisions": {
+    "deck": {
+      "open": "Odloči ({{count}})",
+      "title": "Odločitve",
+      "close": "Zapri",
+      "progressLabel": "Odločitev {{position}} od {{total}}",
+      "loadError": "Odločitev ni bilo mogoče naložiti.",
+      "back": "Nazaj na »Za razvrstitev«",
+      "done": "Vse odločeno",
+      "readMore": "Preberi več",
+      "collapse": "Strni",
+      "openUrl": "Odpri",
+      "recommended": "Priporočeno",
+      "noteOpen": "Odgovori z opombo",
+      "notePlaceholder": "Beseda za agenta",
+      "noteSend": "Pošlji",
+      "later": "Pozneje",
+      "skip": "Preskoči",
+      "undo": "Razveljavi",
+      "decided": "Odločitev shranjena",
+      "postponed": "Vrne se jutri",
+      "noteSent": "Poslano nazaj agentu",
+      "keys": "Enter ali →: priporočeno · 1–5: izberi · ←: pozneje · ↓: preskoči · Ctrl+Z: razveljavi · Esc: zapri"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} e-poštnih sporočil za arhiviranje",
@@ -270,6 +295,9 @@
       "done": "Zahtevana arhiviranja: {{count}}"
     },
     "settings": {
+      "mailRules": "Vedno arhivirani pošiljatelji",
+      "noMailRules": "Ni pošiljateljev.",
+      "removeRule": "Odstrani",
       "calendars": "Prebrani koledarji",
       "noCalendars": "Ni koledarja. Dodajte ga v Profil › Koledarji.",
       "lookahead": "Dni vnaprej",
@@ -301,6 +329,7 @@
       "delete": "Izbriši"
     },
     "mail": {
+      "alwaysArchive": "Vedno arhiviraj tega pošiljatelja",
             "horizon": {
                 "someday": "Nekoč",
                 "nextMonth": "Naslednji mesec",

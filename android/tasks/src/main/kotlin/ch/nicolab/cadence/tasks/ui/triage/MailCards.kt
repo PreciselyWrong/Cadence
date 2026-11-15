@@ -37,6 +37,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.triage.MailCardData
 import ch.nicolab.cadence.tasks.triage.MailDecision
+import ch.nicolab.cadence.tasks.triage.MailDeck
 import ch.nicolab.cadence.tasks.triage.MailHorizon
 import ch.nicolab.cadence.tasks.ui.TaskDateSheet
 import java.time.Instant
@@ -58,13 +59,13 @@ internal fun MailCardView(
     card: MailCardData,
     archiveAvailable: Boolean,
     today: LocalDate,
-    onDecide: (MailDecision, JsonObject, Boolean) -> Unit,
+    onDecide: (MailDecision, JsonObject, Boolean, Boolean) -> Unit,
     onSkip: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
     var archive by remember(card.mailUid) { mutableStateOf(false) }
     var creating by remember(card.mailUid) { mutableStateOf(false) }
-    val decide = { decision: MailDecision, payload: JsonObject -> onDecide(decision, payload, archive) }
+    val decide = { decision: MailDecision, payload: JsonObject -> onDecide(decision, payload, archive, false) }
 
     Panel(modifier = Modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
@@ -86,42 +87,64 @@ internal fun MailCardView(
             }
         }
     }
-    val reply: (@Composable () -> Unit)? = card.gmailUrl?.let { url ->
-        {
-            val label = stringResource(R.string.triage_mail_reply)
-            val open = {
-                uriHandler.openUri(url)
-                decide(MailDecision.REPLY, JsonObject(emptyMap()))
+    if (card.options.isNotEmpty()) {
+        MailOptionRow(card) { option ->
+            val advice = MailDeck.adviceFor(option, card)
+            if (advice.opensMail) card.gmailUrl?.let(uriHandler::openUri)
+            decide(advice.decision, advice.payload)
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            TertiaryAction(stringResource(R.string.triage_deck_edit_task)) { creating = true }
+            if (card.sender != null) {
+                TertiaryAction(stringResource(R.string.triage_mail_always_archive)) {
+                    onDecide(MailDecision.ARCHIVE, JsonObject(emptyMap()), false, true)
+                }
             }
-            if (card.replyFirst) PrimaryAction(label, Modifier.fillMaxWidth(), onClick = open) else SecondaryAction(label, onClick = open)
+            TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
         }
-    }
-    val task: @Composable () -> Unit = {
-        val label = stringResource(R.string.triage_mail_task)
-        if (card.replyFirst && reply != null) {
-            SecondaryAction(label) { creating = true }
-        } else {
-            PrimaryAction(label, Modifier.fillMaxWidth()) { creating = true }
+    } else {
+        val reply: (@Composable () -> Unit)? = card.gmailUrl?.let { url ->
+            {
+                val label = stringResource(R.string.triage_mail_reply)
+                val open = {
+                    uriHandler.openUri(url)
+                    decide(MailDecision.REPLY, JsonObject(emptyMap()))
+                }
+                if (card.replyFirst) PrimaryAction(label, Modifier.fillMaxWidth(), onClick = open) else SecondaryAction(label, onClick = open)
+            }
         }
-    }
-    if (card.replyFirst && reply != null) reply() else task()
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        if (card.replyFirst && reply != null) task() else reply?.invoke()
-        SecondaryAction(stringResource(R.string.triage_mail_later)) { decide(MailDecision.LATER, JsonObject(emptyMap())) }
-        SecondaryAction(stringResource(R.string.triage_mail_dismiss)) { decide(MailDecision.DISMISS, JsonObject(emptyMap())) }
-        SecondaryAction(stringResource(R.string.triage_deck_option_trash)) { decide(MailDecision.TRASH, JsonObject(emptyMap())) }
-        TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
-    }
-    if (archiveAvailable) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .heightIn(min = Size.touch)
-                .toggleable(value = archive, role = Role.Checkbox, onValueChange = { archive = it }),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(checked = archive, onCheckedChange = null)
-            Text(stringResource(R.string.triage_mail_archive), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
+        val task: @Composable () -> Unit = {
+            val label = stringResource(R.string.triage_mail_task)
+            if (card.replyFirst && reply != null) {
+                SecondaryAction(label) { creating = true }
+            } else {
+                PrimaryAction(label, Modifier.fillMaxWidth()) { creating = true }
+            }
+        }
+        if (card.replyFirst && reply != null) reply() else task()
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            if (card.replyFirst && reply != null) task() else reply?.invoke()
+            SecondaryAction(stringResource(R.string.triage_mail_later)) { decide(MailDecision.LATER, JsonObject(emptyMap())) }
+            SecondaryAction(stringResource(R.string.triage_mail_dismiss)) { decide(MailDecision.DISMISS, JsonObject(emptyMap())) }
+            SecondaryAction(stringResource(R.string.triage_deck_option_trash)) { decide(MailDecision.TRASH, JsonObject(emptyMap())) }
+            if (card.sender != null) {
+                TertiaryAction(stringResource(R.string.triage_mail_always_archive)) {
+                    onDecide(MailDecision.ARCHIVE, JsonObject(emptyMap()), false, true)
+                }
+            }
+            TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
+        }
+        if (archiveAvailable) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = Size.touch)
+                    .toggleable(value = archive, role = Role.Checkbox, onValueChange = { archive = it }),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Checkbox(checked = archive, onCheckedChange = null)
+                Text(stringResource(R.string.triage_mail_archive), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
+            }
         }
     }
     if (creating) {

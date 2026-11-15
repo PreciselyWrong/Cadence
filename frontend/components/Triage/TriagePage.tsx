@@ -21,6 +21,7 @@ import { deferDelete } from '../../utils/deferredDelete';
 import ClassifyCard from '../AutoClassify/ClassifyCard';
 import MailCard from './MailCard';
 import MailDeck from './MailDeck';
+import DecisionDeck from '../Decisions/DecisionDeck';
 import PageHeader from '../Shared/ui/PageHeader';
 import {
     applyClassifySuggestion,
@@ -80,6 +81,7 @@ const TriagePage: React.FC = () => {
     const [editing, setEditing] = useState<TriageAction | null>(null);
     const [value, setValue] = useState('');
     const [deckOpen, setDeckOpen] = useState(false);
+    const [decisionsDeckOpen, setDecisionsDeckOpen] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
 
     const load = useCallback(
@@ -97,14 +99,23 @@ const TriagePage: React.FC = () => {
         load();
     }, [load]);
 
-    // A « N mails à trier » notification opens the deck straight away; the
-    // parameter is taken off, so closing the deck stays closed.
+    // A « N mails à trier » or « N décisions à prendre » notification opens
+    // its deck straight away; the parameter is taken off, so closing stays
+    // closed.
     useEffect(() => {
-        if (!queue || searchParams.get('deck') !== 'mail') return;
-        if (queue.items.some((entry) => entry.type === 'mail')) {
-            setDeckOpen(true);
+        if (!queue) return;
+        const deck = searchParams.get('deck');
+        if (deck === 'mail') {
+            if (queue.items.some((entry) => entry.type === 'mail')) {
+                setDeckOpen(true);
+            }
+            setSearchParams({}, { replace: true });
+        } else if (deck === 'decisions') {
+            if ((queue.decisions_count ?? 0) > 0) {
+                setDecisionsDeckOpen(true);
+            }
+            setSearchParams({}, { replace: true });
         }
-        setSearchParams({}, { replace: true });
     }, [queue, searchParams, setSearchParams]);
 
     const items = useMemo(
@@ -204,16 +215,25 @@ const TriagePage: React.FC = () => {
     const decide = (
         decision: MailDecision,
         payload: Record<string, unknown>,
-        archive: boolean
+        archive: boolean,
+        options?: { always_archive?: boolean }
     ) =>
         settle(
             async () => {
-                const outcome = await decideMail(
-                    String(item?.payload?.mail_uid),
-                    decision,
-                    payload,
-                    archive
-                );
+                const outcome = options
+                    ? await decideMail(
+                          String(item?.payload?.mail_uid),
+                          decision,
+                          payload,
+                          archive,
+                          options
+                      )
+                    : await decideMail(
+                          String(item?.payload?.mail_uid),
+                          decision,
+                          payload,
+                          archive
+                      );
                 if (archive && outcome?.archived === false) {
                     showErrorToast(
                         t('triage.mail.notArchived', 'Pas archivé dans Gmail')
@@ -302,6 +322,19 @@ const TriagePage: React.FC = () => {
         );
     }
 
+    if (decisionsDeckOpen && queue) {
+        return (
+            <DecisionDeck
+                onClose={(sent) => {
+                    setDecisionsDeckOpen(false);
+                    sent.finally(load);
+                }}
+            />
+        );
+    }
+
+    const decisionsCount = queue?.decisions_count ?? 0;
+
     return (
         <PageShell template="list" className="pb-28 sm:pb-12">
             <PageHeader
@@ -318,6 +351,19 @@ const TriagePage: React.FC = () => {
                                     'triage.deck.open',
                                     'Trier mes mails ({{count}})',
                                     { count: mailCount }
+                                )}
+                            </Button>
+                        )}
+                        {decisionsCount > 0 && (
+                            <Button
+                                variant="primary"
+                                data-testid="triage-decisions-deck"
+                                onClick={() => setDecisionsDeckOpen(true)}
+                            >
+                                {t(
+                                    'decisions.deck.open',
+                                    'Décider ({{count}})',
+                                    { count: decisionsCount }
                                 )}
                             </Button>
                         )}

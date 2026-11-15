@@ -163,7 +163,15 @@ object MailPayload {
 
 /** Appels de la file « À trier » pour un mail : une décision par carte, rejouée hors ligne avec sa clé. */
 internal object MailRequests {
-    fun decide(mailUid: String, decision: MailDecision, payload: JsonObject, archive: Boolean, key: String, label: String) = DeferredCall(
+    fun decide(
+        mailUid: String,
+        decision: MailDecision,
+        payload: JsonObject,
+        archive: Boolean,
+        key: String,
+        label: String,
+        alwaysArchive: Boolean = false,
+    ) = DeferredCall(
         key = "triage-mail:$mailUid",
         method = "POST",
         path = "/api/v1/triage/mail/${encodePath(mailUid)}/decide",
@@ -172,6 +180,7 @@ internal object MailRequests {
             put("payload", payload)
             // Seules certaines décisions archivent le fil ; « Plus tard » le garde dans la boîte de réception.
             put("archive", archive && decision.canArchive)
+            if (alwaysArchive) put("always_archive", true)
             put("idempotency_key", key)
         },
         label = label,

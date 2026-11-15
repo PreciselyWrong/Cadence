@@ -245,6 +245,31 @@
     "done": "Başlatıldı.",
     "failed": "Eklenti işlem yapamadı."
   },
+  "decisions": {
+    "deck": {
+      "open": "Karar ver ({{count}})",
+      "title": "Kararlar",
+      "close": "Kapat",
+      "progressLabel": "Karar {{position}} / {{total}}",
+      "loadError": "Kararlar yüklenemedi.",
+      "back": "«Sıralanacaklar»a dön",
+      "done": "Hepsi kararlaştırıldı",
+      "readMore": "Devamını oku",
+      "collapse": "Daralt",
+      "openUrl": "Aç",
+      "recommended": "Önerilen",
+      "noteOpen": "Notla yanıtla",
+      "notePlaceholder": "Aracıya bir not",
+      "noteSend": "Gönder",
+      "later": "Sonra",
+      "skip": "Atla",
+      "undo": "Geri al",
+      "decided": "Karar kaydedildi",
+      "postponed": "Yarın tekrar",
+      "noteSent": "Aracıya geri gönderildi",
+      "keys": "Enter veya →: önerilen · 1–5: seç · ←: sonra · ↓: atla · Ctrl+Z: geri al · Esc: kapat"
+    }
+  },
   "triage": {
     "batch": {
       "title": "Arşivlenecek {{count}} e-posta",
@@ -254,6 +279,9 @@
       "done": "{{count}} arşivleme istendi"
     },
     "settings": {
+      "mailRules": "Her zaman arşivlenen gönderenler",
+      "noMailRules": "Gönderen yok.",
+      "removeRule": "Kaldır",
       "calendars": "Okunan takvimler",
       "noCalendars": "Takvim yok. Profil › Takvimler bölümünden ekleyin.",
       "lookahead": "İleriye bakılacak gün",
@@ -285,6 +313,7 @@
       "delete": "Sil"
     },
     "mail": {
+      "alwaysArchive": "Bu göndereni her zaman arşivle",
             "horizon": {
                 "someday": "Bir gün",
                 "nextMonth": "Gelecek ay",

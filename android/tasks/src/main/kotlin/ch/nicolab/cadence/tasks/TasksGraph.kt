@@ -77,6 +77,10 @@ object TasksGraph {
     fun triage(context: Context): ch.nicolab.cadence.tasks.triage.TriageRepository =
         ch.nicolab.cadence.tasks.data.createTriage(context.applicationContext)
 
+    /** Cartes de décision des agents, lues en ligne et gardées pour le hors ligne. */
+    fun decisions(context: Context): ch.nicolab.cadence.tasks.decisions.DecisionsRepository =
+        ch.nicolab.cadence.tasks.data.createDecisions(context.applicationContext)
+
     /** Classement automatique : réglages, marques et annulation (en ligne), réponses aux suggestions (file différée). */
     fun autoClassify(context: Context): ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRepository =
         ch.nicolab.cadence.tasks.autoclassify.autoClassifyRepository(context)

@@ -79,4 +79,17 @@ router.post(
     )
 );
 
+router.get(
+    '/triage/mail/rules',
+    handle((req) => mail.listRules(req.currentUser))
+);
+router.post(
+    '/triage/mail/rules',
+    handle((req) => mail.addRule(req.currentUser, req.body?.address))
+);
+router.delete(
+    '/triage/mail/rules/:address',
+    handle((req) => mail.deleteRule(req.currentUser, req.params.address))
+);
+
 module.exports = router;

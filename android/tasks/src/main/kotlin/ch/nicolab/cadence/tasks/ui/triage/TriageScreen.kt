@@ -55,6 +55,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.autoclassify.AUTO_CLASSIFY_TYPE
 import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyPayload
+import ch.nicolab.cadence.tasks.ui.decisions.DecisionDeckScreen
 import ch.nicolab.cadence.tasks.triage.QuestionDto
 import ch.nicolab.cadence.tasks.triage.MAIL_TYPE
 import ch.nicolab.cadence.tasks.triage.MailDecision
@@ -95,23 +96,28 @@ internal fun TriageEntry(count: Int, onOpen: () -> Unit) {
 
 /** « À trier » ouvert directement (notification du classement). Même écran que depuis Ma journée. */
 @Composable
-fun TriageRoute(onBack: () -> Unit, openDeck: Boolean = false) = TriageScreen(today = LocalDate.now(), onBack = onBack, openDeck = openDeck)
+fun TriageRoute(onBack: () -> Unit, openDeck: Boolean = false, openDecisions: Boolean = false) =
+    TriageScreen(today = LocalDate.now(), onBack = onBack, openDeck = openDeck, openDecisions = openDecisions)
 
 /** Une proposition à la fois, avec sa raison en une ligne : valider, corriger, garder telle quelle ou passer. */
 @Composable
-internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolean = false) {
+internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolean = false, openDecisions: Boolean = false) {
     val viewModel: TriageViewModel = viewModel()
     val tasksViewModel: TasksViewModel = viewModel()
     val projects by tasksViewModel.projects.collectAsStateWithLifecycle()
     val items by viewModel.items.collectAsStateWithLifecycle()
+    val skippedKeys by viewModel.skippedKeys.collectAsStateWithLifecycle()
+    val decisions by viewModel.decisions.collectAsStateWithLifecycle()
     val queue by viewModel.queue.collectAsStateWithLifecycle()
     val undoable by viewModel.undoable.collectAsStateWithLifecycle()
+    val decisionUndoable by viewModel.decisionUndoable.collectAsStateWithLifecycle()
     val snackbar = rememberAppSnackbarHostState()
     val undoLabel = stringResource(R.string.tasks_undo)
     var correcting by remember { mutableStateOf<TriageItemDto?>(null) }
     var opened by remember { mutableStateOf<String?>(null) }
     var precise by remember { mutableStateOf<Pair<TriageItemDto, QuestionDto>?>(null) }
     var deckOpen by remember { mutableStateOf(openDeck) }
+    var decisionsDeckOpen by remember { mutableStateOf(openDecisions) }
     BackHandler(onBack = onBack)
     LaunchedEffect(viewModel) { viewModel.refresh() }
     LaunchedEffect(viewModel) {
@@ -128,21 +134,36 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolea
         }
     }
 
+    if (decisionsDeckOpen) {
+        DecisionDeckScreen(
+            cards = decisions,
+            undoable = decisionUndoable,
+            onDecide = { card, decision, note -> viewModel.decideDecision(card, decision, note) },
+            onSkip = { card -> viewModel.skipDecision(card) },
+            onUndo = viewModel::undoLastDecision,
+            onClose = { decisionsDeckOpen = false },
+        )
+        return
+    }
     if (deckOpen) {
         MailDeckScreen(
             items = items,
             archiveAvailable = queue?.mailArchive == true,
             today = today,
             undoable = undoable,
-            onDecide = { item, decision, payload, archive -> viewModel.decideMail(item, decision, payload, archive) },
+            onDecide = { item, decision, payload, archive, alwaysArchive ->
+                viewModel.decideMail(item, decision, payload, archive, alwaysArchive)
+            },
             onArchiveBatch = viewModel::archiveMailBatch,
             onSkip = { item -> viewModel.skip(item) },
             onUndo = viewModel::undoLast,
             onClose = { deckOpen = false },
+            skipped = skippedKeys,
         )
         return
     }
     val mailCount = items.count { it.type == MAIL_TYPE }
+    val decisionsCount = if (decisions.isNotEmpty()) decisions.size else (queue?.decisionsCount ?: 0)
 
     Surface(Modifier.fillMaxSize(), color = cadence.background, contentColor = cadence.onSurface) {
         Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
@@ -156,11 +177,24 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolea
                     PluginActionButtons(place = "triage", context = emptyMap())
                 },
             )
-            if (mailCount > 0) {
-                PrimaryAction(
-                    stringResource(R.string.triage_deck_open, mailCount),
+            if (mailCount > 0 || decisionsCount > 0) {
+                Row(
                     Modifier.fillMaxWidth().padding(horizontal = Space.gutter, vertical = Space.xs),
-                ) { deckOpen = true }
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                ) {
+                    if (mailCount > 0) {
+                        PrimaryAction(
+                            stringResource(R.string.triage_deck_open, mailCount),
+                            Modifier.weight(1f),
+                        ) { deckOpen = true }
+                    }
+                    if (decisionsCount > 0) {
+                        PrimaryAction(
+                            stringResource(R.string.decisions_deck_open, decisionsCount),
+                            Modifier.weight(1f),
+                        ) { decisionsDeckOpen = true }
+                    }
+                }
             }
             val item = items.firstOrNull()
             if (item == null) {
@@ -183,7 +217,9 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolea
                         onSkip = { viewModel.skip(item) },
                         archiveAvailable = queue?.mailArchive == true,
                         today = today,
-                        onMailDecision = { decision, payload, archive -> viewModel.decideMail(item, decision, payload, archive) },
+                        onMailDecision = { decision, payload, archive, alwaysArchive ->
+                            viewModel.decideMail(item, decision, payload, archive, alwaysArchive)
+                        },
                     ) {
                         TriageCard(
                             item = item,
@@ -242,7 +278,7 @@ private fun AutoClassifyItem(
     onSkip: () -> Unit,
     archiveAvailable: Boolean,
     today: LocalDate,
-    onMailDecision: (MailDecision, JsonObject, Boolean) -> Unit,
+    onMailDecision: (MailDecision, JsonObject, Boolean, Boolean) -> Unit,
     fallback: @Composable () -> Unit,
 ) {
     when (item.type) {

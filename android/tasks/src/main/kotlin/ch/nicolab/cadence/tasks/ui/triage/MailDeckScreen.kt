@@ -118,14 +118,15 @@ internal fun MailDeckScreen(
     archiveAvailable: Boolean,
     today: LocalDate,
     undoable: Boolean,
-    onDecide: (TriageItemDto, MailDecision, JsonObject, Boolean) -> Unit,
+    onDecide: (TriageItemDto, MailDecision, JsonObject, Boolean, Boolean) -> Unit,
     onArchiveBatch: (List<TriageItemDto>) -> Unit,
     onSkip: (TriageItemDto) -> Unit,
     onUndo: () -> Unit,
     onClose: () -> Unit,
+    skipped: List<String> = emptyList(),
 ) {
     BackHandler(onBack = onClose)
-    val cards = MailDeck.cards(items)
+    val cards = MailDeck.cards(items, skipped)
     val current = cards.firstOrNull()
     var batchSeen by rememberSaveable { mutableStateOf(false) }
     val batch = if (batchSeen) emptyList() else MailDeck.archiveBatch(cards)
@@ -187,7 +188,9 @@ internal fun MailDeckScreen(
                             archiveAvailable = archiveAvailable,
                             today = today,
                             undoable = undoable,
-                            onDecide = { decision, payload, archive -> onDecide(item, decision, payload, archive) },
+                            onDecide = { decision, payload, archive, alwaysArchive ->
+                                onDecide(item, decision, payload, archive, alwaysArchive)
+                            },
                             onSkip = { onSkip(item) },
                             onUndo = onUndo,
                         )
@@ -314,7 +317,7 @@ private fun DeckCard(
     archiveAvailable: Boolean,
     today: LocalDate,
     undoable: Boolean,
-    onDecide: (MailDecision, JsonObject, Boolean) -> Unit,
+    onDecide: (MailDecision, JsonObject, Boolean, Boolean) -> Unit,
     onSkip: () -> Unit,
     onUndo: () -> Unit,
 ) {
@@ -332,7 +335,7 @@ private fun DeckCard(
     val empty = JsonObject(emptyMap())
     val hasOptions = card.options.isNotEmpty()
     // Remettre à plus tard garde le mail dans la boîte de réception.
-    val decide = { decision: MailDecision, payload: JsonObject -> onDecide(decision, payload, archive) }
+    val decide = { decision: MailDecision, payload: JsonObject -> onDecide(decision, payload, archive, false) }
     val openMail = { card.gmailUrl?.let(uriHandler::openUri) }
     val accept = {
         if (advice.opensMail) openMail()
@@ -395,7 +398,7 @@ private fun DeckCard(
             MailBody(card)
         }
         if (hasOptions) {
-            OptionRow(card, onChoose = chooseOption)
+            MailOptionRow(card, onChoose = chooseOption)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 if (card.gmailUrl != null) {
                     TertiaryAction(stringResource(R.string.triage_deck_open_gmail)) { openMail() }
@@ -403,6 +406,11 @@ private fun DeckCard(
                 TertiaryAction(stringResource(R.string.triage_deck_edit_task)) { editingTask = true }
                 if (MailOption.TRASH !in card.options) {
                     TertiaryAction(stringResource(R.string.triage_deck_option_trash)) { decide(MailDecision.TRASH, empty) }
+                }
+                if (card.sender != null) {
+                    TertiaryAction(stringResource(R.string.triage_mail_always_archive)) {
+                        onDecide(MailDecision.ARCHIVE, empty, false, true)
+                    }
                 }
                 chat?.let { item ->
                     TertiaryAction(stringResource(R.string.triage_deck_chat)) {
@@ -450,6 +458,11 @@ private fun DeckCard(
                     }
                 }
                 TertiaryAction(stringResource(R.string.triage_deck_option_trash)) { decide(MailDecision.TRASH, empty) }
+                if (card.sender != null) {
+                    TertiaryAction(stringResource(R.string.triage_mail_always_archive)) {
+                        onDecide(MailDecision.ARCHIVE, empty, false, true)
+                    }
+                }
                 TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
             }
             if (archiveAvailable) {
@@ -553,7 +566,7 @@ private fun ActionErrorBanner(error: String) {
 
 /** Une rangée de 2 à 5 grandes actions ; celle que l'agent recommande est encadrée et teintée. */
 @Composable
-private fun OptionRow(card: MailCardData, onChoose: (MailOption) -> Unit) {
+internal fun MailOptionRow(card: MailCardData, onChoose: (MailOption) -> Unit) {
     val recommended = card.recommended ?: card.options.first()
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
         card.options.forEach { option ->

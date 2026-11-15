@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.triage
 
 import java.net.URLEncoder
+import java.time.Instant
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -30,9 +31,44 @@ object MailDeck {
 
     private val EMPTY = JsonObject(emptyMap())
 
-    /** Les cartes Mail lisibles, dans l'ordre de la file (cartes passées en dernier, fait par la file). */
-    fun cards(items: List<TriageItemDto>): List<Pair<TriageItemDto, MailCardData>> =
-        items.filter { it.type == MAIL_TYPE }.mapNotNull { item -> MailPayload.parse(item.payload)?.let { item to it } }
+    /**
+     * Les cartes Mail lisibles, ordonnées par conseil (`event`, puis `draft`/`reply`, puis `task`, puis le reste),
+     * les plus récentes d'abord dans chaque groupe ; les cartes passées restent à la fin.
+     */
+    fun cards(items: List<TriageItemDto>, skipped: List<String> = emptyList()): List<Pair<TriageItemDto, MailCardData>> {
+        val parsed = items.filter { it.type == MAIL_TYPE }.mapNotNull { item -> MailPayload.parse(item.payload)?.let { item to it } }
+        val sorted = parsed.sortedWith(
+            compareBy<Pair<TriageItemDto, MailCardData>> { groupRank(it.second) }
+                .thenBy { receivedSortKey(it.second.receivedAt) },
+        )
+        if (skipped.isEmpty()) return sorted
+        return sorted.sortedBy { (item, _) -> skipped.indexOf(item.key) }
+    }
+
+    private fun groupRank(card: MailCardData): Int {
+        if (card.options.isNotEmpty()) {
+            val rec = card.recommended ?: card.options.first()
+            return when (rec) {
+                MailOption.EVENT -> 0
+                MailOption.DRAFT, MailOption.REPLY -> 1
+                MailOption.TASK -> 2
+                else -> 3
+            }
+        }
+        return when (card.kind) {
+            "event" -> if (card.event != null) 0 else 2
+            "reply" -> if (card.gmailUrl != null) 1 else 2
+            "read" -> if (card.gmailUrl != null) 3 else 2
+            "task", null -> 2
+            else -> 3
+        }
+    }
+
+    private fun receivedSortKey(receivedAt: String?): Long {
+        if (receivedAt.isNullOrBlank()) return Long.MAX_VALUE
+        val epoch = runCatching { Instant.parse(receivedAt).toEpochMilli() }.getOrNull() ?: return Long.MAX_VALUE
+        return -epoch
+    }
 
     /**
      * Les cartes que l'agent conseille d'archiver (newsletters, reçus…), proposées ensemble à l'ouverture : un geste

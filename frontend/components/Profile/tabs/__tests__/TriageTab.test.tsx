@@ -4,6 +4,8 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import TriageTab from '../TriageTab';
 import {
+    deleteMailRule,
+    fetchMailRules,
     fetchTriageSettings,
     saveTriageSettings,
 } from '../../../../utils/triageService';
@@ -12,6 +14,8 @@ jest.mock('../../../../utils/triageService', () => ({
     ...jest.requireActual('../../../../utils/triageService'),
     fetchTriageSettings: jest.fn(),
     saveTriageSettings: jest.fn(),
+    fetchMailRules: jest.fn(),
+    deleteMailRule: jest.fn(),
 }));
 jest.mock('../../../../utils/calendarFeedsService', () => ({
     fetchCalendarFeeds: jest
@@ -43,6 +47,8 @@ describe('TriageTab', () => {
         (saveTriageSettings as jest.Mock).mockImplementation(
             async (next) => next
         );
+        (fetchMailRules as jest.Mock).mockResolvedValue([]);
+        (deleteMailRule as jest.Mock).mockResolvedValue(undefined);
     });
 
     it('saves the calendars read, the alerts and the assistant', async () => {
@@ -68,6 +74,25 @@ describe('TriageTab', () => {
         );
         expect(await screen.findByRole('status')).toHaveTextContent(
             'Réglages enregistrés'
+        );
+    });
+
+    it('lists sender rules and removes one on click', async () => {
+        (fetchMailRules as jest.Mock).mockResolvedValue([
+            { address: 'news@example.com', action: 'archive' },
+        ]);
+        render(
+            <MemoryRouter>
+                <TriageTab isActive />
+            </MemoryRouter>
+        );
+        expect(await screen.findByText('news@example.com')).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Retirer' }));
+        await waitFor(() =>
+            expect(deleteMailRule).toHaveBeenCalledWith('news@example.com')
+        );
+        await waitFor(() =>
+            expect(screen.queryByText('news@example.com')).toBeNull()
         );
     });
 });

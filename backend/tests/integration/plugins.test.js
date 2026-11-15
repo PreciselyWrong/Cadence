@@ -809,6 +809,67 @@ module.exports = {
             expect(registry.runtimeError('hello')).toBeNull();
         });
 
+        it('includes trimmed, 40-char capped status on menu actions when non-empty and ignores errors', async () => {
+            const STATUS_CODE = `
+module.exports = {
+  activate(ctx) {
+    ctx.actions.onRun('fetch', async () => ({ ok: true }), {
+      status: () => {
+        const mode = ctx.settings.get('mode');
+        if (mode === 'throw') throw new Error('boom');
+        if (mode === 'nonstring') return 123;
+        if (mode === 'empty') return '   ';
+        return '  relevé à 9 h 12, ' + 'x'.repeat(50);
+      },
+    });
+  },
+};
+`;
+            const manifest = manifestOf('status-plugin', {
+                permissions: [],
+                events: [],
+                settings: [
+                    {
+                        key: 'mode',
+                        type: 'string',
+                        label: 'Mode',
+                        default: 'text',
+                    },
+                ],
+                actions: [
+                    {
+                        id: 'fetch',
+                        label: 'Relever',
+                        places: ['mail'],
+                        run: true,
+                    },
+                ],
+            });
+            writePlugin('status-plugin', manifest, STATUS_CODE);
+            await adminAgent
+                .patch('/api/plugins/status-plugin')
+                .send({ enabled: true });
+
+            const withStatus = (
+                await otherAgent.get('/api/plugins/menu')
+            ).body.actions.find((a) => a.plugin === 'status-plugin');
+            expect(withStatus.status).toBeDefined();
+            expect(withStatus.status.length).toBe(40);
+            expect(withStatus.status.startsWith('relevé à 9 h 12')).toBe(true);
+
+            for (const mode of ['throw', 'nonstring', 'empty']) {
+                // eslint-disable-next-line no-await-in-loop
+                await adminAgent
+                    .patch('/api/plugins/status-plugin')
+                    .send({ settings: { mode } });
+                // eslint-disable-next-line no-await-in-loop
+                const action = (
+                    await otherAgent.get('/api/plugins/menu')
+                ).body.actions.find((a) => a.plugin === 'status-plugin');
+                expect(action).not.toHaveProperty('status');
+            }
+        });
+
         it('answers 409 with the message when the plugin declines', async () => {
             writePlugin('hello', runManifest(), RUN_CODE);
             await adminAgent

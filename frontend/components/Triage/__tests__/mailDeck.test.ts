@@ -23,14 +23,14 @@ const payload = (fields: Partial<MailPayload> = {}): MailPayload => ({
     ...fields,
 });
 
-const mailItem = (uid: string): TriageItem =>
+const mailItem = (uid: string, fields: Partial<MailPayload> = {}): TriageItem =>
     ({
         key: `mail:${uid}`,
         type: 'mail',
         source: 'mail',
         task_uid: null,
         action: 'decide_mail',
-        payload: payload({ mail_uid: uid }),
+        payload: payload({ mail_uid: uid, ...fields }),
         reason: 'x',
         details: [],
         question: null,
@@ -166,6 +166,29 @@ describe('mail deck › undo', () => {
         }).state;
         state = deckReducer(state, { type: 'failed', key: 'mail:a' }).state;
         expect(deckCards(items, state).map((i) => i.key)).toEqual(['mail:a']);
+    });
+
+    it('orders by recommended group (event, draft/reply, task, rest) with queue order inside each group', () => {
+        const items = [
+            mailItem('other', { recommended: 'archive' }),
+            mailItem('t1', { recommended: 'task' }),
+            mailItem('r1', { recommended: 'reply' }),
+            mailItem('e1', { recommended: 'event' }),
+            mailItem('d1', { recommended: 'draft' }),
+            mailItem('t2', { recommended: 'task' }),
+            mailItem('none', { recommended: null }),
+            mailItem('e2', { recommended: 'event' }),
+        ];
+        expect(deckCards(items, initialDeck).map((i) => i.key)).toEqual([
+            'mail:e1',
+            'mail:e2',
+            'mail:r1',
+            'mail:d1',
+            'mail:t1',
+            'mail:t2',
+            'mail:other',
+            'mail:none',
+        ]);
     });
 });
 

@@ -90,6 +90,7 @@ data class PluginAction(
     val label: String,
     val places: List<String>,
     val run: Boolean = false,
+    val status: String? = null,
 )
 
 /** Réponse de `GET /api/plugins/menu` : les pages des plugins actifs et leurs boutons d'action. */
@@ -179,7 +180,8 @@ object PluginJson {
         val plugin = body.text("plugin") ?: return null
         val id = body.text("id") ?: return null
         val label = body.text("label")?.takeIf { it.isNotBlank() } ?: return null
-        return PluginAction(plugin, id, label, body.texts("places"), run = body.bool("run") == true)
+        val status = body.text("status")?.takeIf { it.isNotBlank() }
+        return PluginAction(plugin, id, label, body.texts("places"), run = body.bool("run") == true, status = status)
     }
 
     /** Forme gardée en préférences, relue par [menu]. */
@@ -213,6 +215,7 @@ object PluginJson {
                                 buildJsonArray { action.places.forEach { add(JsonPrimitive(it)) } },
                             )
                             if (action.run) put("run", true)
+                            action.status?.let { put("status", it) }
                         },
                     )
                 }

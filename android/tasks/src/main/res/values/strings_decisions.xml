@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="decisions_deck_open">Décider (%1$d)</string>
+    <string name="decisions_deck_title">Décider</string>
+    <string name="decisions_deck_done">Tout est décidé</string>
+    <string name="decisions_deck_done_message">Les décisions proposées par les agents sont réglées.</string>
+    <string name="decisions_deck_back">Retour à « À trier »</string>
+    <string name="decisions_read_more">Lire la suite</string>
+    <string name="decisions_read_less">Replier</string>
+    <string name="decisions_open">Ouvrir</string>
+    <string name="decisions_word_hint">Une remarque pour l\'agent (500 caractères)</string>
+    <string name="decisions_sent_choice">Décision enregistrée</string>
+    <string name="decisions_sent_later">Revient demain</string>
+    <string name="decisions_sent_note">Renvoyé à l\'agent</string>
+    <string name="decisions_swipe_hint">Glisser à droite : conseil · à gauche : plus tard</string>
+    <string name="decisions_swipe_hint_no_rec">Glisser à gauche : plus tard</string>
+</resources>

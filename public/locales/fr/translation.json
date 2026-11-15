@@ -245,6 +245,51 @@
     "done": "C’est lancé.",
     "failed": "Le plugin n’a pas pu agir."
   },
+  "decisions": {
+    "deck": {
+      "open": "Décider ({{count}})",
+      "title": "Décisions",
+      "close": "Fermer",
+      "progressLabel": "Décision {{position}} sur {{total}}",
+      "loadError": "Les décisions n’ont pas pu être lues.",
+      "back": "Retour à « À trier »",
+      "done": "Tout est décidé",
+      "readMore": "Lire la suite",
+      "collapse": "Réduire",
+      "openUrl": "Ouvrir",
+      "recommended": "Conseillé",
+      "noteOpen": "Répondre par un mot",
+      "notePlaceholder": "Un mot pour l’agent",
+      "noteSend": "Envoyer",
+      "later": "Plus tard",
+      "skip": "Passer",
+      "undo": "Annuler",
+      "decided": "Décision enregistrée",
+      "postponed": "Revient demain",
+      "noteSent": "Renvoyé à l’agent",
+      "keys": "Entrée ou → : conseil · 1–5 : choisir · ← : plus tard · ↓ : passer · Ctrl+Z : annuler · Échap : fermer"
+    }
+  },
+  "roadmap": {
+      "title": "Feuille de route",
+      "range": "{{start}} au {{end}}",
+      "noDates": "Pas encore de dates",
+      "projectDates": "{{range}} (dates du projet)",
+      "noArea": "Sans domaine",
+      "toggle": "Afficher ou masquer {{name}}",
+      "previousQuarter": "Trimestre précédent",
+      "nextQuarter": "Trimestre suivant",
+      "thisQuarter": "Ce trimestre",
+      "expandAll": "Tout déplier",
+      "collapseAll": "Tout replier",
+      "loadError": "Impossible de charger la feuille de route.",
+      "empty": "Rien à afficher pour l'instant. Les barres viennent des dates de début et d'échéance des tâches de vos projets.",
+      "items": "Domaine / Projet / Tâche",
+      "goalsOutside": "Hors de ce trimestre : {{count}}",
+      "legendGoal": "Date cible de l'objectif",
+      "legendArea": "Résumé du domaine",
+      "legendProject": "Résumé du projet"
+  },
   "triage": {
     "batch": {
       "title": "{{count}} mails à archiver",
@@ -254,6 +299,9 @@
       "done": "{{count}} archivages demandés"
     },
     "settings": {
+      "mailRules": "Expéditeurs toujours archivés",
+      "noMailRules": "Aucun expéditeur.",
+      "removeRule": "Retirer",
       "calendars": "Calendriers lus",
       "noCalendars": "Aucun calendrier. Ajoutez-en dans Profil › Calendriers.",
       "lookahead": "Jours à regarder",
@@ -285,6 +333,7 @@
       "delete": "Supprimer"
     },
     "mail": {
+      "alwaysArchive": "Toujours archiver cet expéditeur",
             "horizon": {
                 "someday": "Un jour",
                 "nextMonth": "Mois prochain",
@@ -479,6 +528,7 @@
     "previewUnavailable": "Aperçu indisponible"
   },
   "sidebar": {
+    "roadmap": "Feuille de route",
     "links": "Liens",
     "dashboard": "Tableau de bord",
     "projects": "Projets",

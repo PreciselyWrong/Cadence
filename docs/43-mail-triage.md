@@ -165,6 +165,13 @@ The « Trier mes mails » decks of the web and Android show the choices, the exc
 
 When an agent creates or reopens a mail card (`propose_mail`), a per-user timer starts (2 minutes, `MAIL_READY_DELAY_MS`, `backend/modules/triage/mailReady.js`); each further card in the burst restarts it. When it fires, the cards with status `pending` are counted: none, and nothing is sent; otherwise the user's unread `mail_ready` notifications are dismissed and one is created: type `mail_ready`, title « 1 mail à trier » or « N mails à trier » (French, server-side, like the proposals' titles), level `info`, `sources` `desktop` and `mobile`, `data` `{ kind: 'mail_ready', count: N }`. A failure is logged (« Mail ready notification failed ») and never fails `propose_mail`. The web notification opens `/triage?deck=mail`, which opens the deck at once when mail cards wait, then drops the parameter.
 
+## Sender rule (2026-11-15)
+
+- **Always archive.** `POST /api/triage/mail/:uid/decide` accepts `always_archive: true` with `decision: 'archive'`, recording `{ address, action: 'archive' }` for the card's `from_address` (lowercased, max 254 chars) in `mail_sender_rules` (unique `(user_id, address)`).
+- **Auto-archive on propose.** `propose_mail` for a sender with an archive rule stores a new or `pending` card already decided `archive` with `action: { type: 'archive', state: 'requested' }` (never reopens a `done` card), omits it from `GET /api/triage`, and skips `mail_ready` notification scheduling. `list_mail_cards` includes `sender_rules: [{ address, action }]`.
+- **Manage rules.** `GET /api/triage/mail/rules` lists the user's rules; `POST /api/triage/mail/rules { address }` adds one (valid email, max 254 chars); `DELETE /api/triage/mail/rules/:address` removes it.
+- **Deck order.** The mail deck orders cards recommended `event` first, then `draft` (or `reply`), then `task`, then the rest, newest first inside each group.
+
 ## Out of scope
 
 Reading a whole message, sending, attachments, IMAP or other providers, rules or filters, labels other than the inbox.

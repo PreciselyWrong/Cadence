@@ -5,7 +5,7 @@
 // decides. Cadence stores no message body and never sends.
 const moment = require('moment-timezone');
 const { Op } = require('sequelize');
-const { MailItem } = require('../../models');
+const { MailItem, MailSenderRule } = require('../../models');
 const { getSafeTimezone } = require('../../utils/timezone-utils');
 const {
     ConflictError,
@@ -14,6 +14,7 @@ const {
 } = require('../../shared/errors');
 const {
     normalizeProposal,
+    normalizeAddress,
     threadKey,
     clean,
     isDay,
@@ -95,6 +96,47 @@ const reopen = (row) => ({
 const findThread = (userId, key) =>
     MailItem.findOne({ where: { user_id: userId, ...key } });
 
+async function hasArchiveRule(userId, fromAddress) {
+    if (!fromAddress) return false;
+    const rule = await MailSenderRule.findOne({
+        where: {
+            user_id: userId,
+            address: fromAddress.toLowerCase(),
+            action: 'archive',
+        },
+    });
+    return Boolean(rule);
+}
+
+async function listRules(user) {
+    const rows = await MailSenderRule.findAll({
+        where: { user_id: user.id },
+        order: [['address', 'ASC']],
+    });
+    return {
+        rules: rows.map((row) => ({
+            address: row.address,
+            action: row.action,
+        })),
+    };
+}
+
+async function addRule(user, rawAddress) {
+    const address = normalizeAddress(rawAddress);
+    const [row] = await MailSenderRule.findOrCreate({
+        where: { user_id: user.id, address },
+        defaults: { action: 'archive' },
+    });
+    return { rule: { address: row.address, action: row.action } };
+}
+
+async function deleteRule(user, rawAddress) {
+    const address = normalizeAddress(rawAddress);
+    await MailSenderRule.destroy({
+        where: { user_id: user.id, address },
+    });
+}
+
 // Decided cards are kept 30 days, so the agent sees what was settled.
 const purge = (userId, now = new Date()) =>
     MailItem.destroy({
@@ -110,6 +152,7 @@ const purge = (userId, now = new Date()) =>
 async function proposeMail(user, input) {
     const card = normalizeProposal(input);
     const key = { account: card.account, thread_id: card.thread_id };
+    const autoArchive = await hasArchiveRule(user.id, card.from_address);
     const row = await findThread(user.id, key);
     if (!row) {
         try {
@@ -117,14 +160,36 @@ async function proposeMail(user, input) {
                 user_id: user.id,
                 ...key,
                 ...pick(card),
-                status: 'pending',
+                ...(autoArchive
+                    ? {
+                          status: 'done',
+                          decision: 'archive',
+                          decided_at: new Date(),
+                          action: { type: 'archive', state: 'requested' },
+                          action_error: null,
+                      }
+                    : { status: 'pending' }),
             });
-            scheduleMailReady(user.id);
+            if (!autoArchive) scheduleMailReady(user.id);
             return { mail_uid: created.uid, status: created.status };
         } catch (error) {
             if (error.name !== 'SequelizeUniqueConstraintError') throw error;
             return proposeMail(user, input);
         }
+    }
+    if (autoArchive) {
+        if (row.status === 'pending') {
+            await row.update({
+                ...pick(card),
+                status: 'done',
+                decision: 'archive',
+                decided_at: new Date(),
+                later_until: null,
+                action: { type: 'archive', state: 'requested' },
+                action_error: null,
+            });
+        }
+        return { mail_uid: row.uid, status: row.status };
     }
     const newer = card.received_at > row.received_at;
     let reopened = false;
@@ -161,11 +226,14 @@ async function resolveMail(user, input) {
 
 async function listCards(user) {
     await purge(user.id);
-    const rows = await MailItem.findAll({
-        where: { user_id: user.id },
-        order: [['received_at', 'DESC']],
-        limit: LIST_MAX,
-    });
+    const [rows, { rules }] = await Promise.all([
+        MailItem.findAll({
+            where: { user_id: user.id },
+            order: [['received_at', 'DESC']],
+            limit: LIST_MAX,
+        }),
+        listRules(user),
+    ]);
     return {
         cards: rows.map((row) => ({
             mail_uid: row.uid,
@@ -187,6 +255,7 @@ async function listCards(user) {
             action_error: row.action_error ?? null,
             note: row.note ?? null,
         })),
+        sender_rules: rules,
     };
 }
 
@@ -362,7 +431,13 @@ function settledAnswer(row, decision, key) {
 async function decide(
     user,
     uid,
-    { decision, payload = {}, archive = false, idempotency_key: key } = {}
+    {
+        decision,
+        payload = {},
+        archive = false,
+        always_archive: alwaysArchive = false,
+        idempotency_key: key,
+    } = {}
 ) {
     if (!DECISIONS.has(decision)) {
         throw new ValidationError(
@@ -381,6 +456,12 @@ async function decide(
     if (archive !== true && archive !== false) {
         throw new ValidationError('archive must be true or false');
     }
+    if (alwaysArchive !== true && alwaysArchive !== false) {
+        throw new ValidationError('always_archive must be true or false');
+    }
+    if (alwaysArchive && decision !== 'archive') {
+        throw new ValidationError('always_archive only applies to archive');
+    }
     if (archive && decision === 'later') {
         throw new ValidationError('a card put off is not archived');
     }
@@ -396,6 +477,9 @@ async function decide(
 
     const row = await MailItem.findOne({ where: { user_id: user.id, uid } });
     if (!row) throw new NotFoundError('Mail card not found');
+    if (alwaysArchive && !row.from_address) {
+        throw new ValidationError('this card has no sender address');
+    }
     const now = new Date();
     const open = ['pending', 'later'].includes(row.status);
     if ((key && row.decide_key === key) || (!open && !isStale(row, now))) {
@@ -458,6 +542,7 @@ async function decide(
     }
     await MailItem.update(changes, { where: { id: row.id } });
     await row.reload();
+    if (alwaysArchive) await addRule(user, row.from_address);
     await announce(user.id, row);
 
     if (!archive) return outcome(row);
@@ -605,6 +690,9 @@ module.exports = {
     reportEvent,
     resolveMail,
     listCards,
+    listRules,
+    addRule,
+    deleteRule,
     queueItems,
     decide,
     archiveAvailable: gateway.configured,

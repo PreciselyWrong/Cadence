@@ -51,6 +51,7 @@ export interface TriageQueue {
     items: TriageItem[];
     tasks: Record<string, TriageTask>;
     count: number;
+    decisions_count?: number;
     // The Gmail gateway is set: a mail card may archive its thread.
     mail_archive?: boolean;
 }
@@ -187,13 +188,58 @@ export const decideMail = async (
     mailUid: string,
     decision: MailDecision,
     payload: Record<string, unknown>,
-    archive: boolean
+    archive: boolean,
+    options?: { always_archive?: boolean }
 ): Promise<MailOutcome> => {
     const response = await send(
         `triage/mail/${encodeURIComponent(mailUid)}/decide`,
-        { decision, payload, archive, idempotency_key: newKey() }
+        {
+            decision,
+            payload,
+            archive,
+            ...(options?.always_archive ? { always_archive: true } : {}),
+            idempotency_key: newKey(),
+        }
     );
     return response.json();
+};
+
+export interface MailSenderRule {
+    address: string;
+    action: string;
+    created_at?: string;
+}
+
+export const fetchMailRules = async (): Promise<MailSenderRule[]> => {
+    const response = await request(
+        'triage/mail/rules',
+        'GET',
+        undefined,
+        'Failed to load the mail sender rules.'
+    );
+    const data = await response.json();
+    return Array.isArray(data) ? data : (data.rules ?? []);
+};
+
+export const createMailRule = async (
+    address: string
+): Promise<MailSenderRule> =>
+    (
+        await request(
+            'triage/mail/rules',
+            'POST',
+            { address },
+            'Failed to save the mail sender rule.'
+        )
+    ).json();
+
+export const deleteMailRule = async (address: string): Promise<void> => {
+    await request(
+        `triage/mail/rules/${encodeURIComponent(address)}`,
+        'DELETE',
+        undefined,
+        'Failed to delete the mail sender rule.'
+    );
 };
 
 // The answer to a question of the queue becomes the linked context of its

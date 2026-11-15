@@ -1120,4 +1120,135 @@ describe('triage › mail cards', () => {
             expect(response.body.archived).toBe(false);
         });
     });
+
+    describe('sender rules', () => {
+        it('records a rule on always_archive, auto-archives new proposals, lists and deletes rules', async () => {
+            const { mail_uid: firstUid } = await propose({
+                thread_id: 'rule-t1',
+                from_address: 'News@Example.COM',
+            });
+
+            // Rejects always_archive without archive decision
+            const badFlag = await decide(firstUid, {
+                decision: 'dismiss',
+                always_archive: true,
+            });
+            expect(badFlag.status).toBe(400);
+
+            // Decide archive with always_archive: true
+            const res = await decide(firstUid, {
+                decision: 'archive',
+                always_archive: true,
+            });
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject({
+                state: 'done',
+                decision: 'archive',
+                action: { type: 'archive', state: 'requested' },
+            });
+
+            // GET /api/triage/mail/rules & list_mail_cards both return the lowercased rule
+            const rulesRes = await agent.get('/api/triage/mail/rules');
+            expect(rulesRes.status).toBe(200);
+            expect(rulesRes.body.rules).toEqual([
+                { address: 'news@example.com', action: 'archive' },
+            ]);
+            const listed = JSON.parse(
+                (await run('list_mail_cards', {})).content[0].text
+            );
+            expect(listed.sender_rules).toEqual([
+                { address: 'news@example.com', action: 'archive' },
+            ]);
+
+            // New proposal from that sender is stored decided archive, not in GET /api/triage
+            const { mail_uid: secondUid, status } = await propose({
+                thread_id: 'rule-t2',
+                from_address: 'news@example.com',
+            });
+            expect(status).toBe('done');
+            expect(await mailItems()).toEqual([]);
+
+            const afterSecond = JSON.parse(
+                (await run('list_mail_cards', {})).content[0].text
+            );
+            const secondCard = afterSecond.cards.find(
+                (c) => c.mail_uid === secondUid
+            );
+            expect(secondCard).toMatchObject({
+                status: 'done',
+                decision: 'archive',
+                action: { type: 'archive', state: 'requested' },
+            });
+
+            // POST /api/triage/mail/rules validates address (bad -> 400, valid -> 200)
+            expect(
+                (
+                    await agent
+                        .post('/api/triage/mail/rules')
+                        .send({ address: 'bad' })
+                ).status
+            ).toBe(400);
+            expect(
+                (
+                    await agent
+                        .post('/api/triage/mail/rules')
+                        .send({ address: ' Other@Example.com ' })
+                ).status
+            ).toBe(200);
+
+            // DELETE removes the rule; subsequent proposal stays pending
+            const delRes = await agent.delete(
+                '/api/triage/mail/rules/news@example.com'
+            );
+            expect(delRes.status).toBe(204);
+
+            const { status: thirdStatus } = await propose({
+                thread_id: 'rule-t3',
+                from_address: 'news@example.com',
+            });
+            expect(thirdStatus).toBe('pending');
+            expect(await mailItems()).toHaveLength(1);
+        });
+
+        it('auto-archives an existing pending card without reopening a done one', async () => {
+            const { mail_uid: pendingUid } = await propose({
+                thread_id: 'rule-pending',
+                from_address: 'auto@example.com',
+            });
+            const { mail_uid: doneUid } = await propose({
+                thread_id: 'rule-done',
+                from_address: 'auto@example.com',
+            });
+            await decide(doneUid, { decision: 'dismiss' });
+
+            await agent
+                .post('/api/triage/mail/rules')
+                .send({ address: 'auto@example.com' });
+
+            // Re-proposing pending card settles it as archive
+            const p = await propose({
+                thread_id: 'rule-pending',
+                from_address: 'auto@example.com',
+            });
+            expect(p.status).toBe('done');
+            const pendingRow = await MailItem.findOne({
+                where: { uid: pendingUid },
+            });
+            expect(pendingRow.decision).toBe('archive');
+            expect(pendingRow.action).toEqual({
+                type: 'archive',
+                state: 'requested',
+            });
+
+            // Re-proposing done card does NOT reopen or overwrite its dismiss decision
+            await propose({
+                thread_id: 'rule-done',
+                from_address: 'auto@example.com',
+                received_at: '2026-11-12T09:00:00Z',
+            });
+            const doneRow = await MailItem.findOne({ where: { uid: doneUid } });
+            expect(doneRow.status).toBe('done');
+            expect(doneRow.decision).toBe('dismiss');
+        });
+    });
 });

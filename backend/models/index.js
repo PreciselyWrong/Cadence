@@ -111,6 +111,8 @@ const LinkPreview = require('./link_preview')(sequelize);
 const BriefProposal = require('./brief_proposal')(sequelize);
 const TaskTriage = require('./task_triage')(sequelize);
 const MailItem = require('./mail_item')(sequelize);
+const MailSenderRule = require('./mail_sender_rule')(sequelize);
+const AgentDecision = require('./agent_decision')(sequelize);
 const Proposal = require('./proposal')(sequelize);
 const { AutoClassifyItem, AutoClassifyChange, AutoClassifySuggestion } =
     require('./auto_classify')(sequelize);
@@ -795,6 +797,8 @@ module.exports = {
     BriefProposal,
     TaskTriage,
     MailItem,
+    MailSenderRule,
+    AgentDecision,
     Proposal,
     AutoClassifyItem,
     AutoClassifyChange,

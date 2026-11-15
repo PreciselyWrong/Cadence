@@ -998,3 +998,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : bouton « Relever les mails » (action `run` du plugin Hermes) dans l'en-tête d'« À trier » et en fin de paquet : le job tourne tout de suite, un message dit ce qui se passe ; à l'ouverture du paquet, dès deux mails conseillés « Archiver », un écran « N mails à archiver » avec une case cochée par mail, « Archiver les N » et « Les voir un par un ». « Relancer le Point emploi » dans l'en-tête de Carrière. Les boutons `run` sont désactivés pendant l'appel et jamais mis en file hors ligne.
 - **Android** : même comportement dans la même étape (Triage, fin du paquet, Carrière).
 
+## Paquet « Décider » et tri des mails v3 (2026-11-15)
+
+- **Problème** : chaque job d'agent qui demandait un choix (abonnements, mises à jour, famille, finances, mémoire) parlait dans un message ou sur Telegram ; et le tri des mails demandait encore des gestes répétés pour les mêmes expéditeurs.
+- **Décision** : un seul paquet « Décider (N) » dans « À trier », construit comme « Trier mes mails » (conseil encadré, bouton danger en rouge, raison en petit, « Répondre par un mot », « Plus tard », « Passer », « Annuler », touches 1–5, Entrée, flèches) ; « Toujours archiver cet expéditeur » sur les cartes Mail, règles dans Profil › À trier ; état « relevé à 9 h 12 » / « en cours… » à côté de « Relever les mails » ; les cartes d'« À trier » montrent les mêmes choix que le paquet ; le paquet Mail met les rendez-vous et les réponses en tête.
+- **Android** : même comportement dans la même étape (1.40.0).
+

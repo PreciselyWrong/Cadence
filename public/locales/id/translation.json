@@ -245,6 +245,31 @@
     "done": "Dimulai.",
     "failed": "Plugin tidak dapat bertindak."
   },
+  "decisions": {
+    "deck": {
+      "open": "Putuskan ({{count}})",
+      "title": "Keputusan",
+      "close": "Tutup",
+      "progressLabel": "Keputusan {{position}} dari {{total}}",
+      "loadError": "Tidak dapat memuat keputusan.",
+      "back": "Kembali ke \"Untuk disortir\"",
+      "done": "Semua diputuskan",
+      "readMore": "Baca selengkapnya",
+      "collapse": "Ciutkan",
+      "openUrl": "Buka",
+      "recommended": "Disarankan",
+      "noteOpen": "Balas dengan catatan",
+      "notePlaceholder": "Pesan untuk agen",
+      "noteSend": "Kirim",
+      "later": "Nanti",
+      "skip": "Lewati",
+      "undo": "Urungkan",
+      "decided": "Keputusan disimpan",
+      "postponed": "Kembali besok",
+      "noteSent": "Dikembalikan ke agen",
+      "keys": "Enter atau →: disarankan · 1–5: pilih · ←: nanti · ↓: lewati · Ctrl+Z: urungkan · Esc: tutup"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} email untuk diarsipkan",
@@ -254,6 +279,9 @@
       "done": "{{count}} pengarsipan diminta"
     },
     "settings": {
+      "mailRules": "Pengirim yang selalu diarsipkan",
+      "noMailRules": "Tidak ada pengirim.",
+      "removeRule": "Hapus",
       "calendars": "Kalender yang dibaca",
       "noCalendars": "Belum ada kalender. Tambahkan di Profil › Kalender.",
       "lookahead": "Hari ke depan",
@@ -285,6 +313,7 @@
       "delete": "Hapus"
     },
     "mail": {
+      "alwaysArchive": "Selalu arsipkan pengirim ini",
             "horizon": {
                 "someday": "Suatu hari",
                 "nextMonth": "Bulan depan",

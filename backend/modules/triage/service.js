@@ -14,6 +14,7 @@ const { taskFingerprint } = require('./core/fingerprint');
 const { applyAction } = require('./actions');
 const autoClassify = require('../auto-classify/service');
 const mail = require('./mail');
+const decisions = require('../decisions/service');
 
 const SETTLED = new Set(['kept', 'applied']);
 const NOTE_PREVIEW = 300;
@@ -109,6 +110,7 @@ async function getQueue(user) {
         ...queue,
         count: queue.items.length,
         mail_archive: mail.archiveAvailable(),
+        decisions_count: await decisions.countDue(user.id),
     };
 }
 

@@ -14,6 +14,7 @@ const { registerPeopleTools } = require('./tools/peopleTools');
 const { registerGoalTools } = require('./tools/goalTools');
 const { registerLinkTools } = require('./tools/linkTools');
 const { registerMailTools } = require('./tools/mailTools');
+const { registerDecisionTools } = require('./tools/decisionTools');
 const { registerCareerTools } = require('./tools/careerTools');
 const { registerWeekendTools } = require('./tools/weekendTools');
 
@@ -32,6 +33,7 @@ function registerAllTools(server, context, tools) {
     registerGoalTools(server, context, tools);
     registerLinkTools(server, context, tools);
     registerMailTools(server, context, tools);
+    registerDecisionTools(server, context, tools);
     registerCareerTools(server, context, tools);
     registerWeekendTools(server, context, tools);
 }

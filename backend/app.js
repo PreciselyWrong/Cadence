@@ -460,6 +460,7 @@ const telegramModule = require('./modules/telegram');
 const urlModule = require('./modules/url');
 const linksModule = require('./modules/links');
 const triageModule = require('./modules/triage');
+const decisionsModule = require('./modules/decisions');
 const proposalsModule = require('./modules/proposals');
 const contentLinksModule = require('./modules/content-links');
 const autoClassifyModule = require('./modules/auto-classify');
@@ -610,6 +611,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, urlModule.routes);
     app.use(basePath, linksModule.routes);
     app.use(basePath, triageModule.routes);
+    app.use(basePath, decisionsModule.routes);
     app.use(basePath, proposalsModule.routes);
     app.use(basePath, contentLinksModule.routes);
     app.use(basePath, autoClassifyModule.routes);

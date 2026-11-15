@@ -255,4 +255,22 @@ class PluginsTest {
         assertFalse(PluginUrls.sameOrigin(base, "https://cdn.example/lib.js"))
         assertFalse(PluginUrls.sameOrigin(base, "not a url"))
     }
+
+    @Test
+    fun runActionStatusIsParsedAndPreservedInMenuBody() {
+        val body = obj(
+            """
+            {
+              "items": [],
+              "actions": [
+                {"plugin":"hermes","id":"fetch","label":"Relever les mails","places":["mail"],"run":true,"status":"relevé à 9 h 12"}
+              ]
+            }
+            """.trimIndent(),
+        )
+        val parsed = PluginJson.menu(body)
+        assertEquals("relevé à 9 h 12", parsed.actions.single().status)
+        val roundTrip = PluginJson.menu(PluginJson.menuBody(parsed))
+        assertEquals("relevé à 9 h 12", roundTrip.actions.single().status)
+    }
 }

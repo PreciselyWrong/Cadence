@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.plugins
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,10 +11,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import kotlinx.coroutines.launch
 
@@ -89,6 +93,17 @@ private fun RunActionButton(
         },
         contentPadding = PaddingValues(horizontal = Space.sm),
     ) {
-        Text(action.label, style = MaterialTheme.typography.labelLarge, maxLines = 1)
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(action.label, style = MaterialTheme.typography.labelLarge, maxLines = 1)
+            action.status?.let { status ->
+                Text(
+                    status,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = cadence.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
     }
 }

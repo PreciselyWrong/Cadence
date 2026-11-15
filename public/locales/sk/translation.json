@@ -255,6 +255,31 @@
     "done": "Spustené.",
     "failed": "Doplnok nemohol konať."
   },
+  "decisions": {
+    "deck": {
+      "open": "Rozhodnúť ({{count}})",
+      "title": "Rozhodnutia",
+      "close": "Zavrieť",
+      "progressLabel": "Rozhodnutie {{position}} z {{total}}",
+      "loadError": "Rozhodnutia sa nepodarilo načítať.",
+      "back": "Späť na „Na roztriedenie“",
+      "done": "Všetko rozhodnuté",
+      "readMore": "Čítať ďalej",
+      "collapse": "Zbaliť",
+      "openUrl": "Otvoriť",
+      "recommended": "Odporúčané",
+      "noteOpen": "Odpovedať poznámkou",
+      "notePlaceholder": "Slovo pre agenta",
+      "noteSend": "Odoslať",
+      "later": "Neskôr",
+      "skip": "Preskočiť",
+      "undo": "Späť",
+      "decided": "Rozhodnutie uložené",
+      "postponed": "Vráti sa zajtra",
+      "noteSent": "Odoslané späť agentovi",
+      "keys": "Enter alebo →: odporúčané · 1–5: vybrať · ←: neskôr · ↓: preskočiť · Ctrl+Z: späť · Esc: zavrieť"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} e-mailov na archiváciu",
@@ -264,6 +289,9 @@
       "done": "Vyžiadané archivácie: {{count}}"
     },
     "settings": {
+      "mailRules": "Vždy archivovaní odosielatelia",
+      "noMailRules": "Žiadny odosielateľ.",
+      "removeRule": "Odstrániť",
       "calendars": "Čítané kalendáre",
       "noCalendars": "Žiadny kalendár. Pridajte ho v Profil › Kalendáre.",
       "lookahead": "Dni dopredu",
@@ -295,6 +323,7 @@
       "delete": "Odstrániť"
     },
     "mail": {
+      "alwaysArchive": "Vždy archivovať tohto odosielateľa",
             "horizon": {
                 "someday": "Niekedy",
                 "nextMonth": "Budúci mesiac",

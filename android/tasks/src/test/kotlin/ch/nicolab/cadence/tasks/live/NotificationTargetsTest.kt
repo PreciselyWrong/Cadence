@@ -24,6 +24,11 @@ class NotificationTargetsTest {
     }
 
     @Test
+    fun decisionsReadyOpensTheDecisionsDeck() {
+        assertEquals(NotificationTarget.DecisionsDeck, of(kind = "decisions_ready"))
+    }
+
+    @Test
     fun proposalKindChoosesItsScreen() {
         assertEquals(NotificationTarget.ProposalSheet("p1"), of(kind = "week", proposalUid = "p1"))
         assertEquals(NotificationTarget.Review, of(kind = "review", proposalUid = "p1"))
@@ -60,6 +65,7 @@ class NotificationTargetsTest {
             NotificationTarget.Career,
             NotificationTarget.Weekend("w-1"),
             NotificationTarget.MailDeck,
+            NotificationTarget.DecisionsDeck,
             NotificationTarget.Plugin(LiveTarget.Plugin("hermes", "?msg=m1&x=a:b")),
             NotificationTarget.Task("t-1"),
             NotificationTarget.Project("p-1"),

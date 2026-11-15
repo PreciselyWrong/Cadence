@@ -62,4 +62,15 @@ class TriageTest {
         assertEquals("", TriageActions.field(payload, "name"))
         assertEquals("", TriageActions.field(null, "name"))
     }
+
+    @Test
+    fun decisionsCountAndMailRulesAreParsed() {
+        val queue = json.decodeFromString<TriageQueueDto>("""{"items":[],"count":0,"decisions_count":4}""")
+        assertEquals(4, queue.decisionsCount)
+
+        val rulesBody = json.parseToJsonElement(
+            """{"rules":[{"address":"news@example.com","action":"archive"},{"address":"  "},{"bad":1}]}""",
+        ).jsonObject
+        assertEquals(listOf(MailSenderRule("news@example.com", "archive")), MailRulesParser.parse(rulesBody))
+    }
 }

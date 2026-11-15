@@ -85,6 +85,7 @@ export interface PluginPageAction {
     label: string;
     places: PluginActionPlace[];
     run?: boolean;
+    status?: string;
 }
 
 // What the plugin said about a run: `ok` false when it declined (409), with

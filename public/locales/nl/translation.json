@@ -245,6 +245,31 @@
     "done": "Gestart.",
     "failed": "De plug-in kon niets doen."
   },
+  "decisions": {
+    "deck": {
+      "open": "Beslissen ({{count}})",
+      "title": "Beslissingen",
+      "close": "Sluiten",
+      "progressLabel": "Beslissing {{position}} van {{total}}",
+      "loadError": "Kon beslissingen niet laden.",
+      "back": "Terug naar \"Te sorteren\"",
+      "done": "Alles beslist",
+      "readMore": "Meer lezen",
+      "collapse": "Invouwen",
+      "openUrl": "Openen",
+      "recommended": "Aanbevolen",
+      "noteOpen": "Antwoorden met notitie",
+      "notePlaceholder": "Een bericht voor de agent",
+      "noteSend": "Verzenden",
+      "later": "Later",
+      "skip": "Overslaan",
+      "undo": "Ongedaan maken",
+      "decided": "Beslissing opgeslagen",
+      "postponed": "Morgen terug",
+      "noteSent": "Teruggestuurd naar agent",
+      "keys": "Enter of →: aanbevolen · 1–5: kiezen · ←: later · ↓: overslaan · Ctrl+Z: ongedaan maken · Esc: sluiten"
+    }
+  },
   "triage": {
     "batch": {
       "title": "{{count}} mails om te archiveren",
@@ -254,6 +279,9 @@
       "done": "{{count}} archiveringen gevraagd"
     },
     "settings": {
+      "mailRules": "Altijd gearchiveerde afzenders",
+      "noMailRules": "Geen afzender.",
+      "removeRule": "Verwijderen",
       "calendars": "Gelezen agenda's",
       "noCalendars": "Geen agenda. Voeg er een toe via Profiel › Agenda's.",
       "lookahead": "Dagen vooruit kijken",
@@ -285,6 +313,7 @@
       "delete": "Verwijderen"
     },
     "mail": {
+      "alwaysArchive": "Deze afzender altijd archiveren",
             "horizon": {
                 "someday": "Ooit",
                 "nextMonth": "Volgende maand",

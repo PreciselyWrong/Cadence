@@ -172,6 +172,8 @@ internal fun CadenceAppScreen(
     var triageOpen by rememberSaveable { mutableStateOf(false) }
     // « Trier mes mails » directement (notification mail_ready) : la liste de « À trier » s'ouvre sur le paquet.
     var triageDeck by rememberSaveable { mutableStateOf(false) }
+    // Paquet « Décider » directement (notification decisions_ready).
+    var triageDecisions by rememberSaveable { mutableStateOf(false) }
     var notificationsOpen by rememberSaveable { mutableStateOf(false) }
     val agentMessages by AgentInbox.messages.collectAsStateWithLifecycle()
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
@@ -309,6 +311,10 @@ internal fun CadenceAppScreen(
             }
             NotificationTarget.MailDeck -> {
                 triageDeck = true
+                triageOpen = true
+            }
+            NotificationTarget.DecisionsDeck -> {
+                triageDecisions = true
                 triageOpen = true
             }
             is NotificationTarget.Plugin -> scope.launch { pluginPageIntent(context, target.page)?.let(context::startActivity) }
@@ -476,7 +482,8 @@ internal fun CadenceAppScreen(
             if (triageOpen) TriageRoute(onBack = {
                 triageOpen = false
                 triageDeck = false
-            }, openDeck = triageDeck)
+                triageDecisions = false
+            }, openDeck = triageDeck, openDecisions = triageDecisions)
             if (notificationsOpen) NotificationsScreen(onBack = { notificationsOpen = false }, onOpen = openTarget)
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
             if (weekendOpen) WeekendSheet(weekendUid, onClose = { weekendOpen = false })

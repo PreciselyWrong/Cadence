@@ -293,7 +293,8 @@ function buildContext(plugin, entry, row) {
         actions: {
             // A `run` action of the manifest, handled here when clicked
             // (runAction). `available` hides the button while it is false.
-            onRun: (id, handler, { available } = {}) => {
+            // `status` returns a short string shown next to/under the button.
+            onRun: (id, handler, { available, status } = {}) => {
                 const declared = (manifest.actions || []).some(
                     (action) => action.id === id && action.run
                 );
@@ -309,6 +310,7 @@ function buildContext(plugin, entry, row) {
                     handler,
                     available:
                         typeof available === 'function' ? available : null,
+                    status: typeof status === 'function' ? status : null,
                 });
             },
         },
@@ -538,6 +540,21 @@ function canRun(plugin, id) {
     }
 }
 
+const MAX_ACTION_STATUS = 40;
+
+function actionStatus(plugin, id) {
+    const fn = plugin.runHandlers.get(id)?.status;
+    if (!fn) return null;
+    try {
+        const raw = fn();
+        if (typeof raw !== 'string') return null;
+        const text = raw.trim().slice(0, MAX_ACTION_STATUS);
+        return text || null;
+    } catch {
+        return null;
+    }
+}
+
 // Buttons of the plugins that run: those that open the plugin's page (it has
 // one), and the run buttons the plugin handles and says it can run now.
 function pageActions() {
@@ -548,7 +565,14 @@ function pageActions() {
                     ? canRun(plugin, action.id)
                     : Boolean(plugin.manifest.menu)
             )
-            .map((action) => ({ plugin: plugin.manifest.id, ...action }))
+            .map((action) => {
+                const entry = { plugin: plugin.manifest.id, ...action };
+                if (action.run) {
+                    const status = actionStatus(plugin, action.id);
+                    if (status) entry.status = status;
+                }
+                return entry;
+            })
     );
 }
 

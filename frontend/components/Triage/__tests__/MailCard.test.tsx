@@ -137,4 +137,31 @@ describe('MailCard', () => {
         expect(onDecide).toHaveBeenNthCalledWith(1, 'dismiss', {}, true);
         expect(onDecide).toHaveBeenNthCalledWith(2, 'later', {}, false);
     });
+
+    it('renders deckButtons with recommended framed when options are present', () => {
+        const onDecide = renderCard({
+            options: ['draft', 'task', 'archive'],
+            recommended: 'draft',
+        });
+        const draftBtn = screen.getByRole('button', { name: 'Brouillon' });
+        const taskBtn = screen.getByRole('button', { name: 'Tâche' });
+        const archiveBtn = screen.getByRole('button', { name: 'Archiver' });
+        expect(draftBtn).toHaveAttribute('data-recommended', 'true');
+        expect(taskBtn).not.toHaveAttribute('data-recommended');
+        expect(archiveBtn).toBeInTheDocument();
+        fireEvent.click(draftBtn);
+        expect(onDecide).toHaveBeenCalledWith('draft', {}, false);
+    });
+
+    it('decides archive with always_archive on always-archive click', () => {
+        const onDecide = renderCard();
+        fireEvent.click(
+            screen.getByRole('button', {
+                name: 'Toujours archiver cet expéditeur',
+            })
+        );
+        expect(onDecide).toHaveBeenCalledWith('archive', {}, false, {
+            always_archive: true,
+        });
+    });
 });

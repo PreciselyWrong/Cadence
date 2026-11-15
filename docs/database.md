@@ -58,6 +58,8 @@ Read shared access through `permissionSources`, never `Permission` alone: group 
 | **WaitlistSubscriber** | `waitlist_subscriber.js` | Release-notes signups from the marketing page (formerly the Cloud waitlist) |
 | **RateLimit** | `rate_limit.js` | Shared rate-limit store |
 | **Setting**, **Action** | `setting.js`, `action.js` | Instance key-value settings; audit trail of share actions (actor, verb, resource, target) |
+| **AgentDecision** | `agent_decision.js` | Agent decision cards (`agent_decisions`, see [Agent decisions](49-agent-decisions.md)) |
+| **MailSenderRule** | `mail_sender_rule.js` | Per-user mail sender archive rules (`mail_sender_rules`, see [Mail cards](43-mail-triage.md)) |
 
 ### Kept but unused
 

@@ -245,6 +245,31 @@
     "done": "시작했습니다.",
     "failed": "플러그인이 작업하지 못했습니다."
   },
+  "decisions": {
+    "deck": {
+      "open": "결정하기 ({{count}})",
+      "title": "결정",
+      "close": "닫기",
+      "progressLabel": "결정 {{position}} / {{total}}",
+      "loadError": "결정을 불러올 수 없습니다.",
+      "back": "«분류할 항목»으로 돌아가기",
+      "done": "모두 결정됨",
+      "readMore": "더 읽기",
+      "collapse": "접기",
+      "openUrl": "열기",
+      "recommended": "추천",
+      "noteOpen": "메모로 답장",
+      "notePlaceholder": "에이전트에게 남길 말",
+      "noteSend": "보내기",
+      "later": "나중에",
+      "skip": "건너뛰기",
+      "undo": "실행 취소",
+      "decided": "결정 저장됨",
+      "postponed": "내일 다시 표시",
+      "noteSent": "에이전트에게 다시 보냄",
+      "keys": "Enter 또는 →: 추천 · 1–5: 선택 · ←: 나중에 · ↓: 건너뛰기 · Ctrl+Z: 실행 취소 · Esc: 닫기"
+    }
+  },
   "triage": {
     "batch": {
       "title": "보관할 메일 {{count}}개",
@@ -254,6 +279,9 @@
       "done": "보관 요청 {{count}}건"
     },
     "settings": {
+      "mailRules": "항상 보관하는 발신자",
+      "noMailRules": "발신자가 없습니다.",
+      "removeRule": "제거",
       "calendars": "읽는 캘린더",
       "noCalendars": "캘린더가 없습니다. 프로필 › 캘린더에서 추가하세요.",
       "lookahead": "미리 볼 일 수",
@@ -285,6 +313,7 @@
       "delete": "삭제"
     },
     "mail": {
+      "alwaysArchive": "이 발신자 항상 보관",
             "horizon": {
                 "someday": "언젠가",
                 "nextMonth": "다음 달",

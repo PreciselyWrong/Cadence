@@ -24,6 +24,9 @@ sealed interface NotificationTarget {
     /** « Trier mes mails » (`mail_ready`). */
     data object MailDeck : NotificationTarget
 
+    /** Paquet « Décider » (`decisions_ready`, `docs/49-agent-decisions.md`). */
+    data object DecisionsDeck : NotificationTarget
+
     /** Page d'un plugin, avec sa requête. */
     data class Plugin(val page: LiveTarget.Plugin) : NotificationTarget
 
@@ -49,6 +52,8 @@ data class NotificationPayload(
 object NotificationTargets {
     private const val MAIL_READY = "mail_ready"
     private const val MAIL = "mail"
+    private const val DECISIONS_READY = "decisions_ready"
+    private const val DECISIONS = "decisions"
     private const val CENTER = "center"
     private const val REVIEW = "review"
     private const val CAREER = "career"
@@ -57,6 +62,7 @@ object NotificationTargets {
 
     fun of(payload: NotificationPayload): NotificationTarget {
         if (payload.kind == MAIL_READY) return NotificationTarget.MailDeck
+        if (payload.kind == DECISIONS_READY) return NotificationTarget.DecisionsDeck
         payload.proposalUid?.takeIf(UID::matches)?.let { uid ->
             return when (ProposalKind.of(payload.kind)) {
                 ProposalKind.REVIEW -> NotificationTarget.Review
@@ -80,6 +86,7 @@ object NotificationTargets {
         NotificationTarget.Career -> CAREER
         is NotificationTarget.Weekend -> "weekend:${target.uid}"
         NotificationTarget.MailDeck -> MAIL
+        NotificationTarget.DecisionsDeck -> DECISIONS
         is NotificationTarget.Plugin -> "plugin:${target.page.id}${target.page.query}"
         is NotificationTarget.Task -> "task:${target.uid}"
         is NotificationTarget.Project -> "project:${target.uid}"
@@ -92,6 +99,7 @@ object NotificationTargets {
         raw == REVIEW -> NotificationTarget.Review
         raw == CAREER -> NotificationTarget.Career
         raw == MAIL -> NotificationTarget.MailDeck
+        raw == DECISIONS -> NotificationTarget.DecisionsDeck
         raw == CENTER -> NotificationTarget.Center
         raw.startsWith("proposal:") -> raw.removePrefix("proposal:").takeIf(UID::matches)?.let(NotificationTarget::ProposalSheet)
         raw.startsWith("weekend:") -> raw.removePrefix("weekend:").takeIf(UID::matches)?.let(NotificationTarget::Weekend)

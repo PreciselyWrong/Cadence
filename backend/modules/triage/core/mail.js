@@ -39,6 +39,7 @@ const KINDS = new Set(['task', 'reply', 'read', 'event']);
 const ACCOUNT = /^[A-Za-z0-9_.-]{1,64}$/;
 const THREAD = /^[A-Za-z0-9_-]{1,128}$/;
 const ADDRESS = /^[^\s@<>]+@[^\s@<>]+$/;
+const ADDRESS_MAX = 254;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 // eslint-disable-next-line no-control-regex
@@ -338,8 +339,20 @@ function excerptFields(value) {
     return clean(value, null, { lines: true });
 }
 
+function normalizeAddress(value) {
+    if (typeof value !== 'string') {
+        throw new ValidationError('address must be a valid email address');
+    }
+    const address = clean(value)?.toLowerCase();
+    if (!address || address.length > ADDRESS_MAX || !ADDRESS.test(address)) {
+        throw new ValidationError('address must be a valid email address');
+    }
+    return address;
+}
+
 module.exports = {
     normalizeProposal,
+    normalizeAddress,
     threadKey,
     clean,
     isDay,

@@ -102,15 +102,25 @@ const RunButton: React.FC<{
             .finally(() => setRunning(false));
     };
     return (
-        <Button
-            variant="secondary"
-            data-testid={`plugin-action-${action.plugin}-${action.id}`}
-            disabled={running}
-            aria-busy={running}
-            onClick={run}
-        >
-            {action.label}
-        </Button>
+        <>
+            <Button
+                variant="secondary"
+                data-testid={`plugin-action-${action.plugin}-${action.id}`}
+                disabled={running}
+                aria-busy={running}
+                onClick={run}
+            >
+                {action.label}
+            </Button>
+            {action.status && (
+                <span
+                    data-testid={`plugin-action-status-${action.plugin}-${action.id}`}
+                    className="text-body-m text-surface-on-variant"
+                >
+                    {action.status}
+                </span>
+            )}
+        </>
     );
 };
 
