@@ -342,6 +342,54 @@ describe('Daily plan operations (PATCH, ETag, If-Match)', () => {
         });
     });
 
+    describe('one planned day per task', () => {
+        const dayAfter = () =>
+            moment.tz('Europe/Athens').add(2, 'day').format('YYYY-MM-DD');
+        const yesterday = () =>
+            moment.tz('Europe/Athens').subtract(1, 'day').format('YYYY-MM-DD');
+        const uidsOn = async (date) =>
+            (await getPlan(date)).plan?.items.map((i) => i.task_uid) ?? [];
+
+        it('adding a task to a day takes it off its other days from today on', async () => {
+            const a = await makeTask();
+            const b = await makeTask();
+            await patchOps(tomorrow, [
+                { op: 'add', task_uid: a.uid },
+                { op: 'add', task_uid: b.uid },
+            ]);
+            await patchOps(dayAfter(), [{ op: 'add', task_uid: a.uid }]);
+
+            await patchOps(today, [{ op: 'add', task_uid: a.uid }]);
+
+            expect(await uidsOn(today)).toEqual([a.uid]);
+            expect(await uidsOn(tomorrow)).toEqual([b.uid]);
+            expect(await uidsOn(dayAfter())).toEqual([]);
+        });
+
+        it('a whole-day replace (PUT) does the same', async () => {
+            const a = await makeTask();
+            await patchOps(today, [{ op: 'add', task_uid: a.uid }]);
+
+            const res = await agent
+                .put(`/api/daily-plan/${tomorrow}`)
+                .send({ items: [{ task_uid: a.uid }] });
+
+            expect(res.status).toBe(200);
+            expect(await uidsOn(today)).toEqual([]);
+            expect(await uidsOn(tomorrow)).toEqual([a.uid]);
+        });
+
+        it('keeps the lines of past days', async () => {
+            const a = await makeTask();
+            await patchOps(yesterday(), [{ op: 'add', task_uid: a.uid }]);
+
+            await patchOps(today, [{ op: 'add', task_uid: a.uid }]);
+
+            expect(await uidsOn(yesterday())).toEqual([a.uid]);
+            expect(await uidsOn(today)).toEqual([a.uid]);
+        });
+    });
+
     describe('validation and atomicity', () => {
         it('lets a slot overlap an existing timed item', async () => {
             const a = await makeTask();

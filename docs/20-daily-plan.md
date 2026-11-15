@@ -173,6 +173,10 @@ Drag a task onto the calendar to schedule it: onto a day in the month view (or t
 | `daily_plans.ai_wrap_up` | The stored AI wrap-up for that day (JSON, optional)                                                                     |
 | `calendar_feeds`         | Name, color, encrypted URL, host, last fetch time and last error, and `show_on_calendar`                                |
 
+### One planned day
+
+A task has one planned day: the day you mean to do it. Putting it on a day from today on (add, slot, move, or a whole-day `PUT`) takes it off every other day from today on, in the same transaction (`repository.transactPlans`). Past days keep their lines as history. The due date is separate and never changes with the plan. Android applies the same rule to its local copy (`PlanEdits.applying`). Migration `20261115170000-one-planned-day-per-task` cleaned the plans written before the rule, keeping each task's most recent line.
+
 Plans and feeds are not included in backups: plans are short-lived, and feed addresses are encrypted with this server's key.
 
 ---

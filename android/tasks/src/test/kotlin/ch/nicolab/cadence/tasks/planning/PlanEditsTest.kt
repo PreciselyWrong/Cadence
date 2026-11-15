@@ -42,6 +42,30 @@ class PlanEditsTest {
     }
 
     @Test
+    fun `une tâche posée sur un jour quitte ses autres jours à venir, pas les jours passés`() {
+        val yesterday = today.minusDays(1)
+        val later = today.plusDays(3)
+        val planned = listOf(
+            PlanEntry("a", yesterday, null, 30),
+            PlanEntry("a", tomorrow, null, 30),
+            PlanEntry("b", tomorrow, null, 30),
+            PlanEntry("a", later, 600, 30),
+        )
+        assertEquals(
+            listOf(PlanEntry("a", yesterday, null, 30), PlanEntry("b", tomorrow, null, 30), PlanEntry("a", today, null, null)),
+            planned.applying(AddTask(today, "a"), today),
+        )
+        assertEquals(
+            listOf(PlanEntry("a", yesterday, null, 30), PlanEntry("b", tomorrow, null, 30), PlanEntry("a", today, 545, 30)),
+            planned.applying(SlotTask(today, "a", 545, 30), today),
+        )
+        assertEquals(
+            listOf(PlanEntry("a", yesterday, null, 30), PlanEntry("b", tomorrow, null, 30), PlanEntry("a", later, 600, 30)),
+            planned.applying(MoveTask(tomorrow, "a", later), today),
+        )
+    }
+
+    @Test
     fun `un ajout local pose la ligne sans heure, un créneau pose heure et durée`() {
         assertEquals(listOf(PlanEntry("b", tomorrow, null, null)), emptyList<PlanEntry>().applying(AddTask(tomorrow, "b")))
         assertEquals(

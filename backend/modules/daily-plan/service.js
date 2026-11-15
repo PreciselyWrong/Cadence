@@ -371,7 +371,8 @@ async function writeDays(user, planDate, dates, { ifMatch = null, change }) {
                     }
                 }
                 return change(days, { visibleWhere, transaction });
-            }
+            },
+            { today: userToday(user) }
         );
     } catch (error) {
         if (error instanceof PlanChangedError) {

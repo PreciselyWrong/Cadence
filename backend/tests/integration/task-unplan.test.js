@@ -33,7 +33,8 @@ describe('PATCH /api/task/:uid unplan', () => {
     it('removes the task from today and later plans only', async () => {
         const task = await Task.create({ name: 'Planned', user_id: user.id });
         const other = await Task.create({ name: 'Other', user_id: user.id });
-        for (const date of [day(-1), day(0), day(3)]) {
+        // A task has one planned day from today on, plus past days kept.
+        for (const date of [day(-1), day(3)]) {
             const res = await agent.patch(`/api/daily-plan/${date}`).send({
                 ops: [
                     { op: 'add', task_uid: task.uid },
@@ -49,7 +50,6 @@ describe('PATCH /api/task/:uid unplan', () => {
         expect(res.status).toBe(200);
 
         expect(await plannedOn(day(-1))).toEqual([task.uid, other.uid]);
-        expect(await plannedOn(day(0))).toEqual([other.uid]);
         expect(await plannedOn(day(3))).toEqual([other.uid]);
     });
 

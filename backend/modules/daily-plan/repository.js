@@ -108,7 +108,9 @@ class DailyPlanRepository {
     // task_id and task_uid) and returns a Map of date to the new lines, for
     // the dates it changed. Locks are taken in date order so two writers
     // touching the same days cannot deadlock on PostgreSQL.
-    async transactPlans(userId, planDates, change) {
+    // A task has one planned day: one newly put on a day from `today` on
+    // leaves every other day from `today` on (past days stay as history).
+    async transactPlans(userId, planDates, change, { today = null } = {}) {
         const dates = [...new Set(planDates)].sort();
         return sequelize.transaction(async (transaction) => {
             const days = new Map();
@@ -179,8 +181,42 @@ class DailyPlanRepository {
                         { transaction }
                     );
                 }
+                if (today !== null && planDate >= today) {
+                    const before = new Set(
+                        days.get(planDate).lines.map((line) => line.task_id)
+                    );
+                    const added = lines
+                        .map((line) => line.task_id)
+                        .filter((taskId) => !before.has(taskId));
+                    await this.removeFromOtherDays(
+                        userId,
+                        added,
+                        { keep: planDate, from: today },
+                        transaction
+                    );
+                }
             }
             return changed.size > 0;
+        });
+    }
+
+    async removeFromOtherDays(userId, taskIds, { keep, from }, transaction) {
+        if (taskIds.length === 0) return;
+        const plans = await DailyPlan.findAll({
+            where: {
+                user_id: userId,
+                plan_date: { [Op.gte]: from, [Op.ne]: keep },
+            },
+            attributes: ['id'],
+            transaction,
+        });
+        if (plans.length === 0) return;
+        await DailyPlanItem.destroy({
+            where: {
+                daily_plan_id: { [Op.in]: plans.map((plan) => plan.id) },
+                task_id: { [Op.in]: taskIds },
+            },
+            transaction,
         });
     }
 

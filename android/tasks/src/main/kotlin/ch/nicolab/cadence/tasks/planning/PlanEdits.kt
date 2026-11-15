@@ -94,8 +94,19 @@ private fun PlanEdit.op(): JsonObject = buildJsonObject {
     }
 }
 
-/** Le plan local après [edit], comme le serveur l'écrit (les seuls jours gardés sur l'appareil : aujourd'hui, demain). */
-internal fun List<PlanEntry>.applying(edit: PlanEdit): List<PlanEntry> = when (edit) {
+/**
+ * Le plan local après [edit], comme le serveur l'écrit. Une tâche n'a qu'un jour prévu : posée sur un jour à partir de
+ * [today], elle quitte ses autres jours à partir de [today] (les jours passés restent).
+ */
+internal fun List<PlanEntry>.applying(edit: PlanEdit, today: LocalDate = LocalDate.now()): List<PlanEntry> {
+    val next = applyingOne(edit)
+    val placed = next.line(edit.day, edit.uid)?.takeIf { line(edit.day, edit.uid) == null }
+        ?: (edit as? MoveTask)?.let { move -> next.line(move.to, move.uid) }
+    if (placed == null || placed.day.isBefore(today)) return next
+    return next.filterNot { it.uid == placed.uid && it.day != placed.day && !it.day.isBefore(today) }
+}
+
+private fun List<PlanEntry>.applyingOne(edit: PlanEdit): List<PlanEntry> = when (edit) {
     is AddTask -> if (line(edit.day, edit.uid) != null) this else inserting(PlanEntry(edit.uid, edit.day, null, null), edit.beforeUid)
     is ReorderTask -> line(edit.day, edit.uid)?.let { moved -> filterNot { it === moved }.inserting(moved, edit.beforeUid) } ?: this
     is RemoveTask -> filterNot { it.matches(edit.day, edit.uid) }
