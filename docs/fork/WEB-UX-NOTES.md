@@ -981,3 +981,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : le paquet ne laissait pas choisir un moment pour la tâche (seule l'échéance de l'agent) et ne permettait pas de supprimer un mail.
 - **Décision** : l'agent peut préremplir un horizon (`suggestion.horizon`) à défaut de jour ; « Modifier la tâche » (toujours là) ouvre nom + date + cinq puces d'horizon (le jour efface l'horizon et inversement) ; « Supprimer » (décision `trash`, corbeille Gmail faite par Hermes) en bouton du paquet si l'agent l'offre, sinon discret à côté de « Passer », et sur la carte d'« À trier ». Détail : `docs/43-mail-triage.md`. Android : même jour (`MailTaskSheet`, `MailDecision.TRASH`).
 
+
+## Fiche de tâche : Supprimer (2026-11-15)
+
+- **Problème** : la fiche flottante (`TaskPane`), seule vue d'une tâche en mode épuré, n'offrait aucun moyen de supprimer la tâche.
+- **Décision** : corbeille dans l'en-tête de la fiche, à côté de Fermer : la fiche se ferme, la ligne disparaît et le toast propose Annuler (6 s) ; une tâche récurrente demande la portée ; absente pour une tâche suivie par un `TODO.md`. Android : suppression déjà présente.

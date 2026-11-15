@@ -6,6 +6,7 @@ import {
     fireEvent,
     waitFor,
     within,
+    act,
 } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskRow from '../TaskRow';
@@ -56,7 +57,7 @@ jest.mock('../../../utils/tasksService', () => ({
     deleteTaskOccurrence: jest.fn(),
     fetchSubtasks: jest.fn().mockResolvedValue([]),
     createTask: jest.fn(),
-    deleteTask: jest.fn(),
+    deleteTask: jest.fn().mockResolvedValue(undefined),
     fetchTaskByUid: jest.fn(),
     fetchTaskRelations: jest.fn().mockResolvedValue([]),
     TASK_RELATIONS_CHANGED_EVENT: 'taskRelationsChanged',
@@ -484,6 +485,27 @@ describe('TaskPane as a floating sheet', () => {
             name: 'Write report',
         });
         expect(dialog).toHaveAttribute('aria-modal', 'false');
+    });
+
+    it('deletes the task from its header, closing the sheet', async () => {
+        renderSheet('/today?task=uid-1');
+        await screen.findByRole('dialog', { name: 'Write report' });
+
+        jest.useFakeTimers();
+        try {
+            fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+            await act(async () => {
+                await Promise.resolve();
+            });
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+            await act(async () => {
+                jest.advanceTimersByTime(7000);
+            });
+            expect(tasksService.deleteTask).toHaveBeenCalledWith('uid-1');
+        } finally {
+            jest.useRealTimers();
+        }
     });
 
     it('moves focus into the sheet and returns it to the opener on Escape', async () => {

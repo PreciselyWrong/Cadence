@@ -6,6 +6,7 @@ import {
     ArrowsPointingOutIcon,
     FolderIcon,
     TagIcon,
+    TrashIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
@@ -20,6 +21,8 @@ import { formatMinute } from '../DailyPlan/planUtils';
 import TaskDecisionRow from '../Review/TaskDecisionRow';
 import PostponementHistory from '../Review/PostponementHistory';
 import { useTaskEditor } from './useTaskEditor';
+import { useTaskActions } from '../../hooks/useTaskActions';
+import { isTodoMdTask } from '../../utils/todoMd';
 import { TaskEditorBody, TaskEditorFooter } from './TaskEditorBody';
 import { CONTROL_HEIGHT } from '../Shared/ui/controlSizes';
 
@@ -124,6 +127,7 @@ const TaskPane: React.FC = () => {
     const location = useLocation();
     const titleId = useId();
     const { openTaskUid, closeTask } = useTaskPane();
+    const { removeWithUndo } = useTaskActions();
     const [task, setTask] = useState<Task | null>(null);
     const [loadFailed, setLoadFailed] = useState(false);
     // The sheet can fill the page instead.
@@ -286,6 +290,21 @@ const TaskPane: React.FC = () => {
                             ) : null
                         )}
                     </nav>
+                )}
+                {task?.uid && !isTodoMdTask(task) && (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            const uid = task.uid as string;
+                            closeTask();
+                            void removeWithUndo(uid, task.name);
+                        }}
+                        aria-label={t('common.delete', 'Delete')}
+                        title={t('common.delete', 'Delete')}
+                        className={iconButton}
+                    >
+                        <TrashIcon className="h-5 w-5" />
+                    </button>
                 )}
                 <button
                     type="button"
