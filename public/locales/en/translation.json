@@ -1296,6 +1296,9 @@
       "missingFields": "Add a name and the calendar address"
     },
     "planning": {
+      "alignDueTitle": "Due date",
+      "alignDueDescription": "Planning a task on a day, moving it or pushing it back also sets its due date to that day, so every list shows one date. Recurring tasks keep their own. Turning this on aligns the tasks already planned from today on.",
+      "alignDue": "Planning sets the due date",
       "hoursTitle": "Your day",
       "hoursDescription": "The hours the timeline shows on Today and when you plan your day. New tasks and AI drafts get a time inside them. Times are in your timezone ({{timezone}}).",
       "hoursFrom": "From",

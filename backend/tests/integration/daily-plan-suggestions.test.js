@@ -64,6 +64,7 @@ describe('Plan my day suggestion settings', () => {
                 staleAfterDays: null,
                 horizonDays: 3,
                 maxSuggestions: 20,
+                alignDueToPlan: false,
             });
             expect(res.body.options.horizonDays).toEqual([1, 3, 7]);
             expect(res.body.options.maxSuggestions).toEqual([10, 20, 50]);

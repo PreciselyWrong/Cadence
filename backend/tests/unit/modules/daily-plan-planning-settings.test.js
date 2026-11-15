@@ -37,6 +37,7 @@ describe('normalizeSuggestionSettings', () => {
             staleAfterDays: 180,
             horizonDays: 7,
             maxSuggestions: 50,
+            alignDueToPlan: true,
         };
         expect(normalizeSuggestionSettings(saved)).toEqual({
             ...saved,

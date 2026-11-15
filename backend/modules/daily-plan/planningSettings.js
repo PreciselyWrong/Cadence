@@ -22,6 +22,9 @@ const DEFAULT_SUGGESTIONS = Object.freeze({
     staleAfterDays: null,
     horizonDays: 3,
     maxSuggestions: 20,
+    // Planning a task on a day also sets its due date to that day
+    // (docs/20-daily-plan.md), so every list shows one date.
+    alignDueToPlan: false,
 });
 
 const SUGGESTION_KEYS = Object.keys(DEFAULT_SUGGESTIONS);
@@ -48,6 +51,7 @@ const normalizers = {
     horizonDays: (value) => (HORIZON_DAYS.includes(value) ? value : undefined),
     maxSuggestions: (value) =>
         MAX_SUGGESTIONS.includes(value) ? value : undefined,
+    alignDueToPlan: (value) => (typeof value === 'boolean' ? value : undefined),
 };
 
 // Reads the saved planning object. A missing or unknown value falls back to
@@ -105,6 +109,8 @@ function invalidMessage(key) {
             return `tieBreak must be one of ${TIE_BREAKS.join(', ')}`;
         case 'staleAfterDays':
             return 'staleAfterDays must be null, 90 or 180';
+        case 'alignDueToPlan':
+            return 'alignDueToPlan must be true or false';
         case 'horizonDays':
             return `horizonDays must be one of ${HORIZON_DAYS.join(', ')}`;
         default:

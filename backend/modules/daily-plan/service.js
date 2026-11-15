@@ -35,12 +35,16 @@ const {
     isSuggestible,
     normalizeSuggestionSettings,
     validateSuggestionUpdate,
+    isRecurring,
 } = require('./planningSettings');
 const {
     getSafeTimezone,
     getCurrentDateInTimezone,
     getDayBoundsInUTC,
     getTodayBoundsInUTC,
+    processDueDateForStorage,
+    dueDateTimeToUTC,
+    utcToUserTimeString,
 } = require('../../utils/timezone-utils');
 const { ValidationError, NotFoundError } = require('../../shared/errors');
 const {
@@ -351,6 +355,12 @@ async function getDay(user, date, scopeQuery = null) {
 // visible items still have that etag. Resolves to whether any day changed.
 async function writeDays(user, planDate, dates, { ifMatch = null, change }) {
     const visibleWhere = await visibleTaskWhere(user.id);
+    const { suggestions } = await getPlanningSettings(user);
+    const timezone = getSafeTimezone(user.timezone);
+    const onPlaced = suggestions.alignDueToPlan
+        ? (day, taskIds, transaction) =>
+              alignDueDates(taskIds, day, timezone, transaction)
+        : null;
     try {
         return await repository.transactPlans(
             user.id,
@@ -372,13 +382,58 @@ async function writeDays(user, planDate, dates, { ifMatch = null, change }) {
                 }
                 return change(days, { visibleWhere, transaction });
             },
-            { today: userToday(user) }
+            { today: userToday(user), onPlaced }
         );
     } catch (error) {
         if (error instanceof PlanChangedError) {
             error.plan = await getPlan(user, planDate);
         }
         throw error;
+    }
+}
+
+const CLOSED_STATUSES = [
+    Task.STATUS.DONE,
+    Task.STATUS.ARCHIVED,
+    Task.STATUS.CANCELLED,
+];
+
+// With alignDueToPlan, a task put on a day takes that day as its due date:
+// end of day, or the same time on the new day. Recurring tasks keep theirs,
+// their due date drives the series. Goes through the model so the sync
+// journal carries the change to the devices.
+async function alignDueDates(taskIds, day, timezone, transaction = null) {
+    const tasks = await repository.findTasksByIds(taskIds, transaction);
+    for (const task of tasks) {
+        if (isRecurring(task) || task.recurring_parent_id || task.habit_mode) {
+            continue;
+        }
+        if (CLOSED_STATUSES.includes(Number(task.status))) continue;
+        const dueDate =
+            task.due_has_time && task.due_date
+                ? dueDateTimeToUTC(
+                      day,
+                      utcToUserTimeString(task.due_date, timezone),
+                      timezone
+                  )
+                : processDueDateForStorage(day, timezone);
+        if (
+            task.due_date &&
+            new Date(task.due_date).getTime() === dueDate.getTime()
+        ) {
+            continue;
+        }
+        await task.update({ due_date: dueDate }, { transaction });
+    }
+}
+
+// Turning alignDueToPlan on aligns, once, the tasks already planned from
+// today on; earlier days are history.
+async function alignPlannedDueDates(user) {
+    const timezone = getSafeTimezone(user.timezone);
+    const days = await repository.findPlannedFrom(user.id, userToday(user));
+    for (const { planDate, taskIds } of days) {
+        await alignDueDates(taskIds, planDate, timezone);
     }
 }
 
@@ -820,10 +875,16 @@ async function saveSuggestionSettings(user, body) {
         }
     }
     const settings = await repository.findUiSettings(user.id);
+    const wasAligning = normalizeSuggestionSettings(
+        settings.planning
+    ).alignDueToPlan;
     await repository.saveUiSettings(user.id, {
         ...settings,
         planning: { ...(settings.planning || {}), ...update },
     });
+    if (update.alignDueToPlan === true && !wasAligning) {
+        await alignPlannedDueDates(user);
+    }
     return getSuggestionSettings(user);
 }
 

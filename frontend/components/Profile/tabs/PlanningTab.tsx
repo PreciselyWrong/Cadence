@@ -12,6 +12,7 @@ import { CSS } from '@dnd-kit/utilities';
 import {
     ArrowsUpDownIcon,
     Bars3Icon,
+    CalendarDaysIcon,
     ChevronDownIcon,
     ChevronUpIcon,
     ClockIcon,
@@ -648,6 +649,38 @@ const PlanningTab: React.FC<PlanningTabProps> = ({ isActive }) => {
                             </select>
                         </label>
                     </div>
+                ) : (
+                    loadingText
+                )}
+            </PlanningCard>
+
+            <PlanningCard
+                icon={CalendarDaysIcon}
+                title={t('profile.planning.alignDueTitle', 'Due date')}
+                description={t(
+                    'profile.planning.alignDueDescription',
+                    'Planning a task on a day, moving it or pushing it back also sets its due date to that day, so every list shows one date. Recurring tasks keep their own. Turning this on aligns the tasks already planned from today on.'
+                )}
+                testId="planning-align-due-card"
+            >
+                {suggestions ? (
+                    <label className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+                        <input
+                            type="checkbox"
+                            checked={suggestions.alignDueToPlan}
+                            onChange={(e) =>
+                                changeSuggestions({
+                                    alignDueToPlan: e.target.checked,
+                                })
+                            }
+                            className={checkbox}
+                            data-testid="planning-align-due"
+                        />
+                        {t(
+                            'profile.planning.alignDue',
+                            'Planning sets the due date'
+                        )}
+                    </label>
                 ) : (
                     loadingText
                 )}

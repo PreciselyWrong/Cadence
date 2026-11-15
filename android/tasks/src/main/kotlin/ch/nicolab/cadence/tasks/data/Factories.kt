@@ -52,6 +52,8 @@ internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(con
 
 internal fun createPageChecks(context: Context): PageCheckClient = TasksRuntime.get(context).pageChecks
 
+internal fun createAlignDue(context: Context): ch.nicolab.cadence.tasks.planning.AlignDueClient = TasksRuntime.get(context).alignDue
+
 internal fun createBacklinks(context: Context): ch.nicolab.cadence.tasks.contentlinks.BacklinksClient = TasksRuntime.get(context).backlinks
 
 internal fun createPeople(context: Context): ch.nicolab.cadence.tasks.contentlinks.PeopleClient = TasksRuntime.get(context).people
@@ -126,6 +128,7 @@ internal class TasksRuntime private constructor(context: Context) {
     )
     val todoMd = TodoMdClient(api::call)
     val pageChecks = PageCheckClient(api::call)
+    val alignDue = ch.nicolab.cadence.tasks.planning.AlignDueClient(api::call)
     val backlinks = ch.nicolab.cadence.tasks.contentlinks.BacklinksClient { method, path, query -> api.callJson(method, path, query) }
     val people = ch.nicolab.cadence.tasks.contentlinks.PeopleClient(
         { method, path, query -> api.callJson(method, path, query) },

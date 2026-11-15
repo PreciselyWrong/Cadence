@@ -52,6 +52,10 @@ object TasksGraph {
     /** Réglage des rappels à heure fixe, partagé avec le serveur (dernière lecture gardée, envoi différé hors ligne). */
     fun timedReminders(context: Context): TimedRemindersRepository = createTimedReminders(context.applicationContext)
 
+    /** « Planifier change l'échéance », réglage du serveur partagé avec le web (en ligne seulement). */
+    fun alignDue(context: Context): ch.nicolab.cadence.tasks.planning.AlignDueClient =
+        ch.nicolab.cadence.tasks.data.createAlignDue(context.applicationContext)
+
     /** « Vérifier les pages » d'un projet, en ligne seulement ; rien n'est supprimé. */
     fun pageChecks(context: Context): PageCheckClient = createPageChecks(context.applicationContext)
 

@@ -22,7 +22,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,12 +44,15 @@ import ch.nicolab.cadence.designsystem.components.CadenceField
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.ToggleRow
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.sync.SyncScheduler
+import kotlinx.coroutines.launch
 import ch.nicolab.cadence.tasks.planning.FocusBlock
 import ch.nicolab.cadence.tasks.planning.FocusException
 import ch.nicolab.cadence.tasks.planning.PlanningSettings
@@ -77,6 +84,15 @@ fun PlanningSettingsPage(modifier: Modifier = Modifier) {
     val saveError by focus.error.collectAsStateWithLifecycle()
     val today = LocalDate.now()
 
+    val alignDue = remember(context) { TasksGraph.alignDue(context) }
+    val scope = rememberCoroutineScope()
+    // Null tant que le serveur n'a pas répondu ; réglage en ligne seulement, comme sur le web.
+    var aligning by remember { mutableStateOf<Boolean?>(null) }
+    var alignFailed by remember { mutableStateOf(false) }
+    LaunchedEffect(alignDue) {
+        runCatching { alignDue.read() }.onSuccess { aligning = it }.onFailure { alignFailed = true }
+    }
+
     // Gardé tout de suite sur l'appareil ; le dépôt l'envoie au serveur, même une fois la page quittée.
     fun saveFocus(blocks: List<FocusBlock>, exceptions: List<FocusException>) = focus.edit(blocks, exceptions)
 
@@ -98,6 +114,32 @@ fun PlanningSettingsPage(modifier: Modifier = Modifier) {
             Text(stringResource(R.string.planning_settings_days), style = MaterialTheme.typography.labelLarge, color = cadence.onSurfaceVariant)
             Spacer(Modifier.height(Space.xs))
             DayToggles(settings.hours.days) { days -> store.update { it.copy(hours = it.hours.copy(days = days)) } }
+        }
+        Panel {
+            Text(stringResource(R.string.planning_settings_align_due_title), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
+            aligning?.let { on ->
+                ToggleRow(stringResource(R.string.planning_settings_align_due), on) { value ->
+                    aligning = value
+                    scope.launch {
+                        runCatching { alignDue.write(value) }
+                            .onSuccess {
+                                aligning = it
+                                alignFailed = false
+                                // Le serveur a écrit les échéances : la synchro les rapporte.
+                                SyncScheduler.requestNow(context)
+                            }
+                            .onFailure {
+                                aligning = on
+                                alignFailed = true
+                            }
+                    }
+                }
+            }
+            Text(
+                stringResource(if (alignFailed) R.string.planning_settings_align_due_offline else R.string.planning_settings_align_due_hint),
+                style = MaterialTheme.typography.bodySmall,
+                color = if (alignFailed) cadence.error else cadence.onSurfaceVariant,
+            )
         }
         Panel {
             Text(stringResource(R.string.planning_settings_shutdown), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)

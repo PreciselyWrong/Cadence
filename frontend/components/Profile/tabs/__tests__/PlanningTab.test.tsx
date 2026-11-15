@@ -58,6 +58,7 @@ const SETTINGS: SuggestionSettings = {
     staleAfterDays: null,
     horizonDays: 3,
     maxSuggestions: 20,
+    alignDueToPlan: false,
 };
 
 const OPTIONS = {
@@ -256,6 +257,17 @@ describe('PlanningTab', () => {
             expect(saveSuggestionSettings).toHaveBeenLastCalledWith({
                 includeNoProject: false,
             });
+        });
+
+        it('saves the option that makes planning move the due date', async () => {
+            await loaded();
+
+            fireEvent.click(checkbox('planning-align-due'));
+
+            expect(saveSuggestionSettings).toHaveBeenLastCalledWith({
+                alignDueToPlan: true,
+            });
+            expect(checkbox('planning-align-due')).toBeChecked();
         });
 
         it('adds and removes a project to never suggest', async () => {

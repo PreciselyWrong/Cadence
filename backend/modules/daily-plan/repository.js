@@ -110,7 +110,14 @@ class DailyPlanRepository {
     // touching the same days cannot deadlock on PostgreSQL.
     // A task has one planned day: one newly put on a day from `today` on
     // leaves every other day from `today` on (past days stay as history).
-    async transactPlans(userId, planDates, change, { today = null } = {}) {
+    // `onPlaced(planDate, taskIds, transaction)` runs for the tasks newly put
+    // on a day from `today` on, inside the same transaction.
+    async transactPlans(
+        userId,
+        planDates,
+        change,
+        { today = null, onPlaced = null } = {}
+    ) {
         const dates = [...new Set(planDates)].sort();
         return sequelize.transaction(async (transaction) => {
             const days = new Map();
@@ -194,6 +201,9 @@ class DailyPlanRepository {
                         { keep: planDate, from: today },
                         transaction
                     );
+                    if (onPlaced && added.length > 0) {
+                        await onPlaced(planDate, added, transaction);
+                    }
                 }
             }
             return changed.size > 0;
@@ -326,6 +336,30 @@ class DailyPlanRepository {
                 ['id', 'ASC'],
             ],
         });
+    }
+
+    findTasksByIds(taskIds, transaction = null) {
+        return Task.findAll({ where: { id: taskIds }, transaction });
+    }
+
+    // Every task on the user's plans from `from` on, with its day.
+    async findPlannedFrom(userId, from) {
+        const plans = await DailyPlan.findAll({
+            where: { user_id: userId, plan_date: { [Op.gte]: from } },
+            attributes: ['plan_date'],
+            include: [
+                {
+                    model: DailyPlanItem,
+                    as: 'Items',
+                    attributes: ['task_id'],
+                    required: true,
+                },
+            ],
+        });
+        return plans.map((plan) => ({
+            planDate: plan.plan_date,
+            taskIds: plan.Items.map((item) => item.task_id),
+        }));
     }
 
     // The days from `from` on whose plan of the user holds the task.

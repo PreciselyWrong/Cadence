@@ -134,6 +134,10 @@
     <string name="planning_settings_end">Fin</string>
     <string name="planning_settings_days">Jours travaillés</string>
     <string name="planning_settings_shutdown">Fin de journée</string>
+    <string name="planning_settings_align_due_title">Échéance</string>
+    <string name="planning_settings_align_due">Planifier change l\'échéance</string>
+    <string name="planning_settings_align_due_hint">Planifier une tâche sur un jour, la déplacer ou la reporter met aussi son échéance à ce jour : toutes les listes montrent une seule date. Les tâches récurrentes gardent la leur. À l\'activation, les tâches déjà planifiées à partir d\'aujourd\'hui sont alignées. Réglage partagé avec le web.</string>
+    <string name="planning_settings_align_due_offline">Réglage indisponible hors ligne : le serveur le garde.</string>
     <string name="planning_settings_shutdown_hint">À partir de cette heure, Cadence propose de terminer la journée.</string>
     <string name="planning_settings_focus">Plages protégées</string>
     <string name="planning_settings_focus_hint">Cadence n\'y place aucune tâche, ici comme sur le web : travail, repas, sport.</string>

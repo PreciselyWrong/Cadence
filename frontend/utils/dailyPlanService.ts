@@ -145,6 +145,8 @@ export interface SuggestionSettings {
     staleAfterDays: number | null;
     horizonDays: number;
     maxSuggestions: number;
+    // Planning a task on a day also sets its due date to that day.
+    alignDueToPlan: boolean;
 }
 
 export interface SuggestionSettingsResponse {
