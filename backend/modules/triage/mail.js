@@ -17,6 +17,7 @@ const {
     threadKey,
     clean,
     isDay,
+    HORIZONS,
     eventFields,
     gmailUrl,
     noteText,
@@ -35,11 +36,19 @@ const DECISIONS = new Set([
     'dismiss',
     'draft',
     'archive',
+    'trash',
     'note',
 ]);
-const ACTION_TYPES = new Set(['draft', 'archive']);
+const ACTION_TYPES = new Set(['draft', 'archive', 'trash']);
 const EVENT_STATES = new Set(['created', 'failed']);
 const RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
+const HORIZON_FIELDS = {
+    week: { week_of: 'this_week' },
+    next_week: { week_of: 'next_week' },
+    this_month: { month_of: 'this_month' },
+    next_month: { month_of: 'next_month' },
+    someday: { later: true },
+};
 const KEY_MAX = 150;
 const LIST_MAX = 100;
 const LATER_HOUR = 8;
@@ -249,12 +258,24 @@ async function createTask(user, row, payload) {
         source_url: row.gmail_url,
     };
     if (dueDate) params.due_date = dueDate;
+    const horizon = payload.horizon ?? suggested.horizon;
+    if (horizon !== undefined && horizon !== null && !HORIZONS.has(horizon)) {
+        throw new ValidationError('payload.horizon is not valid');
+    }
     // create_task checks the rights on the project, by uid.
     const projectUid = clean(payload.project_uid, 64) ?? suggested.project_uid;
     if (projectUid) params.project_id = projectUid;
     const answer = await toolsFor(user)('create_task', params);
     const created = JSON.parse(answer.content[0].text);
-    return created.task?.uid ?? created.uid;
+    const taskUid = created.task?.uid ?? created.uid;
+    // A day wins over a horizon: a dated task already sits in the Plan.
+    if (horizon && !dueDate && taskUid) {
+        await toolsFor(user)('update_task', {
+            id: taskUid,
+            ...HORIZON_FIELDS[horizon],
+        });
+    }
+    return taskUid;
 }
 
 // The appointment the user accepted, for the agent to put in the calendar:
@@ -363,7 +384,10 @@ async function decide(
     if (archive && decision === 'later') {
         throw new ValidationError('a card put off is not archived');
     }
-    if (archive && (decision === 'archive' || decision === 'note')) {
+    if (
+        archive &&
+        (decision === 'archive' || decision === 'trash' || decision === 'note')
+    ) {
         throw new ValidationError('archive does not apply to this decision');
     }
     if (archive && !gateway.configured()) {
@@ -452,6 +476,7 @@ function requestedAction(decision, row) {
         return { type: 'draft', state: 'requested' };
     }
     if (decision === 'archive') return { type: 'archive', state: 'requested' };
+    if (decision === 'trash') return { type: 'trash', state: 'requested' };
     return null;
 }
 
@@ -516,7 +541,7 @@ async function reportAction(user, input = {}) {
     if (!row) throw new NotFoundError('Mail card not found');
     const { type, ok } = input;
     if (!ACTION_TYPES.has(type)) {
-        throw new ValidationError('type must be draft or archive');
+        throw new ValidationError('type must be draft, archive or trash');
     }
     if (typeof ok !== 'boolean') {
         throw new ValidationError('ok must be true or false');

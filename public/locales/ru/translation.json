@@ -286,6 +286,15 @@
       "delete": "Удалить"
     },
     "mail": {
+            "horizon": {
+                "someday": "Когда-нибудь",
+                "nextMonth": "В следующем месяце",
+                "thisMonth": "В этом месяце",
+                "nextWeek": "На следующей неделе",
+                "week": "На этой неделе",
+                "label": "Или позже"
+            },
+            "trashRequested": "Удаление запрошено",
       "draftRequested": "Черновик готовится в Gmail",
       "archiveRequested": "Архивирование запрошено",
       "noteSent": "Возвращено Trieur",
@@ -347,8 +356,10 @@
     "entry": "На разбор ({{count}})",
     "title": "На разбор",
     "deck": {
+            "actionFailedTrash": "Удалить не удалось",
       "progressLabel": "Письмо {{position}} из {{total}}",
       "option": {
+                "trash": "Удалить",
         "draft": "Черновик",
         "read": "Прочитать",
         "event": "Календарь",

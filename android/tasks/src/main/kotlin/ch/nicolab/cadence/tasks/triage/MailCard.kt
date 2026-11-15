@@ -22,6 +22,7 @@ enum class MailDecision(val wire: String, val canArchive: Boolean = false) {
     DISMISS("dismiss", canArchive = true),
     DRAFT("draft"),
     ARCHIVE("archive"),
+    TRASH("trash"),
     NOTE("note"),
 }
 
@@ -34,6 +35,7 @@ enum class MailOption(val wire: String, val decision: MailDecision) {
     EVENT("event", MailDecision.EVENT),
     LATER("later", MailDecision.LATER),
     ARCHIVE("archive", MailDecision.ARCHIVE),
+    TRASH("trash", MailDecision.TRASH),
     DISMISS("dismiss", MailDecision.DISMISS),
     ;
 
@@ -62,6 +64,8 @@ data class MailCardData(
     /** Nom proposé pour la tâche : celui de l'agent, sinon l'objet, sinon le résumé. */
     val taskName: String,
     val dueDate: String?,
+    /** Moment où ranger la tâche quand le mail ne donne pas de jour (`week`, `next_week`, `this_month`, `next_month`, `someday`). */
+    val horizon: String? = null,
     /** Conseil de l'agent : `task`, `reply`, `read`, `event`, ou null. */
     val kind: String? = null,
     /** Rendez-vous que fixe le mail (`kind` = `event`), à créer dans l'agenda par l'agent. */
@@ -79,6 +83,11 @@ data class MailCardData(
     /** Erreur de la dernière action, affichée en haut de la carte. */
     val actionError: String? = null,
 )
+
+/** Les horizons du Plan où une tâche née d'un mail peut être rangée, dans l'ordre de leurs puces. */
+object MailHorizon {
+    val WIRE = listOf("week", "next_week", "this_month", "next_month", "someday")
+}
 
 /** Rendez-vous d'une carte Mail : [start] est un jour (journée entière) ou une heure ISO 8601 avec son décalage. */
 data class MailEventData(val title: String?, val start: String, val end: String?, val allDay: Boolean, val location: String?)
@@ -109,6 +118,7 @@ object MailPayload {
             replyFirst = suggestion?.let { text(it, "kind") } == "reply",
             taskName = suggestion?.let { text(it, "task_name") } ?: subject ?: summary,
             dueDate = suggestion?.let { text(it, "due_date") },
+            horizon = suggestion?.let { text(it, "horizon") }?.takeIf { it in MailHorizon.WIRE },
             kind = suggestion?.let { text(it, "kind") },
             event = (suggestion?.get("event") as? JsonObject)?.let(::event),
             options = options,

@@ -278,6 +278,15 @@
       "delete": "Șterge"
     },
     "mail": {
+            "horizon": {
+                "someday": "Cândva",
+                "nextMonth": "Luna viitoare",
+                "thisMonth": "Luna aceasta",
+                "nextWeek": "Săptămâna viitoare",
+                "week": "Săptămâna aceasta",
+                "label": "Sau mai târziu"
+            },
+            "trashRequested": "Ștergere solicitată",
       "draftRequested": "Ciornă în pregătire în Gmail",
       "archiveRequested": "Arhivare solicitată",
       "noteSent": "Trimis înapoi la Trieur",
@@ -339,8 +348,10 @@
     "entry": "De sortat ({{count}})",
     "title": "De sortat",
     "deck": {
+            "actionFailedTrash": "Ștergerea nu a reușit",
       "progressLabel": "E-mail {{position}} din {{total}}",
       "option": {
+                "trash": "Șterge",
         "draft": "Ciornă",
         "read": "Citește",
         "event": "Calendar",

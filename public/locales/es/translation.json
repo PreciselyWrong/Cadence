@@ -274,6 +274,15 @@
       "delete": "Eliminar"
     },
     "mail": {
+            "horizon": {
+                "someday": "Algún día",
+                "nextMonth": "Próximo mes",
+                "thisMonth": "Este mes",
+                "nextWeek": "Próxima semana",
+                "week": "Esta semana",
+                "label": "O más tarde"
+            },
+            "trashRequested": "Eliminación solicitada",
       "draftRequested": "Borrador en preparación en Gmail",
       "archiveRequested": "Archivado solicitado",
       "noteSent": "Devuelto al Trieur",
@@ -335,8 +344,10 @@
     "entry": "Por ordenar ({{count}})",
     "title": "Por ordenar",
     "deck": {
+            "actionFailedTrash": "La eliminación no se completó",
       "progressLabel": "Correo {{position}} de {{total}}",
       "option": {
+                "trash": "Eliminar",
         "draft": "Borrador",
         "read": "Leer",
         "event": "Calendario",

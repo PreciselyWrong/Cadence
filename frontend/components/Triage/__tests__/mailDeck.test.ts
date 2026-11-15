@@ -313,6 +313,43 @@ describe('mail deck › buttons', () => {
         });
     });
 
+    it('prefills the horizon when the mail gives no day, and the day wins', () => {
+        const [parked] = deckButtons(
+            payload({
+                options: ['task', 'later'],
+                suggestion: { kind: 'task', horizon: 'next_week' },
+            })
+        );
+        expect(parked.payload).toMatchObject({
+            name: 'Devis cuisine',
+            horizon: 'next_week',
+        });
+        const [dated] = deckButtons(
+            payload({
+                options: ['task', 'later'],
+                suggestion: {
+                    kind: 'task',
+                    due_date: '2026-11-20',
+                    horizon: 'next_week',
+                },
+            })
+        );
+        expect(dated.payload).toEqual({
+            name: 'Devis cuisine',
+            due_date: '2026-11-20',
+        });
+    });
+
+    it('offers the deletion as a button without payload', () => {
+        const buttons = deckButtons(payload({ options: ['trash', 'task'] }));
+        expect(buttons[0]).toMatchObject({
+            choice: 'trash',
+            decision: 'trash',
+            payload: {},
+            opensMail: false,
+        });
+    });
+
     it('opens Gmail for the options the server reads from an older card', () => {
         const reply = deckButtons(
             payload({

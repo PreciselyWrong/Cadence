@@ -111,6 +111,7 @@ class MailCardTest {
                 MailDecision.DISMISS to "dismiss",
                 MailDecision.DRAFT to "draft",
                 MailDecision.ARCHIVE to "archive",
+                MailDecision.TRASH to "trash",
                 MailDecision.NOTE to "note",
             ),
             MailDecision.entries.associateWith { it.wire },

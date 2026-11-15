@@ -274,6 +274,15 @@
       "delete": "삭제"
     },
     "mail": {
+            "horizon": {
+                "someday": "언젠가",
+                "nextMonth": "다음 달",
+                "thisMonth": "이번 달",
+                "nextWeek": "다음 주",
+                "week": "이번 주",
+                "label": "또는 나중에"
+            },
+            "trashRequested": "삭제를 요청했습니다",
       "draftRequested": "Gmail에서 초안 준비 중",
       "archiveRequested": "보관 요청됨",
       "noteSent": "Trieur에게 돌려보냄",
@@ -335,8 +344,10 @@
     "entry": "정리할 항목 ({{count}})",
     "title": "정리할 항목",
     "deck": {
+            "actionFailedTrash": "삭제하지 못했습니다",
       "progressLabel": "메일 {{position}} / {{total}}",
       "option": {
+                "trash": "삭제",
         "draft": "초안",
         "read": "읽기",
         "event": "캘린더",

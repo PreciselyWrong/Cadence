@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +37,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.triage.MailCardData
 import ch.nicolab.cadence.tasks.triage.MailDecision
+import ch.nicolab.cadence.tasks.triage.MailHorizon
 import ch.nicolab.cadence.tasks.ui.TaskDateSheet
 import java.time.Instant
 import java.time.LocalDate
@@ -107,6 +109,7 @@ internal fun MailCardView(
         if (card.replyFirst && reply != null) task() else reply?.invoke()
         SecondaryAction(stringResource(R.string.triage_mail_later)) { decide(MailDecision.LATER, JsonObject(emptyMap())) }
         SecondaryAction(stringResource(R.string.triage_mail_dismiss)) { decide(MailDecision.DISMISS, JsonObject(emptyMap())) }
+        SecondaryAction(stringResource(R.string.triage_deck_option_trash)) { decide(MailDecision.TRASH, JsonObject(emptyMap())) }
         TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
     }
     if (archiveAvailable) {
@@ -134,12 +137,21 @@ internal fun MailCardView(
     }
 }
 
-/** La tâche née du mail : nom et échéance préremplis, modifiables. */
-@OptIn(ExperimentalMaterial3Api::class)
+private fun horizonLabel(wire: String): Int = when (wire) {
+    "week" -> R.string.triage_mail_horizon_week
+    "next_week" -> R.string.triage_mail_horizon_next_week
+    "this_month" -> R.string.triage_mail_horizon_this_month
+    "next_month" -> R.string.triage_mail_horizon_next_month
+    else -> R.string.triage_mail_horizon_someday
+}
+
+/** La tâche née du mail : nom, et jour ou horizon préremplis par l'agent, modifiables (le jour efface l'horizon et inversement). */
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 internal fun MailTaskSheet(card: MailCardData, today: LocalDate, onDismiss: () -> Unit, onCreate: (JsonObject) -> Unit) {
     var name by remember(card.mailUid) { mutableStateOf(card.taskName) }
     var due by remember(card.mailUid) { mutableStateOf(card.dueDate?.let { runCatching { LocalDate.parse(it) }.getOrNull() }) }
+    var horizon by remember(card.mailUid) { mutableStateOf(card.horizon.takeIf { card.dueDate == null }) }
     var pickingDate by remember { mutableStateOf(false) }
     if (pickingDate) {
         TaskDateSheet(
@@ -147,7 +159,10 @@ internal fun MailTaskSheet(card: MailCardData, today: LocalDate, onDismiss: () -
             today = today,
             date = due,
             time = null,
-            onApply = { day, _ -> due = day },
+            onApply = { day, _ ->
+                due = day
+                if (day != null) horizon = null
+            },
             onDismiss = { pickingDate = false },
         )
         return
@@ -164,12 +179,26 @@ internal fun MailTaskSheet(card: MailCardData, today: LocalDate, onDismiss: () -
             due?.let { stringResource(R.string.triage_mail_task_due_on, TriageFormat.dueChip(it)) }
                 ?: stringResource(R.string.triage_mail_task_no_due),
         ) { pickingDate = true }
+        Spacer(Modifier.height(Space.sm))
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            MailHorizon.WIRE.forEach { wire ->
+                FilterChip(
+                    selected = horizon == wire,
+                    onClick = {
+                        horizon = if (horizon == wire) null else wire
+                        if (horizon != null) due = null
+                    },
+                    label = { Text(stringResource(horizonLabel(wire))) },
+                )
+            }
+        }
         Spacer(Modifier.height(Space.md))
         PrimaryAction(stringResource(R.string.triage_mail_create_task), Modifier.fillMaxWidth(), enabled = name.isNotBlank()) {
             onCreate(
                 buildJsonObject {
                     put("name", name.trim())
-                    due?.let { put("due_date", it.toString()) }
+                    val day = due
+                    if (day != null) put("due_date", day.toString()) else horizon?.let { put("horizon", it) }
                 },
             )
         }

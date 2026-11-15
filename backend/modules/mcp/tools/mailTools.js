@@ -59,6 +59,18 @@ function registerMailTools(server, context, tools) {
                             required: ['start'],
                         },
                         due_date: { type: 'string', description: 'YYYY-MM-DD' },
+                        horizon: {
+                            type: 'string',
+                            enum: [
+                                'week',
+                                'next_week',
+                                'this_month',
+                                'next_month',
+                                'someday',
+                            ],
+                            description:
+                                'When the mail gives no day: where the task is parked (this week, next week, this month, next month, someday). Ignored when due_date is set.',
+                        },
                         project_uid: { type: 'string' },
                     },
                     required: ['kind'],
@@ -81,6 +93,7 @@ function registerMailTools(server, context, tools) {
                             'event',
                             'later',
                             'archive',
+                            'trash',
                             'dismiss',
                         ],
                     },
@@ -139,7 +152,7 @@ function registerMailTools(server, context, tools) {
     tools.push({
         name: 'list_mail_cards',
         description:
-            'List the mail cards, newest first: pending, put off, waiting for you after a note (reviewing, with the user note), and those decided in the last 30 days with the decision (task, reply, event, later, dismiss, draft, archive, resolved). Read it before proposing, so a thread is not proposed twice. A card decided as event with event.state requested waits for you to create the calendar event, then call report_mail_event. A card with action requested (draft: create the Gmail draft from draft.body; archive: archive the thread) waits for report_mail_action. action_error is the code of the last failed action.',
+            'List the mail cards, newest first: pending, put off, waiting for you after a note (reviewing, with the user note), and those decided in the last 30 days with the decision (task, reply, event, later, dismiss, draft, archive, trash, resolved). Read it before proposing, so a thread is not proposed twice. A card decided as event with event.state requested waits for you to create the calendar event, then call report_mail_event. A card with action requested (draft: create the Gmail draft from draft.body; archive: archive the thread; trash: move the thread to the Gmail trash) waits for report_mail_action. action_error is the code of the last failed action.',
         inputSchema: { type: 'object', properties: {} },
         handler: async () => text(await mail().listCards(context.user)),
     });
@@ -172,12 +185,12 @@ function registerMailTools(server, context, tools) {
     tools.push({
         name: 'report_mail_action',
         description:
-            'After a card asked for a Gmail action (action.type draft or archive, state requested), say what came of it: ok true (draft with its mail.google.com draft link, optional) or ok false with a short error code (the card is reopened for the user). Report once per action.',
+            'After a card asked for a Gmail action (action.type draft, archive or trash, state requested), say what came of it: ok true (draft with its mail.google.com draft link, optional) or ok false with a short error code (the card is reopened for the user). Report once per action.',
         inputSchema: {
             type: 'object',
             properties: {
                 ...THREAD_PROPERTIES,
-                type: { type: 'string', enum: ['draft', 'archive'] },
+                type: { type: 'string', enum: ['draft', 'archive', 'trash'] },
                 ok: { type: 'boolean' },
                 draft_url: {
                     type: 'string',

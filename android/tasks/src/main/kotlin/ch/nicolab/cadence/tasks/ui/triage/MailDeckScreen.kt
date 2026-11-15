@@ -37,6 +37,7 @@ import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoneAll
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Checkbox
@@ -287,8 +288,9 @@ private fun DeckCard(
                 if (card.gmailUrl != null) {
                     TertiaryAction(stringResource(R.string.triage_deck_open_gmail)) { openMail() }
                 }
-                if (MailOption.TASK in card.options) {
-                    TertiaryAction(stringResource(R.string.triage_deck_edit_task)) { editingTask = true }
+                TertiaryAction(stringResource(R.string.triage_deck_edit_task)) { editingTask = true }
+                if (MailOption.TRASH !in card.options) {
+                    TertiaryAction(stringResource(R.string.triage_deck_option_trash)) { decide(MailDecision.TRASH, empty) }
                 }
                 chat?.let { item ->
                     TertiaryAction(stringResource(R.string.triage_deck_chat)) {
@@ -335,6 +337,7 @@ private fun DeckCard(
                         context.startActivity(PluginPageActivity.intent(context, item, MailDeck.chatQuery(card.mailUid)))
                     }
                 }
+                TertiaryAction(stringResource(R.string.triage_deck_option_trash)) { decide(MailDecision.TRASH, empty) }
                 TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
             }
             if (archiveAvailable) {
@@ -506,6 +509,7 @@ private fun optionIcon(option: MailOption): ImageVector = when (option) {
     MailOption.EVENT -> Icons.Outlined.CalendarMonth
     MailOption.LATER -> Icons.Outlined.Schedule
     MailOption.ARCHIVE -> Icons.Outlined.Archive
+    MailOption.TRASH -> Icons.Outlined.Delete
     MailOption.DISMISS -> Icons.Outlined.Close
 }
 
@@ -516,6 +520,7 @@ private fun optionLabel(option: MailOption): Int = when (option) {
     MailOption.EVENT -> R.string.triage_deck_option_event
     MailOption.LATER -> R.string.triage_deck_option_later
     MailOption.ARCHIVE -> R.string.triage_deck_option_archive
+    MailOption.TRASH -> R.string.triage_deck_option_trash
     MailOption.DISMISS -> R.string.triage_deck_option_dismiss
 }
 

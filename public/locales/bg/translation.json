@@ -274,6 +274,15 @@
       "delete": "Изтрий"
     },
     "mail": {
+            "horizon": {
+                "someday": "Някой ден",
+                "nextMonth": "Следващия месец",
+                "thisMonth": "Този месец",
+                "nextWeek": "Следващата седмица",
+                "week": "Тази седмица",
+                "label": "Или по-късно"
+            },
+            "trashRequested": "Изтриването е заявено",
       "draftRequested": "Черновата се подготвя в Gmail",
       "archiveRequested": "Поискано архивиране",
       "noteSent": "Върнато на Trieur",
@@ -335,8 +344,10 @@
     "entry": "За подреждане ({{count}})",
     "title": "За подреждане",
     "deck": {
+            "actionFailedTrash": "Изтриването не успя",
       "progressLabel": "Писмо {{position}} от {{total}}",
       "option": {
+                "trash": "Изтрий",
         "draft": "Чернова",
         "read": "Прочети",
         "event": "Календар",

@@ -274,6 +274,15 @@
       "delete": "Ta bort"
     },
     "mail": {
+            "horizon": {
+                "someday": "Någon gång",
+                "nextMonth": "Nästa månad",
+                "thisMonth": "Den här månaden",
+                "nextWeek": "Nästa vecka",
+                "week": "Den här veckan",
+                "label": "Eller senare"
+            },
+            "trashRequested": "Radering begärd",
       "draftRequested": "Utkast förbereds i Gmail",
       "archiveRequested": "Arkivering begärd",
       "noteSent": "Skickat tillbaka till Trieur",
@@ -335,8 +344,10 @@
     "entry": "Att sortera ({{count}})",
     "title": "Att sortera",
     "deck": {
+            "actionFailedTrash": "Raderingen lyckades inte",
       "progressLabel": "Mejl {{position}} av {{total}}",
       "option": {
+                "trash": "Radera",
         "draft": "Utkast",
         "read": "Läs",
         "event": "Kalender",

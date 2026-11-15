@@ -274,6 +274,15 @@
       "delete": "Verwijderen"
     },
     "mail": {
+            "horizon": {
+                "someday": "Ooit",
+                "nextMonth": "Volgende maand",
+                "thisMonth": "Deze maand",
+                "nextWeek": "Volgende week",
+                "week": "Deze week",
+                "label": "Of later"
+            },
+            "trashRequested": "Verwijdering gevraagd",
       "draftRequested": "Concept wordt voorbereid in Gmail",
       "archiveRequested": "Archiveren aangevraagd",
       "noteSent": "Teruggestuurd naar de Trieur",
@@ -335,8 +344,10 @@
     "entry": "Te sorteren ({{count}})",
     "title": "Te sorteren",
     "deck": {
+            "actionFailedTrash": "Verwijderen is niet gelukt",
       "progressLabel": "Mail {{position}} van {{total}}",
       "option": {
+                "trash": "Verwijderen",
         "draft": "Concept",
         "read": "Lezen",
         "event": "Agenda",

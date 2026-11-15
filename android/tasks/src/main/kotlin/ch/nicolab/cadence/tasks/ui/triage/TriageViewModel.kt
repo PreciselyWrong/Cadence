@@ -122,6 +122,7 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
                 MailDecision.DISMISS -> R.string.triage_mail_dismissed
                 MailDecision.DRAFT -> R.string.triage_mail_drafting
                 MailDecision.ARCHIVE -> R.string.triage_mail_archiving
+                MailDecision.TRASH -> R.string.triage_mail_trashing
                 MailDecision.NOTE -> R.string.triage_mail_noted
             },
         )

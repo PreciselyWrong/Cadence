@@ -290,6 +290,15 @@
       "delete": "حذف"
     },
     "mail": {
+            "horizon": {
+                "someday": "يومًا ما",
+                "nextMonth": "الشهر القادم",
+                "thisMonth": "هذا الشهر",
+                "nextWeek": "الأسبوع القادم",
+                "week": "هذا الأسبوع",
+                "label": "أو لاحقًا"
+            },
+            "trashRequested": "تم طلب الحذف",
       "draftRequested": "يجري تحضير المسودة في Gmail",
       "archiveRequested": "طُلبت الأرشفة",
       "noteSent": "أُعيد إلى Trieur",
@@ -351,8 +360,10 @@
     "entry": "للفرز ({{count}})",
     "title": "للفرز",
     "deck": {
+            "actionFailedTrash": "لم يكتمل الحذف",
       "progressLabel": "البريد {{position}} من {{total}}",
       "option": {
+                "trash": "حذف",
         "draft": "مسودة",
         "read": "قراءة",
         "event": "التقويم",

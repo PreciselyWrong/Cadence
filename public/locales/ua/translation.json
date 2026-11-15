@@ -286,6 +286,15 @@
       "delete": "Видалити"
     },
     "mail": {
+            "horizon": {
+                "someday": "Колись",
+                "nextMonth": "Наступного місяця",
+                "thisMonth": "Цього місяця",
+                "nextWeek": "Наступного тижня",
+                "week": "Цього тижня",
+                "label": "Або пізніше"
+            },
+            "trashRequested": "Видалення запрошено",
       "draftRequested": "Чернетка готується в Gmail",
       "archiveRequested": "Архівування запитано",
       "noteSent": "Повернуто Trieur",
@@ -347,8 +356,10 @@
     "entry": "На розбір ({{count}})",
     "title": "На розбір",
     "deck": {
+            "actionFailedTrash": "Видалити не вдалося",
       "progressLabel": "Лист {{position}} з {{total}}",
       "option": {
+                "trash": "Видалити",
         "draft": "Чернетка",
         "read": "Прочитати",
         "event": "Календар",

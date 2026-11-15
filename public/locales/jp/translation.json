@@ -274,6 +274,15 @@
       "delete": "削除"
     },
     "mail": {
+            "horizon": {
+                "someday": "いつか",
+                "nextMonth": "来月",
+                "thisMonth": "今月",
+                "nextWeek": "来週",
+                "week": "今週",
+                "label": "または後で"
+            },
+            "trashRequested": "削除をリクエストしました",
       "draftRequested": "Gmail で下書きを準備中",
       "archiveRequested": "アーカイブを依頼しました",
       "noteSent": "Trieur に戻しました",
@@ -335,8 +344,10 @@
     "entry": "整理待ち（{{count}}）",
     "title": "整理待ち",
     "deck": {
+            "actionFailedTrash": "削除できませんでした",
       "progressLabel": "メール {{position}} / {{total}}",
       "option": {
+                "trash": "削除",
         "draft": "下書き",
         "read": "読む",
         "event": "カレンダー",

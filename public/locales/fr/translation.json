@@ -274,6 +274,15 @@
       "delete": "Supprimer"
     },
     "mail": {
+            "horizon": {
+                "someday": "Un jour",
+                "nextMonth": "Mois prochain",
+                "thisMonth": "Ce mois-ci",
+                "nextWeek": "Semaine prochaine",
+                "week": "Cette semaine",
+                "label": "Ou plus tard"
+            },
+            "trashRequested": "Suppression demandée",
       "draftRequested": "Brouillon en préparation dans Gmail",
       "archiveRequested": "Archivage demandé",
       "noteSent": "Renvoyé au Trieur",
@@ -335,8 +344,10 @@
     "entry": "À trier ({{count}})",
     "title": "À trier",
     "deck": {
+            "actionFailedTrash": "La suppression n’a pas abouti",
       "progressLabel": "Mail {{position}} sur {{total}}",
       "option": {
+                "trash": "Supprimer",
         "draft": "Brouillon",
         "read": "Lire",
         "event": "Agenda",

@@ -274,6 +274,15 @@
       "delete": "Elimina"
     },
     "mail": {
+            "horizon": {
+                "someday": "Un giorno",
+                "nextMonth": "Mese prossimo",
+                "thisMonth": "Questo mese",
+                "nextWeek": "Settimana prossima",
+                "week": "Questa settimana",
+                "label": "Oppure più avanti"
+            },
+            "trashRequested": "Eliminazione richiesta",
       "draftRequested": "Bozza in preparazione in Gmail",
       "archiveRequested": "Archiviazione richiesta",
       "noteSent": "Rimandato al Trieur",
@@ -335,8 +344,10 @@
     "entry": "Da ordinare ({{count}})",
     "title": "Da ordinare",
     "deck": {
+            "actionFailedTrash": "L’eliminazione non è riuscita",
       "progressLabel": "Mail {{position}} di {{total}}",
       "option": {
+                "trash": "Elimina",
         "draft": "Bozza",
         "read": "Leggi",
         "event": "Calendario",

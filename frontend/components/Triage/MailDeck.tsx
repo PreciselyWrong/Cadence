@@ -10,6 +10,7 @@ import {
     EnvelopeOpenIcon,
     PaperAirplaneIcon,
     XMarkIcon,
+    TrashIcon,
 } from '@heroicons/react/24/outline';
 import {
     decideMail,
@@ -33,7 +34,9 @@ import {
     GMAIL,
     HeldDecision,
     initialDeck,
+    taskPayload,
 } from './mailDeck';
+import MailTaskForm from './MailTaskForm';
 
 // How long « Annuler » can take the last decision back before it is sent.
 const UNDO_MS = 5000;
@@ -64,6 +67,7 @@ const DONE: Record<MailDecision, [string, string]> = {
     event: ['triage.mail.eventRequested', 'Rendez-vous demandé à l’agent'],
     later: ['triage.mail.postponed', 'Revient demain'],
     archive: ['triage.mail.archiveRequested', 'Archivage demandé'],
+    trash: ['triage.mail.trashRequested', 'Suppression demandée'],
     dismiss: ['triage.mail.dismissed', 'Mail ignoré'],
     note: ['triage.mail.noteSent', 'Renvoyé au Trieur'],
 };
@@ -77,11 +81,27 @@ const CHOICE: Record<DeckChoice, [Icon, string, string]> = {
     event: [CalendarIcon, 'triage.deck.option.event', 'Agenda'],
     later: [ClockIcon, 'triage.mail.later', 'Plus tard'],
     archive: [ArchiveBoxIcon, 'triage.deck.option.archive', 'Archiver'],
+    trash: [TrashIcon, 'triage.deck.option.trash', 'Supprimer'],
     dismiss: [XMarkIcon, 'triage.mail.dismiss', 'Ignorer'],
 };
 
 // Putting off, archiving and dismissing push the card away to the left.
-const LEFT: MailDecision[] = ['later', 'archive', 'dismiss'];
+const LEFT: MailDecision[] = ['later', 'archive', 'trash', 'dismiss'];
+
+const HORIZON_KEY: Record<string, string> = {
+    week: 'week',
+    next_week: 'nextWeek',
+    this_month: 'thisMonth',
+    next_month: 'nextMonth',
+    someday: 'someday',
+};
+const HORIZON_LABEL: Record<string, string> = {
+    week: 'Cette semaine',
+    next_week: 'Semaine prochaine',
+    this_month: 'Ce mois-ci',
+    next_month: 'Mois prochain',
+    someday: 'Un jour',
+};
 
 const reducedMotion = () =>
     typeof window.matchMedia === 'function' &&
@@ -171,6 +191,7 @@ const MailDeck: React.FC<MailDeckProps> = ({
     const [noteOpen, setNoteOpen] = useState(false);
     const [note, setNote] = useState('');
     const [mailOpen, setMailOpen] = useState(false);
+    const [taskOpen, setTaskOpen] = useState(false);
     const busy = useRef(false);
 
     const send = useCallback(
@@ -269,6 +290,7 @@ const MailDeck: React.FC<MailDeckProps> = ({
             setNoteOpen(false);
             setNote('');
             setMailOpen(false);
+            setTaskOpen(false);
             setPhase('enter');
             busy.current = false;
         };
@@ -296,7 +318,9 @@ const MailDeck: React.FC<MailDeckProps> = ({
             archive:
                 archiveBox &&
                 archive &&
-                !['later', 'draft', 'archive', 'note'].includes(decision),
+                !['later', 'draft', 'archive', 'trash', 'note'].includes(
+                    decision
+                ),
         };
         leave(direction, () => step({ type: 'decide', held }));
     };
@@ -376,7 +400,19 @@ const MailDeck: React.FC<MailDeckProps> = ({
     });
 
     const detail = (button: DeckButton) => {
-        if (button.choice === 'task') return String(button.payload.name ?? '');
+        if (button.choice === 'task') {
+            const when = button.payload.due_date
+                ? String(button.payload.due_date)
+                : button.payload.horizon
+                  ? t(
+                        `triage.mail.horizon.${HORIZON_KEY[String(button.payload.horizon)]}`,
+                        HORIZON_LABEL[String(button.payload.horizon)]
+                    )
+                  : '';
+            return [String(button.payload.name ?? ''), when]
+                .filter(Boolean)
+                .join(' · ');
+        }
         if (button.choice === 'event' && mail?.suggestion?.event?.start) {
             return eventWhen(mail.suggestion.event);
         }
@@ -397,10 +433,15 @@ const MailDeck: React.FC<MailDeckProps> = ({
                         'triage.deck.actionFailedArchive',
                         'L’archivage n’a pas abouti'
                     )
-                  : t(
-                        'triage.deck.actionFailed',
-                        'La dernière action n’a pas abouti'
-                    );
+                  : type === 'trash'
+                    ? t(
+                          'triage.deck.actionFailedTrash',
+                          'La suppression n’a pas abouti'
+                      )
+                    : t(
+                          'triage.deck.actionFailed',
+                          'La dernière action n’a pas abouti'
+                      );
         return { lead, code: mail.action_error };
     };
 
@@ -651,6 +692,25 @@ const MailDeck: React.FC<MailDeckProps> = ({
                                     'Répondre par un mot'
                                 )}
                             </Button>
+                            <Button
+                                variant="ghost"
+                                size="md"
+                                aria-expanded={taskOpen}
+                                onClick={() => setTaskOpen((open) => !open)}
+                            >
+                                {t('triage.deck.editTask', 'Modifier la tâche')}
+                            </Button>
+                            {!buttons.some(
+                                (button) => button.choice === 'trash'
+                            ) && (
+                                <Button
+                                    variant="ghost"
+                                    size="md"
+                                    onClick={() => decide('trash', {})}
+                                >
+                                    {t('triage.deck.option.trash', 'Supprimer')}
+                                </Button>
+                            )}
                             {chat && (
                                 <ChatLink
                                     href={`${chat.path}?${new URLSearchParams({
@@ -666,6 +726,19 @@ const MailDeck: React.FC<MailDeckProps> = ({
                             </Button>
                             {undoButton}
                         </div>
+                        {taskOpen && (
+                            <MailTaskForm
+                                key={item.key}
+                                initialName={String(
+                                    taskPayload(mail).name ?? ''
+                                )}
+                                initialDue={mail.suggestion?.due_date ?? ''}
+                                initialHorizon={
+                                    mail.suggestion?.horizon ?? null
+                                }
+                                onSubmit={(task) => decide('task', { ...task })}
+                            />
+                        )}
                         {noteOpen && (
                             <form
                                 className="mt-2 flex items-end gap-2"

@@ -274,6 +274,15 @@
       "delete": "Hapus"
     },
     "mail": {
+            "horizon": {
+                "someday": "Suatu hari",
+                "nextMonth": "Bulan depan",
+                "thisMonth": "Bulan ini",
+                "nextWeek": "Minggu depan",
+                "week": "Minggu ini",
+                "label": "Atau nanti"
+            },
+            "trashRequested": "Penghapusan diminta",
       "draftRequested": "Draf sedang disiapkan di Gmail",
       "archiveRequested": "Pengarsipan diminta",
       "noteSent": "Dikembalikan ke Trieur",
@@ -335,8 +344,10 @@
     "entry": "Untuk dipilah ({{count}})",
     "title": "Untuk dipilah",
     "deck": {
+            "actionFailedTrash": "Penghapusan tidak berhasil",
       "progressLabel": "Email {{position}} dari {{total}}",
       "option": {
+                "trash": "Hapus",
         "draft": "Draf",
         "read": "Baca",
         "event": "Kalender",

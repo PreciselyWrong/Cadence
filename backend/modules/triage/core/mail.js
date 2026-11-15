@@ -21,7 +21,17 @@ const OPTIONS = new Set([
     'event',
     'later',
     'archive',
+    'trash',
     'dismiss',
+]);
+// Where a task born from a mail is parked when it has no day (week_of,
+// month_of, #someday), the Plan page horizons.
+const HORIZONS = new Set([
+    'week',
+    'next_week',
+    'this_month',
+    'next_month',
+    'someday',
 ]);
 const MAX_OPTIONS = 5;
 const MIN_OPTIONS = 2;
@@ -86,6 +96,14 @@ function suggestion(value) {
             throw new ValidationError('suggestion.due_date must be YYYY-MM-DD');
         }
         result.due_date = value.due_date;
+    }
+    if (value.horizon !== undefined && value.horizon !== null) {
+        if (!HORIZONS.has(value.horizon)) {
+            throw new ValidationError(
+                `suggestion.horizon must be ${[...HORIZONS].join(', ')}`
+            );
+        }
+        result.horizon = value.horizon;
     }
     const project = clean(value.project_uid, 64);
     if (project) result.project_uid = project;
@@ -325,6 +343,7 @@ module.exports = {
     threadKey,
     clean,
     isDay,
+    HORIZONS,
     eventFields,
     gmailUrl,
     noteText,

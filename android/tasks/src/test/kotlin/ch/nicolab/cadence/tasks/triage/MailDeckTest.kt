@@ -215,4 +215,38 @@ class MailDeckTest {
         assertFalse(body(MailDecision.NOTE, archive = true)["archive"]!!.jsonPrimitive.boolean)
         assertEquals("note", body(MailDecision.NOTE, archive = false)["decision"]!!.jsonPrimitive.content)
     }
+
+    @Test
+    fun `sans jour, la tâche prend l'horizon de l'agent, et le jour l'emporte`() {
+        val parked = MailDeck.taskPayload(card("""{"kind":"task","task_name":"Lire","horizon":"next_month"}"""))
+        assertEquals(
+            buildJsonObject {
+                put("name", "Lire")
+                put("horizon", "next_month")
+            },
+            parked,
+        )
+        val dated = MailDeck.taskPayload(card("""{"kind":"task","task_name":"Lire","due_date":"2026-11-20","horizon":"next_month"}"""))
+        assertEquals(
+            buildJsonObject {
+                put("name", "Lire")
+                put("due_date", "2026-11-20")
+            },
+            dated,
+        )
+    }
+
+    @Test
+    fun `un horizon inconnu est écarté`() {
+        assertNull(card("""{"kind":"task","horizon":"soon"}""").horizon)
+    }
+
+    @Test
+    fun `supprimer part sans charge et ne s'archive pas`() {
+        val advice = MailDeck.adviceFor(MailOption.TRASH, card())
+        assertEquals(MailDecision.TRASH, advice.decision)
+        assertEquals(JsonObject(emptyMap()), advice.payload)
+        assertFalse(advice.opensMail)
+        assertFalse(MailDecision.TRASH.canArchive)
+    }
 }

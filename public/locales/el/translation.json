@@ -274,6 +274,15 @@
       "delete": "Διαγραφή"
     },
     "mail": {
+            "horizon": {
+                "someday": "Κάποτε",
+                "nextMonth": "Τον επόμενο μήνα",
+                "thisMonth": "Αυτόν τον μήνα",
+                "nextWeek": "Την επόμενη εβδομάδα",
+                "week": "Αυτή την εβδομάδα",
+                "label": "Ή αργότερα"
+            },
+            "trashRequested": "Ζητήθηκε διαγραφή",
       "draftRequested": "Το πρόχειρο ετοιμάζεται στο Gmail",
       "archiveRequested": "Ζητήθηκε αρχειοθέτηση",
       "noteSent": "Επιστράφηκε στον Trieur",
@@ -335,8 +344,10 @@
     "entry": "Για ταξινόμηση ({{count}})",
     "title": "Για ταξινόμηση",
     "deck": {
+            "actionFailedTrash": "Η διαγραφή δεν ολοκληρώθηκε",
       "progressLabel": "Μήνυμα {{position}} από {{total}}",
       "option": {
+                "trash": "Διαγραφή",
         "draft": "Πρόχειρο",
         "read": "Ανάγνωση",
         "event": "Ημερολόγιο",

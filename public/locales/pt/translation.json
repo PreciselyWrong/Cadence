@@ -274,6 +274,15 @@
       "delete": "Excluir"
     },
     "mail": {
+            "horizon": {
+                "someday": "Algum dia",
+                "nextMonth": "Próximo mês",
+                "thisMonth": "Este mês",
+                "nextWeek": "Próxima semana",
+                "week": "Esta semana",
+                "label": "Ou mais tarde"
+            },
+            "trashRequested": "Exclusão solicitada",
       "draftRequested": "Rascunho em preparação no Gmail",
       "archiveRequested": "Arquivamento solicitado",
       "noteSent": "Devolvido ao Trieur",
@@ -335,8 +344,10 @@
     "entry": "Por organizar ({{count}})",
     "title": "Por organizar",
     "deck": {
+            "actionFailedTrash": "A exclusão não foi concluída",
       "progressLabel": "E-mail {{position}} de {{total}}",
       "option": {
+                "trash": "Excluir",
         "draft": "Rascunho",
         "read": "Ler",
         "event": "Agenda",

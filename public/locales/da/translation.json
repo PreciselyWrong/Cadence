@@ -274,6 +274,15 @@
       "delete": "Slet"
     },
     "mail": {
+            "horizon": {
+                "someday": "En dag",
+                "nextMonth": "Næste måned",
+                "thisMonth": "Denne måned",
+                "nextWeek": "Næste uge",
+                "week": "Denne uge",
+                "label": "Eller senere"
+            },
+            "trashRequested": "Sletning anmodet",
       "draftRequested": "Kladde forberedes i Gmail",
       "archiveRequested": "Arkivering anmodet",
       "noteSent": "Sendt tilbage til Trieur",
@@ -335,8 +344,10 @@
     "entry": "At sortere ({{count}})",
     "title": "At sortere",
     "deck": {
+            "actionFailedTrash": "Sletningen lykkedes ikke",
       "progressLabel": "Mail {{position}} af {{total}}",
       "option": {
+                "trash": "Slet",
         "draft": "Kladde",
         "read": "Læs",
         "event": "Kalender",

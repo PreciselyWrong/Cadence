@@ -284,6 +284,15 @@
       "delete": "Odstrániť"
     },
     "mail": {
+            "horizon": {
+                "someday": "Niekedy",
+                "nextMonth": "Budúci mesiac",
+                "thisMonth": "Tento mesiac",
+                "nextWeek": "Budúci týždeň",
+                "week": "Tento týždeň",
+                "label": "Alebo neskôr"
+            },
+            "trashRequested": "Vymazanie vyžiadané",
       "draftRequested": "Koncept sa pripravuje v Gmaile",
       "archiveRequested": "Archivácia vyžiadaná",
       "noteSent": "Vrátené Trieurovi",
@@ -345,8 +354,10 @@
     "entry": "Na roztriedenie ({{count}})",
     "title": "Na roztriedenie",
     "deck": {
+            "actionFailedTrash": "Vymazanie sa nepodarilo",
       "progressLabel": "E-mail {{position}} z {{total}}",
       "option": {
+                "trash": "Vymazať",
         "draft": "Koncept",
         "read": "Prečítať",
         "event": "Kalendár",

@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Hermes : exécuter les suppressions de mails et remplir l'horizon (2026-11-15)
+  Raison : Cadence enregistre la décision `trash` (`action: trash, requested`) et accepte `suggestion.horizon` ; reste côté Hermes : `mail_actions_sync` met le fil à la corbeille Gmail puis `report_mail_action` (`type: trash`), et le Trieur renseigne `horizon` quand le mail n'a pas de jour. Vérif : « Supprimer » dans le paquet met le fil à la corbeille ; échec = carte rouverte avec le code ; sur le téléphone, la tâche née d'un mail arrive dans l'horizon choisi.
 - Android : feuille de route trimestrielle (Roadmap) et onglet Chronologie des zones (2026-11-13)
   Raison : repris de l'amont v2.1.0, web seul : page `/roadmap` (zones, projets, tâches sur un trimestre, objectifs en losange, `GET /api/roadmap`, `docs/31-roadmap.md`) et onglet Chronologie d'une zone. Android n'a ni l'un ni l'autre. Vérif : mêmes barres de résumé et mêmes objectifs sur le web et le téléphone avec le même compte ; textes de l'interface seulement en anglais (clés `roadmap.*`, `sidebar.roadmap` à traduire dans les 25 autres langues).
 - Android : liens « bloque » entre tâches et Chronologie de projet (2026-11-13)

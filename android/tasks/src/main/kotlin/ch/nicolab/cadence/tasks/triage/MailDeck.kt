@@ -44,10 +44,11 @@ object MailDeck {
         opensMail = option == MailOption.REPLY,
     )
 
-    /** La tâche née du mail : nom de l'agent (ou objet, ou résumé), échéance suggérée si elle existe. */
+    /** La tâche née du mail : nom de l'agent (ou objet, ou résumé), puis l'échéance suggérée ou, à défaut, l'horizon. */
     fun taskPayload(card: MailCardData): JsonObject = buildJsonObject {
         put("name", card.taskName)
-        card.dueDate?.let { put("due_date", it) }
+        val due = card.dueDate
+        if (due != null) put("due_date", due) else card.horizon?.let { put("horizon", it) }
     }
 
     /** Charge de « Répondre par un mot » : le texte rogné, ou null si la remarque est vide. */

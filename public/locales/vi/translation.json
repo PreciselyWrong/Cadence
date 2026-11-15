@@ -274,6 +274,15 @@
       "delete": "Xóa"
     },
     "mail": {
+            "horizon": {
+                "someday": "Một ngày nào đó",
+                "nextMonth": "Tháng sau",
+                "thisMonth": "Tháng này",
+                "nextWeek": "Tuần sau",
+                "week": "Tuần này",
+                "label": "Hoặc sau"
+            },
+            "trashRequested": "Đã yêu cầu xóa",
       "draftRequested": "Đang chuẩn bị bản nháp trong Gmail",
       "archiveRequested": "Đã yêu cầu lưu trữ",
       "noteSent": "Đã gửi lại cho Trieur",
@@ -335,8 +344,10 @@
     "entry": "Cần phân loại ({{count}})",
     "title": "Cần phân loại",
     "deck": {
+            "actionFailedTrash": "Việc xóa không thành công",
       "progressLabel": "Thư {{position}} / {{total}}",
       "option": {
+                "trash": "Xóa",
         "draft": "Bản nháp",
         "read": "Đọc",
         "event": "Lịch",

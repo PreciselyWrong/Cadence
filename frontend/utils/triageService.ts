@@ -123,6 +123,8 @@ export interface MailPayload {
         kind: 'task' | 'reply' | 'read' | 'event';
         task_name?: string;
         due_date?: string;
+        // Where the task is parked when the mail gives no day
+        horizon?: MailHorizon;
         project_uid?: string;
         // kind event: the appointment the mail sets
         event?: MailEvent;
@@ -142,7 +144,18 @@ export interface MailPayload {
 
 // `reply` only comes from the server's reading of an older card.
 export type MailOption =
-    'draft' | 'reply' | 'task' | 'event' | 'later' | 'archive' | 'dismiss';
+    | 'draft'
+    | 'reply'
+    | 'task'
+    | 'event'
+    | 'later'
+    | 'archive'
+    | 'trash'
+    | 'dismiss';
+
+// The Plan page horizons a task born from a mail can be parked on.
+export type MailHorizon =
+    'week' | 'next_week' | 'this_month' | 'next_month' | 'someday';
 
 // An appointment for the agent to put in the calendar: start is a day
 // (all day) or an ISO 8601 time with its offset.
@@ -161,6 +174,7 @@ export type MailDecision =
     | 'event'
     | 'later'
     | 'archive'
+    | 'trash'
     | 'dismiss'
     // payload { text }: a word back to the agent, which takes the mail again
     | 'note';

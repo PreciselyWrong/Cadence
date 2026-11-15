@@ -32,7 +32,7 @@ Triage item `type: mail`, `source: mail`, `action: decide_mail`, `payload`:
 | `subject` | Subject line |
 | `received_at` | Last message of the thread, ISO 8601 |
 | `summary` | What the mail asks, one line, at most 200 characters |
-| `suggestion` | `{ kind: task \| reply \| read \| event, task_name?, due_date?, project_uid?, event? }`; `event` (kind `event` only): `{ title, start, end, all_day, location? }`, `start` a day `YYYY-MM-DD` (all day) or an ISO 8601 time with its offset, `end` of the same kind and after `start` |
+| `suggestion` | `{ kind: task \| reply \| read \| event, task_name?, due_date?, horizon?, project_uid?, event? }`; `horizon` (`week`, `next_week`, `this_month`, `next_month`, `someday`) parks the task on a Plan horizon when the mail gives no day (a day wins); `event` (kind `event` only): `{ title, start, end, all_day, location? }`, `start` a day `YYYY-MM-DD` (all day) or an ISO 8601 time with its offset, `end` of the same kind and after `start` |
 | `draft_excerpt` | First 280 characters of the prepared draft, if any |
 | `gmail_url` | Opens the thread (or the draft) in Gmail |
 
@@ -44,7 +44,7 @@ Triage item `type: mail`, `source: mail`, `action: decide_mail`, `payload`:
 
 | Decision | Effect |
 |---|---|
-| `task` | Creates a task through the MCP tools: name and date from `payload` (prefilled from `suggestion`), note with the summary and `gmail_url`, source `gmail` with the Gmail address as `source_url` (the source badge). Card done. |
+| `task` | Creates a task through the MCP tools: name and date or `horizon` from `payload` (prefilled from `suggestion`; `horizon` becomes `week_of` / `month_of` / `#someday` through `update_task`, ignored when a day is given), note with the summary and `gmail_url`, source `gmail` with the Gmail address as `source_url` (the source badge). Card done. |
 | `reply` | The client opens `gmail_url` (the draft when there is one). Card done: sent at once on the web card, after the undo window in the deck. |
 | `event` | An appointment for the agent to put in the user's Google Calendar: `payload` may correct `title`, `start`, `end`, `location` (a new `start` without `end` drops the old end), the rest comes from `suggestion.event`; title defaults to the subject. Refused (400, card kept) without any start. Stored on the card as `event: { title, start, end, all_day, location?, state: requested }`. Cadence never writes to the calendar itself: the agent does (see Hermes contract). Card done. |
 | `later` | Card hidden until `payload.until` (default tomorrow 08:00, profile time zone). |
@@ -98,6 +98,12 @@ A button « Trier mes mails (n) » at the top of « À trier » (only when there
 - **Android gestures**: swipe right follows the advice, left puts off (TalkBack has both as custom actions); back closes the deck.
 - **Android deck v2** (1.31.0, `ui/triage/MailDeckScreen.kt`, rules in `triage/MailDeck.kt`, tests `MailDeckTest`): a card with `options` shows them in one row of 2 to 5 big buttons (Brouillon, Répondre, Tâche, Agenda, Plus tard, Archiver, Ignorer); `recommended` is framed and tinted and answers the right swipe. Only Répondre opens Gmail; draft and archive send their decision and say so in a snackbar. The excerpt is readable on the card (« Lire le mail »), the draft body is quoted, `action_error` shows on top. « Répondre par un mot » sends `note` (1 to 500 characters, the card leaves); « Annuler » undoes the last decision while its 4.5 s window is open. Progress « n / N » counts the cards decided since the deck opened. A card without `options` keeps the 1.17 buttons. The `archive` flag is sent only with `task`, `reply`, `event` and `dismiss` (the server refuses it elsewhere). The web deck v2 is built (above).
 
+## Task from a mail, delete, open the mail (2026-11-15)
+
+- **Task with a day or a horizon.** The agent may fill `suggestion.horizon` besides `due_date`. The Tâche button shows name and moment; « Modifier la tâche » (always present in the deck, web and Android) opens the form: name, date, and five horizon chips (Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour); picking a date clears the horizon and the other way round. Web `MailTaskForm.tsx` / `mailDeck.ts` `taskPayload`, Android `MailTaskSheet` / `MailDeck.taskPayload`.
+- **Delete.** Decision `trash` (above), « Supprimer » in the deck (button when the agent lists it, else a quiet button next to « Passer ») and on the « À trier » card. Hermes side to build: `trash` actions in `mail_actions_sync`, then `report_mail_action`.
+- **Android opens Gmail in the browser, not the app.** The Gmail app ignores the `#…` route of a Gmail address and opens its inbox (verified 2026-11-10, `links/GmailLinks.kt`); the mobile site is the only way to land on the thread. The app can be opened without the thread (launch intent), not on the mail.
+
 ## Contract v2
 
 Built on the server on 2026-11-13 (`backend/modules/triage/mail.js`, `core/mail.js`, MCP `mailTools.js`, migration `20261113170000`); web and Android still to build, see « Clients ». Everything is additive: a card proposed without the new fields and the existing decisions behave as before.
@@ -108,7 +114,7 @@ Built on the server on 2026-11-13 (`backend/modules/triage/mail.js`, `core/mail.
 
 | Field | |
 |---|---|
-| `options` | 2 to 5 of `draft \| task \| event \| later \| archive \| dismiss`, distinct, in display order. `reply` is not offered. |
+| `options` | 2 to 5 of `draft \| task \| event \| later \| archive \| trash \| dismiss`, distinct, in display order. `reply` is not offered. |
 | `recommended` | One of `options`. Optional (no highlight without it). |
 | `draft` | `{ body }`, 1 to 4000 characters of plain text. Required with the `draft` option, refused without it. |
 | `excerpt` | Start of the mail, plain text, at most 1500 characters (refused above). Shown on the card so the user reads it without leaving Cadence. |
@@ -123,13 +129,14 @@ Text is cleaned as before (control and invisible characters dropped). The draft 
 |---|---|
 | `draft` | Card done, `action: { type: draft, state: requested }`. Refused (400) when the card has no draft body. Cadence does not call Gmail: Hermes creates the draft from `draft.body`. |
 | `archive` | Card done, `action: { type: archive, state: requested }`. Cadence does not call Gmail: Hermes archives the thread. Refused with the `archive` flag (400). |
+| `trash` | Card done, `action: { type: trash, state: requested }`: Cadence does not call Gmail, Hermes moves the thread to the Gmail trash and reports with `report_mail_action` (`type: trash`). Refused with the `archive` flag (400). Offered as an option (`options` may list `trash`) and always available in the clients as a quiet « Supprimer » button. A failed trash reopens the card like a failed archive. |
 | `note` | `payload.text`, 1 to 500 characters (400 otherwise). Card state `reviewing`: hidden from the deck, `note: { text }` kept on the card, `mail.decided` emitted with the note in `data.mail.note`. A decision on a card waiting for the agent answers 409. |
 
 The existing decisions are unchanged, and the legacy `archive: true` flag is still accepted. Every new decision keeps the rules of the other decisions: one order at a time, `idempotency_key`, 409 when settled elsewhere, the event in `mail.decided`. A decision that settles the card (any but `later` and `note`) clears a failed action left on it; `draft` and `archive` set their own.
 
 ### Reporting the action (`report_mail_action`, MCP)
 
-`account`, `thread_id`, `type` (`draft` or `archive`), `ok` (boolean), `draft_url?` (`https://mail.google.com/…`, `draft` with `ok: true` only), `error?` (a code: lowercase letters and underscores, at most 40 characters, `ok: false` only).
+`account`, `thread_id`, `type` (`draft`, `archive` or `trash`), `ok` (boolean), `draft_url?` (`https://mail.google.com/…`, `draft` with `ok: true` only), `error?` (a code: lowercase letters and underscores, at most 40 characters, `ok: false` only).
 
 - `ok: true` → `action: { type, state: done, draft_url? }`; an archive also sets `archived_at`.
 - `ok: false` → the card is reopened: `status: pending`, `decision` cleared, `action: { type, state: failed }`, `action_error: <code>`. The user sees the error and can press the action again.

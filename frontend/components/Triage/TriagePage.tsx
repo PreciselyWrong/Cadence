@@ -197,6 +197,7 @@ const TriagePage: React.FC = () => {
             'Brouillon en préparation dans Gmail',
         ],
         archive: ['triage.mail.archiveRequested', 'Archivage demandé'],
+        trash: ['triage.mail.trashRequested', 'Suppression demandée'],
         note: ['triage.mail.noteSent', 'Renvoyé au Trieur'],
     };
     // The decision stands even when Gmail did not archive the thread.

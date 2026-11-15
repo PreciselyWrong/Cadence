@@ -286,6 +286,15 @@
       "delete": "Usuń"
     },
     "mail": {
+            "horizon": {
+                "someday": "Kiedyś",
+                "nextMonth": "W przyszłym miesiącu",
+                "thisMonth": "W tym miesiącu",
+                "nextWeek": "W przyszłym tygodniu",
+                "week": "W tym tygodniu",
+                "label": "Albo później"
+            },
+            "trashRequested": "Zażądano usunięcia",
       "draftRequested": "Szkic przygotowywany w Gmailu",
       "archiveRequested": "Zlecono archiwizację",
       "noteSent": "Odesłano do Trieura",
@@ -347,8 +356,10 @@
     "entry": "Do uporządkowania ({{count}})",
     "title": "Do uporządkowania",
     "deck": {
+            "actionFailedTrash": "Usuwanie nie powiodło się",
       "progressLabel": "Mail {{position}} z {{total}}",
       "option": {
+                "trash": "Usuń",
         "draft": "Szkic",
         "read": "Przeczytaj",
         "event": "Kalendarz",

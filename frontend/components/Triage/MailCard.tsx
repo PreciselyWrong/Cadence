@@ -50,9 +50,13 @@ const MailCard: React.FC<MailCardProps> = ({
     const meta = [sender, receivedOn(payload.received_at)]
         .filter(Boolean)
         .join(' · ');
-    // Putting a mail off keeps it in the inbox.
+    // Putting a mail off keeps it in the inbox; a deleted one needs no archive.
     const decide = (decision: MailDecision, extra = {}) =>
-        onDecide(decision, extra, archive && decision !== 'later');
+        onDecide(
+            decision,
+            extra,
+            archive && decision !== 'later' && decision !== 'trash'
+        );
 
     const taskFirst = suggested?.kind !== 'reply';
 
@@ -112,6 +116,13 @@ const MailCard: React.FC<MailCardProps> = ({
                 >
                     {t('triage.mail.dismiss', 'Ignorer')}
                 </Button>
+                <Button
+                    variant="secondary"
+                    size="md"
+                    onClick={() => decide('trash')}
+                >
+                    {t('triage.deck.option.trash', 'Supprimer')}
+                </Button>
             </div>
             {archiveAvailable && (
                 <label className="mt-2 flex min-h-[40px] items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
@@ -134,6 +145,7 @@ const MailCard: React.FC<MailCardProps> = ({
                         ''
                     }
                     initialDue={suggested?.due_date ?? ''}
+                    initialHorizon={suggested?.horizon ?? null}
                     onSubmit={(task) => decide('task', task)}
                 />
             )}

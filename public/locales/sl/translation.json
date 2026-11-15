@@ -290,6 +290,15 @@
       "delete": "Izbriši"
     },
     "mail": {
+            "horizon": {
+                "someday": "Nekoč",
+                "nextMonth": "Naslednji mesec",
+                "thisMonth": "Ta mesec",
+                "nextWeek": "Naslednji teden",
+                "week": "Ta teden",
+                "label": "Ali pozneje"
+            },
+            "trashRequested": "Brisanje zahtevano",
       "draftRequested": "Osnutek se pripravlja v Gmailu",
       "archiveRequested": "Arhiviranje zahtevano",
       "noteSent": "Vrnjeno Trieurju",
@@ -351,8 +360,10 @@
     "entry": "Za razvrstitev ({{count}})",
     "title": "Za razvrstitev",
     "deck": {
+            "actionFailedTrash": "Brisanje ni uspelo",
       "progressLabel": "Sporočilo {{position}} od {{total}}",
       "option": {
+                "trash": "Izbriši",
         "draft": "Osnutek",
         "read": "Preberi",
         "event": "Koledar",

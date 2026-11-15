@@ -274,6 +274,15 @@
       "delete": "Delete"
     },
     "mail": {
+            "horizon": {
+                "someday": "Someday",
+                "nextMonth": "Next month",
+                "thisMonth": "This month",
+                "nextWeek": "Next week",
+                "week": "This week",
+                "label": "Or later"
+            },
+            "trashRequested": "Deletion requested",
       "draftRequested": "Draft being prepared in Gmail",
       "archiveRequested": "Archiving requested",
       "noteSent": "Sent back to the Trieur",
@@ -335,8 +344,10 @@
     "entry": "To sort ({{count}})",
     "title": "To sort",
     "deck": {
+            "actionFailedTrash": "Deleting did not go through",
       "progressLabel": "Mail {{position}} of {{total}}",
       "option": {
+                "trash": "Delete",
         "draft": "Draft",
         "read": "Read",
         "event": "Calendar",

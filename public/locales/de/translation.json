@@ -274,6 +274,15 @@
       "delete": "Löschen"
     },
     "mail": {
+            "horizon": {
+                "someday": "Irgendwann",
+                "nextMonth": "Nächsten Monat",
+                "thisMonth": "Diesen Monat",
+                "nextWeek": "Nächste Woche",
+                "week": "Diese Woche",
+                "label": "Oder später"
+            },
+            "trashRequested": "Löschen angefordert",
       "draftRequested": "Entwurf wird in Gmail vorbereitet",
       "archiveRequested": "Archivieren angefordert",
       "noteSent": "An den Trieur zurückgeschickt",
@@ -335,8 +344,10 @@
     "entry": "Zu sortieren ({{count}})",
     "title": "Zu sortieren",
     "deck": {
+            "actionFailedTrash": "Das Löschen ist fehlgeschlagen",
       "progressLabel": "Mail {{position}} von {{total}}",
       "option": {
+                "trash": "Löschen",
         "draft": "Entwurf",
         "read": "Lesen",
         "event": "Kalender",

@@ -164,11 +164,9 @@ export function recommendation(mail: MailPayload): Recommendation {
     if (kind === 'event' && mail.suggestion?.event?.start) {
         return { decision: 'event', payload: {}, opensMail: false };
     }
-    const name = mail.suggestion?.task_name ?? mail.subject ?? mail.summary;
-    const due = mail.suggestion?.due_date;
     return {
         decision: 'task',
-        payload: due ? { name, due_date: due } : { name },
+        payload: taskPayload(mail),
         opensMail: false,
     };
 }
@@ -192,14 +190,18 @@ const OPTIONS: readonly MailOption[] = [
     'event',
     'later',
     'archive',
+    'trash',
     'dismiss',
 ];
 const MAX_BUTTONS = 5;
 
-const taskPayload = (mail: MailPayload) => {
+// The task the card suggests: name, and a day or else a horizon.
+export const taskPayload = (mail: MailPayload) => {
     const name = mail.suggestion?.task_name ?? mail.subject ?? mail.summary;
     const due = mail.suggestion?.due_date;
-    return due ? { name, due_date: due } : { name };
+    const horizon = mail.suggestion?.horizon;
+    if (due) return { name, due_date: due };
+    return horizon ? { name, horizon } : { name };
 };
 
 const optionButton = (

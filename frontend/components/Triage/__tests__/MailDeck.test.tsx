@@ -150,6 +150,44 @@ describe('MailDeck', () => {
         );
     });
 
+    it('opens the task form with the horizon the agent chose, and changes it', async () => {
+        renderDeck([
+            card('a', {
+                suggestion: {
+                    kind: 'task',
+                    task_name: 'Lire',
+                    horizon: 'next_month',
+                },
+            }),
+            card('b'),
+        ]);
+        fireEvent.click(screen.getByText('Modifier la tâche'));
+        expect(screen.getByText('Mois prochain')).toHaveAttribute(
+            'aria-pressed',
+            'true'
+        );
+        fireEvent.click(screen.getByText('Semaine prochaine'));
+        fireEvent.click(screen.getByText('Créer la tâche'));
+        await screen.findByText('Objet b');
+        fireEvent.click(choice('dismiss'));
+        await screen.findByText('Tout est trié');
+        expect(decide).toHaveBeenCalledWith(
+            'a',
+            'task',
+            { name: 'Lire', horizon: 'next_week' },
+            false
+        );
+    });
+
+    it('deletes the mail with the quiet « Supprimer », or the agent choice', async () => {
+        renderDeck([card('a'), card('b')]);
+        fireEvent.click(screen.getByText('Supprimer'));
+        await screen.findByText('Objet b');
+        fireEvent.click(choice('dismiss'));
+        await screen.findByText('Tout est trié');
+        expect(decide).toHaveBeenCalledWith('a', 'trash', {}, false);
+    });
+
     it('takes the last decision back with « Annuler »', async () => {
         renderDeck([card('a'), card('b')]);
         expect(screen.getByRole('button', { name: 'Annuler' })).toBeDisabled();

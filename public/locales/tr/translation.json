@@ -274,6 +274,15 @@
       "delete": "Sil"
     },
     "mail": {
+            "horizon": {
+                "someday": "Bir gün",
+                "nextMonth": "Gelecek ay",
+                "thisMonth": "Bu ay",
+                "nextWeek": "Gelecek hafta",
+                "week": "Bu hafta",
+                "label": "Veya daha sonra"
+            },
+            "trashRequested": "Silme istendi",
       "draftRequested": "Taslak Gmail’de hazırlanıyor",
       "archiveRequested": "Arşivleme istendi",
       "noteSent": "Trieur’a geri gönderildi",
@@ -335,8 +344,10 @@
     "entry": "Ayıklanacak ({{count}})",
     "title": "Ayıklanacak",
     "deck": {
+            "actionFailedTrash": "Silme tamamlanamadı",
       "progressLabel": "E-posta {{position}} / {{total}}",
       "option": {
+                "trash": "Sil",
         "draft": "Taslak",
         "read": "Oku",
         "event": "Takvim",

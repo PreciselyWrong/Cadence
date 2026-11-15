@@ -274,6 +274,15 @@
       "delete": "删除"
     },
     "mail": {
+            "horizon": {
+                "someday": "某天",
+                "nextMonth": "下月",
+                "thisMonth": "本月",
+                "nextWeek": "下周",
+                "week": "本周",
+                "label": "或稍后"
+            },
+            "trashRequested": "已请求删除",
       "draftRequested": "正在 Gmail 中准备草稿",
       "archiveRequested": "已请求归档",
       "noteSent": "已退回给 Trieur",
@@ -335,8 +344,10 @@
     "entry": "待整理（{{count}}）",
     "title": "待整理",
     "deck": {
+            "actionFailedTrash": "删除未成功",
       "progressLabel": "第 {{position}} / {{total}} 封邮件",
       "option": {
+                "trash": "删除",
         "draft": "草稿",
         "read": "阅读",
         "event": "日历",

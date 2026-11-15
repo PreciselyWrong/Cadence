@@ -78,6 +78,66 @@ describe('triage › mail cards', () => {
         });
     });
 
+    it('parks the task on the suggested horizon when the mail gives no day', async () => {
+        const { mail_uid: uid } = await propose({
+            suggestion: {
+                kind: 'task',
+                task_name: 'Lire le rapport',
+                horizon: 'next_month',
+            },
+        });
+        const response = await decide(uid, { decision: 'task' });
+        expect(response.status).toBe(200);
+        const task = await Task.findOne({
+            where: { uid: response.body.task_uid },
+        });
+        expect(task.due_date).toBeNull();
+        expect(task.month_of).toMatch(/^\d{4}-\d{2}-01/);
+    });
+
+    it('lets the user change the horizon, and a day wins over it', async () => {
+        const { mail_uid: uid } = await propose({
+            suggestion: { kind: 'task', horizon: 'next_month' },
+        });
+        const parked = await decide(uid, {
+            decision: 'task',
+            payload: { horizon: 'next_week' },
+        });
+        const task = await Task.findOne({
+            where: { uid: parked.body.task_uid },
+        });
+        expect(task.week_of).not.toBeNull();
+        expect(task.month_of).toBeNull();
+
+        const { mail_uid: other } = await propose({
+            thread_id: 'aaaa1111bbbb2222',
+            gmail_url:
+                'https://mail.google.com/mail/u/0/#inbox/aaaa1111bbbb2222',
+            suggestion: { kind: 'task', horizon: 'next_month' },
+        });
+        const dated = await decide(other, {
+            decision: 'task',
+            payload: { due_date: '2026-11-20' },
+        });
+        const datedTask = await Task.findOne({
+            where: { uid: dated.body.task_uid },
+        });
+        expect(datedTask.month_of).toBeNull();
+    });
+
+    it('refuses an unknown horizon', async () => {
+        await expect(
+            propose({ suggestion: { kind: 'task', horizon: 'soon' } })
+        ).rejects.toThrow(/horizon/);
+        const { mail_uid: uid } = await propose();
+        const response = await decide(uid, {
+            decision: 'task',
+            payload: { horizon: 'soon' },
+        });
+        expect(response.status).toBe(400);
+        expect(await mailItems()).toHaveLength(1);
+    });
+
     it('keeps one card per thread, updated by a newer message', async () => {
         const first = await propose();
         const second = await propose({
@@ -506,6 +566,57 @@ describe('triage › mail cards', () => {
                 });
                 expect(response.status).toBe(400);
                 expect(await mailItems()).toHaveLength(1);
+            });
+        });
+
+        describe('trash decision', () => {
+            it('settles the card and asks for the trash, with no Gmail call', async () => {
+                const { mail_uid: uid } = await card();
+                const fetchSpy = jest.spyOn(global, 'fetch');
+                const response = await decide(uid, { decision: 'trash' });
+                expect(response.status).toBe(200);
+                expect(response.body).toMatchObject({
+                    state: 'done',
+                    decision: 'trash',
+                    action: { type: 'trash', state: 'requested' },
+                });
+                expect(fetchSpy).not.toHaveBeenCalled();
+                expect(await mailItems()).toEqual([]);
+            });
+
+            it('refuses the archive flag on a trash decision', async () => {
+                const { mail_uid: uid } = await card();
+                const response = await decide(uid, {
+                    decision: 'trash',
+                    archive: true,
+                });
+                expect(response.status).toBe(400);
+            });
+
+            it('marks a requested trash done, or reopens the card when it fails', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'trash' });
+                await report({ type: 'trash', ok: true });
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.action).toEqual({ type: 'trash', state: 'done' });
+
+                const { mail_uid: other } = await card({
+                    thread_id: 'cccc3333dddd4444',
+                    gmail_url:
+                        'https://mail.google.com/mail/u/0/#inbox/cccc3333dddd4444',
+                });
+                await decide(other, { decision: 'trash' });
+                await report({
+                    thread_id: 'cccc3333dddd4444',
+                    type: 'trash',
+                    ok: false,
+                    error: 'gmail_unavailable',
+                });
+                const failed = await MailItem.findOne({
+                    where: { uid: other },
+                });
+                expect(failed.status).toBe('pending');
+                expect(failed.action_error).toBe('gmail_unavailable');
             });
         });
 

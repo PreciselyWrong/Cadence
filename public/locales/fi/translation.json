@@ -274,6 +274,15 @@
       "delete": "Poista"
     },
     "mail": {
+            "horizon": {
+                "someday": "Joskus",
+                "nextMonth": "Ensi kuussa",
+                "thisMonth": "Tässä kuussa",
+                "nextWeek": "Ensi viikolla",
+                "week": "Tällä viikolla",
+                "label": "Tai myöhemmin"
+            },
+            "trashRequested": "Poistoa pyydetty",
       "draftRequested": "Luonnosta valmistellaan Gmailissa",
       "archiveRequested": "Arkistointia pyydetty",
       "noteSent": "Palautettu Trieurille",
@@ -335,8 +344,10 @@
     "entry": "Lajiteltavat ({{count}})",
     "title": "Lajiteltavat",
     "deck": {
+            "actionFailedTrash": "Poisto ei onnistunut",
       "progressLabel": "Viesti {{position}}/{{total}}",
       "option": {
+                "trash": "Poista",
         "draft": "Luonnos",
         "read": "Lue",
         "event": "Kalenteri",
