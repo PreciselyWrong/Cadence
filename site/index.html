@@ -60,14 +60,13 @@ body {
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--primary); text-underline-offset: 3px; }
-h1, h2, h3 { font-family: Inter, system-ui, sans-serif; line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
+h1, h2, h3 { font-family: Inter, system-ui, sans-serif; line-height: 1.15; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
 h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 800; }
 h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); font-weight: 750; }
 h3 { font-size: 1.25rem; font-weight: 700; }
 p { margin: 0; }
 .wrap { width: min(1160px, 100% - 32px); margin-inline: auto; }
 .muted { color: var(--ink-muted); }
-.eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
 
 /* Top bar */
 .top { position: sticky; top: 0; z-index: 10; backdrop-filter: saturate(1.4) blur(14px); background: color-mix(in srgb, var(--surface) 82%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--outline) 50%, transparent); }
@@ -103,9 +102,9 @@ p { margin: 0; }
 /* Pillars */
 .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: clamp(80px, 10vw, 128px); }
 .pillar { background: var(--card); border-radius: 20px; padding: 26px; }
-.pillar .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--primary-container); color: var(--on-primary-container); margin-bottom: 16px; }
-.pillar h3 { margin-bottom: 6px; }
-.pillar p { color: var(--ink-muted); font-size: 0.97rem; }
+.pillar h2 { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+.pillar h2 svg { flex: none; color: var(--primary); }
+.pillar p { margin-top: 10px; color: var(--ink-muted); font-size: 0.97rem; }
 
 /* Tour */
 section.block { padding-top: clamp(80px, 10vw, 128px); }
@@ -114,12 +113,12 @@ section.block { padding-top: clamp(80px, 10vw, 128px); }
 .feature { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(24px, 5vw, 64px); align-items: center; margin-top: clamp(48px, 7vw, 80px); }
 .feature:nth-of-type(even) { grid-template-columns: 7fr 5fr; }
 .feature:nth-of-type(even) .text { order: 2; }
-.feature .text h3 { font-size: 1.5rem; margin: 8px 0 12px; }
+.feature .text h3 { font-size: 1.5rem; margin: 0 0 12px; }
 .feature .text p { color: var(--ink-muted); }
 .feature ul { margin: 14px 0 0; padding: 0; list-style: none; color: var(--ink-muted); font-size: 0.97rem; }
 .feature li { padding-left: 22px; position: relative; margin-top: 6px; }
 .feature li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--primary); }
-.shot { border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid color-mix(in srgb, var(--outline) 60%, transparent); background: var(--card); }
+.shot { border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); background: var(--card); }
 @media (max-width: 860px) {
   .feature, .feature:nth-of-type(even) { grid-template-columns: 1fr; }
   .feature:nth-of-type(even) .text { order: 0; }
@@ -127,7 +126,6 @@ section.block { padding-top: clamp(80px, 10vw, 128px); }
 
 /* Android strip */
 .island { background: var(--island); color: #F2F1FA; border-radius: clamp(24px, 4vw, 40px); padding: clamp(36px, 6vw, 72px) clamp(20px, 5vw, 64px); margin-top: clamp(80px, 10vw, 128px); overflow: hidden; }
-.island .eyebrow { color: #A9A6FF; }
 .island .head p { color: #C8C5D0; }
 .phones { display: grid; grid-template-columns: repeat(6, minmax(160px, 1fr)); gap: 18px; margin-top: 40px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
 .phones figure { margin: 0; scroll-snap-align: start; }
@@ -172,9 +170,8 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 <main>
   <section class="hero">
     <div class="wrap">
-      <p class="eyebrow">Self-hosted · Offline · Open source</p>
-      <h1 style="margin-top:14px">One calm system for <span>your whole day</span></h1>
-      <p class="lead">Tasks, projects, habits and notes in one place. On the web, on Android and on Linux, working offline and syncing back. You host it; no AI needed.</p>
+      <h1>One calm system for <span>your whole day</span></h1>
+      <p class="lead">Tasks, projects, habits and notes in one open-source place. On the web, on Android and on Linux, working offline and syncing back. You host it; no AI needed.</p>
       <div class="actions">
         <a class="btn primary" href="#start">Run it yourself</a>
         <a class="btn ghost" href="https://github.com/PreciselyWrong/Cadence">View on GitHub</a>
@@ -189,38 +186,32 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
   <div class="wrap">
     <div class="pillars">
       <div class="pillar reveal">
-        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></div>
-        <h3>Yours to host</h3>
+        <h2><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>Yours to host</h2>
         <p>One Docker container, SQLite or PostgreSQL. Reach it over Tailscale or your own domain. Nothing leaves unless you connect it.</p>
       </div>
       <div class="pillar reveal">
-        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9Z"/><path d="m3 3 18 18"/></svg></div>
-        <h3>Works offline</h3>
+        <h2><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9Z"/><path d="m3 3 18 18"/></svg>Works offline</h2>
         <p>The web app, the Linux client and the Android app keep working without the server, then merge field by field when it is back.</p>
       </div>
       <div class="pillar reveal">
-        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div>
-        <h3>One system, three clients</h3>
+        <h2><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>One system, three clients</h2>
         <p>Web, Android and Linux share the same tasks, habits, plan and notes. A feature lands on both sides or it is on the roadmap.</p>
       </div>
       <div class="pillar reveal">
-        <div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/></svg></div>
-        <h3>No AI required</h3>
+        <h2><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/></svg>No AI required</h2>
         <p>Everything works by hand. Agents can propose, through MCP, and you decide card by card.</p>
       </div>
     </div>
 
     <section class="block" id="tour">
       <div class="head">
-        <p class="eyebrow">A tour of the web app</p>
-        <h2 style="margin-top:10px">Plan the week, live the day</h2>
+        <h2>Plan the week, live the day</h2>
         <p>A quiet interface in the spirit of Things and TickTick: one list at a time, details only when you open them.</p>
       </div>
 
       <div class="feature reveal">
         <div class="text">
-          <p class="eyebrow">Today</p>
-          <h3>Your day, beside your calendar</h3>
+          <h3>Today, beside your calendar</h3>
           <p>What you planned and what is due, each task once, next to a 1, 3 or 7-day calendar. Drag a task onto an hour, resize it, check it off.</p>
           <ul><li>Habits of the day in the same list</li><li>Google Calendar and CalDAV events on the grid</li><li>Focus blocks and quiet hours</li></ul>
         </div>
@@ -229,8 +220,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 
       <div class="feature reveal">
         <div class="text">
-          <p class="eyebrow">Plan</p>
-          <h3>Inbox, fourteen days, horizons</h3>
+          <h3>Plan: inbox, fourteen days, horizons</h3>
           <p>The inbox on the left, one column per day, then This week, Next week and Later. Overdue tasks are spread over the week in one click, with no guilt counter.</p>
         </div>
         <div class="shot"><img src="screenshots/web/plan.png" alt="Plan board" loading="lazy" width="2880" height="1800"></div>
@@ -238,8 +228,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 
       <div class="feature reveal">
         <div class="text">
-          <p class="eyebrow">Projects</p>
-          <h3>From a list to a timeline</h3>
+          <h3>Projects, from a list to a timeline</h3>
           <p>Areas, projects and sub-projects. Each project is a list, a board or a timeline where links between bars push blocked tasks later when their blocker slips.</p>
           <ul><li>One next action per project</li><li>Pages: the web pages a project works from</li><li>Projects that follow a TODO.md in a git repository</li></ul>
         </div>
@@ -248,7 +237,6 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 
       <div class="feature reveal">
         <div class="text">
-          <p class="eyebrow">Habits</p>
           <h3>Habits that forgive</h3>
           <p>Daily, weekly or so many times a week; quantities, durations, things to avoid. Streaks are prorated, a missed day is not a failure.</p>
         </div>
@@ -257,7 +245,6 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 
       <div class="feature reveal">
         <div class="text">
-          <p class="eyebrow">Notes</p>
           <h3>Notes as outlines</h3>
           <p>Notes and task descriptions are outlines in Markdown: fold, zoom, move, turn a bullet into a task. Link with <code>[[Title]]</code>, mention people, see backlinks.</p>
         </div>
@@ -266,8 +253,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 
       <div class="feature reveal">
         <div class="text">
-          <p class="eyebrow">To sort</p>
-          <h3>Decide in a few swipes</h3>
+          <h3>To sort: decide in a few swipes</h3>
           <p>One card at a time: tasks that need a decision, mails an agent read for you, renewals and updates waiting for a yes. The advice is highlighted; you choose.</p>
         </div>
         <div class="shot"><img src="screenshots/web/mail-deck.png" alt="Mail cards in To sort" loading="lazy" width="2880" height="1800"></div>
@@ -275,7 +261,6 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 
       <div class="feature reveal">
         <div class="text">
-          <p class="eyebrow">Review</p>
           <h3>A weekly review in five minutes</h3>
           <p>Tasks pushed back three times, stalled projects, what is parked for later, this week's time against your available time. One tap per row.</p>
         </div>
@@ -287,8 +272,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
   <div class="wrap">
     <section class="island" id="android">
       <div class="head">
-        <p class="eyebrow">Android</p>
-        <h2 style="margin-top:10px">The same system in your pocket</h2>
+        <h2>The same system in your pocket</h2>
         <p>A native Kotlin app with Compose and widgets. Everything is kept on the phone and synced with your server when it is reachable.</p>
       </div>
       <div class="phones">
@@ -308,8 +292,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
   <div class="wrap">
     <section class="block" id="start">
       <div class="head">
-        <p class="eyebrow">Get started</p>
-        <h2 style="margin-top:10px">Running in one command</h2>
+        <h2>Running in one command</h2>
         <p>Cadence is a fork of <a href="https://github.com/chrisvel/tududi">tududi</a> by Chris Veleris, under the MIT licence.</p>
       </div>
       <div class="start">
