@@ -9,49 +9,142 @@
 <h3 align="center">One personal system for tasks, projects, habits and notes</h3>
 
 <p align="center">
-  Self-hosted, on the web and on Android, working offline, with no AI required.<br>
+  Self-hosted, on the web, Android and Linux, working offline, with no AI required.<br>
   A fork of <a href="https://github.com/chrisvel/tududi">tududi</a> by Chris Veleris, under the MIT licence.
 </p>
 
-![Cadence, light mode](screenshots/all-light.png)
+<p align="center">
+  <a href="#a-tour-of-the-web-app">Web tour</a> ·
+  <a href="#android">Android</a> ·
+  <a href="#linux-desktop">Linux</a> ·
+  <a href="#getting-started">Getting started</a> ·
+  <a href="#what-cadence-adds-to-tududi">What's new since tududi</a>
+</p>
 
-More screenshots are [below](#screenshots).
+![Cadence on the web: Today, a day list beside a calendar](screenshots/web/today.png)
 
 ---
 
 ## What Cadence is
 
-Cadence keeps tasks, projects, areas, habits, notes and quick capture in one place. You run the server yourself (Docker, SQLite or PostgreSQL) and reach it from your devices, for example through Tailscale. Nothing is sent to a third party unless you connect it yourself (Google Calendar, CalDAV, OIDC).
+Cadence keeps tasks, projects, areas, habits, notes and quick capture in one place, with one calm interface on every device. You run the server yourself (Docker, SQLite or PostgreSQL) and reach it from your devices, for example through Tailscale. Nothing is sent to a third party unless you connect it yourself (Google Calendar, CalDAV, OIDC, an AI provider).
 
-| Client                               | State                                                                       |
-| ------------------------------------ | --------------------------------------------------------------------------- |
-| **Web** (installable PWA)            | Full app: every feature below                                               |
-| **Android** ([`android/`](android/)) | Habits with their widgets, and tasks synced with the server, usable offline |
-| **Linux desktop**                    | Tauri shell in `desktop/`: Cadence window controls, tray, quick-add shortcut, native notifications    |
+- **One system, three clients.** The web app, the Android app and the Linux desktop app share the same tasks, plan, habits and notes. A feature ships on both web and Android, or it is listed in the roadmap.
+- **Offline first.** Every client keeps working without the server and syncs back when it is reachable; conflicts are merged field by field.
+- **No AI required.** Everything works by hand. Agents (through the built-in MCP server) can propose cards; you decide.
+- **Calm by design.** No overdue alarms, no days-late counters, no score. One list at a time, details when you open them.
 
-### Android app
+| Client                               | State                                                                                         |
+| ------------------------------------ | --------------------------------------------------------------------------------------------- |
+| **Web** (installable PWA)            | Full app, works offline through a service worker                                              |
+| **Android** ([`android/`](android/)) | Tasks, plan, habits, notes, review and widgets, offline, synced with the server               |
+| **Linux desktop** ([`desktop/`](desktop/)) | Tauri shell: Cadence window controls, tray, quick-add shortcut, native notifications     |
 
-Native Kotlin app (Jetpack Compose, Room, Glance widgets), merged from the former Cadence habits app.
+## A tour of the web app
 
-- **Tasks, offline:** every task is kept on the phone and synced with the server through [`/api/v1/sync`](docs/30-offline-sync.md). Changes made offline are queued and sent when the server is reachable again; conflicts are merged field by field.
+The screenshots below come from a demo account (fictional data, French interface; Cadence speaks 26 languages). They are made with `npm run db:seed:screenshots`, see [docs/fork/SCREENSHOTS.md](docs/fork/SCREENSHOTS.md).
+
+### Today
+
+The day's list (what you planned and what is due that day, each task once) beside a 1, 3 or 7-day calendar. Drag a task onto an hour, move or resize it in 15-minute steps, check it off with the round check. The day's habits sit in the same list, with Google Calendar and CalDAV events on the grid. [Docs](docs/02-today-page-sections.md)
+
+![Today](screenshots/web/today.png)
+
+### Plan
+
+The inbox on the left, then one column per day for the next two weeks, then the horizons (This week, Next week, Later). Ideas from the inbox are decided in place; overdue tasks are replanned or spread over seven days in one click. A task opens in one floating pane on every page. [Docs](docs/20-daily-plan.md)
+
+![Plan](screenshots/web/plan.png)
+
+### Projects and timeline
+
+Areas hold projects, projects hold sub-projects. Each project is a list, a board with free sections, an outline or a timeline: drag a link from one bar to another and a blocked task is pushed later when its blocker slips. One next action per project, and the web pages a project works from in its Pages. [Docs](docs/06-projects.md)
+
+![Project timeline](screenshots/web/project.png)
+
+### Calendar
+
+Year, month, week, N days, day and agenda views. Tasks are drawn at their real length, multi-day tasks as bars; Google Calendar syncs both ways and a secret `.ics` feed subscribes any calendar app to your tasks. [Docs](docs/20-daily-plan.md)
+
+![Calendar](screenshots/web/calendar.png)
+
+### Habits
+
+Daily, weekly or N times a week; counts, quantities, durations, or things to avoid. Streaks are prorated, so one missed day is not a broken chain. The same habits are on the phone, with their widgets. [Docs](docs/21-habits.md)
+
+![Habits](screenshots/web/habits.png)
+
+### Notes
+
+Notes and task descriptions are Markdown outlines: fold, zoom, move a branch, turn a bullet into a linked task. Link with `[[Title]]`, mention people with `@`, and every note lists its backlinks. [Docs](docs/45-outliner.md)
+
+![Notes](screenshots/web/notes.png)
+
+### To sort, and agent cards
+
+« À trier » shows one decision at a time: a task that needs a date, a mail an agent read for you (archive, pay, reply, accept the meeting), a renewal or an update waiting for a yes. The agent's advice is the big button; you choose, with undo and the keyboard. [Docs](docs/40-triage.md), [mails](docs/43-mail-triage.md), [decisions](docs/49-agent-decisions.md)
+
+<table>
+  <tr>
+    <td><img src="screenshots/web/triage.png" alt="To sort, one decision at a time"></td>
+    <td><img src="screenshots/web/mail-deck.png" alt="Sort my mails, one card at a time"></td>
+  </tr>
+</table>
+
+### Review and goals
+
+A weekly review in about five minutes: tasks pushed back three times, stalled projects, what is parked for later, this week's planned time against your available time. Goals carry key results and a bucket list that never reaches Today. [Docs](docs/34-review.md)
+
+<table>
+  <tr>
+    <td><img src="screenshots/web/review.png" alt="Review"></td>
+    <td><img src="screenshots/web/goals.png" alt="Goals"></td>
+  </tr>
+</table>
+
+### Dark mode
+
+Light, dark or pure black, with eight accent colours, the same tokens as the Android app ([design tokens](docs/fork/DESIGN-TOKENS.md)).
+
+![Today in dark mode](screenshots/web/today-dark.png)
+
+## Android
+
+A native Kotlin app (Jetpack Compose, Room, Glance widgets) in [`android/`](android/). Everything is kept on the phone and synced with your server when it is reachable.
+
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/android/today.png" alt="Today on Android" width="220"><br>Today</td>
+    <td align="center"><img src="screenshots/android/plan.png" alt="Plan on Android" width="220"><br>Plan</td>
+    <td align="center"><img src="screenshots/android/agenda.png" alt="Agenda on Android" width="220"><br>Agenda</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/android/habits.png" alt="Habits on Android" width="220"><br>Habits</td>
+    <td align="center"><img src="screenshots/android/task.png" alt="Task sheet on Android" width="220"><br>Task sheet</td>
+    <td align="center"><img src="screenshots/android/review.png" alt="Review on Android" width="220"><br>Review</td>
+  </tr>
+</table>
+
+- **Tasks, offline:** every task is kept on the phone and synced through [`/api/v1/sync`](docs/30-offline-sync.md). Changes made offline are queued and sent when the server is reachable again; conflicts are merged field by field.
+- **Today and Plan:** the day's list with a timeline (« À caser », then the day with the current time and free slots), and the same Plan as the web: inbox, overdue, fourteen days, horizons.
 - **Connect with a QR code:** create an API key in the web app (Profile → API keys) and scan the QR code shown under it, or type the server address and key.
 - **Widgets:** a _Today_ widget where a task is checked off in one tap, a _+ Task_ widget for quick capture, and the habit widgets.
-- **Capture and reminders:** share text from any app into the inbox, and get reminders with _Complete_ and _Later_ actions, shifted out of your quiet hours.
-- **Habits:** synced with the server, so they can be seen and edited on the web.
-- **Review, goals, Stash:** the weekly review, the Stash of paused projects, next actions and goals, as on the web.
-- **Links become tasks:** share or capture an address and it becomes a task named by its kind (« Essayer / Lire / Regarder : … »), the address in its note, with « Déjà dans … » when you already have it.
-- **Project pages:** a project gathers the web pages it works from (preview, GitHub stats, short note), sent from the phone or the Firefox add-on, copied as Markdown, checked for dead pages; any task can become a project.
-- **Links in text:** addresses in task titles, task notes and note titles open on tap; use the edit button beside linked text to change it.
+- **Capture and reminders:** share text or a link from any app (a link becomes a task named by its kind, « Lire : … »), and get reminders with _Complete_ and _Later_ actions, shifted out of your quiet hours.
+- **Habits, review, goals, notes:** the same as on the web, with the outliner toolbar above the keyboard.
+- **Agents:** « À trier », mail and decision cards, and agent notifications you can answer in free text.
 
 Build and install a debug APK with `cd android && ./dev.sh` (JDK 21). See [android/AGENTS.md](android/AGENTS.md).
 
-### Linux desktop app
+## Linux desktop
 
-Thin Tauri 2 shell around your Cadence server (`desktop/`): the web app in a window with Cadence window controls, plus a tray icon, a quick-add capture to the inbox that works offline, and native notifications that arrive while the window is closed. About 60 MB of RAM in the tray. Build with `cd desktop && npm install && npm run build` (RPM and AppImage). See [docs/fork/DESKTOP.md](docs/fork/DESKTOP.md).
+Thin Tauri 2 shell around your Cadence server ([`desktop/`](desktop/)): the web app in a window with Cadence window controls, plus a tray icon, a quick-add capture to the inbox that works offline, and native notifications that arrive while the window is closed. About 60 MB of RAM in the tray. Build with `cd desktop && npm install && npm run build` (RPM and AppImage). See [docs/fork/DESKTOP.md](docs/fork/DESKTOP.md).
 
 ## What Cadence adds to tududi
 
-Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last synced with upstream `eda9aa60`, v1.14.0) and brings the calendar and planning views closer to TickTick. Everything below is new or changed compared with upstream; the rest of the app works as in tududi. The full list, kept up to date, is in [docs/fork/FORK.md](docs/fork/FORK.md).
+Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last synced with upstream `eda9aa60`, v1.14.0, plus a selective pick up to v2.1.0) and brings the planning, calendar and habits closer to TickTick and Things. Everything below is new or changed compared with upstream; the rest of the app works as in tududi. The full list, kept up to date, is in [docs/fork/FORK.md](docs/fork/FORK.md).
+
+<details>
+<summary><strong>Feature-by-feature comparison with tududi</strong></summary>
 
 ### Offline sync and mobile
 
@@ -170,6 +263,9 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 - Docs: [Daily plan & Calendar](docs/20-daily-plan.md), [Focus sessions](docs/30-focus-sessions.md), [Projects → Timeline & Board](docs/06-projects.md), [Tasks → Pinned](docs/00-tasks-behavior.md), [Nested tags](docs/09-tags-system.md), [Eisenhower views](docs/08-views-system.md), [Summary](docs/31-summary.md), [Google sync](docs/33-google-sync.md), [Review](docs/34-review.md).
 
 ---
+
+
+</details>
 
 ## Features inherited from tududi
 
@@ -408,19 +504,3 @@ Issues and pull requests are welcome on [PreciselyWrong/Cadence](https://github.
 Cadence is a fork of **[tududi](https://github.com/chrisvel/tududi)**, created by [Chris Veleris](https://github.com/chrisvel), and keeps its [MIT licence](LICENSE) and copyright notice. If you like the app, consider supporting the original project: [buy Chris a coffee](https://coff.ee/chrisveleris), [sponsor him on GitHub](https://github.com/sponsors/chrisvel) or [on Patreon](https://www.patreon.com/ChrisVeleris).
 
 The Android app comes from the former Cadence habits app, now in [`android/`](android/). TickTick served only as a reference for behaviour: none of its code, assets or texts are used.
-
-## Screenshots
-
-![Cadence, light mode](screenshots/all-light.png)
-
-![Cadence, dark mode](screenshots/all-dark.png)
-
-### Android
-
-<table>
-  <tr>
-    <td><img src="screenshots/android-today.png" alt="Cadence on Android, Today" width="250"></td>
-    <td><img src="screenshots/android-agenda.png" alt="Cadence on Android, Agenda" width="250"></td>
-    <td><img src="screenshots/android-review.png" alt="Cadence on Android, Review" width="250"></td>
-  </tr>
-</table>

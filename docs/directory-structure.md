@@ -54,7 +54,8 @@ tududi/                      # Repository root
 ├── docs/                  # Documentation (this directory)
 │
 └── Other
-    ├── screenshots/       # App screenshots for README
+    ├── screenshots/       # README screenshots (web/, android/), docs/fork/SCREENSHOTS.md
+    ├── site/              # Project page for GitHub Pages
     ├── uploads/           # User file uploads (not in git)
     ├── test-results/      # Playwright test results
     └── node_modules/      # Dependencies

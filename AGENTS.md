@@ -30,6 +30,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Fonctionnalités du fork, synchro amont | `docs/fork/FORK.md` |
 | Décisions UX à reporter entre web et Android | `docs/fork/WEB-UX-NOTES.md` (web → Android), `docs/fork/ANDROID-UX-NOTES.md` (Android → web) |
 | Clients Android/Linux, plan de synchro | `docs/fork/PLAN-clients-sync.md`, `docs/fork/CADENCE-PARITY.md` |
+| Captures du README, page vitrine | `docs/fork/SCREENSHOTS.md` |
 | Client Linux (Tauri, tray, ajout rapide) | `docs/fork/DESKTOP.md`, `desktop/AGENTS.md` |
 | Notifications, heures calmes, rappels | `docs/36-notifications.md` |
 | Synchronisation hors ligne (API) | `docs/30-offline-sync.md`, `backend/modules/sync/` |
@@ -114,6 +115,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - Remise de tâche depuis Proches (Android seul) : `android/tasks/.../handoff/`, contrat et sécurité dans `docs/42-proches-handoff.md`.
 - Android `tasks/ui/LinkedText.kt` : liens ouvrables dans les titres et notes de tâches et les titres de notes, avec édition explicite.
 - `e2e/` : Playwright ; `scripts/` : dev, Docker, versions, sauvegardes Postgres.
+- Captures du README et page vitrine : compte de démo fictif `backend/seeders/screenshots-seeder.js` (`npm run db:seed:screenshots`), captures web `scripts/screenshots/web.js`, page statique `site/` publiée par `.github/workflows/pages.yml` (`docs/fork/SCREENSHOTS.md`).
 
 ## ⛔ Interdits
 

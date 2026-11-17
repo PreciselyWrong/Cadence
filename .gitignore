@@ -62,3 +62,4 @@ tmp/
 !backend/tests/fixtures/legacy/*.sqlite3
 backend/emails/preview/
 backend/dist
+_site/
