@@ -109,7 +109,11 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
             aria-label={title}
             className={`flex min-w-0 flex-col gap-2 rounded-2xl p-2 transition-colors duration-150 ${
                 fill ? 'min-h-0' : ''
-            } ${isOver ? 'bg-primary-container/40' : ''}`}
+            } ${
+                isOver
+                    ? 'bg-primary-container/40 ring-1 ring-primary/40'
+                    : 'bg-surface-high/50 ring-1 ring-outline-variant/40'
+            }`}
         >
             <header className="px-2.5 py-2">
                 <div className="flex items-baseline gap-2">
