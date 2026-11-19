@@ -149,12 +149,13 @@ export const spreadOverdueChoices = (
 
 export const WEEK_DAYS = 7;
 
-/** Next 7 days starting from `today` with their known task counts. */
+/** Next 7 days starting from `today` with their task counts; null for a
+ * day the page has not loaded (a wrong 0 would say the day is free). */
 export const weekDayCounts = (
     today: string,
     counts: Record<string, number>
-): Array<{ date: string; count: number }> =>
+): Array<{ date: string; count: number | null }> =>
     Array.from({ length: WEEK_DAYS }, (_, i) => {
         const date = shiftDay(today, i);
-        return { date, count: counts[date] ?? 0 };
+        return { date, count: counts[date] ?? null };
     });

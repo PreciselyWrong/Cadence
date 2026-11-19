@@ -160,7 +160,7 @@ describe('overdueReplan', () => {
     });
 
     describe('weekDayCounts', () => {
-        it('returns 7 days starting from today with counts (0 when absent)', () => {
+        it('returns 7 days starting from today with counts (null when not loaded)', () => {
             expect(
                 weekDayCounts('2026-11-19', {
                     '2026-11-19': 3,
@@ -168,12 +168,12 @@ describe('overdueReplan', () => {
                 })
             ).toEqual([
                 { date: '2026-11-19', count: 3 },
-                { date: '2026-11-20', count: 0 },
+                { date: '2026-11-20', count: null },
                 { date: '2026-11-21', count: 2 },
-                { date: '2026-11-22', count: 0 },
-                { date: '2026-11-23', count: 0 },
-                { date: '2026-11-24', count: 0 },
-                { date: '2026-11-25', count: 0 },
+                { date: '2026-11-22', count: null },
+                { date: '2026-11-23', count: null },
+                { date: '2026-11-24', count: null },
+                { date: '2026-11-25', count: null },
             ]);
         });
     });

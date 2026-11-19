@@ -266,7 +266,10 @@ const OverdueReplanSheet: React.FC<OverdueReplanSheetProps> = ({
             nextFiveDays.forEach(({ date, count }) => {
                 entries.push({
                     key: `day-${date}`,
-                    label: `${formatShortDay(date)} (${count})`,
+                    label:
+                        count === null
+                            ? formatShortDay(date)
+                            : `${formatShortDay(date)} (${count})`,
                     onSelect: () =>
                         void applySingle(entry, { kind: 'day', date }),
                 });
