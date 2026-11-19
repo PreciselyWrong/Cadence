@@ -160,6 +160,33 @@ function isSuggestible(task, settings, now = Date.now()) {
     return settings.projectStatuses.includes(projectStatusOf(task));
 }
 
+const DEFAULT_MORNING_REPLAN = Object.freeze({
+    enabled: true,
+    time: '06:30',
+});
+
+const TIME_HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+function normalizeMorningReplan(planning) {
+    const raw =
+        planning &&
+        typeof planning === 'object' &&
+        planning.morningReplan &&
+        typeof planning.morningReplan === 'object'
+            ? planning.morningReplan
+            : {};
+    return {
+        enabled:
+            typeof raw.enabled === 'boolean'
+                ? raw.enabled
+                : DEFAULT_MORNING_REPLAN.enabled,
+        time:
+            typeof raw.time === 'string' && TIME_HH_MM.test(raw.time)
+                ? raw.time
+                : DEFAULT_MORNING_REPLAN.time,
+    };
+}
+
 module.exports = {
     isRecurring,
     PROJECT_STATUSES,
@@ -168,7 +195,9 @@ module.exports = {
     HORIZON_DAYS,
     MAX_SUGGESTIONS,
     DEFAULT_SUGGESTIONS,
+    DEFAULT_MORNING_REPLAN,
     normalizeSuggestionSettings,
+    normalizeMorningReplan,
     validateSuggestionUpdate,
     isSuggestible,
 };

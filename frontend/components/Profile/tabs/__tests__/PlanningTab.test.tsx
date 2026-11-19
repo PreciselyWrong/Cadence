@@ -13,6 +13,11 @@ import {
     SuggestionSettings,
 } from '../../../../utils/dailyPlanService';
 import { fetchProjects } from '../../../../utils/projectsService';
+import {
+    fetchProfile,
+    updateUiSettings,
+} from '../../../../utils/profileService';
+import { listProposals } from '../../../../utils/proposalsService';
 
 jest.mock('react-i18next', () => {
     const t = (key: string, fallback?: any, options?: any) => {
@@ -42,6 +47,15 @@ jest.mock('../../../../utils/dailyPlanService', () => ({
 
 jest.mock('../../../../utils/projectsService', () => ({
     fetchProjects: jest.fn(),
+}));
+
+jest.mock('../../../../utils/profileService', () => ({
+    fetchProfile: jest.fn(),
+    updateUiSettings: jest.fn(),
+}));
+
+jest.mock('../../../../utils/proposalsService', () => ({
+    listProposals: jest.fn(),
 }));
 
 // dateUtils loads the real i18n setup, which the react-i18next mock above
@@ -102,6 +116,13 @@ const renderTab = () =>
 describe('PlanningTab', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [],
+            agent: false,
+        });
+        (fetchProfile as jest.Mock).mockResolvedValue({
+            ui_settings: {},
+        });
         (fetchPlanRanking as jest.Mock).mockResolvedValue({
             order: DEFAULT,
             default_order: DEFAULT,
@@ -321,6 +342,111 @@ describe('PlanningTab', () => {
             );
             expect(showErrorToast).toHaveBeenCalledWith(
                 'Could not save your suggestion settings'
+            );
+        });
+    });
+
+    describe('Morning overdue replan', () => {
+        beforeEach(() => {
+            (fetchPlanRanking as jest.Mock).mockResolvedValue({
+                order: ['tagged_today', 'overdue'],
+                default_order: ['tagged_today', 'overdue'],
+            });
+            (fetchDayHours as jest.Mock).mockResolvedValue({
+                start: 480,
+                end: 1080,
+            });
+            (fetchSuggestionSettings as jest.Mock).mockResolvedValue({
+                settings: {
+                    projectStatuses: ['in_progress'],
+                    includeNoProject: true,
+                    excludedProjectIds: [],
+                    tieBreak: 'recently_touched',
+                    staleAfterDays: null,
+                    horizonDays: 3,
+                    maxSuggestions: 20,
+                    alignDueToPlan: false,
+                },
+                defaults: {},
+                options: {
+                    projectStatuses: ['in_progress'],
+                    tieBreak: ['recently_touched'],
+                    staleAfterDays: [null],
+                    horizonDays: [3],
+                    maxSuggestions: [20],
+                },
+            });
+            (fetchProjects as jest.Mock).mockResolvedValue([]);
+            (updateUiSettings as jest.Mock).mockResolvedValue({
+                success: true,
+            });
+        });
+
+        it('is hidden when no agent listens', async () => {
+            (listProposals as jest.Mock).mockResolvedValue({
+                proposals: [],
+                agent: false,
+            });
+            (fetchProfile as jest.Mock).mockResolvedValue({
+                ui_settings: {},
+            });
+
+            render(
+                <MemoryRouter>
+                    <PlanningTab isActive={true} />
+                </MemoryRouter>
+            );
+            await waitFor(() => expect(listProposals).toHaveBeenCalled());
+            expect(
+                screen.queryByTestId('planning-morning-replan')
+            ).not.toBeInTheDocument();
+        });
+
+        it('shows when an agent listens and saves toggle and time', async () => {
+            (listProposals as jest.Mock).mockResolvedValue({
+                proposals: [],
+                agent: true,
+            });
+            (fetchProfile as jest.Mock).mockResolvedValue({
+                ui_settings: {
+                    planning: {
+                        morningReplan: { enabled: true, time: '06:30' },
+                    },
+                },
+            });
+
+            render(
+                <MemoryRouter>
+                    <PlanningTab isActive={true} />
+                </MemoryRouter>
+            );
+
+            await screen.findByTestId('planning-morning-replan');
+            const toggle = screen.getByTestId(
+                'planning-morning-replan-enabled'
+            ) as HTMLInputElement;
+            const timeInput = screen.getByTestId(
+                'planning-morning-replan-time'
+            ) as HTMLInputElement;
+            expect(toggle.checked).toBe(true);
+            expect(timeInput.value).toBe('06:30');
+
+            fireEvent.change(timeInput, { target: { value: '07:15' } });
+            await waitFor(() =>
+                expect(updateUiSettings).toHaveBeenCalledWith({
+                    planning: {
+                        morningReplan: { enabled: true, time: '07:15' },
+                    },
+                })
+            );
+
+            fireEvent.click(toggle);
+            await waitFor(() =>
+                expect(updateUiSettings).toHaveBeenCalledWith({
+                    planning: {
+                        morningReplan: { enabled: false, time: '07:15' },
+                    },
+                })
             );
         });
     });

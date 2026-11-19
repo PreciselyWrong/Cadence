@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CalendarDaysIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { useToast } from '../Shared/ToastContext';
-import Button from '../Shared/ui/Button';
+import Button, { ButtonSize, ButtonVariant } from '../Shared/ui/Button';
 import { ProposalKind } from '../../utils/proposalsService';
 import { setProposalParam } from './proposalLinks';
 import { useProposal } from './useProposal';
@@ -13,11 +13,22 @@ interface ProposalButtonProps {
     kind: ProposalKind;
     // A ready proposal opens here; by default its sheet opens over the page.
     onReady?: (uid: string) => void;
+    label?: string;
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    testId?: string;
 }
 
 // The header button that asks for a proposal and waits for it. Nothing names
 // the agent: the button says what it prepares, and the sheet opens on tap.
-const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
+const ProposalButton: React.FC<ProposalButtonProps> = ({
+    kind,
+    onReady,
+    label: labelProp,
+    variant = 'secondary',
+    size = 'sm',
+    testId,
+}) => {
     const { t } = useTranslation();
     const { showErrorToast, showUndoToast } = useToast();
     const navigate = useNavigate();
@@ -26,10 +37,11 @@ const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
     useProposalChanged(() => void refresh());
     const previous = useRef(status);
 
-    const label =
+    const defaultLabel =
         kind === 'week'
             ? t('proposals.week.button', 'Planifier ma semaine (IA)')
             : t('proposals.review.button', 'Préparer ma revue');
+    const label = labelProp ?? defaultLabel;
     const readyLabel =
         kind === 'week'
             ? t('proposals.week.ready', 'Ta semaine est prête')
@@ -63,8 +75,10 @@ const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
         return (
             <Button
                 variant="secondary"
+                size={size}
                 disabled
                 aria-live="polite"
+                data-testid={testId}
                 icon={
                     <span
                         aria-hidden="true"
@@ -81,6 +95,8 @@ const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
         return (
             <Button
                 variant="primary"
+                size={size}
+                data-testid={testId}
                 icon={<CheckIcon className="h-4 w-4" aria-hidden="true" />}
                 onClick={() =>
                     onReady
@@ -95,7 +111,9 @@ const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
 
     return (
         <Button
-            variant="secondary"
+            variant={variant}
+            size={size}
+            data-testid={testId}
             icon={<CalendarDaysIcon className="h-4 w-4" aria-hidden="true" />}
             onClick={() => void start()}
         >

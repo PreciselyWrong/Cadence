@@ -1108,3 +1108,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : un clic montre toujours la fiche en lecture (titre, jour et heure, agenda, lieu, description), aux couleurs de l'app, avec « Modifier » pour un agenda Google en écriture et « Ouvrir dans Google Agenda » ; les événements fusionnés du Plan l'ouvrent aussi.
 - **Android** : sans objet (l'Agenda Android ouvre l'app d'agenda).
 
+## Replanification des retards par l'IA : bouton et passage du matin (2026-11-19)
+
+- **Problème** : replanifier les tâches en retard avec l'IA demandait de passer par « Planifier ma semaine » à la main, et rien ne préparait ce plan le matin avant l'ouverture de l'app.
+- **Décision** : bouton « Replanifier avec l'IA » (`ProposalButton` `kind="week"`) à côté du bouton « Replanifier » de la bande « En retard » du Plan (masqué sans agent), qui lance une proposition de semaine et ouvre l'aperçu sur le Plan ; passage planifié du matin (`morning_replan` toutes les 15 min, défaut `06:30`, réglable dans Profil › Planification quand un agent écoute) qui lance au plus une proposition par jour quand des retards existent, avec notification « N retards replacés, à valider ».
+- **Android** : hors périmètre de cette étape (la notification « N retards replacés, à valider » arrive déjà via `sources: ['desktop', 'mobile']`).
