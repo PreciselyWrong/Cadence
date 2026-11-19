@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-19 : Aujourd'hui : feuille « Replanifier », pli « Demain » et ligne du temps (web)
+
+- **Problème** : la page Aujourd'hui web affichait encore « Tout faire aujourd'hui » sur les tâches en retard sans choix fin ni étalement, n'avait pas le pli « Demain · N » avant « Suggestions · N », et séparait simplement les tâches à heure des tâches sans heure sans axe temporel ni créneau libre exploitable sur place.
+- **Décision** : alignement sur Android 1.37.0 : (1) bouton « Replanifier » dans l'en-tête « En retard · N » ouvrant une feuille dédiée (`OverdueReplanSheet.tsx`, règle `overdueReplan.ts`) avec Aujourd'hui, Demain, Fait, « Plus… » (5 jours suivants avec charge, horizons, date libre, Abandonner ; Fait / Passer cette fois pour les récurrentes ; pas d'abandon sur `TODO.md`), « Tout à demain » et « Étaler sur 7 jours » via `spreadOverdue.ts`, avec annulation sur place et toast « Annuler » ; (2) pli « Demain · N » avant « Suggestions · N » (`todayLater.ts`), alimenté par `fetchDay(tomorrow)` sans doublon ; (3) liste en ligne du temps (`todayTimeline.ts`) : « À caser » (tâches dont l'heure est passée sans être faites en tête, puis sans heure) et « Ma journée » (trait maintenant, passé atténué, prochaine chose mise en avant, « en même temps » en cas de chevauchement avec un événement, créneau libre avec « Caser les N ici ») et « N à faire » sous la date.
+- **Android** : déjà livré en 1.37.0 (`OverdueReplan.kt`, `PlanBoard.todayLater`, `TodayTimeline.kt`).
+
 ### 2026-11-13 — Feuille de route trimestrielle (web, reprise de l'amont v2.1.0)
 
 - **Ajout** : page `/roadmap` (entrée « Roadmap » de la barre latérale, réglable dans Profil › Barre latérale) et onglet Chronologie d'une zone : zones, projets et tâches sur un trimestre, objectifs en losange à leur date cible, barres de résumé du premier début au dernier terme.

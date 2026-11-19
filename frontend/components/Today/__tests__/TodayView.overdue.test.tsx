@@ -173,4 +173,13 @@ describe('Today overdue tasks', () => {
             )
         );
     });
+
+    it('opens the Replan sheet from the Overdue section header', async () => {
+        render(<TodayView />);
+        const replanBtn = await screen.findByRole('button', { name: 'Replan' });
+        fireEvent.click(replanBtn);
+        expect(
+            await screen.findByRole('dialog', { name: /Replan overdue/ })
+        ).toBeInTheDocument();
+    });
 });

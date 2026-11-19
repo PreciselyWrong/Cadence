@@ -76,6 +76,13 @@ import {
 import { useDay } from './useDay';
 import DayList from './DayList';
 import TaskLine from './TaskLine';
+import OverdueReplanSheet from './OverdueReplanSheet';
+import { computeTodayLater } from './todayLater';
+import {
+    buildTodayTimeline,
+    fillFreeSlot,
+    TimelineFree,
+} from './todayTimeline';
 import CalendarEventDetail from '../Calendar/CalendarEventDetail';
 import DayCalendar, {
     DayColumnData,
@@ -225,6 +232,10 @@ const NewToday: React.FC = () => {
         event: CalendarEvent;
         onDate: string;
     } | null>(null);
+    const [replanOpen, setReplanOpen] = useState(false);
+    const [fetchedTomorrow, setFetchedTomorrow] = useState<DayResponse | null>(
+        null
+    );
     const locale = intlLocale(i18n.language);
 
     const items = useMemo(() => day?.plan?.items ?? [], [day]);
@@ -541,6 +552,26 @@ const NewToday: React.FC = () => {
 
     const tomorrow = format(addDays(parseISO(date), 1), 'yyyy-MM-dd');
     const nextWeek = format(nextMonday(parseISO(date)), 'yyyy-MM-dd');
+    const isToday = date === today;
+    const tomorrowExtra = extras[tomorrow]?.day ?? null;
+    useEffect(() => {
+        if (!isToday || tomorrowExtra) {
+            setFetchedTomorrow(null);
+            return;
+        }
+        let cancelled = false;
+        fetchDay(tomorrow)
+            .then((data) => {
+                if (!cancelled) setFetchedTomorrow(data);
+            })
+            .catch(() => {
+                if (!cancelled) setFetchedTomorrow(null);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [isToday, tomorrow, tomorrowExtra, revision]);
+    const tomorrowDay = tomorrowExtra ?? fetchedTomorrow;
 
     const lineMenu = (line: DayLine): MenuEntry[] => {
         const entries: MenuEntry[] = [];
@@ -896,7 +927,6 @@ const NewToday: React.FC = () => {
     };
 
     const dateObj = parseISO(date);
-    const isToday = date === today;
     const relative = isToday
         ? t('today.title', 'Today')
         : date === format(addDays(parseISO(today), 1), 'yyyy-MM-dd')
@@ -916,7 +946,7 @@ const NewToday: React.FC = () => {
               free: formatDuration(summary.free),
           })
         : [
-              t('today.taskCount', '{{count}} tasks', { count: summary.open }),
+              t('today.toDoCount', '{{count}} to do', { count: summary.open }),
               summary.needed > 0 ? formatDuration(summary.needed) : null,
           ]
               .filter(Boolean)
@@ -1018,6 +1048,65 @@ const NewToday: React.FC = () => {
             return true;
         });
     }, [day]);
+
+    const timeline = useMemo(
+        () => buildTodayTimeline(lines, events, isToday ? now : null),
+        [lines, events, isToday, now]
+    );
+
+    const placeHere = (free: TimelineFree) => {
+        const placements = fillFreeSlot(timeline.toPlace, free);
+        if (placements.length === 0) return;
+        const ops: PlanOp[] = placements.map((p) => ({
+            op: 'slot',
+            task_uid: p.uid,
+            start_minute: p.startMinute,
+            duration_minutes: p.durationMinutes,
+        }));
+        void run(
+            ops,
+            t('today.organized', '{{count}} tasks placed', {
+                count: ops.length,
+            })
+        );
+    };
+
+    const { tomorrow: tomorrowTasks, suggested: dedupedSuggestions } =
+        useMemo(() => {
+            const shown = new Set<string>();
+            [...lines.timed, ...lines.anytime, ...lines.done].forEach((l) =>
+                shown.add(l.uid)
+            );
+            late.forEach(({ task }) => {
+                if (task.uid) shown.add(task.uid);
+            });
+            return computeTodayLater(tomorrowDay, suggestionTasks, shown);
+        }, [lines, late, tomorrowDay, suggestionTasks]);
+
+    const { dayCounts, plannedByDay } = useMemo(() => {
+        const counts: Record<string, number> = {};
+        const planned: Record<
+            string,
+            Array<{ estimated_minutes?: number | null }>
+        > = {};
+        const addDay = (d: string, data: DayResponse | null | undefined) => {
+            if (!data) return;
+            const dayItems = data.plan?.items ?? [];
+            const uids = new Set(dayItems.map((i) => i.task_uid));
+            data.due.forEach((t) => {
+                if (t.uid) uids.add(t.uid);
+            });
+            counts[d] = uids.size;
+            planned[d] = dayItems.map((i) => ({
+                estimated_minutes:
+                    i.duration_minutes ?? i.task?.estimated_minutes,
+            }));
+        };
+        addDay(date, day);
+        addDay(tomorrow, tomorrowDay);
+        Object.entries(extras).forEach(([d, extra]) => addDay(d, extra.day));
+        return { dayCounts: counts, plannedByDay: planned };
+    }, [date, day, tomorrow, tomorrowDay, extras]);
 
     const take = (task: Task) =>
         task.uid &&
@@ -1158,6 +1247,9 @@ const NewToday: React.FC = () => {
                     : null
             }
             lines={lines}
+            timeline={timeline}
+            onPlaceHere={placeHere}
+            onOpenEvent={(event) => setEventDetail({ event, onDate: date })}
             dateOfDay={date}
             currentUid={current?.uid ?? null}
             selectedUid={openTaskUid}
@@ -1199,29 +1291,10 @@ const NewToday: React.FC = () => {
                                   />
                               );
                           }),
-                          action:
-                              day && day.overdue.length > 0
-                                  ? {
-                                        label: t(
-                                            'today.takeAll',
-                                            'Do all today'
-                                        ),
-                                        onClick: () =>
-                                            run(
-                                                day.overdue
-                                                    .filter((task) => task.uid)
-                                                    .map((task) => ({
-                                                        op: 'add' as const,
-                                                        task_uid:
-                                                            task.uid as string,
-                                                    })),
-                                                t(
-                                                    'today.takenAll',
-                                                    'Late tasks added to the day'
-                                                )
-                                            ),
-                                    }
-                                  : undefined,
+                          action: {
+                              label: t('today.replan', 'Replan'),
+                              onClick: () => setReplanOpen(true),
+                          },
                       }
                     : null
             }
@@ -1247,11 +1320,27 @@ const NewToday: React.FC = () => {
                       }
                     : null
             }
-            suggestions={
-                suggestionTasks.length > 0
+            tomorrow={
+                isToday && tomorrowTasks.length > 0
                     ? {
-                          count: suggestionTasks.length,
-                          content: suggestionTasks
+                          count: tomorrowTasks.length,
+                          content: tomorrowTasks
+                              .slice(0, 20)
+                              .map((task) =>
+                                  pickRow(
+                                      task,
+                                      () => take(task),
+                                      t('today.add', 'Add')
+                                  )
+                              ),
+                      }
+                    : null
+            }
+            suggestions={
+                dedupedSuggestions.length > 0
+                    ? {
+                          count: dedupedSuggestions.length,
+                          content: dedupedSuggestions
                               .slice(0, 20)
                               .map((task) =>
                                   pickRow(
@@ -1472,6 +1561,15 @@ const NewToday: React.FC = () => {
                     onChanged={() => void reload()}
                 />
             )}
+            <OverdueReplanSheet
+                open={replanOpen}
+                onClose={() => setReplanOpen(false)}
+                tasks={late}
+                today={today}
+                dayCounts={dayCounts}
+                plannedByDay={plannedByDay}
+                onApplied={() => void reload()}
+            />
             <DragOverlay dropAnimation={null}>
                 {dragging?.kind === 'line' && ghost === null ? (
                     <div className="max-w-xs truncate rounded-lg bg-surface px-3 py-1.5 text-body-m text-surface-on shadow-lg ring-1 ring-outline-variant">

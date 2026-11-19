@@ -110,7 +110,7 @@ Same as Planned section:
 
 - Can be hidden entirely via Today Settings
 - Collapse/expand state is remembered in your browser
-- **Replan sheet (Android, 1.37.0)**: a « Replanifier » button on the fold header opens a sheet listing every overdue task with one-tap choices: Today, Tomorrow, Done, and « Plus… » (the next five days with their task count, This week, Next week, This month, Later, Pick a date, Drop); at the top, « Tout à demain » and « Étaler sur 7 jours » (same spread as Planifier, but each day becomes the due date) act on the rows still open (`android/.../planning/OverdueReplan.kt`). As in the week proposal (`docs/47-proposals.md`), a replaced overdue task stops being overdue: a day becomes its due date, a horizon (next week, `#someday`) clears it, Drop cancels it; its plan lines from today on (except the chosen day) are removed so it sits in one place. A recurring task only offers Done and « Passer cette fois » (skips the occurrence), and grouped actions leave it alone; a `TODO.md` task cannot be dropped. Each choice is written at once and shows « Annuler » in place; the list keeps its rows until the sheet closes. Web: `TODO.md` › Now.
+- **Replan sheet (Android 1.37.0, Web)**: a « Replanifier » button on the fold header opens a sheet listing every overdue task with one-tap choices: Today, Tomorrow, Done, and « Plus… » (the next five days with their task count, This week, Next week, This month, Later, Pick a date, Drop); at the top, « Tout à demain » and « Étaler sur 7 jours » (same spread as Planifier, but each day becomes the due date) act on the rows still open (`android/.../planning/OverdueReplan.kt`, `frontend/components/Today/overdueReplan.ts`). As in the week proposal (`docs/47-proposals.md`), a replaced overdue task stops being overdue: a day becomes its due date, a horizon (next week, `#someday`) clears it, Drop cancels it; its plan lines from today on (except the chosen day) are removed so it sits in one place. A recurring task only offers Done and « Passer cette fois » (skips the occurrence), and grouped actions leave it alone; a `TODO.md` task cannot be dropped. Each choice is written at once and shows « Annuler » in place (and an undo toast on web); the list keeps its rows until the sheet closes.
 
 ---
 
@@ -375,7 +375,10 @@ Habits are Cadence habits, not tasks: they have their own page. The day's goal h
 
 The day's goal habits planned for that day appear in a « Habits · N » section of the day list: one tap checks a yes/no habit or adds its first quick value (else one unit), with an undo. Done ones fold and follow « Masquer les terminées ». A habit with a reminder that day is a slim marker on the day calendar at its reminder time; a click opens the habit. They never enter the other sections.
 
-### Calendar drawer
+### Timeline and Tomorrow fold
+
+- **Today as a timeline**: Today's list splits open work into **To place** (timed tasks whose scheduled/due time has passed without being done, sorted by missed time, followed by untimed tasks) and **My day** on a time axis (all-day events, past/ongoing items dimmed when past, the **Now** line, any free slot of 30+ minutes with **Place N here**, and upcoming items with the next item highlighted and tasks overlapping an event marked **At the same time**). The header summary shows **N to do** when not overloaded.
+- **Tomorrow fold**: under the day's list (and before **Suggestions · N**), a collapsed **Tomorrow · N** fold lists open tasks planned on or due tomorrow, deduplicated against tasks already shown on Today and taking precedence over Suggestions.
 
 Under 1180 px the day calendar is a drawer opened from the header, as on Plan (`DRAWER_BELOW` in `frontend/components/Upcoming/boardDates.ts`).
 
