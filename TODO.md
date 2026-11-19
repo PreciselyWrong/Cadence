@@ -4,7 +4,7 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-- Android : bouton « → premier jour libre » sur l'Inbox et « Cette semaine » de Planifier (2026-11-19)
+- Android : bouton « → premier jour libre » sur l'Inbox, « Cette semaine », « Semaine prochaine » (à partir de son lundi) et « Ce mois-ci » de Planifier (2026-11-19)
   Raison : le web pose une tâche d'un clic sur le premier jour dont le temps libre contient sa durée (`frontend/components/Upcoming/firstFreeDay.ts`, `docs/03-upcoming-view.md` › Quick place). Vérif : pour la même tâche de 20 min, le web et le téléphone proposent le même jour.
 - Android : tâches repoussées et calendrier fusionné dans Planifier (2026-11-19)
   Raison : le web montre une section « Repoussées » (règle de la revue, `GET /api/review/pushed`) avec les décisions de la revue, un badge « ↻ N× » sur les cartes, et un « Calendrier fusionné » qui met les événements dans les jours (`docs/03-upcoming-view.md`). Vérif : sur le téléphone, la même tâche repoussée apparaît dans la section avec le même compte que le web ; les événements d'agenda se voient dans les jours de Planifier.

@@ -11,6 +11,13 @@ import TaskCardBody, { taskCardClass } from '../Shared/task/TaskCardBody';
 import { isPickClick, PickedCardsContext } from './pickedCards';
 import { PushedBadge } from './PushedSection';
 import { QuickPlaceContext } from './firstFreeDay';
+
+const QUICK_PLACES = [
+    'inbox',
+    'horizon:week',
+    'horizon:next_week',
+    'horizon:this_month',
+];
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import {
     PreviewCard,
@@ -85,11 +92,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
     });
     const { onKeyDown: dragKeyDown, ...dragListeners } = listeners ?? {};
     const { t } = useTranslation();
-    // Inbox and « This week » cards: a button to the first day with room.
+    // Inbox, « This week », « Next week » and « This month » cards: a
+    // button to the first day with room.
     const quick = useContext(QuickPlaceContext);
     const quickDate =
-        quick && !line.done && (date === 'inbox' || date === 'horizon:week')
-            ? quick.suggest(task.estimated_minutes)
+        quick && !line.done && QUICK_PLACES.includes(date)
+            ? quick.suggest(task.estimated_minutes, date)
             : null;
     const pick = useContext(PickedCardsContext);
     const picked = !!pick?.picked.has(uid);

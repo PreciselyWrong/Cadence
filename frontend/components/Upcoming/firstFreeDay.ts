@@ -8,10 +8,11 @@ import type { CardData } from './TaskCard';
 
 const DEFAULT_MINUTES = 30;
 
-// The board's quick place for a card of the inbox or of « This week »: the
-// day it would go to (null: no day has room), its short label, and the move.
+// The board's quick place for a card of the inbox or of a near horizon: the
+// day it would go to from where the card is (null: no day has room), its
+// short label, and the move.
 export interface QuickPlace {
-    suggest(minutes: number | null | undefined): string | null;
+    suggest(minutes: number | null | undefined, place: string): string | null;
     label(date: string): string;
     place(card: CardData, date: string): void;
 }

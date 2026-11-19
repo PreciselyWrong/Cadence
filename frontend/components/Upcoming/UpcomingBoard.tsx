@@ -29,7 +29,7 @@ import {
     verticalListSortingStrategy,
     sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { getDay, parseISO } from 'date-fns';
+import { addDays, format, getDay, parseISO } from 'date-fns';
 import {
     CalendarDaysIcon,
     ChevronDoubleRightIcon,
@@ -122,6 +122,7 @@ import {
     STRIP_KEYS,
     toPlan,
     weekDates,
+    weekStartOf,
 } from './horizons';
 import ToPlanBox, {
     TO_PLAN_CARD_DATE,
@@ -2077,29 +2078,46 @@ const UpcomingBoard: React.FC = () => {
     };
 
     // The first day of the board with room for a task (all plan lines
-    // count, whatever the filters).
+    // count, whatever the filters); a « Next week » task from its first day.
+    const nextWeekStart = format(
+        addDays(parseISO(weekStartOf(today, firstDayOfWeek)), 7),
+        'yyyy-MM-dd'
+    );
     const quickPlace: QuickPlace | null = horizonsMode
         ? null
         : {
-              suggest: (minutes) =>
+              suggest: (minutes, place) =>
                   firstFreeDay(
                       minutes,
-                      dates.map((date) => {
-                          const day = days[date];
-                          const lines = day
-                              ? dayLines(day.plan?.items ?? [], day.due, date)
-                              : null;
-                          const hours = day?.day_hours;
-                          return {
-                              date,
-                              load: lines
-                                  ? dayLoad([...lines.timed, ...lines.anytime])
-                                  : 0,
-                              capacity: hours
-                                  ? hours.end - hours.start
-                                  : DEFAULT_DAY_MINUTES,
-                          };
-                      }),
+                      dates
+                          .filter(
+                              (date) =>
+                                  place !== 'horizon:next_week' ||
+                                  date >= nextWeekStart
+                          )
+                          .map((date) => {
+                              const day = days[date];
+                              const lines = day
+                                  ? dayLines(
+                                        day.plan?.items ?? [],
+                                        day.due,
+                                        date
+                                    )
+                                  : null;
+                              const hours = day?.day_hours;
+                              return {
+                                  date,
+                                  load: lines
+                                      ? dayLoad([
+                                            ...lines.timed,
+                                            ...lines.anytime,
+                                        ])
+                                      : 0,
+                                  capacity: hours
+                                      ? hours.end - hours.start
+                                      : DEFAULT_DAY_MINUTES,
+                              };
+                          }),
                       {
                           today,
                           nowMinute: clock,

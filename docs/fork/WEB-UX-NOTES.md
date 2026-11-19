@@ -1063,5 +1063,6 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Problème** : planifier une tâche de la Boîte ou de « Cette semaine » demandait de chercher soi-même un jour qui avait encore la place.
 - **Décision** : petit bouton « → sam. 21 » sur ces cartes : le premier jour, depuis aujourd'hui, dont le temps libre (heures du jour moins le plan ; aujourd'hui, ce qui reste) contient la durée de la tâche (30 min sans estimation). Un clic la pose ; annulable. Règle pure `firstFreeDay.ts`, sans IA.
+- **Étendu** : aussi sur « Semaine prochaine » (premier jour libre à partir de son lundi) et « Ce mois-ci » ; pas sur « Mois prochain » ni « Un jour ».
 - **Android** : à reprendre (`TODO.md` › Now).
 

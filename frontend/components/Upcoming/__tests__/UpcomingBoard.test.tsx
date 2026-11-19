@@ -1806,6 +1806,30 @@ describe('UpcomingBoard', () => {
             expect(within(week).getByTestId('week-load')).toBeInTheDocument();
         });
 
+        it('places next week and this month tasks on their first free day', async () => {
+            const server = fakeServer({}, { '2099-01-01': horizonTasks() });
+            renderBoard();
+            const section = (key: string) =>
+                screen
+                    .getAllByTestId('horizon-column')
+                    .find((el) => el.dataset.horizon === key)!;
+            await screen.findByText('Call the notary');
+            await settle();
+            expect(
+                within(section('this_month')).getByTestId('quick-place')
+            ).toHaveTextContent('Today');
+            expect(
+                within(section('next_month')).queryByTestId('quick-place')
+            ).toBeNull();
+            // Next week: from its Monday, not today.
+            fireEvent.click(
+                within(section('next_week')).getByTestId('quick-place')
+            );
+            await waitFor(() =>
+                expect(server.uids(nextWeekStart())).toEqual(['n1'])
+            );
+        });
+
         it('plans a horizon task on today with t, and it leaves its section', async () => {
             const server = fakeServer({}, { '2099-01-01': horizonTasks() });
             renderBoard();
