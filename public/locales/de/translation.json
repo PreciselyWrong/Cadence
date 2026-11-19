@@ -6587,7 +6587,12 @@
     "pickedCount": "Ausgewählt: {{count}}",
     "pickedClear": "Auswahl aufheben",
     "aiTab": "Von der KI geplant",
-    "sectionToggle": "{{name}} ein- oder ausblenden"
+    "sectionToggle": "{{name}} ein- oder ausblenden",
+    "pushedTitle": "Verschoben",
+    "pushedBadge": "{{count}}-mal in 30 Tagen verschoben",
+    "pushedMeta": "{{count}}× in 30 Tagen",
+    "mergeCalendar": "Kalender eingebunden",
+    "mergeCalendarTitle": "Termine in den Tagesspalten zeigen und den Kalender ausblenden"
   },
   "offline": {
     "offline": "Offline",

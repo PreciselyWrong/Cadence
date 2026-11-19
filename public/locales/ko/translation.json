@@ -6578,7 +6578,12 @@
         "pickedCount": "선택됨: {{count}}",
         "pickedClear": "선택 해제",
         "aiTab": "AI 계획",
-        "sectionToggle": "{{name}} 표시 또는 숨기기"
+        "sectionToggle": "{{name}} 표시 또는 숨기기",
+        "pushedTitle": "미룬 작업",
+        "pushedBadge": "30일 동안 {{count}}번 미룸",
+        "pushedMeta": "30일 동안 {{count}}회",
+        "mergeCalendar": "통합 캘린더",
+        "mergeCalendarTitle": "일정을 날짜 열에 표시하고 옆 캘린더 숨기기"
   },
   "offline": {
     "offline": "오프라인",

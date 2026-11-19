@@ -6593,7 +6593,12 @@
     "pickedCount": "Selecionadas: {{count}}",
     "pickedClear": "Limpar a seleção",
     "aiTab": "Planeado pela IA",
-    "sectionToggle": "Mostrar ou ocultar {{name}}"
+    "sectionToggle": "Mostrar ou ocultar {{name}}",
+    "pushedTitle": "Adiadas",
+    "pushedBadge": "Adiada {{count}} vezes em 30 dias",
+    "pushedMeta": "{{count}}× em 30 dias",
+    "mergeCalendar": "Calendário integrado",
+    "mergeCalendarTitle": "Mostrar a agenda nas colunas dos dias e ocultar o calendário"
   },
   "offline": {
     "offline": "Offline",

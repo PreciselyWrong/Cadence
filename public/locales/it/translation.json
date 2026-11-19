@@ -6593,7 +6593,12 @@
     "pickedCount": "Selezionate: {{count}}",
     "pickedClear": "Svuota la selezione",
     "aiTab": "Pianificato dall’IA",
-    "sectionToggle": "Mostra o nascondi {{name}}"
+    "sectionToggle": "Mostra o nascondi {{name}}",
+    "pushedTitle": "Rimandate",
+    "pushedBadge": "Rimandata {{count}} volte in 30 giorni",
+    "pushedMeta": "{{count}}× in 30 giorni",
+    "mergeCalendar": "Calendario unito",
+    "mergeCalendarTitle": "Mostra l’agenda nelle colonne dei giorni e nascondi il calendario"
   },
   "offline": {
     "offline": "Offline",

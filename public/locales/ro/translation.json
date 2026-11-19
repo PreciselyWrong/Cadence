@@ -6605,7 +6605,12 @@
     "pickedCount": "Selectate: {{count}}",
     "pickedClear": "Golește selecția",
     "aiTab": "Planificat de IA",
-    "sectionToggle": "Afișează sau ascunde {{name}}"
+    "sectionToggle": "Afișează sau ascunde {{name}}",
+    "pushedTitle": "Amânate",
+    "pushedBadge": "Amânată de {{count}} ori în 30 de zile",
+    "pushedMeta": "{{count}}× în 30 de zile",
+    "mergeCalendar": "Calendar integrat",
+    "mergeCalendarTitle": "Afișează agenda în coloanele zilelor și ascunde calendarul lateral"
   },
   "offline": {
     "offline": "Offline",

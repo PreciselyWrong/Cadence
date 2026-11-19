@@ -6578,7 +6578,12 @@
     "pickedCount": "Избрани: {{count}}",
     "pickedClear": "Изчисти избора",
     "aiTab": "Планирано от ИИ",
-    "sectionToggle": "Покажи или скрий {{name}}"
+    "sectionToggle": "Покажи или скрий {{name}}",
+    "pushedTitle": "Отлагани",
+    "pushedBadge": "Отложена {{count}} пъти за 30 дни",
+    "pushedMeta": "{{count}}× за 30 дни",
+    "mergeCalendar": "Обединен календар",
+    "mergeCalendarTitle": "Показвай графика в колоните на дните и скрий страничния календар"
   },
   "offline": {
     "offline": "Офлайн",

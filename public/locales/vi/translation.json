@@ -6578,7 +6578,12 @@
         "pickedCount": "Đã chọn: {{count}}",
         "pickedClear": "Bỏ chọn",
         "aiTab": "Do AI lên kế hoạch",
-        "sectionToggle": "Hiện hoặc ẩn {{name}}"
+        "sectionToggle": "Hiện hoặc ẩn {{name}}",
+        "pushedTitle": "Bị hoãn",
+        "pushedBadge": "Đã hoãn {{count}} lần trong 30 ngày",
+        "pushedMeta": "{{count}}× trong 30 ngày",
+        "mergeCalendar": "Lịch gộp",
+        "mergeCalendarTitle": "Hiện lịch trong các cột ngày và ẩn lịch bên cạnh"
   },
   "offline": {
     "offline": "Ngoại tuyến",

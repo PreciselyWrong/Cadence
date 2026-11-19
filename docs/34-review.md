@@ -77,7 +77,7 @@ History older than the logs is unknown, not rebuilt: older events stored the dat
 
 ### In the task pane
 
-Once a task has been pushed back, a single grey line shows *Moved N times, M in the last 30 days · last date*. The wording is neutral: it describes what happened, never how late anything is. The review rows say *moved N times*; ordinary task rows carry nothing. A click lists the history (pushed back, rescheduled, date removed, planned not done) newest first. Rows in lists carry no new badge.
+Once a task has been pushed back, a single grey line shows *Moved N times, M in the last 30 days · last date*. The wording is neutral: it describes what happened, never how late anything is. The review rows say *moved N times*; ordinary task rows carry nothing. A click lists the history (pushed back, rescheduled, date removed, planned not done) newest first. Rows in lists carry no new badge; on the Plan board, a task of the « Pushed back » list carries a small « ↻ N× » badge and is listed in its left column (`docs/03-upcoming-view.md`, since 2026-11-19).
 
 ## The Review page
 

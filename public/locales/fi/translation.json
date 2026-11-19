@@ -6578,7 +6578,12 @@
     "pickedCount": "Valittu: {{count}}",
     "pickedClear": "Tyhjennä valinta",
     "aiTab": "Tekoälyn suunnitelma",
-    "sectionToggle": "Näytä tai piilota {{name}}"
+    "sectionToggle": "Näytä tai piilota {{name}}",
+    "pushedTitle": "Lykätyt",
+    "pushedBadge": "Lykätty {{count}} kertaa 30 päivässä",
+    "pushedMeta": "{{count}}× 30 päivässä",
+    "mergeCalendar": "Yhdistetty kalenteri",
+    "mergeCalendarTitle": "Näytä kalenteri päiväsarakkeissa ja piilota sivukalenteri"
   },
   "offline": {
     "offline": "Offline-tilassa",

@@ -6616,7 +6616,12 @@
     "pickedCount": "Sélection : {{count}}",
     "pickedClear": "Vider la sélection",
     "aiTab": "Planifié par l’IA",
-    "sectionToggle": "Afficher ou masquer {{name}}"
+    "sectionToggle": "Afficher ou masquer {{name}}",
+    "pushedTitle": "Repoussées",
+    "pushedBadge": "Repoussée {{count}} fois en 30 jours",
+    "pushedMeta": "{{count}}× en 30 jours",
+    "mergeCalendar": "Calendrier fusionné",
+    "mergeCalendarTitle": "Afficher l’agenda dans les colonnes des jours et masquer le calendrier"
   },
   "offline": {
     "offline": "Hors ligne",

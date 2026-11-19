@@ -6578,7 +6578,12 @@
     "pickedCount": "Geselecteerd: {{count}}",
     "pickedClear": "Selectie wissen",
     "aiTab": "Gepland door AI",
-    "sectionToggle": "{{name}} tonen of verbergen"
+    "sectionToggle": "{{name}} tonen of verbergen",
+    "pushedTitle": "Uitgesteld",
+    "pushedBadge": "{{count}} keer uitgesteld in 30 dagen",
+    "pushedMeta": "{{count}}× in 30 dagen",
+    "mergeCalendar": "Samengevoegde agenda",
+    "mergeCalendarTitle": "Agenda in de dagkolommen tonen en de zijkalender verbergen"
   },
   "offline": {
     "offline": "Offline",

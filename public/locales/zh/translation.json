@@ -6578,7 +6578,12 @@
         "pickedCount": "已选：{{count}}",
         "pickedClear": "清除选择",
         "aiTab": "AI 计划",
-        "sectionToggle": "显示或隐藏{{name}}"
+        "sectionToggle": "显示或隐藏{{name}}",
+        "pushedTitle": "反复推迟",
+        "pushedBadge": "30 天内推迟 {{count}} 次",
+        "pushedMeta": "30 天 {{count}}×",
+        "mergeCalendar": "合并日历",
+        "mergeCalendarTitle": "在每天的列中显示日程并隐藏侧边日历"
   },
   "offline": {
     "offline": "离线",

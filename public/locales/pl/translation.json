@@ -6694,7 +6694,12 @@
     "pickedCount": "Zaznaczone: {{count}}",
     "pickedClear": "Wyczyść zaznaczenie",
     "aiTab": "Plan AI",
-    "sectionToggle": "Pokaż lub ukryj {{name}}"
+    "sectionToggle": "Pokaż lub ukryj {{name}}",
+    "pushedTitle": "Odkładane",
+    "pushedBadge": "Odłożone {{count}} razy w 30 dni",
+    "pushedMeta": "{{count}}× w 30 dni",
+    "mergeCalendar": "Kalendarz scalony",
+    "mergeCalendarTitle": "Pokaż terminarz w kolumnach dni i ukryj boczny kalendarz"
   },
   "offline": {
     "offline": "Offline",

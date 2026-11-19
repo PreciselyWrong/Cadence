@@ -6578,7 +6578,12 @@
     "pickedCount": "Valgt: {{count}}",
     "pickedClear": "Ryd valget",
     "aiTab": "Planlagt af AI",
-    "sectionToggle": "Vis eller skjul {{name}}"
+    "sectionToggle": "Vis eller skjul {{name}}",
+    "pushedTitle": "Udskudt",
+    "pushedBadge": "Udskudt {{count}} gange på 30 dage",
+    "pushedMeta": "{{count}}× på 30 dage",
+    "mergeCalendar": "Samlet kalender",
+    "mergeCalendarTitle": "Vis kalenderen i dagkolonnerne og skjul sidekalenderen"
   },
   "offline": {
     "offline": "Offline",

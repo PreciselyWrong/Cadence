@@ -6578,7 +6578,12 @@
     "pickedCount": "Valda: {{count}}",
     "pickedClear": "Rensa urvalet",
     "aiTab": "Planerat av AI",
-    "sectionToggle": "Visa eller dölj {{name}}"
+    "sectionToggle": "Visa eller dölj {{name}}",
+    "pushedTitle": "Uppskjutna",
+    "pushedBadge": "Uppskjuten {{count}} gånger på 30 dagar",
+    "pushedMeta": "{{count}}× på 30 dagar",
+    "mergeCalendar": "Sammanslagen kalender",
+    "mergeCalendarTitle": "Visa kalendern i dagkolumnerna och dölj sidokalendern"
   },
   "offline": {
     "offline": "Offline",

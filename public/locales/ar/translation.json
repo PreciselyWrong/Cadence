@@ -6676,7 +6676,12 @@
     "pickedCount": "المحدد: {{count}}",
     "pickedClear": "مسح التحديد",
     "aiTab": "خطة الذكاء الاصطناعي",
-    "sectionToggle": "إظهار أو إخفاء {{name}}"
+    "sectionToggle": "إظهار أو إخفاء {{name}}",
+    "pushedTitle": "مؤجلة",
+    "pushedBadge": "أُجّلت {{count}} مرات خلال 30 يومًا",
+    "pushedMeta": "{{count}}× خلال 30 يومًا",
+    "mergeCalendar": "تقويم مدمج",
+    "mergeCalendarTitle": "عرض الأجندة داخل أعمدة الأيام وإخفاء التقويم الجانبي"
   },
   "offline": {
     "offline": "غير متصل",

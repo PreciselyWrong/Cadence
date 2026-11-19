@@ -6694,7 +6694,12 @@
     "pickedCount": "Выбрано: {{count}}",
     "pickedClear": "Снять выделение",
     "aiTab": "План ИИ",
-    "sectionToggle": "Показать или скрыть {{name}}"
+    "sectionToggle": "Показать или скрыть {{name}}",
+    "pushedTitle": "Откладываемые",
+    "pushedBadge": "Отложена {{count}} раз за 30 дней",
+    "pushedMeta": "{{count}}× за 30 дней",
+    "mergeCalendar": "Встроенный календарь",
+    "mergeCalendarTitle": "Показывать события в колонках дней и скрыть боковой календарь"
   },
   "offline": {
     "offline": "Нет связи",

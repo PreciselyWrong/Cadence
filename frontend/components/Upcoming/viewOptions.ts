@@ -22,6 +22,8 @@ export interface PlanViewOptions {
     sortBy: SortBy;
     showCompleted: boolean;
     showCalendar: boolean;
+    // The agenda's events in the day columns; the side calendar is hidden.
+    mergeCalendar: boolean;
     calendarSpan: CalendarSpan;
     filters: PlanFilters;
 }
@@ -38,6 +40,7 @@ export const DEFAULT_VIEW_OPTIONS: PlanViewOptions = {
     sortBy: 'plan',
     showCompleted: true,
     showCalendar: true,
+    mergeCalendar: false,
     calendarSpan: 1,
     filters: NO_FILTERS,
 };
@@ -52,6 +55,7 @@ const ALLOWED: { [K in ChoiceKey]: readonly PlanViewOptions[K][] } = {
     sortBy: ['plan', 'time', 'priority', 'name', 'project'],
     showCompleted: [true, false],
     showCalendar: [true, false],
+    mergeCalendar: [true, false],
     calendarSpan: [1, 3, 7],
 };
 

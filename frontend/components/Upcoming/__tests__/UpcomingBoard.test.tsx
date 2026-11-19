@@ -15,6 +15,8 @@ import {
     getProposal,
     listProposals,
 } from '../../../utils/proposalsService';
+import { decideTask, fetchReviewCategory } from '../../../utils/reviewService';
+import { fetchCalendarEvents } from '../../../utils/calendarFeedsService';
 import { useStore } from '../../../store/useStore';
 import { usePluginMenuStore } from '../../../store/pluginMenuStore';
 import {
@@ -110,6 +112,12 @@ jest.mock('../../../utils/proposalsService', () => ({
     sendProposal: jest.fn(),
     dismissProposal: jest.fn(),
     createProposal: jest.fn(),
+}));
+
+jest.mock('../../../utils/reviewService', () => ({
+    ...jest.requireActual('../../../utils/reviewService'),
+    fetchReviewCategory: jest.fn().mockResolvedValue({ total: 0, items: [] }),
+    decideTask: jest.fn(),
 }));
 
 jest.mock('../../Inbox/TriageEntry', () => ({
@@ -1798,6 +1806,112 @@ describe('UpcomingBoard', () => {
             expect(
                 localStorage.getItem('upcoming.leftCollapsed.next_week')
             ).toBe('1');
+        });
+    });
+
+    it('merges the calendar into the day columns and hides the side calendar', async () => {
+        useStore.getState().userSettingsStore.setCalendarEnabled(true);
+        (fetchCalendarEvents as jest.Mock).mockImplementation(
+            async (date: string) => ({
+                events:
+                    date === TOMORROW
+                        ? [
+                              {
+                                  uid: 'e1',
+                                  title: 'Dentist',
+                                  all_day: false,
+                                  busy: true,
+                                  start_minute: 600,
+                                  end_minute: 660,
+                              },
+                          ]
+                        : [],
+            })
+        );
+        renderBoard();
+        await screen.findAllByTestId('upcoming-column');
+        expect(screen.getByTestId('upcoming-calendar')).toBeInTheDocument();
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Merged calendar' })
+        );
+        expect(screen.queryByTestId('upcoming-calendar')).toBeNull();
+        expect(
+            await within(column(TOMORROW)).findByText('Dentist')
+        ).toBeInTheDocument();
+        expect(
+            within(column(TOMORROW)).getByText('10:00–11:00')
+        ).toBeInTheDocument();
+        expect(
+            JSON.parse(localStorage.getItem('upcoming.viewOptions') as string)
+                .mergeCalendar
+        ).toBe(true);
+        useStore.getState().userSettingsStore.setCalendarEnabled(false);
+    });
+
+    describe('tasks pushed back again and again', () => {
+        const pushedPage = () => ({
+            total: 1,
+            items: [
+                {
+                    task: task('t1', 'Write report'),
+                    push: {
+                        recent_count: 4,
+                        total_count: 6,
+                        last_postponed_on: shift(-1),
+                        last_planned_for: shift(-1),
+                        frequent: true,
+                    },
+                },
+            ],
+        });
+
+        beforeEach(() => {
+            (fetchReviewCategory as jest.Mock).mockResolvedValue(pushedPage());
+        });
+
+        it('marks the card on its day and lists it in « Pushed back » on the left', async () => {
+            renderBoard();
+            const badge = await within(column(TODAY)).findByTestId(
+                'pushed-badge'
+            );
+            expect(badge).toHaveTextContent('4×');
+            const section = screen.getByTestId('pushed-section');
+            expect(screen.getByTestId('plan-left-column')).toContainElement(
+                section
+            );
+            expect(
+                within(section).getByText('Write report')
+            ).toBeInTheDocument();
+            expect(
+                within(section).getByText(/4× in 30 days/)
+            ).toBeInTheDocument();
+        });
+
+        it('decides from the row: later sends it to Someday and resets the count', async () => {
+            (decideTask as jest.Mock).mockResolvedValue({});
+            renderBoard();
+            const section = await screen.findByTestId('pushed-section');
+            fireEvent.click(
+                within(section).getByRole('button', { name: /Write report/ })
+            );
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Later' }));
+            await waitFor(() =>
+                expect(decideTask).toHaveBeenCalledWith('t1', {
+                    later: true,
+                    reviewed: true,
+                })
+            );
+        });
+
+        it('shows nothing when no task is pushed back', async () => {
+            (fetchReviewCategory as jest.Mock).mockResolvedValue({
+                total: 0,
+                items: [],
+            });
+            renderBoard();
+            await within(column(TODAY)).findByText('Write report');
+            expect(screen.queryByTestId('pushed-section')).toBeNull();
+            expect(screen.queryByTestId('pushed-badge')).toBeNull();
         });
     });
 

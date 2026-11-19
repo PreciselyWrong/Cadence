@@ -6550,7 +6550,12 @@
     "pickedCount": "Selected: {{count}}",
     "pickedClear": "Clear the selection",
     "aiTab": "Planned by AI",
-    "sectionToggle": "Show or hide {{name}}"
+    "sectionToggle": "Show or hide {{name}}",
+    "pushedTitle": "Pushed back",
+    "pushedBadge": "Pushed back {{count}} times in 30 days",
+    "pushedMeta": "{{count}}× in 30 days",
+    "mergeCalendar": "Merged calendar",
+    "mergeCalendarTitle": "Show the agenda inside the day columns and hide the side calendar"
   },
   "offline": {
     "offline": "Offline",

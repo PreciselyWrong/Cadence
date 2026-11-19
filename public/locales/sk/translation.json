@@ -6649,7 +6649,12 @@
     "pickedCount": "Vybrané: {{count}}",
     "pickedClear": "Zrušiť výber",
     "aiTab": "Plán AI",
-    "sectionToggle": "Zobraziť alebo skryť {{name}}"
+    "sectionToggle": "Zobraziť alebo skryť {{name}}",
+    "pushedTitle": "Odkladané",
+    "pushedBadge": "Odložená {{count}}-krát za 30 dní",
+    "pushedMeta": "{{count}}× za 30 dní",
+    "mergeCalendar": "Zlúčený kalendár",
+    "mergeCalendarTitle": "Zobraziť udalosti v stĺpcoch dní a skryť bočný kalendár"
   },
   "offline": {
     "offline": "Offline",

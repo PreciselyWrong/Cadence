@@ -1053,3 +1053,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : la colonne de gauche liste tout ce qui n'a pas de jour : En retard, À replanifier (s'il y en a), Boîte de réception, Cette semaine (avec la charge « 2 h / 40 h »), Semaine prochaine, Ce mois-ci, Le mois prochain, Un jour. Chaque section se replie (Un jour replié au départ), reçoit des cartes et en donne aux jours. Une tâche déjà sur un jour du tableau n'y est pas répétée. Plus de bande du bas ; la Boîte ne se réduit plus en barre dans Jours.
 - **Android** : Planifier est déjà une liste à sections (Inbox, Échues, jours, horizons) ; rien à reprendre.
 
+## Plan : tâches repoussées et calendrier fusionné (2026-11-19)
+
+- **Problème** : rien ne montrait les tâches repoussées encore et encore ; l'agenda ne se voyait que dans le calendrier de droite.
+- **Décision** : section « Repoussées » à gauche (3 reports ou plus en 30 jours, la règle de la revue), menu Voir / Aujourd'hui / Découper / Plus tard / Faite / Abandonner / Garder ; badge « ↻ 4× » sur leurs cartes. Bouton « Calendrier fusionné » : les événements dans chaque colonne de jour, calendrier de droite masqué.
+- **Android** : à reprendre (`TODO.md` › Now).
+

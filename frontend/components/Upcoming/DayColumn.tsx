@@ -36,6 +36,14 @@ export interface DayColumnProps {
     groupBy?: GroupBy;
     sortBy?: SortBy;
     showCompleted?: boolean;
+    // The agenda's events of the day, shown at the top of the column when
+    // the calendar is merged into the days.
+    events?: {
+        title: string;
+        start?: string;
+        end?: string;
+        all_day: boolean;
+    }[];
     // Minutes the viewer has free that day; the header shows the load against it.
     availableMinutes?: number;
     // First day of the week, 0 (Sunday) to 6; the ISO week is labelled above it.
@@ -66,6 +74,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
     sortBy = 'plan',
     showCompleted = true,
     availableMinutes,
+    events: dayEvents = [],
     weekStartsOn = 1,
     onSelect,
     onAdd,
@@ -125,7 +134,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
     const events = previewing
         ? (preview!.state.detail?.days?.find((d) => d.date === date)?.events ??
           [])
-        : [];
+        : dayEvents;
     const loadBefore = dayLoad(open);
     const load =
         loadBefore -

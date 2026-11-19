@@ -6694,7 +6694,12 @@
     "pickedCount": "Вибрано: {{count}}",
     "pickedClear": "Зняти виділення",
     "aiTab": "План ШІ",
-    "sectionToggle": "Показати або сховати {{name}}"
+    "sectionToggle": "Показати або сховати {{name}}",
+    "pushedTitle": "Відкладені",
+    "pushedBadge": "Відкладено {{count}} разів за 30 днів",
+    "pushedMeta": "{{count}}× за 30 днів",
+    "mergeCalendar": "Вбудований календар",
+    "mergeCalendarTitle": "Показувати події в колонках днів і сховати бічний календар"
   },
   "offline": {
     "offline": "Немає зв’язку",

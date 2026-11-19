@@ -6698,7 +6698,12 @@
     "pickedCount": "Izbrano: {{count}}",
     "pickedClear": "Počisti izbor",
     "aiTab": "Načrt UI",
-    "sectionToggle": "Pokaži ali skrij {{name}}"
+    "sectionToggle": "Pokaži ali skrij {{name}}",
+    "pushedTitle": "Odlagana",
+    "pushedBadge": "Odložena {{count}}-krat v 30 dneh",
+    "pushedMeta": "{{count}}× v 30 dneh",
+    "mergeCalendar": "Združen koledar",
+    "mergeCalendarTitle": "Prikaži dogodke v stolpcih dni in skrij stranski koledar"
   },
   "offline": {
     "offline": "Brez povezave",

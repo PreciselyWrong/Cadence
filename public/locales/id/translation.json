@@ -6578,7 +6578,12 @@
         "pickedCount": "Terpilih: {{count}}",
         "pickedClear": "Kosongkan pilihan",
         "aiTab": "Rencana AI",
-        "sectionToggle": "Tampilkan atau sembunyikan {{name}}"
+        "sectionToggle": "Tampilkan atau sembunyikan {{name}}",
+        "pushedTitle": "Ditunda",
+        "pushedBadge": "Ditunda {{count}} kali dalam 30 hari",
+        "pushedMeta": "{{count}}× dalam 30 hari",
+        "mergeCalendar": "Kalender gabungan",
+        "mergeCalendarTitle": "Tampilkan agenda di kolom hari dan sembunyikan kalender samping"
   },
   "offline": {
     "offline": "Offline",

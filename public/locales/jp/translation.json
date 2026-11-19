@@ -6578,7 +6578,12 @@
         "pickedCount": "選択中: {{count}}",
         "pickedClear": "選択を解除",
         "aiTab": "AIの計画",
-        "sectionToggle": "{{name}}を表示／非表示"
+        "sectionToggle": "{{name}}を表示／非表示",
+        "pushedTitle": "先送り",
+        "pushedBadge": "30日で{{count}}回先送り",
+        "pushedMeta": "30日で{{count}}回",
+        "mergeCalendar": "統合カレンダー",
+        "mergeCalendarTitle": "日の列に予定を表示し、横のカレンダーを隠す"
   },
   "offline": {
     "offline": "オフライン",

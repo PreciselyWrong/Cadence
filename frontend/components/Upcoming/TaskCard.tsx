@@ -8,6 +8,7 @@ import { DayLine, lineAt } from '../Today/dayModel';
 import { subtasksWithoutCard } from './groupCards';
 import TaskCardBody, { taskCardClass } from '../Shared/task/TaskCardBody';
 import { isPickClick, PickedCardsContext } from './pickedCards';
+import { PushedBadge } from './PushedSection';
 import {
     PreviewCard,
     PreviewTrace,
@@ -147,6 +148,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 onToggleSubtask={onToggleSubtask}
                 meta={
                     <>
+                        <PushedBadge uid={uid} />
                         {at !== null && (
                             <span
                                 className={`inline-flex shrink-0 items-center gap-1 text-xs font-semibold tabular-nums ${

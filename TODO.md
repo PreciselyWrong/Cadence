@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : tâches repoussées et calendrier fusionné dans Planifier (2026-11-19)
+  Raison : le web montre une section « Repoussées » (règle de la revue, `GET /api/review/pushed`) avec les décisions de la revue, un badge « ↻ N× » sur les cartes, et un « Calendrier fusionné » qui met les événements dans les jours (`docs/03-upcoming-view.md`). Vérif : sur le téléphone, la même tâche repoussée apparaît dans la section avec le même compte que le web ; les événements d'agenda se voient dans les jours de Planifier.
 - Android : « Planifier ma semaine » en aperçu sur Planifier, comme le web (2026-11-19)
   Raison : le web montre la proposition sur le tableau (`docs/03-upcoming-view.md` › Week preview) : carte de l'IA là où elle envoie une tâche, trace là où elle est, événements et charge avant → après par jour, horizons proches avec leurs comptes, menu Voir la tâche / Refuser / Faite / Abandonner / jour / horizon, « Appliquer » seul à écrire ; aucun bouton d'IA quand `GET /api/proposals` répond `agent: false` (plugin désactivé). Android garde sa feuille et montre encore le bouton sans agent. Vérif : sur le téléphone, une proposition prête s'ouvre sur Planifier avec les mêmes cartes et décisions que le web pour le même compte.
 - Hermes : la semaine voit l'Inbox, les horizons et les projets, et peut proposer « faite » (2026-11-19)
@@ -148,9 +150,7 @@ Branche `feat/habit-stats-bdad4581`.
 ## Next
 
 - [x] Plan web : « En retard » dans la colonne de gauche, au-dessus de la Boîte de réception
-- Plan web : voir les tâches que je repousse sans cesse
-  Raison : rien ne montre les tâches reportées encore et encore ; Cadence compte déjà les reports (liste « repoussées » de la revue). Badge « reportée N× » sur la carte et section repliable « Repoussées » dans la colonne de gauche, avec les choix habituels (faite, abandonner, un horizon, découper). Vérif : une tâche reportée 3 fois montre le badge et apparaît dans la section ; Android dans la même étape ou noté ici.
-
+- [x] Plan web : voir les tâches que je repousse sans cesse
 - Add-on Firefox Cadence signé en non listé (web-ext sign --channel=unlisted, clés AMO dans .env, gecko.id fixe, script publish.ps1 -Sign) pour une installation permanente sans le site de Mozilla.
 
 - Cartes « Mail » dans « À trier » (web et Android)

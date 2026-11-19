@@ -6578,7 +6578,12 @@
     "pickedCount": "Seçili: {{count}}",
     "pickedClear": "Seçimi temizle",
     "aiTab": "Yapay zekâ planı",
-    "sectionToggle": "{{name}} göster veya gizle"
+    "sectionToggle": "{{name}} göster veya gizle",
+    "pushedTitle": "Ertelenenler",
+    "pushedBadge": "30 günde {{count}} kez ertelendi",
+    "pushedMeta": "30 günde {{count}}×",
+    "mergeCalendar": "Birleşik takvim",
+    "mergeCalendarTitle": "Ajandayı gün sütunlarında göster ve yan takvimi gizle"
   },
   "offline": {
     "offline": "Çevrimdışı",
