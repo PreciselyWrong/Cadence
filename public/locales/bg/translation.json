@@ -628,6 +628,18 @@
     "hideCompleted": "Скрий завършени задачи"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Повтарящите се задачи са запазени, изтрийте ги една по една: {{count}}",
+            "someFailed": "Непроменени: {{count}}",
+            "deleted": "Изтрити: {{count}}",
+            "moved": "Преместени: {{count}}",
+            "prioritized": "Променен приоритет: {{count}}",
+            "dated": "Променена дата: {{count}}",
+            "completed": "Завършени: {{count}}",
+            "clear": "Изчисти избора",
+            "count": "Избрани: {{count}}",
+            "label": "Избрани задачи"
+        },
     "deletedToast": "„{{name}}“ е изтрита",
     "title": "Задачи",
     "today": "Днес",
@@ -760,6 +772,17 @@
       "setDueDate": "Задай срок"
     },
     "contextMenu": {
+            "review": "Преглед",
+            "copyError": "Неуспешно копиране",
+            "titleCopied": "Заглавието е копирано",
+            "linkCopied": "Връзката е копирана",
+            "deleteKey": "Del",
+            "copyTitle": "Копирай заглавието",
+            "copyLink": "Копирай връзката",
+            "pickDate": "Избери дата…",
+            "reopen": "Отвори отново",
+            "complete": "Завърши",
+            "open": "Отвори",
       "projectChanged": "Проектът е променен",
       "dateChanged": "Датата е променена",
       "label": "Действия със задачата",
@@ -5783,6 +5806,8 @@
       "plan": "На страница Планиране"
     },
     "shortcuts": {
+            "panePrevious": "Предишна задача в панела",
+            "paneNext": "Следваща задача в панела",
       "palette": "Отваряне на палитрата с команди",
       "capture": "Бързо записване",
       "search": "Търсене",

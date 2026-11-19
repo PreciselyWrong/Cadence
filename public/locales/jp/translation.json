@@ -628,6 +628,18 @@
     "hideCompleted": "完了したタスクを非表示"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "繰り返しタスクは残しました。1件ずつ削除してください：{{count}}",
+            "someFailed": "変更なし：{{count}}",
+            "deleted": "削除：{{count}}",
+            "moved": "移動：{{count}}",
+            "prioritized": "優先度を変更：{{count}}",
+            "dated": "日付を変更：{{count}}",
+            "completed": "完了：{{count}}",
+            "clear": "選択を解除",
+            "count": "選択中：{{count}}",
+            "label": "選択中のタスク"
+        },
     "deletedToast": "「{{name}}」を削除しました",
     "title": "タスク",
     "today": "今日",
@@ -760,6 +772,17 @@
       "setDueDate": "期限日を設定"
     },
     "contextMenu": {
+            "review": "レビュー",
+            "copyError": "コピーできませんでした",
+            "titleCopied": "タイトルをコピーしました",
+            "linkCopied": "リンクをコピーしました",
+            "deleteKey": "Del",
+            "copyTitle": "タイトルをコピー",
+            "copyLink": "リンクをコピー",
+            "pickDate": "日付を選択…",
+            "reopen": "再開",
+            "complete": "完了",
+            "open": "開く",
       "projectChanged": "プロジェクトを変更しました",
       "dateChanged": "日付を変更しました",
       "label": "タスクの操作",
@@ -5783,6 +5806,8 @@
       "plan": "計画ページで"
     },
     "shortcuts": {
+            "panePrevious": "パネルの前のタスク",
+            "paneNext": "パネルの次のタスク",
       "palette": "コマンドパレットを開く",
       "capture": "クイックキャプチャ",
       "search": "検索",

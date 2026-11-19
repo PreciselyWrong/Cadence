@@ -628,6 +628,18 @@
     "hideCompleted": "Skjul Fuldførte Opgaver"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Gentagne opgaver beholdt, slet dem én ad gangen: {{count}}",
+            "someFailed": "Ikke ændret: {{count}}",
+            "deleted": "Slettet: {{count}}",
+            "moved": "Flyttet: {{count}}",
+            "prioritized": "Prioritet ændret: {{count}}",
+            "dated": "Dato ændret: {{count}}",
+            "completed": "Fuldført: {{count}}",
+            "clear": "Ryd valget",
+            "count": "Valgt: {{count}}",
+            "label": "Valgte opgaver"
+        },
     "deletedToast": "\"{{name}}\" slettet",
     "title": "Opgaver",
     "today": "I Dag",
@@ -760,6 +772,17 @@
       "setDueDate": "Angiv forfaldsdato"
     },
     "contextMenu": {
+            "review": "Gennemgang",
+            "copyError": "Kunne ikke kopiere",
+            "titleCopied": "Titel kopieret",
+            "linkCopied": "Link kopieret",
+            "deleteKey": "Del",
+            "copyTitle": "Kopiér titel",
+            "copyLink": "Kopiér link",
+            "pickDate": "Vælg en dato…",
+            "reopen": "Genåbn",
+            "complete": "Fuldfør",
+            "open": "Åbn",
       "projectChanged": "Projekt ændret",
       "dateChanged": "Dato ændret",
       "label": "Handlinger for opgaven",
@@ -5783,6 +5806,8 @@
       "plan": "På siden Planlæg"
     },
     "shortcuts": {
+            "panePrevious": "Forrige opgave i panelet",
+            "paneNext": "Næste opgave i panelet",
       "palette": "Åbn kommandopaletten",
       "capture": "Hurtig indtastning",
       "search": "Søg",

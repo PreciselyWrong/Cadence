@@ -628,6 +628,18 @@
     "hideCompleted": "완료된 작업 숨기기"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "반복 작업은 유지됨, 하나씩 삭제하세요: {{count}}",
+            "someFailed": "변경 안 됨: {{count}}",
+            "deleted": "삭제됨: {{count}}",
+            "moved": "이동됨: {{count}}",
+            "prioritized": "우선순위 변경됨: {{count}}",
+            "dated": "날짜 변경됨: {{count}}",
+            "completed": "완료됨: {{count}}",
+            "clear": "선택 해제",
+            "count": "선택됨: {{count}}",
+            "label": "선택한 작업"
+        },
     "deletedToast": "\"{{name}}\"을(를) 삭제했습니다",
     "title": "작업",
     "today": "오늘",
@@ -760,6 +772,17 @@
       "setDueDate": "마감일 설정"
     },
     "contextMenu": {
+            "review": "검토",
+            "copyError": "복사할 수 없습니다",
+            "titleCopied": "제목을 복사했습니다",
+            "linkCopied": "링크를 복사했습니다",
+            "deleteKey": "Del",
+            "copyTitle": "제목 복사",
+            "copyLink": "링크 복사",
+            "pickDate": "날짜 선택…",
+            "reopen": "다시 열기",
+            "complete": "완료",
+            "open": "열기",
       "projectChanged": "프로젝트 변경됨",
       "dateChanged": "날짜 변경됨",
       "label": "작업 동작",
@@ -5783,6 +5806,8 @@
       "plan": "계획 페이지에서"
     },
     "shortcuts": {
+            "panePrevious": "패널의 이전 작업",
+            "paneNext": "패널의 다음 작업",
       "palette": "명령 팔레트 열기",
       "capture": "빠른 캡처",
       "search": "검색",

@@ -58,6 +58,15 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
+// dateUtils loads the app's i18n, which fetches its translation files in
+// the background; jsdom has no fetch, and the rejection used to land in
+// whichever test was running then. The files never answer here.
+beforeAll(() => {
+    (global as { fetch?: unknown }).fetch = jest.fn(
+        () => new Promise(() => {})
+    );
+});
+
 jest.mock('../../../utils/dateUtils', () => ({
     ...jest.requireActual('../../../utils/dateUtils'),
     getUserTimezone: () => 'UTC',
@@ -65,6 +74,7 @@ jest.mock('../../../utils/dateUtils', () => ({
 
 jest.mock('../../../contexts/TaskPaneContext', () => ({
     TASK_UPDATED_EVENT: 'tududi:task-updated',
+    TASK_DELETED_EVENT: 'cadence:task-deleted',
     useTaskPane: () => ({
         openTaskUid: mockOpenTaskUid,
         openTask: mockOpenTask,
@@ -2057,6 +2067,7 @@ describe('UpcomingBoard', () => {
             await within(column(TODAY)).findByText('Dentist');
             await settle();
             fireEvent.contextMenu(cardIn(TODAY, 'Dentist'));
+            fireEvent.click(await screen.findByTestId('card-send'));
             fireEvent.click(await screen.findByTestId('card-send-someday'));
             await settle();
             expect(mockUpdate).toHaveBeenCalledWith('p1', { later: true });

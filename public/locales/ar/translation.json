@@ -648,6 +648,18 @@
     "hideCompleted": "إخفاء المهام المكتملة"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "تم الإبقاء على المهام المتكررة، احذفها واحدة تلو الأخرى: {{count}}",
+            "someFailed": "بدون تغيير: {{count}}",
+            "deleted": "المحذوفة: {{count}}",
+            "moved": "المنقولة: {{count}}",
+            "prioritized": "تغيير الأولوية: {{count}}",
+            "dated": "تغيير التاريخ: {{count}}",
+            "completed": "المكتملة: {{count}}",
+            "clear": "مسح التحديد",
+            "count": "المحدد: {{count}}",
+            "label": "المهام المحددة"
+        },
     "deletedToast": "تم حذف «{{name}}»",
     "title": "المهام",
     "today": "اليوم",
@@ -780,6 +792,17 @@
       "setDueDate": "تحديد تاريخ الاستحقاق"
     },
     "contextMenu": {
+            "review": "مراجعة",
+            "copyError": "تعذر النسخ",
+            "titleCopied": "تم نسخ العنوان",
+            "linkCopied": "تم نسخ الرابط",
+            "deleteKey": "Del",
+            "copyTitle": "نسخ العنوان",
+            "copyLink": "نسخ الرابط",
+            "pickDate": "اختيار تاريخ…",
+            "reopen": "إعادة فتح",
+            "complete": "إكمال",
+            "open": "فتح",
       "projectChanged": "تم تغيير المشروع",
       "dateChanged": "تم تغيير التاريخ",
       "label": "إجراءات المهمة",
@@ -5841,6 +5864,8 @@
       "plan": "في صفحة التخطيط"
     },
     "shortcuts": {
+            "panePrevious": "المهمة السابقة في اللوحة",
+            "paneNext": "المهمة التالية في اللوحة",
       "palette": "فتح لوحة الأوامر",
       "capture": "التقاط سريع",
       "search": "بحث",

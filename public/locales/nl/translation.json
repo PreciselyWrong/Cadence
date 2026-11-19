@@ -628,6 +628,18 @@
     "hideCompleted": "Verberg Voltooide Taken"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Terugkerende taken behouden, verwijder ze één voor één: {{count}}",
+            "someFailed": "Niet gewijzigd: {{count}}",
+            "deleted": "Verwijderd: {{count}}",
+            "moved": "Verplaatst: {{count}}",
+            "prioritized": "Prioriteit gewijzigd: {{count}}",
+            "dated": "Datum gewijzigd: {{count}}",
+            "completed": "Voltooid: {{count}}",
+            "clear": "Selectie wissen",
+            "count": "Geselecteerd: {{count}}",
+            "label": "Geselecteerde taken"
+        },
     "deletedToast": "\"{{name}}\" verwijderd",
     "title": "Taken",
     "today": "Vandaag",
@@ -760,6 +772,17 @@
       "setDueDate": "Vervaldatum instellen"
     },
     "contextMenu": {
+            "review": "Review",
+            "copyError": "Kopiëren mislukt",
+            "titleCopied": "Titel gekopieerd",
+            "linkCopied": "Link gekopieerd",
+            "deleteKey": "Del",
+            "copyTitle": "Titel kopiëren",
+            "copyLink": "Link kopiëren",
+            "pickDate": "Kies een datum…",
+            "reopen": "Heropenen",
+            "complete": "Voltooien",
+            "open": "Openen",
       "projectChanged": "Project gewijzigd",
       "dateChanged": "Datum gewijzigd",
       "label": "Taakacties",
@@ -5783,6 +5806,8 @@
       "plan": "Op de pagina Plannen"
     },
     "shortcuts": {
+            "panePrevious": "Vorige taak in het paneel",
+            "paneNext": "Volgende taak in het paneel",
       "palette": "Opdrachtenpalet openen",
       "capture": "Snelle invoer",
       "search": "Zoeken",

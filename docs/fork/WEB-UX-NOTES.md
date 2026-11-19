@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-19 : un seul menu de tâche, sélection multiple, ajout rapide lu (web)
+
+- **Problème** : trois menus clic droit différents (listes en densité minimale seulement, Aujourd'hui, Planifier), aucun complet ; « Supprimer » absent d'Aujourd'hui et de Planifier, enterré sous la liste des projets ailleurs ; rien sur les cartes des jours de Planifier ni en densité dense ; pas de sélection multiple dans les listes ; « Ajouter une tâche » ne lisait ni date ni priorité. Audit : `docs/fork/QOL-AUDIT-WEB.md`.
+- **Décision** : un seul menu de tâche partout (clic droit, appui long, bouton « ⋯ », touche Menu), court grâce aux sous-menus : actions de la page en tête, puis Ouvrir, Terminer, Date ▸, Priorité ▸, Déplacer vers un projet ▸, Épingler, Dupliquer, Transformer en projet, Copier le lien, Copier le titre, et Supprimer en dernier, en rouge, avec « Annuler » au lieu d'une confirmation. Ctrl/Cmd+clic et Maj+clic choisissent plusieurs tâches ; une barre en bas fait Terminer, Date, Priorité, Projet, Supprimer pour toutes, avec une seule annulation. La ligne d'ajout lit `demain !1 #Projet`. Dans la fiche, J et K passent à la tâche suivante ou précédente. Règles : `docs/00-tasks-behavior.md` › Minimal Row Gestures.
+- **Android à reprendre** : le même menu sur l'appui long de chaque ligne et carte (mêmes entrées, même ordre, Supprimer avec annulation) et la lecture de l'ajout rapide ; la sélection multiple reste à décider sur téléphone. Voir `TODO.md` › Now.
+
 ### 2026-11-19 : Aujourd'hui : feuille « Replanifier », pli « Demain » et ligne du temps (web)
 
 - **Problème** : la page Aujourd'hui web affichait encore « Tout faire aujourd'hui » sur les tâches en retard sans choix fin ni étalement, n'avait pas le pli « Demain · N » avant « Suggestions · N », et séparait simplement les tâches à heure des tâches sans heure sans axe temporel ni créneau libre exploitable sur place.

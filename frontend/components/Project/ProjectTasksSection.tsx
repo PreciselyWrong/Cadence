@@ -21,7 +21,7 @@ interface ProjectTasksSectionProps {
     onTaskReorder?: (orderedUids: string[]) => void;
     // Minimal only: inline "+ Add task" field and the collapsed Completed
     // section, which lists this project's completed tasks.
-    onInlineCreate?: (name: string) => Promise<void>;
+    onInlineCreate?: (name: string, extras: Partial<Task>) => Promise<void>;
     completedTasks?: Task[];
     completedListKey?: string;
     // TODO.md projects: where "+ Add task" writes in the file.

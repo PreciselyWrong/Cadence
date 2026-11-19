@@ -43,6 +43,8 @@ interface DatePopoverProps {
         // `from` is the task's commitment before the pick.
         onPick: (key: HorizonKey, from: Commitment | null) => void;
     };
+    // Called whenever the popover closes (choice, Esc, outside click)
+    onClose?: () => void;
 }
 
 export interface DateTriggerProps extends ChipPopoverTriggerProps {
@@ -63,6 +65,7 @@ const DatePopover: React.FC<DatePopoverProps> = ({
     renderTrigger,
     withTime = true,
     horizons,
+    onClose,
 }) => {
     const { t, i18n } = useTranslation();
     const locale = useMemo(
@@ -94,6 +97,7 @@ const DatePopover: React.FC<DatePopoverProps> = ({
         <ChipPopover
             label={label}
             widthClass="w-80"
+            onClose={onClose}
             renderTrigger={(props) =>
                 renderTrigger({ ...props, display, commitment })
             }

@@ -2,16 +2,23 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../components/Shared/ToastContext';
 import { Task, PriorityType } from '../entities/Task';
-import { TASK_UPDATED_EVENT } from '../contexts/TaskPaneContext';
+import {
+    TASK_DELETED_EVENT,
+    TaskDeletedDetail,
+    TASK_UPDATED_EVENT,
+} from '../contexts/TaskPaneContext';
 import {
     TASK_PANEL_SAVED_EVENT,
     TaskPanelSavedDetail,
 } from '../store/taskPanelStore';
 import {
     deleteTask,
+    duplicateTask,
     fetchTaskByUid,
     toggleTaskCompletion,
+    updateTask,
 } from '../utils/tasksService';
+import { openTaskPanel } from '../store/taskPanelStore';
 import {
     deleteTaskWithScope,
     isRecurringScopeCancelled,
@@ -27,8 +34,15 @@ const toIsoDay = (date: Date): string =>
         date.getDate()
     ).padStart(2, '0')}`;
 
+export const announceDeleted = (uid: string) =>
+    window.dispatchEvent(
+        new CustomEvent<TaskDeletedDetail>(TASK_DELETED_EVENT, {
+            detail: { uid },
+        })
+    );
+
 // Lets rows and panes that show the task pick up the change.
-const announce = (task: Task) => {
+export const announce = (task: Task) => {
     window.dispatchEvent(
         new CustomEvent<TaskPanelSavedDetail>(TASK_PANEL_SAVED_EVENT, {
             detail: { task },
@@ -116,10 +130,12 @@ export const useTaskActions = () => {
                     deleteTask(task.uid as string)
                 );
                 if (kept) announce(kept);
-                else
+                else {
                     taskRowElements(task.uid as string).forEach((row) => {
                         row.style.display = 'none';
                     });
+                    announceDeleted(task.uid as string);
+                }
             } catch (error) {
                 if (isRecurringScopeCancelled(error)) return;
                 showErrorToast(
@@ -148,7 +164,10 @@ export const useTaskActions = () => {
                     rows.forEach((row, i) => {
                         row.style.display = display[i];
                     }),
-                commit: () => deleteTask(uid),
+                commit: async () => {
+                    await deleteTask(uid);
+                    announceDeleted(uid);
+                },
                 onCommitError: () =>
                     showErrorToast(
                         t(
@@ -165,11 +184,104 @@ export const useTaskActions = () => {
         [removeRecurring, showErrorToast, showUndoToast, t]
     );
 
+    // A date or project change offers to put back the value it replaced. A
+    // recurring task answers its scope prompt instead, so it gets none.
+    const changeWithUndo = useCallback(
+        async (
+            uid: string,
+            change: (task: Task) => Promise<Task>,
+            // Gets the task as it was before the change, and as it is now.
+            back: (before: Task, current: Task) => Promise<Task>,
+            message: string
+        ) => {
+            let before: Task;
+            try {
+                before = await fetchTaskByUid(uid);
+            } catch (error) {
+                console.error('Task action failed:', error);
+                showErrorToast(
+                    t('commandCenter.actionError', 'Could not update the task')
+                );
+                return null;
+            }
+            const saved = await run(() => change(before));
+            if (!saved || isRecurringTask(before)) return saved;
+            showUndoToast(message, () => {
+                void run(async () => back(before, await fetchTaskByUid(uid)));
+            });
+            return saved;
+        },
+        [run, showErrorToast, showUndoToast, t]
+    );
+
+    const setDue = useCallback(
+        (uid: string, date: string | null, time: string | null = null) =>
+            changeWithUndo(
+                uid,
+                (task) =>
+                    moveTaskDue(task, {
+                        due_date: date,
+                        due_time: date ? time : null,
+                    }),
+                (before, current) =>
+                    moveTaskDue(current, {
+                        due_date: before.due_date?.slice(0, 10) ?? null,
+                        due_time: before.due_time ?? null,
+                    }),
+                t('tasks.contextMenu.dateChanged', 'Date changed')
+            ),
+        [changeWithUndo, t]
+    );
+
+    const moveToProjectUndoable = useCallback(
+        (uid: string, projectId: number | null) =>
+            changeWithUndo(
+                uid,
+                (task) => saveTaskEdit(task, { project_id: projectId }),
+                (before, current) =>
+                    saveTaskEdit(current, {
+                        project_id: before.project_id ?? null,
+                    }),
+                t('tasks.contextMenu.projectChanged', 'Project changed')
+            ),
+        [changeWithUndo, t]
+    );
+
+    const setPinned = useCallback(
+        (uid: string, pinned: boolean) =>
+            run(() => updateTask(uid, { pinned })),
+        [run]
+    );
+
+    // The copy opens in the side panel.
+    const duplicate = useCallback(
+        async (uid: string) => {
+            try {
+                const copy = await duplicateTask(await fetchTaskByUid(uid));
+                showSuccessToast(t('task.duplicated', 'Task duplicated'));
+                announce(copy);
+                if (copy.uid) openTaskPanel(copy.uid);
+                return copy;
+            } catch (error) {
+                console.error('Failed to duplicate task:', error);
+                showErrorToast(
+                    t('task.duplicateError', 'Could not duplicate the task.')
+                );
+                return null;
+            }
+        },
+        [showErrorToast, showSuccessToast, t]
+    );
+
     return {
         toggle,
         setPriority,
         setDueShortcut,
         moveToProject,
         removeWithUndo,
+        setDue,
+        moveToProjectUndoable,
+        setPinned,
+        duplicate,
     };
 };

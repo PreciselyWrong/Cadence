@@ -1,11 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { addDays, format } from 'date-fns';
 import NewTask from '../NewTask';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (_key: string, fallback?: string) => fallback ?? _key,
+        i18n: { language: 'fr' },
     }),
 }));
 
@@ -35,9 +37,44 @@ describe('NewTask', () => {
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() =>
-            expect(onTaskCreate).toHaveBeenCalledWith('Buy milk')
+            expect(onTaskCreate).toHaveBeenCalledWith('Buy milk', {})
         );
         expect(input.value).toBe('');
+    });
+
+    it('reads the date and priority of the typed line on Enter', async () => {
+        const onTaskCreate = jest.fn().mockResolvedValue(undefined);
+        const tomorrow = format(addDays(new Date(), 1), 'yyyy-MM-dd');
+        render(<NewTask onTaskCreate={onTaskCreate} />);
+        const input = screen.getByTestId('new-task-input');
+
+        fireEvent.change(input, {
+            target: { value: 'Appeler Lucas demain !1' },
+        });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        await waitFor(() =>
+            expect(onTaskCreate).toHaveBeenCalledWith(
+                'Appeler Lucas',
+                expect.objectContaining({
+                    priority: 'high',
+                    due_date: tomorrow,
+                })
+            )
+        );
+    });
+
+    it('sends no extras for plain text', async () => {
+        const onTaskCreate = jest.fn().mockResolvedValue(undefined);
+        render(<NewTask onTaskCreate={onTaskCreate} />);
+        const input = screen.getByTestId('new-task-input');
+
+        fireEvent.change(input, { target: { value: 'Buy milk' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        await waitFor(() =>
+            expect(onTaskCreate).toHaveBeenCalledWith('Buy milk', {})
+        );
     });
 
     it('does not create anything for a blank name', () => {

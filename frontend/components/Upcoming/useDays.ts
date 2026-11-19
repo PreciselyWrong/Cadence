@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
+import {
+    useTaskDeletedEvent,
+    useTaskUpdatedEvent,
+} from '../../hooks/useTaskUpdatedEvent';
 import { fetchDay, DayResponse } from '../../utils/dayService';
 import { fetchTasks } from '../../utils/tasksService';
 import { getFirstDayOfWeek } from '../../utils/profileService';
@@ -116,6 +119,11 @@ export const useDays = (dates: string[]) => {
         ];
         void reload(wanted);
     });
+    // A deleted task leaves the days that showed it.
+    useTaskDeletedEvent((uid) => {
+        const holding = datesHolding(daysRef.current, uid);
+        if (holding.length > 0) void reload(holding);
+    });
 
     return {
         days,
@@ -225,6 +233,9 @@ export const useHorizonTasks = (enabled: boolean) => {
     useTaskUpdatedEvent(() => {
         if (enabled) void reload();
     });
+    useTaskDeletedEvent(() => {
+        if (enabled) void reload();
+    });
 
     return { tasks, firstDayOfWeek, error, reload };
 };
@@ -256,6 +267,9 @@ export const useUnsortedTasks = (enabled: boolean) => {
     }, [enabled, reload]);
 
     useTaskUpdatedEvent(() => {
+        if (enabled) void reload();
+    });
+    useTaskDeletedEvent(() => {
         if (enabled) void reload();
     });
 

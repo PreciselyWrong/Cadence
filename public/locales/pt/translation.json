@@ -629,6 +629,18 @@
     "hideCompleted": "Ocultar Tarefas Concluídas"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Tarefas recorrentes mantidas, exclua-as uma a uma: {{count}}",
+            "someFailed": "Não alteradas: {{count}}",
+            "deleted": "Excluídas: {{count}}",
+            "moved": "Movidas: {{count}}",
+            "prioritized": "Prioridade alterada: {{count}}",
+            "dated": "Data alterada: {{count}}",
+            "completed": "Concluídas: {{count}}",
+            "clear": "Limpar a seleção",
+            "count": "Selecionadas: {{count}}",
+            "label": "Tarefas selecionadas"
+        },
     "deletedToast": "“{{name}}” excluída",
     "title": "Tarefas",
     "today": "Hoje",
@@ -761,6 +773,17 @@
       "setDueDate": "Definir data de vencimento"
     },
     "contextMenu": {
+            "review": "Revisão",
+            "copyError": "Não foi possível copiar",
+            "titleCopied": "Título copiado",
+            "linkCopied": "Link copiado",
+            "deleteKey": "Del",
+            "copyTitle": "Copiar título",
+            "copyLink": "Copiar link",
+            "pickDate": "Escolher uma data…",
+            "reopen": "Reabrir",
+            "complete": "Concluir",
+            "open": "Abrir",
       "projectChanged": "Projeto alterado",
       "dateChanged": "Data alterada",
       "label": "Ações da tarefa",
@@ -5790,6 +5813,8 @@
       "plan": "Na página Planear"
     },
     "shortcuts": {
+            "panePrevious": "Tarefa anterior no painel",
+            "paneNext": "Próxima tarefa no painel",
       "palette": "Abrir a paleta de comandos",
       "capture": "Captura rápida",
       "search": "Pesquisar",

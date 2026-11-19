@@ -628,6 +628,18 @@
     "hideCompleted": "Tamamlanan Görevleri Gizle"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Yinelenen görevler korundu, tek tek silin: {{count}}",
+            "someFailed": "Değişmedi: {{count}}",
+            "deleted": "Silindi: {{count}}",
+            "moved": "Taşındı: {{count}}",
+            "prioritized": "Öncelik değişti: {{count}}",
+            "dated": "Tarih değişti: {{count}}",
+            "completed": "Tamamlandı: {{count}}",
+            "clear": "Seçimi temizle",
+            "count": "Seçili: {{count}}",
+            "label": "Seçili görevler"
+        },
     "deletedToast": "\"{{name}}\" silindi",
     "title": "Görevler",
     "today": "Bugün",
@@ -760,6 +772,17 @@
       "setDueDate": "Bitiş tarihi ayarla"
     },
     "contextMenu": {
+            "review": "Gözden geçirme",
+            "copyError": "Kopyalanamadı",
+            "titleCopied": "Başlık kopyalandı",
+            "linkCopied": "Bağlantı kopyalandı",
+            "deleteKey": "Del",
+            "copyTitle": "Başlığı kopyala",
+            "copyLink": "Bağlantıyı kopyala",
+            "pickDate": "Tarih seç…",
+            "reopen": "Yeniden aç",
+            "complete": "Tamamla",
+            "open": "Aç",
       "projectChanged": "Proje değiştirildi",
       "dateChanged": "Tarih değiştirildi",
       "label": "Görev işlemleri",
@@ -5783,6 +5806,8 @@
       "plan": "Planla sayfasında"
     },
     "shortcuts": {
+            "panePrevious": "Paneldeki önceki görev",
+            "paneNext": "Paneldeki sonraki görev",
       "palette": "Komut paletini aç",
       "capture": "Hızlı yakalama",
       "search": "Ara",

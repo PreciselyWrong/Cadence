@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Location } from 'react-router-dom';
 import {
     TagIcon,
@@ -16,6 +16,7 @@ import { resolveTagColor } from '../../utils/tagColor';
 import { buildTagTree, flattenTagTree, tagLeafName } from '../../utils/tagTree';
 import EntityIcon from '../Shared/EntityIcon';
 import { SidebarPinButton, useTagPin } from './sidebarPins';
+import { ContextMenu } from '../Shared/ui/Menu';
 import {
     DROP_HIGHLIGHT_CLASS,
     dropTargetAttrs,
@@ -37,6 +38,11 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
 }) => {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useSidebarSectionExpanded('tags');
+    const [menuTarget, setMenuTarget] = useState<{
+        tag: Tag;
+        x: number;
+        y: number;
+    } | null>(null);
 
     const showBadge = useSidebarSectionBadge('tags');
 
@@ -173,6 +179,14 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                                 style={{ paddingLeft: 30 + depth * 14 }}
                                 title={item.name}
                                 onClick={() => navigate(item)}
+                                onContextMenu={(event) => {
+                                    event.preventDefault();
+                                    setMenuTarget({
+                                        tag: item,
+                                        x: event.clientX,
+                                        y: event.clientY,
+                                    });
+                                }}
                                 data-testid={`sidebar-tag-${item.uid || item.id}`}
                             >
                                 <span
@@ -204,6 +218,20 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                         )
                     )}
                 </div>
+            )}
+            {menuTarget && (
+                <ContextMenu
+                    entries={[
+                        {
+                            key: 'open',
+                            label: t('common.open', 'Open'),
+                            onSelect: () => navigate(menuTarget.tag),
+                        },
+                    ]}
+                    x={menuTarget.x}
+                    y={menuTarget.y}
+                    onClose={() => setMenuTarget(null)}
+                />
             )}
         </div>
     );

@@ -1436,12 +1436,13 @@ const TodayPage: React.FC = () => {
 
     // Minimal "+ Add task" field on the candidate list: the task is due on the
     // day being planned (today, unless another day is open).
-    const handleInlineCreate = async (name: string) => {
+    const handleInlineCreate = async (name: string, extras: Partial<Task>) => {
         await createTask({
             name,
             due_date: date ?? todayString(),
             status: TASK_STATUS.NOT_STARTED,
             completed_at: null,
+            ...extras,
         } as unknown as Task);
         setReloadToken((n) => n + 1);
     };

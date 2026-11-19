@@ -642,6 +642,18 @@
     "hideCompleted": "Ukryj zakończone zadania"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Zadania cykliczne zachowane, usuń je pojedynczo: {{count}}",
+            "someFailed": "Bez zmian: {{count}}",
+            "deleted": "Usunięte: {{count}}",
+            "moved": "Przeniesione: {{count}}",
+            "prioritized": "Zmieniony priorytet: {{count}}",
+            "dated": "Zmieniona data: {{count}}",
+            "completed": "Ukończone: {{count}}",
+            "clear": "Wyczyść zaznaczenie",
+            "count": "Zaznaczone: {{count}}",
+            "label": "Zaznaczone zadania"
+        },
     "deletedToast": "\"{{name}}\" usunięto",
     "title": "Zadania",
     "today": "Dziś",
@@ -774,6 +786,17 @@
       "setDueDate": "Ustaw termin"
     },
     "contextMenu": {
+            "review": "Przegląd",
+            "copyError": "Nie udało się skopiować",
+            "titleCopied": "Tytuł skopiowany",
+            "linkCopied": "Link skopiowany",
+            "deleteKey": "Del",
+            "copyTitle": "Kopiuj tytuł",
+            "copyLink": "Kopiuj link",
+            "pickDate": "Wybierz datę…",
+            "reopen": "Otwórz ponownie",
+            "complete": "Ukończ",
+            "open": "Otwórz",
       "projectChanged": "Zmieniono projekt",
       "dateChanged": "Zmieniono datę",
       "label": "Działania zadania",
@@ -5879,6 +5902,8 @@
       "plan": "Na stronie Planuj"
     },
     "shortcuts": {
+            "panePrevious": "Poprzednie zadanie w panelu",
+            "paneNext": "Następne zadanie w panelu",
       "palette": "Otwórz paletę poleceń",
       "capture": "Szybkie przechwycenie",
       "search": "Szukaj",

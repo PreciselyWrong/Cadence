@@ -15,7 +15,7 @@ import {
 import { useIsMinimal } from '../hooks/useUiDensity';
 import PageHeader from './Shared/ui/PageHeader';
 import PageShell, { PAGE_GUTTER } from './Shared/ui/PageShell';
-import NewTask from './Task/NewTask';
+import NewTask, { withListTag } from './Task/NewTask';
 import CompletedTasksSection, {
     useCompletedTasks,
 } from './Task/CompletedTasksSection';
@@ -41,7 +41,10 @@ import { getApiPath } from '../config/paths';
 import { getCsrfToken } from '../utils/csrfService';
 import { isQueuedOfflineResponse } from '../utils/authUtils';
 import { isTaskActive } from '../constants/taskStatus';
-import { useTaskUpdatedEvent } from '../hooks/useTaskUpdatedEvent';
+import {
+    useTaskDeletedEvent,
+    useTaskUpdatedEvent,
+} from '../hooks/useTaskUpdatedEvent';
 import { openTaskPanel } from '../store/taskPanelStore';
 import SkeletonRows from './Shared/SkeletonRows';
 
@@ -388,12 +391,12 @@ const Tasks: React.FC = () => {
 
     // Minimal "+ Add task" field: the task joins the list it was typed in
     // (a `?tag=` list tags it).
-    const handleInlineCreate = async (name: string) => {
+    const handleInlineCreate = async (name: string, extras: Partial<Task>) => {
         await handleTaskCreate({
             name,
             status: 'not_started',
             completed_at: null,
-            ...(tag ? { tags: [tag] } : {}),
+            ...(tag ? withListTag(extras, tag) : extras),
         } as unknown as Partial<Task>);
     };
 
@@ -454,6 +457,20 @@ const Tasks: React.FC = () => {
     useTaskUpdatedEvent((saved) => {
         setTasks((prev) => mergeUpdatedTaskList(prev, saved, saved));
         setGroupedTasks((prev) => mergeUpdatedGroupedTasks(prev, saved, saved));
+    });
+    // A task deleted from a menu or the pane leaves the list once gone.
+    useTaskDeletedEvent((uid) => {
+        setTasks((prev) => prev.filter((task) => task.uid !== uid));
+        setGroupedTasks((prev) =>
+            prev
+                ? Object.fromEntries(
+                      Object.entries(prev).map(([key, list]) => [
+                          key,
+                          list.filter((task) => task.uid !== uid),
+                      ])
+                  )
+                : prev
+        );
     });
 
     const handleTaskUpdate = async (updatedTask: Task) => {

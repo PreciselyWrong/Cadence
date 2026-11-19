@@ -11,6 +11,7 @@ import TaskCardBody, { taskCardClass } from '../Shared/task/TaskCardBody';
 import { isPickClick, PickedCardsContext } from './pickedCards';
 import { PushedBadge } from './PushedSection';
 import { QuickPlaceContext } from './firstFreeDay';
+import { CardMenuContext } from './cardMenu';
 
 const QUICK_PLACES = [
     'inbox',
@@ -100,6 +101,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             ? quick.suggest(task.estimated_minutes, date)
             : null;
     const pick = useContext(PickedCardsContext);
+    const openMenu = useContext(CardMenuContext);
     const picked = !!pick?.picked.has(uid);
     // While the AI's week is previewed, a decided task shows as its proposal
     // here (its new day) or as a trace (it leaves this place).
@@ -121,6 +123,19 @@ const TaskCard: React.FC<TaskCardProps> = ({
             onOpen(line);
             return;
         }
+        if (
+            openMenu &&
+            (event.key === 'ContextMenu' ||
+                (event.key === 'F10' && event.shiftKey))
+        ) {
+            event.preventDefault();
+            const rect = event.currentTarget.getBoundingClientRect();
+            openMenu(task, event.currentTarget, {
+                x: rect.left + 16,
+                y: rect.bottom,
+            });
+            return;
+        }
         dragKeyDown?.(event);
     };
 
@@ -132,6 +147,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             data-testid="upcoming-card"
             data-task-row=""
             data-uid={uid}
+            data-task-uid={uid}
             aria-selected={selected || picked}
             data-picked={picked || undefined}
             aria-label={task.name}
@@ -142,6 +158,18 @@ const TaskCard: React.FC<TaskCardProps> = ({
             {...attributes}
             {...dragListeners}
             onKeyDown={onKeyDown}
+            onContextMenu={
+                openMenu
+                    ? (event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          openMenu(task, event.currentTarget, {
+                              x: event.clientX,
+                              y: event.clientY,
+                          });
+                      }
+                    : undefined
+            }
             onMouseDown={(event) => {
                 // Shift click picks the card; it must not select text.
                 if (pick && event.shiftKey) event.preventDefault();

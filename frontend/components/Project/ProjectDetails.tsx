@@ -49,7 +49,10 @@ import type { TaskLink, TimelineDates } from './Timeline/timelineLayout';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
 import { rescanTodoMd } from '../../utils/todoMdService';
 import { isTodoMdProject } from '../../utils/todoMd';
-import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
+import {
+    useTaskDeletedEvent,
+    useTaskUpdatedEvent,
+} from '../../hooks/useTaskUpdatedEvent';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { mergeVisibleOrder } from '../Shared/sortableList';
 import { sortByTaskOrder } from '../../utils/taskOrder';
@@ -263,6 +266,9 @@ const ProjectDetails: React.FC = () => {
         }
         setTasks((prev) => mergeUpdatedTaskList(prev, saved, saved));
     });
+    useTaskDeletedEvent((uid) =>
+        setTasks((prev) => prev.filter((task) => task.uid !== uid))
+    );
 
     // Bumped after something is captured, so new tasks and notes show up
     const [reloadKey, setReloadKey] = useState(0);
@@ -503,16 +509,19 @@ const ProjectDetails: React.FC = () => {
     };
 
     // Minimal "+ Add task" field: the new task joins this project.
-    const handleInlineCreate = async (name: string) => {
+    const handleInlineCreate = async (name: string, extras: Partial<Task>) => {
         if (!project?.uid) return;
+        // A project named in the typed line wins over this page's project.
+        const namesOtherProject = extras.project_id !== undefined;
         const created = await createTask({
             name,
-            project_uid: project.uid,
+            ...(namesOtherProject ? {} : { project_uid: project.uid }),
             status: 'not_started',
             completed_at: null,
             ...(isTodoMdProject(project) && todoSection
                 ? { todo_section: todoSection }
                 : {}),
+            ...extras,
         } as Task);
         setTasks((prev) => [created, ...prev]);
     };

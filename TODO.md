@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : un seul menu de tâche à l'appui long, comme le web (2026-11-19)
+  Raison : le web a un seul menu de tâche partout (`docs/00-tasks-behavior.md` › Task menu) : actions de l'écran, Ouvrir, Terminer, Date ▸, Priorité ▸, Projet ▸, Épingler, Dupliquer, Transformer en projet, Copier le lien, Copier le titre, Supprimer avec annulation ; la ligne « Ajouter une tâche » lit `demain !1 #Projet`. Android a des menus différents selon l'écran. Sélection multiple : à décider sur téléphone. Vérif : appui long sur une tâche d'Aujourd'hui, de Planifier et d'un projet sur le téléphone donne les mêmes entrées dans le même ordre ; Supprimer puis Annuler la remet.
 - Android : une adresse en nom de tâche est un lien, site ouvrable d'un toucher (2026-11-19)
   Raison : le web lit une adresse tapée comme nom (titre de la page, icône, image) et ouvre le site d'un clic sur la ligne du site et dans la fiche (`docs/37-links.md` › Rows) ; `links/TaskLinks.kt` ne lit que la note. Vérif : la même tâche « https://… » montre sur le téléphone le titre de la page et son image, et le site s'ouvre d'un toucher.
 - Android : « Discuter avec l'IA » dans la fiche de tâche (2026-11-19)

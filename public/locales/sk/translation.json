@@ -896,6 +896,18 @@
     "hideCompleted": "Skryť dokončené úlohy"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Opakované úlohy ponechané, odstráňte ich po jednej: {{count}}",
+            "someFailed": "Nezmenené: {{count}}",
+            "deleted": "Odstránené: {{count}}",
+            "moved": "Presunuté: {{count}}",
+            "prioritized": "Zmenená priorita: {{count}}",
+            "dated": "Zmenený dátum: {{count}}",
+            "completed": "Dokončené: {{count}}",
+            "clear": "Zrušiť výber",
+            "count": "Vybrané: {{count}}",
+            "label": "Vybrané úlohy"
+        },
     "deletedToast": "„{{name}}“ odstránené",
     "title": "Úlohy",
     "reorderError": "Poradie úloh sa nepodarilo uložiť",
@@ -1029,6 +1041,17 @@
       "setDueDate": "Nastaviť termín"
     },
     "contextMenu": {
+            "review": "Kontrola",
+            "copyError": "Kopírovanie zlyhalo",
+            "titleCopied": "Názov skopírovaný",
+            "linkCopied": "Odkaz skopírovaný",
+            "deleteKey": "Del",
+            "copyTitle": "Kopírovať názov",
+            "copyLink": "Kopírovať odkaz",
+            "pickDate": "Vybrať dátum…",
+            "reopen": "Znovu otvoriť",
+            "complete": "Dokončiť",
+            "open": "Otvoriť",
       "projectChanged": "Projekt zmenený",
       "dateChanged": "Dátum zmenený",
       "label": "Akcie úlohy",
@@ -5941,6 +5964,8 @@
       "plan": "Na stránke Plánovať"
     },
     "shortcuts": {
+            "panePrevious": "Predchádzajúca úloha v paneli",
+            "paneNext": "Ďalšia úloha v paneli",
       "palette": "Otvoriť paletu príkazov",
       "capture": "Rýchly zápis",
       "search": "Hľadať",

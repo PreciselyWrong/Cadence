@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import Menu from '../Menu';
+import Menu, { ContextMenu } from '../Menu';
 
 const flushFrame = () =>
     act(() => {
@@ -135,5 +135,69 @@ describe('Menu', () => {
         fireEvent.keyDown(screen.getByTestId('trigger'), { key: 'ArrowDown' });
         flushFrame();
         expect(screen.getByTestId('menu')).toBeInTheDocument();
+    });
+
+    it('opens a submenu with ArrowRight, runs its item and closes all', () => {
+        const pick = jest.fn();
+        render(
+            <Menu
+                testId="menu"
+                entries={[
+                    {
+                        key: 'date',
+                        label: 'Date',
+                        submenu: [
+                            { key: 'd1', label: 'Demain', onSelect: pick },
+                        ],
+                    },
+                ]}
+                trigger={(props) => (
+                    <button {...props} data-testid="trigger">
+                        Plus
+                    </button>
+                )}
+            />
+        );
+        fireEvent.click(screen.getByTestId('trigger'));
+        flushFrame();
+        fireEvent.keyDown(screen.getByTestId('menu'), { key: 'ArrowRight' });
+        flushFrame();
+        const sub = screen.getByTestId('menu-date');
+        expect(document.activeElement).toBe(
+            screen.getByRole('menuitem', { name: 'Demain' })
+        );
+        fireEvent.keyDown(sub, { key: 'ArrowLeft' });
+        expect(screen.queryByTestId('menu-date')).not.toBeInTheDocument();
+        expect(document.activeElement).toBe(
+            screen.getByRole('menuitem', { name: 'Date' })
+        );
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Date' }));
+        flushFrame();
+        // A press inside the submenu is not outside the menu.
+        fireEvent.pointerDown(screen.getByRole('menuitem', { name: 'Demain' }));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Demain' }));
+        expect(pick).toHaveBeenCalledTimes(1);
+        expect(screen.queryByTestId('menu')).not.toBeInTheDocument();
+    });
+
+    it('opens a context menu at a point and closes on Escape', () => {
+        const onClose = jest.fn();
+        render(
+            <ContextMenu
+                testId="ctx"
+                x={40}
+                y={50}
+                onClose={onClose}
+                entries={[{ key: 'a', label: 'Supprimer', danger: true }]}
+            />
+        );
+        flushFrame();
+        const menu = screen.getByTestId('ctx');
+        expect(menu.style.top).toBe('50px');
+        expect(document.activeElement).toBe(
+            screen.getByRole('menuitem', { name: 'Supprimer' })
+        );
+        fireEvent.keyDown(menu, { key: 'Escape' });
+        expect(onClose).toHaveBeenCalledTimes(1);
     });
 });

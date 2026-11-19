@@ -107,6 +107,8 @@ import ViewMenu from './ViewMenu';
 import JumpToDate from './JumpToDate';
 import HorizonColumn, { horizonFromCardDate } from './HorizonColumn';
 import Menu, { MenuEntry } from '../Shared/ui/Menu';
+import TaskContextMenu from '../Task/menu/TaskContextMenu';
+import { CardMenuContext, OpenCardMenu } from './cardMenu';
 import type { HorizonDropData } from './HorizonColumn';
 import {
     HORIZON_KEYS,
@@ -1614,51 +1616,77 @@ const UpcomingBoard: React.FC = () => {
     // The card menu of the Days layout (right click, or a long press that
     // does not start a drag): send the card to a horizon.
     const [cardMenu, setCardMenu] = useState<{
-        card: CardData;
+        card: CardData | null;
+        task: Task;
         x: number;
         y: number;
     } | null>(null);
-    useEffect(() => {
-        if (!cardMenu) return;
-        document.querySelector<HTMLElement>('[data-card-menu-anchor]')?.click();
-    }, [cardMenu]);
-    const cardMenuEntries: MenuEntry[] = !cardMenu
+    const closeCardMenu = useCallback(() => setCardMenu(null), []);
+    // A card opens the one task menu; the board adds the horizon choices
+    // of its place first (none in the Horizons layout).
+    const openCardMenu = useCallback<OpenCardMenu>(
+        (task, el, at) =>
+            setCardMenu({
+                card: horizonsMode ? null : cardAtRef.current(el),
+                task,
+                ...at,
+            }),
+        [horizonsMode]
+    );
+    const cardMenuEntries: MenuEntry[] = !cardMenu?.card
         ? []
         : cardMenu.card.date === TO_PLAN_CARD_DATE
           ? [
-                { heading: t('upcoming.commitTo', 'Commit to') },
-                ...HORIZON_KEYS.map((key) => ({
-                    key,
-                    label: horizonTitles[key],
-                    testId: `card-commit-${key}`,
-                    onSelect: () =>
-                        void commitToPlanCard(cardMenu.card.uid, key),
-                })),
                 {
-                    key: 'uncommit',
-                    label: t(
-                        'upcoming.removeCommitment',
-                        'Remove the commitment'
-                    ),
-                    testId: 'card-commit-none',
-                    onSelect: () =>
-                        void commitToPlanCard(cardMenu.card.uid, null),
+                    key: 'commit',
+                    label: t('upcoming.commitTo', 'Commit to'),
+                    testId: 'card-commit',
+                    submenu: [
+                        ...HORIZON_KEYS.map((key) => ({
+                            key,
+                            label: horizonTitles[key],
+                            testId: `card-commit-${key}`,
+                            onSelect: () =>
+                                void commitToPlanCard(
+                                    (cardMenu.card as CardData).uid,
+                                    key
+                                ),
+                        })),
+                        {
+                            key: 'uncommit',
+                            label: t(
+                                'upcoming.removeCommitment',
+                                'Remove the commitment'
+                            ),
+                            testId: 'card-commit-none',
+                            onSelect: () =>
+                                void commitToPlanCard(
+                                    (cardMenu.card as CardData).uid,
+                                    null
+                                ),
+                        },
+                    ],
                 },
             ]
           : [
-                { heading: t('upcoming.stripLabel', 'Send to a horizon') },
-                ...STRIP_KEYS.map((key) => ({
-                    key,
-                    label: horizonTitles[key],
-                    hint:
-                        key === 'next_week'
-                            ? '⇧W'
-                            : key === 'this_month'
-                              ? '⇧M'
-                              : undefined,
-                    testId: `card-send-${key}`,
-                    onSelect: () => void sendToHorizon(cardMenu.card, key),
-                })),
+                {
+                    key: 'horizon',
+                    label: t('upcoming.stripLabel', 'Send to a horizon'),
+                    testId: 'card-send',
+                    submenu: STRIP_KEYS.map((key) => ({
+                        key,
+                        label: horizonTitles[key],
+                        hint:
+                            key === 'next_week'
+                                ? '⇧W'
+                                : key === 'this_month'
+                                  ? '⇧M'
+                                  : undefined,
+                        testId: `card-send-${key}`,
+                        onSelect: () =>
+                            void sendToHorizon(cardMenu.card as CardData, key),
+                    })),
+                },
             ];
 
     // Where a drop target is, in words, for screen readers.
@@ -1971,6 +1999,9 @@ const UpcomingBoard: React.FC = () => {
             duration: 0,
         };
     };
+
+    const cardAtRef = useRef(cardAt);
+    cardAtRef.current = cardAt;
 
     const planCardOn = (card: CardData, to: string) => {
         const writes = columnDropWrites(
@@ -2489,7 +2520,7 @@ const UpcomingBoard: React.FC = () => {
 
     const overdueCards = overdue.map((task) => lineFromDue(task, today));
 
-    return (
+    const board = (
         <QuickPlaceContext.Provider value={quickPlace}>
             <PushedCountsContext.Provider value={pushedCounts}>
                 <PickedCardsContext.Provider value={pickedCards}>
@@ -2778,22 +2809,6 @@ const UpcomingBoard: React.FC = () => {
                                     <div
                                         className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 pb-3 pl-5 pr-2 pt-1"
                                         onKeyDown={onBoardKeyDown}
-                                        onContextMenu={(event) => {
-                                            if (horizonsMode) return;
-                                            const el = (
-                                                event.target as HTMLElement
-                                            ).closest?.(
-                                                CARD
-                                            ) as HTMLElement | null;
-                                            const card = el ? cardAt(el) : null;
-                                            if (!card) return;
-                                            event.preventDefault();
-                                            setCardMenu({
-                                                card,
-                                                x: event.clientX,
-                                                y: event.clientY,
-                                            });
-                                        }}
                                     >
                                         {previewOpen && (
                                             <PreviewBanner
@@ -3539,34 +3554,13 @@ const UpcomingBoard: React.FC = () => {
                                 </div>
                             </div>
                             {cardMenu && (
-                                <div
-                                    className="fixed"
-                                    style={{
-                                        left: cardMenu.x,
-                                        top: cardMenu.y,
-                                    }}
-                                >
-                                    <Menu
-                                        entries={cardMenuEntries}
-                                        align="start"
-                                        testId="card-horizon-menu"
-                                        onOpenChange={(open) => {
-                                            if (!open) setCardMenu(null);
-                                        }}
-                                        trigger={(triggerProps) => (
-                                            <button
-                                                {...triggerProps}
-                                                type="button"
-                                                data-card-menu-anchor=""
-                                                aria-label={t(
-                                                    'upcoming.stripLabel',
-                                                    'Send to a horizon'
-                                                )}
-                                                className="block h-0 w-0 overflow-hidden opacity-0"
-                                            />
-                                        )}
-                                    />
-                                </div>
+                                <TaskContextMenu
+                                    task={cardMenu.task}
+                                    x={cardMenu.x}
+                                    y={cardMenu.y}
+                                    lead={cardMenuEntries}
+                                    onClose={closeCardMenu}
+                                />
                             )}
                             {eventDetail && (
                                 <CalendarEventDetail
@@ -3661,6 +3655,12 @@ const UpcomingBoard: React.FC = () => {
                 </PickedCardsContext.Provider>
             </PushedCountsContext.Provider>
         </QuickPlaceContext.Provider>
+    );
+
+    return (
+        <CardMenuContext.Provider value={openCardMenu}>
+            {board}
+        </CardMenuContext.Provider>
     );
 };
 

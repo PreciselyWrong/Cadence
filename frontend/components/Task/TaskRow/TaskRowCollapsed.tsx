@@ -1,4 +1,3 @@
-import TurnIntoProject from '../TurnIntoProject';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -15,9 +14,6 @@ import {
     NoSymbolIcon,
     EllipsisVerticalIcon,
     EllipsisHorizontalIcon,
-    PencilIcon,
-    TrashIcon,
-    MapPinIcon,
 } from '@heroicons/react/24/outline';
 import {
     FolderIcon,
@@ -73,6 +69,7 @@ import { linkTitleOf } from '../../Links/taskLink';
 import TaskNotePreview from '../../Shared/task/TaskNotePreview';
 import { dueDayLabel, isDueLate } from '../../Shared/task/dueLabel';
 import { ROW_GROUP, rowMenuClass } from '../../Shared/task/rowMenu';
+import { MENU_WIDTH } from '../../Shared/ui/Menu';
 
 interface TaskRowCollapsedProps {
     task: Task;
@@ -99,12 +96,13 @@ interface TaskRowCollapsedProps {
     editable?: boolean;
     onSaveTitle?: (name: string) => void | Promise<void>;
     onEscape?: () => void;
-    onEdit?: () => void;
-    onDelete?: (e: React.MouseEvent) => void;
-    onTogglePin?: () => void;
-    onActionsMenuOpenChange?: (open: boolean) => void;
-    // Right click on a minimal row, when it is not expanded.
-    onContextMenu?: (e: React.MouseEvent) => void;
+    // The task can be deleted from the row (Delete key).
+    canDelete?: boolean;
+    // Opens the task menu at a point: right click, the "⋯" button or the
+    // menu key, when the row is not expanded.
+    onOpenMenu?: (at: { x: number; y: number }) => void;
+    // The task menu is open: the "⋯" button stays shown.
+    menuOpen?: boolean;
     // Its task is open in the sheet: the minimal row shows its menu.
     selected?: boolean;
 }
@@ -187,11 +185,9 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     editable = false,
     onSaveTitle,
     onEscape,
-    onEdit,
-    onDelete,
-    onTogglePin,
-    onActionsMenuOpenChange,
-    onContextMenu,
+    canDelete = false,
+    onOpenMenu,
+    menuOpen = false,
     selected = false,
 }) => {
     const { t, i18n } = useTranslation();
@@ -218,31 +214,6 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     );
     const areas = useStore((state: any) => state.areasStore?.areas);
     const [draftName, setDraftName] = useState(currentName);
-    const actionsMenuRef = useRef<HTMLDivElement>(null);
-    const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
-
-    useEffect(() => {
-        onActionsMenuOpenChange?.(isActionsMenuOpen);
-        if (!isActionsMenuOpen) return;
-        const onPointerDown = (e: MouseEvent) => {
-            if (
-                actionsMenuRef.current &&
-                !actionsMenuRef.current.contains(e.target as Node)
-            ) {
-                setIsActionsMenuOpen(false);
-            }
-        };
-        const onKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') setIsActionsMenuOpen(false);
-        };
-        document.addEventListener('mousedown', onPointerDown);
-        document.addEventListener('keydown', onKeyDown);
-        return () => {
-            document.removeEventListener('mousedown', onPointerDown);
-            document.removeEventListener('keydown', onKeyDown);
-        };
-    }, [isActionsMenuOpen, onActionsMenuOpenChange]);
-
     useEffect(() => {
         setDraftName(currentName);
     }, [currentName, editable]);
@@ -370,7 +341,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         } else if (
             !editable &&
             e.key === 'Delete' &&
-            onDelete &&
+            canDelete &&
             task.uid &&
             !task.is_virtual_occurrence
         ) {
@@ -536,15 +507,27 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             role="button"
             tabIndex={0}
             onContextMenu={
-                isMinimal && onContextMenu && !editable
+                onOpenMenu && !editable
                     ? (e) => {
                           e.preventDefault();
-                          onContextMenu(e);
+                          onOpenMenu({ x: e.clientX, y: e.clientY });
                       }
                     : undefined
             }
             onClick={onActivate}
             onKeyDown={(e) => {
+                // The menu key or Shift+F10 opens the task menu at the row.
+                if (
+                    onOpenMenu &&
+                    !editable &&
+                    e.target === e.currentTarget &&
+                    (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey))
+                ) {
+                    e.preventDefault();
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    onOpenMenu({ x: rect.left + 24, y: rect.bottom });
+                    return;
+                }
                 if (isMinimal) {
                     handleMinimalKeyDown(e);
                     return;
@@ -872,25 +855,31 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 className="h-10 w-10 self-center"
             />
 
-            {!editable && (onEdit || onDelete || onTogglePin) && (
+            {!editable && onOpenMenu && (
                 <div
-                    ref={actionsMenuRef}
                     className="relative flex-shrink-0"
                     onClick={stop}
                     onKeyDown={(e) => e.stopPropagation()}
                 >
                     <button
                         type="button"
-                        onClick={() => setIsActionsMenuOpen((open) => !open)}
+                        onClick={(e) => {
+                            const rect =
+                                e.currentTarget.getBoundingClientRect();
+                            onOpenMenu({
+                                x: rect.right - MENU_WIDTH,
+                                y: rect.bottom + 4,
+                            });
+                        }}
                         aria-haspopup="menu"
-                        aria-expanded={isActionsMenuOpen}
+                        aria-expanded={menuOpen}
                         aria-label={t('common.moreActions', 'More actions')}
                         title={t('common.moreActions', 'More actions')}
                         data-testid="task-actions-menu-button"
                         className={`flex items-center justify-center rounded-md p-1 max-sm:-m-2.5 max-sm:min-h-[44px] max-sm:min-w-[44px] text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
                             isMinimal
-                                ? rowMenuClass(selected || isActionsMenuOpen)
-                                : isActionsMenuOpen
+                                ? rowMenuClass(selected || menuOpen)
+                                : menuOpen
                                   ? 'opacity-100'
                                   : '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100'
                         }`}
@@ -901,63 +890,6 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                             <EllipsisVerticalIcon className="h-4 w-4" />
                         )}
                     </button>
-                    {isActionsMenuOpen && (
-                        <div
-                            role="menu"
-                            className="absolute right-0 top-full mt-1 w-36 py-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 overflow-hidden"
-                        >
-                            {onEdit && (
-                                <button
-                                    type="button"
-                                    role="menuitem"
-                                    onClick={() => {
-                                        setIsActionsMenuOpen(false);
-                                        onEdit();
-                                    }}
-                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                >
-                                    <PencilIcon className="h-4 w-4" />
-                                    {t('common.edit', 'Edit')}
-                                </button>
-                            )}
-                            {onTogglePin && (
-                                <button
-                                    type="button"
-                                    role="menuitem"
-                                    onClick={() => {
-                                        setIsActionsMenuOpen(false);
-                                        onTogglePin();
-                                    }}
-                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                >
-                                    <MapPinIcon className="h-4 w-4" />
-                                    {task.pinned
-                                        ? t('task.unpin', 'Unpin')
-                                        : t('task.pin', 'Pin')}
-                                </button>
-                            )}
-                            {onDelete && (
-                                <TurnIntoProject
-                                    task={task}
-                                    onDone={() => setIsActionsMenuOpen(false)}
-                                />
-                            )}
-                            {onDelete && (
-                                <button
-                                    type="button"
-                                    role="menuitem"
-                                    onClick={(e) => {
-                                        setIsActionsMenuOpen(false);
-                                        onDelete(e);
-                                    }}
-                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                                >
-                                    <TrashIcon className="h-4 w-4" />
-                                    {t('common.delete', 'Delete')}
-                                </button>
-                            )}
-                        </div>
-                    )}
                 </div>
             )}
 

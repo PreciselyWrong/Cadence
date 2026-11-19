@@ -184,7 +184,7 @@ describe('TaskRowCollapsed in minimal mode', () => {
     });
 
     it('shows its menu only on the selected row, never on hover alone', () => {
-        const { rerender } = renderRow(baseTask(), { onEdit: jest.fn() });
+        const { rerender } = renderRow(baseTask(), { onOpenMenu: jest.fn() });
         const menu = screen.getByTestId('task-actions-menu-button');
         expect(menu).toHaveClass('invisible');
         expect(menu.className).not.toMatch(/group-hover/);
@@ -194,7 +194,7 @@ describe('TaskRowCollapsed in minimal mode', () => {
                 project={project}
                 onActivate={jest.fn()}
                 onToggleCompletion={jest.fn()}
-                onEdit={jest.fn()}
+                onOpenMenu={jest.fn()}
                 selected
             />
         );
@@ -251,15 +251,26 @@ describe('TaskRowCollapsed in minimal mode', () => {
         );
     });
 
-    it('opens the row context menu on right click', () => {
-        const onContextMenu = jest.fn();
-        renderRow(baseTask(), { onContextMenu });
+    it('opens the task menu at the pointer on right click', () => {
+        const onOpenMenu = jest.fn();
+        renderRow(baseTask(), { onOpenMenu });
 
         const row = screen
             .getByText('Write report')
             .closest('[role="button"]')!;
-        fireEvent.contextMenu(row);
-        expect(onContextMenu).toHaveBeenCalledTimes(1);
+        fireEvent.contextMenu(row, { clientX: 30, clientY: 40 });
+        expect(onOpenMenu).toHaveBeenCalledWith({ x: 30, y: 40 });
+    });
+
+    it('opens the task menu with the menu key', () => {
+        const onOpenMenu = jest.fn();
+        renderRow(baseTask(), { onOpenMenu });
+
+        const row = screen
+            .getByText('Write report')
+            .closest('[role="button"]')!;
+        fireEvent.keyDown(row, { key: 'ContextMenu' });
+        expect(onOpenMenu).toHaveBeenCalledTimes(1);
     });
 
     it('shows no subtasks chevron for a task without subtasks', () => {
@@ -382,12 +393,12 @@ describe('TaskRowCollapsed in dense mode', () => {
         ).not.toBeInTheDocument();
     });
 
-    it('ignores right click so the browser menu stays', () => {
-        const onContextMenu = jest.fn();
-        renderRow(baseTask(), { onContextMenu });
+    it('opens the same task menu on right click', () => {
+        const onOpenMenu = jest.fn();
+        renderRow(baseTask(), { onOpenMenu });
 
         fireEvent.contextMenu(screen.getByText('Write report'));
-        expect(onContextMenu).not.toHaveBeenCalled();
+        expect(onOpenMenu).toHaveBeenCalledTimes(1);
     });
 
     it('keeps the subtasks toggle without a chevron', () => {

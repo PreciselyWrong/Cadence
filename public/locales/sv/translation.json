@@ -628,6 +628,18 @@
     "hideCompleted": "Dölj slutförda uppgifter"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Återkommande uppgifter behållna, radera dem en i taget: {{count}}",
+            "someFailed": "Inte ändrade: {{count}}",
+            "deleted": "Raderade: {{count}}",
+            "moved": "Flyttade: {{count}}",
+            "prioritized": "Prioritet ändrad: {{count}}",
+            "dated": "Datum ändrat: {{count}}",
+            "completed": "Slutförda: {{count}}",
+            "clear": "Rensa urvalet",
+            "count": "Valda: {{count}}",
+            "label": "Valda uppgifter"
+        },
     "deletedToast": "”{{name}}” togs bort",
     "title": "Uppgifter",
     "today": "Idag",
@@ -760,6 +772,17 @@
       "setDueDate": "Ange förfallodatum"
     },
     "contextMenu": {
+            "review": "Granskning",
+            "copyError": "Kunde inte kopiera",
+            "titleCopied": "Titel kopierad",
+            "linkCopied": "Länk kopierad",
+            "deleteKey": "Del",
+            "copyTitle": "Kopiera titel",
+            "copyLink": "Kopiera länk",
+            "pickDate": "Välj ett datum…",
+            "reopen": "Öppna igen",
+            "complete": "Slutför",
+            "open": "Öppna",
       "projectChanged": "Projekt ändrat",
       "dateChanged": "Datum ändrat",
       "label": "Åtgärder för uppgiften",
@@ -5783,6 +5806,8 @@
       "plan": "På sidan Planera"
     },
     "shortcuts": {
+            "panePrevious": "Föregående uppgift i panelen",
+            "paneNext": "Nästa uppgift i panelen",
       "palette": "Öppna kommandopaletten",
       "capture": "Snabbfångst",
       "search": "Sök",

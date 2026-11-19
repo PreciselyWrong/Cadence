@@ -20,6 +20,7 @@ import {
 
 import { useStore } from '../../../store/useStore';
 import { NativeTaskDragContext } from '../../Sidebar/sidebarDrop';
+import { useTaskSelection } from '../../../store/taskSelectionStore';
 import { UNDO_WINDOW_MS } from '../../../utils/deferredDelete';
 
 const navigateMock = jest.fn();
@@ -540,10 +541,10 @@ describe('TaskRow', () => {
     });
 
     describe('actions menu', () => {
-        it('opens the side panel from Edit without expanding the row', () => {
+        it('opens the side panel from Open without expanding the row', () => {
             renderRow(baseTask());
             fireEvent.click(screen.getByTestId('task-actions-menu-button'));
-            fireEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Open' }));
             expect(useTaskPanel.getState().uid).toBe('task-1');
             expect(navigateMock).not.toHaveBeenCalled();
             expect(
@@ -637,8 +638,24 @@ describe('TaskRow', () => {
             renderRow(baseTask());
             fireEvent.click(screen.getByTestId('task-actions-menu-button'));
             expect(screen.getByRole('menu')).toBeInTheDocument();
-            fireEvent.mouseDown(document.body);
+            fireEvent.pointerDown(document.body);
             expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('selection of several rows', () => {
+        beforeEach(() => useTaskSelection.getState().clear());
+
+        it('picks the row on Ctrl click without opening it, and a plain click clears', () => {
+            renderRow(baseTask());
+            const row = screen.getByText('Buy tickets');
+            fireEvent.click(row, { ctrlKey: true });
+            expect(useTaskSelection.getState().uids).toEqual(['task-1']);
+            expect(
+                screen.queryByDisplayValue('Buy tickets')
+            ).not.toBeInTheDocument();
+            fireEvent.click(row);
+            expect(useTaskSelection.getState().uids).toEqual([]);
         });
     });
 

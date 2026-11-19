@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Location } from 'react-router-dom';
 import {
     FolderIcon,
@@ -23,6 +23,11 @@ import {
 import EntityIcon from '../Shared/EntityIcon';
 import { isProjectLive } from '../../utils/projectStatus';
 import { SidebarPinButton, useProjectPin } from './sidebarPins';
+import type { ProjectMenuTarget } from './SidebarProjectMenu';
+
+// Loaded on the first right click: its dialogs pull in the project editor,
+// which the sidebar does not need to start.
+const SidebarProjectMenu = React.lazy(() => import('./SidebarProjectMenu'));
 
 interface SidebarProjectsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -62,6 +67,9 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
 
     const activeProjects = projects.filter((p) => isProjectLive(p.status));
     const pinProject = useProjectPin();
+    const [menuTarget, setMenuTarget] = useState<ProjectMenuTarget | null>(
+        null
+    );
     const [foldedProjects, toggleFold] = useFoldedProjects();
     const openProjectUid = activeProjects.find(
         (p) => getProjectPath(p) === location.pathname
@@ -210,6 +218,14 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                                         : undefined
                                 }
                                 onClick={() => navigate(project)}
+                                onContextMenu={(event) => {
+                                    event.preventDefault();
+                                    setMenuTarget({
+                                        project,
+                                        x: event.clientX,
+                                        y: event.clientY,
+                                    });
+                                }}
                             >
                                 {hasChildren && (
                                     <button
@@ -261,6 +277,16 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                             </div>
                         ))}
                     </div>
+                </li>
+            )}
+            {menuTarget && (
+                <li className="list-none p-0">
+                    <Suspense fallback={null}>
+                        <SidebarProjectMenu
+                            target={menuTarget}
+                            onOpen={navigate}
+                        />
+                    </Suspense>
                 </li>
             )}
         </ul>

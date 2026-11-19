@@ -103,6 +103,23 @@ export const SHORTCUT_DEFS: ShortcutDef[] = [
         defaultLabel: 'Move between tasks',
         global: false,
     },
+    // Handled by the floating task pane (TaskPane), listed for the help.
+    {
+        id: 'pane-next',
+        keys: ['j'],
+        group: 'task',
+        labelKey: 'commandCenter.shortcuts.paneNext',
+        defaultLabel: 'Next task in the pane',
+        global: false,
+    },
+    {
+        id: 'pane-previous',
+        keys: ['k'],
+        group: 'task',
+        labelKey: 'commandCenter.shortcuts.panePrevious',
+        defaultLabel: 'Previous task in the pane',
+        global: false,
+    },
     {
         id: 'task-complete',
         keys: ['x'],

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -6,7 +6,8 @@ import { EllipsisHorizontalIcon, FlagIcon } from '@heroicons/react/24/outline';
 import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { Task } from '../../entities/Task';
 import { isTaskDone } from '../../constants/taskStatus';
-import Menu, { MenuEntry, MenuItem } from '../Shared/ui/Menu';
+import { MENU_WIDTH, MenuEntry, MenuItem } from '../Shared/ui/Menu';
+import TaskContextMenu from '../Task/menu/TaskContextMenu';
 import { IconButton } from '../Shared/ui/Button';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from './dayModel';
@@ -97,8 +98,10 @@ const TaskLine: React.FC<TaskLineProps> = ({
     overlaps = false,
 }) => {
     const { t, i18n } = useTranslation();
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuTrigger = useRef<HTMLButtonElement | null>(null);
+    // Where the task menu is open: right click, the "⋯" button or the
+    // menu key.
+    const [menuAt, setMenuAt] = useState<{ x: number; y: number } | null>(null);
+    const menuOpen = menuAt !== null;
     const { task, uid } = line;
     const { link, preview } = useTaskLink(task);
     // A link's address reads as its site; the rest of the note stays.
@@ -126,6 +129,8 @@ const TaskLine: React.FC<TaskLineProps> = ({
         disabled: !sortable,
     });
     const { onKeyDown: dragKeyDown, ...dragListeners } = listeners ?? {};
+
+    const closeMenu = useCallback(() => setMenuAt(null), []);
 
     const runKey = (key: string) => findEntry(menu, key)?.onSelect?.();
 
@@ -156,6 +161,12 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 if (findEntry(menu, 'unslot')) runKey('unslot');
                 else runKey('remove');
                 return;
+            case 'ContextMenu': {
+                event.preventDefault();
+                const rect = event.currentTarget.getBoundingClientRect();
+                setMenuAt({ x: rect.left + 24, y: rect.bottom });
+                return;
+            }
         }
         dragKeyDown?.(event);
     };
@@ -237,6 +248,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
         <div
             ref={setNodeRef}
             data-task-row
+            data-task-uid={uid}
             data-testid="task-line"
             className={`${ROW_GROUP} relative grid cursor-default grid-cols-[52px_auto_minmax(0,1fr)] items-start gap-x-3 rounded-xl px-2 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary/60 max-sm:py-2.5 ${
                 selected
@@ -263,7 +275,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
             onClick={() => onOpen(line)}
             onContextMenu={(event) => {
                 event.preventDefault();
-                menuTrigger.current?.click();
+                setMenuAt({ x: event.clientX, y: event.clientY });
             }}
         >
             <span className="flex flex-col items-end pt-0.5">
@@ -367,30 +379,41 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 )}`}
                 onClick={(event) => event.stopPropagation()}
             >
-                <Menu
-                    entries={menu}
-                    align="end"
-                    onOpenChange={setMenuOpen}
-                    trigger={(triggerProps) => (
-                        <IconButton
-                            {...triggerProps}
-                            ref={(node) => {
-                                menuTrigger.current = node;
-                                const forward = triggerProps.ref;
-                                if (typeof forward === 'function')
-                                    forward(node);
-                                else if (forward)
-                                    (
-                                        forward as React.MutableRefObject<HTMLButtonElement | null>
-                                    ).current = node;
-                            }}
-                            label={t('today.moreActions', 'More actions')}
-                        >
-                            <EllipsisHorizontalIcon />
-                        </IconButton>
-                    )}
-                />
+                <IconButton
+                    label={t('today.moreActions', 'More actions')}
+                    aria-haspopup="menu"
+                    aria-expanded={menuOpen}
+                    onClick={(event) => {
+                        const rect =
+                            event.currentTarget.getBoundingClientRect();
+                        setMenuAt({
+                            x: rect.right - MENU_WIDTH,
+                            y: rect.bottom + 4,
+                        });
+                    }}
+                >
+                    <EllipsisHorizontalIcon />
+                </IconButton>
             </span>
+            {menuAt && (
+                <TaskContextMenu
+                    task={task}
+                    x={menuAt.x}
+                    y={menuAt.y}
+                    lead={menu.filter(
+                        (entry) =>
+                            entry !== 'separator' &&
+                            !(
+                                typeof entry === 'object' &&
+                                'key' in entry &&
+                                entry.key === 'open'
+                            )
+                    )}
+                    onOpen={() => onOpen(line)}
+                    onToggle={() => onToggle(line)}
+                    onClose={closeMenu}
+                />
+            )}
         </div>
     );
 };

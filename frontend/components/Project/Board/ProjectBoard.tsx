@@ -25,6 +25,7 @@ import TaskChip from '../../Shared/task/TaskChip';
 import { dueDayLabel, isDueLate, localToday } from '../../Shared/task/dueLabel';
 import { useTaskPane } from '../../../contexts/TaskPaneContext';
 import { useToast } from '../../Shared/ToastContext';
+import { useTaskMenu } from '../../Task/menu/useTaskMenu';
 
 interface ProjectBoardProps {
     project: Project;
@@ -78,6 +79,9 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
     const { i18n } = useTranslation();
     const language = i18n?.language ?? 'en';
     const { showErrorToast } = useToast();
+    const taskMenu = useTaskMenu((task) => ({
+        onOpen: () => onOpenTask(task),
+    }));
     const [sections, setSections] = useState<ProjectSection[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingUid, setEditingUid] = useState<string | null>(null);
@@ -327,6 +331,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                         setDropBefore(null);
                     }}
                     onClick={() => onOpenTask(task)}
+                    {...taskMenu.bind(task)}
                     onKeyDown={(e) => {
                         if (e.target !== e.currentTarget || e.key !== 'Enter')
                             return;
@@ -666,6 +671,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                     onCancel={() => setToDelete(null)}
                 />
             )}
+            {taskMenu.node}
         </div>
     );
 };

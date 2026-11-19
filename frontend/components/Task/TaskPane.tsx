@@ -23,6 +23,7 @@ import { formatMinute } from '../DailyPlan/planUtils';
 import TaskDecisionRow from '../Review/TaskDecisionRow';
 import PostponementHistory from '../Review/PostponementHistory';
 import { useTaskEditor } from './useTaskEditor';
+import { neighbourTaskUid } from './paneNavigation';
 import { useTaskActions } from '../../hooks/useTaskActions';
 import { isTodoMdTask } from '../../utils/todoMd';
 import { TaskEditorBody, TaskEditorFooter } from './TaskEditorBody';
@@ -125,6 +126,12 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
     );
 };
 
+// j and k must not act while the person types or a menu or dialog is open.
+const isTypingTarget = (el: Element | null): boolean =>
+    !!el &&
+    (el.matches('input, textarea, select') ||
+        (el instanceof HTMLElement && el.isContentEditable));
+
 // The task's detail, on every page: a wide sheet floating over the lower
 // part of the page (Today, Plan and every list alike), "Expand" fills the
 // page; full screen below md. Opened by `?task=`; a click outside, Escape,
@@ -142,7 +149,7 @@ const TaskPane: React.FC = () => {
     const { t, i18n } = useTranslation();
     const location = useLocation();
     const titleId = useId();
-    const { openTaskUid, closeTask } = useTaskPane();
+    const { openTaskUid, closeTask, openTask } = useTaskPane();
     const navigate = useNavigate();
     // The AI's chat page (plugin), opened on this task.
     const chat = usePluginMenuStore((state) =>
@@ -202,14 +209,47 @@ const TaskPane: React.FC = () => {
     const shown =
         !!openTaskUid && canShowTaskPane(location.pathname, location.search);
 
+    // j and k open the next and previous task of the page. The sheet's own
+    // rows (its subtasks) are not part of the page's list.
     useEffect(() => {
         if (!openTaskUid) return;
         const onKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') closeTask();
+            if (e.key === 'Escape') {
+                closeTask();
+                return;
+            }
+            if (e.key !== 'j' && e.key !== 'k') return;
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (isTypingTarget(document.activeElement)) return;
+            if (
+                document.querySelector(
+                    '[data-portal-menu], [role="dialog"][aria-modal="true"]'
+                )
+            ) {
+                return;
+            }
+            const rows = Array.from(
+                document.querySelectorAll<HTMLElement>('[data-task-uid]')
+            ).filter(
+                (row) =>
+                    row.offsetParent !== null &&
+                    !sheetRef.current?.contains(row)
+            );
+            const uid = neighbourTaskUid(
+                rows.map((row) => row.dataset.taskUid ?? ''),
+                openTaskUid,
+                e.key === 'j' ? 1 : -1
+            );
+            if (!uid) return;
+            e.preventDefault();
+            openTask(uid);
+            rows.find((row) => row.dataset.taskUid === uid)?.scrollIntoView({
+                block: 'nearest',
+            });
         };
         document.addEventListener('keydown', onKeyDown);
         return () => document.removeEventListener('keydown', onKeyDown);
-    }, [openTaskUid, closeTask]);
+    }, [openTaskUid, closeTask, openTask]);
 
     // The floating sheet takes focus when it opens and gives it back to the
     // element that opened it when it closes.

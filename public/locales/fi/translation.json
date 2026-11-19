@@ -628,6 +628,18 @@
     "hideCompleted": "Piilota valmiit tehtävät"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Toistuvat tehtävät säilytetty, poista ne yksi kerrallaan: {{count}}",
+            "someFailed": "Ei muutettu: {{count}}",
+            "deleted": "Poistettu: {{count}}",
+            "moved": "Siirretty: {{count}}",
+            "prioritized": "Prioriteetti muutettu: {{count}}",
+            "dated": "Päivä muutettu: {{count}}",
+            "completed": "Valmiit: {{count}}",
+            "clear": "Tyhjennä valinta",
+            "count": "Valittu: {{count}}",
+            "label": "Valitut tehtävät"
+        },
     "deletedToast": "”{{name}}” poistettu",
     "title": "Tehtävät",
     "today": "Tänään",
@@ -760,6 +772,17 @@
       "setDueDate": "Aseta eräpäivä"
     },
     "contextMenu": {
+            "review": "Katselmointi",
+            "copyError": "Kopiointi epäonnistui",
+            "titleCopied": "Otsikko kopioitu",
+            "linkCopied": "Linkki kopioitu",
+            "deleteKey": "Del",
+            "copyTitle": "Kopioi otsikko",
+            "copyLink": "Kopioi linkki",
+            "pickDate": "Valitse päivä…",
+            "reopen": "Avaa uudelleen",
+            "complete": "Merkitse valmiiksi",
+            "open": "Avaa",
       "projectChanged": "Projekti vaihdettu",
       "dateChanged": "Päivämäärä vaihdettu",
       "label": "Tehtävän toiminnot",
@@ -5783,6 +5806,8 @@
       "plan": "Suunnittele-sivulla"
     },
     "shortcuts": {
+            "panePrevious": "Edellinen tehtävä paneelissa",
+            "paneNext": "Seuraava tehtävä paneelissa",
       "palette": "Avaa komentopaletti",
       "capture": "Pikakaappaus",
       "search": "Hae",

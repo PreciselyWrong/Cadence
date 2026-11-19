@@ -642,6 +642,18 @@
     "hideCompleted": "Сховати завершені завдання"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Повторювані завдання збережено, видаляйте їх по одному: {{count}}",
+            "someFailed": "Не змінено: {{count}}",
+            "deleted": "Видалено: {{count}}",
+            "moved": "Переміщено: {{count}}",
+            "prioritized": "Пріоритет змінено: {{count}}",
+            "dated": "Дату змінено: {{count}}",
+            "completed": "Виконано: {{count}}",
+            "clear": "Зняти виділення",
+            "count": "Вибрано: {{count}}",
+            "label": "Вибрані завдання"
+        },
     "deletedToast": "«{{name}}» видалено",
     "title": "Завдання",
     "today": "Сьогодні",
@@ -774,6 +786,17 @@
       "setDueDate": "Встановити термін"
     },
     "contextMenu": {
+            "review": "Огляд",
+            "copyError": "Не вдалося скопіювати",
+            "titleCopied": "Назву скопійовано",
+            "linkCopied": "Посилання скопійовано",
+            "deleteKey": "Del",
+            "copyTitle": "Копіювати назву",
+            "copyLink": "Копіювати посилання",
+            "pickDate": "Вибрати дату…",
+            "reopen": "Відкрити знову",
+            "complete": "Виконати",
+            "open": "Відкрити",
       "projectChanged": "Проєкт змінено",
       "dateChanged": "Дату змінено",
       "label": "Дії із завданням",
@@ -5879,6 +5902,8 @@
       "plan": "На сторінці Планування"
     },
     "shortcuts": {
+            "panePrevious": "Попереднє завдання в панелі",
+            "paneNext": "Наступне завдання в панелі",
       "palette": "Відкрити палітру команд",
       "capture": "Швидкий запис",
       "search": "Пошук",

@@ -651,6 +651,18 @@
     "todayPageSettings": "Paramètres de la page Aujourd'hui"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Tâches récurrentes gardées, à supprimer une par une : {{count}}",
+            "someFailed": "Non modifiées : {{count}}",
+            "deleted": "Supprimées : {{count}}",
+            "moved": "Déplacées : {{count}}",
+            "prioritized": "Priorité modifiée : {{count}}",
+            "dated": "Date modifiée : {{count}}",
+            "completed": "Terminées : {{count}}",
+            "clear": "Vider la sélection",
+            "count": "Sélection : {{count}}",
+            "label": "Tâches sélectionnées"
+        },
     "deletedToast": "« {{name}} » supprimée",
     "title": "Tâches",
     "today": "Aujourd'hui",
@@ -783,6 +795,17 @@
       "setDueDate": "Définir l'échéance"
     },
     "contextMenu": {
+            "review": "Revue",
+            "copyError": "Copie impossible",
+            "titleCopied": "Titre copié",
+            "linkCopied": "Lien copié",
+            "deleteKey": "Suppr",
+            "copyTitle": "Copier le titre",
+            "copyLink": "Copier le lien",
+            "pickDate": "Choisir une date…",
+            "reopen": "Rouvrir",
+            "complete": "Terminer",
+            "open": "Ouvrir",
       "projectChanged": "Projet modifié",
       "dateChanged": "Date modifiée",
       "label": "Actions de la tâche",
@@ -5815,6 +5838,8 @@
       "plan": "Sur la page Planifier"
     },
     "shortcuts": {
+            "panePrevious": "Tâche précédente dans la fiche",
+            "paneNext": "Tâche suivante dans la fiche",
       "palette": "Ouvrir la palette de commandes",
       "capture": "Capture rapide",
       "search": "Rechercher",

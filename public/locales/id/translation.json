@@ -628,6 +628,18 @@
     "hideCompleted": "Sembunyikan Tugas yang Selesai"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Tugas berulang dipertahankan, hapus satu per satu: {{count}}",
+            "someFailed": "Tidak diubah: {{count}}",
+            "deleted": "Dihapus: {{count}}",
+            "moved": "Dipindahkan: {{count}}",
+            "prioritized": "Prioritas diubah: {{count}}",
+            "dated": "Tanggal diubah: {{count}}",
+            "completed": "Selesai: {{count}}",
+            "clear": "Hapus pilihan",
+            "count": "Terpilih: {{count}}",
+            "label": "Tugas terpilih"
+        },
     "deletedToast": "\"{{name}}\" dihapus",
     "title": "Tugas",
     "today": "Hari Ini",
@@ -760,6 +772,17 @@
       "setDueDate": "Atur tanggal jatuh tempo"
     },
     "contextMenu": {
+            "review": "Tinjauan",
+            "copyError": "Tidak dapat menyalin",
+            "titleCopied": "Judul disalin",
+            "linkCopied": "Tautan disalin",
+            "deleteKey": "Del",
+            "copyTitle": "Salin judul",
+            "copyLink": "Salin tautan",
+            "pickDate": "Pilih tanggal…",
+            "reopen": "Buka lagi",
+            "complete": "Selesaikan",
+            "open": "Buka",
       "projectChanged": "Proyek diubah",
       "dateChanged": "Tanggal diubah",
       "label": "Tindakan tugas",
@@ -5783,6 +5806,8 @@
       "plan": "Di halaman Rencana"
     },
     "shortcuts": {
+            "panePrevious": "Tugas sebelumnya di panel",
+            "paneNext": "Tugas berikutnya di panel",
       "palette": "Buka palet perintah",
       "capture": "Tangkap cepat",
       "search": "Cari",

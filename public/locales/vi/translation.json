@@ -628,6 +628,18 @@
     "hideCompleted": "Ẩn Nhiệm vụ Đã hoàn thành"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Đã giữ công việc lặp lại, hãy xóa từng cái: {{count}}",
+            "someFailed": "Không thay đổi: {{count}}",
+            "deleted": "Đã xóa: {{count}}",
+            "moved": "Đã chuyển: {{count}}",
+            "prioritized": "Đã đổi mức ưu tiên: {{count}}",
+            "dated": "Đã đổi ngày: {{count}}",
+            "completed": "Đã hoàn thành: {{count}}",
+            "clear": "Bỏ chọn",
+            "count": "Đã chọn: {{count}}",
+            "label": "Công việc đã chọn"
+        },
     "deletedToast": "Đã xóa \"{{name}}\"",
     "title": "Nhiệm vụ",
     "today": "Hôm nay",
@@ -760,6 +772,17 @@
       "setDueDate": "Đặt ngày đến hạn"
     },
     "contextMenu": {
+            "review": "Xem lại",
+            "copyError": "Không thể sao chép",
+            "titleCopied": "Đã sao chép tiêu đề",
+            "linkCopied": "Đã sao chép liên kết",
+            "deleteKey": "Del",
+            "copyTitle": "Sao chép tiêu đề",
+            "copyLink": "Sao chép liên kết",
+            "pickDate": "Chọn ngày…",
+            "reopen": "Mở lại",
+            "complete": "Hoàn thành",
+            "open": "Mở",
       "projectChanged": "Đã đổi dự án",
       "dateChanged": "Đã đổi ngày",
       "label": "Thao tác công việc",
@@ -5783,6 +5806,8 @@
       "plan": "Trên trang Lên kế hoạch"
     },
     "shortcuts": {
+            "panePrevious": "Công việc trước trong bảng",
+            "paneNext": "Công việc tiếp theo trong bảng",
       "palette": "Mở bảng lệnh",
       "capture": "Ghi nhanh",
       "search": "Tìm kiếm",

@@ -24,7 +24,7 @@ import { mergeVisibleOrder } from '../Shared/sortableList';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import TaskList from '../Task/TaskList';
 import TaskViewBody from '../Task/TaskViewBody';
-import NewTask from '../Task/NewTask';
+import NewTask, { withListTag } from '../Task/NewTask';
 import CompletedTasksSection from '../Task/CompletedTasksSection';
 import { isTaskCompleted } from '../../constants/taskStatus';
 import GroupedTaskList from '../Task/GroupedTaskList';
@@ -43,7 +43,10 @@ import { getApiPath } from '../../config/paths';
 import { getCsrfToken } from '../../utils/csrfService';
 import { SortOption } from '../Shared/SortFilterButton';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
-import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
+import {
+    useTaskDeletedEvent,
+    useTaskUpdatedEvent,
+} from '../../hooks/useTaskUpdatedEvent';
 import IconSortDropdown from '../Shared/IconSortDropdown';
 import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import Segmented from '../Shared/ui/Segmented';
@@ -332,6 +335,9 @@ const TagDetails: React.FC = () => {
         }
         setTasks((prev) => mergeUpdatedTaskList(prev, saved, saved));
     });
+    useTaskDeletedEvent((uid) =>
+        setTasks((prev) => prev.filter((task) => task.uid !== uid))
+    );
 
     // Setup native event listener for edit button to avoid React event system conflicts
     useEffect(() => {
@@ -378,13 +384,13 @@ const TagDetails: React.FC = () => {
     };
 
     // Minimal "+ Add task" field: the new task gets this tag.
-    const handleInlineCreate = async (name: string) => {
+    const handleInlineCreate = async (name: string, extras: Partial<Task>) => {
         if (!tag?.name) return;
         const created = await createTask({
             name,
-            tags: [tag.name],
             status: 'not_started',
             completed_at: null,
+            ...withListTag(extras, tag.name),
         } as unknown as Task);
         setTasks((prev) => [created, ...prev]);
     };

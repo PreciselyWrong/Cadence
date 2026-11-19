@@ -642,6 +642,18 @@
     "hideCompleted": "Скрыть завершенные задачи"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Повторяющиеся задачи сохранены, удаляйте их по одной: {{count}}",
+            "someFailed": "Не изменено: {{count}}",
+            "deleted": "Удалено: {{count}}",
+            "moved": "Перемещено: {{count}}",
+            "prioritized": "Приоритет изменён: {{count}}",
+            "dated": "Дата изменена: {{count}}",
+            "completed": "Выполнено: {{count}}",
+            "clear": "Снять выделение",
+            "count": "Выбрано: {{count}}",
+            "label": "Выбранные задачи"
+        },
     "deletedToast": "«{{name}}» удалена",
     "title": "Задачи",
     "today": "Сегодня",
@@ -774,6 +786,17 @@
       "setDueDate": "Задать срок"
     },
     "contextMenu": {
+            "review": "Обзор",
+            "copyError": "Не удалось скопировать",
+            "titleCopied": "Название скопировано",
+            "linkCopied": "Ссылка скопирована",
+            "deleteKey": "Del",
+            "copyTitle": "Копировать название",
+            "copyLink": "Копировать ссылку",
+            "pickDate": "Выбрать дату…",
+            "reopen": "Открыть снова",
+            "complete": "Выполнить",
+            "open": "Открыть",
       "projectChanged": "Проект изменён",
       "dateChanged": "Дата изменена",
       "label": "Действия с задачей",
@@ -5879,6 +5902,8 @@
       "plan": "На странице Планирование"
     },
     "shortcuts": {
+            "panePrevious": "Предыдущая задача в панели",
+            "paneNext": "Следующая задача в панели",
       "palette": "Открыть палитру команд",
       "capture": "Быстрый ввод",
       "search": "Поиск",

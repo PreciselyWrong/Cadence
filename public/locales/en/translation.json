@@ -628,6 +628,18 @@
     "hideCompleted": "Hide Completed Tasks"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Recurring tasks kept, delete them one by one: {{count}}",
+            "someFailed": "Not changed: {{count}}",
+            "deleted": "Deleted: {{count}}",
+            "moved": "Moved: {{count}}",
+            "prioritized": "Priority changed: {{count}}",
+            "dated": "Date changed: {{count}}",
+            "completed": "Completed: {{count}}",
+            "clear": "Clear the selection",
+            "count": "Selected: {{count}}",
+            "label": "Selected tasks"
+        },
     "deletedToast": "\"{{name}}\" deleted",
     "title": "Tasks",
     "reorderError": "Failed to save task order",
@@ -761,6 +773,17 @@
       "setDueDate": "Set due date"
     },
     "contextMenu": {
+            "review": "Review",
+            "copyError": "Could not copy",
+            "titleCopied": "Title copied",
+            "linkCopied": "Link copied",
+            "deleteKey": "Del",
+            "copyTitle": "Copy title",
+            "copyLink": "Copy link",
+            "pickDate": "Pick a date…",
+            "reopen": "Reopen",
+            "complete": "Complete",
+            "open": "Open",
       "projectChanged": "Project changed",
       "dateChanged": "Date changed",
       "label": "Task actions",
@@ -5755,6 +5778,8 @@
       "plan": "On the Plan page"
     },
     "shortcuts": {
+            "panePrevious": "Previous task in the pane",
+            "paneNext": "Next task in the pane",
       "palette": "Open the command palette",
       "capture": "Quick capture",
       "search": "Search",

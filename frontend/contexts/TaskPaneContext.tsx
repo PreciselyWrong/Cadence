@@ -4,6 +4,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // Window event carrying the saved Task (detail). Lists merge it into their state.
 export const TASK_UPDATED_EVENT = 'tududi:task-updated';
 
+// Sent once a task delete has reached the server (after its undo window),
+// so lists that keep their own copy of the task drop it.
+export const TASK_DELETED_EVENT = 'cadence:task-deleted';
+
+export interface TaskDeletedDetail {
+    uid: string;
+}
+
 const TASK_PARAM = 'task';
 // The day a task is planned on and its start, set by the opener that knows
 // them (a calendar block or a planned line). Dropped with the task.

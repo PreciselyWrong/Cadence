@@ -33,7 +33,8 @@ import {
 } from '../constants/contentBackgrounds';
 import NoteFocusMode from './Note/NoteFocusMode';
 import NoteEditorView from './Note/NoteEditorView';
-import NoteRow from './Shared/NoteRow';
+import NoteRow, { notePath } from './Shared/NoteRow';
+import { MenuEntry } from './Shared/ui/Menu';
 import PageHeader from './Shared/ui/PageHeader';
 import PageShell, { PAGE_GUTTER } from './Shared/ui/PageShell';
 import Button from './Shared/ui/Button';
@@ -418,6 +419,29 @@ const Notes: React.FC = () => {
         }
     };
 
+    // The row's right click menu: the same actions as the note's own page.
+    const noteRowMenu = (note: Note): MenuEntry[] => [
+        {
+            key: 'open',
+            label: t('common.open', 'Open'),
+            onSelect: () => navigate(notePath(note)),
+        },
+        {
+            key: 'pin',
+            label: note.pin_to_sidebar
+                ? t('notes.unpinFromSidebar', 'Unpin from sidebar')
+                : t('notes.pinToSidebar', 'Pin to sidebar'),
+            onSelect: () => void handleTogglePin(note),
+        },
+        'separator',
+        {
+            key: 'delete',
+            label: t('common.delete', 'Delete'),
+            danger: true,
+            onSelect: () => deleteNoteWithUndo(note),
+        },
+    ];
+
     // A Focus narrows the list in memory; the store keeps every note
     const sortedNotes = useMemo(
         () =>
@@ -644,6 +668,7 @@ const Notes: React.FC = () => {
                                                     <NoteRow
                                                         key={note.uid}
                                                         note={note}
+                                                        menu={noteRowMenu(note)}
                                                     />
                                                 ))}
                                             </div>

@@ -717,3 +717,89 @@ describe('TaskPane as a floating sheet', () => {
         );
     });
 });
+
+describe('TaskPane j and k keys', () => {
+    const taskAt = (n: number) =>
+        ({
+            ...baseTask,
+            id: n,
+            uid: `uid-${n}`,
+            name: `Task ${n}`,
+        }) as unknown as Task;
+    const pageTasks = [taskAt(1), taskAt(2), taskAt(3)];
+
+    const renderTwoRows = () =>
+        render(
+            <MemoryRouter initialEntries={['/today']}>
+                <TaskPaneProvider>
+                    <TaskRowExpansionProvider>
+                        {pageTasks.map((task) => (
+                            <TaskRow
+                                key={task.uid}
+                                task={task}
+                                onTaskUpdate={async () => {}}
+                                onTaskDelete={jest.fn()}
+                                projects={[]}
+                            />
+                        ))}
+                    </TaskRowExpansionProvider>
+                    <TaskPane />
+                    <LocationProbe />
+                    <RecurringScopeDialogHost />
+                </TaskPaneProvider>
+            </MemoryRouter>
+        );
+
+    const pressKey = (key: string) =>
+        fireEvent.keyDown(document.activeElement ?? document, { key });
+
+    beforeAll(() => {
+        // jsdom has no layout: every rendered element counts as visible.
+        Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
+            configurable: true,
+            get() {
+                return this.parentNode;
+            },
+        });
+        Element.prototype.scrollIntoView = jest.fn();
+    });
+
+    afterAll(() => {
+        delete (HTMLElement.prototype as { offsetParent?: unknown })
+            .offsetParent;
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockedUseIsMinimal.mockReturnValue(true);
+        mockedFetchTaskByUid.mockImplementation(async (uid: string) =>
+            pageTasks.find((task) => task.uid === uid)
+        );
+    });
+
+    it('opens the next task with j and the previous one with k, stopping at the ends', async () => {
+        renderTwoRows();
+        fireEvent.click(screen.getByText('Task 2'));
+        await waitFor(() =>
+            expect(screen.getByTestId('location-search')).toHaveTextContent(
+                '?task=uid-2'
+            )
+        );
+
+        pressKey('j');
+        expect(screen.getByTestId('location-search')).toHaveTextContent(
+            '?task=uid-3'
+        );
+
+        pressKey('j');
+        expect(screen.getByTestId('location-search')).toHaveTextContent(
+            '?task=uid-3'
+        );
+
+        pressKey('k');
+        pressKey('k');
+        expect(screen.getByTestId('location-search')).toHaveTextContent(
+            '?task=uid-1'
+        );
+    });
+});

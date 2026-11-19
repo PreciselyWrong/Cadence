@@ -629,6 +629,18 @@
     "hideCompleted": "Nascondi Attività Completate"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Attività ricorrenti mantenute, eliminale una alla volta: {{count}}",
+            "someFailed": "Non modificate: {{count}}",
+            "deleted": "Eliminate: {{count}}",
+            "moved": "Spostate: {{count}}",
+            "prioritized": "Priorità modificata: {{count}}",
+            "dated": "Data modificata: {{count}}",
+            "completed": "Completate: {{count}}",
+            "clear": "Annulla la selezione",
+            "count": "Selezionate: {{count}}",
+            "label": "Attività selezionate"
+        },
     "deletedToast": "«{{name}}» eliminata",
     "title": "Attività",
     "today": "Oggi",
@@ -761,6 +773,17 @@
       "setDueDate": "Imposta scadenza"
     },
     "contextMenu": {
+            "review": "Revisione",
+            "copyError": "Impossibile copiare",
+            "titleCopied": "Titolo copiato",
+            "linkCopied": "Link copiato",
+            "deleteKey": "Canc",
+            "copyTitle": "Copia titolo",
+            "copyLink": "Copia link",
+            "pickDate": "Scegli una data…",
+            "reopen": "Riapri",
+            "complete": "Completa",
+            "open": "Apri",
       "projectChanged": "Progetto cambiato",
       "dateChanged": "Data cambiata",
       "label": "Azioni attività",
@@ -5790,6 +5813,8 @@
       "plan": "Nella pagina Pianifica"
     },
     "shortcuts": {
+            "panePrevious": "Attività precedente nel pannello",
+            "paneNext": "Attività successiva nel pannello",
       "palette": "Apri la palette dei comandi",
       "capture": "Cattura rapida",
       "search": "Cerca",

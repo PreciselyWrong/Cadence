@@ -12,6 +12,7 @@ jest.mock('../../../hooks/useUiDensity', () => ({
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (_key: string, fallback?: string) => fallback ?? _key,
+        i18n: { language: 'fr' },
     }),
 }));
 
@@ -74,7 +75,7 @@ describe('ProjectTasksSection in minimal mode', () => {
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() =>
-            expect(onInlineCreate).toHaveBeenCalledWith('New item')
+            expect(onInlineCreate).toHaveBeenCalledWith('New item', {})
         );
     });
 

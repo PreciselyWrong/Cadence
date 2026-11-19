@@ -628,6 +628,18 @@
     "hideCompleted": "Abgeschlossene Aufgaben ausblenden"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Wiederkehrende Aufgaben behalten, einzeln löschen: {{count}}",
+            "someFailed": "Nicht geändert: {{count}}",
+            "deleted": "Gelöscht: {{count}}",
+            "moved": "Verschoben: {{count}}",
+            "prioritized": "Priorität geändert: {{count}}",
+            "dated": "Datum geändert: {{count}}",
+            "completed": "Erledigt: {{count}}",
+            "clear": "Auswahl aufheben",
+            "count": "Ausgewählt: {{count}}",
+            "label": "Ausgewählte Aufgaben"
+        },
     "deletedToast": "\"{{name}}\" gelöscht",
     "title": "Aufgaben",
     "backlog": "Backlog",
@@ -760,6 +772,17 @@
       "setDueDate": "Fälligkeitsdatum setzen"
     },
     "contextMenu": {
+            "review": "Überprüfung",
+            "copyError": "Kopieren fehlgeschlagen",
+            "titleCopied": "Titel kopiert",
+            "linkCopied": "Link kopiert",
+            "deleteKey": "Entf",
+            "copyTitle": "Titel kopieren",
+            "copyLink": "Link kopieren",
+            "pickDate": "Datum wählen…",
+            "reopen": "Wieder öffnen",
+            "complete": "Erledigen",
+            "open": "Öffnen",
       "projectChanged": "Projekt geändert",
       "dateChanged": "Datum geändert",
       "label": "Aktionen für die Aufgabe",
@@ -5792,6 +5815,8 @@
       "plan": "Auf der Seite Planen"
     },
     "shortcuts": {
+            "panePrevious": "Vorherige Aufgabe im Bereich",
+            "paneNext": "Nächste Aufgabe im Bereich",
       "palette": "Befehlspalette öffnen",
       "capture": "Schnellerfassung",
       "search": "Suchen",

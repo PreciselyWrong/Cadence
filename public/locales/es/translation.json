@@ -1559,6 +1559,18 @@
     "tag": "Etiqueta"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Tareas recurrentes conservadas, elimínalas una a una: {{count}}",
+            "someFailed": "Sin cambios: {{count}}",
+            "deleted": "Eliminadas: {{count}}",
+            "moved": "Movidas: {{count}}",
+            "prioritized": "Prioridad cambiada: {{count}}",
+            "dated": "Fecha cambiada: {{count}}",
+            "completed": "Completadas: {{count}}",
+            "clear": "Borrar la selección",
+            "count": "Seleccionadas: {{count}}",
+            "label": "Tareas seleccionadas"
+        },
     "deletedToast": "\"{{name}}\" eliminada",
     "title": "Tareas",
     "today": "Hoy",
@@ -1691,6 +1703,17 @@
       "setDueDate": "Establecer fecha límite"
     },
     "contextMenu": {
+            "review": "Revisión",
+            "copyError": "No se pudo copiar",
+            "titleCopied": "Título copiado",
+            "linkCopied": "Enlace copiado",
+            "deleteKey": "Supr",
+            "copyTitle": "Copiar título",
+            "copyLink": "Copiar enlace",
+            "pickDate": "Elegir una fecha…",
+            "reopen": "Reabrir",
+            "complete": "Completar",
+            "open": "Abrir",
       "projectChanged": "Proyecto cambiado",
       "dateChanged": "Fecha cambiada",
       "label": "Acciones de la tarea",
@@ -5777,6 +5800,8 @@
       "plan": "En la página Planificar"
     },
     "shortcuts": {
+            "panePrevious": "Tarea anterior en el panel",
+            "paneNext": "Tarea siguiente en el panel",
       "palette": "Abrir la paleta de comandos",
       "capture": "Captura rápida",
       "search": "Buscar",

@@ -22,6 +22,7 @@ import {
     useSidebarDrop,
 } from './sidebarDrop';
 import { isProjectLive } from '../../utils/projectStatus';
+import { ContextMenu } from '../Shared/ui/Menu';
 
 interface SidebarAreasProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -66,6 +67,11 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
     );
     const loadProjects = useStore((state) => state.projectsStore.loadProjects);
     const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
+    const [menuTarget, setMenuTarget] = useState<{
+        area: Area;
+        x: number;
+        y: number;
+    } | null>(null);
 
     // An area row takes projects and tasks dragged onto it; a project row in
     // an open folder takes tasks and notes, and drags onto another area.
@@ -121,6 +127,7 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                     <span
                         className="flex-1 min-w-0 truncate cursor-pointer"
                         onClick={() => navigate(area)}
+                        onContextMenu={(event) => openMenu(event, area)}
                     >
                         {area.name}
                     </span>
@@ -166,6 +173,11 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
             area.name,
             <Squares2X2Icon className="h-4 w-4 mr-2" />
         );
+
+    const openMenu = (event: React.MouseEvent, area: Area) => {
+        event.preventDefault();
+        setMenuTarget({ area, x: event.clientX, y: event.clientY });
+    };
 
     return (
         <ul className="flex flex-col">
@@ -261,6 +273,9 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                                         area.uid
                                     )}
                                     onClick={() => navigate(area)}
+                                    onContextMenu={(event) =>
+                                        openMenu(event, area)
+                                    }
                                 >
                                     <span className="truncate min-w-0">
                                         {area.name}
@@ -269,6 +284,22 @@ const SidebarAreas: React.FC<SidebarAreasProps> = ({
                             )
                         )}
                     </div>
+                </li>
+            )}
+            {menuTarget && (
+                <li className="list-none p-0">
+                    <ContextMenu
+                        entries={[
+                            {
+                                key: 'open',
+                                label: t('common.open', 'Open'),
+                                onSelect: () => navigate(menuTarget.area),
+                            },
+                        ]}
+                        x={menuTarget.x}
+                        y={menuTarget.y}
+                        onClose={() => setMenuTarget(null)}
+                    />
                 </li>
             )}
         </ul>

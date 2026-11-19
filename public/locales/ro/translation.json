@@ -633,6 +633,18 @@
     "hideCompleted": "Ascunde Sarcini Finalizate"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Sarcinile recurente au fost păstrate, șterge-le pe rând: {{count}}",
+            "someFailed": "Neschimbate: {{count}}",
+            "deleted": "Șterse: {{count}}",
+            "moved": "Mutate: {{count}}",
+            "prioritized": "Prioritate schimbată: {{count}}",
+            "dated": "Dată schimbată: {{count}}",
+            "completed": "Finalizate: {{count}}",
+            "clear": "Golește selecția",
+            "count": "Selectate: {{count}}",
+            "label": "Sarcini selectate"
+        },
     "deletedToast": "\"{{name}}\" a fost șters",
     "title": "Sarcini",
     "today": "Astăzi",
@@ -765,6 +777,17 @@
       "setDueDate": "Setează data scadentă"
     },
     "contextMenu": {
+            "review": "Revizuire",
+            "copyError": "Copierea a eșuat",
+            "titleCopied": "Titlu copiat",
+            "linkCopied": "Link copiat",
+            "deleteKey": "Del",
+            "copyTitle": "Copiază titlul",
+            "copyLink": "Copiază linkul",
+            "pickDate": "Alege o dată…",
+            "reopen": "Redeschide",
+            "complete": "Finalizează",
+            "open": "Deschide",
       "projectChanged": "Proiect schimbat",
       "dateChanged": "Data schimbată",
       "label": "Acțiuni pentru sarcină",
@@ -5800,6 +5823,8 @@
       "plan": "Pe pagina Planifică"
     },
     "shortcuts": {
+            "panePrevious": "Sarcina anterioară din panou",
+            "paneNext": "Sarcina următoare din panou",
       "palette": "Deschide paleta de comenzi",
       "capture": "Captură rapidă",
       "search": "Caută",

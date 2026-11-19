@@ -44,10 +44,18 @@ import { isTaskOverdueInTodayPlan } from '../../../utils/dateUtils';
 import { getApiPath } from '../../../config/paths';
 import TaskRowCollapsed from './TaskRowCollapsed';
 import TaskRowExpanded from './TaskRowExpanded';
-import MinimalContextMenu from './MinimalContextMenu';
+import TaskContextMenu from '../menu/TaskContextMenu';
+import {
+    useTaskSelection,
+    visibleTaskRowUids,
+} from '../../../store/taskSelectionStore';
+import { useReviewMenuEntries } from '../menu/useReviewMenuEntries';
 import { useTaskRowExpansion } from './TaskRowExpansionContext';
 import { useTaskRowSave } from './useTaskRowSave';
-import { useTaskPane } from '../../../contexts/TaskPaneContext';
+import {
+    TASK_UPDATED_EVENT,
+    useTaskPane,
+} from '../../../contexts/TaskPaneContext';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
 import {
     NativeTaskDragContext,
@@ -129,7 +137,6 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const [isBlockedConfirmOpen, setIsBlockedConfirmOpen] = useState(false);
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [isStatusMenuOpen, setIsStatusMenuOpen] = useState(false);
-    const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
     const [contextMenuAt, setContextMenuAt] = useState<{
         x: number;
         y: number;
@@ -297,7 +304,27 @@ const TaskRow: React.FC<TaskRowProps> = ({
         }
     }, [task.uid]);
 
-    const handleActivate = () => {
+    // Ctrl/Cmd click picks the row, Shift click a range: the selection bar
+    // then acts on all of them. A plain click clears a selection.
+    const handleActivate = (e?: React.MouseEvent | React.KeyboardEvent) => {
+        if (
+            task.uid &&
+            e &&
+            'button' in e &&
+            (e.metaKey || e.ctrlKey || e.shiftKey)
+        ) {
+            e.preventDefault();
+            const selection = useTaskSelection.getState();
+            if (e.shiftKey) {
+                selection.selectRange(task.uid, visibleTaskRowUids());
+            } else {
+                selection.toggle(task.uid);
+            }
+            return;
+        }
+        if (useTaskSelection.getState().uids.length > 0) {
+            useTaskSelection.getState().clear();
+        }
         if (canExpand) {
             // Minimal rows open the task in the floating sheet; a second
             // click on the same row closes it.
@@ -346,9 +373,22 @@ const TaskRow: React.FC<TaskRowProps> = ({
         [task, onTaskUpdate, showErrorToast, t]
     );
 
-    const openContextMenu = useCallback((e: React.MouseEvent) => {
-        setContextMenuAt({ x: e.clientX, y: e.clientY });
-    }, []);
+    const openContextMenu = useCallback(
+        (at: { x: number; y: number }) => setContextMenuAt(at),
+        []
+    );
+    const closeContextMenu = useCallback(() => setContextMenuAt(null), []);
+    const isSelected = useTaskSelection(
+        (state) => !!task.uid && state.uids.includes(task.uid)
+    );
+    // Like the detail pane, announce a saved decision so lists that merge
+    // it from the event stay in step.
+    const reviewEntries = useReviewMenuEntries(displayTask, async (saved) => {
+        window.dispatchEvent(
+            new CustomEvent<Task>(TASK_UPDATED_EVENT, { detail: saved })
+        );
+        await onTaskUpdate(saved);
+    });
 
     // The row hides at once and the delete waits for the undo window. A
     // recurring task's scope prompt is its confirmation, so it deletes now.
@@ -576,8 +616,17 @@ const TaskRow: React.FC<TaskRowProps> = ({
             data-task-uid={task.uid}
             data-task-row=""
             data-task-expanded={isExpanded || undefined}
+            data-selected={isSelected || undefined}
+            // Shift click selects a range of rows, not the text between.
+            onMouseDown={(e) => {
+                if (e.shiftKey) e.preventDefault();
+            }}
             className={`relative ${
-                isStatusMenuOpen || isActionsMenuOpen
+                isSelected
+                    ? 'rounded-xl bg-primary-container/40 ring-1 ring-primary/50 '
+                    : ''
+            }${
+                isStatusMenuOpen || contextMenuAt !== null
                     ? 'z-[10001]'
                     : isExpanded
                       ? 'z-30'
@@ -629,23 +678,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     editable={isExpanded}
                     onSaveTitle={fileBacked ? undefined : setters.setTitle}
                     onEscape={collapse}
-                    onEdit={task.uid ? openTask : undefined}
-                    onDelete={
-                        task.uid && !fileBacked ? handleDeleteClick : undefined
-                    }
-                    onTogglePin={
-                        task.uid
-                            ? () => {
-                                  setters
-                                      .setPinned(!task.pinned)
-                                      .catch(() => {});
-                              }
-                            : undefined
-                    }
-                    onActionsMenuOpenChange={setIsActionsMenuOpen}
-                    onContextMenu={
-                        isMinimal && task.uid ? openContextMenu : undefined
-                    }
+                    canDelete={Boolean(task.uid) && !fileBacked}
+                    onOpenMenu={task.uid ? openContextMenu : undefined}
+                    menuOpen={contextMenuAt !== null}
                     selected={isPaneOpen}
                 />
 
@@ -768,15 +803,27 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     </div>
                 )}
 
-            {isMinimal && task.uid && contextMenuAt && (
-                <MinimalContextMenu
+            {task.uid && contextMenuAt && (
+                <TaskContextMenu
                     x={contextMenuAt.x}
                     y={contextMenuAt.y}
                     task={displayTask}
-                    projects={projectList}
-                    onTaskUpdate={onTaskUpdate}
-                    onDelete={fileBacked ? undefined : askToDelete}
-                    onClose={() => setContextMenuAt(null)}
+                    extra={reviewEntries}
+                    onOpen={() => {
+                        if (isMinimal && canExpand) openPane(task.uid);
+                        else openTask();
+                    }}
+                    onToggle={() => void handleToggleCompletion()}
+                    onDelete={askToDelete}
+                    onSaved={(saved) =>
+                        void onTaskUpdate({
+                            ...displayTask,
+                            ...saved,
+                            subtasks:
+                                saved.subtasks || displayTask.subtasks || [],
+                        }).catch(() => {})
+                    }
+                    onClose={closeContextMenu}
                 />
             )}
 

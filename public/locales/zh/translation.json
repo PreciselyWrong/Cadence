@@ -628,6 +628,18 @@
     "hideCompleted": "隐藏已完成的任务"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "已保留重复任务，请逐个删除：{{count}}",
+            "someFailed": "未更改：{{count}}",
+            "deleted": "已删除：{{count}}",
+            "moved": "已移动：{{count}}",
+            "prioritized": "优先级已更改：{{count}}",
+            "dated": "日期已更改：{{count}}",
+            "completed": "已完成：{{count}}",
+            "clear": "清除选择",
+            "count": "已选：{{count}}",
+            "label": "已选任务"
+        },
     "deletedToast": "“{{name}}”已删除",
     "title": "任务",
     "today": "今天",
@@ -760,6 +772,17 @@
       "setDueDate": "设置截止日期"
     },
     "contextMenu": {
+            "review": "回顾",
+            "copyError": "无法复制",
+            "titleCopied": "标题已复制",
+            "linkCopied": "链接已复制",
+            "deleteKey": "Del",
+            "copyTitle": "复制标题",
+            "copyLink": "复制链接",
+            "pickDate": "选择日期…",
+            "reopen": "重新打开",
+            "complete": "完成",
+            "open": "打开",
       "projectChanged": "项目已更改",
       "dateChanged": "日期已更改",
       "label": "任务操作",
@@ -5783,6 +5806,8 @@
       "plan": "在计划页面"
     },
     "shortcuts": {
+            "panePrevious": "面板中的上一个任务",
+            "paneNext": "面板中的下一个任务",
       "palette": "打开命令面板",
       "capture": "快速捕获",
       "search": "搜索",

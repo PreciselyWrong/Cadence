@@ -15,21 +15,19 @@ export const canBecomeProject = (task: Task): boolean =>
     (!task.recurrence_type || task.recurrence_type === 'none') &&
     !(task as Task & { source_key?: string | null }).source_key;
 
-// « Transformer en projet » (docs/37-links.md): a menu item, its question,
-// then the new project opens.
-const TurnIntoProject: React.FC<{ task: Task; onDone?: () => void }> = ({
-    task,
-    onDone,
-}) => {
+// The question of « Transformer en projet », then the new project opens.
+export const TurnIntoProjectDialog: React.FC<{
+    task: Task;
+    onClose: () => void;
+    onDone?: () => void;
+}> = ({ task, onClose, onDone }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { showErrorToast } = useToast();
-    const [asking, setAsking] = useState(false);
-    if (!canBecomeProject(task)) return null;
     const label = t('task.turnIntoProject', 'Turn into a project');
 
     const turn = async () => {
-        setAsking(false);
+        onClose();
         try {
             const { project } = await turnTaskIntoProject(task.uid as string);
             onDone?.();
@@ -43,6 +41,32 @@ const TurnIntoProject: React.FC<{ task: Task; onDone?: () => void }> = ({
             );
         }
     };
+
+    return (
+        <ConfirmDialog
+            title={label}
+            message={t(
+                'task.turnIntoProjectMessage',
+                'Turn « {{name}} » into a project? Its subtasks become the project’s tasks and the addresses of its note its pages.',
+                { name: task.name }
+            )}
+            confirmButtonText={label}
+            onConfirm={() => void turn()}
+            onCancel={onClose}
+        />
+    );
+};
+
+// « Transformer en projet » (docs/37-links.md): a menu item, its question,
+// then the new project opens.
+const TurnIntoProject: React.FC<{ task: Task; onDone?: () => void }> = ({
+    task,
+    onDone,
+}) => {
+    const { t } = useTranslation();
+    const [asking, setAsking] = useState(false);
+    if (!canBecomeProject(task)) return null;
+    const label = t('task.turnIntoProject', 'Turn into a project');
 
     return (
         <>
@@ -59,16 +83,10 @@ const TurnIntoProject: React.FC<{ task: Task; onDone?: () => void }> = ({
                 {label}
             </button>
             {asking && (
-                <ConfirmDialog
-                    title={label}
-                    message={t(
-                        'task.turnIntoProjectMessage',
-                        'Turn « {{name}} » into a project? Its subtasks become the project’s tasks and the addresses of its note its pages.',
-                        { name: task.name }
-                    )}
-                    confirmButtonText={label}
-                    onConfirm={() => void turn()}
-                    onCancel={() => setAsking(false)}
+                <TurnIntoProjectDialog
+                    task={task}
+                    onClose={() => setAsking(false)}
+                    onDone={onDone}
                 />
             )}
         </>

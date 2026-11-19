@@ -646,6 +646,18 @@
     "hideCompleted": "Skrij dokončane naloge"
   },
   "tasks": {
+        "selection": {
+            "recurringKept": "Ponavljajoča se opravila ohranjena, izbrišite jih eno za drugim: {{count}}",
+            "someFailed": "Nespremenjeno: {{count}}",
+            "deleted": "Izbrisano: {{count}}",
+            "moved": "Premaknjeno: {{count}}",
+            "prioritized": "Spremenjena prioriteta: {{count}}",
+            "dated": "Spremenjen datum: {{count}}",
+            "completed": "Dokončano: {{count}}",
+            "clear": "Počisti izbor",
+            "count": "Izbrano: {{count}}",
+            "label": "Izbrana opravila"
+        },
     "deletedToast": "»{{name}}« izbrisano",
     "title": "Naloge",
     "today": "Danes",
@@ -778,6 +790,17 @@
       "setDueDate": "Nastavi rok"
     },
     "contextMenu": {
+            "review": "Pregled",
+            "copyError": "Kopiranje ni uspelo",
+            "titleCopied": "Naslov kopiran",
+            "linkCopied": "Povezava kopirana",
+            "deleteKey": "Del",
+            "copyTitle": "Kopiraj naslov",
+            "copyLink": "Kopiraj povezavo",
+            "pickDate": "Izberi datum…",
+            "reopen": "Ponovno odpri",
+            "complete": "Dokončaj",
+            "open": "Odpri",
       "projectChanged": "Projekt spremenjen",
       "dateChanged": "Datum spremenjen",
       "label": "Dejanja naloge",
@@ -5883,6 +5906,8 @@
       "plan": "Na strani Načrtuj"
     },
     "shortcuts": {
+            "panePrevious": "Prejšnje opravilo v podoknu",
+            "paneNext": "Naslednje opravilo v podoknu",
       "palette": "Odpri paleto ukazov",
       "capture": "Hitro zajemanje",
       "search": "Iskanje",

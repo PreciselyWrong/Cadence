@@ -8,6 +8,11 @@ import { useToast } from '../Shared/ToastContext';
 import TaskCheckCircle from '../Task/TaskCheckCircle';
 import TaskChip from '../Shared/task/TaskChip';
 import { ROW_GROUP } from '../Shared/task/rowMenu';
+import { useTaskMenu } from '../Task/menu/useTaskMenu';
+import {
+    useTaskDeletedEvent,
+    useTaskUpdatedEvent,
+} from '../../hooks/useTaskUpdatedEvent';
 
 const chip =
     'h-7 rounded-lg px-2.5 text-xs font-medium text-surface-on ring-1 ring-inset ring-outline-variant hover:bg-surface-high focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-50 max-sm:min-h-[44px]';
@@ -40,6 +45,13 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
     useEffect(() => {
         load();
     }, [load, reloadKey]);
+
+    // Changes and deletes made from the menu reload the list.
+    useTaskUpdatedEvent(() => void load());
+    useTaskDeletedEvent(() => void load());
+    const taskMenu = useTaskMenu((task) => ({
+        onToggle: () => void complete(task),
+    }));
 
     const decide = async (task: Task, decision: TaskDecision) => {
         if (!task.uid) return;
@@ -88,6 +100,7 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
                         <li
                             key={task.uid}
                             data-task-row=""
+                            {...taskMenu.bind(task)}
                             className={`${ROW_GROUP} flex items-start gap-3 rounded-xl px-2 py-2 ${
                                 openTaskUid === task.uid
                                     ? 'bg-surface-highest'
@@ -219,6 +232,7 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
                     );
                 })}
             </ul>
+            {taskMenu.node}
             {!showAll && tasks.length > VISIBLE && (
                 <button
                     type="button"

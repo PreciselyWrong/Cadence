@@ -147,6 +147,7 @@ In Minimal mode a click on a task row opens the task in a pane on the right. On 
 - Edits happen in place, with no save button, in the same inline editor as the task sheet (see Opening a Task): title, a chip per field, description, subtasks, attachments and comments. The decision toggles (In view, This week, Later) and the postponement history stay under the comments.
 - The open task is kept in the URL as `?task=<uid>`, so a reload keeps it. Opening or closing replaces the history entry instead of adding one.
 - Escape closes the pane. "Open full page" goes to the task page.
+- J and K open the next and previous task of the page (rows in reading order, the pane's own subtasks left out), unless focus is in a text field or a menu or dialog is open.
 - On a wide window (1280 px and up) the sheet is a column a third of the window wide, on the side away from the click that opened it (a task clicked on the left opens on the right, and the reverse), so the clicked row stays in view; « Expand » still fills the page. Narrower windows keep the bottom sheet, phones the full-screen sheet.
 - **Discuss with the AI** (chat icon in the header, only while the AI plugin runs): opens the plugin's chat page with `?view=chat&about=<uid>`. The page reads the task and starts a conversation on it; the agent writes to Cadence only when asked in that conversation (plugin `hermes` 3.10.0, its README › Discuter d'une tâche). Android: not yet (`TODO.md`).
 - A saved change is merged into the Tasks list without another request. Other lists update when they reload.
@@ -154,19 +155,23 @@ In Minimal mode a click on a task row opens the task in a pane on the right. On 
 
 ## **Minimal Row Gestures**
 
-In Minimal mode, task rows and their lists take the gestures below. Dense mode has none of them and keeps its own controls.
+In Minimal mode, task rows and their lists take the gestures below. Dense mode keeps its own controls, except the task menu and the selection of several tasks, which work in both.
 
 - **Subtasks chevron:** a row with subtasks shows a small chevron before its round check. A click shows the subtasks indented below the row; a second click hides them. Rows start collapsed. Subtask rows take the same gestures.
 - **Collapsible groups:** in a grouped list, a project group header or a day column header collapses its tasks on a click. The state is kept per list (its path and query) and per group, in this browser only.
-- **Right-click menu:** a right-click on a row that is not open opens a menu at the cursor:
-    - Priority: None, Low, Medium or High.
-    - Date: Today, Tomorrow, Next week (the next Monday after today) or Clear date. Setting a date clears any time of day on the task.
-    - Move to project: No project, or one of your projects.
-    - Pin or Unpin.
-    - Duplicate: a new open task with the name, note, project, area, tags, priority and dates; it opens in the task sheet. Not offered for a TODO.md task. Subtasks, recurrence, status and parent task are not copied. The task page's actions menu has the same item and opens the copy on its page.
-    - Delete: the task leaves the list at once and an « Undo » toast (5 s) keeps it; after that, or when the page is left, it is deleted. A recurring task asks its scope first instead.
+- **Task menu (right-click):** one menu for a task on every page that shows one: task lists in both densities (Tasks, projects, tags, areas, Kanban, Eisenhower), Today, the Plan board (day cards, overdue, horizons, inbox), a project's board and Inbox › « Tâches à classer ». It opens at the cursor on a right-click (a long press on touch screens), under the row's « ⋯ » button, or at the row with the Menu key or Shift+F10. The page's own actions come first (Today: plan at the next free time, remove the time, move to tomorrow or next week, take off the day; Plan: « Send to a horizon ▸ », or « Commit to ▸ » for « À planifier »), then:
+    - Open (Enter) and Complete / Reopen (X).
+    - Date ▸ Today, Tomorrow, Next week (the next Monday), Pick a date… (the shared date popover), and Clear date when a date is set. Setting a date from the menu clears any time of day.
+    - Priority ▸ High, Medium, Low, None. The current value is checked.
+    - Move to project ▸ No project, or one of the open projects (done, cancelled and archived ones are left out). Not offered for a TODO.md task.
+    - Pin or Unpin; on list rows, Review ▸ In view, This week, Later, and Next action on a project page.
+    - Duplicate (not for a TODO.md task): a new open task with the name, note, project, area, tags, priority and dates; it opens in the task panel. Subtasks, recurrence, status and parent task are not copied.
+    - Turn into a project, for a top-level one-off task (its question first).
+    - Copy link (the task's `/task/<uid>` address) and Copy title.
+    - Delete (Del), last and in red, not for a TODO.md task: the task leaves the page at once and an « Undo » toast keeps it for a few seconds; after that, or when the page is left, it is deleted. A recurring task asks its scope first instead.
     - A date or project change shows an « Undo » toast that puts the old value back (not for a recurring task, whose scope prompt decides).
-    - Each choice saves at once and updates the list. The menu closes after a choice, on Escape or on a press outside it, and stays inside the window.
+    - Submenus open on hover, a click, or Arrow Right; Arrow Left or Escape goes back. The menu closes after a choice, on Escape or on a press outside it, and stays inside the window. A choice saves at once; every page showing the task updates, and a deleted task leaves every list.
+- **Select several tasks:** Ctrl or Cmd click on a task row picks it, Shift click picks every row from the last picked one; a plain click clears the selection, as do Escape and a page change. While tasks are picked a bar at the bottom offers Complete, Date ▸, Priority ▸, Move to project ▸ and Delete for all of them, each with one « Undo » for the whole group. A selection never deletes a recurring task: it is kept and a toast says so. The Plan board keeps its own picks (Ctrl/Shift click on cards, see [03-upcoming-view.md](03-upcoming-view.md)).
 - **Drag to reorder:** grab a row in the Tasks list (no explicit sort), a project's task list or a tag's task list and drop it at a new place. The order survives a reload and the list then sorts by **Custom**. A first drag made under another sort starts from that sort. All Tasks and each tag keep a per-user order (`user_task_orders`, scopes `all`, `tag:<id>`); a tag can only be ordered by its owner. A project's order is the synced `order` of its top-level tasks, shared by everyone who can edit the project and shown on Android too; read-only members cannot change it. Rows not in the saved order come first, newest first.
 - **Drop on the sidebar:** drag a row from any task list (Minimal or Dense, Upcoming and Today included) onto a sidebar project, tag, area, or Today / Tomorrow. The target lights up while the pointer is over it; releasing there moves the task to the project, adds the tag (other tags stay), sets the area, or makes it due that day, and the row stays where it was in its list. A task that already has it is left alone. The click that ends the drag does not open the target. Recurring tasks are not taken by Today / Tomorrow. Full rules: [Sidebar — Drop on the sidebar](32-sidebar.md#drop-on-the-sidebar).
 - **Keyboard:** the list keeps one row in the Tab order. Arrow Up and Arrow Down move focus between rows, subtask rows included. They do nothing while focus is in a text field.
@@ -184,7 +189,7 @@ The right side of a Minimal row shows, in order: the recurrence icon, the commen
 In Minimal mode, four task lists share two pieces at their top and bottom. Dense mode shows neither.
 
 - **Lists:** Today (candidate list), Tasks (All tasks and smart lists), a project's Tasks tab, and a tag's Tasks tab.
-- **"+ Add task" field** at the top. Enter creates the task and clears the field; Escape clears it; a blank name does nothing. A failed create puts the text back and shows an error. The new task inherits its list:
+- **"+ Add task" field** at the top. Enter creates the task and clears the field; Escape clears it; a blank name does nothing. A failed create puts the text back and shows an error. The line is read like the Plan board's quick add (`frontend/utils/quickAddParse.ts`): a date (« demain », « vendredi », « 12/3 »), a priority (`!1` to `!3`), a project or tags (`#`) and a duration are taken out of the name and set on the task; a project named in the line wins over the list's project, and a tag list keeps its tag. The new task inherits its list:
     - Project: the project.
     - Tag: the tag.
     - Tasks with `?tag=`: that tag.

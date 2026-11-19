@@ -18,7 +18,10 @@ import { createTask, toggleTaskCompletion } from '../../utils/tasksService';
 import { TASK_STATUS, isTaskDone } from '../../constants/taskStatus';
 import { getUserTimezone } from '../../utils/dateUtils';
 import { minuteOfDay } from '../DailyPlan/planUtils';
-import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
+import {
+    useTaskDeletedEvent,
+    useTaskUpdatedEvent,
+} from '../../hooks/useTaskUpdatedEvent';
 import { onCaptureSaved } from '../../utils/captureUi';
 import { useStore } from '../../store/useStore';
 import { applyOpsLocally, tasksOf, toPlanInput } from './dayModel';
@@ -122,6 +125,8 @@ export const useDay = (date: string | undefined) => {
         setDay((current) => (current ? withTask(current, saved) : current));
         void reload();
     });
+    // A task deleted from a menu or the pane leaves the day.
+    useTaskDeletedEvent(() => void reload());
 
     const fail = useCallback(
         (err: unknown) => {
