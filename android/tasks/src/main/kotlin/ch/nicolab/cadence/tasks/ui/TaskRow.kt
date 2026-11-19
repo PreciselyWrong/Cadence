@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -365,6 +366,16 @@ private fun TaskMeta(
             val time = (plannedAt ?: task.dueDate?.takeIf { task.dueHasTime })?.let { wireTime(instantTime(it, zone)) }
             val badge = listOfNotNull(day, time).joinToString(" ")
             if (badge.isNotEmpty()) {
+                // Une échéance à venir porte un drapeau : dans Aujourd'hui, la date n'est pas le jour où on la fait.
+                val upcomingDue = day != null && !overdue && dueDate != null && dueDate.isAfter(today)
+                if (upcomingDue) {
+                    Icon(
+                        Icons.Outlined.Flag,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(12.dp),
+                    )
+                }
                 // Texte simple, sans pastille ; une échéance passée reste neutre, jamais la couleur d'erreur.
                 Text(
                     text = badge,
