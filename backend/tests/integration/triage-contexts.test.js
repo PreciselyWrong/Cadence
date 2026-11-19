@@ -381,21 +381,14 @@ describe('triage questions and linked contexts', () => {
     });
 
     describe('legacy answer path', () => {
-        it('still takes an answer on the daily brief path of older Android apps', async () => {
+        it('no longer takes the daily brief path (Android 1.21 and later use /triage/answers)', async () => {
             const res = await agent
                 .post(`/api/daily-plan/${TODAY}/brief/answers`)
                 .send({
-                    question_key: 'question-fictive-3',
                     target: { scope: 'task', ref: tasks.payment.uid },
                     answer: 'yes',
-                    idempotency_key: 'reponse-fictive-5',
                 });
-            expect(res.status).toBe(200);
-            expect(res.body.context).toMatchObject({
-                scope: 'task',
-                target_ref: tasks.payment.uid,
-                text: 'Oui',
-            });
+            expect(res.status).toBe(404);
         });
     });
 

@@ -78,7 +78,7 @@ All under `/api` and `/api/v1`.
 | `POST /triage/keep` | `{ task_uid }` |
 | `POST /triage/apply` | `{ task_uid, action, payload?, idempotency_key? }`; the same key does nothing twice |
 | `GET /triage/settings`, `PUT /triage/settings` | The settings above; `PUT` takes a partial update and returns them all |
-| `POST /triage/answers` | `{ target: { scope, ref }, answer: yes \| no \| text }` → `{ context }`. `POST /daily-plan/:date/brief/answers` takes the same body for the Android app up to 1.20 |
+| `POST /triage/answers` | `{ target: { scope, ref }, answer: yes \| no \| text }` → `{ context }` |
 | `GET /triage/contexts` | `?scope=&target_ref=` → `{ contexts }` (200 at most) |
 | `PATCH /triage/contexts/:uid`, `DELETE /triage/contexts/:uid` | `{ text }`; 404 for a context of someone else |
 | `POST /triage/mail/:uid/decide` | `{ decision: task \| reply \| event \| later \| dismiss \| draft \| archive \| note, payload?, archive?, idempotency_key? }` |

@@ -51,9 +51,6 @@ const answer = handle((req) =>
     contexts.answerQuestion(req.currentUser, req.body ?? {})
 );
 router.post('/triage/answers', answer);
-// The path of the retired daily brief, still sent by the Android app up to
-// 1.20 (and by answers queued offline before its update): same handler.
-router.post('/daily-plan/:date/brief/answers', answer);
 
 router.get(
     '/triage/contexts',
