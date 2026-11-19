@@ -190,20 +190,32 @@ internal object PlanBoard {
     }
 
     /**
-     * « Étaler sur 7 jours » (web : `spreadOverdue`, cas partagés `fixtures/plan/spread-overdue.json`). Tri : priorité
-     * haute, moyenne, basse, aucune ; puis l'échéance la plus ancienne ; puis l'uid. Chaque tâche va au jour, de
-     * [today] à [today] + 6, dont la charge est la plus faible (somme des durées estimées de [planned], 30 min sans
-     * estimation positive), le plus tôt à égalité ; la charge du jour choisi grandit de la durée de la tâche. Rend les
-     * paires (uid, jour) dans l'ordre de placement.
+     * « Replanifier » des échues (web : `spreadOverdue`, cas partagés `fixtures/plan/spread-overdue.json`). Tri :
+     * priorité haute, moyenne, basse, aucune ; puis l'échéance la plus ancienne ; puis l'uid. Une tâche peut aller à un
+     * jour de sa fenêtre depuis [today] (deux jours en priorité haute, quatre en moyenne, sept sinon), jamais avant son
+     * jour de début ni de report (dans [zone]) ; sans tel jour dans sa fenêtre, le premier jour permis des sept, et
+     * aucun la laisse échue. Elle va à son jour permis le moins chargé (somme des durées estimées de [planned], 30 min
+     * sans estimation positive), le plus tôt à égalité ; la charge du jour choisi grandit de la durée de la tâche. Rend
+     * les paires (uid, jour) dans l'ordre de placement.
      */
-    fun spread(overdue: List<TaskItem>, planned: Map<LocalDate, List<Int?>>, today: LocalDate): List<Pair<String, LocalDate>> {
+    fun spread(
+        overdue: List<TaskItem>,
+        planned: Map<LocalDate, List<Int?>>,
+        today: LocalDate,
+        zone: ZoneId = ZoneId.systemDefault(),
+    ): List<Pair<String, LocalDate>> {
         val days = (0 until SPREAD_DAYS).map { today.plusDays(it.toLong()) }
         val load = days.mapTo(ArrayList()) { day -> planned[day].orEmpty().sumOf(::spreadMinutes) }
         val rank = { task: TaskItem -> when (task.priority) { 2 -> 0; 1 -> 1; 0 -> 2; else -> 3 } }
+        val window = listOf(2, 4, SPREAD_DAYS, SPREAD_DAYS)
         return overdue
             .sortedWith(compareBy<TaskItem>(rank).thenBy { it.dueDay ?: LocalDate.MAX }.thenBy { it.uid })
-            .map { task ->
-                val best = load.indices.minBy { load[it] }
+            .mapNotNull { task ->
+                val earliest = listOfNotNull(task.startDate, task.deferUntil).maxOfOrNull { it.atZone(zone).toLocalDate() }
+                val allowed = days.indices.filter { earliest == null || !days[it].isBefore(earliest) }
+                if (allowed.isEmpty()) return@mapNotNull null
+                val choices = allowed.filter { it < window[rank(task)] }.ifEmpty { listOf(allowed.first()) }
+                val best = choices.minBy { load[it] }
                 load[best] += spreadMinutes(task.estimatedMinutes)
                 task.uid to days[best]
             }

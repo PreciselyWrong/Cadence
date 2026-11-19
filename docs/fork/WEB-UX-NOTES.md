@@ -1015,3 +1015,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : la colonne Boîte de réception / « À planifier » faisait 260 px fixes ; les titres longs s'y coupaient sur quatre lignes.
 - **Décision** : poignée à droite de la colonne, comme celle du calendrier (glisser, flèches, Début / Fin, double clic pour revenir à 260 px), de 220 à 560 px sans retirer au tableau ses deux jours ni, s'il est à côté, le calendrier le plus étroit ; largeur gardée par navigateur.
 - **Android** : sans objet, Planifier tient en une colonne.
+
+## Plan : En retard en une ligne, Replanifier par urgence, jours vides discrets (2026-11-19)
+
+- **Problème** : la bande « En retard » prenait un quart de l'écran avant la semaine ; « Replanifier ▾ » proposait d'abord de tout mettre aujourd'hui ; chaque jour vide affichait « Rien de prévu. » en gras et « 0  0 min / 10 h » ; des aides restaient affichées pour toujours.
+- **Décision** : bande repliée en une ligne par défaut (« En retard (N) », une aide courte, les boutons) ; bouton partagé : « Replanifier » répartit (priorité haute aujourd'hui ou demain, moyenne sous 4 jours, le reste sous 7, jamais avant la date de début ou de report, jour le moins chargé), « ▾ » garde Aujourd'hui, Demain, Choisir une date ; le toast dit jusqu'à quel jour. Jour vide sans texte, en-tête sans zéro (nombre, charge et barre seulement s'il y a des cartes). Aides de la Boîte et des horizons en infobulles.
+- **Android** : la règle de répartition est la même (`PlanBoard.spread`, cas partagés), donc « Étaler sur 7 jours » des Échues l'applique déjà ; à reprendre côté écran : Échues repliée en une ligne, jours vides sans texte, l'action principale « Replanifier » qui répartit.

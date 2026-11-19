@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.planning
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.io.File
 import java.time.LocalDate
+import java.time.ZoneOffset
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
@@ -26,6 +27,9 @@ class SpreadOverdueTest {
 
     private fun JsonElement.minutes(): Int? = jsonObject["estimated_minutes"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.int
 
+    private fun JsonElement.day(key: String) =
+        jsonObject[key]?.takeUnless { it is JsonNull }?.jsonPrimitive?.content?.let { LocalDate.parse(it.take(10)).atStartOfDay(ZoneOffset.UTC).toInstant() }
+
     private fun priority(element: JsonElement): Int? = when (element.jsonObject["priority"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.content) {
         "low" -> 0
         "medium" -> 1
@@ -34,7 +38,7 @@ class SpreadOverdueTest {
     }
 
     @TestFactory
-    fun `étaler sur 7 jours suit les cas partagés avec le web`(): List<DynamicTest> =
+    fun `replanifier les échues suit les cas partagés avec le web`(): List<DynamicTest> =
         fixture.getValue("cases").jsonArray.map { case ->
             DynamicTest.dynamicTest(case.str("name")) {
                 val overdue = case.jsonObject.getValue("overdue").jsonArray.map {
@@ -44,13 +48,15 @@ class SpreadOverdueTest {
                         priority = priority(it),
                         dueDay = LocalDate.parse(it.str("due_date").take(10)),
                         estimatedMinutes = it.minutes(),
+                        startDate = it.day("start_date"),
+                        deferUntil = it.day("defer_until"),
                     )
                 }
                 val planned = case.jsonObject.getValue("planned").jsonObject.map { (date, tasks) ->
                     LocalDate.parse(date) to tasks.jsonArray.map { it.minutes() }
                 }.toMap()
                 val expected = case.jsonObject.getValue("expect").jsonArray.map { it.str("uid") to LocalDate.parse(it.str("date")) }
-                assertEquals(expected, PlanBoard.spread(overdue, planned, LocalDate.parse(case.str("today"))))
+                assertEquals(expected, PlanBoard.spread(overdue, planned, LocalDate.parse(case.str("today")), ZoneOffset.UTC))
             }
         }
 }

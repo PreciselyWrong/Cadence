@@ -433,8 +433,9 @@ const UpcomingBoard: React.FC = () => {
     const [eventsVersion, setEventsVersion] = useState(0);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [inboxChoice, setInboxChoice] = useState(loadInboxCollapsed);
+    // One line until opened: the overdue cards no longer push the week down.
     const [overdueCollapsed, setOverdueCollapsed] = useState(
-        () => readStored(OVERDUE_KEY) === '1'
+        () => readStored(OVERDUE_KEY) !== '0'
     );
     const [storedWidth, setStoredWidth] = useState(() => {
         const stored = Number(readStored(WIDTH_KEY));
@@ -1897,7 +1898,10 @@ const UpcomingBoard: React.FC = () => {
     // today on; today is reloaded so the strip drops them.
     const lateUids = () =>
         overdue.map((task) => task.uid).filter(Boolean) as string[];
-    const planOverdue = (placed: { uid: string; date: string }[]) => {
+    const planOverdue = (
+        placed: { uid: string; date: string }[],
+        message = t('upcoming.overdueReplanned', 'Overdue tasks replanned')
+    ) => {
         const byDate = new Map<string, string[]>();
         placed.forEach(({ uid, date }) =>
             byDate.set(date, [...(byDate.get(date) ?? []), uid])
@@ -1909,11 +1913,7 @@ const UpcomingBoard: React.FC = () => {
                 task_uid: uid,
             })),
         }));
-        return commit(
-            writes,
-            t('upcoming.overdueReplanned', 'Overdue tasks replanned'),
-            [today]
-        );
+        return commit(writes, message, [today]);
     };
     const replanOverdueOn = (date: string) => {
         if (date < today) return;
@@ -1942,16 +1942,33 @@ const UpcomingBoard: React.FC = () => {
                 (loaded[date]?.plan?.items ?? []).map((item) => item.task),
             ])
         );
+        const placed = spreadOverdue(
+            late.map((task) => ({
+                uid: task.uid as string,
+                priority: task.priority,
+                due_date: task.due_date,
+                estimated_minutes: task.estimated_minutes,
+                start_date: task.start_date,
+                defer_until: task.defer_until,
+            })),
+            today,
+            planned
+        );
+        if (placed.length === 0) return;
+        // The toast names the last day used: « réparties jusqu'à samedi ».
+        const last = placed.reduce(
+            (max, { date }) => (date > max ? date : max),
+            today
+        );
+        const until = new Intl.DateTimeFormat(i18n.language, {
+            weekday: 'long',
+        }).format(new Date(`${last}T12:00:00`));
         void planOverdue(
-            spreadOverdue(
-                late.map((task) => ({
-                    uid: task.uid as string,
-                    priority: task.priority,
-                    due_date: task.due_date,
-                    estimated_minutes: task.estimated_minutes,
-                })),
-                today,
-                planned
+            placed,
+            t(
+                'upcoming.overdueSpreadDone',
+                'Overdue tasks spread until {{until}}',
+                { until }
             )
         );
     };
@@ -1969,12 +1986,6 @@ const UpcomingBoard: React.FC = () => {
             label: t('upcoming.overdueTomorrow', 'Tomorrow'),
             testId: 'overdue-replan-tomorrow',
             onSelect: () => replanOverdueOn(shiftDay(today, 1)),
-        },
-        {
-            key: 'spread',
-            label: t('upcoming.overdueSpread', 'Spread over 7 days'),
-            testId: 'overdue-replan-spread',
-            onSelect: () => void spreadOverdueOverWeek(),
         },
         {
             key: 'pick',
@@ -2233,7 +2244,12 @@ const UpcomingBoard: React.FC = () => {
                             <section
                                 data-testid="upcoming-overdue"
                                 aria-label={t('upcoming.overdue', 'Overdue')}
-                                className="shrink-0 rounded-2xl border border-danger/30 bg-danger/5 px-2 py-1.5"
+                                data-collapsed={overdueCollapsed || undefined}
+                                className={`shrink-0 rounded-2xl px-2 ${
+                                    overdueCollapsed
+                                        ? 'py-0.5'
+                                        : 'border border-danger/30 bg-danger/5 py-1.5'
+                                }`}
                             >
                                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                                     <button
@@ -2256,46 +2272,78 @@ const UpcomingBoard: React.FC = () => {
                                             { count: overdueCards.length }
                                         )}
                                     </button>
+                                    {overdueCollapsed && (
+                                        <span className="truncate text-body-s text-surface-on-variant">
+                                            {t(
+                                                'upcoming.overdueHint',
+                                                'Reschedule spreads them over the week, urgent ones first.'
+                                            )}
+                                        </span>
+                                    )}
                                     <div className="relative ml-auto flex flex-wrap items-center justify-end gap-1">
                                         <PluginActions
                                             place="overdue"
                                             context={{ date: today }}
                                         />
-                                        <Menu
-                                            entries={replanEntries}
-                                            testId="overdue-replan-menu"
-                                            trigger={({ ref, ...props }) => (
-                                                <Button
-                                                    {...props}
-                                                    ref={(el) => {
-                                                        replanMenuRef.current =
-                                                            el;
-                                                        if (
-                                                            typeof ref ===
-                                                            'function'
-                                                        ) {
-                                                            ref(el);
-                                                        } else if (ref) {
-                                                            (
-                                                                ref as React.MutableRefObject<HTMLButtonElement | null>
-                                                            ).current = el;
-                                                        }
-                                                    }}
-                                                    size="sm"
-                                                    variant="danger"
-                                                    data-testid="overdue-replan"
-                                                >
-                                                    {t(
-                                                        'upcoming.overdueReplan',
-                                                        'Reschedule'
-                                                    )}
-                                                    <ChevronDownIcon
-                                                        aria-hidden="true"
-                                                        className="h-3.5 w-3.5"
-                                                    />
-                                                </Button>
-                                            )}
-                                        />
+                                        <div className="flex items-center">
+                                            <Button
+                                                size="sm"
+                                                variant="danger"
+                                                className="rounded-r-none"
+                                                data-testid="overdue-replan"
+                                                title={t(
+                                                    'upcoming.overdueReplanTitle',
+                                                    'Spread over the next days: high priority today or tomorrow, medium within 4 days, the rest within 7, on the lightest days, never before a start date.'
+                                                )}
+                                                onClick={() =>
+                                                    void spreadOverdueOverWeek()
+                                                }
+                                            >
+                                                {t(
+                                                    'upcoming.overdueReplan',
+                                                    'Reschedule'
+                                                )}
+                                            </Button>
+                                            <Menu
+                                                entries={replanEntries}
+                                                testId="overdue-replan-menu"
+                                                trigger={({
+                                                    ref,
+                                                    ...props
+                                                }) => (
+                                                    <Button
+                                                        {...props}
+                                                        ref={(el) => {
+                                                            replanMenuRef.current =
+                                                                el;
+                                                            if (
+                                                                typeof ref ===
+                                                                'function'
+                                                            ) {
+                                                                ref(el);
+                                                            } else if (ref) {
+                                                                (
+                                                                    ref as React.MutableRefObject<HTMLButtonElement | null>
+                                                                ).current = el;
+                                                            }
+                                                        }}
+                                                        size="sm"
+                                                        variant="danger"
+                                                        className="-ml-px rounded-l-none px-1.5"
+                                                        aria-label={t(
+                                                            'upcoming.overdueMore',
+                                                            'All on one day'
+                                                        )}
+                                                        data-testid="overdue-replan-more"
+                                                    >
+                                                        <ChevronDownIcon
+                                                            aria-hidden="true"
+                                                            className="h-3.5 w-3.5"
+                                                        />
+                                                    </Button>
+                                                )}
+                                            />
+                                        </div>
                                         <JumpToDate
                                             value={today}
                                             today={today}

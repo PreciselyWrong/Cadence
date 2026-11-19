@@ -14,7 +14,6 @@ import { DayLine, dayLines } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
 import { progressOf } from './planOps';
 import { IconButton } from '../Shared/ui/Button';
-import EmptyState from '../Shared/ui/EmptyState';
 import { FIELD_CLASS } from '../Shared/ui/controlSizes';
 import { weekdayTitle } from './dayLabel';
 import { cardTaskKeys, dayLoad, groupCards, sortCards } from './groupCards';
@@ -213,8 +212,12 @@ const DayColumn: React.FC<DayColumnProps> = ({
                         {label}
                     </h2>
                     <span className="ml-auto flex shrink-0 items-center gap-2 whitespace-nowrap text-xs tabular-nums text-surface-on-variant">
-                        <span>{progress.total}</span>
-                        {(availableMinutes !== undefined || load > 0) && (
+                        {progress.total > 0 && (
+                            <span data-testid="upcoming-count">
+                                {progress.total}
+                            </span>
+                        )}
+                        {load > 0 && (
                             <span
                                 data-testid="upcoming-load"
                                 data-over={overLoad}
@@ -257,26 +260,31 @@ const DayColumn: React.FC<DayColumnProps> = ({
                 <p className="h-4 whitespace-nowrap text-xs tabular-nums text-surface-on-variant">
                     <time dateTime={date}>{dateText}</time>
                 </p>
-                <div
-                    role="progressbar"
-                    aria-label={t(
-                        'upcoming.progress',
-                        '{{done}} of {{total}} done',
-                        {
-                            done: progress.done,
-                            total: progress.total,
-                        }
-                    )}
-                    aria-valuemin={0}
-                    aria-valuemax={progress.total}
-                    aria-valuenow={progress.done}
-                    className="h-1 overflow-hidden rounded-full bg-surface-highest"
-                >
+                {/* An empty day keeps the row, so headers stay aligned. */}
+                {progress.total === 0 ? (
+                    <div aria-hidden="true" className="h-1" />
+                ) : (
                     <div
-                        className="h-full rounded-full bg-primary transition-[width] duration-150"
-                        style={{ width: `${percent}%` }}
-                    />
-                </div>
+                        role="progressbar"
+                        aria-label={t(
+                            'upcoming.progress',
+                            '{{done}} of {{total}} done',
+                            {
+                                done: progress.done,
+                                total: progress.total,
+                            }
+                        )}
+                        aria-valuemin={0}
+                        aria-valuemax={progress.total}
+                        aria-valuenow={progress.done}
+                        className="h-1 overflow-hidden rounded-full bg-surface-highest"
+                    >
+                        <div
+                            className="h-full rounded-full bg-primary transition-[width] duration-150"
+                            style={{ width: `${percent}%` }}
+                        />
+                    </div>
+                )}
             </header>
 
             {adding && (
@@ -350,11 +358,12 @@ const DayColumn: React.FC<DayColumnProps> = ({
                         </div>
                     )}
                 </SortableContext>
+                {/* An empty day stays blank: the cards are what the eye
+                    should meet. */}
                 {lines && progress.total === 0 && (
-                    <EmptyState
-                        className="py-6"
-                        title={t('upcoming.empty', 'Nothing planned.')}
-                    />
+                    <p className="sr-only">
+                        {t('upcoming.empty', 'Nothing planned.')}
+                    </p>
                 )}
             </div>
         </section>

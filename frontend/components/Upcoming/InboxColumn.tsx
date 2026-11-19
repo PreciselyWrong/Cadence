@@ -292,7 +292,13 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
         >
             <header className="px-2.5 py-2">
                 <div className="flex items-center gap-2">
-                    <h2 className="min-w-0 flex-1 truncate text-body font-semibold text-surface-on">
+                    <h2
+                        title={t(
+                            'upcoming.inboxHint',
+                            'Drag onto a day to plan it'
+                        )}
+                        className="min-w-0 flex-1 truncate text-body font-semibold text-surface-on"
+                    >
                         {title}
                     </h2>
                     <div className="flex shrink-0 gap-0.5">
@@ -320,9 +326,6 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                         )}
                     </div>
                 </div>
-                <p className="text-xs text-surface-on-variant">
-                    {t('upcoming.inboxHint', 'Drag onto a day to plan it')}
-                </p>
                 <div className="-ml-2.5 mt-1 flex flex-wrap gap-0.5 empty:hidden">
                     <TriageEntry />
                     {open.length > 0 && (

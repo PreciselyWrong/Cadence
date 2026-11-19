@@ -347,10 +347,14 @@ describe('DayColumn', () => {
         expect(bar).toHaveAccessibleName('1 of 2 done');
     });
 
-    it('shows the empty state when the day has nothing', () => {
-        renderColumn({ day: dayWith() });
+    it('keeps an empty day quiet: no count, no load, no visible text', () => {
+        renderColumn({ availableMinutes: 600, day: dayWith() });
 
-        expect(screen.getByText('Nothing planned.')).toBeInTheDocument();
+        // Said to screen readers only.
+        expect(screen.getByText('Nothing planned.')).toHaveClass('sr-only');
+        expect(screen.queryByTestId('upcoming-load')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('upcoming-count')).not.toBeInTheDocument();
+        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
         expect(screen.queryAllByTestId('upcoming-card')).toHaveLength(0);
     });
 

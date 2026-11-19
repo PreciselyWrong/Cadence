@@ -269,9 +269,11 @@ const shift = (n: number) => {
 };
 const TOMORROW = shift(1);
 
-// The overdue strip's « Reschedule ▾ » menu, then one of its choices.
+// The overdue strip's « ▾ » menu (all on one day), then one of its choices.
 const replanOverdue = (strip: HTMLElement, choice: string) => {
-    fireEvent.click(within(strip).getByRole('button', { name: 'Reschedule' }));
+    fireEvent.click(
+        within(strip).getByRole('button', { name: 'All on one day' })
+    );
     fireEvent.click(
         within(screen.getByTestId('overdue-replan-menu')).getByRole(
             'menuitem',
@@ -298,6 +300,8 @@ beforeEach(() => {
     jest.clearAllMocks();
     mockOpenTaskUid = null;
     localStorage.clear();
+    // Most cases read the overdue cards: the strip starts open.
+    localStorage.setItem('upcoming.overdueCollapsed', '0');
     // A desktop window: the calendar sits beside the board.
     window.innerWidth = 1440;
     mockFetchDay.mockImplementation(async (date?: string) => {
@@ -695,9 +699,10 @@ describe('UpcomingBoard', () => {
         );
         renderBoard();
         const columns = await screen.findAllByTestId('horizon-column');
+        // The horizon's meaning is its tooltip, no longer a line.
         expect(
-            within(columns[4]).getByText('Maybe later, out of the way')
-        ).toBeInTheDocument();
+            within(columns[4]).getByRole('heading', { name: /^Someday/ })
+        ).toHaveAttribute('title', 'Maybe later, out of the way');
         fireEvent.click(
             within(columns[3]).getByRole('button', {
                 name: 'Add a task to Next month',
@@ -967,6 +972,49 @@ describe('UpcomingBoard', () => {
         expect(todayLoads()).toBeGreaterThan(loadsBefore);
     });
 
+    it('shows the overdue tasks as one line until opened', async () => {
+        localStorage.removeItem('upcoming.overdueCollapsed');
+        withOverdue([
+            task('late', 'Renew passport', {
+                due_date: shift(-3),
+            } as Partial<Task>),
+        ]);
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        expect(strip).toHaveAttribute('data-collapsed', 'true');
+        expect(within(strip).queryByText('Renew passport')).toBeNull();
+        fireEvent.click(within(strip).getByText('Overdue (1)'));
+        expect(within(strip).getByText('Renew passport')).toBeInTheDocument();
+        expect(localStorage.getItem('upcoming.overdueCollapsed')).toBe('0');
+    });
+
+    it('names the last day the spread used', async () => {
+        withOverdue([
+            task('minor', 'Sort photos', {
+                due_date: shift(-9),
+                priority: 'low',
+            } as Partial<Task>),
+            task('urgent', 'Renew passport', {
+                due_date: shift(-2),
+                priority: 'high',
+            } as Partial<Task>),
+        ]);
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        await settle();
+        fireEvent.click(
+            within(strip).getByRole('button', { name: 'Reschedule' })
+        );
+        await waitFor(() =>
+            expect(mockShowUndoToast).toHaveBeenCalledWith(
+                `Overdue tasks spread until ${new Intl.DateTimeFormat('en', {
+                    weekday: 'long',
+                }).format(new Date(`${shift(2)}T12:00:00`))}`,
+                expect.any(Function)
+            )
+        );
+    });
+
     it('spreads the overdue tasks over the lightest of the next 7 days', async () => {
         // Today holds « Write report » (30 min): the others are empty.
         withOverdue([
@@ -982,7 +1030,9 @@ describe('UpcomingBoard', () => {
         renderBoard();
         const strip = await screen.findByTestId('upcoming-overdue');
         await settle();
-        replanOverdue(strip, 'Spread over 7 days');
+        fireEvent.click(
+            within(strip).getByRole('button', { name: 'Reschedule' })
+        );
         await waitFor(() => expect(mockApply).toHaveBeenCalledTimes(2));
         expect(mockApply).toHaveBeenCalledWith(
             TOMORROW,

@@ -91,8 +91,9 @@ internal object OverdueReplan {
         movable(tasks).map { it to ReplanChoice.Day(today.plusDays(1)) }
 
     /**
-     * « Étaler sur 7 jours » : même répartition que celle de Planifier ([PlanBoard.spread], jour le moins chargé
-     * d'aujourd'hui à J+6), mais chaque jour devient l'échéance, comme un choix d'une ligne.
+     * « Étaler sur 7 jours » : même répartition que celle de Planifier ([PlanBoard.spread] : fenêtre selon la priorité,
+     * jamais avant le début ni le report, jour le moins chargé), mais chaque jour devient l'échéance, comme un choix
+     * d'une ligne.
      */
     fun spread(tasks: List<TaskItem>, plan: List<PlanEntry>, all: List<TaskItem>, today: LocalDate): List<Pair<TaskItem, ReplanChoice>> {
         val minutes = all.associate { it.uid to it.estimatedMinutes }

@@ -12,7 +12,6 @@ import { intlLocale } from '../DailyPlan/planUtils';
 import { DayLine, lineFromDue } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
 import { IconButton } from '../Shared/ui/Button';
-import EmptyState from '../Shared/ui/EmptyState';
 import { FIELD_CLASS } from '../Shared/ui/controlSizes';
 import type { HorizonKey } from './horizons';
 
@@ -114,8 +113,14 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
         >
             <header className="px-2.5 py-2">
                 <div className="flex items-baseline gap-2">
-                    <h2 className="text-body font-semibold text-surface-on">
+                    {/* What the horizon means is a tooltip, not a line read
+                        every time. */}
+                    <h2
+                        title={hint}
+                        className="text-body font-semibold text-surface-on"
+                    >
                         {title}
+                        {hint && <span className="sr-only">. {hint}</span>}
                     </h2>
                     {tasks && tasks.length > 0 && (
                         <span className="text-xs tabular-nums text-surface-on-variant">
@@ -136,9 +141,6 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                         </IconButton>
                     )}
                 </div>
-                {hint && (
-                    <p className="text-xs text-surface-on-variant">{hint}</p>
-                )}
             </header>
             {onAdd && adding && (
                 <form onSubmit={submit}>
@@ -183,19 +185,20 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                     ))}
                 </SortableContext>
                 {nothingElse && (
-                    <EmptyState
-                        className="py-6"
-                        title={t('upcoming.empty', 'Nothing planned.')}
-                        hint={
-                            plannedOnDays.length > 0
-                                ? t(
-                                      'upcoming.plannedOnDayHint',
-                                      '{{count}} planned on a day',
-                                      { count: plannedOnDays.length }
-                                  )
-                                : undefined
-                        }
-                    />
+                    <>
+                        <p className="sr-only">
+                            {t('upcoming.empty', 'Nothing planned.')}
+                        </p>
+                        {plannedOnDays.length > 0 && (
+                            <p className="px-2.5 py-2 text-xs text-surface-on-variant">
+                                {t(
+                                    'upcoming.plannedOnDayHint',
+                                    '{{count}} planned on a day',
+                                    { count: plannedOnDays.length }
+                                )}
+                            </p>
+                        )}
+                    </>
                 )}
                 {plannedOnDays.length > 0 && (
                     <div className="flex flex-col gap-2 pt-1">
