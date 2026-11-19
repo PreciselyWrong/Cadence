@@ -15,6 +15,7 @@ const {
 const taskScheduler = require('./modules/tasks/taskScheduler');
 const { initializeEmailService } = require('./services/emailService');
 const { setConfig, getConfig } = require('./config/config');
+const { staticCacheControl } = require('./utils/staticCache');
 const config = getConfig();
 const distIndexPath = path.join(__dirname, 'dist', 'index.html');
 const serveFromDist = config.production || fs.existsSync(distIndexPath);
@@ -331,7 +332,6 @@ app.use(
 // Static files. Webpack output is content-hashed, so the bundles can be
 // cached for a year; the shell (index.html) and the service worker must
 // always be revalidated or a deploy would never reach returning visitors.
-const NEVER_CACHE = new Set(['/index.html', '/sw.js', '/manifest.json']);
 if (serveFromDist) {
     app.use(
         express.static(path.join(__dirname, 'dist'), {
@@ -341,9 +341,8 @@ if (serveFromDist) {
             immutable: true,
             setHeaders: (res, filePath) => {
                 const rel = filePath.slice(path.join(__dirname, 'dist').length);
-                if (NEVER_CACHE.has(rel.replace(/\\/g, '/'))) {
-                    res.setHeader('Cache-Control', 'no-cache');
-                }
+                const cacheControl = staticCacheControl(rel);
+                if (cacheControl) res.setHeader('Cache-Control', cacheControl);
             },
         })
     );

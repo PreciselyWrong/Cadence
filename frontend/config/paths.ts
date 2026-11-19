@@ -89,19 +89,22 @@ export function getApiPath(path: string): string {
     return withBasePath(`api/${cleanPath}`);
 }
 
+// In every translation address. Translations were once cached for a year
+// under a fixed name; the server now revalidates them, and this version,
+// past the old `v=2`, makes browsers drop the copies they still hold.
+export const LOCALES_VERSION = '3';
+
 /**
  * Get the locales path
  * @param path - The locales path (e.g., '/locales/en/translation.json')
- * @returns The full locales path
+ * @returns The full locales path, with the translations version
  */
 export function getLocalesPath(path: string): string {
     const cleanPath = stripLeadingSlash(path);
-
-    if (cleanPath.startsWith('locales/')) {
-        return withBasePath(cleanPath);
-    }
-
-    return withBasePath(`locales/${cleanPath}`);
+    const file = cleanPath.startsWith('locales/')
+        ? cleanPath
+        : `locales/${cleanPath}`;
+    return withBasePath(`${file}?v=${LOCALES_VERSION}`);
 }
 
 /**
