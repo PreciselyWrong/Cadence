@@ -5802,7 +5802,8 @@
       "navigation": "Aller à",
       "task": "Sur une tâche",
       "create": "Créer",
-      "triage": "Tri de la boîte"
+      "triage": "Tri de la boîte",
+      "plan": "Sur la page Planifier"
     },
     "shortcuts": {
       "palette": "Ouvrir la palette de commandes",
@@ -5827,7 +5828,17 @@
       "triageProject": "Tri : en faire un projet",
       "triageNote": "Tri : en faire une note",
       "triageLater": "Tri : plus tard (reste dans la boîte)",
-      "triageDelete": "Tri : supprimer"
+      "triageDelete": "Tri : supprimer",
+      "planAddInbox": "Ajouter à la Boîte de réception",
+      "planFocus": "Passer d'une tâche ou d'un jour à l'autre (ou H, J, K, L)",
+      "planMoveDay": "Déplacer la tâche (ou la sélection) d'un jour",
+      "planToday": "La planifier aujourd'hui",
+      "planTomorrow": "La planifier demain",
+      "planNextWeek": "L'envoyer à la semaine prochaine",
+      "planThisMonth": "L'envoyer à ce mois-ci",
+      "planDrag": "La prendre pour la déplacer aux flèches (Entrée la pose)",
+      "planPick": "Sélectionner plusieurs tâches (clic avec Ctrl, Cmd ou Maj)",
+      "planClear": "Vider la sélection"
     }
   },
   "taskPanel": {
@@ -6572,7 +6583,12 @@
     "stripOpen": "Ouvrir {{name}} dans Horizons",
     "sentToHorizon": "Envoyée vers {{name}}",
     "plannedOnDayHint_one": "{{count}} planifiée un jour",
-    "plannedOnDayHint_other": "{{count}} planifiées un jour"
+    "plannedOnDayHint_other": "{{count}} planifiées un jour",
+    "weekLoad": "Cette semaine {{planned}} / {{available}}",
+    "weekLoadTitle": "Prévu d'aujourd'hui à la fin de la semaine, face à vos heures de journée",
+    "pickedMoved": "Tâches sélectionnées déplacées",
+    "pickedCount": "Sélection : {{count}}",
+    "pickedClear": "Vider la sélection"
   },
   "offline": {
     "offline": "Hors ligne",

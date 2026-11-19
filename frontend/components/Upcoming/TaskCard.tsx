@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FlagIcon } from '@heroicons/react/24/outline';
@@ -7,6 +7,7 @@ import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from '../Today/dayModel';
 import { subtasksWithoutCard } from './groupCards';
 import TaskCardBody, { taskCardClass } from '../Shared/task/TaskCardBody';
+import { isPickClick, PickedCardsContext } from './pickedCards';
 
 export const cardId = (date: string, uid: string): string =>
     `card:${date}:${uid}`;
@@ -74,6 +75,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
         disabled: line.done,
     });
     const { onKeyDown: dragKeyDown, ...dragListeners } = listeners ?? {};
+    const pick = useContext(PickedCardsContext);
+    const picked = !!pick?.picked.has(uid);
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.target !== event.currentTarget) return;
@@ -93,7 +96,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
             data-testid="upcoming-card"
             data-task-row=""
             data-uid={uid}
-            aria-selected={selected}
+            aria-selected={selected || picked}
+            data-picked={picked || undefined}
             aria-label={task.name}
             style={{
                 transform: CSS.Transform.toString(transform),
@@ -102,8 +106,21 @@ const TaskCard: React.FC<TaskCardProps> = ({
             {...attributes}
             {...dragListeners}
             onKeyDown={onKeyDown}
-            onClick={() => onOpen(line)}
-            className={taskCardClass(selected, isDragging)}
+            onMouseDown={(event) => {
+                // Shift click picks the card; it must not select text.
+                if (pick && event.shiftKey) event.preventDefault();
+            }}
+            onClick={(event) => {
+                if (pick && isPickClick(event)) {
+                    event.preventDefault();
+                    pick.toggle(data);
+                    return;
+                }
+                onOpen(line);
+            }}
+            className={`${taskCardClass(selected, isDragging)} ${
+                picked ? '!bg-primary-container/50 ring-2 ring-primary/70' : ''
+            }`}
         >
             <TaskCardBody
                 task={task}

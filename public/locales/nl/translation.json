@@ -5770,7 +5770,8 @@
       "navigation": "Ga naar",
       "task": "Bij een taak",
       "create": "Maken",
-      "triage": "Inbox sorteren"
+      "triage": "Inbox sorteren",
+      "plan": "Op de pagina Plannen"
     },
     "shortcuts": {
       "palette": "Opdrachtenpalet openen",
@@ -5795,7 +5796,17 @@
       "triageProject": "Sorteren: maak een project",
       "triageNote": "Sorteren: maak een notitie",
       "triageLater": "Sorteren: later (in de inbox houden)",
-      "triageDelete": "Sorteren: verwijderen"
+      "triageDelete": "Sorteren: verwijderen",
+      "planAddInbox": "Toevoegen aan de inbox",
+      "planFocus": "Tussen taken en dagen bewegen (of H, J, K, L)",
+      "planMoveDay": "De taak (of de selectie) een dag verschuiven",
+      "planToday": "Vandaag inplannen",
+      "planTomorrow": "Morgen inplannen",
+      "planNextWeek": "Naar volgende week sturen",
+      "planThisMonth": "Naar deze maand sturen",
+      "planDrag": "Oppakken om met de pijlen te verplaatsen (Enter zet neer)",
+      "planPick": "Meerdere taken selecteren (klik met Ctrl, Cmd of Shift)",
+      "planClear": "Selectie wissen"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripOpen": "{{name}} openen in Horizonnen",
     "sentToHorizon": "Verplaatst naar {{name}}",
     "plannedOnDayHint_one": "{{count}} ingepland op een dag",
-    "plannedOnDayHint_other": "{{count}} ingepland op een dag"
+    "plannedOnDayHint_other": "{{count}} ingepland op een dag",
+    "weekLoad": "Deze week {{planned}} / {{available}}",
+    "weekLoadTitle": "Gepland van vandaag tot het eind van de week, tegenover je daguren",
+    "pickedMoved": "Geselecteerde taken verplaatst",
+    "pickedCount": "Geselecteerd: {{count}}",
+    "pickedClear": "Selectie wissen"
   },
   "offline": {
     "offline": "Offline",

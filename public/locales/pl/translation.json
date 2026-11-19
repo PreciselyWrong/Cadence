@@ -5866,7 +5866,8 @@
       "navigation": "Przejdź do",
       "task": "Przy zadaniu",
       "create": "Utwórz",
-      "triage": "Przegląd skrzynki"
+      "triage": "Przegląd skrzynki",
+      "plan": "Na stronie Planuj"
     },
     "shortcuts": {
       "palette": "Otwórz paletę poleceń",
@@ -5891,7 +5892,17 @@
       "triageProject": "Przegląd: zamień w projekt",
       "triageNote": "Przegląd: zamień w notatkę",
       "triageLater": "Przegląd: później (zostaw w skrzynce)",
-      "triageDelete": "Przegląd: usuń"
+      "triageDelete": "Przegląd: usuń",
+      "planAddInbox": "Dodaj do skrzynki odbiorczej",
+      "planFocus": "Przechodzenie między zadaniami i dniami (lub H, J, K, L)",
+      "planMoveDay": "Przesuń zadanie (lub zaznaczenie) o dzień",
+      "planToday": "Zaplanuj na dziś",
+      "planTomorrow": "Zaplanuj na jutro",
+      "planNextWeek": "Wyślij na przyszły tydzień",
+      "planThisMonth": "Wyślij na ten miesiąc",
+      "planDrag": "Podnieś, by przesuwać strzałkami (Enter upuszcza)",
+      "planPick": "Zaznacz kilka zadań (klik z Ctrl, Cmd lub Shift)",
+      "planClear": "Wyczyść zaznaczenie"
     }
   },
   "taskPanel": {
@@ -6650,7 +6661,12 @@
     "plannedOnDayHint_one": "Zaplanowane na dzień: {{count}}",
     "plannedOnDayHint_few": "Zaplanowane na dzień: {{count}}",
     "plannedOnDayHint_many": "Zaplanowane na dzień: {{count}}",
-    "plannedOnDayHint_other": "Zaplanowane na dzień: {{count}}"
+    "plannedOnDayHint_other": "Zaplanowane na dzień: {{count}}",
+    "weekLoad": "Ten tydzień {{planned}} / {{available}}",
+    "weekLoadTitle": "Zaplanowane od dziś do końca tygodnia wobec twoich godzin dnia",
+    "pickedMoved": "Przeniesiono zaznaczone zadania",
+    "pickedCount": "Zaznaczone: {{count}}",
+    "pickedClear": "Wyczyść zaznaczenie"
   },
   "offline": {
     "offline": "Offline",

@@ -5777,7 +5777,8 @@
       "navigation": "Vai a",
       "task": "Su un'attività",
       "create": "Crea",
-      "triage": "Smistamento Inbox"
+      "triage": "Smistamento Inbox",
+      "plan": "Nella pagina Pianifica"
     },
     "shortcuts": {
       "palette": "Apri la palette dei comandi",
@@ -5802,7 +5803,17 @@
       "triageProject": "Smista: rendi progetto",
       "triageNote": "Smista: rendi nota",
       "triageLater": "Smista: più tardi (resta nella Inbox)",
-      "triageDelete": "Smista: elimina"
+      "triageDelete": "Smista: elimina",
+      "planAddInbox": "Aggiungi alla posta in arrivo",
+      "planFocus": "Spostarsi tra attività e giorni (o H, J, K, L)",
+      "planMoveDay": "Sposta l'attività (o la selezione) di un giorno",
+      "planToday": "Pianificala oggi",
+      "planTomorrow": "Pianificala domani",
+      "planNextWeek": "Mandala alla prossima settimana",
+      "planThisMonth": "Mandala a questo mese",
+      "planDrag": "Prendila per spostarla con le frecce (Invio la rilascia)",
+      "planPick": "Seleziona più attività (clic con Ctrl, Cmd o Maiusc)",
+      "planClear": "Svuota la selezione"
     }
   },
   "taskPanel": {
@@ -6549,7 +6560,12 @@
     "stripOpen": "Apri {{name}} in Orizzonti",
     "sentToHorizon": "Inviata a {{name}}",
     "plannedOnDayHint_one": "{{count}} pianificata in un giorno",
-    "plannedOnDayHint_other": "{{count}} pianificate in un giorno"
+    "plannedOnDayHint_other": "{{count}} pianificate in un giorno",
+    "weekLoad": "Questa settimana {{planned}} / {{available}}",
+    "weekLoadTitle": "Pianificato da oggi a fine settimana, rispetto alle tue ore giornaliere",
+    "pickedMoved": "Attività selezionate spostate",
+    "pickedCount": "Selezionate: {{count}}",
+    "pickedClear": "Svuota la selezione"
   },
   "offline": {
     "offline": "Offline",

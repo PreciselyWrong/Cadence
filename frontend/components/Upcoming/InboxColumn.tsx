@@ -110,6 +110,8 @@ export interface InboxColumnProps {
     items: InboxItem[];
     // Width of the open column, set from its handle on the board.
     width?: number;
+    // Bumped by the board's N key: opens the field to add a task.
+    addRequest?: number;
     // Inbox › « Tâches à classer »: open tasks with no moment decided.
     tasks?: Task[];
     today: string;
@@ -199,6 +201,7 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
     collapsed = false,
     onCollapsedChange,
     width = INBOX_WIDTH,
+    addRequest = 0,
 }) => {
     const { t } = useTranslation();
     const open = openInboxItems(items);
@@ -218,6 +221,11 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
         setAdding(true);
         if (collapsed) onCollapsedChange?.(false);
     };
+    useEffect(() => {
+        if (addRequest > 0) startAdding();
+        // startAdding is rebuilt every render; only a new request counts.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [addRequest]);
     const stopAdding = () => {
         setAdding(false);
         setDraft('');

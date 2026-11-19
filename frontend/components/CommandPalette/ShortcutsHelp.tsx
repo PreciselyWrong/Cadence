@@ -25,6 +25,11 @@ const GROUPS: Array<{ id: ShortcutGroup; key: string; fallback: string }> = [
         key: 'commandCenter.help.triage',
         fallback: 'Inbox triage',
     },
+    {
+        id: 'plan',
+        key: 'commandCenter.help.plan',
+        fallback: 'On the Plan page',
+    },
 ];
 
 const ShortcutsHelp: React.FC<ShortcutsHelpProps> = ({ onClose }) => {

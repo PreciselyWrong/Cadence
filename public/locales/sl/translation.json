@@ -5870,7 +5870,8 @@
       "navigation": "Pojdi na",
       "task": "Pri opravilu",
       "create": "Ustvari",
-      "triage": "Razvrščanje prejetega"
+      "triage": "Razvrščanje prejetega",
+      "plan": "Na strani Načrtuj"
     },
     "shortcuts": {
       "palette": "Odpri paleto ukazov",
@@ -5895,7 +5896,17 @@
       "triageProject": "Razvrsti: naredi projekt",
       "triageNote": "Razvrsti: naredi opombo",
       "triageLater": "Razvrsti: pozneje (ohrani v prejetem)",
-      "triageDelete": "Razvrsti: izbriši"
+      "triageDelete": "Razvrsti: izbriši",
+      "planAddInbox": "Dodaj v Prejeto",
+      "planFocus": "Premikanje med opravili in dnevi (ali H, J, K, L)",
+      "planMoveDay": "Premakni opravilo (ali izbor) za en dan",
+      "planToday": "Načrtuj za danes",
+      "planTomorrow": "Načrtuj za jutri",
+      "planNextWeek": "Pošlji v naslednji teden",
+      "planThisMonth": "Pošlji v ta mesec",
+      "planDrag": "Dvigni za premik s puščicami (Enter spusti)",
+      "planPick": "Izberi več opravil (klik s Ctrl, Cmd ali Shift)",
+      "planClear": "Počisti izbor"
     }
   },
   "taskPanel": {
@@ -6654,7 +6665,12 @@
     "plannedOnDayHint_one": "Načrtovano za dan: {{count}}",
     "plannedOnDayHint_two": "Načrtovano za dan: {{count}}",
     "plannedOnDayHint_few": "Načrtovano za dan: {{count}}",
-    "plannedOnDayHint_other": "Načrtovano za dan: {{count}}"
+    "plannedOnDayHint_other": "Načrtovano za dan: {{count}}",
+    "weekLoad": "Ta teden {{planned}} / {{available}}",
+    "weekLoadTitle": "Načrtovano od danes do konca tedna glede na tvoje dnevne ure",
+    "pickedMoved": "Izbrana opravila premaknjena",
+    "pickedCount": "Izbrano: {{count}}",
+    "pickedClear": "Počisti izbor"
   },
   "offline": {
     "offline": "Brez povezave",

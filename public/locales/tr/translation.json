@@ -5770,7 +5770,8 @@
       "navigation": "Git",
       "task": "Bir görevde",
       "create": "Oluştur",
-      "triage": "Gelen kutusu ayıklama"
+      "triage": "Gelen kutusu ayıklama",
+      "plan": "Planla sayfasında"
     },
     "shortcuts": {
       "palette": "Komut paletini aç",
@@ -5795,7 +5796,17 @@
       "triageProject": "Ayıkla: projeye dönüştür",
       "triageNote": "Ayıkla: nota dönüştür",
       "triageLater": "Ayıkla: sonra (gelen kutusunda tut)",
-      "triageDelete": "Ayıkla: sil"
+      "triageDelete": "Ayıkla: sil",
+      "planAddInbox": "Gelen kutusuna ekle",
+      "planFocus": "Görevler ve günler arasında geç (veya H, J, K, L)",
+      "planMoveDay": "Görevi (veya seçimi) bir gün kaydır",
+      "planToday": "Bugüne planla",
+      "planTomorrow": "Yarına planla",
+      "planNextWeek": "Gelecek haftaya gönder",
+      "planThisMonth": "Bu aya gönder",
+      "planDrag": "Oklarla taşımak için al (Enter bırakır)",
+      "planPick": "Birden çok görev seç (Ctrl, Cmd veya Shift ile tıkla)",
+      "planClear": "Seçimi temizle"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripOpen": "{{name}} ögesini Ufuklar'da aç",
     "sentToHorizon": "{{name}} ufkuna gönderildi",
     "plannedOnDayHint_one": "{{count}} tanesi bir güne planlandı",
-    "plannedOnDayHint_other": "{{count}} tanesi bir güne planlandı"
+    "plannedOnDayHint_other": "{{count}} tanesi bir güne planlandı",
+    "weekLoad": "Bu hafta {{planned}} / {{available}}",
+    "weekLoadTitle": "Bugünden hafta sonuna kadar planlanan, günlük saatlerine göre",
+    "pickedMoved": "Seçili görevler taşındı",
+    "pickedCount": "Seçili: {{count}}",
+    "pickedClear": "Seçimi temizle"
   },
   "offline": {
     "offline": "Çevrimdışı",

@@ -532,6 +532,96 @@ describe('UpcomingBoard', () => {
         ).toHaveTextContent('Calendar');
     });
 
+    it('shows the rest of the week against its hours in the strip', async () => {
+        renderBoard();
+        const week = await screen.findByTestId('week-load');
+        expect(week).toHaveTextContent(/^This week .+ \/ .+$/);
+    });
+
+    it('opens the inbox field on N, not while typing', async () => {
+        renderBoard();
+        await screen.findByTestId('inbox-column');
+        fireEvent.keyDown(document.body, { key: 'n' });
+        const field = await screen.findByPlaceholderText('Add a task');
+        expect(field).toHaveFocus();
+        fireEvent.change(field, { target: { value: 'n' } });
+        fireEvent.keyDown(field, { key: 'n' });
+        expect(screen.getAllByPlaceholderText('Add a task')).toHaveLength(1);
+    });
+
+    describe('selection of several cards', () => {
+        const cardOf = (name: string) =>
+            within(column(TODAY))
+                .getByText(name)
+                .closest('[data-testid="upcoming-card"]') as HTMLElement;
+
+        it('picks cards with Ctrl or Shift click and plans them together', async () => {
+            renderBoard();
+            await within(column(TODAY)).findByText('Write report');
+            fireEvent.click(cardOf('Write report'), { ctrlKey: true });
+            fireEvent.click(cardOf('Pay bill'), { shiftKey: true });
+            // Picking never opens the task.
+            expect(mockOpenTask).not.toHaveBeenCalled();
+            expect(cardOf('Write report')).toHaveAttribute(
+                'data-picked',
+                'true'
+            );
+            const bar = screen.getByRole('toolbar', { name: 'Selected: 2' });
+
+            fireEvent.click(
+                within(bar).getByRole('button', { name: 'Tomorrow' })
+            );
+            await waitFor(() =>
+                expect(mockApply).toHaveBeenCalledWith(
+                    TOMORROW,
+                    [
+                        expect.objectContaining({ op: 'slot', task_uid: 't1' }),
+                        { op: 'add', task_uid: 't2' },
+                    ],
+                    expect.anything()
+                )
+            );
+            expect(mockApply).toHaveBeenCalledWith(
+                TODAY,
+                [{ op: 'remove', task_uid: 't1' }],
+                expect.anything()
+            );
+            expect(screen.queryByRole('toolbar')).not.toBeInTheDocument();
+        });
+
+        it('moves the whole selection with t from a picked card', async () => {
+            renderBoard();
+            await within(column(TODAY)).findByText('Write report');
+            fireEvent.click(cardOf('Pay bill'), { ctrlKey: true });
+            fireEvent.click(cardOf('Write report'), { metaKey: true });
+            fireEvent.keyDown(cardOf('Pay bill'), { key: 'T', shiftKey: true });
+            await waitFor(() =>
+                expect(mockApply).toHaveBeenCalledWith(
+                    TOMORROW,
+                    expect.arrayContaining([
+                        { op: 'add', task_uid: 't2' },
+                        expect.objectContaining({ op: 'slot', task_uid: 't1' }),
+                    ]),
+                    expect.anything()
+                )
+            );
+        });
+
+        it('clears with Escape or a second Ctrl click', async () => {
+            renderBoard();
+            await within(column(TODAY)).findByText('Write report');
+            fireEvent.click(cardOf('Write report'), { ctrlKey: true });
+            fireEvent.click(cardOf('Pay bill'), { ctrlKey: true });
+            fireEvent.click(cardOf('Pay bill'), { ctrlKey: true });
+            expect(
+                screen.getByRole('toolbar', { name: 'Selected: 1' })
+            ).toBeInTheDocument();
+            fireEvent.keyDown(document.body, { key: 'Escape' });
+            expect(screen.queryByRole('toolbar')).not.toBeInTheDocument();
+            expect(cardOf('Write report')).not.toHaveAttribute('data-picked');
+        });
+    });
+
     it('opens the inbox at its remembered width', async () => {
         localStorage.setItem('upcoming.inboxWidth', '400');
         renderBoard();

@@ -5866,7 +5866,8 @@
       "navigation": "Перейти",
       "task": "Для задачи",
       "create": "Создать",
-      "triage": "Разбор входящих"
+      "triage": "Разбор входящих",
+      "plan": "На странице Планирование"
     },
     "shortcuts": {
       "palette": "Открыть палитру команд",
@@ -5891,7 +5892,17 @@
       "triageProject": "Разбор: сделать проектом",
       "triageNote": "Разбор: сделать заметкой",
       "triageLater": "Разбор: позже (оставить во входящих)",
-      "triageDelete": "Разбор: удалить"
+      "triageDelete": "Разбор: удалить",
+      "planAddInbox": "Добавить во входящие",
+      "planFocus": "Переход между задачами и днями (или H, J, K, L)",
+      "planMoveDay": "Сдвинуть задачу (или выделение) на день",
+      "planToday": "Запланировать на сегодня",
+      "planTomorrow": "Запланировать на завтра",
+      "planNextWeek": "Отправить на следующую неделю",
+      "planThisMonth": "Отправить на этот месяц",
+      "planDrag": "Взять, чтобы двигать стрелками (Enter — опустить)",
+      "planPick": "Выбрать несколько задач (щелчок с Ctrl, Cmd или Shift)",
+      "planClear": "Снять выделение"
     }
   },
   "taskPanel": {
@@ -6650,7 +6661,12 @@
     "plannedOnDayHint_one": "Запланировано на день: {{count}}",
     "plannedOnDayHint_few": "Запланировано на день: {{count}}",
     "plannedOnDayHint_many": "Запланировано на день: {{count}}",
-    "plannedOnDayHint_other": "Запланировано на день: {{count}}"
+    "plannedOnDayHint_other": "Запланировано на день: {{count}}",
+    "weekLoad": "Эта неделя {{planned}} / {{available}}",
+    "weekLoadTitle": "Запланировано с сегодня до конца недели относительно ваших рабочих часов",
+    "pickedMoved": "Выбранные задачи перемещены",
+    "pickedCount": "Выбрано: {{count}}",
+    "pickedClear": "Снять выделение"
   },
   "offline": {
     "offline": "Нет связи",

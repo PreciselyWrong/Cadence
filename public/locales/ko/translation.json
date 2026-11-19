@@ -5770,7 +5770,8 @@
       "navigation": "이동",
       "task": "작업에서",
       "create": "만들기",
-      "triage": "받은편지함 정리"
+      "triage": "받은편지함 정리",
+      "plan": "계획 페이지에서"
     },
     "shortcuts": {
       "palette": "명령 팔레트 열기",
@@ -5795,7 +5796,17 @@
       "triageProject": "정리: 프로젝트로 만들기",
       "triageNote": "정리: 노트로 만들기",
       "triageLater": "정리: 나중에 (받은편지함에 유지)",
-      "triageDelete": "정리: 삭제"
+      "triageDelete": "정리: 삭제",
+      "planAddInbox": "받은편지함에 추가",
+      "planFocus": "작업과 날짜 사이 이동 (또는 H, J, K, L)",
+      "planMoveDay": "작업(또는 선택)을 하루 이동",
+      "planToday": "오늘로 계획",
+      "planTomorrow": "내일로 계획",
+      "planNextWeek": "다음 주로 보내기",
+      "planThisMonth": "이번 달로 보내기",
+      "planDrag": "집어서 화살표로 이동 (Enter로 놓기)",
+      "planPick": "여러 작업 선택 (Ctrl, Cmd 또는 Shift 클릭)",
+      "planClear": "선택 해제"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripLabel": "기간으로 보내기",
     "stripOpen": "기간에서 {{name}} 열기",
     "sentToHorizon": "{{name}}(으)로 보냄",
-    "plannedOnDayHint_other": "{{count}}개는 특정 날에 계획됨"
+    "plannedOnDayHint_other": "{{count}}개는 특정 날에 계획됨",
+        "weekLoad": "이번 주 {{planned}} / {{available}}",
+        "weekLoadTitle": "오늘부터 주말까지 계획된 시간과 하루 근무 시간 비교",
+        "pickedMoved": "선택한 작업을 옮겼습니다",
+        "pickedCount": "선택됨: {{count}}",
+        "pickedClear": "선택 해제"
   },
   "offline": {
     "offline": "오프라인",

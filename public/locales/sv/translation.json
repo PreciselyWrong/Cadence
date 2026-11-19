@@ -5770,7 +5770,8 @@
       "navigation": "Gå till",
       "task": "På en uppgift",
       "create": "Skapa",
-      "triage": "Sortering av inkorgen"
+      "triage": "Sortering av inkorgen",
+      "plan": "På sidan Planera"
     },
     "shortcuts": {
       "palette": "Öppna kommandopaletten",
@@ -5795,7 +5796,17 @@
       "triageProject": "Sortera: gör till projekt",
       "triageNote": "Sortera: gör till anteckning",
       "triageLater": "Sortera: senare (behåll i inkorgen)",
-      "triageDelete": "Sortera: ta bort"
+      "triageDelete": "Sortera: ta bort",
+      "planAddInbox": "Lägg till i inkorgen",
+      "planFocus": "Flytta mellan uppgifter och dagar (eller H, J, K, L)",
+      "planMoveDay": "Flytta uppgiften (eller urvalet) en dag",
+      "planToday": "Planera den i dag",
+      "planTomorrow": "Planera den i morgon",
+      "planNextWeek": "Skicka den till nästa vecka",
+      "planThisMonth": "Skicka den till den här månaden",
+      "planDrag": "Plocka upp den och flytta med pilarna (Enter släpper)",
+      "planPick": "Välj flera uppgifter (klick med Ctrl, Cmd eller Skift)",
+      "planClear": "Rensa urvalet"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripOpen": "Öppna {{name}} i Horisonter",
     "sentToHorizon": "Skickad till {{name}}",
     "plannedOnDayHint_one": "{{count}} planerad på en dag",
-    "plannedOnDayHint_other": "{{count}} planerade på en dag"
+    "plannedOnDayHint_other": "{{count}} planerade på en dag",
+    "weekLoad": "Den här veckan {{planned}} / {{available}}",
+    "weekLoadTitle": "Planerat från i dag till veckans slut, mot dina dagtimmar",
+    "pickedMoved": "Valda uppgifter flyttade",
+    "pickedCount": "Valda: {{count}}",
+    "pickedClear": "Rensa urvalet"
   },
   "offline": {
     "offline": "Offline",

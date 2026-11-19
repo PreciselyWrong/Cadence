@@ -5770,7 +5770,8 @@
       "navigation": "前往",
       "task": "任务上",
       "create": "创建",
-      "triage": "收件箱整理"
+      "triage": "收件箱整理",
+      "plan": "在计划页面"
     },
     "shortcuts": {
       "palette": "打开命令面板",
@@ -5795,7 +5796,17 @@
       "triageProject": "整理：转为项目",
       "triageNote": "整理：转为笔记",
       "triageLater": "整理：稍后（保留在收件箱）",
-      "triageDelete": "整理：删除"
+      "triageDelete": "整理：删除",
+      "planAddInbox": "添加到收件箱",
+      "planFocus": "在任务和日期间移动（或 H、J、K、L）",
+      "planMoveDay": "将任务（或所选）移动一天",
+      "planToday": "计划在今天",
+      "planTomorrow": "计划在明天",
+      "planNextWeek": "发送到下周",
+      "planThisMonth": "发送到本月",
+      "planDrag": "拿起后用方向键移动（Enter 放下）",
+      "planPick": "选择多个任务（Ctrl、Cmd 或 Shift 加点击）",
+      "planClear": "清除选择"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripLabel": "发送到展望",
     "stripOpen": "在展望中打开{{name}}",
     "sentToHorizon": "已发送到{{name}}",
-    "plannedOnDayHint_other": "{{count}} 项已安排到某天"
+    "plannedOnDayHint_other": "{{count}} 项已安排到某天",
+        "weekLoad": "本周 {{planned}} / {{available}}",
+        "weekLoadTitle": "从今天到本周末的计划时长，对比你的每日工作时间",
+        "pickedMoved": "已移动所选任务",
+        "pickedCount": "已选：{{count}}",
+        "pickedClear": "清除选择"
   },
   "offline": {
     "offline": "离线",

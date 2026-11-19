@@ -5,7 +5,7 @@ import { isMac } from './keyboardShortcutsService';
 import type { ShortcutBinding } from './shortcutDispatcher';
 
 export type ShortcutGroup =
-    'general' | 'navigation' | 'task' | 'create' | 'triage';
+    'general' | 'navigation' | 'task' | 'create' | 'triage' | 'plan';
 
 export interface ShortcutDef {
     id: string;
@@ -206,6 +206,87 @@ export const SHORTCUT_DEFS: ShortcutDef[] = [
         group: 'triage',
         labelKey: 'commandCenter.shortcuts.triageDelete',
         defaultLabel: 'Triage: delete',
+        global: false,
+    },
+    // Handled by the Plan board (UpcomingBoard), listed for the help.
+    {
+        id: 'plan-add-inbox',
+        keys: ['N'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planAddInbox',
+        defaultLabel: 'Add to the inbox',
+        global: false,
+    },
+    {
+        id: 'plan-focus',
+        keys: ['↑', '↓', '←', '→'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planFocus',
+        defaultLabel: 'Move between tasks and days (or H, J, K, L)',
+        global: false,
+    },
+    {
+        id: 'plan-move-day',
+        keys: ['Shift', '←', '→'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planMoveDay',
+        defaultLabel: 'Move the task (or the selection) a day',
+        global: false,
+    },
+    {
+        id: 'plan-today',
+        keys: ['T'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planToday',
+        defaultLabel: 'Plan it today',
+        global: false,
+    },
+    {
+        id: 'plan-tomorrow',
+        keys: ['Shift', 'T'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planTomorrow',
+        defaultLabel: 'Plan it tomorrow',
+        global: false,
+    },
+    {
+        id: 'plan-next-week',
+        keys: ['Shift', 'W'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planNextWeek',
+        defaultLabel: 'Send it to next week',
+        global: false,
+    },
+    {
+        id: 'plan-this-month',
+        keys: ['Shift', 'M'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planThisMonth',
+        defaultLabel: 'Send it to this month',
+        global: false,
+    },
+    {
+        id: 'plan-drag',
+        keys: ['M'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planDrag',
+        defaultLabel: 'Pick it up to move with the arrows (Enter drops it)',
+        global: false,
+    },
+    {
+        id: 'plan-pick',
+        keys: ['Ctrl', 'Shift'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planPick',
+        defaultLabel: 'Pick several tasks (Ctrl, Cmd or Shift click)',
+        global: false,
+    },
+    {
+        id: 'plan-clear',
+        keys: ['Esc'],
+        group: 'plan',
+        labelKey: 'commandCenter.shortcuts.planClear',
+        defaultLabel: 'Clear the selection',
         global: false,
     },
 ];

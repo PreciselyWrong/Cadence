@@ -5742,7 +5742,8 @@
       "navigation": "Go to",
       "task": "On a task",
       "create": "Create",
-      "triage": "Inbox triage"
+      "triage": "Inbox triage",
+      "plan": "On the Plan page"
     },
     "shortcuts": {
       "palette": "Open the command palette",
@@ -5767,7 +5768,17 @@
       "triageProject": "Triage: make it a project",
       "triageNote": "Triage: make it a note",
       "triageLater": "Triage: later (keep it in the inbox)",
-      "triageDelete": "Triage: delete"
+      "triageDelete": "Triage: delete",
+      "planAddInbox": "Add to the inbox",
+      "planFocus": "Move between tasks and days (or H, J, K, L)",
+      "planMoveDay": "Move the task (or the selection) a day",
+      "planToday": "Plan it today",
+      "planTomorrow": "Plan it tomorrow",
+      "planNextWeek": "Send it to next week",
+      "planThisMonth": "Send it to this month",
+      "planDrag": "Pick it up to move with the arrows (Enter drops it)",
+      "planPick": "Pick several tasks (Ctrl, Cmd or Shift click)",
+      "planClear": "Clear the selection"
     }
   },
   "taskPanel": {
@@ -6506,7 +6517,12 @@
     "stripOpen": "Open {{name}} in Horizons",
     "sentToHorizon": "Sent to {{name}}",
     "plannedOnDayHint_one": "{{count}} planned on a day",
-    "plannedOnDayHint_other": "{{count}} planned on a day"
+    "plannedOnDayHint_other": "{{count}} planned on a day",
+    "weekLoad": "This week {{planned}} / {{available}}",
+    "weekLoadTitle": "Planned from today to the end of the week, against your day hours",
+    "pickedMoved": "Selected tasks moved",
+    "pickedCount": "Selected: {{count}}",
+    "pickedClear": "Clear the selection"
   },
   "offline": {
     "offline": "Offline",

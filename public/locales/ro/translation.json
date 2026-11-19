@@ -5787,7 +5787,8 @@
       "navigation": "Mergi la",
       "task": "Pe o sarcină",
       "create": "Creează",
-      "triage": "Triere inbox"
+      "triage": "Triere inbox",
+      "plan": "Pe pagina Planifică"
     },
     "shortcuts": {
       "palette": "Deschide paleta de comenzi",
@@ -5812,7 +5813,17 @@
       "triageProject": "Triere: transformă în proiect",
       "triageNote": "Triere: transformă în notiță",
       "triageLater": "Triere: mai târziu (păstrează în inbox)",
-      "triageDelete": "Triere: șterge"
+      "triageDelete": "Triere: șterge",
+      "planAddInbox": "Adaugă în căsuța de intrare",
+      "planFocus": "Mută-te între sarcini și zile (sau H, J, K, L)",
+      "planMoveDay": "Mută sarcina (sau selecția) cu o zi",
+      "planToday": "Planific-o azi",
+      "planTomorrow": "Planific-o mâine",
+      "planNextWeek": "Trimite-o săptămâna viitoare",
+      "planThisMonth": "Trimite-o luna aceasta",
+      "planDrag": "Ridic-o ca s-o muți cu săgețile (Enter o lasă)",
+      "planPick": "Selectează mai multe sarcini (clic cu Ctrl, Cmd sau Shift)",
+      "planClear": "Golește selecția"
     }
   },
   "taskPanel": {
@@ -6561,7 +6572,12 @@
     "sentToHorizon": "Trimisă către {{name}}",
     "plannedOnDayHint_one": "{{count}} planificată într-o zi",
     "plannedOnDayHint_few": "{{count}} planificate într-o zi",
-    "plannedOnDayHint_other": "{{count}} planificate într-o zi"
+    "plannedOnDayHint_other": "{{count}} planificate într-o zi",
+    "weekLoad": "Săptămâna aceasta {{planned}} / {{available}}",
+    "weekLoadTitle": "Planificat de azi până la sfârșitul săptămânii, față de orele tale",
+    "pickedMoved": "Sarcinile selectate au fost mutate",
+    "pickedCount": "Selectate: {{count}}",
+    "pickedClear": "Golește selecția"
   },
   "offline": {
     "offline": "Offline",

@@ -5779,7 +5779,8 @@
       "navigation": "Wechseln zu",
       "task": "Bei einer Aufgabe",
       "create": "Erstellen",
-      "triage": "Eingang sortieren"
+      "triage": "Eingang sortieren",
+      "plan": "Auf der Seite Planen"
     },
     "shortcuts": {
       "palette": "Befehlspalette öffnen",
@@ -5804,7 +5805,17 @@
       "triageProject": "Sortieren: als Projekt anlegen",
       "triageNote": "Sortieren: als Notiz anlegen",
       "triageLater": "Sortieren: später (im Eingang belassen)",
-      "triageDelete": "Sortieren: löschen"
+      "triageDelete": "Sortieren: löschen",
+      "planAddInbox": "Zum Eingang hinzufügen",
+      "planFocus": "Zwischen Aufgaben und Tagen wechseln (oder H, J, K, L)",
+      "planMoveDay": "Aufgabe (oder Auswahl) um einen Tag verschieben",
+      "planToday": "Heute einplanen",
+      "planTomorrow": "Morgen einplanen",
+      "planNextWeek": "In die nächste Woche schieben",
+      "planThisMonth": "In diesen Monat schieben",
+      "planDrag": "Aufnehmen und mit den Pfeilen bewegen (Enter legt ab)",
+      "planPick": "Mehrere Aufgaben auswählen (Klick mit Strg, Cmd oder Umschalt)",
+      "planClear": "Auswahl aufheben"
     }
   },
   "taskPanel": {
@@ -6543,7 +6554,12 @@
     "stripOpen": "{{name}} in Horizonte öffnen",
     "sentToHorizon": "Nach {{name}} verschoben",
     "plannedOnDayHint_one": "{{count}} an einem Tag geplant",
-    "plannedOnDayHint_other": "{{count}} an einem Tag geplant"
+    "plannedOnDayHint_other": "{{count}} an einem Tag geplant",
+    "weekLoad": "Diese Woche {{planned}} / {{available}}",
+    "weekLoadTitle": "Geplant von heute bis Wochenende, gegenüber deinen Tagesstunden",
+    "pickedMoved": "Ausgewählte Aufgaben verschoben",
+    "pickedCount": "Ausgewählt: {{count}}",
+    "pickedClear": "Auswahl aufheben"
   },
   "offline": {
     "offline": "Offline",

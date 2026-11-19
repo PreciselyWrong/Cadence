@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatDuration } from '../DailyPlan/planUtils';
+import type { WeekLoad } from './weekLoad';
 import { useDroppable } from '@dnd-kit/core';
 import type { HorizonDropData } from './HorizonColumn';
 import { HorizonKey, STRIP_KEYS } from './horizons';
@@ -58,6 +60,8 @@ const StripTarget: React.FC<StripTargetProps> = ({
 
 interface HorizonStripProps {
     titles: Record<HorizonKey, string>;
+    // The rest of this week against its hours; not a drop target.
+    week?: WeekLoad | null;
     // null while the horizon tasks load.
     counts: Partial<Record<HorizonKey, number>> | null;
     dragging: boolean;
@@ -70,6 +74,7 @@ interface HorizonStripProps {
  */
 const HorizonStrip: React.FC<HorizonStripProps> = ({
     titles,
+    week = null,
     counts,
     dragging,
     onOpen,
@@ -81,6 +86,30 @@ const HorizonStrip: React.FC<HorizonStripProps> = ({
             data-testid="horizon-strip"
             className="flex shrink-0 items-center gap-1 rounded-xl bg-surface-high/70 p-1"
         >
+            {week && (
+                <p
+                    data-testid="week-load"
+                    data-over={week.planned > week.available}
+                    title={t(
+                        'upcoming.weekLoadTitle',
+                        'Planned from today to the end of the week, against your day hours'
+                    )}
+                    className={`shrink-0 whitespace-nowrap px-2.5 text-body-m tabular-nums ${
+                        week.planned > week.available
+                            ? 'font-semibold text-danger'
+                            : 'text-surface-on-variant'
+                    }`}
+                >
+                    {t(
+                        'upcoming.weekLoad',
+                        'This week {{planned}} / {{available}}',
+                        {
+                            planned: formatDuration(week.planned),
+                            available: formatDuration(week.available),
+                        }
+                    )}
+                </p>
+            )}
             {STRIP_KEYS.map((key) => (
                 <StripTarget
                     key={key}

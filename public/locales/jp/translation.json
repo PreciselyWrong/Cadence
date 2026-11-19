@@ -5770,7 +5770,8 @@
       "navigation": "移動",
       "task": "タスク上で",
       "create": "作成",
-      "triage": "受信トレイの整理"
+      "triage": "受信トレイの整理",
+      "plan": "計画ページで"
     },
     "shortcuts": {
       "palette": "コマンドパレットを開く",
@@ -5795,7 +5796,17 @@
       "triageProject": "整理: プロジェクトにする",
       "triageNote": "整理: メモにする",
       "triageLater": "整理: 後で（受信トレイに残す）",
-      "triageDelete": "整理: 削除"
+      "triageDelete": "整理: 削除",
+      "planAddInbox": "受信トレイに追加",
+      "planFocus": "タスクと日の間を移動（H, J, K, L も可）",
+      "planMoveDay": "タスク（または選択）を1日ずらす",
+      "planToday": "今日に計画",
+      "planTomorrow": "明日に計画",
+      "planNextWeek": "来週へ送る",
+      "planThisMonth": "今月へ送る",
+      "planDrag": "持ち上げて矢印で移動（Enter で置く）",
+      "planPick": "複数のタスクを選択（Ctrl、Cmd、Shift + クリック）",
+      "planClear": "選択を解除"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripLabel": "期間へ送る",
     "stripOpen": "期間で{{name}}を開く",
     "sentToHorizon": "{{name}}に送りました",
-    "plannedOnDayHint_other": "{{count}}件は日付に予定済み"
+    "plannedOnDayHint_other": "{{count}}件は日付に予定済み",
+        "weekLoad": "今週 {{planned}} / {{available}}",
+        "weekLoadTitle": "今日から週末までの予定と、1日の作業時間との比較",
+        "pickedMoved": "選択したタスクを移動しました",
+        "pickedCount": "選択中: {{count}}",
+        "pickedClear": "選択を解除"
   },
   "offline": {
     "offline": "オフライン",

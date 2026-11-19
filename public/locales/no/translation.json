@@ -5775,7 +5775,8 @@
       "navigation": "Gå til",
       "task": "På en oppgave",
       "create": "Opprett",
-      "triage": "Sortering av innboks"
+      "triage": "Sortering av innboks",
+      "plan": "På siden Planlegg"
     },
     "shortcuts": {
       "palette": "Åpne kommandopalett",
@@ -5800,7 +5801,17 @@
       "triageProject": "Sorter: gjør til prosjekt",
       "triageNote": "Sorter: gjør til notat",
       "triageLater": "Sorter: senere (behold i innboksen)",
-      "triageDelete": "Sorter: slett"
+      "triageDelete": "Sorter: slett",
+      "planAddInbox": "Legg til i innboksen",
+      "planFocus": "Flytt mellom oppgaver og dager (eller H, J, K, L)",
+      "planMoveDay": "Flytt oppgaven (eller utvalget) en dag",
+      "planToday": "Planlegg den i dag",
+      "planTomorrow": "Planlegg den i morgen",
+      "planNextWeek": "Send den til neste uke",
+      "planThisMonth": "Send den til denne måneden",
+      "planDrag": "Plukk den opp og flytt med pilene (Enter slipper)",
+      "planPick": "Velg flere oppgaver (klikk med Ctrl, Cmd eller Shift)",
+      "planClear": "Tøm utvalget"
     }
   },
   "taskPanel": {
@@ -6539,7 +6550,12 @@
     "stripOpen": "Åpne {{name}} i Horisonter",
     "sentToHorizon": "Sendt til {{name}}",
     "plannedOnDayHint_one": "{{count}} planlagt på en dag",
-    "plannedOnDayHint_other": "{{count}} planlagt på en dag"
+    "plannedOnDayHint_other": "{{count}} planlagt på en dag",
+    "weekLoad": "Denne uken {{planned}} / {{available}}",
+    "weekLoadTitle": "Planlagt fra i dag til slutten av uken, mot dagtimene dine",
+    "pickedMoved": "Valgte oppgaver flyttet",
+    "pickedCount": "Valgt: {{count}}",
+    "pickedClear": "Tøm utvalget"
   },
   "offline": {
     "offline": "Frakoblet",

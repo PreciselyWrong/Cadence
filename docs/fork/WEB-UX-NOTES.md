@@ -1027,3 +1027,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : la Boîte de réception défilait dans une petite zone et « À planifier » dans une autre en dessous ; « Aujourd'hui » paraissait désactivé ; l'icône seule du calendrier ne disait rien.
 - **Décision** : la colonne de gauche défile d'un seul bloc, en-têtes collants (Boîte, puis « À planifier ») ; « Aujourd'hui » toujours actif (ramène la colonne du jour) ; « Calendrier » écrit à côté de l'icône, enfoncé quand il est ouvert.
 - **Android** : sans objet pour la colonne (une seule liste déjà) ; l'en-tête de Planifier n'a pas ces boutons.
+
+## Plan : sélection multiple, N, charge de la semaine, calendrier à côté à 1500 px (2026-11-19)
+
+- **Problème** : on déplaçait les cartes une par une ; les raccourcis du tableau n'étaient connus que des lecteurs d'écran ; rien ne disait si la semaine était pleine ; à 1500 px, le calendrier passait en tiroir.
+- **Décision** : Ctrl, Cmd ou Maj + clic sélectionne plusieurs cartes ; barre « Sélection : N » (Aujourd'hui, Demain, Semaine prochaine, Ce mois-ci, ✕) ; glisser une carte sélectionnée ou t, Maj+T, Maj+←/→, Maj+W, Maj+M déplacent toute la sélection, une seule annulation. N ouvre l'ajout dans la Boîte. Les touches du tableau sont dans l'aide `?` (« Sur la page Planifier »). La bande des horizons commence par « Cette semaine 6 h 30 / 35 h ». Le calendrier reste à côté tant que le tableau garde la Boîte, un jour et demi et le calendrier le plus étroit.
+- **Android** : à reprendre : sélection multiple par appui long puis « Planifier » groupé, charge de la semaine en tête de Planifier (`TODO.md`). Sans objet : N, aide `?`, largeur du calendrier.

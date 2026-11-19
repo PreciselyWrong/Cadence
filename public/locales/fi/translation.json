@@ -5770,7 +5770,8 @@
       "navigation": "Siirry",
       "task": "Tehtävässä",
       "create": "Luo",
-      "triage": "Saapuneiden lajittelu"
+      "triage": "Saapuneiden lajittelu",
+      "plan": "Suunnittele-sivulla"
     },
     "shortcuts": {
       "palette": "Avaa komentopaletti",
@@ -5795,7 +5796,17 @@
       "triageProject": "Lajittele: tee projektiksi",
       "triageNote": "Lajittele: tee muistiinpanoksi",
       "triageLater": "Lajittele: myöhemmin (jää saapuneisiin)",
-      "triageDelete": "Lajittele: poista"
+      "triageDelete": "Lajittele: poista",
+      "planAddInbox": "Lisää saapuneisiin",
+      "planFocus": "Liiku tehtävien ja päivien välillä (tai H, J, K, L)",
+      "planMoveDay": "Siirrä tehtävää (tai valintaa) päivällä",
+      "planToday": "Suunnittele tälle päivälle",
+      "planTomorrow": "Suunnittele huomiselle",
+      "planNextWeek": "Lähetä ensi viikolle",
+      "planThisMonth": "Lähetä tälle kuulle",
+      "planDrag": "Nosta siirrettäväksi nuolilla (Enter laskee)",
+      "planPick": "Valitse useita tehtäviä (napsautus Ctrl, Cmd tai Vaihto)",
+      "planClear": "Tyhjennä valinta"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripOpen": "Avaa {{name}} Näkymissä",
     "sentToHorizon": "Siirretty: {{name}}",
     "plannedOnDayHint_one": "{{count}} suunniteltu päivälle",
-    "plannedOnDayHint_other": "{{count}} suunniteltu päivälle"
+    "plannedOnDayHint_other": "{{count}} suunniteltu päivälle",
+    "weekLoad": "Tällä viikolla {{planned}} / {{available}}",
+    "weekLoadTitle": "Suunniteltu tästä päivästä viikon loppuun päivätuntejasi vasten",
+    "pickedMoved": "Valitut tehtävät siirretty",
+    "pickedCount": "Valittu: {{count}}",
+    "pickedClear": "Tyhjennä valinta"
   },
   "offline": {
     "offline": "Offline-tilassa",

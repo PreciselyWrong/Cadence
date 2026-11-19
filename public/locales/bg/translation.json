@@ -5770,7 +5770,8 @@
       "navigation": "Към",
       "task": "При задача",
       "create": "Създаване",
-      "triage": "Обработка на входящите"
+      "triage": "Обработка на входящите",
+      "plan": "На страница Планиране"
     },
     "shortcuts": {
       "palette": "Отваряне на палитрата с команди",
@@ -5795,7 +5796,17 @@
       "triageProject": "Обработка: направи я проект",
       "triageNote": "Обработка: направи я бележка",
       "triageLater": "Обработка: по-късно (остава във входящите)",
-      "triageDelete": "Обработка: изтриване"
+      "triageDelete": "Обработка: изтриване",
+      "planAddInbox": "Добави към входящите",
+      "planFocus": "Движение между задачи и дни (или H, J, K, L)",
+      "planMoveDay": "Премести задачата (или избора) с един ден",
+      "planToday": "Планирай я за днес",
+      "planTomorrow": "Планирай я за утре",
+      "planNextWeek": "Прати я към следващата седмица",
+      "planThisMonth": "Прати я към този месец",
+      "planDrag": "Вземи я, за да я местиш със стрелките (Enter я пуска)",
+      "planPick": "Избери няколко задачи (клик с Ctrl, Cmd или Shift)",
+      "planClear": "Изчисти избора"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripOpen": "Отвори {{name}} в Хоризонти",
     "sentToHorizon": "Изпратена към {{name}}",
     "plannedOnDayHint_one": "{{count}} планирана за ден",
-    "plannedOnDayHint_other": "{{count}} планирани за ден"
+    "plannedOnDayHint_other": "{{count}} планирани за ден",
+    "weekLoad": "Тази седмица {{planned}} / {{available}}",
+    "weekLoadTitle": "Планирано от днес до края на седмицата спрямо работните ти часове",
+    "pickedMoved": "Избраните задачи са преместени",
+    "pickedCount": "Избрани: {{count}}",
+    "pickedClear": "Изчисти избора"
   },
   "offline": {
     "offline": "Офлайн",

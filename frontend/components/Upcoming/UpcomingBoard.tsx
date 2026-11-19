@@ -173,6 +173,9 @@ import PluginActions from '../Plugins/PluginActions';
 import ProposalButton from '../Proposals/ProposalButton';
 import { useProposalChanged } from '../Proposals/useProposalChanged';
 import { SPREAD_DAYS, spreadOverdue } from './spreadOverdue';
+import { weekLoad } from './weekLoad';
+import { PickedCardsContext } from './pickedCards';
+import { isEditableTarget } from '../../utils/shortcutDispatcher';
 
 const SLOT = 15;
 const DEFAULT_HOURS = { start: 480, end: 1080 };
@@ -1284,15 +1287,22 @@ const UpcomingBoard: React.FC = () => {
      * is committed to the horizon (due date untouched), one undo takes both
      * back.
      */
-    const sendToHorizon = async (card: CardData, to: HorizonKey) => {
+    // Sends a card to a horizon and returns its undo; `announce` false
+    // leaves the toast to the caller (a selection sent at once).
+    const sendToHorizon = async (
+        card: CardData,
+        to: HorizonKey,
+        announce = true
+    ): Promise<(() => void) | null> => {
         if (card.date === TO_PLAN_CARD_DATE) {
-            return commitToPlanCard(card.uid, to);
+            await commitToPlanCard(card.uid, to);
+            return null;
         }
         const current = bucketsRef.current;
         const from = current ? horizonOf(current, card.uid) : null;
         const patch = horizonPatch(from, to);
         const writes = leaveDayWrites(card);
-        if (!patch && writes.length === 0) return;
+        if (!patch && writes.length === 0) return null;
         const undoWrites =
             writes.length > 0
                 ? inverseWrites(daysRef.current, writes, today)
@@ -1301,11 +1311,11 @@ const UpcomingBoard: React.FC = () => {
             if (patch) await updateTask(card.uid, patch as Partial<Task>);
         } catch (err) {
             fail(err);
-            return;
+            return null;
         }
         const left = await commit(writes, undefined, sourceDays(card));
         await reloadHorizons();
-        if (!left) return;
+        if (!left) return null;
         const back = from
             ? horizonPatch(to, from)
             : {
@@ -1313,25 +1323,29 @@ const UpcomingBoard: React.FC = () => {
                   month_of: null,
                   ...(to === 'someday' ? { later: false } : {}),
               };
-        showUndoToast(
-            t('upcoming.sentToHorizon', 'Sent to {{name}}', {
-                name: horizonTitles[to],
-            }),
-            () => {
-                if (undoWrites) {
-                    void commit(
-                        withoutMissingAnchors(daysRef.current, undoWrites),
-                        undefined,
-                        sourceDays(card)
-                    );
-                }
-                if (patch && back) {
-                    updateTask(card.uid, back as Partial<Task>)
-                        .then(() => reloadHorizons())
-                        .catch(fail);
-                }
+        const undo = () => {
+            if (undoWrites) {
+                void commit(
+                    withoutMissingAnchors(daysRef.current, undoWrites),
+                    undefined,
+                    sourceDays(card)
+                );
             }
-        );
+            if (patch && back) {
+                updateTask(card.uid, back as Partial<Task>)
+                    .then(() => reloadHorizons())
+                    .catch(fail);
+            }
+        };
+        if (announce) {
+            showUndoToast(
+                t('upcoming.sentToHorizon', 'Sent to {{name}}', {
+                    name: horizonTitles[to],
+                }),
+                undo
+            );
+        }
+        return undo;
     };
 
     /**
@@ -1652,6 +1666,17 @@ const UpcomingBoard: React.FC = () => {
                 void planInboxItem(data, { date: over.date });
             return;
         }
+        // A picked card carries the whole selection to a day or a horizon.
+        if (data.kind === 'card' && inGroup(data.uid)) {
+            if (toHorizon) {
+                void sendPickedToHorizon(toHorizon);
+                return;
+            }
+            if (over.kind === 'column') {
+                planPickedOn(over.date);
+                return;
+            }
+        }
         if (toHorizon) {
             if (data.kind !== 'card') return;
             if (horizonsMode) void moveToHorizon(data.uid, toHorizon);
@@ -1735,6 +1760,84 @@ const UpcomingBoard: React.FC = () => {
         });
     };
 
+    // Cards picked with Ctrl, Cmd or Shift click (Days layout only): a drag,
+    // a day shortcut or the selection bar moves them all at once.
+    const [picked, setPicked] = useState<Map<string, CardData>>(
+        () => new Map()
+    );
+    const togglePicked = useCallback((card: CardData) => {
+        setPicked((current) => {
+            const next = new Map(current);
+            if (next.has(card.uid)) next.delete(card.uid);
+            else next.set(card.uid, card);
+            return next;
+        });
+    }, []);
+    const clearPicked = useCallback(() => setPicked(new Map()), []);
+    const pickedCards = useMemo(
+        () => (horizonsMode ? null : { picked, toggle: togglePicked }),
+        [horizonsMode, picked, togglePicked]
+    );
+    useEffect(clearPicked, [horizonsMode, clearPicked]);
+    useEffect(() => {
+        if (picked.size === 0) return;
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') clearPicked();
+        };
+        document.addEventListener('keydown', onKeyDown);
+        return () => document.removeEventListener('keydown', onKeyDown);
+    }, [picked.size, clearPicked]);
+    const inGroup = (uid: string) => picked.size > 1 && picked.has(uid);
+
+    // Every picked card on `to`, as one write per day touched.
+    const planPickedOn = (to: string) => {
+        const cards = [...picked.values()];
+        const ops = new Map<string, PlanOp[]>();
+        cards.forEach((card) => {
+            const planned = !!daysRef.current[card.date]?.plan?.items.some(
+                (item) => item.task_uid === card.uid
+            );
+            columnDropWrites(
+                sourceOf(card.uid, card.date, planned),
+                to
+            ).forEach((write) =>
+                ops.set(write.date, [
+                    ...(ops.get(write.date) ?? []),
+                    ...write.ops,
+                ])
+            );
+        });
+        const writes: PlanWrite[] = [...ops].map(([date, dayOps]) => ({
+            date,
+            ops: dayOps,
+        }));
+        clearPicked();
+        void commit(
+            writes,
+            t('upcoming.pickedMoved', 'Selected tasks moved'),
+            [...new Set(cards.flatMap(sourceDays))],
+            cards.flatMap(inboxTaskOf)
+        );
+    };
+
+    // Every picked card sent to a horizon, one Undo for all.
+    const sendPickedToHorizon = async (to: HorizonKey) => {
+        const cards = [...picked.values()];
+        clearPicked();
+        const undos: Array<() => void> = [];
+        for (const card of cards) {
+            const undo = await sendToHorizon(card, to, false);
+            if (undo) undos.push(undo);
+        }
+        if (undos.length === 0) return;
+        showUndoToast(
+            t('upcoming.sentToHorizon', 'Sent to {{name}}', {
+                name: horizonTitles[to],
+            }),
+            () => undos.forEach((undo) => undo())
+        );
+    };
+
     /**
      * Board shortcuts on a focused card: arrows or h j k l move the focus
      * (between cards, between days), Shift with left/right (or H, L) moves
@@ -1773,10 +1876,15 @@ const UpcomingBoard: React.FC = () => {
                 focusIn(next.querySelector('button'))
             );
         };
+        const group = inGroup(card.uid);
+        const planOn = (to: string) =>
+            group ? planPickedOn(to) : planCardOn(card, to);
+        const toHorizon = (to: HorizonKey) =>
+            void (group ? sendPickedToHorizon(to) : sendToHorizon(card, to));
         const moveDay = (step: number) => {
             const to = neighbourDate(dates, card.date, step);
             if (horizonsMode || !to) return false;
-            planCardOn(card, to);
+            planOn(to);
             return true;
         };
         if (event.shiftKey && (key === 'ArrowLeft' || key === 'H')) {
@@ -1792,16 +1900,16 @@ const UpcomingBoard: React.FC = () => {
         } else if (key === 'ArrowUp' || key === 'k') {
             handled = vertical(-1);
         } else if (!horizonsMode && event.shiftKey && key === 'W') {
-            void sendToHorizon(card, 'next_week');
+            toHorizon('next_week');
             handled = true;
         } else if (!horizonsMode && event.shiftKey && key === 'M') {
-            void sendToHorizon(card, 'this_month');
+            toHorizon('this_month');
             handled = true;
         } else if (key === 't') {
-            planCardOn(card, today);
+            planOn(today);
             handled = true;
         } else if (key === 'T') {
-            planCardOn(card, tomorrow);
+            planOn(tomorrow);
             handled = true;
         }
         if (handled) event.preventDefault();
@@ -1876,6 +1984,20 @@ const UpcomingBoard: React.FC = () => {
         setStoredWidth(next);
         if (persist) writeStored(WIDTH_KEY, String(next));
     };
+
+    // N anywhere on the page (not in a field or a dialog) adds to the inbox.
+    const [inboxAddRequest, setInboxAddRequest] = useState(0);
+    useEffect(() => {
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key !== 'n' && event.key !== 'N') return;
+            if (event.altKey || event.ctrlKey || event.metaKey) return;
+            if (event.shiftKey || isEditableTarget(event.target)) return;
+            event.preventDefault();
+            setInboxAddRequest((n) => n + 1);
+        };
+        document.addEventListener('keydown', onKeyDown);
+        return () => document.removeEventListener('keydown', onKeyDown);
+    }, []);
 
     const setInboxWidth = (width: number, persist = false) => {
         const next = clampInboxWidth(width, panesWidth, calendarBeside);
@@ -2072,637 +2194,767 @@ const UpcomingBoard: React.FC = () => {
     const overdueCards = overdue.map((task) => lineFromDue(task, today));
 
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={collision}
-            measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-            accessibility={{
-                announcements,
-                screenReaderInstructions: {
-                    draggable: t(
-                        'upcoming.a11yInstructions',
-                        'To move a task, press M, move it with the arrow keys, then press Enter or Space to drop it, or Escape to cancel. On a focused task: arrows or H, J, K, L move between tasks and days; Shift with Left or Right moves the task a day; T plans it today, Shift+T tomorrow; Enter opens it.'
-                    ),
-                },
-            }}
-            onDragStart={onDragStart}
-            onDragMove={onDragMove}
-            onDragEnd={onDragEnd}
-            onDragCancel={endDrag}
-        >
-            <div
-                data-testid="upcoming-board"
-                className="flex h-full min-h-0 w-full flex-col bg-surface max-md:h-auto max-md:min-h-[calc(100dvh-3.5rem)] max-md:pb-24"
+        <PickedCardsContext.Provider value={pickedCards}>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={collision}
+                measuring={{
+                    droppable: { strategy: MeasuringStrategy.Always },
+                }}
+                accessibility={{
+                    announcements,
+                    screenReaderInstructions: {
+                        draggable: t(
+                            'upcoming.a11yInstructions',
+                            'To move a task, press M, move it with the arrow keys, then press Enter or Space to drop it, or Escape to cancel. On a focused task: arrows or H, J, K, L move between tasks and days; Shift with Left or Right moves the task a day; T plans it today, Shift+T tomorrow; Enter opens it.'
+                        ),
+                    },
+                }}
+                onDragStart={onDragStart}
+                onDragMove={onDragMove}
+                onDragEnd={onDragEnd}
+                onDragCancel={endDrag}
             >
-                <header
-                    className={`flex flex-wrap items-center gap-x-3 gap-y-2 ${PAGE_GUTTER} pb-3 pt-6`}
+                <div
+                    data-testid="upcoming-board"
+                    className="flex h-full min-h-0 w-full flex-col bg-surface max-md:h-auto max-md:min-h-[calc(100dvh-3.5rem)] max-md:pb-24"
                 >
-                    <h1 className={`mr-1 ${PAGE_TITLE_CLASS}`}>
-                        {t('upcoming.title', 'Plan')}
-                    </h1>
-                    <Segmented
-                        aria-label={t('upcoming.layout', 'Layout')}
-                        selected={horizonsMode ? 'horizons' : 'days'}
-                        onSelect={(mode) =>
-                            patchOptions({
-                                mode: mode === 'horizons' ? 'horizons' : 'days',
-                            })
-                        }
-                        options={[
-                            { id: 'days', label: t('upcoming.days', 'Days') },
-                            {
-                                id: 'horizons',
-                                label: t('upcoming.horizons', 'Horizons'),
-                            },
-                        ]}
-                    />
-                    {!horizonsMode && (
-                        <nav
-                            aria-label={t('upcoming.dateNav', 'Dates')}
-                            className="flex items-center gap-1"
-                        >
-                            {/* Never disabled: on today it scrolls today's
+                    <header
+                        className={`flex flex-wrap items-center gap-x-3 gap-y-2 ${PAGE_GUTTER} pb-3 pt-6`}
+                    >
+                        <h1 className={`mr-1 ${PAGE_TITLE_CLASS}`}>
+                            {t('upcoming.title', 'Plan')}
+                        </h1>
+                        <Segmented
+                            aria-label={t('upcoming.layout', 'Layout')}
+                            selected={horizonsMode ? 'horizons' : 'days'}
+                            onSelect={(mode) =>
+                                patchOptions({
+                                    mode:
+                                        mode === 'horizons'
+                                            ? 'horizons'
+                                            : 'days',
+                                })
+                            }
+                            options={[
+                                {
+                                    id: 'days',
+                                    label: t('upcoming.days', 'Days'),
+                                },
+                                {
+                                    id: 'horizons',
+                                    label: t('upcoming.horizons', 'Horizons'),
+                                },
+                            ]}
+                        />
+                        {!horizonsMode && (
+                            <nav
+                                aria-label={t('upcoming.dateNav', 'Dates')}
+                                className="flex items-center gap-1"
+                            >
+                                {/* Never disabled: on today it scrolls today's
                                 column back into view. */}
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    aria-current={
+                                        anchor === today && selected === today
+                                            ? 'date'
+                                            : undefined
+                                    }
+                                    onClick={() => goTo(today, today)}
+                                >
+                                    {t('upcoming.today', 'Today')}
+                                </Button>
+                                <IconButton
+                                    label={t(
+                                        'upcoming.previousWeek',
+                                        'Previous week'
+                                    )}
+                                    onClick={() => {
+                                        const to = shiftWeek(anchor, -1);
+                                        goTo(to, to);
+                                    }}
+                                >
+                                    <ChevronLeftIcon />
+                                </IconButton>
+                                <IconButton
+                                    label={t('upcoming.nextWeek', 'Next week')}
+                                    onClick={() => {
+                                        const to = shiftWeek(anchor, 1);
+                                        goTo(to, to);
+                                    }}
+                                >
+                                    <ChevronRightIcon />
+                                </IconButton>
+                                <JumpToDate
+                                    value={selected}
+                                    today={today}
+                                    weekStartsOn={firstDayOfWeek}
+                                    onPick={(date) =>
+                                        goTo(date, anchorFor(anchor, date))
+                                    }
+                                />
+                                <span className="ml-1 text-body-m text-surface-on-variant max-sm:hidden">
+                                    {rangeLabel(
+                                        dates[0],
+                                        dates[dates.length - 1]
+                                    )}
+                                </span>
+                            </nav>
+                        )}
+                        <div className="ml-auto flex items-center gap-1">
+                            <ProposalButton kind="week" />
+                            <PluginActions
+                                place="plan"
+                                context={{
+                                    start: dates[0],
+                                    end: dates[dates.length - 1],
+                                }}
+                            />
+                            <ViewMenu
+                                options={options}
+                                onChange={setOptions}
+                                projects={filterProjects}
+                                tags={filterTags}
+                            />
                             <Button
                                 size="sm"
-                                variant="secondary"
-                                aria-current={
-                                    anchor === today && selected === today
-                                        ? 'date'
+                                variant={
+                                    calendarVisible ? 'secondary' : 'ghost'
+                                }
+                                aria-label={
+                                    calendarVisible
+                                        ? t(
+                                              'upcoming.hideCalendar',
+                                              'Hide calendar'
+                                          )
+                                        : t(
+                                              'upcoming.showCalendar',
+                                              'Show calendar'
+                                          )
+                                }
+                                aria-pressed={calendarVisible}
+                                aria-expanded={
+                                    placement === 'drawer'
+                                        ? drawerOpen
                                         : undefined
                                 }
-                                onClick={() => goTo(today, today)}
-                            >
-                                {t('upcoming.today', 'Today')}
-                            </Button>
-                            <IconButton
-                                label={t(
-                                    'upcoming.previousWeek',
-                                    'Previous week'
-                                )}
-                                onClick={() => {
-                                    const to = shiftWeek(anchor, -1);
-                                    goTo(to, to);
-                                }}
-                            >
-                                <ChevronLeftIcon />
-                            </IconButton>
-                            <IconButton
-                                label={t('upcoming.nextWeek', 'Next week')}
-                                onClick={() => {
-                                    const to = shiftWeek(anchor, 1);
-                                    goTo(to, to);
-                                }}
-                            >
-                                <ChevronRightIcon />
-                            </IconButton>
-                            <JumpToDate
-                                value={selected}
-                                today={today}
-                                weekStartsOn={firstDayOfWeek}
-                                onPick={(date) =>
-                                    goTo(date, anchorFor(anchor, date))
+                                onClick={() =>
+                                    placement === 'split'
+                                        ? patchOptions({
+                                              showCalendar:
+                                                  !options.showCalendar,
+                                          })
+                                        : setDrawerOpen(!drawerOpen)
                                 }
-                            />
-                            <span className="ml-1 text-body-m text-surface-on-variant max-sm:hidden">
-                                {rangeLabel(dates[0], dates[dates.length - 1])}
-                            </span>
-                        </nav>
-                    )}
-                    <div className="ml-auto flex items-center gap-1">
-                        <ProposalButton kind="week" />
-                        <PluginActions
-                            place="plan"
-                            context={{
-                                start: dates[0],
-                                end: dates[dates.length - 1],
-                            }}
-                        />
-                        <ViewMenu
-                            options={options}
-                            onChange={setOptions}
-                            projects={filterProjects}
-                            tags={filterTags}
-                        />
-                        <Button
-                            size="sm"
-                            variant={calendarVisible ? 'secondary' : 'ghost'}
-                            aria-label={
-                                calendarVisible
-                                    ? t(
-                                          'upcoming.hideCalendar',
-                                          'Hide calendar'
-                                      )
-                                    : t(
-                                          'upcoming.showCalendar',
-                                          'Show calendar'
-                                      )
-                            }
-                            aria-pressed={calendarVisible}
-                            aria-expanded={
-                                placement === 'drawer' ? drawerOpen : undefined
-                            }
-                            onClick={() =>
-                                placement === 'split'
-                                    ? patchOptions({
-                                          showCalendar: !options.showCalendar,
-                                      })
-                                    : setDrawerOpen(!drawerOpen)
-                            }
+                            >
+                                <CalendarDaysIcon
+                                    aria-hidden="true"
+                                    className="h-4 w-4"
+                                />
+                                {t('upcoming.calendar', 'Calendar')}
+                            </Button>
+                        </div>
+                    </header>
+
+                    {(error || (horizonsMode && horizon.error)) && (
+                        <p
+                            role="status"
+                            className={`${PAGE_GUTTER} pb-2 text-body-m text-danger`}
                         >
-                            <CalendarDaysIcon
-                                aria-hidden="true"
-                                className="h-4 w-4"
-                            />
-                            {t('upcoming.calendar', 'Calendar')}
-                        </Button>
-                    </div>
-                </header>
+                            {t(
+                                'upcoming.loadFailed',
+                                'Could not load the days.'
+                            )}
+                        </p>
+                    )}
 
-                {(error || (horizonsMode && horizon.error)) && (
-                    <p
-                        role="status"
-                        className={`${PAGE_GUTTER} pb-2 text-body-m text-danger`}
-                    >
-                        {t('upcoming.loadFailed', 'Could not load the days.')}
-                    </p>
-                )}
-
-                <div
-                    ref={panesRef}
-                    className="relative flex min-h-0 flex-1 flex-col md:flex-row"
-                >
                     <div
-                        className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 pb-3 pl-5 pr-2 pt-1"
-                        onKeyDown={onBoardKeyDown}
-                        onContextMenu={(event) => {
-                            if (horizonsMode) return;
-                            const el = (event.target as HTMLElement).closest?.(
-                                CARD
-                            ) as HTMLElement | null;
-                            const card = el ? cardAt(el) : null;
-                            if (!card) return;
-                            event.preventDefault();
-                            setCardMenu({
-                                card,
-                                x: event.clientX,
-                                y: event.clientY,
-                            });
-                        }}
+                        ref={panesRef}
+                        className="relative flex min-h-0 flex-1 flex-col md:flex-row"
                     >
-                        {overdueCards.length > 0 && (
-                            <section
-                                data-testid="upcoming-overdue"
-                                aria-label={t('upcoming.overdue', 'Overdue')}
-                                data-collapsed={overdueCollapsed || undefined}
-                                className={`shrink-0 rounded-2xl px-2 ${
-                                    overdueCollapsed
-                                        ? 'py-0.5'
-                                        : 'border border-danger/30 bg-danger/5 py-1.5'
-                                }`}
-                            >
-                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                    <button
-                                        type="button"
-                                        aria-expanded={!overdueCollapsed}
-                                        onClick={toggleOverdue}
-                                        className="flex h-8 items-center gap-1.5 whitespace-nowrap rounded-lg px-1.5 text-body-m font-semibold text-danger hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary"
-                                    >
-                                        <ChevronRightIcon
-                                            aria-hidden="true"
-                                            className={`h-4 w-4 transition-transform duration-150 ${
-                                                overdueCollapsed
-                                                    ? ''
-                                                    : 'rotate-90'
-                                            }`}
-                                        />
-                                        {t(
-                                            'upcoming.overdueCount',
-                                            'Overdue ({{count}})',
-                                            { count: overdueCards.length }
-                                        )}
-                                    </button>
-                                    {overdueCollapsed && (
-                                        <span className="truncate text-body-s text-surface-on-variant">
-                                            {t(
-                                                'upcoming.overdueHint',
-                                                'Reschedule spreads them over the week, urgent ones first.'
-                                            )}
-                                        </span>
+                        <div
+                            className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 pb-3 pl-5 pr-2 pt-1"
+                            onKeyDown={onBoardKeyDown}
+                            onContextMenu={(event) => {
+                                if (horizonsMode) return;
+                                const el = (
+                                    event.target as HTMLElement
+                                ).closest?.(CARD) as HTMLElement | null;
+                                const card = el ? cardAt(el) : null;
+                                if (!card) return;
+                                event.preventDefault();
+                                setCardMenu({
+                                    card,
+                                    x: event.clientX,
+                                    y: event.clientY,
+                                });
+                            }}
+                        >
+                            {overdueCards.length > 0 && (
+                                <section
+                                    data-testid="upcoming-overdue"
+                                    aria-label={t(
+                                        'upcoming.overdue',
+                                        'Overdue'
                                     )}
-                                    <div className="relative ml-auto flex flex-wrap items-center justify-end gap-1">
-                                        <PluginActions
-                                            place="overdue"
-                                            context={{ date: today }}
-                                        />
-                                        <div className="flex items-center">
-                                            <Button
-                                                size="sm"
-                                                variant="danger"
-                                                className="rounded-r-none"
-                                                data-testid="overdue-replan"
-                                                title={t(
-                                                    'upcoming.overdueReplanTitle',
-                                                    'Spread over the next days: high priority today or tomorrow, medium within 4 days, the rest within 7, on the lightest days, never before a start date.'
-                                                )}
-                                                onClick={() =>
-                                                    void spreadOverdueOverWeek()
-                                                }
-                                            >
-                                                {t(
-                                                    'upcoming.overdueReplan',
-                                                    'Reschedule'
-                                                )}
-                                            </Button>
-                                            <Menu
-                                                entries={replanEntries}
-                                                testId="overdue-replan-menu"
-                                                trigger={({
-                                                    ref,
-                                                    ...props
-                                                }) => (
-                                                    <Button
-                                                        {...props}
-                                                        ref={(el) => {
-                                                            replanMenuRef.current =
-                                                                el;
-                                                            if (
-                                                                typeof ref ===
-                                                                'function'
-                                                            ) {
-                                                                ref(el);
-                                                            } else if (ref) {
-                                                                (
-                                                                    ref as React.MutableRefObject<HTMLButtonElement | null>
-                                                                ).current = el;
-                                                            }
-                                                        }}
-                                                        size="sm"
-                                                        variant="danger"
-                                                        className="-ml-px rounded-l-none px-1.5"
-                                                        aria-label={t(
-                                                            'upcoming.overdueMore',
-                                                            'All on one day'
-                                                        )}
-                                                        data-testid="overdue-replan-more"
-                                                    >
-                                                        <ChevronDownIcon
-                                                            aria-hidden="true"
-                                                            className="h-3.5 w-3.5"
-                                                        />
-                                                    </Button>
-                                                )}
-                                            />
-                                        </div>
-                                        <JumpToDate
-                                            value={today}
-                                            today={today}
-                                            weekStartsOn={firstDayOfWeek}
-                                            onPick={replanOverdueOn}
-                                            controlled={{
-                                                open: pickingOverdueDate,
-                                                label: t(
-                                                    'upcoming.overduePick',
-                                                    'Pick a date…'
-                                                ),
-                                                testId: 'overdue-replan-date',
-                                                min: today,
-                                                onClose: () => {
-                                                    setPickingOverdueDate(
-                                                        false
-                                                    );
-                                                    replanMenuRef.current?.focus();
-                                                },
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                                {!overdueCollapsed && (
-                                    <div
-                                        role="list"
-                                        className="flex gap-2 overflow-x-auto px-1 pb-1.5 pt-1"
-                                    >
-                                        <SortableContext
-                                            items={overdueCards.map((line) =>
-                                                cardId(OVERDUE, line.uid)
-                                            )}
-                                            strategy={
-                                                horizontalListSortingStrategy
-                                            }
-                                        >
-                                            {overdueCards.map((line) => (
-                                                <div
-                                                    key={line.uid}
-                                                    className="w-[240px] shrink-0"
-                                                >
-                                                    <TaskCard
-                                                        line={line}
-                                                        date={OVERDUE}
-                                                        selected={
-                                                            openTaskUid ===
-                                                            line.uid
-                                                        }
-                                                        onToggle={toggle}
-                                                        onOpen={(l) =>
-                                                            openLine(l)
-                                                        }
-                                                        onToggleSubtask={
-                                                            toggleSubtask
-                                                        }
-                                                    />
-                                                </div>
-                                            ))}
-                                        </SortableContext>
-                                    </div>
-                                )}
-                            </section>
-                        )}
-                        <div className="flex min-h-0 min-w-0 flex-1 gap-3">
-                            <div
-                                ref={inboxRef}
-                                data-testid="plan-left-column"
-                                className="flex min-h-0 shrink-0 flex-col gap-2 overflow-y-auto p-1"
-                            >
-                                <div
-                                    className={`flex ${
-                                        inboxIsCollapsed
-                                            ? 'min-h-0 flex-1'
-                                            : 'shrink-0'
+                                    data-collapsed={
+                                        overdueCollapsed || undefined
+                                    }
+                                    className={`shrink-0 rounded-2xl px-2 ${
+                                        overdueCollapsed
+                                            ? 'py-0.5'
+                                            : 'border border-danger/30 bg-danger/5 py-1.5'
                                     }`}
                                 >
-                                    <InboxColumn
-                                        width={openInboxWidth}
-                                        items={inboxItems}
-                                        tasks={inboxTasks}
-                                        today={today}
-                                        loading={
-                                            inboxLoading ||
-                                            unsorted.tasks === null
-                                        }
-                                        openTaskUid={openTaskUid}
-                                        onAdd={addToInbox}
-                                        onOpenTask={(line) => openLine(line)}
-                                        onToggleTask={toggle}
-                                        onToggleSubtask={toggleSubtask}
-                                        collapsed={inboxIsCollapsed}
-                                        onCollapsedChange={setInboxCollapsed}
-                                        onIdeaToTask={() =>
-                                            void reloadUnsorted()
-                                        }
-                                    />
-                                </div>
-                                {toPlanBox && (
-                                    <ToPlanBox
-                                        box={toPlanBox}
-                                        today={today}
-                                        openTaskUid={openTaskUid}
-                                        collapsed={toPlanCollapsed}
-                                        onCollapsedChange={setToPlanCollapsed}
-                                        thin={inboxIsCollapsed}
-                                        width={openInboxWidth}
-                                        onExpand={() => {
-                                            setInboxCollapsed(false);
-                                            setToPlanCollapsed(false);
-                                        }}
-                                        onOpenTask={(line) => openLine(line)}
-                                        onToggleTask={toggle}
-                                        onToggleSubtask={toggleSubtask}
-                                    />
-                                )}
-                            </div>
-                            {!inboxIsCollapsed && (
-                                // Sits in the gap: as wide as the gap alone.
-                                <div className="-mx-[9px] flex">
-                                    <PaneSplitter
-                                        label={t(
-                                            'upcoming.resizeInbox',
-                                            'Inbox width'
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                        <button
+                                            type="button"
+                                            aria-expanded={!overdueCollapsed}
+                                            onClick={toggleOverdue}
+                                            className="flex h-8 items-center gap-1.5 whitespace-nowrap rounded-lg px-1.5 text-body-m font-semibold text-danger hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary"
+                                        >
+                                            <ChevronRightIcon
+                                                aria-hidden="true"
+                                                className={`h-4 w-4 transition-transform duration-150 ${
+                                                    overdueCollapsed
+                                                        ? ''
+                                                        : 'rotate-90'
+                                                }`}
+                                            />
+                                            {t(
+                                                'upcoming.overdueCount',
+                                                'Overdue ({{count}})',
+                                                { count: overdueCards.length }
+                                            )}
+                                        </button>
+                                        {overdueCollapsed && (
+                                            <span className="truncate text-body-s text-surface-on-variant">
+                                                {t(
+                                                    'upcoming.overdueHint',
+                                                    'Reschedule spreads them over the week, urgent ones first.'
+                                                )}
+                                            </span>
                                         )}
-                                        testId="inbox-splitter"
-                                        width={openInboxWidth}
-                                        min={INBOX_MIN}
-                                        max={inboxMaxWidth(
-                                            panesWidth,
-                                            calendarBeside
-                                        )}
-                                        from="left"
-                                        containerRef={inboxRef}
-                                        defaultWidth={INBOX_WIDTH}
-                                        onChange={setInboxWidth}
-                                    />
-                                </div>
+                                        <div className="relative ml-auto flex flex-wrap items-center justify-end gap-1">
+                                            <PluginActions
+                                                place="overdue"
+                                                context={{ date: today }}
+                                            />
+                                            <div className="flex items-center">
+                                                <Button
+                                                    size="sm"
+                                                    variant="danger"
+                                                    className="rounded-r-none"
+                                                    data-testid="overdue-replan"
+                                                    title={t(
+                                                        'upcoming.overdueReplanTitle',
+                                                        'Spread over the next days: high priority today or tomorrow, medium within 4 days, the rest within 7, on the lightest days, never before a start date.'
+                                                    )}
+                                                    onClick={() =>
+                                                        void spreadOverdueOverWeek()
+                                                    }
+                                                >
+                                                    {t(
+                                                        'upcoming.overdueReplan',
+                                                        'Reschedule'
+                                                    )}
+                                                </Button>
+                                                <Menu
+                                                    entries={replanEntries}
+                                                    testId="overdue-replan-menu"
+                                                    trigger={({
+                                                        ref,
+                                                        ...props
+                                                    }) => (
+                                                        <Button
+                                                            {...props}
+                                                            ref={(el) => {
+                                                                replanMenuRef.current =
+                                                                    el;
+                                                                if (
+                                                                    typeof ref ===
+                                                                    'function'
+                                                                ) {
+                                                                    ref(el);
+                                                                } else if (
+                                                                    ref
+                                                                ) {
+                                                                    (
+                                                                        ref as React.MutableRefObject<HTMLButtonElement | null>
+                                                                    ).current =
+                                                                        el;
+                                                                }
+                                                            }}
+                                                            size="sm"
+                                                            variant="danger"
+                                                            className="-ml-px rounded-l-none px-1.5"
+                                                            aria-label={t(
+                                                                'upcoming.overdueMore',
+                                                                'All on one day'
+                                                            )}
+                                                            data-testid="overdue-replan-more"
+                                                        >
+                                                            <ChevronDownIcon
+                                                                aria-hidden="true"
+                                                                className="h-3.5 w-3.5"
+                                                            />
+                                                        </Button>
+                                                    )}
+                                                />
+                                            </div>
+                                            <JumpToDate
+                                                value={today}
+                                                today={today}
+                                                weekStartsOn={firstDayOfWeek}
+                                                onPick={replanOverdueOn}
+                                                controlled={{
+                                                    open: pickingOverdueDate,
+                                                    label: t(
+                                                        'upcoming.overduePick',
+                                                        'Pick a date…'
+                                                    ),
+                                                    testId: 'overdue-replan-date',
+                                                    min: today,
+                                                    onClose: () => {
+                                                        setPickingOverdueDate(
+                                                            false
+                                                        );
+                                                        replanMenuRef.current?.focus();
+                                                    },
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    {!overdueCollapsed && (
+                                        <div
+                                            role="list"
+                                            className="flex gap-2 overflow-x-auto px-1 pb-1.5 pt-1"
+                                        >
+                                            <SortableContext
+                                                items={overdueCards.map(
+                                                    (line) =>
+                                                        cardId(
+                                                            OVERDUE,
+                                                            line.uid
+                                                        )
+                                                )}
+                                                strategy={
+                                                    horizontalListSortingStrategy
+                                                }
+                                            >
+                                                {overdueCards.map((line) => (
+                                                    <div
+                                                        key={line.uid}
+                                                        className="w-[240px] shrink-0"
+                                                    >
+                                                        <TaskCard
+                                                            line={line}
+                                                            date={OVERDUE}
+                                                            selected={
+                                                                openTaskUid ===
+                                                                line.uid
+                                                            }
+                                                            onToggle={toggle}
+                                                            onOpen={(l) =>
+                                                                openLine(l)
+                                                            }
+                                                            onToggleSubtask={
+                                                                toggleSubtask
+                                                            }
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </SortableContext>
+                                        </div>
+                                    )}
+                                </section>
                             )}
-                            <div
-                                ref={boardRef}
-                                data-testid="upcoming-columns"
-                                style={
-                                    horizonsMode
-                                        ? {
-                                              gridTemplateColumns: `repeat(${horizonColumns(boardWidth)}, minmax(0, 1fr))`,
-                                          }
-                                        : undefined
-                                }
-                                className={
-                                    horizonsMode
-                                        ? `grid min-h-0 min-w-0 flex-1 gap-3 overflow-y-auto p-1 ${
-                                              horizonRowsFill(
-                                                  horizonColumns(boardWidth)
-                                              )
-                                                  ? 'auto-rows-[minmax(0,1fr)]'
-                                                  : 'content-start auto-rows-auto'
-                                          }`
-                                        : 'flex min-h-0 min-w-0 flex-1 snap-x snap-proximity scroll-px-1 gap-3 overflow-x-auto p-1'
-                                }
-                            >
-                                {horizonsMode
-                                    ? HORIZON_KEYS.map((key) => (
-                                          <HorizonColumn
-                                              key={key}
-                                              horizon={key}
-                                              title={horizonTitles[key]}
-                                              hint={horizonHints[key]}
-                                              tasks={buckets?.[key] ?? null}
-                                              plannedOnDays={
-                                                  key === 'week'
-                                                      ? plannedOnDays
-                                                      : undefined
-                                              }
-                                              today={today}
-                                              openTaskUid={openTaskUid}
-                                              onOpen={(line) => openLine(line)}
-                                              onToggle={toggle}
-                                              onToggleSubtask={toggleSubtask}
-                                              onAdd={(name) =>
-                                                  void addToHorizon(key, name)
-                                              }
-                                              fill={horizonRowsFill(
-                                                  horizonColumns(boardWidth)
-                                              )}
-                                          />
-                                      ))
-                                    : dates.map((date) => {
-                                          const day = shownDays[date];
-                                          const hours = day?.day_hours;
-                                          return (
-                                              <div
-                                                  key={date}
-                                                  className="flex w-[264px] shrink-0 snap-start flex-col"
-                                              >
-                                                  {/* Room for the week label of the columns that start a week, so headers line up. */}
-                                                  {getDay(parseISO(date)) !==
-                                                      firstDayOfWeek && (
-                                                      <div
-                                                          aria-hidden="true"
-                                                          className="h-6 shrink-0"
-                                                      />
-                                                  )}
-                                                  <DayColumn
-                                                      date={date}
-                                                      isToday={date === today}
-                                                      day={day}
-                                                      selected={
-                                                          calendarVisible
-                                                              ? calendarDates.includes(
-                                                                    date
-                                                                )
-                                                              : date ===
-                                                                selected
-                                                      }
-                                                      openTaskUid={openTaskUid}
-                                                      groupBy={options.groupBy}
-                                                      sortBy={options.sortBy}
-                                                      showCompleted={
-                                                          options.showCompleted
-                                                      }
-                                                      availableMinutes={
-                                                          hours
-                                                              ? hours.end -
-                                                                hours.start
-                                                              : DEFAULT_DAY_MINUTES
-                                                      }
-                                                      weekStartsOn={
-                                                          firstDayOfWeek
-                                                      }
-                                                      onSelect={selectDay}
-                                                      onAdd={addTask}
-                                                      onOpen={(line) =>
-                                                          openLine(line, date)
-                                                      }
-                                                      onToggle={toggle}
-                                                      onToggleSubtask={
-                                                          toggleSubtask
-                                                      }
-                                                  />
-                                              </div>
-                                          );
-                                      })}
-                            </div>
-                        </div>
-                        {!horizonsMode && (
-                            <HorizonStrip
-                                titles={horizonTitles}
-                                counts={
-                                    buckets
-                                        ? Object.fromEntries(
-                                              STRIP_KEYS.map((key) => [
-                                                  key,
-                                                  buckets[key].length,
-                                              ])
-                                          )
-                                        : null
-                                }
-                                dragging={!!dragging}
-                                onOpen={openHorizon}
-                            />
-                        )}
-                    </div>
-
-                    {calendarVisible && placement === 'split' && (
-                        <>
-                            <PaneSplitter
-                                label={t(
-                                    'upcoming.resizeCalendar',
-                                    'Calendar width'
+                            <div className="flex min-h-0 min-w-0 flex-1 gap-3">
+                                <div
+                                    ref={inboxRef}
+                                    data-testid="plan-left-column"
+                                    className="flex min-h-0 shrink-0 flex-col gap-2 overflow-y-auto p-1"
+                                >
+                                    <div
+                                        className={`flex ${
+                                            inboxIsCollapsed
+                                                ? 'min-h-0 flex-1'
+                                                : 'shrink-0'
+                                        }`}
+                                    >
+                                        <InboxColumn
+                                            width={openInboxWidth}
+                                            addRequest={inboxAddRequest}
+                                            items={inboxItems}
+                                            tasks={inboxTasks}
+                                            today={today}
+                                            loading={
+                                                inboxLoading ||
+                                                unsorted.tasks === null
+                                            }
+                                            openTaskUid={openTaskUid}
+                                            onAdd={addToInbox}
+                                            onOpenTask={(line) =>
+                                                openLine(line)
+                                            }
+                                            onToggleTask={toggle}
+                                            onToggleSubtask={toggleSubtask}
+                                            collapsed={inboxIsCollapsed}
+                                            onCollapsedChange={
+                                                setInboxCollapsed
+                                            }
+                                            onIdeaToTask={() =>
+                                                void reloadUnsorted()
+                                            }
+                                        />
+                                    </div>
+                                    {toPlanBox && (
+                                        <ToPlanBox
+                                            box={toPlanBox}
+                                            today={today}
+                                            openTaskUid={openTaskUid}
+                                            collapsed={toPlanCollapsed}
+                                            onCollapsedChange={
+                                                setToPlanCollapsed
+                                            }
+                                            thin={inboxIsCollapsed}
+                                            width={openInboxWidth}
+                                            onExpand={() => {
+                                                setInboxCollapsed(false);
+                                                setToPlanCollapsed(false);
+                                            }}
+                                            onOpenTask={(line) =>
+                                                openLine(line)
+                                            }
+                                            onToggleTask={toggle}
+                                            onToggleSubtask={toggleSubtask}
+                                        />
+                                    )}
+                                </div>
+                                {!inboxIsCollapsed && (
+                                    // Sits in the gap: as wide as the gap alone.
+                                    <div className="-mx-[9px] flex">
+                                        <PaneSplitter
+                                            label={t(
+                                                'upcoming.resizeInbox',
+                                                'Inbox width'
+                                            )}
+                                            testId="inbox-splitter"
+                                            width={openInboxWidth}
+                                            min={INBOX_MIN}
+                                            max={inboxMaxWidth(
+                                                panesWidth,
+                                                calendarBeside
+                                            )}
+                                            from="left"
+                                            containerRef={inboxRef}
+                                            defaultWidth={INBOX_WIDTH}
+                                            onChange={setInboxWidth}
+                                        />
+                                    </div>
                                 )}
-                                testId="pane-splitter"
-                                width={calendarWidth}
-                                min={CALENDAR_MIN}
-                                max={calendarMax}
-                                from="right"
-                                containerRef={panesRef}
-                                defaultWidth={CALENDAR_WIDTH[1]}
-                                onChange={setCalendarWidth}
-                            />
+                                <div
+                                    ref={boardRef}
+                                    data-testid="upcoming-columns"
+                                    style={
+                                        horizonsMode
+                                            ? {
+                                                  gridTemplateColumns: `repeat(${horizonColumns(boardWidth)}, minmax(0, 1fr))`,
+                                              }
+                                            : undefined
+                                    }
+                                    className={
+                                        horizonsMode
+                                            ? `grid min-h-0 min-w-0 flex-1 gap-3 overflow-y-auto p-1 ${
+                                                  horizonRowsFill(
+                                                      horizonColumns(boardWidth)
+                                                  )
+                                                      ? 'auto-rows-[minmax(0,1fr)]'
+                                                      : 'content-start auto-rows-auto'
+                                              }`
+                                            : 'flex min-h-0 min-w-0 flex-1 snap-x snap-proximity scroll-px-1 gap-3 overflow-x-auto p-1'
+                                    }
+                                >
+                                    {horizonsMode
+                                        ? HORIZON_KEYS.map((key) => (
+                                              <HorizonColumn
+                                                  key={key}
+                                                  horizon={key}
+                                                  title={horizonTitles[key]}
+                                                  hint={horizonHints[key]}
+                                                  tasks={buckets?.[key] ?? null}
+                                                  plannedOnDays={
+                                                      key === 'week'
+                                                          ? plannedOnDays
+                                                          : undefined
+                                                  }
+                                                  today={today}
+                                                  openTaskUid={openTaskUid}
+                                                  onOpen={(line) =>
+                                                      openLine(line)
+                                                  }
+                                                  onToggle={toggle}
+                                                  onToggleSubtask={
+                                                      toggleSubtask
+                                                  }
+                                                  onAdd={(name) =>
+                                                      void addToHorizon(
+                                                          key,
+                                                          name
+                                                      )
+                                                  }
+                                                  fill={horizonRowsFill(
+                                                      horizonColumns(boardWidth)
+                                                  )}
+                                              />
+                                          ))
+                                        : dates.map((date) => {
+                                              const day = shownDays[date];
+                                              const hours = day?.day_hours;
+                                              return (
+                                                  <div
+                                                      key={date}
+                                                      className="flex w-[264px] shrink-0 snap-start flex-col"
+                                                  >
+                                                      {/* Room for the week label of the columns that start a week, so headers line up. */}
+                                                      {getDay(
+                                                          parseISO(date)
+                                                      ) !== firstDayOfWeek && (
+                                                          <div
+                                                              aria-hidden="true"
+                                                              className="h-6 shrink-0"
+                                                          />
+                                                      )}
+                                                      <DayColumn
+                                                          date={date}
+                                                          isToday={
+                                                              date === today
+                                                          }
+                                                          day={day}
+                                                          selected={
+                                                              calendarVisible
+                                                                  ? calendarDates.includes(
+                                                                        date
+                                                                    )
+                                                                  : date ===
+                                                                    selected
+                                                          }
+                                                          openTaskUid={
+                                                              openTaskUid
+                                                          }
+                                                          groupBy={
+                                                              options.groupBy
+                                                          }
+                                                          sortBy={
+                                                              options.sortBy
+                                                          }
+                                                          showCompleted={
+                                                              options.showCompleted
+                                                          }
+                                                          availableMinutes={
+                                                              hours
+                                                                  ? hours.end -
+                                                                    hours.start
+                                                                  : DEFAULT_DAY_MINUTES
+                                                          }
+                                                          weekStartsOn={
+                                                              firstDayOfWeek
+                                                          }
+                                                          onSelect={selectDay}
+                                                          onAdd={addTask}
+                                                          onOpen={(line) =>
+                                                              openLine(
+                                                                  line,
+                                                                  date
+                                                              )
+                                                          }
+                                                          onToggle={toggle}
+                                                          onToggleSubtask={
+                                                              toggleSubtask
+                                                          }
+                                                      />
+                                                  </div>
+                                              );
+                                          })}
+                                </div>
+                            </div>
+                            {!horizonsMode && (
+                                <HorizonStrip
+                                    titles={horizonTitles}
+                                    week={weekLoad(
+                                        days,
+                                        today,
+                                        firstDayOfWeek,
+                                        DEFAULT_DAY_MINUTES
+                                    )}
+                                    counts={
+                                        buckets
+                                            ? Object.fromEntries(
+                                                  STRIP_KEYS.map((key) => [
+                                                      key,
+                                                      buckets[key].length,
+                                                  ])
+                                              )
+                                            : null
+                                    }
+                                    dragging={!!dragging}
+                                    onOpen={openHorizon}
+                                />
+                            )}
+                        </div>
+
+                        {calendarVisible && placement === 'split' && (
+                            <>
+                                <PaneSplitter
+                                    label={t(
+                                        'upcoming.resizeCalendar',
+                                        'Calendar width'
+                                    )}
+                                    testId="pane-splitter"
+                                    width={calendarWidth}
+                                    min={CALENDAR_MIN}
+                                    max={calendarMax}
+                                    from="right"
+                                    containerRef={panesRef}
+                                    defaultWidth={CALENDAR_WIDTH[1]}
+                                    onChange={setCalendarWidth}
+                                />
+                                <section
+                                    aria-label={t(
+                                        'upcoming.calendar',
+                                        'Calendar'
+                                    )}
+                                    data-testid="upcoming-calendar"
+                                    style={{ width: calendarWidth }}
+                                    className="flex min-h-0 shrink-0 flex-col border-l border-outline-variant/60"
+                                >
+                                    {calendar}
+                                </section>
+                            </>
+                        )}
+                        {calendarVisible && placement === 'drawer' && (
                             <section
                                 aria-label={t('upcoming.calendar', 'Calendar')}
                                 data-testid="upcoming-calendar"
-                                style={{ width: calendarWidth }}
-                                className="flex min-h-0 shrink-0 flex-col border-l border-outline-variant/60"
+                                data-drawer="true"
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Escape' && !dragging) {
+                                        setDrawerOpen(false);
+                                    }
+                                }}
+                                className="absolute inset-y-0 right-0 z-30 flex w-[min(400px,100%)] flex-col border-l border-outline-variant/60 bg-surface shadow-xl"
                             >
                                 {calendar}
                             </section>
-                        </>
-                    )}
-                    {calendarVisible && placement === 'drawer' && (
-                        <section
-                            aria-label={t('upcoming.calendar', 'Calendar')}
-                            data-testid="upcoming-calendar"
-                            data-drawer="true"
-                            onKeyDown={(event) => {
-                                if (event.key === 'Escape' && !dragging) {
-                                    setDrawerOpen(false);
-                                }
-                            }}
-                            className="absolute inset-y-0 right-0 z-30 flex w-[min(400px,100%)] flex-col border-l border-outline-variant/60 bg-surface shadow-xl"
-                        >
-                            {calendar}
-                        </section>
-                    )}
-                </div>
-            </div>
-            {cardMenu && (
-                <div
-                    className="fixed"
-                    style={{ left: cardMenu.x, top: cardMenu.y }}
-                >
-                    <Menu
-                        entries={cardMenuEntries}
-                        align="start"
-                        testId="card-horizon-menu"
-                        onOpenChange={(open) => {
-                            if (!open) setCardMenu(null);
-                        }}
-                        trigger={(triggerProps) => (
-                            <button
-                                {...triggerProps}
-                                type="button"
-                                data-card-menu-anchor=""
-                                aria-label={t(
-                                    'upcoming.stripLabel',
-                                    'Send to a horizon'
-                                )}
-                                className="block h-0 w-0 overflow-hidden opacity-0"
-                            />
                         )}
-                    />
-                </div>
-            )}
-            {eventDetail && (
-                <CalendarEventDetail
-                    event={eventDetail.event}
-                    onDate={eventDetail.onDate}
-                    onClose={() => setEventDetail(null)}
-                    onChanged={() => setEventsVersion((v) => v + 1)}
-                />
-            )}
-            <DragOverlay dropAnimation={null}>
-                {dragging && ghost === null ? (
-                    <div className="max-w-xs truncate rounded-lg bg-surface px-3 py-1.5 text-body-m text-surface-on shadow-lg ring-1 ring-outline-variant">
-                        {dragging.title}
                     </div>
-                ) : null}
-            </DragOverlay>
-        </DndContext>
+                </div>
+                {cardMenu && (
+                    <div
+                        className="fixed"
+                        style={{ left: cardMenu.x, top: cardMenu.y }}
+                    >
+                        <Menu
+                            entries={cardMenuEntries}
+                            align="start"
+                            testId="card-horizon-menu"
+                            onOpenChange={(open) => {
+                                if (!open) setCardMenu(null);
+                            }}
+                            trigger={(triggerProps) => (
+                                <button
+                                    {...triggerProps}
+                                    type="button"
+                                    data-card-menu-anchor=""
+                                    aria-label={t(
+                                        'upcoming.stripLabel',
+                                        'Send to a horizon'
+                                    )}
+                                    className="block h-0 w-0 overflow-hidden opacity-0"
+                                />
+                            )}
+                        />
+                    </div>
+                )}
+                {eventDetail && (
+                    <CalendarEventDetail
+                        event={eventDetail.event}
+                        onDate={eventDetail.onDate}
+                        onClose={() => setEventDetail(null)}
+                        onChanged={() => setEventsVersion((v) => v + 1)}
+                    />
+                )}
+                <DragOverlay dropAnimation={null}>
+                    {dragging && ghost === null ? (
+                        <div className="max-w-xs truncate rounded-lg bg-surface px-3 py-1.5 text-body-m text-surface-on shadow-lg ring-1 ring-outline-variant">
+                            {dragging.title}
+                        </div>
+                    ) : null}
+                </DragOverlay>
+                {picked.size > 0 && (
+                    <div
+                        role="toolbar"
+                        aria-label={t(
+                            'upcoming.pickedCount',
+                            'Selected: {{count}}',
+                            {
+                                count: picked.size,
+                            }
+                        )}
+                        className="fixed bottom-20 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-2xl bg-surface-card px-2 py-1.5 shadow-2xl ring-1 ring-outline-variant"
+                    >
+                        <span className="px-2 text-body-m font-semibold tabular-nums text-surface-on">
+                            {t('upcoming.pickedCount', 'Selected: {{count}}', {
+                                count: picked.size,
+                            })}
+                        </span>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => planPickedOn(today)}
+                        >
+                            {t('upcoming.overdueToday', 'Today')}
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => planPickedOn(tomorrow)}
+                        >
+                            {t('upcoming.overdueTomorrow', 'Tomorrow')}
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() =>
+                                void sendPickedToHorizon('next_week')
+                            }
+                        >
+                            {horizonTitles.next_week}
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() =>
+                                void sendPickedToHorizon('this_month')
+                            }
+                        >
+                            {horizonTitles.this_month}
+                        </Button>
+                        <IconButton
+                            label={t(
+                                'upcoming.pickedClear',
+                                'Clear the selection'
+                            )}
+                            onClick={clearPicked}
+                        >
+                            <XMarkIcon />
+                        </IconButton>
+                    </div>
+                )}
+            </DndContext>
+        </PickedCardsContext.Provider>
     );
 };
 

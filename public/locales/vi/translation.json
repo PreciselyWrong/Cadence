@@ -5770,7 +5770,8 @@
       "navigation": "Đi tới",
       "task": "Trên một công việc",
       "create": "Tạo",
-      "triage": "Phân loại hộp thư đến"
+      "triage": "Phân loại hộp thư đến",
+      "plan": "Trên trang Lên kế hoạch"
     },
     "shortcuts": {
       "palette": "Mở bảng lệnh",
@@ -5795,7 +5796,17 @@
       "triageProject": "Phân loại: chuyển thành dự án",
       "triageNote": "Phân loại: chuyển thành ghi chú",
       "triageLater": "Phân loại: để sau (giữ trong hộp thư đến)",
-      "triageDelete": "Phân loại: xóa"
+      "triageDelete": "Phân loại: xóa",
+      "planAddInbox": "Thêm vào hộp thư đến",
+      "planFocus": "Di chuyển giữa các việc và các ngày (hoặc H, J, K, L)",
+      "planMoveDay": "Dời việc (hoặc lựa chọn) một ngày",
+      "planToday": "Lên lịch hôm nay",
+      "planTomorrow": "Lên lịch ngày mai",
+      "planNextWeek": "Gửi sang tuần sau",
+      "planThisMonth": "Gửi sang tháng này",
+      "planDrag": "Nhấc lên để di chuyển bằng phím mũi tên (Enter để thả)",
+      "planPick": "Chọn nhiều việc (nhấp kèm Ctrl, Cmd hoặc Shift)",
+      "planClear": "Bỏ chọn"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripLabel": "Gửi đến một tầm nhìn",
     "stripOpen": "Mở {{name}} trong Tầm nhìn",
     "sentToHorizon": "Đã gửi đến {{name}}",
-    "plannedOnDayHint_other": "{{count}} đã lên lịch vào một ngày"
+    "plannedOnDayHint_other": "{{count}} đã lên lịch vào một ngày",
+        "weekLoad": "Tuần này {{planned}} / {{available}}",
+        "weekLoadTitle": "Đã lên lịch từ hôm nay đến cuối tuần, so với giờ làm trong ngày",
+        "pickedMoved": "Đã chuyển các việc đã chọn",
+        "pickedCount": "Đã chọn: {{count}}",
+        "pickedClear": "Bỏ chọn"
   },
   "offline": {
     "offline": "Ngoại tuyến",

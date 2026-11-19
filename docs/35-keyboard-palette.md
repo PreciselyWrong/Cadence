@@ -30,6 +30,8 @@ The single list is `frontend/utils/shortcutRegistry.ts`; `?` opens it as an over
 
 On a focused task row (Minimal density): Up/Down between rows, `x` or Space complete, `e` or Enter open, `d` date, `p` priority, `m` move to a project (opens the palette on the project list), `Delete` delete with undo.
 
+On the Plan page (group « Sur la page Planifier » of the help): `n` adds to the inbox; arrows or `h` `j` `k` `l` move between cards and days; Shift+←/→ move the card (or the selection) a day; `t` today, Shift+T tomorrow; Shift+W next week, Shift+M this month; `m` picks a card up for a keyboard drag; Ctrl, Cmd or Shift click picks several cards; Escape clears the selection (`docs/03-upcoming-view.md`).
+
 Delete with undo hides the row at once and calls the API only after 6 seconds, so Undo restores the same task. Reloading the page inside that window cancels the delete.
 
 Dispatcher: `frontend/utils/shortcutDispatcher.ts` (pure, tested). Plain keys are ignored with Ctrl, Meta or Alt held, in `input`, `textarea`, `select`, content-editable elements and inside `aria-modal` dialogs.

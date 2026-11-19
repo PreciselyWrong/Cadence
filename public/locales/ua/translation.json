@@ -5866,7 +5866,8 @@
       "navigation": "Перейти до",
       "task": "Для завдання",
       "create": "Створити",
-      "triage": "Розбір вхідних"
+      "triage": "Розбір вхідних",
+      "plan": "На сторінці Планування"
     },
     "shortcuts": {
       "palette": "Відкрити палітру команд",
@@ -5891,7 +5892,17 @@
       "triageProject": "Розбір: зробити проєктом",
       "triageNote": "Розбір: зробити нотаткою",
       "triageLater": "Розбір: пізніше (залишити у вхідних)",
-      "triageDelete": "Розбір: видалити"
+      "triageDelete": "Розбір: видалити",
+      "planAddInbox": "Додати до вхідних",
+      "planFocus": "Перехід між завданнями та днями (або H, J, K, L)",
+      "planMoveDay": "Зсунути завдання (або виділення) на день",
+      "planToday": "Запланувати на сьогодні",
+      "planTomorrow": "Запланувати на завтра",
+      "planNextWeek": "Надіслати на наступний тиждень",
+      "planThisMonth": "Надіслати на цей місяць",
+      "planDrag": "Узяти, щоб рухати стрілками (Enter — покласти)",
+      "planPick": "Вибрати кілька завдань (клацання з Ctrl, Cmd або Shift)",
+      "planClear": "Зняти виділення"
     }
   },
   "taskPanel": {
@@ -6650,7 +6661,12 @@
     "plannedOnDayHint_one": "Заплановано на день: {{count}}",
     "plannedOnDayHint_few": "Заплановано на день: {{count}}",
     "plannedOnDayHint_many": "Заплановано на день: {{count}}",
-    "plannedOnDayHint_other": "Заплановано на день: {{count}}"
+    "plannedOnDayHint_other": "Заплановано на день: {{count}}",
+    "weekLoad": "Цей тиждень {{planned}} / {{available}}",
+    "weekLoadTitle": "Заплановано від сьогодні до кінця тижня відносно ваших робочих годин",
+    "pickedMoved": "Вибрані завдання переміщено",
+    "pickedCount": "Вибрано: {{count}}",
+    "pickedClear": "Зняти виділення"
   },
   "offline": {
     "offline": "Немає зв’язку",

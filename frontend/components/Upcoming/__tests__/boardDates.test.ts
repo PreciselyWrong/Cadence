@@ -50,9 +50,9 @@ describe('board dates', () => {
 describe('calendar width', () => {
     const minBoard = minBoardWidth(260);
 
-    it('needs room for the inbox and two day columns', () => {
+    it('needs room for the inbox and a day and a half', () => {
         expect(minBoardWidth(0)).toBeLessThan(minBoard);
-        expect(minBoard).toBeGreaterThanOrEqual(260 + 2 * 264);
+        expect(minBoard).toBeGreaterThanOrEqual(260 + 1.5 * 264);
     });
 
     it('clamps a stale stored width (1077) to the maximum', () => {
@@ -86,12 +86,30 @@ describe('calendar width', () => {
             expect(clampInboxWidth(NaN, 2400, true)).toBe(INBOX_WIDTH);
         });
 
+        // Measured widths have fractions: rounding up would push the
+        // calendar into its drawer.
+        it('never takes the last fraction of a pixel the calendar needs', () => {
+            const available = 1121.89;
+            const inbox = clampInboxWidth(999, available, true);
+            expect(
+                calendarPlacement(1500, available, minBoardWidth(inbox))
+            ).toBe('split');
+        });
+
         it('leaves the board two columns and the narrowest calendar', () => {
             const rest = minBoardWidth(0) + 12;
             expect(clampInboxWidth(500, rest + 300 + 280, true)).toBe(300);
             // Without the calendar the inbox may take its room.
             expect(clampInboxWidth(500, rest + 300 + 280, false)).toBe(500);
         });
+    });
+
+    // A 1500 px window with the sidebar open leaves the panes about 1120 px:
+    // the calendar sits beside the usual inbox and a day and a half.
+    it('stays beside the board on a 1500 px window', () => {
+        expect(calendarPlacement(1500, 1120, minBoardWidth(INBOX_WIDTH))).toBe(
+            'split'
+        );
     });
 
     it('becomes a drawer under 1180 px or when the board would be squeezed', () => {

@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : Planifier rattrape la revue UX du web (2026-11-19)
+  Raison : le web a la bande « En retard » repliée en une ligne avec « Replanifier » qui répartit (la règle est déjà partagée : `PlanBoard.spread`), les jours vides sans texte ni zéro, la sélection de plusieurs cartes (Ctrl/Maj + clic, barre « Sélection : N ») et « Cette semaine 6 h 30 / 35 h » en tête de la bande des horizons (`docs/03-upcoming-view.md`, `docs/fork/WEB-UX-NOTES.md` 2026-11-19). Vérif : sur le téléphone, Échues tient en une ligne et « Replanifier » répartit comme le web ; un appui long puis « Sélectionner » permet de planifier plusieurs tâches d'un coup ; la charge de la semaine est la même que sur le web avec le même compte.
 - Hermes : exécuter les suppressions de mails et remplir l'horizon (2026-11-15)
   Raison : Cadence enregistre la décision `trash` (`action: trash, requested`) et accepte `suggestion.horizon` ; reste côté Hermes : `mail_actions_sync` met le fil à la corbeille Gmail puis `report_mail_action` (`type: trash`), et le Trieur renseigne `horizon` quand le mail n'a pas de jour. Vérif : « Supprimer » dans le paquet met le fil à la corbeille ; échec = carte rouverte avec le code ; sur le téléphone, la tâche née d'un mail arrive dans l'horizon choisi.
 - Android : feuille de route trimestrielle (Roadmap) et onglet Chronologie des zones (2026-11-13)

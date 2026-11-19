@@ -5770,7 +5770,8 @@
       "navigation": "Buka",
       "task": "Pada tugas",
       "create": "Buat",
-      "triage": "Pemilahan kotak masuk"
+      "triage": "Pemilahan kotak masuk",
+      "plan": "Di halaman Rencana"
     },
     "shortcuts": {
       "palette": "Buka palet perintah",
@@ -5795,7 +5796,17 @@
       "triageProject": "Pilah: jadikan proyek",
       "triageNote": "Pilah: jadikan catatan",
       "triageLater": "Pilah: nanti (tetap di kotak masuk)",
-      "triageDelete": "Pilah: hapus"
+      "triageDelete": "Pilah: hapus",
+      "planAddInbox": "Tambahkan ke kotak masuk",
+      "planFocus": "Berpindah antar tugas dan hari (atau H, J, K, L)",
+      "planMoveDay": "Geser tugas (atau pilihan) satu hari",
+      "planToday": "Rencanakan hari ini",
+      "planTomorrow": "Rencanakan besok",
+      "planNextWeek": "Kirim ke minggu depan",
+      "planThisMonth": "Kirim ke bulan ini",
+      "planDrag": "Ambil untuk dipindah dengan panah (Enter meletakkan)",
+      "planPick": "Pilih beberapa tugas (klik dengan Ctrl, Cmd, atau Shift)",
+      "planClear": "Kosongkan pilihan"
     }
   },
   "taskPanel": {
@@ -6534,7 +6545,12 @@
     "stripLabel": "Kirim ke horizon",
     "stripOpen": "Buka {{name}} di Horizon",
     "sentToHorizon": "Dikirim ke {{name}}",
-    "plannedOnDayHint_other": "{{count}} direncanakan pada suatu hari"
+    "plannedOnDayHint_other": "{{count}} direncanakan pada suatu hari",
+        "weekLoad": "Minggu ini {{planned}} / {{available}}",
+        "weekLoadTitle": "Direncanakan dari hari ini hingga akhir minggu, dibanding jam harianmu",
+        "pickedMoved": "Tugas terpilih dipindahkan",
+        "pickedCount": "Terpilih: {{count}}",
+        "pickedClear": "Kosongkan pilihan"
   },
   "offline": {
     "offline": "Offline",

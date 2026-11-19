@@ -5828,7 +5828,8 @@
       "navigation": "الانتقال إلى",
       "task": "على مهمة",
       "create": "إنشاء",
-      "triage": "فرز الوارد"
+      "triage": "فرز الوارد",
+      "plan": "في صفحة التخطيط"
     },
     "shortcuts": {
       "palette": "فتح لوحة الأوامر",
@@ -5853,7 +5854,17 @@
       "triageProject": "فرز: تحويله إلى مشروع",
       "triageNote": "فرز: تحويله إلى ملاحظة",
       "triageLater": "فرز: لاحقًا (إبقاؤه في الوارد)",
-      "triageDelete": "فرز: حذف"
+      "triageDelete": "فرز: حذف",
+      "planAddInbox": "إضافة إلى صندوق الوارد",
+      "planFocus": "التنقل بين المهام والأيام (أو H وJ وK وL)",
+      "planMoveDay": "نقل المهمة (أو التحديد) يومًا",
+      "planToday": "تخطيطها اليوم",
+      "planTomorrow": "تخطيطها غدًا",
+      "planNextWeek": "إرسالها إلى الأسبوع القادم",
+      "planThisMonth": "إرسالها إلى هذا الشهر",
+      "planDrag": "التقاطها لتحريكها بالأسهم (Enter يضعها)",
+      "planPick": "تحديد عدة مهام (نقر مع Ctrl أو Cmd أو Shift)",
+      "planClear": "مسح التحديد"
     }
   },
   "taskPanel": {
@@ -6632,7 +6643,12 @@
     "plannedOnDayHint_two": "{{count}} مخططة في يوم",
     "plannedOnDayHint_few": "{{count}} مخططة في يوم",
     "plannedOnDayHint_many": "{{count}} مخططة في يوم",
-    "plannedOnDayHint_other": "{{count}} مخططة في يوم"
+    "plannedOnDayHint_other": "{{count}} مخططة في يوم",
+    "weekLoad": "هذا الأسبوع {{planned}} / {{available}}",
+    "weekLoadTitle": "المخطط من اليوم حتى نهاية الأسبوع مقابل ساعات يومك",
+    "pickedMoved": "نُقلت المهام المحددة",
+    "pickedCount": "المحدد: {{count}}",
+    "pickedClear": "مسح التحديد"
   },
   "offline": {
     "offline": "غير متصل",

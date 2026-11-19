@@ -37,7 +37,13 @@ In the days layout, a slim strip under the day columns (Semaine prochaine, Ce mo
 
 ### « À planifier » (Days layout)
 
-The inbox column is 260 px wide by default and widens or narrows from the handle on its right (drag, arrow keys, Home / End; a double click brings back 260 px): 220 to 560 px, and never so wide that the board loses its two day columns or, when the calendar sits beside it, the narrowest calendar. The width is kept per browser (`upcoming.inboxWidth`); « À planifier » below follows it. Web only: the phone shows one column. The inbox and « À planifier » scroll as one list in that column; each header sticks at the top while its part is in view.
+The inbox column is 260 px wide by default and widens or narrows from the handle on its right (drag, arrow keys, Home / End; a double click brings back 260 px): 220 to 560 px, and never so wide that the board loses its day and a half of columns or, when the calendar sits beside it, the narrowest calendar. The width is kept per browser (`upcoming.inboxWidth`); « À planifier » below follows it. Web only: the phone shows one column. The inbox and « À planifier » scroll as one list in that column; each header sticks at the top while its part is in view.
+
+Beside the board, the calendar needs the window to be 1180 px or more and the board to keep the inbox, a day and a half of columns and the narrowest calendar (280 px); otherwise it is a drawer (`calendarPlacement`, `minBoardWidth` in `boardDates.ts`). A 1500 px window with the sidebar open keeps it beside the board.
+
+The horizon strip under the days starts with the rest of this week: « Cette semaine 6 h 30 / 35 h », the open plan lines from today to the last day of the week against each day's hours (`weekLoad.ts`; a day not loaded counts its usual hours), red when over.
+
+Several cards can be picked with Ctrl, Cmd or Shift click (Days layout only, `pickedCards.ts`): a picked card is tinted, a bar at the bottom says « Sélection : N » with Aujourd'hui, Demain, Semaine prochaine, Ce mois-ci and ✕. Dragging a picked card onto a day or a horizon moves the whole selection; on a picked card t, Shift+T, Shift+←/→, Shift+W and Shift+M act on all of it. One write per day touched, one Undo; Escape or ✕ clears. N anywhere on the page (not in a field or a dialog) opens the inbox's add field. All the board keys are listed in the `?` help under « Sur la page Planifier » (`shortcutRegistry.ts`, group `plan`).
 
 In the header, « Aujourd'hui » is never greyed out: on today it brings today's column back into view (`aria-current="date"`). The calendar button reads « Calendrier » next to its icon, pressed while the calendar shows.
 

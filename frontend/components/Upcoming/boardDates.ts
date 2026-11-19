@@ -32,15 +32,19 @@ export const anchorFor = (
     count = BOARD_DAYS
 ): string => (boardDates(anchor, count).includes(picked) ? anchor : picked);
 
-// The board's smallest width: the inbox (as shown) and two day columns.
+// Day columns the board keeps in view beside the calendar: one and the
+// next half-showing, so a 1500 px window still has the calendar beside it.
+const MIN_VISIBLE_DAYS = 1.5;
+
+// The board's smallest width: the inbox (as shown) and a day and a half.
 export const minBoardWidth = (inboxWidth: number): number =>
     inboxWidth +
     (inboxWidth > 0 ? COLUMN_GAP : 0) +
-    2 * DAY_COLUMN_WIDTH +
+    Math.round(MIN_VISIBLE_DAYS * DAY_COLUMN_WIDTH) +
     COLUMN_GAP +
     BOARD_PADDING;
 
-// Widest the inbox may be: the board keeps two day columns and, when the
+// Widest the inbox may be: the board keeps a day and a half and, when the
 // calendar is shown beside it, the narrowest calendar (0: not measured yet).
 export const inboxMaxWidth = (
     available: number,
@@ -64,7 +68,9 @@ export const clampInboxWidth = (
 ): number => {
     const max = inboxMaxWidth(available, calendarShown);
     const wanted = Number.isFinite(width) && width > 0 ? width : INBOX_WIDTH;
-    return Math.round(Math.max(INBOX_MIN, Math.min(max, wanted)));
+    // Down, never up: half a pixel more would push the calendar into its
+    // drawer.
+    return Math.floor(Math.max(INBOX_MIN, Math.min(max, wanted)));
 };
 
 // Widest the calendar may be in `available` px (0: not measured yet).
@@ -92,7 +98,7 @@ export const clampCalendarWidth = (
 };
 
 // Split beside the board, or a drawer over it: the window is narrow, or the
-// board would lose its two columns next to the narrowest calendar.
+// board would lose its day and a half next to the narrowest calendar.
 export const calendarPlacement = (
     viewport: number,
     available: number,
