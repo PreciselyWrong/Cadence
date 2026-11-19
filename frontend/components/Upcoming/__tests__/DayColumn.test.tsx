@@ -170,6 +170,35 @@ describe('DayColumn', () => {
         expect(cardTitles()).toEqual(['Task a', 'Task b']);
     });
 
+    it('shows the merged events between the cards, in time order', () => {
+        renderColumn({
+            day: dayWith([
+                planItem('late', 1, { start_minute: 18 * 60 }),
+                planItem('early', 2, { start_minute: 9 * 60 }),
+                planItem('free', 3),
+            ]),
+            events: [
+                {
+                    title: 'Lunch',
+                    start: '12:00',
+                    end: '13:00',
+                    all_day: false,
+                },
+            ],
+        });
+        const order = Array.from(
+            document.querySelectorAll(
+                '[data-testid="upcoming-card"], [data-testid="day-event"]'
+            )
+        ).map((el) => el.getAttribute('aria-label') ?? el.textContent);
+        expect(order).toEqual([
+            'Task early',
+            '12:00–13:00Lunch',
+            'Task late',
+            'Task free',
+        ]);
+    });
+
     it('lists tasks due that day but not planned, after the planned ones', () => {
         renderColumn({
             day: dayWith([planItem('a', 1)], [task('due', 'Due only')]),

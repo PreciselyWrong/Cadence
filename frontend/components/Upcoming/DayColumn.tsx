@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { AgendaEvent, dayAgenda } from './dayAgenda';
 import { useTranslation } from 'react-i18next';
 import { useDroppable } from '@dnd-kit/core';
 import {
@@ -202,6 +203,25 @@ const DayColumn: React.FC<DayColumnProps> = ({
     const startsWeek = getDay(at) === weekStartsOn;
     const weekNumber = getISOWeek(addDays(at, 3));
 
+    // Merged calendar: the events sit between the cards in time order,
+    // unless the cards are grouped or sorted by something else than time.
+    const interleave =
+        groupBy === 'none' && (sortBy === 'plan' || sortBy === 'time');
+    const renderEvent = (event: AgendaEvent, i?: number) => (
+        <div
+            key={`event-${event.title}-${event.start ?? 'day'}-${i ?? ''}`}
+            role="listitem"
+            data-testid="day-event"
+            className="flex gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-xs text-blue-900 dark:bg-blue-900/30 dark:text-blue-100"
+        >
+            <span className="shrink-0 tabular-nums opacity-80">
+                {event.all_day
+                    ? t('upcoming.preview.allDay', 'All day')
+                    : `${event.start}–${event.end}`}
+            </span>
+            <span className="min-w-0 break-words">{event.title}</span>
+        </div>
+    );
     const renderCard = (line: DayLine) => (
         <TaskCard
             key={line.uid}
@@ -358,31 +378,10 @@ const DayColumn: React.FC<DayColumnProps> = ({
                 </form>
             )}
             <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto -mx-1.5 px-2 pb-2 pt-1.5">
-                {events.length > 0 && (
-                    <ul
-                        aria-label={t('upcoming.preview.events', 'Agenda')}
-                        className="flex flex-col gap-1"
-                        data-testid="preview-events"
-                    >
-                        {events.map((event, i) => (
-                            <li
-                                key={`${event.title}-${i}`}
-                                className="flex gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-xs text-blue-900 dark:bg-blue-900/30 dark:text-blue-100"
-                            >
-                                <span className="shrink-0 tabular-nums opacity-80">
-                                    {event.all_day
-                                        ? t(
-                                              'upcoming.preview.allDay',
-                                              'All day'
-                                          )
-                                        : `${event.start}–${event.end}`}
-                                </span>
-                                <span className="min-w-0 break-words">
-                                    {event.title}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
+                {(!interleave || open.length === 0) && events.length > 0 && (
+                    <div className="flex flex-col gap-1">
+                        {events.map(renderEvent)}
+                    </div>
                 )}
                 <SortableContext
                     items={open.map((line) => cardId(date, line.uid))}
@@ -404,7 +403,14 @@ const DayColumn: React.FC<DayColumnProps> = ({
                                 </h3>
                             )}
                             <div role="list" className="flex flex-col gap-2">
-                                {group.cards.map(renderCard)}
+                                {interleave
+                                    ? dayAgenda(group.cards, events).map(
+                                          (row, i) =>
+                                              row.kind === 'card'
+                                                  ? renderCard(row.card)
+                                                  : renderEvent(row.event, i)
+                                      )
+                                    : group.cards.map(renderCard)}
                             </div>
                         </div>
                     ))}

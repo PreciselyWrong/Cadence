@@ -643,7 +643,7 @@ describe('UpcomingBoard', () => {
             expect(trace).toHaveTextContent('Write report');
             // The day's agenda is in the column.
             expect(
-                within(column(TOMORROW)).getByTestId('preview-events')
+                within(column(TOMORROW)).getByTestId('day-event')
             ).toHaveTextContent('Dentist');
 
             // Hovering one rings the other, sizes unchanged.
