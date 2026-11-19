@@ -178,7 +178,9 @@ function loadWorker(initial: Server) {
     let server = initial;
     const seen: Request[] = [];
     const fetchMock = jest.fn(async (input: any, init?: any) => {
-        const req = input instanceof Request ? input : new Request(input, init);
+        // A page request is a plain object here (mode navigate): its url.
+        const req =
+            input instanceof Request ? input : new Request(urlOf(input), init);
         seen.push(req.clone());
         return server(req);
     });
@@ -369,6 +371,43 @@ describe('service worker reads', () => {
 
     it('serves the cached shell for a page offline', async () => {
         const sw = loadWorker(down);
+        sw.caches.stores.set(
+            'tududi-v4',
+            new Map([
+                [
+                    `${ORIGIN}/`,
+                    { body: '<html>shell', status: 200, headers: [] },
+                ],
+            ])
+        );
+        const response = await sw.navigate('/today');
+        expect(await response.text()).toBe('<html>shell');
+    });
+});
+
+describe('service worker pages', () => {
+    it('asks the server for a page even after a read found it unreachable', async () => {
+        const sw = loadWorker(down);
+        await sw.request('/api/tasks');
+        sw.setServer(() => new Response('<html>new'));
+        sw.caches.stores.set('tududi-old', new Map());
+        sw.seed('/api/areas', []);
+        const response = await sw.navigate('/upcoming');
+        expect(await response.text()).toBe('<html>new');
+        // Online again, the caches of older versions go.
+        await flush();
+        expect(sw.caches.stores.has('tududi-old')).toBe(false);
+        expect(sw.caches.stores.has(API_CACHE)).toBe(true);
+    });
+
+    it('serves the shell of its own version offline, never an older one', async () => {
+        const sw = loadWorker(down);
+        sw.caches.stores.set(
+            'tududi-old',
+            new Map([
+                [`${ORIGIN}/`, { body: '<html>old', status: 200, headers: [] }],
+            ])
+        );
         sw.caches.stores.set(
             'tududi-v4',
             new Map([

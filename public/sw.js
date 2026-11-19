@@ -105,20 +105,26 @@ self.addEventListener('install', (event) => {
 
 // ─── Activate ───────────────────────────────────────────────────────────────
 
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches
-            .keys()
-            .then((keys) =>
-                Promise.all(
-                    keys
-                        .filter(
-                            (key) => key !== CACHE_VERSION && key !== API_CACHE
-                        )
-                        .map((key) => caches.delete(key))
-                )
+// Drops the caches of older versions. Run on activate and again after the
+// first page served online: WebKitGTK (the Linux client) kept a dozen old
+// versions despite activate.
+let pruned = false;
+const pruneOldCaches = () =>
+    caches
+        .keys()
+        .then((keys) =>
+            Promise.all(
+                keys
+                    .filter((key) => key !== CACHE_VERSION && key !== API_CACHE)
+                    .map((key) => caches.delete(key))
             )
-    );
+        )
+        .then(() => {
+            pruned = true;
+        });
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(pruneOldCaches());
     self.clients.claim();
 });
 
@@ -263,10 +269,24 @@ function markOnline() {
     replay();
 }
 
+// A page always asks the server first, even while reads are latched
+// offline: otherwise a window that once lost the server (sleep, Tailscale
+// down) stays on the cached shell. Offline, the shell is this version's,
+// never one of an older cache left behind.
 async function handleNavigate(request) {
-    const response = await reachServer(request, READ_TIMEOUT_MS);
-    if (response) return response;
-    const shell = await caches.match(scopeUrl(''));
+    try {
+        const response = await fetchWithTimeout(request, READ_TIMEOUT_MS);
+        if (!core.isUnreachableStatus(response.status)) {
+            markOnline();
+            if (!pruned) pruneOldCaches().catch(() => undefined);
+            return response;
+        }
+    } catch {
+        // network error or timeout
+    }
+    markOffline();
+    const own = await caches.open(CACHE_VERSION);
+    const shell = await own.match(scopeUrl(''));
     return shell || offlineError();
 }
 

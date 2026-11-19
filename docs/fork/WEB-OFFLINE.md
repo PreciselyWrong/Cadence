@@ -54,6 +54,8 @@ AI (assistant, classification, text analysis), sign-in, push subscriptions, CalD
 
 The main window is a WebKitGTK webview on the server's https origin, so it registers the same worker, stored in the app's data folder (`~/.local/share/ch.nicolab.cadence.desktop/serviceworkers`, `CacheStorage`). If the server is unreachable when the window opens, the worker serves the cached shell. Nothing changes in `desktop/`.
 
+Fixed 2026-11-19: a page always asks the server first, even when reads are latched offline (a window that once lost the server stayed on the cached shell), and offline it serves the shell of its own version only. Old version caches are pruned on activate and again after the first page served online: WebKitGTK had kept twelve, and `caches.match` returned the oldest shell (a two-week-old app).
+
 ## Verification (2026-11-12)
 
 - Unit: `frontend/__tests__/offlineCore.test.ts`, `serviceWorker.test.ts` (worker driven with in-memory Cache Storage and IndexedDB), `components/Offline/__tests__`; server: `backend/tests/integration/sync-offline-replay.test.js`.
