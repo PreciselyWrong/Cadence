@@ -1,3 +1,15 @@
+## [1.42.0] : 19 novembre 2026
+
+- Un seul menu de tâche à l'appui long, partout : Ouvrir, Terminer, Date, Priorité, Projet, Épingler, Dupliquer, Transformer en projet, Copier le lien ou le titre, Supprimer avec Annuler, avec en tête les gestes propres à l'écran.
+- Une tâche dont le nom est une adresse montre le titre de la page, son icône et son image ; un toucher sur le site ouvre la page, et la fiche a « Ouvrir le lien ».
+- « Discuter avec l'IA » dans l'en-tête de la fiche : la conversation s'ouvre sur la tâche (quand le plugin de l'IA est branché).
+- Plus de bouton d'IA quand aucun agent n'écoute ; les tâches repoussées trois fois ou plus portent « ↻ N× » dans Planifier.
+- Liens « bloque » dans la fiche : « Bloque » et « Bloquée par », ajout et retrait, mention « Bloquée ».
+- La description d'un projet s'affiche sur sa page avec les aperçus de ses liens, hors ligne compris.
+- L'Agenda suit les heures visibles réglées sur le web et grise ce qui sort des heures de travail.
+- Réglages › À trier revient : agendas et propositions de l'IA, comme sur le web.
+- « Zone » partout à la place de « domaine » ; une échéance à venir porte un petit drapeau.
+
 ## [1.41.0] : 19 novembre 2026
 
 - Rituel du matin : le matin, quand des tâches sont en retard, la notification ouvre trois étapes de grandes cartes : trier chaque retard d'un glissement (droite = conseil de l'IA, gauche = demain, haut = plus tard) ou par de grands boutons avec Annuler, vérifier « Ta journée » (priorités « Ce qui compte » avec étoile, événements, tâches et charge), puis « C'est parti » pour tout appliquer et revenir sur Aujourd'hui. Une carte « Ma matinée » reste en haut d'Aujourd'hui tant que le rituel du jour n'est pas validé.
