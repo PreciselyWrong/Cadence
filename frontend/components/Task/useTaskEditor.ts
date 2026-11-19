@@ -15,7 +15,7 @@ import {
 } from '../../utils/peopleService';
 import { useStore } from '../../store/useStore';
 import { useToast } from '../Shared/ToastContext';
-import { isTaskCompleted } from '../../constants/taskStatus';
+import { isTaskCompleted, isTaskDone } from '../../constants/taskStatus';
 import { isStartAfterDue } from '../../utils/dueDateTime';
 import { isTodoMdTask } from '../../utils/todoMd';
 import { datePresets } from '../../utils/datePresets';
@@ -46,11 +46,14 @@ const dayOf = (value?: string | null) =>
 // and the task pane. Every field saves by itself as soon as it is committed
 // (blur, choice in a popover) and goes back to its saved value when the save
 // fails. Subtasks, attachments and comments save as soon as they change.
-// `active` is false while a panel stays mounted but closed.
+// `active` is false while a panel stays mounted but closed. `onCompleted`
+// runs once a completion is saved: a recurring task comes back not started,
+// so the act of completing is the signal, not the saved status.
 export const useTaskEditor = (
     initialTask: Task,
     onSaved?: (task: Task) => void,
-    active = true
+    active = true,
+    onCompleted?: () => void
 ) => {
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
@@ -268,10 +271,13 @@ export const useTaskEditor = (
     flushRef.current = flush;
     useEffect(() => () => flushRef.current(), []);
 
+    const onCompletedRef = useRef(onCompleted);
+    onCompletedRef.current = onCompleted;
     const done = isTaskCompleted(task.status);
     const toggleCompletion = () => {
         if (!task.uid) return;
         const uid = task.uid;
+        const completing = !done;
         void run({}, async (_setters, commit) => {
             await toggleTaskCompletion(uid, task);
             await commit();
@@ -280,7 +286,21 @@ export const useTaskEditor = (
                 showErrorToast(
                     t('task.statusUpdateError', 'Failed to update status')
                 );
+                return;
             }
+            if (completing) onCompletedRef.current?.();
+        });
+    };
+
+    const changeStatus = (status: Task['status']) => {
+        const completing = !done && isTaskDone(status);
+        void runFields(
+            { status },
+            { status },
+            'task.statusUpdateError',
+            'Failed to update status'
+        ).then((ok) => {
+            if (ok && completing) onCompletedRef.current?.();
         });
     };
 
@@ -390,6 +410,7 @@ export const useTaskEditor = (
         reset,
         done,
         toggleCompletion,
+        changeStatus,
         handleComplete,
         postponeToTomorrow,
         handleSubtaskUpdate,

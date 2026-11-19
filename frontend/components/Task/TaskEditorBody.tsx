@@ -223,14 +223,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                         (s) => s.setTags(names)
                     )
                 }
-                onStatus={(status) =>
-                    void runFields(
-                        { status },
-                        { status },
-                        'task.statusUpdateError',
-                        'Failed to update status'
-                    )
-                }
+                onStatus={ed.changeStatus}
                 onRecurrence={(payload) =>
                     void run(payload, (s) => s.setRecurrence(payload))
                 }

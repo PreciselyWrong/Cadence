@@ -24,7 +24,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
     task: initialTask,
     onSaved,
 }) => {
-    const ed = useTaskEditor(initialTask, onSaved, isOpen);
+    const ed = useTaskEditor(initialTask, onSaved, isOpen, onClose);
 
     return (
         <EntitySidePanel

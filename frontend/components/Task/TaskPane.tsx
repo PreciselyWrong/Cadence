@@ -66,6 +66,7 @@ export const formatPlannedWhen = (
 interface TaskPaneBodyProps {
     task: Task;
     onSaved: (task: Task) => void;
+    onCompleted: () => void;
     titleId: string;
     plannedLabel: string | null;
 }
@@ -76,10 +77,11 @@ interface TaskPaneBodyProps {
 const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
     task,
     onSaved,
+    onCompleted,
     titleId,
     plannedLabel,
 }) => {
-    const ed = useTaskEditor(task, onSaved);
+    const ed = useTaskEditor(task, onSaved, true, onCompleted);
 
     return (
         <>
@@ -120,8 +122,8 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
 
 // The task's detail, on every page: a wide sheet floating over the lower
 // part of the page (Today, Plan and every list alike), "Expand" fills the
-// page; full screen below md. Opened by `?task=`; a click outside, Escape or
-// a second click on the same row closes it.
+// page; full screen below md. Opened by `?task=`; a click outside, Escape,
+// a second click on the same row or completing the task closes it.
 const TaskPane: React.FC = () => {
     const { t, i18n } = useTranslation();
     const location = useLocation();
@@ -321,6 +323,7 @@ const TaskPane: React.FC = () => {
                     key={task.uid}
                     task={task}
                     onSaved={handleSaved}
+                    onCompleted={closeTask}
                     titleId={titleId}
                     plannedLabel={plannedLabel}
                 />

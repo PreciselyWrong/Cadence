@@ -508,6 +508,52 @@ describe('TaskPane as a floating sheet', () => {
         }
     });
 
+    // A recurring task comes back not started with its next due date, so
+    // the sheet closes on the act of completing, not on the saved status.
+    it('closes the sheet when the task is completed from its check circle', async () => {
+        (tasksService.toggleTaskCompletion as jest.Mock).mockResolvedValue({
+            ...baseTask,
+            status: 'done',
+        });
+        renderSheet('/today?task=uid-1');
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+
+        fireEvent.click(within(dialog).getByTestId('task-complete-button'));
+
+        await waitFor(() =>
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+        );
+        expect(tasksService.toggleTaskCompletion).toHaveBeenCalledWith(
+            'uid-1',
+            expect.anything()
+        );
+        expect(screen.getByTestId('location-search')).toHaveTextContent(/^$/);
+    });
+
+    it('stays open when a done task is reopened', async () => {
+        const doneTask = { ...baseTask, status: 'done' } as unknown as Task;
+        mockedFetchTaskByUid.mockResolvedValue(doneTask);
+        (tasksService.toggleTaskCompletion as jest.Mock).mockResolvedValue(
+            baseTask
+        );
+        renderSheet('/today?task=uid-1');
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+
+        fireEvent.click(within(dialog).getByTestId('task-complete-button'));
+
+        await waitFor(() =>
+            expect(tasksService.toggleTaskCompletion).toHaveBeenCalled()
+        );
+        await act(async () => {
+            await Promise.resolve();
+        });
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
+
     it('moves focus into the sheet and returns it to the opener on Escape', async () => {
         renderSheet('/today');
         const opener = screen.getByRole('button', { name: 'Open task' });

@@ -1004,3 +1004,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : un seul paquet « Décider (N) » dans « À trier », construit comme « Trier mes mails » (conseil encadré, bouton danger en rouge, raison en petit, « Répondre par un mot », « Plus tard », « Passer », « Annuler », touches 1–5, Entrée, flèches) ; « Toujours archiver cet expéditeur » sur les cartes Mail, règles dans Profil › À trier ; état « relevé à 9 h 12 » / « en cours… » à côté de « Relever les mails » ; les cartes d'« À trier » montrent les mêmes choix que le paquet ; le paquet Mail met les rendez-vous et les réponses en tête.
 - **Android** : même comportement dans la même étape (1.40.0).
 
+## Terminer une tâche ferme sa fiche (2026-11-19)
+
+- **Problème** : cocher la case d'une tâche dans sa fiche (ou passer son statut à Terminée) laissait la fiche ouverte sur une tâche finie.
+- **Décision** : la fiche flottante et le panneau de tâche se ferment dès que la complétion est enregistrée ; rouvrir une tâche terminée les laisse ouverts. Une tâche récurrente revient « non commencée » avec sa prochaine échéance : c'est le geste de terminer qui ferme, pas le statut renvoyé.
+- **Android** : la fiche se fermait déjà à la case (`TaskDetailSheet.kt`).
