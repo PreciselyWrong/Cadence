@@ -50,6 +50,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | File « À trier » | `docs/40-triage.md`, `backend/modules/triage/` |
 | Cartes Mail de « À trier » | `docs/43-mail-triage.md`, `backend/modules/triage/mail.js` |
 | Cartes de décision des jobs d'agent (paquet « Décider ») | `docs/49-agent-decisions.md`, `backend/modules/decisions/` |
+| Rituel du matin sur le téléphone (cartes des retards, journée, `focus`) | `docs/50-morning-ritual.md` |
 | Propositions d'agent (« Planifier ma semaine », « Préparer ma revue », week-end) | `docs/47-proposals.md`, `docs/48-weekend.md`, `backend/modules/proposals/` |
 | Tout appel à un agent Hermes (coût, contrat JSON, fenêtre native, jobs cron) | `.agents/skills/hermes-calls/SKILL.md` |
 | Classement automatique (nouvelles tâches et notes) | `docs/41-auto-classify.md`, `backend/modules/auto-classify/` |

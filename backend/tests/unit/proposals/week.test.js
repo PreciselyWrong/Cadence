@@ -223,6 +223,18 @@ describe('validateWeekAnswer', () => {
         events: [],
     });
 
+    it('keeps up to three known focus tasks, once each, in order', () => {
+        const kept = validateWeekAnswer(base, {
+            changes: [],
+            focus: ['b', 'zzz', 'a', 'b', 'c', 'a'],
+        });
+        expect(kept.focus).toEqual(['b', 'a', 'c']);
+        expect(validateWeekAnswer(base, { changes: [] }).focus).toEqual([]);
+        expect(
+            validateWeekAnswer(base, { changes: [], focus: 'a' }).focus
+        ).toEqual([]);
+    });
+
     it('puts at most the daily cap of tasks on a day, the rest to this week', () => {
         const day = PERIOD.start;
         const capped = weekFacts({

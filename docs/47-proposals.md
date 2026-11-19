@@ -303,6 +303,8 @@ Read-only list of the career proposals the agent prepared (`kind: career`, serve
 
 ## Morning run
 
+On the phone the morning proposal opens as the morning ritual (`docs/50-morning-ritual.md`): the answer may carry `focus` (up to three known `task_uid`, the tasks that matter today), and `GET /api/proposals/:uid` and the notification's data carry `trigger`.
+
 Once a day, a scheduled job (`morning_replan` in `backend/modules/tasks/taskScheduler.js`, `*/15 * * * *`, under `withJobLock`) checks each user (`backend/modules/proposals/morning.js`, pure gate in `backend/modules/proposals/core/morning.js`) and calls `createProposal(user, { kind: 'week', trigger: 'morning' })` when all four conditions hold:
 
 1. **Setting on and time reached**: `ui_settings.planning.morningReplan` (`{ enabled: boolean, time: "HH:MM" }`, default `{ enabled: true, time: "06:30" }`, sanitized in `backend/modules/daily-plan/planningSettings.js` and `backend/modules/users/service.js`) is enabled and the user's local clock in `user.timezone` is between `time` and three hours after it (a proposal is never started in the evening).

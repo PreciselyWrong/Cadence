@@ -116,6 +116,8 @@ function serialize(row, { withFacts = false } = {}) {
         error: row.error ?? null,
         reply_text: row.reply_text ?? null,
         round: roundOf(row),
+        // `morning`: prepared by the morning run, opened as the ritual.
+        trigger: row.facts?.trigger ?? null,
         notes: notesOf(row),
         created_at: row.created_at,
         updated_at: row.updated_at,
@@ -179,7 +181,12 @@ async function notifyOutcome(row) {
         title: outcomeTitle(row, ready),
         message: ready ? row.answer?.headline : undefined,
         level: ready ? 'success' : 'error',
-        data: { proposal_uid: row.uid, kind: row.kind, status: row.status },
+        data: {
+            proposal_uid: row.uid,
+            kind: row.kind,
+            status: row.status,
+            trigger: row.facts?.trigger ?? null,
+        },
         sources: ['desktop', 'mobile'],
     });
 }

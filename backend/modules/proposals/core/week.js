@@ -284,6 +284,8 @@ function capDays(facts, changes) {
 // names a task of the facts, an operation of the list, and a date inside the
 // period when the operation needs one. One change per task. The headline and
 // subtitle are read by answer.js.
+const FOCUS_MAX = 3;
+
 function validateWeekAnswer(facts, raw) {
     const known = new Set(facts.tasks.map((task) => task.uid));
     const inPeriod = (date) =>
@@ -307,11 +309,19 @@ function validateWeekAnswer(facts, raw) {
         changes.push(change);
     }
     capDays(facts, changes);
+    // The few tasks that matter today (docs/50-morning-ritual.md): known
+    // tasks, once each, three at most.
+    const focus = [];
+    for (const uid of Array.isArray(raw.focus) ? raw.focus : []) {
+        if (focus.length >= FOCUS_MAX) break;
+        if (known.has(uid) && !focus.includes(uid)) focus.push(uid);
+    }
     return {
         questions: takeList(raw.questions, QUESTIONS_MAX)
             .map(cleanQuestion)
             .filter(Boolean),
         changes,
+        focus,
     };
 }
 

@@ -44,6 +44,7 @@ describe('validateAnswer', () => {
                 subtitle: 'Deux retards replacés.',
                 questions: [],
                 changes: [],
+                focus: [],
             },
         });
     });
@@ -57,6 +58,7 @@ describe('validateAnswer', () => {
                 subtitle: null,
                 questions: [],
                 changes: [],
+                focus: [],
             },
         });
     });
@@ -70,6 +72,7 @@ describe('validateAnswer', () => {
                 subtitle: 'Rien à changer.',
                 questions: [],
                 changes: [],
+                focus: [],
             },
         });
     });
