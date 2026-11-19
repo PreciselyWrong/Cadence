@@ -19,15 +19,24 @@ import { PAGE_TITLE_CLASS } from '../Shared/ui/PageHeader';
 import { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import TaskLine from './TaskLine';
 import { DayLine, DayLines, visibleLines } from './dayModel';
+import {
+    buildTodayTimeline,
+    fillFreeSlot,
+    TimelineFree,
+    TodayTimeline,
+} from './todayTimeline';
+import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
+import type { CalendarEvent } from '../../utils/calendarFeedsService';
 
 const SECTIONS_KEY = 'today.sections';
 
-type SectionKey = 'overdue' | 'habits' | 'suggestions' | 'done';
+type SectionKey = 'overdue' | 'habits' | 'tomorrow' | 'suggestions' | 'done';
 
 // How the sections start; only the day's habits start open.
 const CLOSED: Record<SectionKey, boolean> = {
     overdue: false,
     habits: true,
+    tomorrow: false,
     suggestions: false,
     done: false,
 };
@@ -92,9 +101,13 @@ export interface DayListProps {
         content: React.ReactNode;
         action?: { label: string; onClick(): void };
     } | null;
+    tomorrow?: { count: number; content: React.ReactNode } | null;
     suggestions: { count: number; content: React.ReactNode } | null;
     // The day's habits (open count, rows); absent when none is due.
     habits?: { count: number; content: React.ReactNode } | null;
+    timeline?: TodayTimeline | null;
+    onPlaceHere?(free: TimelineFree): void;
+    onOpenEvent?(event: CalendarEvent): void;
     emptyText: string;
 }
 
@@ -172,8 +185,12 @@ const DayList: React.FC<DayListProps> = ({
     onToggle,
     onOpen,
     overdue,
+    tomorrow = null,
     suggestions,
     habits = null,
+    timeline: timelineProp = null,
+    onPlaceHere,
+    onOpenEvent,
     emptyText,
 }) => {
     const { t } = useTranslation();
@@ -202,11 +219,22 @@ const DayList: React.FC<DayListProps> = ({
         data: { kind: 'list' },
     });
 
-    const timedIds = lines.timed.map((line) => `line:${line.uid}`);
-    const anytimeIds = lines.anytime.map((line) => `line:${line.uid}`);
-    const hasOpen = lines.timed.length > 0 || lines.anytime.length > 0;
+    const timeline = timelineProp ?? buildTodayTimeline(lines, [], null);
+    const toPlaceIds = timeline.toPlace.map((item) => `line:${item.line.uid}`);
+    const timelineTaskIds = timeline.entries
+        .filter((entry) => entry.kind === 'task')
+        .map((entry) => `line:${entry.line.uid}`);
+    const hasOpen = timeline.toPlace.length > 0 || timelineTaskIds.length > 0;
 
-    const row = (line: DayLine) => (
+    const row = (
+        line: DayLine,
+        extra: {
+            missedAt?: number | null;
+            past?: boolean;
+            next?: boolean;
+            overlaps?: boolean;
+        } = {}
+    ) => (
         <TaskLine
             key={line.uid}
             line={line}
@@ -218,6 +246,10 @@ const DayList: React.FC<DayListProps> = ({
             menu={lineMenu(line)}
             expanded={expanded}
             onToggleSubtask={onToggleSubtask}
+            missedAt={extra.missedAt}
+            past={extra.past}
+            next={extra.next}
+            overlaps={extra.overlaps}
         />
     );
 
@@ -347,27 +379,144 @@ const DayList: React.FC<DayListProps> = ({
                     </div>
                 )}
 
-                <div role="list" className="px-2">
-                    <SortableContext
-                        items={timedIds}
-                        strategy={verticalListSortingStrategy}
-                    >
-                        {lines.timed.map(row)}
-                    </SortableContext>
-                </div>
-
-                {lines.timed.length > 0 && lines.anytime.length > 0 && (
-                    <div className="mx-4 my-1.5 h-px bg-outline-variant/60" />
+                {timeline.toPlace.length > 0 && (
+                    <div className="py-1" data-testid="timeline-to-place">
+                        <div className="px-4 py-1 text-xs font-medium text-surface-on-variant">
+                            {t('today.toPlaceCount', 'To place · {{n}}', {
+                                n: timeline.toPlace.length,
+                            })}
+                        </div>
+                        <div role="list" className="px-2">
+                            <SortableContext
+                                items={toPlaceIds}
+                                strategy={verticalListSortingStrategy}
+                            >
+                                {timeline.toPlace.map((item) =>
+                                    row(item.line, { missedAt: item.missedAt })
+                                )}
+                            </SortableContext>
+                        </div>
+                    </div>
                 )}
 
-                <div role="list" className="px-2">
-                    <SortableContext
-                        items={anytimeIds}
-                        strategy={verticalListSortingStrategy}
-                    >
-                        {lines.anytime.map(row)}
-                    </SortableContext>
-                </div>
+                {timeline.entries.length > 0 && (
+                    <div className="py-1" data-testid="timeline-my-day">
+                        <div className="px-4 py-1 text-xs font-medium text-surface-on-variant">
+                            {t('today.myDay', 'My day')}
+                        </div>
+                        <div role="list" className="px-2">
+                            <SortableContext
+                                items={timelineTaskIds}
+                                strategy={verticalListSortingStrategy}
+                            >
+                                {timeline.entries.map((entry, idx) => {
+                                    if (entry.kind === 'task') {
+                                        return row(entry.line, {
+                                            past: entry.past,
+                                            next: entry.next,
+                                            overlaps: entry.overlaps,
+                                        });
+                                    }
+                                    if (entry.kind === 'event') {
+                                        return (
+                                            <button
+                                                key={`ev-${entry.event.uid}-${idx}`}
+                                                type="button"
+                                                onClick={() =>
+                                                    onOpenEvent?.(entry.event)
+                                                }
+                                                className={`grid w-full grid-cols-[52px_auto_minmax(0,1fr)] items-center gap-x-3 rounded-xl px-2 py-1.5 text-left hover:bg-surface-high/60 ${
+                                                    entry.past
+                                                        ? 'opacity-55'
+                                                        : ''
+                                                } ${
+                                                    entry.next
+                                                        ? 'bg-primary-container/30 ring-1 ring-primary/30'
+                                                        : ''
+                                                }`}
+                                            >
+                                                <span className="text-right text-xs font-medium tabular-nums text-surface-on-variant">
+                                                    {entry.start !== null
+                                                        ? formatMinute(
+                                                              entry.start
+                                                          )
+                                                        : t(
+                                                              'today.allDay',
+                                                              'All day'
+                                                          )}
+                                                </span>
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="h-2.5 w-2.5 rounded-full"
+                                                    style={{
+                                                        backgroundColor:
+                                                            entry.event.color ||
+                                                            'var(--color-primary, #6366f1)',
+                                                    }}
+                                                />
+                                                <span className="truncate text-body-m text-surface-on">
+                                                    {entry.event.title}
+                                                </span>
+                                            </button>
+                                        );
+                                    }
+                                    if (entry.kind === 'now') {
+                                        return (
+                                            <div
+                                                key="timeline-now"
+                                                data-testid="timeline-now"
+                                                className="my-1 flex items-center gap-2 px-2"
+                                            >
+                                                <span className="w-[52px] text-right text-xs font-semibold tabular-nums text-primary">
+                                                    {formatMinute(entry.minute)}
+                                                </span>
+                                                <span className="h-2 w-2 shrink-0 rounded-full bg-primary" />
+                                                <span className="h-px flex-1 bg-primary/70" />
+                                                <span className="text-[11px] font-medium text-primary">
+                                                    {t('today.now', 'Now')}
+                                                </span>
+                                            </div>
+                                        );
+                                    }
+                                    const placements = fillFreeSlot(
+                                        timeline.toPlace,
+                                        entry
+                                    );
+                                    return (
+                                        <div
+                                            key={`free-${entry.startMinute}`}
+                                            data-testid="timeline-free"
+                                            className="mx-2 my-1 flex items-center justify-between gap-2 rounded-lg border border-dashed border-outline-variant/60 px-3 py-1.5 text-xs text-surface-on-variant"
+                                        >
+                                            <span>
+                                                {formatDuration(entry.minutes)}{' '}
+                                                {t('today.freeSlot', 'free')}
+                                            </span>
+                                            {placements.length > 0 &&
+                                                onPlaceHere && (
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        onClick={() =>
+                                                            onPlaceHere(entry)
+                                                        }
+                                                    >
+                                                        {t(
+                                                            'today.placeHere',
+                                                            'Place {{count}} here',
+                                                            {
+                                                                count: placements.length,
+                                                            }
+                                                        )}
+                                                    </Button>
+                                                )}
+                                        </div>
+                                    );
+                                })}
+                            </SortableContext>
+                        </div>
+                    </div>
+                )}
 
                 {!hasOpen && <EmptyState title={emptyText} />}
 
@@ -382,6 +531,25 @@ const DayList: React.FC<DayListProps> = ({
                         />
                         {sections.habits && (
                             <div className="px-2">{habits.content}</div>
+                        )}
+                    </div>
+                )}
+
+                {tomorrow && tomorrow.count > 0 && (
+                    <div className="py-1">
+                        <SectionHead
+                            label={t(
+                                'today.tomorrowCount',
+                                'Tomorrow · {{n}}',
+                                {
+                                    n: tomorrow.count,
+                                }
+                            )}
+                            open={sections.tomorrow}
+                            onToggle={() => toggle('tomorrow')}
+                        />
+                        {sections.tomorrow && (
+                            <div className="px-2">{tomorrow.content}</div>
                         )}
                     </div>
                 )}

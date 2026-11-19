@@ -67,6 +67,12 @@ export interface TaskLineProps {
     // Show the description and the subtasks under the row.
     expanded?: boolean;
     onToggleSubtask?(subtask: Task): void;
+    // Timeline states: missed scheduled time in "À caser", past item dimmed,
+    // next upcoming item highlighted, overlapping an event.
+    missedAt?: number | null;
+    past?: boolean;
+    next?: boolean;
+    overlaps?: boolean;
 }
 
 /**
@@ -85,6 +91,10 @@ const TaskLine: React.FC<TaskLineProps> = ({
     sortable = true,
     expanded = false,
     onToggleSubtask,
+    missedAt = null,
+    past = false,
+    next = false,
+    overlaps = false,
 }) => {
     const { t, i18n } = useTranslation();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -203,6 +213,18 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 {shortDayLabel(dueDay as string, i18n?.language ?? 'en')}
             </Chip>
         ) : null,
+        missedAt !== null ? (
+            <Chip key="missed" tone="warning">
+                {t('today.missedAt', 'Scheduled {{time}}', {
+                    time: formatMinute(missedAt),
+                })}
+            </Chip>
+        ) : null,
+        overlaps ? (
+            <Chip key="overlaps" tone="warning">
+                {t('today.overlaps', 'At the same time')}
+            </Chip>
+        ) : null,
         !expanded && subtasks.length > 0 ? (
             <Chip key="subs">
                 {subtasks.filter((sub) => isTaskDone(sub.status)).length}/
@@ -221,8 +243,12 @@ const TaskLine: React.FC<TaskLineProps> = ({
                     ? 'bg-surface-highest'
                     : current
                       ? 'bg-primary-container/50'
-                      : 'hover:bg-surface-high/60'
-            } ${isDragging ? 'opacity-60 shadow-lg' : ''}`}
+                      : next
+                        ? 'bg-primary-container/30 ring-1 ring-primary/30'
+                        : 'hover:bg-surface-high/60'
+            } ${past && !line.done ? 'opacity-55' : ''} ${
+                isDragging ? 'opacity-60 shadow-lg' : ''
+            }`}
             style={{
                 transform: CSS.Transform.toString(transform),
                 transition: isDragging ? undefined : transition,
@@ -241,7 +267,9 @@ const TaskLine: React.FC<TaskLineProps> = ({
             }}
         >
             <span className="flex flex-col items-end pt-0.5">
-                {at !== null && <BigTime minute={at} strong={current} />}
+                {at !== null && missedAt === null && (
+                    <BigTime minute={at} strong={current || next} />
+                )}
                 {dueOnly && (
                     <FlagIcon
                         aria-label={t('today.dueAt', 'Due')}

@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DayList, { DayListProps } from '../DayList';
 import { DayLine } from '../dayModel';
+import { buildTodayTimeline } from '../todayTimeline';
 import { Task } from '../../../entities/Task';
 
 jest.mock('react-i18next', () => ({
@@ -244,5 +245,64 @@ describe('DayList habits', () => {
         expect(
             screen.queryByRole('button', { name: /Habits/ })
         ).not.toBeInTheDocument();
+    });
+});
+
+describe('DayList tomorrow and timeline', () => {
+    beforeEach(() => window.localStorage.clear());
+
+    it('renders Tomorrow · N before Suggestions · N and persists its open state', () => {
+        render(
+            <DayList
+                {...baseProps({
+                    tomorrow: { count: 3, content: <div>Tomorrow task</div> },
+                    suggestions: { count: 2, content: <div>Idea</div> },
+                })}
+            />
+        );
+        const tomorrowHead = screen.getByRole('button', {
+            name: /Tomorrow · 3/,
+        });
+        const suggestionsHead = screen.getByRole('button', {
+            name: /Suggestions · 2/,
+        });
+        expect(
+            tomorrowHead.compareDocumentPosition(suggestionsHead) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+        expect(tomorrowHead).toHaveAttribute('aria-expanded', 'false');
+        fireEvent.click(tomorrowHead);
+        expect(tomorrowHead).toHaveAttribute('aria-expanded', 'true');
+        expect(screen.getByText('Tomorrow task')).toBeInTheDocument();
+        expect(
+            JSON.parse(window.localStorage.getItem('today.sections') as string)
+        ).toMatchObject({ tomorrow: true });
+    });
+
+    it('renders To place, My day, now line, and free slot Place N here action', () => {
+        const lines = {
+            timed: [lineOf('t', { start: 720, duration: 30 })],
+            anytime: [lineOf('a', { duration: 30 })],
+            done: [],
+        };
+        const timeline = buildTodayTimeline(lines, [], 600);
+        const onPlaceHere = jest.fn();
+        render(
+            <DayList
+                {...baseProps({
+                    lines,
+                    timeline,
+                    onPlaceHere,
+                })}
+            />
+        );
+        expect(screen.getByTestId('timeline-to-place')).toBeInTheDocument();
+        expect(screen.getByTestId('timeline-my-day')).toBeInTheDocument();
+        expect(screen.getByTestId('timeline-now')).toBeInTheDocument();
+        expect(screen.getByTestId('timeline-free')).toBeInTheDocument();
+
+        const placeBtn = screen.getByRole('button', { name: 'Place 1 here' });
+        fireEvent.click(placeBtn);
+        expect(onPlaceHere).toHaveBeenCalledTimes(1);
     });
 });
