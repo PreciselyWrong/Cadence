@@ -18,6 +18,15 @@ Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `d
 - La journée en ligne du temps : « À caser » puis « Ma journée » sur un axe (maintenant, passé atténué, prochaine chose, « en même temps », créneaux libres et « Caser les N ici »), « N à faire » sous la date.
 - Repli « Demain » avant les suggestions.
 
+### Menus et sélection (web)
+
+- Un seul menu de tâche partout (clic droit, « ⋯ », touche Menu) : Ouvrir, Terminer, Date, Priorité, Projet, Épingler, Dupliquer, Transformer en projet, Copier le lien ou le titre, Supprimer avec annulation.
+- Ctrl ou Maj + clic sur les lignes, barre d'actions groupées ; « Ajouter une tâche » lit date, priorité, projet et étiquettes ; J/K dans la fiche.
+
+### Rituel du matin (Android 1.41.0)
+
+- La notification du matin ouvre trois étapes de grandes cartes : chaque retard avec le conseil de l'IA en avant et le choix à soi, « Ta journée » avec les trois tâches qui comptent, puis « C'est parti » (`docs/50-morning-ritual.md`, plugin Hermes 3.12.0).
+
 ### Divers
 
 - L'ancien chemin des réponses du résumé du jour est retiré (Android 1.21 et suivants).
