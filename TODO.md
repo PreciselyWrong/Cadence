@@ -6,8 +6,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 - Android : « Discuter avec l'IA » dans la fiche de tâche (2026-11-19)
   Raison : le web ouvre depuis l'en-tête de la fiche la page du plugin de l'IA sur la tâche (`?view=chat&about=<uid>`, `docs/00-tasks-behavior.md` › Task Pane, plugin `hermes` 3.10.0). Android ouvre déjà la page du plugin en WebView. Vérif : depuis une tâche sur le téléphone, la conversation s'ouvre sur cette tâche avec le même premier message que le web ; plugin éteint, pas de bouton.
-- Hermes : déployer le plugin 3.10.0 (2026-11-19)
-  Raison : « Discuter avec l'IA » sur une tâche a besoin de l'intent `task` du plugin (dépôt `cadence-plugin-hermes`, commit local). Vérif : depuis la fiche d'une tâche, l'agent répond sur cette tâche ; mesurer les tokens du premier échange (≲ 20 k).
+- Hermes : mesurer « Discuter avec l'IA » sur une tâche (plugin 3.10.0 déployé le 2026-11-19)
+  Vérif : depuis la fiche d'une tâche, l'agent répond sur cette tâche ; tokens du premier échange notés (≲ 20 k).
 - Android : bouton d'IA masqué sans agent et badge « ↻ N× » des tâches repoussées dans Planifier (2026-11-19)
   Raison : le Plan du bureau (aperçu de la semaine de l'IA sur le tableau, calendrier fusionné, « → jour », sélection multiple, section Repoussées) reste web seul : l'écran du téléphone est trop petit pour s'en servir (décision du 2026-11-19, `docs/fork/DECISIONS.md`). Restent sur Android ce qui y sert : pas de bouton « Planifier ma semaine » quand `GET /api/proposals` répond `agent: false`, et le compte « ↻ N× » (`GET /api/review/pushed`) sur les cartes. Vérif : plugin éteint, aucun bouton d'IA sur le téléphone ; une tâche repoussée 3 fois montre « ↻ 3× » comme sur le web.
 - Hermes : la semaine voit l'Inbox, les horizons et les projets, et peut proposer « faite » (2026-11-19)
