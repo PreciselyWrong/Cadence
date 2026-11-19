@@ -120,7 +120,7 @@
     <string name="tasks_strip_show_all">Tous les jours</string>
     <string name="tasks_projects_next">Prochaine : %1$s</string>
     <string name="tasks_projects_done_all">Tout est terminé</string>
-    <string name="tasks_projects_no_area">Sans domaine</string>
+    <string name="tasks_projects_no_area">Sans zone</string>
     <string name="tasks_projects_progress">%1$d terminées sur %2$d</string>
     <string name="tasks_tags_empty">Aucune étiquette pour l\'instant.</string>
     <string name="tasks_tag_empty">Aucune tâche ouverte avec cette étiquette.</string>

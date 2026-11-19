@@ -29,7 +29,7 @@ A task whose note holds an address shows the page on its row instead of the raw 
 A task whose **name** is an address (typed or pasted as is, note without one) is a link too (2026-11-19, web): its row reads the page's title, else the host and path, instead of the raw address. The site line is a link: a click opens the page in a new tab without opening the task. The task sheet shows the site with ↗ in its header, one click to open it.
 
 - Web: rule `frontend/components/Links/taskLink.ts`, marks `Links/LinkMarks.tsx`; task lists (`TaskRowCollapsed`, small picture at the end of the row), Today (`Today/TaskLine.tsx`, same), cards of Plan, the inbox column and the project board (`Shared/task/TaskCardBody.tsx`, picture as a cover on top).
-- Android: rule `links/TaskLinks.kt`, marks `ui/LinkMarks.kt`, in `TaskRow` (every list, Today, Plan); picture and site name from the Room cache `link_previews`, offline; icon through `ui/SiteIcon.kt`.
+- Android: rule `links/TaskLinks.kt` (note or bare address as task name, page title fallback), marks `ui/LinkMarks.kt`, in `TaskRow` (every list, Today, Plan) with one-tap site line to open in browser and « Ouvrir le lien » in the task sheet header; picture and site name from the Room cache `link_previews`, offline; icon through `ui/SiteIcon.kt`.
 - Project pages show the site's icon instead of the initial (the initial when the site has none), and the page's picture when it has one, on the web and Android.
 
 ## Project pages

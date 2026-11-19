@@ -63,6 +63,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -86,6 +87,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.glassBorder
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -102,6 +104,7 @@ import ch.nicolab.cadence.tasks.planning.WeekDay
 import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.proposals.ProposalKind
 import ch.nicolab.cadence.tasks.proposals.ProposalPhase
+import ch.nicolab.cadence.tasks.review.ReviewStep
 import ch.nicolab.cadence.tasks.ui.proposals.rememberProposalAction
 import ch.nicolab.cadence.tasks.ui.triage.TriageEntry
 import ch.nicolab.cadence.tasks.ui.triage.TriageScreen
@@ -163,6 +166,16 @@ internal fun PlanTab(
     val projectNames = rememberProjectNames(viewModel)
     val today = moment.today
     val zone = moment.zone
+
+    val context = LocalContext.current
+    var pushedCounts by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
+    LaunchedEffect(Unit) {
+        TasksGraph.review(context).tasks(ReviewStep.PUSHED).onSuccess { loaded ->
+            pushedCounts = loaded.value.items
+                .mapNotNull { item -> item.push?.recentCount?.takeIf { it >= 3 }?.let { item.uid to it } }
+                .toMap()
+        }
+    }
 
     var page by rememberSaveable { mutableIntStateOf(0) }
     val start = PlanWeek.start(today, page)
@@ -255,6 +268,7 @@ internal fun PlanTab(
                             onOpen = { onOpen(task) },
                             onMenu = { viewModel.openMenu(task) },
                             onSwipeAction = { viewModel.swipe(task, it) },
+                            pushedCount = pushedCounts[task.uid],
                         )
                     }
                     is PlanDayItem.Event -> {
@@ -288,6 +302,7 @@ internal fun PlanTab(
                         onOpen = { onOpen(card.task) },
                         onMenu = { viewModel.openMenu(card.task) },
                         onSwipeAction = { viewModel.swipe(card.task, it) },
+                        pushedCount = pushedCounts[card.task.uid],
                     )
                 }
             }
@@ -324,6 +339,7 @@ internal fun PlanTab(
                         onMenu = { viewModel.openMenu(task) },
                         onSwipeAction = { viewModel.swipe(task, it) },
                         background = background,
+                        pushedCount = pushedCounts[task.uid],
                         trailing = { MoreButton(task.name) { choosing = ChoiceTarget.Task(task) } },
                     )
                 },
@@ -414,6 +430,7 @@ private fun PlanDayItem.key(): String = when (this) {
 @Composable
 private fun AiDayLink(day: LocalDate) {
     val action = rememberProposalAction(ProposalKind.WEEK, day = day)
+    if (!action.visible) return
     val palette = cadence
     Row(
         Modifier

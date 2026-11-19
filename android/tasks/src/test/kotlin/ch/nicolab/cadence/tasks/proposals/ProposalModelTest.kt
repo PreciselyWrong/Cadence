@@ -58,6 +58,13 @@ class ProposalModelTest {
     }
 
     @Test
+    fun `parses agent availability on proposal list and defaults to false`() {
+        assertFalse(ProposalJson.decodeFromString<ProposalListDto>("""{"proposals":[]}""").agent)
+        assertFalse(ProposalJson.decodeFromString<ProposalListDto>("""{"proposals":[],"agent":false}""").agent)
+        assertTrue(ProposalJson.decodeFromString<ProposalListDto>("""{"proposals":[],"agent":true}""").agent)
+    }
+
+    @Test
     fun `the days of the sheet come from the server when it sends them, else from the facts`() {
         val dto = ProposalJson.decodeFromString<ProposalDto>(
             """

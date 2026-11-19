@@ -24,8 +24,10 @@ import androidx.compose.foundation.verticalScroll
 import ch.nicolab.cadence.tasks.ui.autoclassify.AutoClassifyMarkLine
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
@@ -66,6 +68,7 @@ import ch.nicolab.cadence.tasks.notes.ContentTargets
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -86,8 +89,13 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.links.TaskLinks
 import ch.nicolab.cadence.tasks.model.DetailTitle
+import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
+import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
 import ch.nicolab.cadence.tasks.project.canBecomeProject
+import ch.nicolab.cadence.tasks.triage.MailDeck
+import java.net.URLEncoder
 import ch.nicolab.cadence.tasks.model.EstimateFormat
 import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.FunnelStage
@@ -228,6 +236,10 @@ internal fun TaskDetailSheet(
                 .navigationBarsPadding()
                 .imePadding(),
         ) {
+            val uriHandler = LocalUriHandler.current
+            val taskLink = remember(current.name, current.note, current.source, current.sourceUrl) { TaskLinks.of(current) }
+            val pluginMenu = rememberPluginMenu(current.uid)
+            val hermesPlugin = remember(pluginMenu) { pluginMenu.items.firstOrNull { it.id == MailDeck.CHAT_PLUGIN } }
             DetailHeader(
                 title = title,
                 titleReadOnly = textLocked,
@@ -241,6 +253,13 @@ internal fun TaskDetailSheet(
                 },
                 onTitleChange = { title = it },
                 onBack = close,
+                onOpenLink = taskLink?.let { link -> { runCatching { uriHandler.openUri(link.url) } } },
+                onDiscuss = hermesPlugin?.let { item ->
+                    {
+                        val query = "?view=chat&about=" + URLEncoder.encode(current.uid, "UTF-8")
+                        context.startActivity(PluginPageActivity.intent(context, item, query))
+                    }
+                },
                 onFocusTimer = { picker = Picker.Focus },
                 onMore = { picker = Picker.Actions },
             )
@@ -570,6 +589,8 @@ private fun DetailHeader(
     onToggle: () -> Unit,
     onTitleChange: (String) -> Unit,
     onBack: () -> Unit,
+    onOpenLink: (() -> Unit)?,
+    onDiscuss: (() -> Unit)?,
     onFocusTimer: () -> Unit,
     onMore: () -> Unit,
 ) {
@@ -591,6 +612,20 @@ private fun DetailHeader(
                 onClick = onBack,
             )
             Spacer(Modifier.weight(1f))
+            onOpenLink?.let { openLink ->
+                RoundHeaderButton(
+                    icon = Icons.AutoMirrored.Outlined.OpenInNew,
+                    contentDescription = stringResource(R.string.tasks_open_link),
+                    onClick = openLink,
+                )
+            }
+            onDiscuss?.let { discuss ->
+                RoundHeaderButton(
+                    icon = Icons.Outlined.ChatBubbleOutline,
+                    contentDescription = stringResource(R.string.tasks_discuss_ai),
+                    onClick = discuss,
+                )
+            }
             RoundHeaderButton(
                 icon = Icons.Outlined.Timer,
                 contentDescription = stringResource(R.string.tasks_focus_open),

@@ -78,7 +78,7 @@ data class DayEventDto(
 data class DayWorkDto(val start: String = "", val end: String = "", val label: String? = null)
 
 @Serializable
-internal data class ProposalListDto(val proposals: List<ProposalDto> = emptyList())
+internal data class ProposalListDto(val proposals: List<ProposalDto> = emptyList(), val agent: Boolean = false)
 
 @Serializable
 data class ProposalAnswerDto(

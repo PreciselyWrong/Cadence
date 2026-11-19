@@ -54,7 +54,7 @@ object SyncConflictText {
     private val ENTITIES = mapOf(
         "task" to "Tâche",
         "project" to "Projet",
-        "area" to "Domaine",
+        "area" to "Zone",
         "goal" to "Objectif",
         "tag" to "Étiquette",
         "note" to "Note",
@@ -77,7 +77,7 @@ object SyncConflictText {
         "completed_at" to "Terminée le",
         "project_uid" to "Projet",
         "parent_project_uid" to "Projet parent",
-        "area_uid" to "Domaine",
+        "area_uid" to "Zone",
         "goal_uid" to "Objectif",
         "parent_task_uid" to "Tâche parente",
         "next_task_uid" to "Prochaine action",

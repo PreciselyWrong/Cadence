@@ -54,6 +54,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.nicolab.cadence.calendar.EventWithDone
+import ch.nicolab.cadence.designsystem.components.BadgeTone
+import ch.nicolab.cadence.designsystem.components.CadenceBadge
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
@@ -326,6 +328,7 @@ internal fun ToPlaceRow(
     background: Color = MaterialTheme.colorScheme.surface,
     /** Faux quand l'appui long sert à glisser la ligne : le menu s'ouvre alors au relâcher, sans bouger. */
     longPressMenu: Boolean = true,
+    pushedCount: Int? = null,
     trailing: (@Composable () -> Unit)? = null,
 ) {
     val haptic = rememberCadenceHaptic()
@@ -363,6 +366,7 @@ internal fun ToPlaceRow(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
+            pushedCount?.let { PushedBadge(it, Modifier.padding(start = Space.xs)) }
             if (trailing != null) {
                 trailing()
             } else {
@@ -386,6 +390,7 @@ internal fun TimelineTaskRow(
     onSwipeAction: (SwipeAction) -> Unit,
     modifier: Modifier = Modifier,
     longPressMenu: Boolean = true,
+    pushedCount: Int? = null,
 ) {
     val haptic = rememberCadenceHaptic()
     val swipeConfig = rememberSwipeConfig()
@@ -412,6 +417,7 @@ internal fun TimelineTaskRow(
             },
         ) {
             TimelineTitle(task.name, entry, struck = checking || task.isClosed, modifier = Modifier.weight(1f))
+            pushedCount?.let { PushedBadge(it, Modifier.padding(start = Space.xs)) }
             // Une tâche commencée et pas encore échue le dit, plutôt qu'une durée.
             val ongoing = entry.start != null && entry.end != null && !entry.start.isAfter(now) && entry.end.isAfter(now)
             if (ongoing) {
@@ -485,6 +491,16 @@ internal fun TimelineEventRow(
             RightMark(entry, now, if (event.event.allDay || end == null) null else "→ $end")
         }
     }
+}
+
+@Composable
+internal fun PushedBadge(count: Int, modifier: Modifier = Modifier) {
+    val label = stringResource(R.string.plan_pushed_badge, count)
+    CadenceBadge(
+        text = "↻ ${count}×",
+        tone = BadgeTone.Warning,
+        modifier = modifier.semantics { contentDescription = label },
+    )
 }
 
 /** « 45 min », « 1 h », « 4 h 35 ». */

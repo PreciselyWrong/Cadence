@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 internal const val PROPOSAL_POLL_MS = 5_000L
 
 /** État et geste d'une proposition, partagés par le bouton, le lien d'Aujourd'hui et l'entrée du menu ⋯. */
-internal class ProposalAction(val label: String, val phase: ProposalPhase, val onClick: () -> Unit)
+internal class ProposalAction(val label: String, val phase: ProposalPhase, val visible: Boolean, val onClick: () -> Unit)
 
 /**
  * « Planifier ma semaine » ou « Préparer ma revue » : idle, « En préparation… » (relu toutes les [PROPOSAL_POLL_MS]
@@ -39,6 +39,7 @@ internal fun rememberProposalAction(kind: ProposalKind, onReady: () -> Unit = {}
     val context = LocalContext.current
     val repo = remember(context) { ProposalRepository.of(context) }
     val latest by repo.latest.collectAsStateWithLifecycle()
+    val agentAvailable by repo.agentAvailable.collectAsStateWithLifecycle()
     val phase = ProposalPhase.of(latest[kind])
     val snackbar = rememberAppSnackbarHostState()
     val scope = rememberCoroutineScope()
@@ -66,7 +67,7 @@ internal fun rememberProposalAction(kind: ProposalKind, onReady: () -> Unit = {}
         is ProposalPhase.Preparing -> stringResource(R.string.proposal_preparing)
         is ProposalPhase.Ready -> stringResource(if (week) R.string.proposal_week_ready else R.string.proposal_review_ready)
     }
-    return ProposalAction(label, phase) {
+    return ProposalAction(label, phase, visible = agentAvailable) {
         when (phase) {
             ProposalPhase.Idle -> scope.launch {
                 repo.create(kind, day, day).onFailure { snackbar.showSnackbar(if (it is IOException) offline else failed) }
@@ -83,6 +84,7 @@ internal fun rememberProposalAction(kind: ProposalKind, onReady: () -> Unit = {}
 @Composable
 internal fun ProposalButton(kind: ProposalKind, modifier: Modifier = Modifier, onReady: () -> Unit = {}) {
     val action = rememberProposalAction(kind, onReady)
+    if (!action.visible) return
     if (action.phase is ProposalPhase.Ready) {
         PrimaryAction(action.label, modifier = modifier, onClick = action.onClick)
     } else {

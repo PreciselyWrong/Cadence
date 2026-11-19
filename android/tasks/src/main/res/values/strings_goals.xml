@@ -8,8 +8,8 @@
 
     <!-- Domaines : filtre des listes et suggestion des cinq domaines. -->
     <string name="areas_filter_all">Tous</string>
-    <string name="areas_filter_label">Filtrer par domaine</string>
-    <string name="areas_suggest">Proposer 5 domaines</string>
+    <string name="areas_filter_label">Filtrer par zone</string>
+    <string name="areas_suggest">Proposer 5 zones</string>
     <string name="areas_suggest_business">Business et Argent</string>
     <string name="areas_suggest_tech">Tech et Systèmes</string>
     <string name="areas_suggest_personal">Perso</string>
