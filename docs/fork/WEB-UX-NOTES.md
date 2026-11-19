@@ -1020,7 +1020,7 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Problème** : la bande « En retard » prenait un quart de l'écran avant la semaine ; « Replanifier ▾ » proposait d'abord de tout mettre aujourd'hui ; chaque jour vide affichait « Rien de prévu. » en gras et « 0  0 min / 10 h » ; des aides restaient affichées pour toujours.
 - **Décision** : bande repliée en une ligne par défaut (« En retard (N) », une aide courte, les boutons) ; bouton partagé : « Replanifier » répartit (priorité haute aujourd'hui ou demain, moyenne sous 4 jours, le reste sous 7, jamais avant la date de début ou de report, jour le moins chargé), « ▾ » garde Aujourd'hui, Demain, Choisir une date ; le toast dit jusqu'à quel jour. Jour vide sans texte, en-tête sans zéro (nombre, charge et barre seulement s'il y a des cartes). Aides de la Boîte et des horizons en infobulles.
-- **Android** : la règle de répartition est la même (`PlanBoard.spread`, cas partagés), donc « Étaler sur 7 jours » des Échues l'applique déjà ; à reprendre côté écran : Échues repliée en une ligne, jours vides sans texte, l'action principale « Replanifier » qui répartit.
+- **Android** : la règle de répartition est la même (`PlanBoard.spread`, cas partagés), donc « Étaler sur 7 jours » des Échues l'applique déjà ; le reste de l'écran non (décision du 2026-11-19, `docs/fork/DECISIONS.md`).
 
 ## Plan : colonne de gauche en une seule liste, en-tête plus clair (2026-11-19)
 
@@ -1032,14 +1032,14 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Problème** : on déplaçait les cartes une par une ; les raccourcis du tableau n'étaient connus que des lecteurs d'écran ; rien ne disait si la semaine était pleine ; à 1500 px, le calendrier passait en tiroir.
 - **Décision** : Ctrl, Cmd ou Maj + clic sélectionne plusieurs cartes ; barre « Sélection : N » (Aujourd'hui, Demain, Semaine prochaine, Ce mois-ci, ✕) ; glisser une carte sélectionnée ou t, Maj+T, Maj+←/→, Maj+W, Maj+M déplacent toute la sélection, une seule annulation. N ouvre l'ajout dans la Boîte. Les touches du tableau sont dans l'aide `?` (« Sur la page Planifier »). La bande des horizons commence par « Cette semaine 6 h 30 / 35 h ». Le calendrier reste à côté tant que le tableau garde la Boîte, un jour et demi et le calendrier le plus étroit.
-- **Android** : à reprendre : sélection multiple par appui long puis « Planifier » groupé, charge de la semaine en tête de Planifier (`TODO.md`). Sans objet : N, aide `?`, largeur du calendrier.
+- **Android** : non, l'écran est trop petit pour s'en servir (décision du 2026-11-19, `docs/fork/DECISIONS.md`).
 
 ## « Planifier ma semaine » sur le tableau, plus de modale (2026-11-19)
 
 - **Problème** : la proposition de semaine arrivait dans une modale étroite, pleine de texte, sans voir l'effet sur la semaine ni l'agenda ; on ne lui faisait pas confiance.
 - **Décision** : la proposition s'affiche sur Planifier même. Bandeau violet « Proposition de l'IA » (titre, questions, effet, « Appliquer »). Carte violette là où l'IA envoie une tâche (d'où elle vient, durée, raison séparée par un trait), trace en pointillés là où elle est ; le survol encadre les deux sans changer de taille. Événements de l'agenda dans chaque jour, charge avant → après. À gauche : Cette semaine, Semaine prochaine, Ce mois-ci (puis ce qui bouge dans Le mois prochain et Plus tard). Clic sur une carte : Voir la tâche, Refuser, Faite, Abandonner, un jour, un horizon ; glisser aussi. Rien n'est écrit avant « Appliquer ». L'agent n'est jamais nommé : « IA ».
 - **Suite (même jour)** : 3ᵉ onglet « Planifié par l'IA » à côté de Jours et Horizons, visible seulement quand une semaine est prête et qu'un agent écoute (plugin désactivé : rien de l'IA n'apparaît) ; halo doux autour de la paire survolée ; listes de gauche repliables ; menus qui restent dans l'écran ; le serveur déplace vraiment la ligne de plan (plus de tâche planifiée deux fois).
-- **Android** : à reprendre (`TODO.md` › Now) ; la feuille actuelle reste.
+- **Android** : non, l'écran est trop petit pour s'en servir (décision du 2026-11-19, `docs/fork/DECISIONS.md`) ; la feuille actuelle reste, sans bouton quand aucun agent n'écoute (`TODO.md` › Now).
 
 ## Plan : « En retard » en haut de la colonne de gauche (2026-11-19)
 
@@ -1057,12 +1057,12 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Problème** : rien ne montrait les tâches repoussées encore et encore ; l'agenda ne se voyait que dans le calendrier de droite.
 - **Décision** : section « Repoussées » à gauche (3 reports ou plus en 30 jours, la règle de la revue), menu Voir / Aujourd'hui / Découper / Plus tard / Faite / Abandonner / Garder ; badge « ↻ 4× » sur leurs cartes. Bouton « Calendrier fusionné » : les événements dans chaque colonne de jour, calendrier de droite masqué.
-- **Android** : à reprendre (`TODO.md` › Now).
+- **Android** : non, l'écran est trop petit pour s'en servir (décision du 2026-11-19, `docs/fork/DECISIONS.md`), sauf le badge « ↻ N× » (`TODO.md` › Now).
 
 ## Plan : « → sam. » pour poser une tâche sur le premier jour libre (2026-11-19)
 
 - **Problème** : planifier une tâche de la Boîte ou de « Cette semaine » demandait de chercher soi-même un jour qui avait encore la place.
 - **Décision** : petit bouton « → sam. 21 » sur ces cartes : le premier jour, depuis aujourd'hui, dont le temps libre (heures du jour moins le plan ; aujourd'hui, ce qui reste) contient la durée de la tâche (30 min sans estimation). Un clic la pose ; annulable. Règle pure `firstFreeDay.ts`, sans IA.
 - **Étendu** : aussi sur « Semaine prochaine » (premier jour libre à partir de son lundi) et « Ce mois-ci » ; pas sur « Mois prochain » ni « Un jour ».
-- **Android** : à reprendre (`TODO.md` › Now).
+- **Android** : non, l'écran est trop petit pour s'en servir (décision du 2026-11-19, `docs/fork/DECISIONS.md`).
 
