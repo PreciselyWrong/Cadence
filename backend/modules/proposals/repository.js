@@ -112,6 +112,14 @@ async function findAreaNames(userId) {
     return areas.map((area) => area.name);
 }
 
+// The id and uid of a task the user can see, for the plan writes.
+async function findTaskRef(userId, uid) {
+    return Task.findOne({
+        where: { [Op.and]: [await visibleWhere(userId), { uid }] },
+        attributes: ['id', 'uid'],
+    });
+}
+
 // Active projects the user can see, most recently touched first, with the
 // name of their area.
 async function findActiveProjects(userId) {
@@ -234,6 +242,7 @@ module.exports = {
     create,
     dismissReady,
     findByUid,
+    findTaskRef,
     findReady,
     findPending,
     findLatestPerKind,

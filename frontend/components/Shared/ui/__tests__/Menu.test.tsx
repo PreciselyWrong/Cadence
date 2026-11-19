@@ -103,6 +103,33 @@ describe('Menu', () => {
         expect(screen.queryByTestId('menu')).not.toBeInTheDocument();
     });
 
+    // A long menu near the bottom: neither below nor above has room.
+    it('stays inside the window and scrolls when it is taller than the room', () => {
+        jest.spyOn(
+            HTMLElement.prototype,
+            'offsetHeight',
+            'get'
+        ).mockReturnValue(500);
+        Object.defineProperty(window, 'innerHeight', {
+            value: 600,
+            configurable: true,
+        });
+        setup();
+        const trigger = screen.getByTestId('trigger');
+        jest.spyOn(trigger, 'getBoundingClientRect').mockReturnValue({
+            top: 300,
+            bottom: 330,
+            left: 10,
+            right: 60,
+        } as DOMRect);
+        fireEvent.click(trigger);
+        flushFrame();
+        const menu = screen.getByTestId('menu');
+        expect(menu.style.top).toBe('92px');
+        expect(menu.style.maxHeight).toBe('calc(100vh - 16px)');
+        expect(menu).toHaveClass('overflow-y-auto');
+    });
+
     it('opens with ArrowDown on the trigger', () => {
         setup();
         fireEvent.keyDown(screen.getByTestId('trigger'), { key: 'ArrowDown' });

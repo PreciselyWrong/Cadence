@@ -77,7 +77,10 @@ export interface WeekTaskFact {
     estimate_min?: number;
     overdue?: boolean;
     week_of?: string;
+    month_of?: string;
     someday?: boolean;
+    // Filed nowhere (or waiting for « Quand ? »): the inbox.
+    inbox?: boolean;
 }
 
 export interface WeekFacts {
@@ -87,6 +90,7 @@ export interface WeekFacts {
         date: string;
         events: { title: string; start: string; end: string | null }[];
         planned: string[];
+        due?: string[];
         load_minutes: number;
     }[];
     tasks: WeekTaskFact[];
@@ -208,9 +212,14 @@ export const getProposal = (uid: string): Promise<ProposalDetail> =>
     ).then((response) => response.json());
 
 // The latest proposal of each kind; `status` narrows it to one status.
-export const listProposals = (
-    status?: ProposalStatus
-): Promise<ProposalSummary[]> =>
+// `agent`: something answers proposals (a plugin or a webhook); without it
+// the AI's buttons stay hidden.
+export interface ProposalList {
+    proposals: ProposalSummary[];
+    agent: boolean;
+}
+
+export const listProposals = (status?: ProposalStatus): Promise<ProposalList> =>
     request(
         status ? `proposals?status=${status}` : 'proposals',
         'GET',
@@ -218,7 +227,10 @@ export const listProposals = (
         'Failed to load the proposals.'
     )
         .then((response) => response.json())
-        .then((body: { proposals: ProposalSummary[] }) => body.proposals);
+        .then((body: ProposalList) => ({
+            proposals: body.proposals,
+            agent: body.agent === true,
+        }));
 
 // Week: the decision taken for each task (`op`). Review: the decisions taken
 // on one item each (`choice`).

@@ -18,6 +18,7 @@ import { FIELD_CLASS } from '../Shared/ui/controlSizes';
 import { weekdayTitle } from './dayLabel';
 import { cardTaskKeys, dayLoad, groupCards, sortCards } from './groupCards';
 import type { GroupBy, SortBy } from './viewOptions';
+import { PreviewCard, useWeekPreviewContext } from './WeekPreview';
 
 export interface ColumnDropData {
     kind: 'column';
@@ -94,7 +95,42 @@ const DayColumn: React.FC<DayColumnProps> = ({
     );
     // A subtask with a card of its own in this column is not listed again.
     const ownCardKeys = cardTaskKeys([...open, ...done]);
-    const load = dayLoad(open);
+    // The AI's week previewed: cards arriving here, cards leaving, the day's
+    // events, and the load before → after.
+    const preview = useWeekPreviewContext();
+    const previewing = !!preview?.state.ready;
+    const shownUids = new Set(
+        (lines ? [...open, ...done] : []).map((l) => l.uid)
+    );
+    const arriving = previewing
+        ? preview!.state.moves.filter(
+              (move) =>
+                  move.to.kind === 'day' &&
+                  move.to.date === date &&
+                  !shownUids.has(move.uid)
+          )
+        : [];
+    const leavingMinutes = previewing
+        ? open
+              .filter((line) => {
+                  const move = preview!.state.moves.find(
+                      (m) => m.uid === line.uid
+                  );
+                  return (
+                      move && !(move.to.kind === 'day' && move.to.date === date)
+                  );
+              })
+              .reduce((sum, line) => sum + line.duration, 0)
+        : 0;
+    const events = previewing
+        ? (preview!.state.detail?.days?.find((d) => d.date === date)?.events ??
+          [])
+        : [];
+    const loadBefore = dayLoad(open);
+    const load =
+        loadBefore -
+        leavingMinutes +
+        arriving.reduce((sum, move) => sum + move.minutes, 0);
     const overLoad = availableMinutes !== undefined && load > availableMinutes;
     const progress = lines ? progressOf(lines) : { done: 0, total: 0 };
     const percent =
@@ -217,7 +253,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
                                 {progress.total}
                             </span>
                         )}
-                        {load > 0 && (
+                        {(load > 0 || loadBefore > 0) && (
                             <span
                                 data-testid="upcoming-load"
                                 data-over={overLoad}
@@ -227,6 +263,11 @@ const DayColumn: React.FC<DayColumnProps> = ({
                                         : ''
                                 }`}
                             >
+                                {previewing && loadBefore !== load && (
+                                    <span className="text-surface-on-variant">
+                                        {formatDuration(loadBefore)} →{' '}
+                                    </span>
+                                )}
                                 {availableMinutes === undefined
                                     ? formatDuration(load)
                                     : t(
@@ -307,7 +348,33 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     />
                 </form>
             )}
-            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-0.5 pb-1">
+            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto -mx-1.5 px-2 pb-2 pt-1.5">
+                {events.length > 0 && (
+                    <ul
+                        aria-label={t('upcoming.preview.events', 'Agenda')}
+                        className="flex flex-col gap-1"
+                        data-testid="preview-events"
+                    >
+                        {events.map((event, i) => (
+                            <li
+                                key={`${event.title}-${i}`}
+                                className="flex gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-xs text-blue-900 dark:bg-blue-900/30 dark:text-blue-100"
+                            >
+                                <span className="shrink-0 tabular-nums opacity-80">
+                                    {event.all_day
+                                        ? t(
+                                              'upcoming.preview.allDay',
+                                              'All day'
+                                          )
+                                        : `${event.start}–${event.end}`}
+                                </span>
+                                <span className="min-w-0 break-words">
+                                    {event.title}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
                 <SortableContext
                     items={open.map((line) => cardId(date, line.uid))}
                     strategy={verticalListSortingStrategy}
@@ -360,7 +427,14 @@ const DayColumn: React.FC<DayColumnProps> = ({
                 </SortableContext>
                 {/* An empty day stays blank: the cards are what the eye
                     should meet. */}
-                {lines && progress.total === 0 && (
+                {arriving.length > 0 && (
+                    <div className="flex flex-col gap-2">
+                        {arriving.map((move) => (
+                            <PreviewCard key={move.uid} move={move} />
+                        ))}
+                    </div>
+                )}
+                {lines && progress.total === 0 && arriving.length === 0 && (
                     <p className="sr-only">
                         {t('upcoming.empty', 'Nothing planned.')}
                     </p>

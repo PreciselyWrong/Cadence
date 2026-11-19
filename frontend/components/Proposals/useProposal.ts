@@ -20,12 +20,15 @@ export interface ProposalState {
 // it again.
 export function useProposal(kind: ProposalKind) {
     const [latest, setLatest] = useState<ProposalState | null>(null);
+    // Unknown until read: nothing of the AI shows before it is known.
+    const [agent, setAgent] = useState(false);
     const pendingUid = latest?.status === 'pending' ? latest.uid : null;
 
     const refresh = useCallback(() => {
         return listProposals()
-            .then((all) => {
-                const found = all.find((p) => p.kind === kind);
+            .then(({ proposals, agent: listening }) => {
+                setAgent(listening);
+                const found = proposals.find((p) => p.kind === kind);
                 setLatest(
                     found ? { uid: found.uid, status: found.status } : null
                 );
@@ -50,6 +53,7 @@ export function useProposal(kind: ProposalKind) {
     }, [kind]);
 
     return {
+        agent,
         uid: latest?.uid ?? null,
         status: latest?.status ?? null,
         request,

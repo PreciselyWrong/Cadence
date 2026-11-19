@@ -74,8 +74,24 @@ describe('ProposalButton', () => {
         jest.useRealTimers();
     });
 
+    it('shows nothing while no agent listens (the plugin is off)', async () => {
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [summary('ready')],
+            agent: false,
+        });
+        renderButton();
+        await waitFor(() => expect(listProposals).toHaveBeenCalled());
+        await act(async () => {
+            await Promise.resolve();
+        });
+        expect(screen.queryByRole('button')).toBeNull();
+    });
+
     it('asks for the week and shows the preparing state', async () => {
-        (listProposals as jest.Mock).mockResolvedValue([]);
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [],
+            agent: true,
+        });
         (createProposal as jest.Mock).mockResolvedValue({
             uid: 'p1',
             status: 'pending',
@@ -98,13 +114,17 @@ describe('ProposalButton', () => {
     });
 
     it('turns into the ready state, then opens the sheet by its uid', async () => {
-        (listProposals as jest.Mock).mockResolvedValueOnce([
-            summary('pending'),
-        ]);
+        (listProposals as jest.Mock).mockResolvedValueOnce({
+            proposals: [summary('pending')],
+            agent: true,
+        });
         renderButton();
         await screen.findByRole('button', { name: /En préparation/ });
 
-        (listProposals as jest.Mock).mockResolvedValue([summary('ready')]);
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [summary('ready')],
+            agent: true,
+        });
         await act(async () => {
             jest.advanceTimersByTime(5000);
         });
@@ -116,7 +136,10 @@ describe('ProposalButton', () => {
     });
 
     it('stops polling once the proposal is no longer pending', async () => {
-        (listProposals as jest.Mock).mockResolvedValue([summary('ready')]);
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [summary('ready')],
+            agent: true,
+        });
         renderButton();
         await screen.findByRole('button', { name: 'Ta semaine est prête' });
         (listProposals as jest.Mock).mockClear();
@@ -129,15 +152,17 @@ describe('ProposalButton', () => {
     });
 
     it('announces a failed week with a retry', async () => {
-        (listProposals as jest.Mock).mockResolvedValueOnce([
-            summary('pending'),
-        ]);
+        (listProposals as jest.Mock).mockResolvedValueOnce({
+            proposals: [summary('pending')],
+            agent: true,
+        });
         renderButton();
         await screen.findByRole('button', { name: /En préparation/ });
 
-        (listProposals as jest.Mock).mockResolvedValue([
-            { ...summary('failed'), error: 'timeout' },
-        ]);
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [{ ...summary('failed'), error: 'timeout' }],
+            agent: true,
+        });
         await act(async () => {
             jest.advanceTimersByTime(5000);
         });

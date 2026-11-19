@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : « Planifier ma semaine » en aperçu sur Planifier, comme le web (2026-11-19)
+  Raison : le web montre la proposition sur le tableau (`docs/03-upcoming-view.md` › Week preview) : carte de l'IA là où elle envoie une tâche, trace là où elle est, événements et charge avant → après par jour, horizons proches avec leurs comptes, menu Voir la tâche / Refuser / Faite / Abandonner / jour / horizon, « Appliquer » seul à écrire ; aucun bouton d'IA quand `GET /api/proposals` répond `agent: false` (plugin désactivé). Android garde sa feuille et montre encore le bouton sans agent. Vérif : sur le téléphone, une proposition prête s'ouvre sur Planifier avec les mêmes cartes et décisions que le web pour le même compte.
 - Hermes : la semaine voit l'Inbox, les horizons et les projets, et peut proposer « faite » (2026-11-19)
   Raison : Cadence envoie désormais les tâches de l'Inbox (`inbox: true`), des horizons (`week_of`, `month_of`), les projets avec `about`, `open_tasks`, `due`, et accepte l'opération `done` (`docs/47-proposals.md`). Reste côté plugin Hermes : décrire ces champs et `done` dans le prompt `week` (`lib/proposals.js`) et le skill `planificateur`, garder les deux identiques au contrat. Vérif : une vraie semaine propose de placer une tâche de l'Inbox et une de « Cette semaine », et propose « faite » pour une tâche déjà faite ; tokens du run notés (≲ 20 k).
 - Android : Planifier rattrape la revue UX du web (2026-11-19)

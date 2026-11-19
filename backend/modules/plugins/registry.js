@@ -492,6 +492,13 @@ function onEvent(event) {
     }
 }
 
+// A running plugin handles this event (e.g. an agent for proposals).
+function listensTo(name) {
+    return [...running.values()].some(
+        (plugin) => (plugin.handlers.get(name) ?? []).length > 0
+    );
+}
+
 // Express handler for /plugins/:id/x/*: forwards to the plugin's router
 // while it runs, 404 otherwise.
 function routeHandler(req, res, next) {
@@ -684,4 +691,5 @@ module.exports = {
     runningVersion,
     runtimeError,
     onEvent,
+    listensTo,
 };

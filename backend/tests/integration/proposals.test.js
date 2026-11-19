@@ -13,8 +13,10 @@ const {
     Project,
     Proposal,
     Task,
+    Webhook,
 } = require('../../models');
 const dispatcher = require('../../modules/webhooks/dispatcher');
+const registry = require('../../modules/plugins/registry');
 const dailyPlan = require('../../modules/daily-plan/service');
 const { toolsFor } = require('../../modules/triage/actions');
 const { createTestUser } = require('../helpers/testUtils');
@@ -75,6 +77,30 @@ describe('proposals', () => {
     });
 
     const taskUid = (created) => created.task?.uid ?? created.uid;
+
+    it('says whether an agent listens for proposals: an enabled plugin or webhook', async () => {
+        const none = await agent.get('/api/proposals');
+        expect(none.body.agent).toBe(false);
+
+        const listening = jest
+            .spyOn(registry, 'listensTo')
+            .mockImplementation((name) => name === 'proposal.requested');
+        const withPlugin = await agent.get('/api/proposals');
+        expect(withPlugin.body.agent).toBe(true);
+        listening.mockRestore();
+
+        await Webhook.create({
+            user_id: user.id,
+            name: 'Agent',
+            url: 'https://agent.example.com/hook',
+            secret: 'x'.repeat(32),
+            events: ['proposal.requested'],
+            enabled: true,
+        });
+        dispatcher.invalidate(user.id);
+        const withHook = await agent.get('/api/proposals');
+        expect(withHook.body.agent).toBe(true);
+    });
 
     it('creates a week proposal, asks the agent once, and keeps it pending', async () => {
         const first = await agent.post('/api/proposals').send({
@@ -614,6 +640,37 @@ describe('proposals', () => {
         ]);
         const row = await Task.findOne({ where: { uid: taskUid(planned) } });
         expect(row.status).toBe(Task.STATUS.DONE);
+    });
+
+    it('moves a planned task to its new day, and takes it off the plans for a horizon', async () => {
+        await dailyPlan.carryOver(user, today, [taskUid(planned)]);
+        await dailyPlan.carryOver(user, day(1), [taskUid(dueSoon)]);
+        const { body: created } = await agent
+            .post('/api/proposals')
+            .send({ kind: 'week', start: today, end: day(6) });
+        await answerAs(created.uid, { answer: { headline: 'Déplacer' } });
+        const applied = await agent
+            .post(`/api/proposals/${created.uid}/apply`)
+            .send({
+                decisions: [
+                    {
+                        task_uid: taskUid(planned),
+                        op: 'plan_day',
+                        date: day(2),
+                    },
+                    { task_uid: taskUid(dueSoon), op: 'next_month' },
+                ],
+            });
+        expect(applied.status).toBe(200);
+        const uidsOn = async (date) =>
+            ((await dailyPlan.getPlan(user, date)).plan?.items ?? []).map(
+                (item) => item.task_uid
+            );
+        // As the preview shows: it leaves today and lands on its new day.
+        expect(await uidsOn(today)).not.toContain(taskUid(planned));
+        expect(await uidsOn(day(2))).toContain(taskUid(planned));
+        // A horizon is no day: it leaves the plans from today on.
+        expect(await uidsOn(day(1))).not.toContain(taskUid(dueSoon));
     });
 
     it('sends the goals, areas and projects as facts', async () => {

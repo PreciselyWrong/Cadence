@@ -8,6 +8,11 @@ import { DayLine, lineAt } from '../Today/dayModel';
 import { subtasksWithoutCard } from './groupCards';
 import TaskCardBody, { taskCardClass } from '../Shared/task/TaskCardBody';
 import { isPickClick, PickedCardsContext } from './pickedCards';
+import {
+    PreviewCard,
+    PreviewTrace,
+    useWeekPreviewContext,
+} from './WeekPreview';
 
 export const cardId = (date: string, uid: string): string =>
     `card:${date}:${uid}`;
@@ -77,6 +82,18 @@ const TaskCard: React.FC<TaskCardProps> = ({
     const { onKeyDown: dragKeyDown, ...dragListeners } = listeners ?? {};
     const pick = useContext(PickedCardsContext);
     const picked = !!pick?.picked.has(uid);
+    // While the AI's week is previewed, a decided task shows as its proposal
+    // here (its new day) or as a trace (it leaves this place).
+    const preview = useWeekPreviewContext();
+    const move = preview?.state.moves.find((m) => m.uid === uid);
+
+    if (move) {
+        return move.to.kind === 'day' && move.to.date === date ? (
+            <PreviewCard move={move} />
+        ) : (
+            <PreviewTrace move={move} />
+        );
+    }
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.target !== event.currentTarget) return;

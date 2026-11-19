@@ -22,7 +22,7 @@ const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
     const { showErrorToast, showUndoToast } = useToast();
     const navigate = useNavigate();
     const location = useLocation();
-    const { uid, status, request, refresh } = useProposal(kind);
+    const { agent, uid, status, request, refresh } = useProposal(kind);
     useProposalChanged(() => void refresh());
     const previous = useRef(status);
 
@@ -55,6 +55,9 @@ const ProposalButton: React.FC<ProposalButtonProps> = ({ kind, onReady }) => {
         // `start` is recreated on each render; only the status matters here.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
+
+    // No agent listening (plugin off, no webhook): nothing of the AI shows.
+    if (!agent) return null;
 
     if (status === 'pending') {
         return (

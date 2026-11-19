@@ -10,6 +10,11 @@ import {
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import UpcomingBoard from '../UpcomingBoard';
+import {
+    applyProposal,
+    getProposal,
+    listProposals,
+} from '../../../utils/proposalsService';
 import { useStore } from '../../../store/useStore';
 import { usePluginMenuStore } from '../../../store/pluginMenuStore';
 import {
@@ -97,6 +102,16 @@ jest.mock('../../../utils/calendarFeedsService', () => ({
 }));
 
 // « À trier (N) » reads the triage queue from the server.
+jest.mock('../../../utils/proposalsService', () => ({
+    ...jest.requireActual('../../../utils/proposalsService'),
+    listProposals: jest.fn().mockResolvedValue({ proposals: [], agent: true }),
+    getProposal: jest.fn(),
+    applyProposal: jest.fn(),
+    sendProposal: jest.fn(),
+    dismissProposal: jest.fn(),
+    createProposal: jest.fn(),
+}));
+
 jest.mock('../../Inbox/TriageEntry', () => ({
     __esModule: true,
     default: () => null,
@@ -255,9 +270,9 @@ const isoWeekStart = (date: string): string => {
     return `${at.getFullYear()}-${pad(at.getMonth() + 1)}-${pad(at.getDate())}`;
 };
 
-const renderBoard = () =>
+const renderBoard = (path = '/upcoming') =>
     render(
-        <MemoryRouter>
+        <MemoryRouter initialEntries={[path]}>
             <UpcomingBoard />
         </MemoryRouter>
     );
@@ -547,6 +562,199 @@ describe('UpcomingBoard', () => {
         fireEvent.change(field, { target: { value: 'n' } });
         fireEvent.keyDown(field, { key: 'n' });
         expect(screen.getAllByPlaceholderText('Add a task')).toHaveLength(1);
+    });
+
+    describe('the AI week previewed on the board', () => {
+        // Today holds « Write report » (t1, planned) and « Pay bill » (t2,
+        // due only). The AI moves t1 to tomorrow and t2 to next month.
+        const proposal = (status = 'ready') => ({
+            uid: 'p1',
+            kind: 'week',
+            status,
+            facts: {
+                today: TODAY,
+                period: { start: TODAY, end: shift(6) },
+                days: [
+                    {
+                        date: TODAY,
+                        events: [],
+                        planned: ['t1'],
+                        load_minutes: 45,
+                    },
+                ],
+                tasks: [
+                    { uid: 't1', name: 'Write report', estimate_min: 45 },
+                    { uid: 't2', name: 'Pay bill', due: TODAY },
+                ],
+            },
+            answer: {
+                headline: 'Lighter today',
+                questions: [],
+                changes: [
+                    {
+                        task_uid: 't1',
+                        op: 'plan_day',
+                        date: TOMORROW,
+                        reason: 'Tomorrow is free',
+                    },
+                    { task_uid: 't2', op: 'next_month', reason: '' },
+                ],
+            },
+            days: [
+                {
+                    date: TOMORROW,
+                    load_minutes: 0,
+                    capacity_minutes: 600,
+                    items: [],
+                    events: [
+                        {
+                            title: 'Dentist',
+                            start: '10:00',
+                            end: '11:00',
+                            all_day: false,
+                        },
+                    ],
+                    work: null,
+                },
+            ],
+        });
+
+        beforeEach(() => {
+            (getProposal as jest.Mock).mockResolvedValue(proposal());
+        });
+
+        it('shows the proposal on the days: the card where it goes, a trace where it was', async () => {
+            renderBoard('/upcoming?proposal=p1');
+            const banner = await screen.findByTestId('week-preview-banner');
+            expect(
+                within(banner).getByText('Lighter today')
+            ).toBeInTheDocument();
+
+            const card = await within(column(TOMORROW)).findByTestId(
+                'preview-card'
+            );
+            expect(card).toHaveTextContent('Write report');
+            expect(card).toHaveTextContent('Tomorrow is free');
+            const trace = within(column(TODAY)).getAllByTestId(
+                'preview-trace'
+            )[0];
+            expect(trace).toHaveTextContent('Write report');
+            // The day's agenda is in the column.
+            expect(
+                within(column(TOMORROW)).getByTestId('preview-events')
+            ).toHaveTextContent('Dentist');
+
+            // Hovering one rings the other, sizes unchanged.
+            fireEvent.mouseEnter(card);
+            expect(trace).toHaveAttribute('data-linked', 'true');
+            fireEvent.mouseLeave(card);
+            expect(trace).not.toHaveAttribute('data-linked');
+        });
+
+        it('opens the task from the card menu, and keeps it where it is on refuse', async () => {
+            renderBoard('/upcoming?proposal=p1');
+            const card = await within(column(TOMORROW)).findByTestId(
+                'preview-card'
+            );
+            fireEvent.click(card);
+            fireEvent.click(
+                screen.getByRole('menuitem', { name: 'Show the task' })
+            );
+            expect(mockOpenTask).toHaveBeenCalledWith('t1');
+
+            fireEvent.click(
+                within(column(TOMORROW)).getByTestId('preview-card')
+            );
+            fireEvent.click(
+                screen.getByRole('menuitem', {
+                    name: 'Refuse: keep it where it is',
+                })
+            );
+            expect(
+                within(column(TOMORROW)).queryByTestId('preview-card')
+            ).not.toBeInTheDocument();
+        });
+
+        it('applies the decisions, the user’s own included, and leaves the preview', async () => {
+            (applyProposal as jest.Mock).mockResolvedValue({
+                uid: 'p1',
+                status: 'applied',
+                results: [
+                    { task_uid: 't1', state: 'applied' },
+                    { task_uid: 't2', state: 'applied' },
+                ],
+            });
+            renderBoard('/upcoming?proposal=p1');
+            const card = await within(column(TOMORROW)).findByTestId(
+                'preview-card'
+            );
+            fireEvent.click(card);
+            fireEvent.click(
+                screen.getByRole('menuitemcheckbox', { name: 'Mark as done' })
+            );
+            fireEvent.click(screen.getByTestId('week-preview-apply'));
+            await waitFor(() =>
+                expect(applyProposal).toHaveBeenCalledWith('p1', {
+                    decisions: [
+                        { task_uid: 't1', op: 'done' },
+                        { task_uid: 't2', op: 'next_month' },
+                    ],
+                })
+            );
+            await waitFor(() =>
+                expect(
+                    screen.queryByTestId('week-preview-banner')
+                ).not.toBeInTheDocument()
+            );
+        });
+
+        it('folds a horizon list of the preview and remembers it', async () => {
+            renderBoard('/upcoming?proposal=p1');
+            await screen.findByTestId('preview-horizons');
+            const month = screen
+                .getAllByTestId('preview-horizon')
+                .find((el) => el.dataset.horizon === 'next_month')!;
+            expect(
+                within(month).getByTestId('preview-card')
+            ).toBeInTheDocument();
+            fireEvent.click(
+                within(month).getByRole('button', { expanded: true })
+            );
+            expect(within(month).queryByTestId('preview-card')).toBeNull();
+            expect(
+                localStorage.getItem('upcoming.previewCollapsed.next_month')
+            ).toBe('1');
+        });
+
+        it('adds a « Planned by AI » tab once the week is ready, and leaves it for Days', async () => {
+            (listProposals as jest.Mock).mockResolvedValue({
+                proposals: [{ uid: 'p1', kind: 'week', status: 'ready' }],
+                agent: true,
+            });
+            renderBoard();
+            const tab = await screen.findByTestId('ai-tab');
+            expect(screen.queryByTestId('week-preview-banner')).toBeNull();
+            fireEvent.click(tab);
+            expect(
+                await screen.findByTestId('week-preview-banner')
+            ).toBeInTheDocument();
+            fireEvent.click(screen.getByRole('tab', { name: 'Horizons' }));
+            await waitFor(() =>
+                expect(screen.queryByTestId('week-preview-banner')).toBeNull()
+            );
+            expect(screen.getByTestId('ai-tab')).toBeInTheDocument();
+        });
+
+        it('says when the AI is still preparing the week', async () => {
+            (getProposal as jest.Mock).mockResolvedValue({
+                ...proposal('pending'),
+                answer: null,
+            });
+            renderBoard('/upcoming?proposal=p1');
+            expect(
+                await screen.findByText('The AI is preparing your week…')
+            ).toBeInTheDocument();
+        });
     });
 
     describe('selection of several cards', () => {

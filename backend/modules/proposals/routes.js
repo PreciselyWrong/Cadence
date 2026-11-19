@@ -38,9 +38,10 @@ router.post(
 router.get(
     '/proposals',
     handle((req) =>
-        service
-            .listProposals(req.currentUser, req.query)
-            .then((proposals) => ({ proposals }))
+        Promise.all([
+            service.listProposals(req.currentUser, req.query),
+            service.agentAvailable(req.currentUser),
+        ]).then(([proposals, agent]) => ({ proposals, agent }))
     )
 );
 

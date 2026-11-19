@@ -15,6 +15,7 @@ const { serializeTasks } = require('../tasks/core/serializers');
 const { isRecurring } = require('../daily-plan/planningSettings');
 const { toolsFor } = require('../triage/actions');
 const dispatcher = require('../webhooks/dispatcher');
+const pluginRegistry = require('../plugins/registry');
 const { logError } = require('../../services/logService');
 const reviewService = require('../review/service');
 const dailyPlan = require('../daily-plan/service');
@@ -387,6 +388,15 @@ const reviewAnswer = ({ headline, subtitle }, judgedItems, cached) => ({
     ],
 });
 
+// Something answers proposals: a running plugin or an enabled webhook. Without
+// one, the clients show none of the AI's buttons (docs/47-proposals.md).
+async function agentAvailable(user) {
+    return (
+        pluginRegistry.listensTo('proposal.requested') ||
+        dispatcher.hookListensTo(user.id, 'proposal.requested')
+    );
+}
+
 async function createProposal(user, { kind, start, end } = {}) {
     if (!KINDS.has(kind)) {
         throw new ValidationError('kind must be week or review');
@@ -558,9 +568,23 @@ async function announceAnswers(userId, uid, answers) {
 // Changes of a week, by task. The operations are the ones the user can do
 // by hand: a plan line on a day (the due date stays), this week, later, a
 // new due date, done, dropped (cancelled, not deleted).
+const HORIZON_OPS = new Set([
+    'this_week',
+    'next_week',
+    'this_month',
+    'next_month',
+    'later',
+]);
+
 async function applyWeekChange(user, change) {
     const run = toolsFor(user);
     const id = change.task_uid;
+    // A day or a horizon replaces the task's place in the plans from today
+    // on, as the Plan board's preview shows (docs/03-upcoming-view.md).
+    if (change.op === 'plan_day' || HORIZON_OPS.has(change.op)) {
+        const task = await repository.findTaskRef(user.id, id);
+        if (task) await dailyPlan.takeTaskOffPlansFrom(user, task);
+    }
     switch (change.op) {
         case 'plan_day':
             await dailyPlan.carryOver(user, change.date, [id]);
@@ -653,13 +677,6 @@ async function attempt(taskUid, action) {
 // Applies the week decisions one by one; `keep` does nothing.
 // An overdue task that the user places again stops being overdue: a day
 // becomes its due date, a horizon clears it. Other tasks keep their due date.
-const HORIZON_OPS = new Set([
-    'this_week',
-    'next_week',
-    'this_month',
-    'next_month',
-    'later',
-]);
 
 async function applyWeekDecisions(user, decisions, overdue = new Set()) {
     const results = [];
@@ -825,6 +842,7 @@ async function dismissProposal(user, uid) {
 }
 
 module.exports = {
+    agentAvailable,
     createProposal,
     getProposal,
     listProposals,

@@ -2,7 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ProposalSheet from './ProposalSheet';
 import WeekendSheet from '../Weekend/WeekendSheet';
-import { PROPOSAL_PARAM, setProposalParam } from './proposalLinks';
+import {
+    PROPOSAL_PARAM,
+    proposalSearch,
+    setProposalParam,
+} from './proposalLinks';
+
+const PLAN_PATH = '/upcoming';
 import { getProposal, ProposalKind } from '../../utils/proposalsService';
 
 interface SheetByKindProps {
@@ -14,6 +20,17 @@ interface SheetByKindProps {
 // read falls back to the week sheet, which shows its own error.
 const SheetByKind: React.FC<SheetByKindProps> = ({ uid, onClose }) => {
     const [kind, setKind] = useState<ProposalKind | null>(null);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const onPlan = location.pathname === PLAN_PATH;
+    // A week is previewed on the Plan board itself; elsewhere it leads there.
+    useEffect(() => {
+        if (kind !== 'week' || onPlan) return;
+        navigate(
+            { pathname: PLAN_PATH, search: proposalSearch('', uid) },
+            { replace: true }
+        );
+    }, [kind, onPlan, navigate, uid]);
     useEffect(() => {
         let alive = true;
         getProposal(uid)
@@ -25,6 +42,7 @@ const SheetByKind: React.FC<SheetByKindProps> = ({ uid, onClose }) => {
     }, [uid]);
     if (!kind) return null;
     if (kind === 'weekend') return <WeekendSheet uid={uid} onClose={onClose} />;
+    if (kind === 'week') return null;
     return <ProposalSheet uid={uid} onClose={onClose} />;
 };
 

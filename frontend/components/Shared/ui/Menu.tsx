@@ -90,10 +90,15 @@ const Menu: React.FC<MenuProps> = ({
         if (!rect) return;
         const height = menuRef.current?.offsetHeight ?? 0;
         const below = rect.bottom + GAP;
+        const room = window.innerHeight;
+        // Below, else above; a menu taller than both is pulled up so its end
+        // stays on screen (it scrolls when taller than the window).
         const top =
-            below + height > window.innerHeight && rect.top - GAP - height > 0
-                ? rect.top - GAP - height
-                : below;
+            below + height <= room
+                ? below
+                : rect.top - GAP - height > 0
+                  ? rect.top - GAP - height
+                  : Math.max(8, room - height - 8);
         const rawLeft = align === 'end' ? rect.right - MENU_WIDTH : rect.left;
         const left = Math.min(
             Math.max(8, rawLeft),
@@ -196,8 +201,9 @@ const Menu: React.FC<MenuProps> = ({
                             top: position?.top ?? -9999,
                             left: position?.left ?? -9999,
                             width: MENU_WIDTH,
+                            maxHeight: 'calc(100vh - 16px)',
                         }}
-                        className="fixed z-[70] rounded-chip bg-surface p-1 shadow-lg ring-1 ring-outline-variant/70 dark:bg-surface-card"
+                        className="fixed z-[70] overflow-y-auto rounded-chip bg-surface p-1 shadow-lg ring-1 ring-outline-variant/70 dark:bg-surface-card"
                     >
                         {entries.map((entry, index) => {
                             if (entry === 'separator') {

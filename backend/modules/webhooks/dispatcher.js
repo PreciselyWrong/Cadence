@@ -61,6 +61,12 @@ async function enabledHooks(userId) {
     return hooks;
 }
 
+// An enabled webhook of the user wants this event.
+async function hookListensTo(userId, name) {
+    const hooks = await enabledHooks(userId);
+    return hooks.some((hook) => hook.events.includes(name));
+}
+
 const clip = (value, max) => {
     const text = String(value ?? '');
     return text.length > max ? `${text.slice(0, max - 3)}...` : text;
@@ -313,6 +319,7 @@ async function processDue({ now = new Date(), limit = 100 } = {}) {
 
 module.exports = {
     emit,
+    hookListensTo,
     deliver,
     processDue,
     invalidate,
