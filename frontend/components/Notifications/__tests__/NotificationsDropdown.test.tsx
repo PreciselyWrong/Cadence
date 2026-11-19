@@ -143,4 +143,19 @@ describe('NotificationsDropdown', () => {
         expect(screen.getByText('today')).toBeInTheDocument();
         agentNote.data.openPath = '/plugins/hermes?msg=m1';
     });
+
+    it('lists only notifications still waiting and drops them once read', async () => {
+        await open();
+        expect((global as any).fetch).toHaveBeenCalledWith(
+            expect.stringContaining('includeRead=false'),
+            expect.anything()
+        );
+        (fetchWithCsrf as jest.Mock).mockResolvedValueOnce({ ok: true });
+        await act(async () => {
+            fireEvent.click(screen.getByText('Mark all as read'));
+        });
+        expect(
+            screen.queryByText('3 mails attendent une décision')
+        ).not.toBeInTheDocument();
+    });
 });

@@ -12,12 +12,13 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
 
 /**
- * Centre des notifications (écran « Notifications », cloche) : lues et non lues, en ligne seulement. Le compteur
+ * Centre des notifications (écran « Notifications », cloche) : celles qui attendent encore, en ligne seulement ; une
+ * notification lue ou dont le travail est fait (ici ou sur le web) est traitée et n'y est plus. Le compteur
  * non lu vient de `GET /api/notifications/unread-count` et se relit à chaque passe de [AgentInbox.refresh].
  */
 object NotificationCenter {
     private const val TAG = "NotificationCenter"
-    private const val LIST_PATH = "/api/notifications?limit=50&scope=agents"
+    private const val LIST_PATH = "/api/notifications?limit=50&scope=agents&includeRead=false"
 
     private val _unread = MutableStateFlow(0)
     val unread: StateFlow<Int> = _unread.asStateFlow()
@@ -34,7 +35,7 @@ object NotificationCenter {
         }
     }
 
-    /** Les dernières notifications, plus récente d'abord ; [IOException] hors ligne ou sur un refus du serveur. */
+    /** Les notifications qui attendent encore, plus récente d'abord ; [IOException] hors ligne ou sur un refus du serveur. */
     suspend fun list(context: Context): List<CenterNotification> = CenterNotifications.parse(liveRequest(context, "GET", LIST_PATH))
 
     /** Marque une notification lue ; vrai si le serveur l'a notée. */

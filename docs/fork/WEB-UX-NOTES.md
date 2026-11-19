@@ -1119,3 +1119,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : replanifier les tâches en retard avec l'IA demandait de passer par « Planifier ma semaine » à la main, et rien ne préparait ce plan le matin avant l'ouverture de l'app.
 - **Décision** : bouton « Replanifier avec l'IA » (`ProposalButton` `kind="week"`) à côté du bouton « Replanifier » de la bande « En retard » du Plan (masqué sans agent), qui lance une proposition de semaine et ouvre l'aperçu sur le Plan ; passage planifié du matin (`morning_replan` toutes les 15 min, défaut `06:30`, réglable dans Profil › Planification quand un agent écoute) qui lance au plus une proposition par jour quand des retards existent, avec notification « N retards replacés, à valider ».
 - **Android** : hors périmètre de cette étape (la notification « N retards replacés, à valider » arrive déjà via `sources: ['desktop', 'mobile']`).
+
+## Cloche : seulement ce qui attend encore (2026-11-19)
+
+- **Problème** : la cloche et l'écran Notifications gardaient les notifications lues et celles déjà traitées sur l'autre client (« 3 mails à trier » après le tri).
+- **Décision** : non lues seulement (`includeRead=false`) ; une lue quitte la liste ; le serveur passe en lues celles dont le travail est fait (`backend/modules/notifications/settle.js`) ; plus de fond « non lu », devenu sans objet.
+- **Android** : livré dans 1.42.2.

@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../app');
-const { Notification } = require('../../models');
+const { Notification, MailItem } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
 // The bell and the phone's Notifications screen show only what an agent
@@ -32,6 +32,15 @@ describe('GET /api/notifications?scope=agents', () => {
         await create('reminder', { taskUid: 't1' }, 'task');
         await create('task_due_soon', { taskUid: 't1' }, 'due');
         await create('system', null, 'test');
+        await MailItem.create({
+            user_id: user.id,
+            account: 'a',
+            thread_id: 't1',
+            received_at: new Date(),
+            summary: 's',
+            gmail_url: 'https://mail.example.com/x',
+            status: 'pending',
+        });
         await create('mail_ready', { kind: 'mail_ready', count: 3 }, 'mail');
         await create(
             'proposal',

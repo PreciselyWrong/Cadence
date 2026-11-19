@@ -14,6 +14,7 @@ const dispatcher = require('../webhooks/dispatcher');
 const { logError } = require('../../services/logService');
 const repository = require('./repository');
 const { scheduleDecisionsReady } = require('./ready');
+const { settleAgentNotifications } = require('../notifications/settle');
 const {
     KIND_RE,
     STATUSES,
@@ -320,6 +321,7 @@ async function decide(
 
     await row.reload();
     await announce(user.id, row);
+    await settleAgentNotifications(user.id);
     return outcomeOf(row);
 }
 

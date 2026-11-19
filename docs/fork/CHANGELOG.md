@@ -4,6 +4,11 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.19.6
+
+- Cloche des notifications : seulement ce qui attend encore. Une notification lue disparaît, et celles dont le travail est fait (mails triés, décisions prises, proposition validée ou remplacée) passent en lues d'elles-mêmes, sur le web comme sur le téléphone.
+- Android 1.42.2 (`android/CHANGELOG.md`).
+
 ## 2026.11.19.5
 
 - Une tâche ajoutée par « Capturer » pour un autre jour (« demain », une date) apparaît tout de suite sur le Plan et sur Aujourd'hui, sans recharger la page.

@@ -26,6 +26,7 @@ const {
 } = require('./core/mail');
 const gateway = require('./mailGateway');
 const { scheduleMailReady } = require('./mailReady');
+const { settleAgentNotifications } = require('../notifications/settle');
 const dispatcher = require('../webhooks/dispatcher');
 const { logError } = require('../../services/logService');
 
@@ -544,6 +545,7 @@ async function decide(
     await row.reload();
     if (alwaysArchive) await addRule(user, row.from_address);
     await announce(user.id, row);
+    await settleAgentNotifications(user.id);
 
     if (!archive) return outcome(row);
     const archived = await gateway.archiveThread(row.account, row.thread_id);

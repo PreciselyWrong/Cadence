@@ -1,6 +1,7 @@
 'use strict';
 
 const notificationsRepository = require('./repository');
+const { settleAgentNotifications } = require('./settle');
 const { NotFoundError, ValidationError } = require('../../shared/errors');
 const {
     normalizeTimedReminders,
@@ -36,6 +37,7 @@ class NotificationsService {
             type,
             scope,
         } = options;
+        if (scope === 'agents') await settleAgentNotifications(userId);
         return notificationsRepository.getUserNotifications(userId, {
             limit: parseInt(limit),
             offset: parseInt(offset),
@@ -47,6 +49,7 @@ class NotificationsService {
 
     // `scope=agents`: only what an agent asks of the user (core/agents.js).
     async getUnreadCount(userId, options = {}) {
+        if (options.scope === 'agents') await settleAgentNotifications(userId);
         const count = await notificationsRepository.getUnreadCount(userId, {
             scope: options.scope === 'agents' ? 'agents' : null,
         });

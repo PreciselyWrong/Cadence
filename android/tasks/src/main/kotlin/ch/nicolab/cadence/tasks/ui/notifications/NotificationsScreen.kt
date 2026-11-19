@@ -6,21 +6,16 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -57,8 +52,9 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /**
- * Écran « Notifications » : celles des agents et du classement, lues et non lues, la plus récente d'abord. Un toucher
- * marque la notification lue et ouvre sa cible ([NotificationTargets]) ; « Tout marquer comme lu » vide le compteur.
+ * Écran « Notifications » : celles des agents et du classement qui attendent encore, la plus récente d'abord. Un toucher
+ * marque la notification lue, la retire et ouvre sa cible ([NotificationTargets]) ; « Tout marquer comme lu » vide la
+ * liste. Le serveur tient pour lue celle dont le travail est fait, ici ou sur le web.
  * En ligne seulement ; rien n'est gardé sur le téléphone.
  */
 @Composable
@@ -90,11 +86,10 @@ fun NotificationsScreen(onBack: () -> Unit, onOpen: (NotificationTarget) -> Unit
 
     fun open(item: CenterNotification) {
         if (!item.read) {
-            entries = entries.map { if (it.uid == item.uid) it.copy(read = true) else it }
+            val before = entries
+            entries = entries.filterNot { it.uid == item.uid }
             scope.launch {
-                if (!NotificationCenter.markRead(context, item.uid)) {
-                    entries = entries.map { if (it.uid == item.uid) it.copy(read = false) else it }
-                }
+                if (!NotificationCenter.markRead(context, item.uid)) entries = before
             }
         }
         onOpen(NotificationTargets.of(item.payload))
@@ -111,13 +106,13 @@ fun NotificationsScreen(onBack: () -> Unit, onOpen: (NotificationTarget) -> Unit
                     backDescription = stringResource(R.string.tasks_back),
                 )
             }
-            if (entries.any { !it.read }) {
+            if (entries.isNotEmpty()) {
                 TertiaryAction(
                     stringResource(R.string.notifications_read_all),
                     Modifier.padding(horizontal = Space.gutter - Space.sm),
                 ) {
                     scope.launch {
-                        if (NotificationCenter.markAllRead(context)) entries = entries.map { it.copy(read = true) }
+                        if (NotificationCenter.markAllRead(context)) entries = emptyList()
                     }
                 }
             }
@@ -166,13 +161,11 @@ private fun NotificationRow(item: CenterNotification, now: Instant, onClick: () 
     Row(
         Modifier
             .fillMaxWidth()
-            .background(if (item.read) palette.surface else palette.primaryContainer, RoundedCornerShape(16.dp))
+            .background(palette.surface, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = Space.md, vertical = Space.sm),
         verticalAlignment = Alignment.Top,
     ) {
-        Box(Modifier.padding(top = 6.dp).size(8.dp).background(if (item.read) palette.surface else palette.primary, CircleShape))
-        Spacer(Modifier.width(Space.sm))
         Column(Modifier.weight(1f)) {
             item.agentLabel?.let {
                 Text(it, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = palette.primary)
@@ -180,7 +173,7 @@ private fun NotificationRow(item: CenterNotification, now: Instant, onClick: () 
             Text(
                 item.title,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = if (item.read) FontWeight.Normal else FontWeight.SemiBold,
+                fontWeight = FontWeight.SemiBold,
                 color = palette.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

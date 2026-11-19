@@ -89,7 +89,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
         try {
             const response = await fetch(
                 getApiPath(
-                    'notifications?limit=20&includeRead=true&scope=agents'
+                    'notifications?limit=20&includeRead=false&scope=agents'
                 ),
                 {
                     credentials: 'include',
@@ -133,21 +133,8 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
             );
 
             if (response.ok) {
-                const data = await response.json();
-                const updatedNotification: Notification | undefined =
-                    data.notification;
-                if (updatedNotification) {
-                    setNotifications((prev) =>
-                        prev.map((n) =>
-                            n.uid === uid
-                                ? {
-                                      ...n,
-                                      read_at: updatedNotification.read_at,
-                                  }
-                                : n
-                        )
-                    );
-                }
+                // A read notification is handled: it leaves the list.
+                setNotifications((prev) => prev.filter((n) => n.uid !== uid));
                 fetchUnreadCount();
             }
         } catch (error) {
@@ -166,10 +153,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
             );
 
             if (response.ok) {
-                const now = new Date().toISOString();
-                setNotifications((prev) =>
-                    prev.map((n) => ({ ...n, read_at: now }))
-                );
+                setNotifications([]);
                 setUnreadCount(0);
             }
         } catch (error) {
@@ -431,11 +415,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
                             notifications.map((notification) => (
                                 <div
                                     key={notification.uid}
-                                    className={`border-b border-outline-variant px-4 py-3 transition-colors last:border-b-0 hover:bg-surface-high ${
-                                        !notification.read_at
-                                            ? 'bg-primary-container/40'
-                                            : ''
-                                    }`}
+                                    className="border-b border-outline-variant px-4 py-3 transition-colors last:border-b-0 hover:bg-surface-high"
                                 >
                                     <div className="flex items-start gap-3">
                                         {getIcon(notification)}

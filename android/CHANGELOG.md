@@ -1,3 +1,7 @@
+## [1.42.2] : 19 novembre 2026
+
+- Notifications : la liste ne garde que ce qui attend encore. Une notification lue, ici ou sur le web, disparaît ; « 3 mails à trier », les décisions et les propositions s'effacent d'elles-mêmes une fois traitées, même depuis le PC.
+
 ## [1.42.1] : 19 novembre 2026
 
 - Partager un lien ou un texte vers Cadence : la feuille propose l'échéance de la tâche (Aujourd'hui, Demain, Ce week-end ou une date au choix). Une tâche datée ne passe plus par « Tâches à classer ».
