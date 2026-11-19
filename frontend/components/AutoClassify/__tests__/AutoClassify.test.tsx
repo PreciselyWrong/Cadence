@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 import TriagePage from '../../Triage/TriagePage';
 import AutoClassifiedMark from '../AutoClassifiedMark';
 import { fetchTriageQueue } from '../../../utils/triageService';
@@ -109,7 +110,11 @@ describe('classifier cards in the triage queue', () => {
             })
         );
         (applyClassifySuggestion as jest.Mock).mockResolvedValue({});
-        render(<TriagePage />);
+        render(
+            <MemoryRouter>
+                <TriagePage />
+            </MemoryRouter>
+        );
         expect(await screen.findByText('Idées cabane')).toBeInTheDocument();
         expect(screen.getByText('Note')).toBeInTheDocument();
         fireEvent.click(screen.getByText('Appliquer'));
@@ -133,7 +138,11 @@ describe('classifier cards in the triage queue', () => {
             })
         );
         (applyClassifySuggestion as jest.Mock).mockResolvedValue({});
-        render(<TriagePage />);
+        render(
+            <MemoryRouter>
+                <TriagePage />
+            </MemoryRouter>
+        );
         fireEvent.click(await screen.findByLabelText('Nouveau projet'));
         fireEvent.change(screen.getByLabelText('Nom du nouveau projet'), {
             target: { value: 'Cabane au fond' },
@@ -164,7 +173,11 @@ describe('classifier cards in the triage queue', () => {
             })
         );
         (applyClassifySuggestion as jest.Mock).mockResolvedValue({});
-        render(<TriagePage />);
+        render(
+            <MemoryRouter>
+                <TriagePage />
+            </MemoryRouter>
+        );
         fireEvent.click(await screen.findByLabelText('Autre…'));
         const select = await screen.findByRole('combobox', {
             name: 'Choisir un projet',
@@ -188,7 +201,11 @@ describe('classifier cards in the triage queue', () => {
             })
         );
         (dismissClassifySuggestion as jest.Mock).mockResolvedValue({});
-        render(<TriagePage />);
+        render(
+            <MemoryRouter>
+                <TriagePage />
+            </MemoryRouter>
+        );
         fireEvent.click(
             await screen.findByText('Ignorer', { selector: 'button' })
         );
