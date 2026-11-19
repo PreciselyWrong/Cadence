@@ -17,8 +17,10 @@ describe('cadenceVersion', () => {
 
     it('says dev for a build without a commit', () => {
         expect(
-            cadenceVersion({ version: 'v1.14.0', cadenceVersion: '2026.11.19' }, {})
-                .build
+            cadenceVersion(
+                { version: 'v1.14.0', cadenceVersion: '2026.11.19' },
+                {}
+            ).build
         ).toBe('dev');
     });
 

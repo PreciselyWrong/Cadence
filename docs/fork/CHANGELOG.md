@@ -4,6 +4,24 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.19.3
+
+### Retards et IA
+
+- « Replanifier avec l'IA » dans la bande « En retard » du Plan : l'IA propose un jour, un horizon, « faite » ou « abandonner » pour chaque retard, à valider sur le tableau.
+- Passage du matin : à 6 h 30 (réglable dans Profil › Planification), s'il y a des retards, l'IA prépare la proposition et une notification « N retards replacés, à valider » arrive ; une fois par jour au plus, jamais le soir.
+- La semaine proposée par l'IA voit la Boîte de réception, les horizons et les projets, et peut proposer « faite » (plugin Hermes 3.11.0).
+
+### Aujourd'hui (repris d'Android)
+
+- Feuille « Replanifier » des retards : un clic par tâche (aujourd'hui, demain, un jour, un horizon, une date, fait, abandonner ; une série : fait ou passer), « Tout à demain », « Étaler sur 7 jours », annulation.
+- La journée en ligne du temps : « À caser » puis « Ma journée » sur un axe (maintenant, passé atténué, prochaine chose, « en même temps », créneaux libres et « Caser les N ici »), « N à faire » sous la date.
+- Repli « Demain » avant les suggestions.
+
+### Divers
+
+- L'ancien chemin des réponses du résumé du jour est retiré (Android 1.21 et suivants).
+
 ## 2026.11.19.2
 
 - Plan, calendrier fusionné : les événements sont des cartes comme les tâches, avec une icône de calendrier à la couleur de l'agenda à la place du rond (comme sur Android).
