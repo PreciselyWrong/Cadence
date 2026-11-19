@@ -1,3 +1,7 @@
+## [1.42.1] : 19 novembre 2026
+
+- Partager un lien ou un texte vers Cadence : la feuille propose l'échéance de la tâche (Aujourd'hui, Demain, Ce week-end ou une date au choix). Une tâche datée ne passe plus par « Tâches à classer ».
+
 ## [1.42.0] : 19 novembre 2026
 
 - Un seul menu de tâche à l'appui long, partout : Ouvrir, Terminer, Date, Priorité, Projet, Épingler, Dupliquer, Transformer en projet, Copier le lien ou le titre, Supprimer avec Annuler, avec en tête les gestes propres à l'écran.
