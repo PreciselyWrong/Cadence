@@ -6520,7 +6520,6 @@
     "overdueSpreadDone": "Forfaldne opgaver fordelt til {{until}}",
     "overdueMore": "Alle på én dag",
     "overdueReplanTitle": "Fordel over de næste dage: høj prioritet i dag eller i morgen, mellem inden for 4 dage, resten inden for 7, på de letteste dage, aldrig før en startdato.",
-    "overdueHint": "Omplanlæg fordeler dem over ugen, de hastende først.",
     "resizeInbox": "Indbakkens bredde",
     "thisWeekHint": "Planlagt til denne uge, uden fast dag",
     "thisMonthHint": "Et sted i denne måned, uden fast dag",

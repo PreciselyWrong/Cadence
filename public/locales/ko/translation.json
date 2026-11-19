@@ -6521,7 +6521,6 @@
     "overdueSpreadDone": "지난 작업을 {{until}}까지 나눠 배치했습니다",
     "overdueMore": "모두 같은 날에",
     "overdueReplanTitle": "다음 날들에 나눔: 높은 우선순위는 오늘이나 내일, 보통은 4일 이내, 나머지는 7일 이내, 가장 한가한 날에, 시작일 이전에는 두지 않음.",
-    "overdueHint": "다시 계획하면 이번 주에 나눠 배치합니다. 급한 것부터.",
     "resizeInbox": "받은편지함 너비",
     "thisWeekHint": "이번 주에 확정, 정해진 요일 없음",
     "thisMonthHint": "이번 달 중 언제든, 정해진 요일 없음",

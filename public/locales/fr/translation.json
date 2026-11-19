@@ -6558,7 +6558,6 @@
     "overdueSpreadDone": "Tâches en retard réparties jusqu'à {{until}}",
     "overdueMore": "Toutes le même jour",
     "overdueReplanTitle": "Répartit sur les jours suivants : priorité haute aujourd'hui ou demain, moyenne sous 4 jours, le reste sous 7, sur les jours les moins chargés, jamais avant une date de début.",
-    "overdueHint": "Replanifier les répartit sur la semaine, les urgentes d'abord.",
     "resizeInbox": "Largeur de la Boîte de réception",
     "thisWeekHint": "Engagée cette semaine, sans jour fixe",
     "thisMonthHint": "Un jour ce mois-ci, sans jour fixe",

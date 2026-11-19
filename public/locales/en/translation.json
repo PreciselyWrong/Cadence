@@ -6492,7 +6492,6 @@
     "overdueSpreadDone": "Overdue tasks spread until {{until}}",
     "overdueMore": "All on one day",
     "overdueReplanTitle": "Spread over the next days: high priority today or tomorrow, medium within 4 days, the rest within 7, on the lightest days, never before a start date.",
-    "overdueHint": "Reschedule spreads them over the week, urgent ones first.",
     "resizeInbox": "Inbox width",
     "thisWeekHint": "Committed to this week, no fixed day",
     "thisMonthHint": "Sometime this month, no fixed day",

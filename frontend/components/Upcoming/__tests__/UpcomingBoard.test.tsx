@@ -1294,6 +1294,31 @@ describe('UpcomingBoard', () => {
         expect(todayLoads()).toBeGreaterThan(loadsBefore);
     });
 
+    it('lists the overdue tasks in the left column, above the inbox, one under the other', async () => {
+        withOverdue([
+            task('late', 'Renew passport', {
+                due_date: shift(-3),
+            } as Partial<Task>),
+            task('later', 'Call the bank', {
+                due_date: shift(-2),
+            } as Partial<Task>),
+        ]);
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        const left = screen.getByTestId('plan-left-column');
+        expect(left).toContainElement(strip);
+        const inbox = within(left).getByTestId('inbox-column');
+        expect(
+            strip.compareDocumentPosition(inbox) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+        // Cards stack: the arrows move down the list.
+        const cards = within(strip).getAllByTestId('upcoming-card');
+        cards[0].focus();
+        fireEvent.keyDown(cards[0], { key: 'ArrowDown' });
+        expect(cards[1]).toHaveFocus();
+    });
+
     it('shows the overdue tasks as one line until opened', async () => {
         localStorage.removeItem('upcoming.overdueCollapsed');
         withOverdue([

@@ -6535,7 +6535,6 @@
     "overdueSpreadDone": "Tarefas atrasadas distribuídas até {{until}}",
     "overdueMore": "Todas no mesmo dia",
     "overdueReplanTitle": "Distribuir pelos próximos dias: prioridade alta hoje ou amanhã, média em 4 dias, o resto em 7, nos dias mais leves, nunca antes de uma data de início.",
-    "overdueHint": "Reagendar distribui-as pela semana, as urgentes primeiro.",
     "resizeInbox": "Largura da caixa de entrada",
     "thisWeekHint": "Comprometida para esta semana, sem dia fixo",
     "thisMonthHint": "Em algum dia deste mês, sem dia fixo",

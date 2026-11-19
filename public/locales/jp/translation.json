@@ -6521,7 +6521,6 @@
     "overdueSpreadDone": "期限切れのタスクを{{until}}まで振り分けました",
     "overdueMore": "すべて同じ日に",
     "overdueReplanTitle": "今後の日に振り分け：優先度高は今日か明日、中は4日以内、その他は7日以内、最も空いている日に。開始日より前には置きません。",
-    "overdueHint": "再計画すると今週に振り分けます。急ぎのものから。",
     "resizeInbox": "受信トレイの幅",
     "thisWeekHint": "今週に予定済み、曜日は未定",
     "thisMonthHint": "今月のいずれか、曜日は未定",

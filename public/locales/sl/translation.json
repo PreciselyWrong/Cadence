@@ -6638,7 +6638,6 @@
     "overdueSpreadDone": "Zamujena opravila razporejena do: {{until}}",
     "overdueMore": "Vse na isti dan",
     "overdueReplanTitle": "Razporedi na naslednje dni: visoka prednost danes ali jutri, srednja v 4 dneh, ostalo v 7, na najlažje dni, nikoli pred datumom začetka.",
-    "overdueHint": "Ponovno načrtovanje jih razporedi po tednu, najprej nujne.",
     "resizeInbox": "Širina mape Prejeto",
     "thisWeekHint": "Načrtovano za ta teden, brez določenega dne",
     "thisMonthHint": "Nekoč v tem mesecu, brez določenega dne",

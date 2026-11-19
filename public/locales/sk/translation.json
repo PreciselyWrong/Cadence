@@ -6589,7 +6589,6 @@
     "overdueSpreadDone": "Oneskorené úlohy rozdelené do: {{until}}",
     "overdueMore": "Všetky na jeden deň",
     "overdueReplanTitle": "Rozdeliť na ďalšie dni: vysoká priorita dnes alebo zajtra, stredná do 4 dní, zvyšok do 7, na najvoľnejšie dni, nikdy pred dátumom začatia.",
-    "overdueHint": "Preplánovanie ich rozdelí na týždeň, najprv naliehavé.",
     "resizeInbox": "Šírka doručenej pošty",
     "thisWeekHint": "Naplánované na tento týždeň, bez pevného dňa",
     "thisMonthHint": "Niekedy tento mesiac, bez pevného dňa",

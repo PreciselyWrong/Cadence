@@ -26,7 +26,7 @@ import {
 } from '@dnd-kit/core';
 import {
     SortableContext,
-    horizontalListSortingStrategy,
+    verticalListSortingStrategy,
     sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import { getDay, parseISO } from 'date-fns';
@@ -2031,12 +2031,10 @@ const UpcomingBoard: React.FC = () => {
         };
         const cards = Array.from(container.querySelectorAll(CARD));
         const index = cards.indexOf(target);
-        const horizontal = container.dataset.testid === 'upcoming-overdue';
         const key = event.key;
         let handled = false;
         const vertical = (step: number) => focusIn(cards[index + step]);
         const sideways = (step: number) => {
-            if (horizontal) return focusIn(cards[index + step]);
             const columns = Array.from(
                 boardRef.current?.querySelectorAll(COLUMN) ?? []
             );
@@ -2614,207 +2612,224 @@ const UpcomingBoard: React.FC = () => {
                                         onClose={closePreview}
                                     />
                                 )}
-                                {overdueCards.length > 0 && (
-                                    <section
-                                        data-testid="upcoming-overdue"
-                                        aria-label={t(
-                                            'upcoming.overdue',
-                                            'Overdue'
-                                        )}
-                                        data-collapsed={
-                                            overdueCollapsed || undefined
-                                        }
-                                        className={`shrink-0 rounded-2xl px-2 ${
-                                            overdueCollapsed
-                                                ? 'py-0.5'
-                                                : 'border border-danger/30 bg-danger/5 py-1.5'
-                                        }`}
-                                    >
-                                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                            <button
-                                                type="button"
-                                                aria-expanded={
-                                                    !overdueCollapsed
-                                                }
-                                                onClick={toggleOverdue}
-                                                className="flex h-8 items-center gap-1.5 whitespace-nowrap rounded-lg px-1.5 text-body-m font-semibold text-danger hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary"
-                                            >
-                                                <ChevronRightIcon
-                                                    aria-hidden="true"
-                                                    className={`h-4 w-4 transition-transform duration-150 ${
-                                                        overdueCollapsed
-                                                            ? ''
-                                                            : 'rotate-90'
-                                                    }`}
-                                                />
-                                                {t(
-                                                    'upcoming.overdueCount',
-                                                    'Overdue ({{count}})',
-                                                    {
-                                                        count: overdueCards.length,
-                                                    }
-                                                )}
-                                            </button>
-                                            {overdueCollapsed && (
-                                                <span className="truncate text-body-s text-surface-on-variant">
-                                                    {t(
-                                                        'upcoming.overdueHint',
-                                                        'Reschedule spreads them over the week, urgent ones first.'
-                                                    )}
-                                                </span>
-                                            )}
-                                            <div className="relative ml-auto flex flex-wrap items-center justify-end gap-1">
-                                                <PluginActions
-                                                    place="overdue"
-                                                    context={{ date: today }}
-                                                />
-                                                <div className="flex items-center">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="danger"
-                                                        className="rounded-r-none"
-                                                        data-testid="overdue-replan"
-                                                        title={t(
-                                                            'upcoming.overdueReplanTitle',
-                                                            'Spread over the next days: high priority today or tomorrow, medium within 4 days, the rest within 7, on the lightest days, never before a start date.'
-                                                        )}
-                                                        onClick={() =>
-                                                            void spreadOverdueOverWeek()
-                                                        }
-                                                    >
-                                                        {t(
-                                                            'upcoming.overdueReplan',
-                                                            'Reschedule'
-                                                        )}
-                                                    </Button>
-                                                    <Menu
-                                                        entries={replanEntries}
-                                                        testId="overdue-replan-menu"
-                                                        trigger={({
-                                                            ref,
-                                                            ...props
-                                                        }) => (
-                                                            <Button
-                                                                {...props}
-                                                                ref={(el) => {
-                                                                    replanMenuRef.current =
-                                                                        el;
-                                                                    if (
-                                                                        typeof ref ===
-                                                                        'function'
-                                                                    ) {
-                                                                        ref(el);
-                                                                    } else if (
-                                                                        ref
-                                                                    ) {
-                                                                        (
-                                                                            ref as React.MutableRefObject<HTMLButtonElement | null>
-                                                                        ).current =
-                                                                            el;
-                                                                    }
-                                                                }}
-                                                                size="sm"
-                                                                variant="danger"
-                                                                className="-ml-px rounded-l-none px-1.5"
-                                                                aria-label={t(
-                                                                    'upcoming.overdueMore',
-                                                                    'All on one day'
-                                                                )}
-                                                                data-testid="overdue-replan-more"
-                                                            >
-                                                                <ChevronDownIcon
-                                                                    aria-hidden="true"
-                                                                    className="h-3.5 w-3.5"
-                                                                />
-                                                            </Button>
-                                                        )}
-                                                    />
-                                                </div>
-                                                <JumpToDate
-                                                    value={today}
-                                                    today={today}
-                                                    weekStartsOn={
-                                                        firstDayOfWeek
-                                                    }
-                                                    onPick={replanOverdueOn}
-                                                    controlled={{
-                                                        open: pickingOverdueDate,
-                                                        label: t(
-                                                            'upcoming.overduePick',
-                                                            'Pick a date…'
-                                                        ),
-                                                        testId: 'overdue-replan-date',
-                                                        min: today,
-                                                        onClose: () => {
-                                                            setPickingOverdueDate(
-                                                                false
-                                                            );
-                                                            replanMenuRef.current?.focus();
-                                                        },
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                        {!overdueCollapsed && (
-                                            <div
-                                                role="list"
-                                                className="flex gap-2 overflow-x-auto px-1 pb-1.5 pt-1"
-                                            >
-                                                <SortableContext
-                                                    items={overdueCards.map(
-                                                        (line) =>
-                                                            cardId(
-                                                                OVERDUE,
-                                                                line.uid
-                                                            )
-                                                    )}
-                                                    strategy={
-                                                        horizontalListSortingStrategy
-                                                    }
-                                                >
-                                                    {overdueCards.map(
-                                                        (line) => (
-                                                            <div
-                                                                key={line.uid}
-                                                                className="w-[240px] shrink-0"
-                                                            >
-                                                                <TaskCard
-                                                                    line={line}
-                                                                    date={
-                                                                        OVERDUE
-                                                                    }
-                                                                    selected={
-                                                                        openTaskUid ===
-                                                                        line.uid
-                                                                    }
-                                                                    onToggle={
-                                                                        toggle
-                                                                    }
-                                                                    onOpen={(
-                                                                        l
-                                                                    ) =>
-                                                                        openLine(
-                                                                            l
-                                                                        )
-                                                                    }
-                                                                    onToggleSubtask={
-                                                                        toggleSubtask
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </SortableContext>
-                                            </div>
-                                        )}
-                                    </section>
-                                )}
                                 <div className="flex min-h-0 min-w-0 flex-1 gap-3">
                                     <div
                                         ref={inboxRef}
                                         data-testid="plan-left-column"
                                         className="flex min-h-0 shrink-0 flex-col gap-2 overflow-y-auto p-1"
                                     >
+                                        {overdueCards.length > 0 && (
+                                            <div
+                                                style={{
+                                                    width: openInboxWidth,
+                                                }}
+                                                className="shrink-0"
+                                            >
+                                                <section
+                                                    data-testid="upcoming-overdue"
+                                                    aria-label={t(
+                                                        'upcoming.overdue',
+                                                        'Overdue'
+                                                    )}
+                                                    data-collapsed={
+                                                        overdueCollapsed ||
+                                                        undefined
+                                                    }
+                                                    className={`shrink-0 rounded-2xl px-2 ${
+                                                        overdueCollapsed
+                                                            ? 'py-0.5'
+                                                            : 'border border-danger/30 bg-danger/5 py-1.5'
+                                                    }`}
+                                                >
+                                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                                        <button
+                                                            type="button"
+                                                            aria-expanded={
+                                                                !overdueCollapsed
+                                                            }
+                                                            onClick={
+                                                                toggleOverdue
+                                                            }
+                                                            className="flex h-8 items-center gap-1.5 whitespace-nowrap rounded-lg px-1.5 text-body-m font-semibold text-danger hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary"
+                                                        >
+                                                            <ChevronRightIcon
+                                                                aria-hidden="true"
+                                                                className={`h-4 w-4 transition-transform duration-150 ${
+                                                                    overdueCollapsed
+                                                                        ? ''
+                                                                        : 'rotate-90'
+                                                                }`}
+                                                            />
+                                                            {t(
+                                                                'upcoming.overdueCount',
+                                                                'Overdue ({{count}})',
+                                                                {
+                                                                    count: overdueCards.length,
+                                                                }
+                                                            )}
+                                                        </button>
+                                                        <div className="relative ml-auto flex flex-wrap items-center justify-end gap-1">
+                                                            <PluginActions
+                                                                place="overdue"
+                                                                context={{
+                                                                    date: today,
+                                                                }}
+                                                            />
+                                                            <div className="flex items-center">
+                                                                <Button
+                                                                    size="sm"
+                                                                    variant="danger"
+                                                                    className="rounded-r-none"
+                                                                    data-testid="overdue-replan"
+                                                                    title={t(
+                                                                        'upcoming.overdueReplanTitle',
+                                                                        'Spread over the next days: high priority today or tomorrow, medium within 4 days, the rest within 7, on the lightest days, never before a start date.'
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        void spreadOverdueOverWeek()
+                                                                    }
+                                                                >
+                                                                    {t(
+                                                                        'upcoming.overdueReplan',
+                                                                        'Reschedule'
+                                                                    )}
+                                                                </Button>
+                                                                <Menu
+                                                                    entries={
+                                                                        replanEntries
+                                                                    }
+                                                                    testId="overdue-replan-menu"
+                                                                    trigger={({
+                                                                        ref,
+                                                                        ...props
+                                                                    }) => (
+                                                                        <Button
+                                                                            {...props}
+                                                                            ref={(
+                                                                                el
+                                                                            ) => {
+                                                                                replanMenuRef.current =
+                                                                                    el;
+                                                                                if (
+                                                                                    typeof ref ===
+                                                                                    'function'
+                                                                                ) {
+                                                                                    ref(
+                                                                                        el
+                                                                                    );
+                                                                                } else if (
+                                                                                    ref
+                                                                                ) {
+                                                                                    (
+                                                                                        ref as React.MutableRefObject<HTMLButtonElement | null>
+                                                                                    ).current =
+                                                                                        el;
+                                                                                }
+                                                                            }}
+                                                                            size="sm"
+                                                                            variant="danger"
+                                                                            className="-ml-px rounded-l-none px-1.5"
+                                                                            aria-label={t(
+                                                                                'upcoming.overdueMore',
+                                                                                'All on one day'
+                                                                            )}
+                                                                            data-testid="overdue-replan-more"
+                                                                        >
+                                                                            <ChevronDownIcon
+                                                                                aria-hidden="true"
+                                                                                className="h-3.5 w-3.5"
+                                                                            />
+                                                                        </Button>
+                                                                    )}
+                                                                />
+                                                            </div>
+                                                            <JumpToDate
+                                                                value={today}
+                                                                today={today}
+                                                                weekStartsOn={
+                                                                    firstDayOfWeek
+                                                                }
+                                                                onPick={
+                                                                    replanOverdueOn
+                                                                }
+                                                                controlled={{
+                                                                    open: pickingOverdueDate,
+                                                                    label: t(
+                                                                        'upcoming.overduePick',
+                                                                        'Pick a date…'
+                                                                    ),
+                                                                    testId: 'overdue-replan-date',
+                                                                    min: today,
+                                                                    onClose:
+                                                                        () => {
+                                                                            setPickingOverdueDate(
+                                                                                false
+                                                                            );
+                                                                            replanMenuRef.current?.focus();
+                                                                        },
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    {!overdueCollapsed && (
+                                                        <div
+                                                            role="list"
+                                                            className="flex flex-col gap-2 px-0.5 pb-1.5 pt-1"
+                                                        >
+                                                            <SortableContext
+                                                                items={overdueCards.map(
+                                                                    (line) =>
+                                                                        cardId(
+                                                                            OVERDUE,
+                                                                            line.uid
+                                                                        )
+                                                                )}
+                                                                strategy={
+                                                                    verticalListSortingStrategy
+                                                                }
+                                                            >
+                                                                {overdueCards.map(
+                                                                    (line) => (
+                                                                        <div
+                                                                            key={
+                                                                                line.uid
+                                                                            }
+                                                                            className="w-full"
+                                                                        >
+                                                                            <TaskCard
+                                                                                line={
+                                                                                    line
+                                                                                }
+                                                                                date={
+                                                                                    OVERDUE
+                                                                                }
+                                                                                selected={
+                                                                                    openTaskUid ===
+                                                                                    line.uid
+                                                                                }
+                                                                                onToggle={
+                                                                                    toggle
+                                                                                }
+                                                                                onOpen={(
+                                                                                    l
+                                                                                ) =>
+                                                                                    openLine(
+                                                                                        l
+                                                                                    )
+                                                                                }
+                                                                                onToggleSubtask={
+                                                                                    toggleSubtask
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                            </SortableContext>
+                                                        </div>
+                                                    )}
+                                                </section>
+                                            </div>
+                                        )}
                                         <div
                                             className={`flex ${
                                                 inboxIsCollapsed

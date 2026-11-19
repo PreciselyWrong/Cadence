@@ -6535,7 +6535,6 @@
     "overdueSpreadDone": "Attività in ritardo distribuite fino a {{until}}",
     "overdueMore": "Tutte lo stesso giorno",
     "overdueReplanTitle": "Distribuisci sui prossimi giorni: priorità alta oggi o domani, media entro 4 giorni, il resto entro 7, nei giorni più leggeri, mai prima di una data di inizio.",
-    "overdueHint": "Ripianifica le distribuisce sulla settimana, prima le urgenti.",
     "resizeInbox": "Larghezza della posta in arrivo",
     "thisWeekHint": "Impegnata questa settimana, senza giorno fisso",
     "thisMonthHint": "Un giorno di questo mese, senza giorno fisso",

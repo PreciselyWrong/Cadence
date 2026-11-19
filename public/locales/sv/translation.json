@@ -6520,7 +6520,6 @@
     "overdueSpreadDone": "Försenade uppgifter fördelade till {{until}}",
     "overdueMore": "Alla på en dag",
     "overdueReplanTitle": "Fördela över de kommande dagarna: hög prioritet i dag eller i morgon, medel inom 4 dagar, resten inom 7, på de lättaste dagarna, aldrig före ett startdatum.",
-    "overdueHint": "Planera om fördelar dem över veckan, brådskande först.",
     "resizeInbox": "Inkorgens bredd",
     "thisWeekHint": "Planerad för den här veckan, utan fast dag",
     "thisMonthHint": "Någon gång den här månaden, utan fast dag",

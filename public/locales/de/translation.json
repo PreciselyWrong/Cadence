@@ -6529,7 +6529,6 @@
     "overdueSpreadDone": "Überfällige Aufgaben bis {{until}} verteilt",
     "overdueMore": "Alle an einem Tag",
     "overdueReplanTitle": "Auf die nächsten Tage verteilen: hohe Priorität heute oder morgen, mittlere innerhalb von 4 Tagen, der Rest innerhalb von 7, an den leichtesten Tagen, nie vor einem Startdatum.",
-    "overdueHint": "Neu planen verteilt sie auf die Woche, Dringendes zuerst.",
     "resizeInbox": "Breite des Eingangs",
     "thisWeekHint": "Für diese Woche vorgesehen, ohne festen Tag",
     "thisMonthHint": "Irgendwann in diesem Monat, ohne festen Tag",

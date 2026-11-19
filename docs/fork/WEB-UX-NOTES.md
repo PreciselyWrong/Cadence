@@ -1040,3 +1040,10 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : la proposition s'affiche sur Planifier même. Bandeau violet « Proposition de l'IA » (titre, questions, effet, « Appliquer »). Carte violette là où l'IA envoie une tâche (d'où elle vient, durée, raison séparée par un trait), trace en pointillés là où elle est ; le survol encadre les deux sans changer de taille. Événements de l'agenda dans chaque jour, charge avant → après. À gauche : Cette semaine, Semaine prochaine, Ce mois-ci (puis ce qui bouge dans Le mois prochain et Plus tard). Clic sur une carte : Voir la tâche, Refuser, Faite, Abandonner, un jour, un horizon ; glisser aussi. Rien n'est écrit avant « Appliquer ». L'agent n'est jamais nommé : « IA ».
 - **Suite (même jour)** : 3ᵉ onglet « Planifié par l'IA » à côté de Jours et Horizons, visible seulement quand une semaine est prête et qu'un agent écoute (plugin désactivé : rien de l'IA n'apparaît) ; halo doux autour de la paire survolée ; listes de gauche repliables ; menus qui restent dans l'écran ; le serveur déplace vraiment la ligne de plan (plus de tâche planifiée deux fois).
 - **Android** : à reprendre (`TODO.md` › Now) ; la feuille actuelle reste.
+
+## Plan : « En retard » en haut de la colonne de gauche (2026-11-19)
+
+- **Problème** : la bande « En retard » au-dessus des jours repoussait la semaine vers le bas.
+- **Décision** : « En retard » est la première section de la colonne de gauche, au-dessus de la Boîte de réception : tout ce qui n'a pas de jour est à gauche, les jours gardent toute la hauteur. Cartes l'une sous l'autre, repliée en une ligne (« En retard (N) », « Replanifier ▾ »), l'aide est dans l'infobulle du bouton.
+- **Android** : Échues est déjà une section de la liste de Planifier.
+

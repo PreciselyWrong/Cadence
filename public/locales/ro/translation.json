@@ -6546,7 +6546,6 @@
     "overdueSpreadDone": "Sarcinile întârziate au fost împărțite până {{until}}",
     "overdueMore": "Toate în aceeași zi",
     "overdueReplanTitle": "Împarte pe zilele următoare: prioritate mare azi sau mâine, medie în 4 zile, restul în 7, în zilele cele mai libere, niciodată înainte de data de început.",
-    "overdueHint": "Replanificarea le împarte pe săptămână, întâi cele urgente.",
     "resizeInbox": "Lățimea căsuței de intrare",
     "thisWeekHint": "Angajată pentru săptămâna aceasta, fără zi fixă",
     "thisMonthHint": "Cândva în luna aceasta, fără zi fixă",
