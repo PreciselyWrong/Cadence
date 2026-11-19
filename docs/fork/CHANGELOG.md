@@ -4,6 +4,11 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.19.4
+
+- Aujourd'hui, feuille « Replanifier » : un jour pas encore chargé n'affiche plus « (0) », qui faisait croire qu'il était libre.
+- Android 1.42.0 sur NicoApps (menu de tâche unique, liens « bloque », description de projet, Réglages › À trier ; `android/CHANGELOG.md`).
+
 ## 2026.11.19.3
 
 ### Retards et IA
