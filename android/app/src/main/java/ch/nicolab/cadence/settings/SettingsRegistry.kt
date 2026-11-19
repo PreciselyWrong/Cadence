@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.EventAvailable
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Flight
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
@@ -137,6 +138,14 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOfNotNu
         title = ch.nicolab.cadence.tasks.R.string.auto_classify_settings_title,
         subtitle = { null },
         content = { ch.nicolab.cadence.tasks.ui.settings.AutoClassifySettingsPage() },
+    ),
+    SettingsPage(
+        id = "triage",
+        section = SettingsSection.ORGANISATION,
+        icon = Icons.Outlined.FilterList,
+        title = ch.nicolab.cadence.tasks.R.string.triage_settings_title,
+        subtitle = { null },
+        content = { ch.nicolab.cadence.tasks.ui.settings.TriageSettingsPage() },
     ),
     SettingsPage(
         id = "gestures",

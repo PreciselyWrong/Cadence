@@ -2,6 +2,8 @@ package ch.nicolab.cadence.tasks
 
 import ch.nicolab.cadence.domain.QuietHours
 import ch.nicolab.cadence.domain.QuietPolicy
+import ch.nicolab.cadence.tasks.model.DayHoursRange
+import ch.nicolab.cadence.tasks.model.VisibleHours
 import java.time.DayOfWeek
 import java.time.ZoneId
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +19,8 @@ data class ConnectionInfo(
     val accountZone: ZoneId = ZoneId.systemDefault(),
     val firstDayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
     val quietHours: QuietHours? = null,
+    val visibleHours: VisibleHours = VisibleHours.WHOLE_DAY,
+    val dayHours: DayHoursRange? = null,
 ) {
     val quiet: QuietPolicy get() = QuietPolicy(quietHours, accountZone)
 }

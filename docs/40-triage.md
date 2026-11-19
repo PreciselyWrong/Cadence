@@ -23,7 +23,7 @@ A queue of proposals on open tasks, one at a time, each with its reason in one l
 
 ## Settings
 
-Profile › À trier (web). Stored in `ui_settings.brief`, the key of the retired daily brief (`docs/39-daily-brief.md`), so the values saved before 2026-11-12 are kept; the other keys left there are ignored (`modules/triage/settings.js`). A read never fails (an invalid value falls back to its default); an update with an unknown key or an invalid value answers 400.
+Profile › À trier (web) and Réglages › À trier (Android, `TriageSettingsPage`, saved online with a clear error when offline). Stored in `ui_settings.brief`, the key of the retired daily brief (`docs/39-daily-brief.md`), so the values saved before 2026-11-12 are kept; the other keys left there are ignored (`modules/triage/settings.js`). A read never fails (an invalid value falls back to its default); an update with an unknown key or an invalid value answers 400.
 
 | Key | Default | |
 |---|---|---|

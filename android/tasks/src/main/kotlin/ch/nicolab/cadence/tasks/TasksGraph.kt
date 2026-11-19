@@ -81,6 +81,10 @@ object TasksGraph {
     fun decisions(context: Context): ch.nicolab.cadence.tasks.decisions.DecisionsRepository =
         ch.nicolab.cadence.tasks.data.createDecisions(context.applicationContext)
 
+    /** Liens « Bloque / Bloquée par » d'une tâche, lus en ligne avec cache local et écrits en appel différé. */
+    internal fun relations(context: Context): ch.nicolab.cadence.tasks.relations.TaskRelationsRepository =
+        ch.nicolab.cadence.tasks.data.createRelations(context.applicationContext)
+
     /** Classement automatique : réglages, marques et annulation (en ligne), réponses aux suggestions (file différée). */
     fun autoClassify(context: Context): ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRepository =
         ch.nicolab.cadence.tasks.autoclassify.autoClassifyRepository(context)

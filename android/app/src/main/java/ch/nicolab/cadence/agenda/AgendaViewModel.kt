@@ -14,8 +14,11 @@ import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.TaskRepository
+import ch.nicolab.cadence.tasks.model.DayHoursRange
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.tasks.model.VisibleHours
+import ch.nicolab.cadence.tasks.planning.PlanningStore
 import ch.nicolab.cadence.R
 import java.time.LocalDateTime
 import java.time.LocalDate
@@ -68,6 +71,8 @@ internal data class AgendaUiState(
     val options: AgendaOptions = AgendaOptions(),
     val permissionMissing: Boolean = false,
     val checkEvents: Boolean = false,
+    val visibleHours: VisibleHours = VisibleHours.WHOLE_DAY,
+    val dayHours: DayHoursRange? = null,
 )
 
 /** Changement d'une tâche récurrente en attente de sa portée ; [occurrence] est le jour d'une occurrence à venir, null pour l'enregistrée. */
@@ -93,6 +98,8 @@ internal const val AGENDA_LIST_DAYS = 30
 internal class AgendaViewModel(application: Application) : AndroidViewModel(application) {
     private val calendar: CalendarRepository = CalendarGraph.repository(application)
     private val tasks: TaskRepository = TasksGraph.repository(application)
+    private val connection = TasksGraph.connection(application)
+    private val planningStore = PlanningStore.of(application)
     private val habitRepository = (application as CadenceApp).repository
     private val prefs = application.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
     private val zone: ZoneId = ZoneId.systemDefault()
@@ -140,6 +147,20 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
         )
     }.combine(tray) { ui, items -> ui.copy(tray = items) }.combine(calendar.permissionMissing) { ui, missing -> ui.copy(permissionMissing = missing) }
         .combine(calendar.globalSettings) { ui, settings -> ui.copy(checkEvents = settings.checkEvents) }
+        .combine(connection.observe()) { ui, conn ->
+            ui.copy(
+                visibleHours = conn?.visibleHours ?: VisibleHours.WHOLE_DAY,
+                dayHours = conn?.dayHours ?: ui.dayHours,
+            )
+        }
+        .combine(planningStore.settings) { ui, planning ->
+            ui.copy(
+                dayHours = ui.dayHours ?: DayHoursRange(
+                    planning.hours.start.toSecondOfDay() / 60,
+                    planning.hours.end.toSecondOfDay() / 60,
+                ),
+            )
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), AgendaUiState(selected = LocalDate.now(zone), today = LocalDate.now(zone)))
 
     fun selectMode(mode: AgendaMode) {

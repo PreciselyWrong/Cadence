@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Item 1 : Liens « Bloque / Bloquée par » sur la fiche de tâche -->
+    <string name="task_relations_title">Liens</string>
+    <string name="task_relations_add">+ Lier</string>
+    <string name="task_relations_blocks_prefix">Bloque\u202F: %1$s</string>
+    <string name="task_relations_blocked_by_prefix">Bloquée par\u202F: %1$s</string>
+    <string name="task_relations_blocked_badge">Bloquée</string>
+    <string name="task_relations_remove">Retirer le lien</string>
+    <string name="task_relations_pick_title">Lier à une tâche</string>
+    <string name="task_relations_type_blocks">Bloque</string>
+    <string name="task_relations_type_blocked_by">Bloquée par</string>
+    <string name="task_relations_search_hint">Chercher une tâche…</string>
+    <string name="task_relations_empty_search">Aucune tâche trouvée.</string>
+    <string name="task_relations_deferred_add">Lier la tâche : %1$s</string>
+    <string name="task_relations_deferred_remove">Retirer le lien de la tâche</string>
+
+    <!-- Item 4 : Réglages › À trier -->
+    <string name="triage_settings_title">À trier</string>
+    <string name="triage_settings_intro">Réglages de la file « À trier » enregistrés sur le serveur.</string>
+    <string name="triage_settings_offline">Impossible de joindre le serveur : les réglages d’« À trier » demandent une connexion.</string>
+    <string name="triage_settings_save_offline">Impossible d’enregistrer hors ligne. Vérifiez la connexion et réessayez.</string>
+    <string name="triage_settings_saved">Réglages enregistrés.</string>
+    <string name="triage_settings_save">Enregistrer</string>
+    <string name="triage_settings_calendars_title">Calendriers lus</string>
+    <string name="triage_settings_no_calendars">Aucun calendrier configuré sur le serveur.</string>
+    <string name="triage_settings_lookahead">Jours à regarder (1–14)</string>
+    <string name="triage_settings_alerts_title">Alertes</string>
+    <string name="triage_settings_alert_conflict">Conflit d’horaire</string>
+    <string name="triage_settings_alert_event_in_work_hours">Événement sur les heures de travail</string>
+    <string name="triage_settings_alert_duplicate">Doublon possible</string>
+    <string name="triage_settings_alert_deadline_in_note">Échéance mentionnée dans la note</string>
+    <string name="triage_settings_alert_postponed">Tâche souvent reportée</string>
+    <string name="triage_settings_postponements">Reports avant une carte (1–20)</string>
+    <string name="triage_settings_closed_lookback">Tâches terminées regardées (jours, 1–60)</string>
+    <string name="triage_settings_duplicate_similarity">Seuil de doublon (0–1)</string>
+    <string name="triage_settings_ai_title">Propositions de l’IA</string>
+    <string name="triage_settings_ai_enabled">Propositions de l’IA dans À trier</string>
+    <string name="triage_settings_ai_limit">Tâches regardées par jour (1–200)</string>
+</resources>

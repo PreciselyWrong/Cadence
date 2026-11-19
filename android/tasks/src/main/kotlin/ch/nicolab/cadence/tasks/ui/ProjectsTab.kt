@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -493,13 +494,34 @@ internal fun ProjectTasksPane(
                 )
             }
         }
+        val description = project?.description?.takeIf { it.isNotBlank() }
+        if (description != null) {
+            item(key = "description") {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = Space.md, end = Space.md, bottom = Space.md),
+                    verticalArrangement = Arrangement.spacedBy(Space.sm),
+                ) {
+                    MarkdownView(
+                        content = description,
+                        onToggleCheckbox = {},
+                    )
+                    LinkPreviewList(
+                        text = description,
+                        previews = viewModel.linkPreviews,
+                        limit = 5,
+                    )
+                }
+            }
+        }
         if (subProjects.isNotEmpty()) {
             item(key = "sub-projects") { SectionHeader(title = stringResource(R.string.tasks_subprojects_title), count = subProjects.size) }
             itemsIndexed(subProjects, key = { _, sub -> "sub-${sub.project.uid}" }) { index, sub ->
                 SubProjectRow(sub, rowGroupShape(index, subProjects.size)) { onOpenProject(sub.project.uid) }
             }
         }
-        if (tasks.isEmpty() && subProjects.isEmpty() && notes.isEmpty() && pages.isEmpty()) {
+        if (tasks.isEmpty() && subProjects.isEmpty() && notes.isEmpty() && pages.isEmpty() && description == null) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
         if (outline) {

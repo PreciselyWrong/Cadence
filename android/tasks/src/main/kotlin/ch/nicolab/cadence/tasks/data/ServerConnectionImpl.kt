@@ -11,7 +11,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import ch.nicolab.cadence.domain.QuietHours
 import ch.nicolab.cadence.tasks.ConnectionInfo
 import ch.nicolab.cadence.tasks.ServerConnection
+import ch.nicolab.cadence.tasks.model.DayHoursRange
 import ch.nicolab.cadence.tasks.model.Funnel
+import ch.nicolab.cadence.tasks.model.VisibleHours
 import ch.nicolab.cadence.tasks.sync.AccountProfile
 import ch.nicolab.cadence.tasks.sync.AuthError
 import ch.nicolab.cadence.tasks.sync.HabitOwnership
@@ -41,6 +43,10 @@ private object ConnectionKeys {
     val QUIET_ENABLED = booleanPreferencesKey("quiet_hours_enabled")
     val QUIET_START = stringPreferencesKey("quiet_hours_start")
     val QUIET_END = stringPreferencesKey("quiet_hours_end")
+    val VISIBLE_HOURS_START = intPreferencesKey("visible_hours_start")
+    val VISIBLE_HOURS_END = intPreferencesKey("visible_hours_end")
+    val DAY_HOURS_START = intPreferencesKey("day_hours_start")
+    val DAY_HOURS_END = intPreferencesKey("day_hours_end")
     val TOKEN_CIPHER = stringPreferencesKey("token_cipher")
     val TOKEN_IV = stringPreferencesKey("token_iv")
 }
@@ -65,6 +71,14 @@ internal class ServerConnectionImpl(
                         prefs[ConnectionKeys.QUIET_ENABLED] == true,
                         prefs[ConnectionKeys.QUIET_START],
                         prefs[ConnectionKeys.QUIET_END],
+                    ),
+                    VisibleHours.of(
+                        prefs[ConnectionKeys.VISIBLE_HOURS_START],
+                        prefs[ConnectionKeys.VISIBLE_HOURS_END],
+                    ),
+                    DayHoursRange.of(
+                        prefs[ConnectionKeys.DAY_HOURS_START],
+                        prefs[ConnectionKeys.DAY_HOURS_END],
                     ),
                 )
             }
@@ -173,6 +187,10 @@ private fun applyProfile(prefs: MutablePreferences, profile: AccountProfile) {
     setOrRemove(prefs, ConnectionKeys.QUIET_ENABLED, profile.quietHours?.enabled)
     setOrRemove(prefs, ConnectionKeys.QUIET_START, profile.quietHours?.start?.toString())
     setOrRemove(prefs, ConnectionKeys.QUIET_END, profile.quietHours?.end?.toString())
+    setOrRemove(prefs, ConnectionKeys.VISIBLE_HOURS_START, profile.visibleHours.startHour)
+    setOrRemove(prefs, ConnectionKeys.VISIBLE_HOURS_END, profile.visibleHours.endHour)
+    setOrRemove(prefs, ConnectionKeys.DAY_HOURS_START, profile.dayHours?.startMinute)
+    setOrRemove(prefs, ConnectionKeys.DAY_HOURS_END, profile.dayHours?.endMinute)
 }
 
 private fun <T : Any> setOrRemove(prefs: MutablePreferences, key: Preferences.Key<T>, value: T?) {

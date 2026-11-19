@@ -22,7 +22,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyncConflictEntity::class,
         DeferredCallEntity::class,
     ],
-    version = 23,
+    version = 24,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -307,5 +307,16 @@ internal val MIGRATION_21_22 = object : Migration(21, 22) {
 internal val MIGRATION_22_23 = object : Migration(22, 23) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("UPDATE deferred_calls SET path = '/api/v1/triage/answers' WHERE path LIKE '/api/v1/daily-plan/%/brief/answers'")
+    }
+}
+
+/**
+ * Ajoute la description d'un projet (`description`). Le curseur est retiré : le prochain instantané apporte
+ * les descriptions déjà posées sur le serveur.
+ */
+internal val MIGRATION_23_24 = object : Migration(23, 24) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE projects ADD COLUMN description TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

@@ -167,6 +167,37 @@ class TriageRepository internal constructor(
         Result.failure(error)
     }
 
+    /** Réglages de la file « À trier » (`GET /api/v1/triage/settings`), en ligne seulement. */
+    suspend fun getSettings(): Result<TriageSettingsData> = try {
+        val body = call("GET", "/api/v1/triage/settings", emptyMap(), null)
+        Result.success(TriageSettingsCodec.parse(body))
+    } catch (error: CancellationException) {
+        throw error
+    } catch (error: Exception) {
+        Result.failure(error)
+    }
+
+    /** Enregistre les réglages d'« À trier » (`PUT /api/v1/triage/settings`), en ligne seulement. */
+    suspend fun saveSettings(data: TriageSettingsData): Result<TriageSettingsData> = try {
+        val body = call("PUT", "/api/v1/triage/settings", emptyMap(), TriageSettingsCodec.toPutBody(data))
+        Result.success(TriageSettingsCodec.parse(body))
+    } catch (error: CancellationException) {
+        throw error
+    } catch (error: Exception) {
+        Result.failure(error)
+    }
+
+    /** Calendriers configurés sur le serveur (flux ICS + Google), en ligne seulement. */
+    suspend fun listCalendarOptions(): List<TriageCalendarOption> {
+        val feeds = runCatching {
+            TriageSettingsCodec.parseCalendarFeeds(call("GET", "/api/v1/calendar-feeds", emptyMap(), null))
+        }.getOrDefault(emptyList())
+        val google = runCatching {
+            TriageSettingsCodec.parseGoogleCalendars(call("GET", "/api/v1/google", emptyMap(), null))
+        }.getOrDefault(emptyList())
+        return (feeds + google).distinctBy { it.uid }
+    }
+
     private fun decode(raw: String): TriageQueueDto? = runCatching { JSON.decodeFromString<TriageQueueDto>(raw) }.getOrNull()
 
     private companion object {

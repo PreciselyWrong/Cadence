@@ -129,6 +129,8 @@ data class ProjectItem(
     val parentProjectUid: String? = null,
     /** Bannière du projet (`image_url`) telle que le serveur l'envoie ; voir [ProjectImage]. */
     val imageUrl: String? = null,
+    /** Description Markdown du projet (`description`). */
+    val description: String? = null,
 ) {
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
     val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)

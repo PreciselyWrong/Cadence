@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.tasks.sync
 
 import ch.nicolab.cadence.domain.QuietHours
+import ch.nicolab.cadence.tasks.model.DayHoursRange
+import ch.nicolab.cadence.tasks.model.VisibleHours
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -188,6 +190,7 @@ private fun errorCodeOf(body: String?): String? = body?.let {
 }?.take(80)
 
 internal fun profileOf(fields: JsonObject): AccountProfile = shaped {
+    val uiSettings = fields["ui_settings"] as? JsonObject
     AccountProfile(
         email = (fields["email"] as? JsonPrimitive)?.contentOrNull,
         uid = (fields["uid"] as? JsonPrimitive)?.contentOrNull,
@@ -200,6 +203,8 @@ internal fun profileOf(fields: JsonObject): AccountProfile = shaped {
                 end = (quiet["end"] as? JsonPrimitive)?.contentOrNull,
             )
         },
+        visibleHours = VisibleHours.fromUiSettings(uiSettings),
+        dayHours = DayHoursRange.fromUiSettings(uiSettings),
     )
 }
 
