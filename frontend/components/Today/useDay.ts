@@ -328,7 +328,12 @@ export const useDay = (date: string | undefined) => {
     useEffect(
         () =>
             onCaptureSaved(({ scope, items, undone }) => {
-                if (scope !== 'today' || !date) return;
+                if (!date) return;
+                // Saved elsewhere (« demain », a date): the views read again.
+                if (scope !== 'today') {
+                    void reload();
+                    return;
+                }
                 const uids = items
                     .filter((item) => item.target === 'task' && item.uid)
                     .map((item) => item.uid as string);

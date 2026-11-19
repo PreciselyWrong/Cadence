@@ -83,6 +83,7 @@ import DayCalendar, {
 } from '../Today/DayCalendar';
 import { useIsNarrow } from '../../hooks/useIsNarrow';
 import { parseQuickAdd } from '../../utils/quickAddParse';
+import { onCaptureSaved } from '../../utils/captureUi';
 import {
     useCalendarEvents,
     useDays,
@@ -767,6 +768,9 @@ const UpcomingBoard: React.FC = () => {
     );
     // A proposal applied elsewhere moves tasks across the plan.
     useProposalChanged(() => void reload());
+    // A task saved from the capture box may land on any day or horizon
+    // (« demain », a date): read the board again.
+    useEffect(() => onCaptureSaved(() => void reload()), [reload]);
 
     const decidePushed = async (uid: string, decision: TaskDecision) => {
         try {

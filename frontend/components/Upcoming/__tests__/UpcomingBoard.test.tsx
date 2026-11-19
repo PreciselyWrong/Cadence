@@ -42,6 +42,7 @@ let mockOpenTaskUid: string | null = null;
 const mockOpenTask = jest.fn();
 const mockCloseTask = jest.fn();
 
+import { emitCaptureSaved } from '../../../utils/captureUi';
 jest.mock('../../Shared/MarkdownRenderer', () => ({
     __esModule: true,
     default: () => null,
@@ -389,6 +390,23 @@ describe('UpcomingBoard', () => {
         await new Promise((resolve) => setTimeout(resolve, 300));
         expect(mockFetchDay.mock.calls.length).toBe(calls);
         expect(calls).toBe(14);
+    });
+
+    it('reloads the days when the capture box saves a task elsewhere', async () => {
+        renderBoard();
+        await screen.findAllByTestId('upcoming-column');
+        await settle();
+        const calls = mockFetchDay.mock.calls.length;
+        act(() => {
+            emitCaptureSaved({
+                scope: null,
+                items: [{ target: 'task', uid: 'new1' } as never],
+                undone: false,
+            });
+        });
+        await waitFor(() =>
+            expect(mockFetchDay.mock.calls.length).toBeGreaterThan(calls)
+        );
     });
 
     it('titles the page Plan, with Days selected', async () => {

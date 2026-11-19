@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    act,
     fireEvent,
     render,
     screen,
@@ -8,30 +9,32 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TodayView from '../TodayView';
+import { emitCaptureSaved } from '../../../utils/captureUi';
 import { fetchDay, DayResponse } from '../../../utils/dayService';
 import { fetchProfile } from '../../../utils/profileService';
 
-jest.mock('react-i18next', () => ({
-    useTranslation: () => ({
-        t: (
-            _key: string,
-            fallback: unknown,
-            values?: Record<string, unknown>
-        ) => {
-            const text =
-                typeof fallback === 'string'
-                    ? fallback
-                    : String(
-                          (fallback as { defaultValue?: string })
-                              ?.defaultValue ?? _key
-                      );
-            return text.replace(/{{(\w+)}}/g, (_m, name) =>
-                String(values?.[name] ?? '')
-            );
-        },
-        i18n: { language: 'en' },
-    }),
-}));
+// One translation object for every render, as react-i18next gives: a new
+// `t` each render would reload the day in a loop.
+jest.mock('react-i18next', () => {
+    const t = (
+        _key: string,
+        fallback: unknown,
+        values?: Record<string, unknown>
+    ) => {
+        const text =
+            typeof fallback === 'string'
+                ? fallback
+                : String(
+                      (fallback as { defaultValue?: string })?.defaultValue ??
+                          _key
+                  );
+        return text.replace(/{{(\w+)}}/g, (_m, name) =>
+            String(values?.[name] ?? '')
+        );
+    };
+    const value = { t, i18n: { language: 'en' } };
+    return { useTranslation: () => value };
+});
 
 jest.mock('react-router-dom', () => ({
     Link: ({ children, to, ...rest }: any) => (
@@ -134,6 +137,30 @@ beforeEach(() => {
     });
     (fetchDay as jest.Mock).mockImplementation(async () => dayResponse());
     (fetchProfile as jest.Mock).mockResolvedValue({ ui_settings: {} });
+});
+
+describe('Today and the capture box', () => {
+    it('reads the day again when a task is captured for another day', async () => {
+        render(<TodayView />);
+        await screen.findByText(/Overdue · 1/);
+        // Let the first loads (the day, tomorrow) settle.
+        await act(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 400));
+        });
+        const calls = (fetchDay as jest.Mock).mock.calls.length;
+        act(() => {
+            emitCaptureSaved({
+                scope: null,
+                items: [{ target: 'task', uid: 'new1' } as never],
+                undone: false,
+            });
+        });
+        await waitFor(() =>
+            expect((fetchDay as jest.Mock).mock.calls.length).toBeGreaterThan(
+                calls
+            )
+        );
+    });
 });
 
 describe('Today overdue tasks', () => {
