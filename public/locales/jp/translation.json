@@ -2750,6 +2750,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "編集",
+      "openGoogle": "Google カレンダーで開く",
       "close": "閉じる",
       "allDay": "終日"
     },

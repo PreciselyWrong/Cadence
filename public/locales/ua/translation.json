@@ -2572,6 +2572,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Редагувати",
+      "openGoogle": "Відкрити в Google Календарі",
       "close": "Закрити",
       "allDay": "Увесь день"
     },

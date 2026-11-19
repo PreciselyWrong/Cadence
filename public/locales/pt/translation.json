@@ -2822,6 +2822,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Editar",
+      "openGoogle": "Abrir no Google Agenda",
       "close": "Fechar",
       "allDay": "Dia inteiro"
     },

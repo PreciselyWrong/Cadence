@@ -3390,6 +3390,17 @@ const UpcomingBoard: React.FC = () => {
                                                                       showCompleted={
                                                                           options.showCompleted
                                                                       }
+                                                                      onOpenEvent={(
+                                                                          event,
+                                                                          onDate
+                                                                      ) =>
+                                                                          setEventDetail(
+                                                                              {
+                                                                                  event,
+                                                                                  onDate,
+                                                                              }
+                                                                          )
+                                                                      }
                                                                       events={
                                                                           merged
                                                                               ? (
@@ -3418,6 +3429,7 @@ const UpcomingBoard: React.FC = () => {
                                                                                                 : formatMinute(
                                                                                                       event.end_minute
                                                                                                   ),
+                                                                                        source: event,
                                                                                     })
                                                                                 )
                                                                               : undefined

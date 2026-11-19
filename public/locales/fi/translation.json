@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Muokkaa",
+      "openGoogle": "Avaa Google Kalenterissa",
       "close": "Sulje",
       "allDay": "Koko päivä"
     },

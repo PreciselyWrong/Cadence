@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Edit",
+      "openGoogle": "Buka di Google Kalender",
       "close": "Tutup",
       "allDay": "Sepanjang hari"
     },

@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "편집",
+      "openGoogle": "Google 캘린더에서 열기",
       "close": "닫기",
       "allDay": "종일"
     },

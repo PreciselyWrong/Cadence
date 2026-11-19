@@ -2847,6 +2847,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Modifier",
+      "openGoogle": "Ouvrir dans Google Agenda",
       "close": "Fermer",
       "allDay": "Toute la journée"
     },

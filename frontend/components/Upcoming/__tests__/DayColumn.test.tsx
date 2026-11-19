@@ -199,6 +199,26 @@ describe('DayColumn', () => {
         ]);
     });
 
+    it('opens the detail of a merged event on a click', () => {
+        const source = { title: 'Lunch' } as never;
+        const onOpenEvent = jest.fn();
+        renderColumn({
+            day: dayWith([planItem('a', 1)]),
+            events: [
+                {
+                    title: 'Lunch',
+                    start: '12:00',
+                    end: '13:00',
+                    all_day: false,
+                    source,
+                },
+            ],
+            onOpenEvent,
+        });
+        fireEvent.click(screen.getByRole('button', { name: /Lunch/ }));
+        expect(onOpenEvent).toHaveBeenCalledWith(source, DAY);
+    });
+
     it('lists tasks due that day but not planned, after the planned ones', () => {
         renderColumn({
             day: dayWith([planItem('a', 1)], [task('due', 'Due only')]),

@@ -74,10 +74,30 @@ describe('CalendarEventDetail', () => {
         expect(
             screen.queryByRole('button', { name: 'Delete' })
         ).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: 'Edit' })
+        ).not.toBeInTheDocument();
+    });
+
+    it('opens a writable Google event to read, editing only on demand', () => {
+        renderDetail(
+            event({
+                ...google2way,
+                html_link: 'https://calendar.google.com/e/1',
+            })
+        );
+        expect(screen.queryByLabelText('Description')).toBeNull();
+        expect(screen.getByText(/SORTIE FAMILIALE/)).toBeInTheDocument();
+        expect(
+            screen.getByRole('link', { name: 'Open in Google Calendar' })
+        ).toHaveAttribute('href', 'https://calendar.google.com/e/1');
+        fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+        expect(screen.getByLabelText('Description')).toBeInTheDocument();
     });
 
     it('opens a writable Google event in the editor, its HTML as text', () => {
         renderDetail(event(google2way));
+        fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
         expect(screen.getByLabelText('Description')).toHaveValue(
             'SORTIE FAMILIALE\n\nParking gratuit.'
         );
@@ -86,6 +106,7 @@ describe('CalendarEventDetail', () => {
     it('saves without sending back an untouched description', async () => {
         const onChanged = jest.fn();
         renderDetail(event(google2way), onChanged);
+        fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
         fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(onChanged).toHaveBeenCalled());
         const input = (google.updateGoogleEvent as jest.Mock).mock.calls[0][2];
@@ -100,6 +121,7 @@ describe('CalendarEventDetail', () => {
     it('deletes after a second click that confirms', async () => {
         const onChanged = jest.fn();
         renderDetail(event(google2way), onChanged);
+        fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
         fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
         expect(google.deleteGoogleEvent).not.toHaveBeenCalled();
         fireEvent.click(

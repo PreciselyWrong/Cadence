@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { parseISO } from 'date-fns';
 import type { CalendarEvent } from '../../utils/calendarFeedsService';
 import {
@@ -50,7 +50,8 @@ interface CalendarEventDetailProps {
 }
 
 // What a click on an event opens, on every page that draws a calendar: the
-// editor (with Delete) for a writable Google calendar, the read card else.
+// read card, with « Edit » to the editor (and Delete) for a writable Google
+// calendar.
 const CalendarEventDetail: React.FC<CalendarEventDetailProps> = ({
     event,
     onDate,
@@ -58,7 +59,9 @@ const CalendarEventDetail: React.FC<CalendarEventDetailProps> = ({
     onChanged,
 }) => {
     const draft = editableGoogleDraft(event);
-    if (draft?.calendarUid && draft.eventId) {
+    // A click shows the event; the editor opens only on « Edit ».
+    const [editing, setEditing] = useState(false);
+    if (editing && draft?.calendarUid && draft.eventId) {
         const { calendarUid, eventId } = draft;
         return (
             <GoogleEventModal
@@ -87,8 +90,10 @@ const CalendarEventDetail: React.FC<CalendarEventDetailProps> = ({
                 allDay: event.all_day,
                 location: event.location ?? null,
                 description: event.description ?? null,
+                htmlLink: event.html_link ?? null,
             }}
             onClose={onClose}
+            onEdit={draft ? () => setEditing(true) : undefined}
         />
     );
 };

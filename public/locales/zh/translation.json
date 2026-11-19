@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "编辑",
+      "openGoogle": "在 Google 日历中打开",
       "close": "关闭",
       "allDay": "全天"
     },

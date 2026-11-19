@@ -2371,6 +2371,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Bearbeiten",
+      "openGoogle": "In Google Kalender öffnen",
       "close": "Schließen",
       "allDay": "Ganztägig"
     },

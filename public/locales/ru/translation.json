@@ -2863,6 +2863,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Изменить",
+      "openGoogle": "Открыть в Google Календаре",
       "close": "Закрыть",
       "allDay": "Весь день"
     },

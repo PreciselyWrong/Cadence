@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Bewerken",
+      "openGoogle": "Openen in Google Agenda",
       "close": "Sluiten",
       "allDay": "Hele dag"
     },

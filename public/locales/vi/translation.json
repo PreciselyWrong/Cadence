@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Sửa",
+      "openGoogle": "Mở trong Google Lịch",
       "close": "Đóng",
       "allDay": "Cả ngày"
     },

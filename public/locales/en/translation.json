@@ -3004,6 +3004,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Edit",
+      "openGoogle": "Open in Google Calendar",
       "close": "Close",
       "allDay": "All day"
     },

@@ -2820,6 +2820,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Rediger",
+      "openGoogle": "Åpne i Google Kalender",
       "close": "Lukk",
       "allDay": "Hele dagen"
     },

@@ -2783,6 +2783,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Editar",
+      "openGoogle": "Abrir en Google Calendar",
       "close": "Cerrar",
       "allDay": "Todo el día"
     },

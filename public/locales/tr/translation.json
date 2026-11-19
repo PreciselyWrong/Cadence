@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Düzenle",
+      "openGoogle": "Google Takvim'de aç",
       "close": "Kapat",
       "allDay": "Tüm gün"
     },

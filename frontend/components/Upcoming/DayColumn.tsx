@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { AgendaEvent, dayAgenda } from './dayAgenda';
+import type { CalendarEvent } from '../../utils/calendarFeedsService';
 import { useTranslation } from 'react-i18next';
 import { useDroppable } from '@dnd-kit/core';
 import {
@@ -44,7 +45,10 @@ export interface DayColumnProps {
         start?: string;
         end?: string;
         all_day: boolean;
+        // The agenda's event, opened in its detail on a click.
+        source?: CalendarEvent;
     }[];
+    onOpenEvent?(event: CalendarEvent, date: string): void;
     // Minutes the viewer has free that day; the header shows the load against it.
     availableMinutes?: number;
     // First day of the week, 0 (Sunday) to 6; the ISO week is labelled above it.
@@ -82,6 +86,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
     onOpen,
     onToggle,
     onToggleSubtask,
+    onOpenEvent,
 }) => {
     const { t, i18n } = useTranslation();
     const [draft, setDraft] = useState('');
@@ -207,21 +212,43 @@ const DayColumn: React.FC<DayColumnProps> = ({
     // unless the cards are grouped or sorted by something else than time.
     const interleave =
         groupBy === 'none' && (sortBy === 'plan' || sortBy === 'time');
-    const renderEvent = (event: AgendaEvent, i?: number) => (
-        <div
-            key={`event-${event.title}-${event.start ?? 'day'}-${i ?? ''}`}
-            role="listitem"
-            data-testid="day-event"
-            className="flex gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-xs text-blue-900 dark:bg-blue-900/30 dark:text-blue-100"
-        >
-            <span className="shrink-0 tabular-nums opacity-80">
-                {event.all_day
-                    ? t('upcoming.preview.allDay', 'All day')
-                    : `${event.start}–${event.end}`}
-            </span>
-            <span className="min-w-0 break-words">{event.title}</span>
-        </div>
-    );
+    const renderEvent = (
+        event: AgendaEvent & { source?: CalendarEvent },
+        i?: number
+    ) => {
+        const source = event.source;
+        const body = (
+            <>
+                <span className="shrink-0 tabular-nums opacity-80">
+                    {event.all_day
+                        ? t('upcoming.preview.allDay', 'All day')
+                        : `${event.start}–${event.end}`}
+                </span>
+                <span className="min-w-0 break-words">{event.title}</span>
+            </>
+        );
+        const tone =
+            'flex w-full gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-left text-xs text-blue-900 dark:bg-blue-900/30 dark:text-blue-100';
+        return (
+            <div
+                key={`event-${event.title}-${event.start ?? 'day'}-${i ?? ''}`}
+                role="listitem"
+                data-testid="day-event"
+            >
+                {source && onOpenEvent ? (
+                    <button
+                        type="button"
+                        onClick={() => onOpenEvent(source, date)}
+                        className={`${tone} hover:bg-blue-100 focus-visible:outline-2 focus-visible:outline-primary dark:hover:bg-blue-900/50`}
+                    >
+                        {body}
+                    </button>
+                ) : (
+                    <div className={tone}>{body}</div>
+                )}
+            </div>
+        );
+    };
     const renderCard = (line: DayLine) => (
         <TaskCard
             key={line.uid}

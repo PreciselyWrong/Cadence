@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Rediger",
+      "openGoogle": "Åbn i Google Kalender",
       "close": "Luk",
       "allDay": "Hele dagen"
     },

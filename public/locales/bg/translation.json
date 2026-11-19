@@ -2819,6 +2819,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Редактиране",
+      "openGoogle": "Отвори в Google Календар",
       "close": "Затвори",
       "allDay": "Цял ден"
     },

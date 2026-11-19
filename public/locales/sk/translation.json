@@ -438,6 +438,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Upraviť",
+      "openGoogle": "Otvoriť v Kalendári Google",
       "close": "Zavrieť",
       "allDay": "Celý deň"
     },

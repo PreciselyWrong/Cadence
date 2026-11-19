@@ -2847,6 +2847,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "تعديل",
+      "openGoogle": "فتح في تقويم Google",
       "close": "إغلاق",
       "allDay": "طوال اليوم"
     },

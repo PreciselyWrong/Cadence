@@ -2828,6 +2828,8 @@
   },
   "calendar": {
     "feed": {
+      "edit": "Editează",
+      "openGoogle": "Deschide în Google Calendar",
       "close": "Închide",
       "allDay": "Toată ziua"
     },
