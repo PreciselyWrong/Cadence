@@ -109,7 +109,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
         fetch(getApiPath('version'))
             .then((response) => response.json())
             .then((data) => {
-                // « Cadence 2026.11.19 · 95aa5a1 »: the version and its build.
+                // « Cadence 2026.11.19 »: the version (the build stays in the API).
                 if (data.label || data.version) {
                     setVersion(data.label || data.version);
                 }

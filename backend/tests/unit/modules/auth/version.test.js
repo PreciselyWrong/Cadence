@@ -10,7 +10,7 @@ describe('cadenceVersion', () => {
         ).toEqual({
             version: '2026.11.19',
             build: '95aa5a1',
-            label: 'Cadence 2026.11.19 · 95aa5a1',
+            label: 'Cadence 2026.11.19',
             upstream: 'v1.14.0',
         });
     });
@@ -18,8 +18,8 @@ describe('cadenceVersion', () => {
     it('says dev for a build without a commit', () => {
         expect(
             cadenceVersion({ version: 'v1.14.0', cadenceVersion: '2026.11.19' }, {})
-                .label
-        ).toBe('Cadence 2026.11.19 · dev');
+                .build
+        ).toBe('dev');
     });
 
     it('matches the top entry of the changelog', () => {

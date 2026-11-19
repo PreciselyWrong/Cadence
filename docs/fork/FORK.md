@@ -111,7 +111,7 @@ This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tudud
 7. **Tests first, then the full run.** Backend integration + frontend RTL for each behaviour; before pushing, run the backend suite, `npm run frontend:test`, `npx tsc --noEmit -p .`, `npm run lint` and `npm run build`.
 8. **Stay close to upstream.** Small, focused commits in upstream style so they can be offered back to chrisvel/tududi. Don't reformat files you don't otherwise change.
 9. **TickTick is a reference for behaviour only.** Never copy its code, assets (SVG/PNG) or texts into this MIT repository.
-10. **Version and changelog.** Every production release of the server or web (push to `main`, then the image) adds an entry on top of `docs/fork/CHANGELOG.md` and sets the same number in `cadenceVersion` of `package.json` (`YYYY.MM.DD`, `.2` for a second release that day); a backend test checks they match. The sidebar shows « Cadence <version> · <commit> », the commit coming from `CADENCE_BUILD` set by the image build. `version` stays upstream's. On an upstream merge, keep ours for `cadenceVersion`.
+10. **Version and changelog.** Every production release of the server or web (push to `main`, then the image) adds an entry on top of `docs/fork/CHANGELOG.md` and sets the same number in `cadenceVersion` of `package.json` (`YYYY.MM.DD`, `.2` for a second release that day); a backend test checks they match. The sidebar shows « Cadence <version> »; `GET /api/version` also gives the image's commit (`build`, from `CADENCE_BUILD` set by the image build). `version` stays upstream's. On an upstream merge, keep ours for `cadenceVersion`.
 
 ## Syncing with upstream
 

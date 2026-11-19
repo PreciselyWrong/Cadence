@@ -10,7 +10,7 @@ const cadenceVersion = (pkg, env = process.env) => {
     return {
         version,
         build,
-        label: `Cadence ${version} · ${build}`,
+        label: `Cadence ${version}`,
         upstream: pkg.version,
     };
 };

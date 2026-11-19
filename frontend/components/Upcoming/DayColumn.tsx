@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { AgendaEvent, dayAgenda } from './dayAgenda';
 import type { CalendarEvent } from '../../utils/calendarFeedsService';
 import { useTranslation } from 'react-i18next';
@@ -217,18 +217,30 @@ const DayColumn: React.FC<DayColumnProps> = ({
         i?: number
     ) => {
         const source = event.source;
+        // A card like the tasks', with a calendar in the calendar's colour
+        // where a task has its check (as on Android).
         const body = (
-            <>
-                <span className="shrink-0 tabular-nums opacity-80">
-                    {event.all_day
-                        ? t('upcoming.preview.allDay', 'All day')
-                        : `${event.start}–${event.end}`}
+            <span className="flex items-start gap-2.5">
+                <CalendarIcon
+                    aria-hidden="true"
+                    data-testid="event-mark"
+                    style={{ color: source?.color || undefined }}
+                    className="mt-px h-[18px] w-[18px] shrink-0 text-primary"
+                />
+                <span className="min-w-0 flex-1">
+                    <span className="block break-words text-body-m font-medium leading-5 text-surface-on">
+                        {event.title}
+                    </span>
+                    <span className="mt-1 block text-xs tabular-nums text-surface-on-variant">
+                        {event.all_day
+                            ? t('upcoming.preview.allDay', 'All day')
+                            : `${event.start}–${event.end}`}
+                    </span>
                 </span>
-                <span className="min-w-0 break-words">{event.title}</span>
-            </>
+            </span>
         );
         const tone =
-            'flex w-full gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-left text-xs text-blue-900 dark:bg-blue-900/30 dark:text-blue-100';
+            'block w-full rounded-lg border border-outline-variant/50 bg-surface p-3 text-left';
         return (
             <div
                 key={`event-${event.title}-${event.start ?? 'day'}-${i ?? ''}`}
@@ -239,7 +251,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     <button
                         type="button"
                         onClick={() => onOpenEvent(source, date)}
-                        className={`${tone} hover:bg-blue-100 focus-visible:outline-2 focus-visible:outline-primary dark:hover:bg-blue-900/50`}
+                        className={`${tone} transition-colors duration-150 hover:border-outline-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60`}
                     >
                         {body}
                     </button>
@@ -406,7 +418,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
             )}
             <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto -mx-1.5 px-2 pb-2 pt-1.5">
                 {(!interleave || open.length === 0) && events.length > 0 && (
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-2">
                         {events.map(renderEvent)}
                     </div>
                 )}

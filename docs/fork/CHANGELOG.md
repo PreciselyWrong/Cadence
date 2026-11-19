@@ -1,8 +1,13 @@
 # Changelog de Cadence
 
-Une entrée par mise en production du serveur et du web, la plus récente en haut. Le numéro est la date (`AAAA.MM.JJ`, suivi de `.2`, `.3` pour un deuxième envoi le même jour) ; il vient de `cadenceVersion` dans `package.json` et s'affiche en bas de la barre latérale avec le commit de l'image (« Cadence 2026.11.19 · 95aa5a1 »). `version` de `package.json` reste celle de l'amont tududi (v1.14.0). Android garde ses propres numéros (`android/`, versionName).
+Une entrée par mise en production du serveur et du web, la plus récente en haut. Le numéro est la date (`AAAA.MM.JJ`, suivi de `.2`, `.3` pour un deuxième envoi le même jour) ; il vient de `cadenceVersion` dans `package.json` et s'affiche en bas de la barre latérale (« Cadence 2026.11.19 ») ; le commit de l'image reste lisible dans `GET /api/version` (`build`). `version` de `package.json` reste celle de l'amont tududi (v1.14.0). Android garde ses propres numéros (`android/`, versionName).
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
+
+## 2026.11.19.2
+
+- Plan, calendrier fusionné : les événements sont des cartes comme les tâches, avec une icône de calendrier à la couleur de l'agenda à la place du rond (comme sur Android).
+- La barre latérale affiche « Cadence 2026.11.19.2 », sans le commit (toujours dans `GET /api/version`).
 
 ## 2026.11.19
 

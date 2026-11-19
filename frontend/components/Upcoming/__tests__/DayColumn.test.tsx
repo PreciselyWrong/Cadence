@@ -193,10 +193,31 @@ describe('DayColumn', () => {
         ).map((el) => el.getAttribute('aria-label') ?? el.textContent);
         expect(order).toEqual([
             'Task early',
-            '12:00–13:00Lunch',
+            'Lunch12:00–13:00',
             'Task late',
             'Task free',
         ]);
+    });
+
+    it('draws a merged event as a card with a calendar mark in its colour', () => {
+        renderColumn({
+            day: dayWith([planItem('a', 1)]),
+            events: [
+                {
+                    title: 'Lunch',
+                    start: '12:00',
+                    end: '13:00',
+                    all_day: false,
+                    source: { title: 'Lunch', color: '#16a34a' } as never,
+                },
+            ],
+            onOpenEvent: jest.fn(),
+        });
+        const card = screen.getByTestId('day-event');
+        const mark = within(card).getByTestId('event-mark');
+        expect(mark).toHaveStyle({ color: '#16a34a' });
+        expect(within(card).getByText('12:00–13:00')).toBeInTheDocument();
+        expect(card.querySelector('[role="checkbox"]')).toBeNull();
     });
 
     it('opens the detail of a merged event on a click', () => {
