@@ -508,6 +508,30 @@ describe('UpcomingBoard', () => {
         });
     });
 
+    it('scrolls the inbox and « À planifier » as one list with sticky headers', async () => {
+        renderBoard();
+        const inbox = await screen.findByTestId('inbox-column');
+        const left = screen.getByTestId('plan-left-column');
+        expect(left).toHaveClass('overflow-y-auto');
+        expect(within(inbox).getByRole('list')).not.toHaveClass(
+            'overflow-y-auto'
+        );
+        expect(inbox.querySelector('header')).toHaveClass('sticky', 'top-0');
+    });
+
+    it('keeps Today usable on today and names the calendar button', async () => {
+        renderBoard();
+        await screen.findAllByTestId('upcoming-column');
+        const todayButton = screen.getByRole('button', { name: 'Today' });
+        // Never greyed out: on today it brings today's column back in view.
+        expect(todayButton).toBeEnabled();
+        expect(todayButton).toHaveAttribute('aria-current', 'date');
+        // The header's button (the calendar pane has its own « Hide »).
+        expect(
+            screen.getAllByRole('button', { name: 'Hide calendar' })[0]
+        ).toHaveTextContent('Calendar');
+    });
+
     it('opens the inbox at its remembered width', async () => {
         localStorage.setItem('upcoming.inboxWidth', '400');
         renderBoard();

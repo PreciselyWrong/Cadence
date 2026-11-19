@@ -74,6 +74,16 @@ describe('ToPlanBox', () => {
         ]);
     });
 
+    it('scrolls with the inbox above it, its header sticking on top', () => {
+        renderBox({ replan: [task('r')], week: [], month: [] });
+        const box = screen.getByTestId('to-plan-box');
+        expect(box).not.toHaveClass('overflow-y-auto');
+        expect(screen.getByRole('button', { name: /To plan/ })).toHaveClass(
+            'sticky',
+            'top-0'
+        );
+    });
+
     it('collapses as a whole', () => {
         const { onCollapsedChange } = renderBox(
             { replan: [task('r')], week: [], month: [] },

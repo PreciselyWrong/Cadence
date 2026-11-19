@@ -2121,11 +2121,15 @@ const UpcomingBoard: React.FC = () => {
                             aria-label={t('upcoming.dateNav', 'Dates')}
                             className="flex items-center gap-1"
                         >
+                            {/* Never disabled: on today it scrolls today's
+                                column back into view. */}
                             <Button
                                 size="sm"
                                 variant="secondary"
-                                disabled={
+                                aria-current={
                                     anchor === today && selected === today
+                                        ? 'date'
+                                        : undefined
                                 }
                                 onClick={() => goTo(today, today)}
                             >
@@ -2180,8 +2184,10 @@ const UpcomingBoard: React.FC = () => {
                             projects={filterProjects}
                             tags={filterTags}
                         />
-                        <IconButton
-                            label={
+                        <Button
+                            size="sm"
+                            variant={calendarVisible ? 'secondary' : 'ghost'}
+                            aria-label={
                                 calendarVisible
                                     ? t(
                                           'upcoming.hideCalendar',
@@ -2192,7 +2198,7 @@ const UpcomingBoard: React.FC = () => {
                                           'Show calendar'
                                       )
                             }
-                            active={calendarVisible}
+                            aria-pressed={calendarVisible}
                             aria-expanded={
                                 placement === 'drawer' ? drawerOpen : undefined
                             }
@@ -2204,8 +2210,12 @@ const UpcomingBoard: React.FC = () => {
                                     : setDrawerOpen(!drawerOpen)
                             }
                         >
-                            <CalendarDaysIcon />
-                        </IconButton>
+                            <CalendarDaysIcon
+                                aria-hidden="true"
+                                className="h-4 w-4"
+                            />
+                            {t('upcoming.calendar', 'Calendar')}
+                        </Button>
                     </div>
                 </header>
 
@@ -2410,9 +2420,16 @@ const UpcomingBoard: React.FC = () => {
                         <div className="flex min-h-0 min-w-0 flex-1 gap-3">
                             <div
                                 ref={inboxRef}
-                                className="flex min-h-0 shrink-0 flex-col gap-2 p-1"
+                                data-testid="plan-left-column"
+                                className="flex min-h-0 shrink-0 flex-col gap-2 overflow-y-auto p-1"
                             >
-                                <div className="flex min-h-0 flex-1">
+                                <div
+                                    className={`flex ${
+                                        inboxIsCollapsed
+                                            ? 'min-h-0 flex-1'
+                                            : 'shrink-0'
+                                    }`}
+                                >
                                     <InboxColumn
                                         width={openInboxWidth}
                                         items={inboxItems}

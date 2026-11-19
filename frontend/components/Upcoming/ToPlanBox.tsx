@@ -132,15 +132,13 @@ const ToPlanBox: React.FC<ToPlanBoxProps> = ({
             aria-label={title}
             data-testid="to-plan-box"
             style={{ width }}
-            className={`flex shrink-0 flex-col gap-1.5 overflow-y-auto rounded-2xl px-2 pb-2 ${
-                collapsed ? '' : 'max-h-[45%]'
-            }`}
+            className="flex shrink-0 flex-col gap-1.5 rounded-2xl px-2 pb-2"
         >
             <button
                 type="button"
                 aria-expanded={!collapsed}
                 onClick={() => onCollapsedChange(!collapsed)}
-                className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-body font-semibold text-surface-on hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary"
+                className="sticky top-0 z-10 flex h-8 items-center gap-1.5 rounded-lg bg-surface px-2.5 text-body font-semibold text-surface-on hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary"
             >
                 <ChevronRightIcon
                     aria-hidden="true"

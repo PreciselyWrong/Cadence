@@ -1021,3 +1021,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : la bande « En retard » prenait un quart de l'écran avant la semaine ; « Replanifier ▾ » proposait d'abord de tout mettre aujourd'hui ; chaque jour vide affichait « Rien de prévu. » en gras et « 0  0 min / 10 h » ; des aides restaient affichées pour toujours.
 - **Décision** : bande repliée en une ligne par défaut (« En retard (N) », une aide courte, les boutons) ; bouton partagé : « Replanifier » répartit (priorité haute aujourd'hui ou demain, moyenne sous 4 jours, le reste sous 7, jamais avant la date de début ou de report, jour le moins chargé), « ▾ » garde Aujourd'hui, Demain, Choisir une date ; le toast dit jusqu'à quel jour. Jour vide sans texte, en-tête sans zéro (nombre, charge et barre seulement s'il y a des cartes). Aides de la Boîte et des horizons en infobulles.
 - **Android** : la règle de répartition est la même (`PlanBoard.spread`, cas partagés), donc « Étaler sur 7 jours » des Échues l'applique déjà ; à reprendre côté écran : Échues repliée en une ligne, jours vides sans texte, l'action principale « Replanifier » qui répartit.
+
+## Plan : colonne de gauche en une seule liste, en-tête plus clair (2026-11-19)
+
+- **Problème** : la Boîte de réception défilait dans une petite zone et « À planifier » dans une autre en dessous ; « Aujourd'hui » paraissait désactivé ; l'icône seule du calendrier ne disait rien.
+- **Décision** : la colonne de gauche défile d'un seul bloc, en-têtes collants (Boîte, puis « À planifier ») ; « Aujourd'hui » toujours actif (ramène la colonne du jour) ; « Calendrier » écrit à côté de l'icône, enfoncé quand il est ouvert.
+- **Android** : sans objet pour la colonne (une seule liste déjà) ; l'en-tête de Planifier n'a pas ces boutons.

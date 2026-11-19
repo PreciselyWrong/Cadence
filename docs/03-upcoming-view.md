@@ -37,7 +37,9 @@ In the days layout, a slim strip under the day columns (Semaine prochaine, Ce mo
 
 ### « À planifier » (Days layout)
 
-The inbox column is 260 px wide by default and widens or narrows from the handle on its right (drag, arrow keys, Home / End; a double click brings back 260 px): 220 to 560 px, and never so wide that the board loses its two day columns or, when the calendar sits beside it, the narrowest calendar. The width is kept per browser (`upcoming.inboxWidth`); « À planifier » below follows it. Web only: the phone shows one column.
+The inbox column is 260 px wide by default and widens or narrows from the handle on its right (drag, arrow keys, Home / End; a double click brings back 260 px): 220 to 560 px, and never so wide that the board loses its two day columns or, when the calendar sits beside it, the narrowest calendar. The width is kept per browser (`upcoming.inboxWidth`); « À planifier » below follows it. Web only: the phone shows one column. The inbox and « À planifier » scroll as one list in that column; each header sticks at the top while its part is in view.
+
+In the header, « Aujourd'hui » is never greyed out: on today it brings today's column back into view (`aria-current="date"`). The calendar button reads « Calendrier » next to its icon, pressed while the calendar shows.
 
 Under the inbox column, a box « À planifier » (`ToPlanBox.tsx`, rule `toPlan` in `horizons.ts`; Android `PlanBoard.toSchedule`), open top-level tasks without #someday:
 
