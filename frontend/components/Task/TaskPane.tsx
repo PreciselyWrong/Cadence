@@ -126,6 +126,15 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
 // part of the page (Today, Plan and every list alike), "Expand" fills the
 // page; full screen below md. Opened by `?task=`; a click outside, Escape,
 // a second click on the same row or completing the task closes it.
+export type PaneSide = 'left' | 'right';
+
+// The side of the window the sheet opens on: away from the click (none,
+// as on a reload: the right).
+export const paneSideFor = (
+    clickX: number | null,
+    windowWidth: number
+): PaneSide => (clickX !== null && clickX > windowWidth / 2 ? 'left' : 'right');
+
 const TaskPane: React.FC = () => {
     const { t, i18n } = useTranslation();
     const location = useLocation();
@@ -148,6 +157,24 @@ const TaskPane: React.FC = () => {
     useEffect(() => {
         setExpanded(false);
     }, [location.pathname, isOpen]);
+
+    // On a wide window the sheet is a column on the third of the screen
+    // away from the click that opened it, so the clicked row stays in view.
+    const lastPointerX = useRef<number | null>(null);
+    useEffect(() => {
+        const onPointerDown = (event: PointerEvent) => {
+            lastPointerX.current = event.clientX;
+        };
+        document.addEventListener('pointerdown', onPointerDown, true);
+        return () =>
+            document.removeEventListener('pointerdown', onPointerDown, true);
+    }, []);
+    const [side, setSide] = useState<PaneSide>('right');
+    useEffect(() => {
+        if (openTaskUid) {
+            setSide(paneSideFor(lastPointerX.current, window.innerWidth));
+        }
+    }, [openTaskUid]);
 
     useEffect(() => {
         if (!openTaskUid) return;
@@ -243,9 +270,16 @@ const TaskPane: React.FC = () => {
             role="dialog"
             aria-modal="false"
             aria-labelledby={titleId}
+            data-side={side}
             tabIndex={-1}
             className={`flex min-h-0 flex-col bg-surface outline-none max-md:fixed max-md:inset-0 max-md:z-40 md:absolute md:inset-x-3 md:bottom-3 md:z-40 md:overflow-hidden md:rounded-2xl md:shadow-2xl md:ring-1 md:ring-black/10 dark:bg-surface-card dark:md:ring-white/10 ${
                 expanded ? 'md:top-3' : 'md:h-[46%] md:min-h-[300px]'
+            } ${
+                expanded
+                    ? ''
+                    : `xl:top-3 xl:h-auto xl:w-1/3 xl:min-w-[420px] ${
+                          side === 'right' ? 'xl:left-auto' : 'xl:right-auto'
+                      }`
             }`}
         >
             <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-outline-variant/60 px-4 py-2">

@@ -71,6 +71,8 @@ Tasks are sorted by:
 
 Tasks with a due date **before today** that are **NOT already in the Planned section**.
 
+On the web Today page each one is a task line like those of the day (2026-11-19): check circle, drag onto the list or the calendar (it joins the day and leaves the late list at once), menu with « Aujourd'hui » and the day's moves.
+
 ### Key Rules
 
 1. **Time-based filtering**

@@ -75,6 +75,7 @@ import {
 } from './dayModel';
 import { useDay } from './useDay';
 import DayList from './DayList';
+import TaskLine from './TaskLine';
 import CalendarEventDetail from '../Calendar/CalendarEventDetail';
 import DayCalendar, {
     DayColumnData,
@@ -991,7 +992,14 @@ const NewToday: React.FC = () => {
         </div>
     );
 
-    const late = useMemo(() => (day ? lateTasks(day) : []), [day]);
+    // A late task put on the day (dragged, taken) leaves the late list at once.
+    const late = useMemo(() => {
+        if (!day) return [];
+        const onDay = new Set(
+            [...lines.timed, ...lines.anytime, ...lines.done].map((l) => l.uid)
+        );
+        return lateTasks(day).filter(({ task }) => !onDay.has(task.uid ?? ''));
+    }, [day, lines]);
 
     const suggestionTasks = useMemo(() => {
         const s = day?.suggestions;
@@ -1160,31 +1168,37 @@ const NewToday: React.FC = () => {
                 late.length > 0
                     ? {
                           count: late.length,
-                          content: late.map(({ task, plannedDate }) =>
-                              plannedDate
-                                  ? pickRow(
-                                        task,
-                                        null,
-                                        t(
-                                            'today.plannedOn',
-                                            'Planned {{day}}',
-                                            {
-                                                day: new Intl.DateTimeFormat(
-                                                    locale,
+                          // The same task lines as the day: check circle,
+                          // drag onto the list or the calendar, menu.
+                          content: late.map(({ task, plannedDate }) => {
+                              const line = lineFromDue(task, date);
+                              return (
+                                  <TaskLine
+                                      key={line.uid}
+                                      line={line}
+                                      dateOfDay={date}
+                                      selected={openTaskUid === line.uid}
+                                      onToggle={toggleLine}
+                                      onOpen={(l) => openLine(l)}
+                                      menu={
+                                          plannedDate
+                                              ? lineMenu(line)
+                                              : [
                                                     {
-                                                        weekday: 'short',
-                                                        day: 'numeric',
-                                                    }
-                                                ).format(parseISO(plannedDate)),
-                                            }
-                                        )
-                                    )
-                                  : pickRow(
-                                        task,
-                                        () => take(task),
-                                        t('today.takeToday', 'Do today')
-                                    )
-                          ),
+                                                        key: 'today',
+                                                        label: t(
+                                                            'today.takeToday',
+                                                            'Do today'
+                                                        ),
+                                                        onSelect: () =>
+                                                            take(task),
+                                                    },
+                                                    ...lineMenu(line),
+                                                ]
+                                      }
+                                  />
+                              );
+                          }),
                           action:
                               day && day.overdue.length > 0
                                   ? {

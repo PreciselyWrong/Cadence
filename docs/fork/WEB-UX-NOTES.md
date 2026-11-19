@@ -1078,3 +1078,15 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : journée entière d'abord, puis chaque événement avant la première tâche plus tardive (créneau, sinon heure d'échéance) ou sans heure (`dayAgenda.ts`). Tâches groupées ou triées autrement que par l'heure : événements en haut.
 - **Android** : non, Plan du bureau web seul (décision du 2026-11-19).
 
+## Fiche de tâche en colonne, du côté opposé au clic (2026-11-19)
+
+- **Problème** : la fiche flottante du bas cachait la moitié de la page et parfois la tâche cliquée.
+- **Décision** : à partir de 1280 px, un tiers de la fenêtre, du côté opposé au clic (`paneSideFor`, `TaskPane.tsx`) ; en dessous, la fiche du bas ; téléphone, plein écran.
+- **Android** : sans objet (fiche plein écran).
+
+## Aujourd'hui : les retards sont des lignes de tâche (2026-11-19)
+
+- **Problème** : les tâches en retard d'Aujourd'hui étaient de simples lignes de texte, sans case ni glisser.
+- **Décision** : mêmes lignes que la journée (case, glisser vers la liste ou le calendrier, menu avec « Aujourd'hui ») ; une tâche posée sur la journée quitte la liste des retards.
+- **Android** : la feuille « Replanifier » des Échues couvre déjà ces actions.
+

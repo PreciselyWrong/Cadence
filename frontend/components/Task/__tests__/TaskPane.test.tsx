@@ -493,6 +493,35 @@ describe('TaskPane as a floating sheet', () => {
         expect(dialog).toHaveAttribute('aria-modal', 'false');
     });
 
+    it('opens on the side opposite the click that opened it', async () => {
+        // jsdom has no PointerEvent: without one the click loses clientX.
+        if (!('PointerEvent' in window)) {
+            Object.defineProperty(window, 'PointerEvent', {
+                configurable: true,
+                value: class extends MouseEvent {},
+            });
+        }
+        Object.defineProperty(window, 'innerWidth', {
+            configurable: true,
+            value: 1600,
+        });
+        renderSheet('/today');
+        const opener = screen.getByRole('button', { name: 'Open task' });
+        fireEvent.pointerDown(opener, { clientX: 200 });
+        fireEvent.click(opener);
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+        expect(dialog).toHaveAttribute('data-side', 'right');
+
+        fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+        fireEvent.pointerDown(opener, { clientX: 1400 });
+        fireEvent.click(opener);
+        expect(
+            await screen.findByRole('dialog', { name: 'Write report' })
+        ).toHaveAttribute('data-side', 'left');
+    });
+
     it('opens a chat with the AI about the task from its header', async () => {
         usePluginMenuStore.setState({
             items: [
