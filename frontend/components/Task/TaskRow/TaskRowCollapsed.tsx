@@ -69,6 +69,7 @@ import { ACCENT, accentVars } from '../../../constants/colorPalette';
 import { useTagColor } from '../../../utils/tagColor';
 import TaskChip from '../../Shared/task/TaskChip';
 import { LinkThumb, SiteLine, useTaskLink } from '../../Links/LinkMarks';
+import { linkTitleOf } from '../../Links/taskLink';
 import TaskNotePreview from '../../Shared/task/TaskNotePreview';
 import { dueDayLabel, isDueLate } from '../../Shared/task/dueLabel';
 import { ROW_GROUP, rowMenuClass } from '../../Shared/task/rowMenu';
@@ -661,7 +662,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                 isTaskCompleted(task.status)
                             )}`}
                         >
-                            {currentName}
+                            {linkTitleOf(currentName, link, preview)}
                         </span>
                     )}
                     {!editable && task.uid && !task.is_virtual_occurrence && (

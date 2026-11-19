@@ -7,6 +7,7 @@ import TaskSourceBadge from '../TaskSourceBadge';
 import TaskChip from './TaskChip';
 import { plainPreview } from './plainText';
 import { LinkThumb, SiteLine, useTaskLink } from '../../Links/LinkMarks';
+import { linkTitleOf } from '../../Links/taskLink';
 
 // The one task card frame (Plan days and inbox, project board): a quiet
 // border, the selected card ringed in the accent.
@@ -80,7 +81,7 @@ const TaskCardBody: React.FC<TaskCardBodyProps> = ({
                             : 'text-surface-on'
                     }`}
                 >
-                    {task.name}
+                    {linkTitleOf(task.name, link, preview)}
                 </span>
                 <TaskSourceBadge task={task} className="self-center" />
             </div>

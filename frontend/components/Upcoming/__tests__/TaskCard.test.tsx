@@ -17,6 +17,10 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
+jest.mock('../../../hooks/useUrlPreview', () => ({
+    useUrlPreview: () => null,
+}));
+
 const line = (
     fields: Partial<Omit<DayLine, 'task'>> & { task?: Partial<Task> }
 ): DayLine =>
@@ -61,6 +65,25 @@ const renderCard = (
 };
 
 describe('TaskCard', () => {
+    it('reads a bare address as its site, with a link that opens it alone', () => {
+        const { onOpen } = renderCard({
+            line: line({
+                task: { name: 'https://github.com/thedotmack/claude-mem' },
+            }),
+        });
+        expect(
+            screen.getByText('github.com/thedotmack/claude-mem')
+        ).toBeInTheDocument();
+        const site = screen.getByRole('link', { name: /github\.com/ });
+        expect(site).toHaveAttribute(
+            'href',
+            'https://github.com/thedotmack/claude-mem'
+        );
+        expect(site).toHaveAttribute('target', '_blank');
+        fireEvent.click(site);
+        expect(onOpen).not.toHaveBeenCalled();
+    });
+
     it('puts the round check before the title on the first line', () => {
         renderCard({ line: line({ task: {} }) });
 

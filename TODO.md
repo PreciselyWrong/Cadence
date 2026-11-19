@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : une adresse en nom de tâche est un lien, site ouvrable d'un toucher (2026-11-19)
+  Raison : le web lit une adresse tapée comme nom (titre de la page, icône, image) et ouvre le site d'un clic sur la ligne du site et dans la fiche (`docs/37-links.md` › Rows) ; `links/TaskLinks.kt` ne lit que la note. Vérif : la même tâche « https://… » montre sur le téléphone le titre de la page et son image, et le site s'ouvre d'un toucher.
 - Android : « Discuter avec l'IA » dans la fiche de tâche (2026-11-19)
   Raison : le web ouvre depuis l'en-tête de la fiche la page du plugin de l'IA sur la tâche (`?view=chat&about=<uid>`, `docs/00-tasks-behavior.md` › Task Pane, plugin `hermes` 3.10.0). Android ouvre déjà la page du plugin en WebView. Vérif : depuis une tâche sur le téléphone, la conversation s'ouvre sur cette tâche avec le même premier message que le web ; plugin éteint, pas de bouton.
 - Hermes : mesurer « Discuter avec l'IA » sur une tâche (plugin 3.10.0 déployé le 2026-11-19)

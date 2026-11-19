@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     ArrowsPointingInIcon,
+    ArrowTopRightOnSquareIcon,
     ArrowsPointingOutIcon,
     ChatBubbleLeftRightIcon,
     FolderIcon,
@@ -26,6 +27,8 @@ import { useTaskActions } from '../../hooks/useTaskActions';
 import { isTodoMdTask } from '../../utils/todoMd';
 import { TaskEditorBody, TaskEditorFooter } from './TaskEditorBody';
 import { CONTROL_HEIGHT } from '../Shared/ui/controlSizes';
+import { SiteIcon } from '../Links/LinkMarks';
+import { taskLinkOf } from '../Links/taskLink';
 import { CHAT_PLUGIN, usePluginMenuStore } from '../../store/pluginMenuStore';
 
 // The day a task is planned on, from `?task=uid&on=YYYY-MM-DD&at=minute`
@@ -260,6 +263,8 @@ const TaskPane: React.FC = () => {
           })
         : null;
     // Jump to the task's project or tag: their pages list the other tasks.
+    // The page the task points at, one click away.
+    const paneLink = task ? taskLinkOf(task) : null;
     const jumpClass = `inline-flex ${CONTROL_HEIGHT.sm} max-w-[14rem] items-center gap-1.5 rounded-lg bg-surface-high px-2.5 text-body-m text-surface-on hover:bg-surface-highest`;
     const iconButton =
         'rounded-lg p-1.5 text-surface-on-variant hover:bg-surface-high hover:text-surface-on';
@@ -303,6 +308,21 @@ const TaskPane: React.FC = () => {
                         aria-label={t('taskPane.goTo', 'Go to')}
                         className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-1.5"
                     >
+                        {paneLink && (
+                            <a
+                                href={paneLink.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={paneLink.url}
+                                className={jumpClass}
+                            >
+                                <SiteIcon url={paneLink.url} />
+                                <span className="truncate">
+                                    {paneLink.host}
+                                </span>
+                                <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 shrink-0" />
+                            </a>
+                        )}
                         {task.Project?.uid && task.Project.name && (
                             <Link
                                 to={createProjectUrl({

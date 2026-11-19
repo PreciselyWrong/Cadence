@@ -1090,3 +1090,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : mêmes lignes que la journée (case, glisser vers la liste ou le calendrier, menu avec « Aujourd'hui ») ; une tâche posée sur la journée quitte la liste des retards.
 - **Android** : la feuille « Replanifier » des Échues couvre déjà ces actions.
 
+## Liens des tâches : adresse en nom, site cliquable, lien dans la fiche (2026-11-19)
+
+- **Problème** : une tâche dont le nom était une adresse s'affichait brute, sans icône ni image ; le site d'une tâche-lien et l'adresse dans la fiche n'étaient pas cliquables.
+- **Décision** : adresse en nom = lien (titre de la page, sinon hôte et chemin) ; la ligne du site ouvre la page dans un nouvel onglet sans ouvrir la tâche ; « github.com ↗ » dans l'en-tête de la fiche.
+- **Android** : à vérifier : `links/TaskLinks.kt` ne lit que la note (`TODO.md` › Now).
+

@@ -26,6 +26,8 @@ Every address written in a task note, a note or a project description shows a ca
 
 A task whose note holds an address shows the page on its row instead of the raw address: the site's icon and name (`site_name` of the preview, else the host without `www.`) under the title, and the page's picture at the 1.91:1 of shared pictures, nothing when it has none (no screenshot). The rest of the note keeps its preview line. The icon is the one of the origin badge (`GET /api/links/favicon?host=`, read by the server: the site never sees who looks), left out of the site line when the badge already shows it.
 
+A task whose **name** is an address (typed or pasted as is, note without one) is a link too (2026-11-19, web): its row reads the page's title, else the host and path, instead of the raw address. The site line is a link: a click opens the page in a new tab without opening the task. The task sheet shows the site with ↗ in its header, one click to open it.
+
 - Web: rule `frontend/components/Links/taskLink.ts`, marks `Links/LinkMarks.tsx`; task lists (`TaskRowCollapsed`, small picture at the end of the row), Today (`Today/TaskLine.tsx`, same), cards of Plan, the inbox column and the project board (`Shared/task/TaskCardBody.tsx`, picture as a cover on top).
 - Android: rule `links/TaskLinks.kt`, marks `ui/LinkMarks.kt`, in `TaskRow` (every list, Today, Plan); picture and site name from the Room cache `link_previews`, offline; icon through `ui/SiteIcon.kt`.
 - Project pages show the site's icon instead of the initial (the initial when the site has none), and the page's picture when it has one, on the web and Android.

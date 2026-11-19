@@ -52,19 +52,27 @@ export const LinkThumb: React.FC<{
 export const siteNameOf = (link: TaskLink, preview: UrlPreview | null) =>
     preview?.siteName?.trim() || link.host;
 
-// The site of a task's link, in place of the raw address.
+// The site of a task's link, in place of the raw address: a click opens
+// the page in a new tab, without opening or dragging the task.
 export const SiteLine: React.FC<{
     link: TaskLink;
     preview: UrlPreview | null;
     className?: string;
 }> = ({ link, preview, className = '' }) => (
-    <span
-        className={`flex min-w-0 items-center gap-1.5 text-xs text-surface-on-variant ${className}`}
+    <a
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={link.url}
+        onClick={(event) => event.stopPropagation()}
+        onPointerDown={(event) => event.stopPropagation()}
+        onKeyDown={(event) => event.stopPropagation()}
+        className={`flex w-fit max-w-full min-w-0 items-center gap-1.5 rounded text-xs text-surface-on-variant hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary ${className}`}
         data-testid="task-site"
     >
         {!link.iconInBadge && <SiteIcon url={link.url} />}
         <span className="truncate">{siteNameOf(link, preview)}</span>
-    </span>
+    </a>
 );
 
 // A task's link and what the server read of the page (null while it

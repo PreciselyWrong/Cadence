@@ -13,6 +13,7 @@ import { DayLine, lineAt } from './dayModel';
 import TaskSourceBadge from '../Shared/TaskSourceBadge';
 import Chip from '../Shared/task/TaskChip';
 import { LinkThumb, SiteLine, useTaskLink } from '../Links/LinkMarks';
+import { linkTitleOf } from '../Links/taskLink';
 import TaskNotePreview from '../Shared/task/TaskNotePreview';
 import { shortDayLabel } from '../Shared/task/dueLabel';
 import { ROW_GROUP, rowMenuClass } from '../Shared/task/rowMenu';
@@ -265,7 +266,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
                                 : 'text-surface-on'
                         }`}
                     >
-                        {task.name}
+                        {linkTitleOf(task.name, link, preview)}
                     </span>
                     <TaskSourceBadge task={task} className="mt-1" />
                     {chips.length > 0 && (

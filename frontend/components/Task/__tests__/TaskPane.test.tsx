@@ -551,6 +551,23 @@ describe('TaskPane as a floating sheet', () => {
         }
     });
 
+    it('opens the link of a task from its header', async () => {
+        mockedFetchTaskByUid.mockResolvedValue({
+            ...baseTask,
+            note: 'https://github.com/thedotmack/claude-mem',
+        });
+        renderSheet('/today?task=uid-1');
+        await screen.findByRole('dialog', { name: 'Write report' });
+        const open = within(
+            screen.getByRole('navigation', { name: 'Go to' })
+        ).getByRole('link', { name: /github\.com/ });
+        expect(open).toHaveAttribute(
+            'href',
+            'https://github.com/thedotmack/claude-mem'
+        );
+        expect(open).toHaveAttribute('target', '_blank');
+    });
+
     it('offers no chat when no AI plugin runs', async () => {
         renderSheet('/today?task=uid-1');
         await screen.findByRole('dialog', { name: 'Write report' });
