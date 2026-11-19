@@ -19,6 +19,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 - tout sur `main`, un commit par étape vérifiée ; une branche seulement pour un essai risqué, supprimée une fois fusionnée ;
 - parité web ↔ Android : toute fonctionnalité ajoutée d'un côté est livrée de l'autre dans la même étape, ou inscrite dans `TODO.md` (`Now`) avec la raison et la vérif attendue ; elle est synchronisée avec le serveur (`backend/modules/sync/`) quand elle porte des données ; dans le même commit, mettre à jour ce `AGENTS.md` (`Quoi`, `Carte`, `État`), `android/AGENTS.md`, `docs/fork/FORK.md` et `docs/fork/WEB-UX-NOTES.md` si l'UI web change ;
 - TickTick sert de référence de comportement uniquement : jamais son code, ses ressources ni ses textes.
+- version et changelog : chaque mise en production du serveur ou du web (push sur `main` puis image) ajoute une entrée en tête de `docs/fork/CHANGELOG.md` et met le même numéro dans `cadenceVersion` de `package.json` (date `AAAA.MM.JJ`, `.2`, `.3` pour un autre envoi le même jour) ; le test `backend/tests/unit/modules/auth/version.test.js` vérifie que les deux concordent. Le commit de l'image vient de `CADENCE_BUILD` (CI). Ne jamais changer `version` de `package.json` : c'est celle de l'amont.
 
 ## Lire selon la tâche
 
@@ -28,6 +29,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Feuille de route | `TODO.md` (`Now`, `Next`, `Ideas`) |
 | Guide de l'amont, index des docs | `docs/fork/UPSTREAM-GUIDE.md` |
 | Fonctionnalités du fork, synchro amont | `docs/fork/FORK.md` |
+| Version affichée, changelog | `docs/fork/CHANGELOG.md`, `backend/modules/auth/version.js` |
 | Décisions UX à reporter entre web et Android | `docs/fork/WEB-UX-NOTES.md` (web → Android), `docs/fork/ANDROID-UX-NOTES.md` (Android → web) |
 | Clients Android/Linux, plan de synchro | `docs/fork/PLAN-clients-sync.md`, `docs/fork/CADENCE-PARITY.md` |
 | Captures du README, page vitrine | `docs/fork/SCREENSHOTS.md` |
@@ -136,6 +138,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - ⛔ Lancer toute la suite Jest d'un coup — elle a saturé la mémoire de la machine ; cibler les fichiers avec `-w 2`.
 - ⛔ Basculer la prod vers Postgres par-dessus une base SQLite remplie — le serveur refuse ; passer par export puis import.
 - ⛔ Monter `~/Dev` dans un conteneur pour lire les `TODO.md` — exposerait des secrets ; passer par un dossier dédié (`scripts/todo-md-sync.sh`) ou par Git.
+- ⛔ Pousser sur `main` une mise en production sans entrée dans `docs/fork/CHANGELOG.md` ni `cadenceVersion` à jour — la barre latérale afficherait un numéro faux et le changelog mentirait.
 - ⛔ Écrire une référence privée dans un fichier versionné (chemins personnels, noms d'hôtes ou adresses internes, e-mails, identifiants, noms de dépôts privés) — le dépôt est public ; garder ces valeurs dans `.env` ou la base, et utiliser des exemples génériques.
 - ⛔ Nommer l'agent (Hermes ou un autre) dans l'interface — l'agent derrière peut changer ; l'interface dit « IA » (le nom d'un plugin reste sur sa page de plugin).
 - ⛔ Emojis, footer « Generated with Claude Code » ou trailer `Co-authored-by` dans une PR ou un commit destiné à l'amont — préférences du mainteneur (`docs/MEMORY.md`).

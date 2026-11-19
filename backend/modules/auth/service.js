@@ -23,6 +23,7 @@ const peopleService = require('../people/service');
 const mfaService = require('../mfa/service');
 const mfaSession = require('../mfa/session');
 const packageJson = require('../../../package.json');
+const { cadenceVersion } = require('./version');
 const { getRoleInfo } = require('../../services/rolesService');
 const {
     ValidationError,
@@ -34,7 +35,7 @@ const {
 
 class AuthService {
     getVersion() {
-        return { version: packageJson.version };
+        return cadenceVersion(packageJson);
     }
 
     async getRegistrationStatus() {

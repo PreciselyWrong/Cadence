@@ -74,7 +74,8 @@ const BackupRestore: React.FC<BackupRestoreProps> = ({
                 credentials: 'include',
             });
             const data = await response.json();
-            setAppVersion(data.version);
+            // Backups carry the upstream version: compare like with like.
+            setAppVersion(data.upstream || data.version);
         } catch (error) {
             console.error('Error fetching app version:', error);
         }

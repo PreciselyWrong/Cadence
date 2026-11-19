@@ -109,8 +109,9 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
         fetch(getApiPath('version'))
             .then((response) => response.json())
             .then((data) => {
-                if (data.version) {
-                    setVersion(data.version);
+                // « Cadence 2026.11.19 · 95aa5a1 »: the version and its build.
+                if (data.label || data.version) {
+                    setVersion(data.label || data.version);
                 }
             })
             .catch((error) => {

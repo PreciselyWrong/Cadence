@@ -132,6 +132,9 @@ VOLUME ["/app/backups"]
 
 EXPOSE 3002
 
+# The commit the image is built from, shown beside the version.
+ARG CADENCE_BUILD=
+ENV CADENCE_BUILD=${CADENCE_BUILD}
 ENV NODE_ENV=production \
     DB_FILE="/app/db/production.sqlite3" \
     PORT=3002 \
