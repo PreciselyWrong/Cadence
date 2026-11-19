@@ -6583,7 +6583,8 @@
     "pushedBadge": "Udskudt {{count}} gange på 30 dage",
     "pushedMeta": "{{count}}× på 30 dage",
     "mergeCalendar": "Samlet kalender",
-    "mergeCalendarTitle": "Vis kalenderen i dagkolonnerne og skjul sidekalenderen"
+    "mergeCalendarTitle": "Vis kalenderen i dagkolonnerne og skjul sidekalenderen",
+    "quickPlaceTitle": "Planlæg {{day}}: den første dag med plads"
   },
   "offline": {
     "offline": "Offline",

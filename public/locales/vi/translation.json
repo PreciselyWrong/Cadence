@@ -6583,7 +6583,8 @@
         "pushedBadge": "Đã hoãn {{count}} lần trong 30 ngày",
         "pushedMeta": "{{count}}× trong 30 ngày",
         "mergeCalendar": "Lịch gộp",
-        "mergeCalendarTitle": "Hiện lịch trong các cột ngày và ẩn lịch bên cạnh"
+        "mergeCalendarTitle": "Hiện lịch trong các cột ngày và ẩn lịch bên cạnh",
+        "quickPlaceTitle": "Lên lịch {{day}}: ngày đầu tiên còn chỗ"
   },
   "offline": {
     "offline": "Ngoại tuyến",

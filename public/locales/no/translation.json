@@ -6588,7 +6588,8 @@
     "pushedBadge": "Utsatt {{count}} ganger på 30 dager",
     "pushedMeta": "{{count}}× på 30 dager",
     "mergeCalendar": "Samlet kalender",
-    "mergeCalendarTitle": "Vis kalenderen i dagkolonnene og skjul sidekalenderen"
+    "mergeCalendarTitle": "Vis kalenderen i dagkolonnene og skjul sidekalenderen",
+    "quickPlaceTitle": "Planlegg {{day}}: den første dagen med plass"
   },
   "offline": {
     "offline": "Frakoblet",

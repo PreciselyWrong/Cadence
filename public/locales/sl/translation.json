@@ -6703,7 +6703,8 @@
     "pushedBadge": "Odložena {{count}}-krat v 30 dneh",
     "pushedMeta": "{{count}}× v 30 dneh",
     "mergeCalendar": "Združen koledar",
-    "mergeCalendarTitle": "Prikaži dogodke v stolpcih dni in skrij stranski koledar"
+    "mergeCalendarTitle": "Prikaži dogodke v stolpcih dni in skrij stranski koledar",
+    "quickPlaceTitle": "Načrtuj za {{day}}: prvi dan s prostorom"
   },
   "offline": {
     "offline": "Brez povezave",

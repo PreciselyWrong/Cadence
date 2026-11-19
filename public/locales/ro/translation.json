@@ -6610,7 +6610,8 @@
     "pushedBadge": "Amânată de {{count}} ori în 30 de zile",
     "pushedMeta": "{{count}}× în 30 de zile",
     "mergeCalendar": "Calendar integrat",
-    "mergeCalendarTitle": "Afișează agenda în coloanele zilelor și ascunde calendarul lateral"
+    "mergeCalendarTitle": "Afișează agenda în coloanele zilelor și ascunde calendarul lateral",
+    "quickPlaceTitle": "Planifică {{day}}: prima zi cu loc"
   },
   "offline": {
     "offline": "Offline",

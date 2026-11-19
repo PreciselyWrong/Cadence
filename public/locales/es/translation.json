@@ -6585,7 +6585,8 @@
     "pushedBadge": "Aplazada {{count}} veces en 30 días",
     "pushedMeta": "{{count}}× en 30 días",
     "mergeCalendar": "Calendario integrado",
-    "mergeCalendarTitle": "Mostrar la agenda en las columnas de los días y ocultar el calendario"
+    "mergeCalendarTitle": "Mostrar la agenda en las columnas de los días y ocultar el calendario",
+    "quickPlaceTitle": "Planificar el {{day}}: el primer día con hueco"
   },
   "offline": {
     "offline": "Sin conexión",

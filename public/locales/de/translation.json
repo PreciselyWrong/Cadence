@@ -6592,7 +6592,8 @@
     "pushedBadge": "{{count}}-mal in 30 Tagen verschoben",
     "pushedMeta": "{{count}}× in 30 Tagen",
     "mergeCalendar": "Kalender eingebunden",
-    "mergeCalendarTitle": "Termine in den Tagesspalten zeigen und den Kalender ausblenden"
+    "mergeCalendarTitle": "Termine in den Tagesspalten zeigen und den Kalender ausblenden",
+    "quickPlaceTitle": "Am {{day}} einplanen: der erste Tag mit genug Zeit"
   },
   "offline": {
     "offline": "Offline",

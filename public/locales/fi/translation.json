@@ -6583,7 +6583,8 @@
     "pushedBadge": "Lykätty {{count}} kertaa 30 päivässä",
     "pushedMeta": "{{count}}× 30 päivässä",
     "mergeCalendar": "Yhdistetty kalenteri",
-    "mergeCalendarTitle": "Näytä kalenteri päiväsarakkeissa ja piilota sivukalenteri"
+    "mergeCalendarTitle": "Näytä kalenteri päiväsarakkeissa ja piilota sivukalenteri",
+    "quickPlaceTitle": "Suunnittele {{day}}: ensimmäinen päivä, jolle mahtuu"
   },
   "offline": {
     "offline": "Offline-tilassa",

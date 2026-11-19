@@ -6583,7 +6583,8 @@
     "pushedBadge": "30 günde {{count}} kez ertelendi",
     "pushedMeta": "30 günde {{count}}×",
     "mergeCalendar": "Birleşik takvim",
-    "mergeCalendarTitle": "Ajandayı gün sütunlarında göster ve yan takvimi gizle"
+    "mergeCalendarTitle": "Ajandayı gün sütunlarında göster ve yan takvimi gizle",
+    "quickPlaceTitle": "{{day}} için planla: yer olan ilk gün"
   },
   "offline": {
     "offline": "Çevrimdışı",

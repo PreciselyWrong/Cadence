@@ -6681,7 +6681,8 @@
     "pushedBadge": "أُجّلت {{count}} مرات خلال 30 يومًا",
     "pushedMeta": "{{count}}× خلال 30 يومًا",
     "mergeCalendar": "تقويم مدمج",
-    "mergeCalendarTitle": "عرض الأجندة داخل أعمدة الأيام وإخفاء التقويم الجانبي"
+    "mergeCalendarTitle": "عرض الأجندة داخل أعمدة الأيام وإخفاء التقويم الجانبي",
+    "quickPlaceTitle": "التخطيط يوم {{day}}: أول يوم يتسع لها"
   },
   "offline": {
     "offline": "غير متصل",

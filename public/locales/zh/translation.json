@@ -6583,7 +6583,8 @@
         "pushedBadge": "30 天内推迟 {{count}} 次",
         "pushedMeta": "30 天 {{count}}×",
         "mergeCalendar": "合并日历",
-        "mergeCalendarTitle": "在每天的列中显示日程并隐藏侧边日历"
+        "mergeCalendarTitle": "在每天的列中显示日程并隐藏侧边日历",
+        "quickPlaceTitle": "安排在{{day}}：第一个有空的日子"
   },
   "offline": {
     "offline": "离线",

@@ -6583,7 +6583,8 @@
         "pushedBadge": "30日で{{count}}回先送り",
         "pushedMeta": "30日で{{count}}回",
         "mergeCalendar": "統合カレンダー",
-        "mergeCalendarTitle": "日の列に予定を表示し、横のカレンダーを隠す"
+        "mergeCalendarTitle": "日の列に予定を表示し、横のカレンダーを隠す",
+        "quickPlaceTitle": "{{day}}に計画：入る最初の日"
   },
   "offline": {
     "offline": "オフライン",

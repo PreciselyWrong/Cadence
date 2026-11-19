@@ -1059,3 +1059,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : section « Repoussées » à gauche (3 reports ou plus en 30 jours, la règle de la revue), menu Voir / Aujourd'hui / Découper / Plus tard / Faite / Abandonner / Garder ; badge « ↻ 4× » sur leurs cartes. Bouton « Calendrier fusionné » : les événements dans chaque colonne de jour, calendrier de droite masqué.
 - **Android** : à reprendre (`TODO.md` › Now).
 
+## Plan : « → sam. » pour poser une tâche sur le premier jour libre (2026-11-19)
+
+- **Problème** : planifier une tâche de la Boîte ou de « Cette semaine » demandait de chercher soi-même un jour qui avait encore la place.
+- **Décision** : petit bouton « → sam. 21 » sur ces cartes : le premier jour, depuis aujourd'hui, dont le temps libre (heures du jour moins le plan ; aujourd'hui, ce qui reste) contient la durée de la tâche (30 min sans estimation). Un clic la pose ; annulable. Règle pure `firstFreeDay.ts`, sans IA.
+- **Android** : à reprendre (`TODO.md` › Now).
+

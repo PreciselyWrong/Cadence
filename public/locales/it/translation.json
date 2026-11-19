@@ -6598,7 +6598,8 @@
     "pushedBadge": "Rimandata {{count}} volte in 30 giorni",
     "pushedMeta": "{{count}}× in 30 giorni",
     "mergeCalendar": "Calendario unito",
-    "mergeCalendarTitle": "Mostra l’agenda nelle colonne dei giorni e nascondi il calendario"
+    "mergeCalendarTitle": "Mostra l’agenda nelle colonne dei giorni e nascondi il calendario",
+    "quickPlaceTitle": "Pianifica {{day}}: il primo giorno con spazio"
   },
   "offline": {
     "offline": "Offline",

@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FlagIcon } from '@heroicons/react/24/outline';
@@ -9,6 +10,8 @@ import { subtasksWithoutCard } from './groupCards';
 import TaskCardBody, { taskCardClass } from '../Shared/task/TaskCardBody';
 import { isPickClick, PickedCardsContext } from './pickedCards';
 import { PushedBadge } from './PushedSection';
+import { QuickPlaceContext } from './firstFreeDay';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import {
     PreviewCard,
     PreviewTrace,
@@ -81,6 +84,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
         disabled: line.done,
     });
     const { onKeyDown: dragKeyDown, ...dragListeners } = listeners ?? {};
+    const { t } = useTranslation();
+    // Inbox and « This week » cards: a button to the first day with room.
+    const quick = useContext(QuickPlaceContext);
+    const quickDate =
+        quick && !line.done && (date === 'inbox' || date === 'horizon:week')
+            ? quick.suggest(task.estimated_minutes)
+            : null;
     const pick = useContext(PickedCardsContext);
     const picked = !!pick?.picked.has(uid);
     // While the AI's week is previewed, a decided task shows as its proposal
@@ -148,6 +158,32 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 onToggleSubtask={onToggleSubtask}
                 meta={
                     <>
+                        {quickDate && quick && (
+                            <button
+                                type="button"
+                                data-testid="quick-place"
+                                title={t(
+                                    'upcoming.quickPlaceTitle',
+                                    'Plan on {{day}}: the first day with room for it',
+                                    { day: quick.label(quickDate) }
+                                )}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    quick.place(data, quickDate);
+                                }}
+                                onPointerDown={(event) =>
+                                    event.stopPropagation()
+                                }
+                                onKeyDown={(event) => event.stopPropagation()}
+                                className="order-last ml-auto inline-flex shrink-0 items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-medium text-primary hover:bg-primary-container/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                            >
+                                <ArrowRightIcon
+                                    aria-hidden="true"
+                                    className="h-3 w-3"
+                                />
+                                {quick.label(quickDate)}
+                            </button>
+                        )}
                         <PushedBadge uid={uid} />
                         {at !== null && (
                             <span

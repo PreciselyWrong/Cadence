@@ -1611,6 +1611,37 @@ describe('UpcomingBoard', () => {
         expect(mockCreate.mock.calls[0][0]).not.toHaveProperty('due_date');
     });
 
+    it('places an inbox task on the first day with room, in one click', async () => {
+        const loose = task('u1', 'Book the train', {
+            estimated_minutes: 20,
+        } as Partial<Task>);
+        mockFetchTasks.mockImplementation(async (query?: string) => ({
+            tasks: query === '?type=unsorted' ? [loose] : [],
+            metrics: {} as never,
+        }));
+        // Today is full (10 h of 10 h): tomorrow is the first day with room.
+        const server = fakeServer({
+            [TODAY]: [
+                { task: task('big', 'Workshop'), start: null, duration: 600 },
+            ],
+        });
+        server.tasks.set('u1', loose);
+        renderBoard();
+        const inbox = screen.getByTestId('inbox-column');
+        await within(inbox).findByText('Book the train');
+        await settle();
+        const button = within(inbox).getByTestId('quick-place');
+        expect(button).toHaveTextContent('Tomorrow');
+        fireEvent.click(button);
+        await settle();
+        expect(mockApply).toHaveBeenCalledWith(
+            TOMORROW,
+            [{ op: 'add', task_uid: 'u1' }],
+            expect.anything()
+        );
+        expect(mockOpenTask).not.toHaveBeenCalled();
+    });
+
     it('lists unsorted tasks in the inbox column and plans one from there', async () => {
         const loose = task('u1', 'Renew the car insurance');
         mockFetchTasks.mockImplementation(async (query?: string) => ({

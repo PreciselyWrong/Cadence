@@ -6621,7 +6621,8 @@
     "pushedBadge": "Repoussée {{count}} fois en 30 jours",
     "pushedMeta": "{{count}}× en 30 jours",
     "mergeCalendar": "Calendrier fusionné",
-    "mergeCalendarTitle": "Afficher l’agenda dans les colonnes des jours et masquer le calendrier"
+    "mergeCalendarTitle": "Afficher l’agenda dans les colonnes des jours et masquer le calendrier",
+    "quickPlaceTitle": "Planifier {{day}} : le premier jour où elle tient"
   },
   "offline": {
     "offline": "Hors ligne",

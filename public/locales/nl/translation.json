@@ -6583,7 +6583,8 @@
     "pushedBadge": "{{count}} keer uitgesteld in 30 dagen",
     "pushedMeta": "{{count}}× in 30 dagen",
     "mergeCalendar": "Samengevoegde agenda",
-    "mergeCalendarTitle": "Agenda in de dagkolommen tonen en de zijkalender verbergen"
+    "mergeCalendarTitle": "Agenda in de dagkolommen tonen en de zijkalender verbergen",
+    "quickPlaceTitle": "Plannen op {{day}}: de eerste dag met ruimte"
   },
   "offline": {
     "offline": "Offline",

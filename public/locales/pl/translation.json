@@ -6699,7 +6699,8 @@
     "pushedBadge": "Odłożone {{count}} razy w 30 dni",
     "pushedMeta": "{{count}}× w 30 dni",
     "mergeCalendar": "Kalendarz scalony",
-    "mergeCalendarTitle": "Pokaż terminarz w kolumnach dni i ukryj boczny kalendarz"
+    "mergeCalendarTitle": "Pokaż terminarz w kolumnach dni i ukryj boczny kalendarz",
+    "quickPlaceTitle": "Zaplanuj na {{day}}: pierwszy dzień z miejscem"
   },
   "offline": {
     "offline": "Offline",

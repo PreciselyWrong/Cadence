@@ -6598,7 +6598,8 @@
     "pushedBadge": "Adiada {{count}} vezes em 30 dias",
     "pushedMeta": "{{count}}× em 30 dias",
     "mergeCalendar": "Calendário integrado",
-    "mergeCalendarTitle": "Mostrar a agenda nas colunas dos dias e ocultar o calendário"
+    "mergeCalendarTitle": "Mostrar a agenda nas colunas dos dias e ocultar o calendário",
+    "quickPlaceTitle": "Planear {{day}}: o primeiro dia com espaço"
   },
   "offline": {
     "offline": "Offline",

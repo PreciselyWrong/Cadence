@@ -6555,7 +6555,8 @@
     "pushedBadge": "Pushed back {{count}} times in 30 days",
     "pushedMeta": "{{count}}× in 30 days",
     "mergeCalendar": "Merged calendar",
-    "mergeCalendarTitle": "Show the agenda inside the day columns and hide the side calendar"
+    "mergeCalendarTitle": "Show the agenda inside the day columns and hide the side calendar",
+    "quickPlaceTitle": "Plan on {{day}}: the first day with room for it"
   },
   "offline": {
     "offline": "Offline",

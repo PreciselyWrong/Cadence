@@ -6583,7 +6583,8 @@
         "pushedBadge": "Ditunda {{count}} kali dalam 30 hari",
         "pushedMeta": "{{count}}× dalam 30 hari",
         "mergeCalendar": "Kalender gabungan",
-        "mergeCalendarTitle": "Tampilkan agenda di kolom hari dan sembunyikan kalender samping"
+        "mergeCalendarTitle": "Tampilkan agenda di kolom hari dan sembunyikan kalender samping",
+        "quickPlaceTitle": "Rencanakan {{day}}: hari pertama yang masih muat"
   },
   "offline": {
     "offline": "Offline",
