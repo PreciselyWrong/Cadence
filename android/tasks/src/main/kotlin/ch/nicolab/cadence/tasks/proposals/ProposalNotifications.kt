@@ -22,18 +22,23 @@ internal object ProposalNotifications {
     const val EXTRA_ROUTE = "proposal_route"
     const val EXTRA_UID = "proposal_uid"
     const val ROUTE_SHOW = "show"
+    const val ROUTE_MORNING = "morning"
     const val ROUTE_PLAN = "plan"
     const val ROUTE_REVIEW = "review"
     const val ROUTE_CAREER = "career"
 
     /** Route et texte d'une notification de proposition, ou null si le statut n'en demande aucun. */
-    fun present(kind: String?, status: String?): Presentation? {
+    fun present(kind: String?, status: String?, trigger: String? = null): Presentation? {
         val failed = status == ProposalStatus.FAILED.wire
         val ready = status == ProposalStatus.READY.wire
         if (!failed && !ready) return null
         return when (ProposalKind.of(kind)) {
-            ProposalKind.WEEK -> if (ready) Presentation(R.string.proposal_week_ready, R.string.proposal_week_ready_text, ROUTE_SHOW)
-            else Presentation(R.string.proposal_week_failed, R.string.proposal_failed_text, ROUTE_PLAN)
+            ProposalKind.WEEK -> when {
+                ready && trigger == MorningRitual.TRIGGER_MORNING ->
+                    Presentation(R.string.proposal_morning_ready, R.string.proposal_morning_ready_text, ROUTE_MORNING)
+                ready -> Presentation(R.string.proposal_week_ready, R.string.proposal_week_ready_text, ROUTE_SHOW)
+                else -> Presentation(R.string.proposal_week_failed, R.string.proposal_failed_text, ROUTE_PLAN)
+            }
             ProposalKind.REVIEW -> if (ready) Presentation(R.string.proposal_review_ready, R.string.proposal_review_ready_text, ROUTE_REVIEW)
             else Presentation(R.string.proposal_review_failed, R.string.proposal_failed_text, ROUTE_REVIEW)
             ProposalKind.CAREER -> if (ready) Presentation(R.string.proposal_career_ready, R.string.proposal_career_ready_text, ROUTE_CAREER)
@@ -48,7 +53,7 @@ internal object ProposalNotifications {
     /** Pose la notification ; sans permission rien ne s'affiche (l'identifiant reste noté par le flux). */
     fun post(context: Context, notification: LiveNotification, uid: String) {
         if (!TaskReminderScheduler.notificationsAllowed(context)) return
-        val presentation = present(notification.kind, notification.proposalStatus) ?: return
+        val presentation = present(notification.kind, notification.proposalStatus, notification.trigger) ?: return
         LiveChannels.ensure(context)
         val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
             ?.putExtra(EXTRA_ROUTE, presentation.route)
@@ -57,13 +62,15 @@ internal object ProposalNotifications {
             PendingIntent.getActivity(context, uid.hashCode(), it, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
         val failed = notification.proposalStatus == ProposalStatus.FAILED.wire
-        val title = context.getString(presentation.title)
+        val morning = notification.trigger == MorningRitual.TRIGGER_MORNING
+        val title = if (morning && notification.title.isNotBlank()) notification.title else context.getString(presentation.title)
+        val text = if (morning && notification.message.isNotBlank()) notification.message else context.getString(presentation.text)
         val builder = NotificationCompat.Builder(context, LiveChannels.INFO)
             .setSmallIcon(R.drawable.tasks_ic_agent)
             .setColor(if (failed) LightPalette.error.toArgb() else LightPalette.success.toArgb())
             .setContentTitle(title)
-            .setContentText(context.getString(presentation.text))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(context.getString(presentation.text)))
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setCategory(if (failed) NotificationCompat.CATEGORY_ERROR else NotificationCompat.CATEGORY_STATUS)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)

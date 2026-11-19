@@ -110,6 +110,7 @@ import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.ui.notifications.NotificationsScreen
 import ch.nicolab.cadence.tasks.proposals.ProposalTab
 import ch.nicolab.cadence.tasks.ui.proposals.CareerScreen
+import ch.nicolab.cadence.tasks.ui.proposals.MorningRitualScreen
 import ch.nicolab.cadence.tasks.ui.proposals.WeekendSheet
 import ch.nicolab.cadence.tasks.ui.proposals.ProposalSheet
 import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
@@ -208,6 +209,7 @@ internal fun CadenceAppScreen(
     val proposalContext = androidx.compose.ui.platform.LocalContext.current
     val proposals = androidx.compose.runtime.remember(proposalContext) { ProposalRepository.of(proposalContext) }
     val proposalSheet by proposals.sheet.collectAsStateWithLifecycle()
+    val proposalRitual by proposals.ritual.collectAsStateWithLifecycle()
     val proposalTab by proposals.tab.collectAsStateWithLifecycle()
     androidx.compose.runtime.LaunchedEffect(proposalTab) {
         when (proposalTab) {
@@ -297,6 +299,7 @@ internal fun CadenceAppScreen(
         notificationsOpen = false
         when (target) {
             is NotificationTarget.ProposalSheet -> proposals.show(target.uid)
+            is NotificationTarget.MorningRitual -> proposals.showRitual(target.uid)
             NotificationTarget.Review -> {
                 tab = Tab.BILAN
                 reviewOpen = true
@@ -486,10 +489,21 @@ internal fun CadenceAppScreen(
             }, openDeck = triageDeck, openDecisions = triageDecisions)
             if (notificationsOpen) NotificationsScreen(onBack = { notificationsOpen = false }, onOpen = openTarget)
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
+            proposalRitual?.let { uid ->
+                MorningRitualScreen(
+                    uid = uid,
+                    onClose = proposals::closeRitual,
+                    onApplied = {
+                        proposals.closeRitual()
+                        tab = Tab.TASKS
+                    },
+                )
+            }
             if (weekendOpen) WeekendSheet(weekendUid, onClose = { weekendOpen = false })
             if (addTaskOpen) QuickAddSheet(onDismiss = { addTaskOpen = false })
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen && !notificationsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action ?: defaultAdd) { index ->
+            val fullOverlay = settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen || notificationsOpen || proposalRitual != null
+            if (!fullOverlay) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action ?: defaultAdd) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }
@@ -497,7 +511,7 @@ internal fun CadenceAppScreen(
                 snackbar,
                 Modifier.align(Alignment.BottomCenter).padding(
                     // Sans barre flottante, la bannière s'arrête quand même au-dessus des boutons du système (3 boutons ou gestes).
-                    bottom = if (settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen || notificationsOpen) {
+                    bottom = if (fullOverlay) {
                         WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.lg
                     } else {
                         navigationClearance() + Space.sm

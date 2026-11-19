@@ -168,4 +168,35 @@
     <string name="weekend_weather_snow">neige</string>
     <string name="weekend_weather_storm">orage</string>
     <string name="weekend_weather_fog">brouillard</string>
+    <string name="proposal_morning_ready">Ta matinée est prête</string>
+    <string name="proposal_morning_ready_text">Ouvre pour trier tes retards et voir ta journée.</string>
+    <string name="ritual_step1_title">Hier et retards</string>
+    <string name="ritual_step2_title">Ta journée</string>
+    <string name="ritual_close">Fermer</string>
+    <string name="ritual_progress">%1$d / %2$d</string>
+    <string name="ritual_advice_title">Conseil de l\'IA</string>
+    <string name="ritual_today">Aujourd\'hui</string>
+    <string name="ritual_tomorrow">Demain</string>
+    <string name="ritual_more">Plus…</string>
+    <string name="ritual_done">Faite</string>
+    <string name="ritual_drop">Abandonner</string>
+    <string name="ritual_undo">Annuler</string>
+    <string name="ritual_more_title">Choisir quand</string>
+    <string name="ritual_other_date">Choisir une date</string>
+    <plurals name="ritual_day_tasks">
+        <item quantity="one">%1$d tâche</item>
+        <item quantity="other">%1$d tâches</item>
+    </plurals>
+    <string name="ritual_focus_section">Ce qui compte</string>
+    <string name="ritual_day_section">Dans ta journée</string>
+    <string name="ritual_load_line">%1$s prévues · %2$s libres</string>
+    <string name="ritual_not_today">Pas aujourd\'hui</string>
+    <string name="ritual_change_choice">Changer</string>
+    <string name="ritual_mark_focus">Marquer comme priorité</string>
+    <string name="ritual_unmark_focus">Retirer des priorités</string>
+    <string name="ritual_start_day">C\'est parti</string>
+    <string name="ritual_later">Plus tard</string>
+    <string name="ritual_empty_day">Rien de prévu pour l\'instant.</string>
+    <string name="ritual_today_card_title">Ma matinée</string>
+    <string name="ritual_today_card_subtitle">Trier mes retards et voir ma journée</string>
 </resources>

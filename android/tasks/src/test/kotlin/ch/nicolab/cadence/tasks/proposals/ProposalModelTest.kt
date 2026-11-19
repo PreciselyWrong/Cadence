@@ -471,6 +471,7 @@ class ProposalModelTest {
     @Test
     fun `a finished week opens the sheet, a failed one opens Planifier, a pending one notifies nothing`() {
         assertEquals(ProposalNotifications.ROUTE_SHOW, ProposalNotifications.present("week", "ready")?.route)
+        assertEquals(ProposalNotifications.ROUTE_MORNING, ProposalNotifications.present("week", "ready", "morning")?.route)
         assertEquals(ProposalNotifications.ROUTE_PLAN, ProposalNotifications.present("week", "failed")?.route)
         assertEquals(ProposalNotifications.ROUTE_REVIEW, ProposalNotifications.present("review", "ready")?.route)
         assertNull(ProposalNotifications.present("week", "pending"))
