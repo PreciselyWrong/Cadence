@@ -5433,6 +5433,7 @@
     "saveError": "Could not save the board"
   },
   "taskPane": {
+    "chat": "Discuss with the AI",
     "label": "Task details",
     "close": "Close",
     "openFullPage": "Open full page",

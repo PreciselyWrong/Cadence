@@ -5455,6 +5455,7 @@
     "saveError": "Nie udało się zapisać tablicy"
   },
   "taskPane": {
+    "chat": "Omów z AI",
     "label": "Szczegóły zadania",
     "close": "Zamknij",
     "openFullPage": "Otwórz pełną stronę",

@@ -5367,6 +5367,7 @@
     "saveError": "ボードを保存できませんでした"
   },
   "taskPane": {
+    "chat": "AIと話し合う",
     "label": "タスクの詳細",
     "close": "閉じる",
     "openFullPage": "フルページを開く",

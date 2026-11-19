@@ -5367,6 +5367,7 @@
     "saveError": "Kunne ikke gemme tavlen"
   },
   "taskPane": {
+    "chat": "Drøft med AI",
     "label": "Opgavedetaljer",
     "close": "Luk",
     "openFullPage": "Åbn fuld side",

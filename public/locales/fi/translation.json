@@ -5367,6 +5367,7 @@
     "saveError": "Taulun tallennus epäonnistui"
   },
   "taskPane": {
+    "chat": "Keskustele tekoälyn kanssa",
     "label": "Tehtävän tiedot",
     "close": "Sulje",
     "openFullPage": "Avaa koko sivu",

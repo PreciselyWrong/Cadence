@@ -5576,6 +5576,7 @@
     "saveError": "Tabuľu sa nepodarilo uložiť"
   },
   "taskPane": {
+    "chat": "Prebrať s AI",
     "label": "Podrobnosti úlohy",
     "close": "Zavrieť",
     "openFullPage": "Otvoriť celú stránku",

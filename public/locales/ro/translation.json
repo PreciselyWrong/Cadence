@@ -5382,6 +5382,7 @@
     "saveError": "Panoul nu a putut fi salvat"
   },
   "taskPane": {
+    "chat": "Discută cu IA",
     "label": "Detalii sarcină",
     "close": "Închide",
     "openFullPage": "Deschide pagina completă",

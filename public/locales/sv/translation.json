@@ -5367,6 +5367,7 @@
     "saveError": "Kunde inte spara tavlan"
   },
   "taskPane": {
+    "chat": "Diskutera med AI:n",
     "label": "Uppgiftsdetaljer",
     "close": "Stäng",
     "openFullPage": "Öppna hela sidan",

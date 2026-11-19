@@ -5399,6 +5399,7 @@
     "saveError": "Impossible d'enregistrer le tableau"
   },
   "taskPane": {
+    "chat": "Discuter avec l'IA",
     "label": "Détails de la tâche",
     "close": "Fermer",
     "openFullPage": "Ouvrir la page complète",

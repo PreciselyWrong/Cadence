@@ -5459,6 +5459,7 @@
     "saveError": "Table ni bilo mogoče shraniti"
   },
   "taskPane": {
+    "chat": "Pogovori se z UI",
     "label": "Podrobnosti naloge",
     "close": "Zapri",
     "openFullPage": "Odpri celotno stran",

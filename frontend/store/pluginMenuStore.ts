@@ -5,6 +5,9 @@ import {
     fetchPluginMenu,
 } from '../utils/pluginsService';
 
+// The plugin whose page is the chat with the AI (« Discuter »).
+export const CHAT_PLUGIN = 'hermes';
+
 interface PluginMenuState {
     items: PluginMenuItem[];
     // Buttons the same plugins add to page headers

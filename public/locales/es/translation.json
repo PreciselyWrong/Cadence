@@ -5361,6 +5361,7 @@
     "saveError": "No se pudo guardar el tablero"
   },
   "taskPane": {
+    "chat": "Hablar con la IA",
     "label": "Detalles de la tarea",
     "close": "Cerrar",
     "openFullPage": "Abrir página completa",

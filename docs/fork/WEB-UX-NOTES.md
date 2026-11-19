@@ -1066,3 +1066,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Étendu** : aussi sur « Semaine prochaine » (premier jour libre à partir de son lundi) et « Ce mois-ci » ; pas sur « Mois prochain » ni « Un jour ».
 - **Android** : non, l'écran est trop petit pour s'en servir (décision du 2026-11-19, `docs/fork/DECISIONS.md`).
 
+## Fiche de tâche : « Discuter avec l'IA » (2026-11-19)
+
+- **Problème** : parler d'une tâche à l'IA demandait d'ouvrir la page Agents et de recopier la tâche.
+- **Décision** : icône de bulle dans l'en-tête de la fiche, seulement quand le plugin de l'IA tourne ; elle ouvre la conversation sur cette tâche (`?view=chat&about=<uid>`), la page du plugin lit la tâche et lance l'échange. Rouvrir la même tâche reprend la conversation.
+- **Android** : à reprendre dans la fiche de tâche (`TODO.md` › Now).

@@ -5367,6 +5367,7 @@
     "saveError": "Bord kon niet worden opgeslagen"
   },
   "taskPane": {
+    "chat": "Bespreken met de AI",
     "label": "Taakdetails",
     "close": "Sluiten",
     "openFullPage": "Volledige pagina openen",

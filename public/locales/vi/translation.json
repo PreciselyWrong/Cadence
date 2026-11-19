@@ -5367,6 +5367,7 @@
     "saveError": "Không thể lưu bảng"
   },
   "taskPane": {
+    "chat": "Thảo luận với AI",
     "label": "Chi tiết công việc",
     "close": "Đóng",
     "openFullPage": "Mở trang đầy đủ",

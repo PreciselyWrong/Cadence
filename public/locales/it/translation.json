@@ -5374,6 +5374,7 @@
     "saveError": "Impossibile salvare la bacheca"
   },
   "taskPane": {
+    "chat": "Parlane con l'IA",
     "label": "Dettagli attività",
     "close": "Chiudi",
     "openFullPage": "Apri pagina completa",

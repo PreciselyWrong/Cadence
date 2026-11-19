@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     ArrowsPointingInIcon,
     ArrowsPointingOutIcon,
+    ChatBubbleLeftRightIcon,
     FolderIcon,
     TagIcon,
     TrashIcon,
@@ -25,6 +26,7 @@ import { useTaskActions } from '../../hooks/useTaskActions';
 import { isTodoMdTask } from '../../utils/todoMd';
 import { TaskEditorBody, TaskEditorFooter } from './TaskEditorBody';
 import { CONTROL_HEIGHT } from '../Shared/ui/controlSizes';
+import { CHAT_PLUGIN, usePluginMenuStore } from '../../store/pluginMenuStore';
 
 // The day a task is planned on, from `?task=uid&on=YYYY-MM-DD&at=minute`
 // (the calendar that opened the sheet knows it; the task payload does not).
@@ -129,6 +131,11 @@ const TaskPane: React.FC = () => {
     const location = useLocation();
     const titleId = useId();
     const { openTaskUid, closeTask } = useTaskPane();
+    const navigate = useNavigate();
+    // The AI's chat page (plugin), opened on this task.
+    const chat = usePluginMenuStore((state) =>
+        state.items.find((entry) => entry.id === CHAT_PLUGIN)
+    );
     const { removeWithUndo } = useTaskActions();
     const [task, setTask] = useState<Task | null>(null);
     const [loadFailed, setLoadFailed] = useState(false);
@@ -292,6 +299,24 @@ const TaskPane: React.FC = () => {
                             ) : null
                         )}
                     </nav>
+                )}
+                {task?.uid && chat && (
+                    <button
+                        type="button"
+                        onClick={() =>
+                            navigate(
+                                `${chat.path}?${new URLSearchParams({
+                                    view: 'chat',
+                                    about: task.uid as string,
+                                })}`
+                            )
+                        }
+                        aria-label={t('taskPane.chat', 'Discuss with the AI')}
+                        title={t('taskPane.chat', 'Discuss with the AI')}
+                        className={iconButton}
+                    >
+                        <ChatBubbleLeftRightIcon className="h-5 w-5" />
+                    </button>
                 )}
                 {task?.uid && !isTodoMdTask(task) && (
                     <button

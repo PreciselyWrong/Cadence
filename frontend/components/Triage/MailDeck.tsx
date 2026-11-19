@@ -19,7 +19,7 @@ import {
     MailPayload,
     TriageItem,
 } from '../../utils/triageService';
-import { usePluginMenuStore } from '../../store/pluginMenuStore';
+import { CHAT_PLUGIN, usePluginMenuStore } from '../../store/pluginMenuStore';
 import { useToast } from '../Shared/ToastContext';
 import Button, { IconButton } from '../Shared/ui/Button';
 import {
@@ -45,7 +45,6 @@ import PluginActions from '../Plugins/PluginActions';
 const UNDO_MS = 5000;
 const LEAVE_MS = 180;
 // The Hermes plugin's page has the chat with the agents (docs/46-plugins.md).
-const CHAT_PLUGIN = 'hermes';
 // Past this, the mail's text starts folded under « Lire le mail ».
 const LONG_EXCERPT = 420;
 const LONG_EXCERPT_LINES = 7;

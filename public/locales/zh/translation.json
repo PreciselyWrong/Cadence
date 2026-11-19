@@ -5367,6 +5367,7 @@
     "saveError": "无法保存看板"
   },
   "taskPane": {
+    "chat": "与 AI 讨论",
     "label": "任务详情",
     "close": "关闭",
     "openFullPage": "打开完整页面",

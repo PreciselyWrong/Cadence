@@ -22,6 +22,7 @@ import { Task } from '../../../entities/Task';
 import * as tasksService from '../../../utils/tasksService';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
 
+import { usePluginMenuStore } from '../../../store/pluginMenuStore';
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (_key: string, fallback?: string, values?: Record<string, string>) =>
@@ -149,7 +150,12 @@ const baseTask = {
 
 const LocationProbe = () => {
     const location = useLocation();
-    return <div data-testid="location-search">{location.search}</div>;
+    return (
+        <>
+            <div data-testid="location-search">{location.search}</div>
+            <div data-testid="location-path">{location.pathname}</div>
+        </>
+    );
 };
 
 // Mirrors the Tasks list: merges the saves the pane broadcasts.
@@ -485,6 +491,43 @@ describe('TaskPane as a floating sheet', () => {
             name: 'Write report',
         });
         expect(dialog).toHaveAttribute('aria-modal', 'false');
+    });
+
+    it('opens a chat with the AI about the task from its header', async () => {
+        usePluginMenuStore.setState({
+            items: [
+                {
+                    id: 'hermes',
+                    label: 'Agents',
+                    path: '/plugins/hermes',
+                    file: 'index.html',
+                },
+            ],
+        });
+        try {
+            renderSheet('/today?task=uid-1');
+            await screen.findByRole('dialog', { name: 'Write report' });
+            fireEvent.click(
+                screen.getByRole('button', { name: 'Discuss with the AI' })
+            );
+            expect(screen.getByTestId('location-path')).toHaveTextContent(
+                '/plugins/hermes'
+            );
+            expect(screen.getByTestId('location-search')).toHaveTextContent(
+                '?view=chat&about=uid-1'
+            );
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+        } finally {
+            usePluginMenuStore.setState({ items: [] });
+        }
+    });
+
+    it('offers no chat when no AI plugin runs', async () => {
+        renderSheet('/today?task=uid-1');
+        await screen.findByRole('dialog', { name: 'Write report' });
+        expect(
+            screen.queryByRole('button', { name: 'Discuss with the AI' })
+        ).toBeNull();
     });
 
     it('deletes the task from its header, closing the sheet', async () => {

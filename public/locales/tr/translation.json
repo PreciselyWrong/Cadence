@@ -5367,6 +5367,7 @@
     "saveError": "Pano kaydedilemedi"
   },
   "taskPane": {
+    "chat": "Yapay zekâyla konuş",
     "label": "Görev ayrıntıları",
     "close": "Kapat",
     "openFullPage": "Tam sayfayı aç",

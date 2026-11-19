@@ -5372,6 +5372,7 @@
     "saveError": "Kunne ikke lagre tavlen"
   },
   "taskPane": {
+    "chat": "Diskuter med KI-en",
     "label": "Oppgavedetaljer",
     "close": "Lukk",
     "openFullPage": "Åpne hele siden",

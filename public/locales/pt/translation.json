@@ -5374,6 +5374,7 @@
     "saveError": "Não foi possível salvar o quadro"
   },
   "taskPane": {
+    "chat": "Conversar com a IA",
     "label": "Detalhes da tarefa",
     "close": "Fechar",
     "openFullPage": "Abrir página completa",

@@ -5376,6 +5376,7 @@
     "saveError": "Board konnte nicht gespeichert werden"
   },
   "taskPane": {
+    "chat": "Mit der KI besprechen",
     "label": "Aufgabendetails",
     "close": "Schließen",
     "openFullPage": "Vollständige Seite öffnen",

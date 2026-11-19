@@ -5367,6 +5367,7 @@
     "saveError": "Tidak dapat menyimpan papan"
   },
   "taskPane": {
+    "chat": "Diskusikan dengan AI",
     "label": "Detail tugas",
     "close": "Tutup",
     "openFullPage": "Buka halaman lengkap",
