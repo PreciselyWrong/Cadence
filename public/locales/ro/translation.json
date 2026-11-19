@@ -6596,17 +6596,16 @@
     "next": "Ziua următoare",
     "nextWeekHint": "Angajată pentru săptămâna viitoare, fără zi fixă",
     "stripLabel": "Trimite către un orizont",
-    "stripOpen": "Deschide {{name}} în Orizonturi",
     "sentToHorizon": "Trimisă către {{name}}",
     "plannedOnDayHint_one": "{{count}} planificată într-o zi",
     "plannedOnDayHint_few": "{{count}} planificate într-o zi",
     "plannedOnDayHint_other": "{{count}} planificate într-o zi",
-    "weekLoad": "Săptămâna aceasta {{planned}} / {{available}}",
     "weekLoadTitle": "Planificat de azi până la sfârșitul săptămânii, față de orele tale",
     "pickedMoved": "Sarcinile selectate au fost mutate",
     "pickedCount": "Selectate: {{count}}",
     "pickedClear": "Golește selecția",
-    "aiTab": "Planificat de IA"
+    "aiTab": "Planificat de IA",
+    "sectionToggle": "Afișează sau ascunde {{name}}"
   },
   "offline": {
     "offline": "Offline",

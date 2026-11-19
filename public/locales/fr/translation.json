@@ -6608,16 +6608,15 @@
     "next": "Jour suivant",
     "nextWeekHint": "Prévu pour la semaine prochaine, sans jour fixe",
     "stripLabel": "Envoyer vers un horizon",
-    "stripOpen": "Ouvrir {{name}} dans Horizons",
     "sentToHorizon": "Envoyée vers {{name}}",
     "plannedOnDayHint_one": "{{count}} planifiée un jour",
     "plannedOnDayHint_other": "{{count}} planifiées un jour",
-    "weekLoad": "Cette semaine {{planned}} / {{available}}",
     "weekLoadTitle": "Prévu d'aujourd'hui à la fin de la semaine, face à vos heures de journée",
     "pickedMoved": "Tâches sélectionnées déplacées",
     "pickedCount": "Sélection : {{count}}",
     "pickedClear": "Vider la sélection",
-    "aiTab": "Planifié par l’IA"
+    "aiTab": "Planifié par l’IA",
+    "sectionToggle": "Afficher ou masquer {{name}}"
   },
   "offline": {
     "offline": "Hors ligne",

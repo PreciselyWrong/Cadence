@@ -6571,15 +6571,14 @@
     "next": "Ngày sau",
     "nextWeekHint": "Đã cam kết cho tuần sau, không có ngày cố định",
     "stripLabel": "Gửi đến một tầm nhìn",
-    "stripOpen": "Mở {{name}} trong Tầm nhìn",
     "sentToHorizon": "Đã gửi đến {{name}}",
     "plannedOnDayHint_other": "{{count}} đã lên lịch vào một ngày",
-        "weekLoad": "Tuần này {{planned}} / {{available}}",
         "weekLoadTitle": "Đã lên lịch từ hôm nay đến cuối tuần, so với giờ làm trong ngày",
         "pickedMoved": "Đã chuyển các việc đã chọn",
         "pickedCount": "Đã chọn: {{count}}",
         "pickedClear": "Bỏ chọn",
-        "aiTab": "Do AI lên kế hoạch"
+        "aiTab": "Do AI lên kế hoạch",
+        "sectionToggle": "Hiện hoặc ẩn {{name}}"
   },
   "offline": {
     "offline": "Ngoại tuyến",

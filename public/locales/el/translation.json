@@ -6571,16 +6571,15 @@
     "next": "Επόμενη ημέρα",
     "nextWeekHint": "Δεσμευμένη για την επόμενη εβδομάδα, χωρίς συγκεκριμένη μέρα",
     "stripLabel": "Αποστολή σε ορίζοντα",
-    "stripOpen": "Άνοιγμα {{name}} στους Ορίζοντες",
     "sentToHorizon": "Στάλθηκε σε {{name}}",
     "plannedOnDayHint_one": "{{count}} προγραμματισμένη σε μέρα",
     "plannedOnDayHint_other": "{{count}} προγραμματισμένες σε μέρα",
-    "weekLoad": "Αυτή την εβδομάδα {{planned}} / {{available}}",
     "weekLoadTitle": "Προγραμματισμένα από σήμερα ως το τέλος της εβδομάδας, έναντι των ωρών σου",
     "pickedMoved": "Οι επιλεγμένες εργασίες μετακινήθηκαν",
     "pickedCount": "Επιλεγμένες: {{count}}",
     "pickedClear": "Καθαρισμός επιλογής",
-    "aiTab": "Από την ΤΝ"
+    "aiTab": "Από την ΤΝ",
+    "sectionToggle": "Εμφάνιση ή απόκρυψη {{name}}"
   },
   "offline": {
     "offline": "Εκτός σύνδεσης",

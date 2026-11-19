@@ -6684,18 +6684,17 @@
     "next": "Наступний день",
     "nextWeekHint": "Заплановано на наступний тиждень, без конкретного дня",
     "stripLabel": "Надіслати на горизонт",
-    "stripOpen": "Відкрити {{name}} у Горизонтах",
     "sentToHorizon": "Надіслано: {{name}}",
     "plannedOnDayHint_one": "Заплановано на день: {{count}}",
     "plannedOnDayHint_few": "Заплановано на день: {{count}}",
     "plannedOnDayHint_many": "Заплановано на день: {{count}}",
     "plannedOnDayHint_other": "Заплановано на день: {{count}}",
-    "weekLoad": "Цей тиждень {{planned}} / {{available}}",
     "weekLoadTitle": "Заплановано від сьогодні до кінця тижня відносно ваших робочих годин",
     "pickedMoved": "Вибрані завдання переміщено",
     "pickedCount": "Вибрано: {{count}}",
     "pickedClear": "Зняти виділення",
-    "aiTab": "План ШІ"
+    "aiTab": "План ШІ",
+    "sectionToggle": "Показати або сховати {{name}}"
   },
   "offline": {
     "offline": "Немає зв’язку",

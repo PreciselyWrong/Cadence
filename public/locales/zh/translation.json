@@ -6571,15 +6571,14 @@
     "next": "后一天",
     "nextWeekHint": "下周已安排，无固定日期",
     "stripLabel": "发送到展望",
-    "stripOpen": "在展望中打开{{name}}",
     "sentToHorizon": "已发送到{{name}}",
     "plannedOnDayHint_other": "{{count}} 项已安排到某天",
-        "weekLoad": "本周 {{planned}} / {{available}}",
         "weekLoadTitle": "从今天到本周末的计划时长，对比你的每日工作时间",
         "pickedMoved": "已移动所选任务",
         "pickedCount": "已选：{{count}}",
         "pickedClear": "清除选择",
-        "aiTab": "AI 计划"
+        "aiTab": "AI 计划",
+        "sectionToggle": "显示或隐藏{{name}}"
   },
   "offline": {
     "offline": "离线",

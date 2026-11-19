@@ -6571,15 +6571,14 @@
     "next": "다음 날",
     "nextWeekHint": "다음 주에 확정, 정해진 요일 없음",
     "stripLabel": "기간으로 보내기",
-    "stripOpen": "기간에서 {{name}} 열기",
     "sentToHorizon": "{{name}}(으)로 보냄",
     "plannedOnDayHint_other": "{{count}}개는 특정 날에 계획됨",
-        "weekLoad": "이번 주 {{planned}} / {{available}}",
         "weekLoadTitle": "오늘부터 주말까지 계획된 시간과 하루 근무 시간 비교",
         "pickedMoved": "선택한 작업을 옮겼습니다",
         "pickedCount": "선택됨: {{count}}",
         "pickedClear": "선택 해제",
-        "aiTab": "AI 계획"
+        "aiTab": "AI 계획",
+        "sectionToggle": "{{name}} 표시 또는 숨기기"
   },
   "offline": {
     "offline": "오프라인",

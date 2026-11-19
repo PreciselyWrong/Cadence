@@ -43,7 +43,25 @@ interface HorizonColumnProps {
     // Fills its grid row and scrolls its own cards (horizons side by side);
     // false: as tall as its cards (wrapped rows).
     fill?: boolean;
+    // A section of the Days layout's left column: its title folds it (kept
+    // per browser), folded from the start when `defaultCollapsed`.
+    collapsible?: boolean;
+    defaultCollapsed?: boolean;
+    // After the count in the header (This week: the week's load).
+    headerExtra?: React.ReactNode;
 }
+
+const collapsedKey = (horizon: HorizonKey) =>
+    `upcoming.leftCollapsed.${horizon}`;
+
+const readCollapsed = (horizon: HorizonKey, fallback: boolean): boolean => {
+    try {
+        const stored = localStorage.getItem(collapsedKey(horizon));
+        return stored === null ? fallback : stored === '1';
+    } catch {
+        return fallback;
+    }
+};
 
 /**
  * One horizon of the Plan page (This week, This month, Next month, Someday):
@@ -64,8 +82,23 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
     onToggleSubtask,
     onAdd,
     fill = true,
+    collapsible = false,
+    defaultCollapsed = false,
+    headerExtra,
 }) => {
     const { t, i18n } = useTranslation();
+    const [folded, setFolded] = useState(() =>
+        collapsible ? readCollapsed(horizon, defaultCollapsed) : false
+    );
+    const toggleFolded = () => {
+        const next = !folded;
+        setFolded(next);
+        try {
+            localStorage.setItem(collapsedKey(horizon), next ? '1' : '0');
+        } catch {
+            // Folding still works for this visit.
+        }
+    };
     const [draft, setDraft] = useState('');
     const [adding, setAdding] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -121,9 +154,31 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                         every time. */}
                     <h2
                         title={hint}
-                        className="text-body font-semibold text-surface-on"
+                        className="min-w-0 text-body font-semibold text-surface-on"
                     >
-                        {title}
+                        {collapsible ? (
+                            <button
+                                type="button"
+                                aria-expanded={!folded}
+                                aria-label={t(
+                                    'upcoming.sectionToggle',
+                                    'Show or hide {{name}}',
+                                    { name: title }
+                                )}
+                                onClick={toggleFolded}
+                                className="-ml-1 flex items-center gap-1 rounded-md px-1 text-left hover:bg-surface-high focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                            >
+                                <ChevronRightIcon
+                                    aria-hidden="true"
+                                    className={`h-3.5 w-3.5 shrink-0 text-surface-on-variant transition-transform duration-150 ${
+                                        folded ? '' : 'rotate-90'
+                                    }`}
+                                />
+                                {title}
+                            </button>
+                        ) : (
+                            title
+                        )}
                         {hint && <span className="sr-only">. {hint}</span>}
                     </h2>
                     {tasks && tasks.length > 0 && (
@@ -131,6 +186,7 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                             {tasks.length}
                         </span>
                     )}
+                    {headerExtra}
                     {onAdd && (
                         <IconButton
                             label={t(
@@ -146,7 +202,7 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                     )}
                 </div>
             </header>
-            {onAdd && adding && (
+            {onAdd && adding && !folded && (
                 <form onSubmit={submit}>
                     <input
                         ref={inputRef}
@@ -166,105 +222,118 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                     />
                 </form>
             )}
-            <div
-                role="list"
-                className={`flex flex-col gap-2 px-0.5 pb-1 ${
-                    fill ? 'min-h-0 flex-1 overflow-y-auto' : ''
-                }`}
-            >
-                <SortableContext
-                    items={lines.map((line) => cardId(date, line.uid))}
-                    strategy={verticalListSortingStrategy}
+            {!folded && (
+                <div
+                    role="list"
+                    className={`flex flex-col gap-2 px-0.5 pb-1 ${
+                        fill ? 'min-h-0 flex-1 overflow-y-auto' : ''
+                    }`}
                 >
-                    {lines.map((line) => (
-                        <TaskCard
-                            key={line.uid}
-                            line={line}
-                            date={date}
-                            selected={openTaskUid === line.uid}
-                            onToggle={onToggle}
-                            onOpen={onOpen}
-                            onToggleSubtask={onToggleSubtask}
-                        />
-                    ))}
-                </SortableContext>
-                {nothingElse && (
-                    <>
-                        <p className="sr-only">
-                            {t('upcoming.empty', 'Nothing planned.')}
-                        </p>
-                        {plannedOnDays.length > 0 && (
-                            <p className="px-2.5 py-2 text-xs text-surface-on-variant">
+                    <SortableContext
+                        items={lines.map((line) => cardId(date, line.uid))}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        {lines.map((line) => (
+                            <TaskCard
+                                key={line.uid}
+                                line={line}
+                                date={date}
+                                selected={openTaskUid === line.uid}
+                                onToggle={onToggle}
+                                onOpen={onOpen}
+                                onToggleSubtask={onToggleSubtask}
+                            />
+                        ))}
+                    </SortableContext>
+                    {nothingElse && (
+                        <>
+                            <p className="sr-only">
+                                {t('upcoming.empty', 'Nothing planned.')}
+                            </p>
+                            {plannedOnDays.length > 0 && (
+                                <p className="px-2.5 py-2 text-xs text-surface-on-variant">
+                                    {t(
+                                        'upcoming.plannedOnDayHint',
+                                        '{{count}} planned on a day',
+                                        { count: plannedOnDays.length }
+                                    )}
+                                </p>
+                            )}
+                        </>
+                    )}
+                    {plannedOnDays.length > 0 && (
+                        <div className="flex flex-col gap-2 pt-1">
+                            <button
+                                type="button"
+                                aria-expanded={showPlanned}
+                                onClick={() => setPlannedChoice(!showPlanned)}
+                                className="flex h-8 items-center gap-1.5 rounded-lg px-2 text-left text-xs font-semibold uppercase tracking-wide text-surface-on-variant hover:bg-surface-high focus-visible:outline-2 focus-visible:outline-primary"
+                            >
+                                <ChevronRightIcon
+                                    aria-hidden="true"
+                                    className={`h-3.5 w-3.5 transition-transform duration-150 ${
+                                        showPlanned ? 'rotate-90' : ''
+                                    }`}
+                                />
                                 {t(
-                                    'upcoming.plannedOnDayHint',
-                                    '{{count}} planned on a day',
+                                    'upcoming.plannedOnDay',
+                                    'Planned on a day ({{count}})',
                                     { count: plannedOnDays.length }
                                 )}
-                            </p>
-                        )}
-                    </>
-                )}
-                {plannedOnDays.length > 0 && (
-                    <div className="flex flex-col gap-2 pt-1">
-                        <button
-                            type="button"
-                            aria-expanded={showPlanned}
-                            onClick={() => setPlannedChoice(!showPlanned)}
-                            className="flex h-8 items-center gap-1.5 rounded-lg px-2 text-left text-xs font-semibold uppercase tracking-wide text-surface-on-variant hover:bg-surface-high focus-visible:outline-2 focus-visible:outline-primary"
-                        >
-                            <ChevronRightIcon
-                                aria-hidden="true"
-                                className={`h-3.5 w-3.5 transition-transform duration-150 ${
-                                    showPlanned ? 'rotate-90' : ''
-                                }`}
-                            />
-                            {t(
-                                'upcoming.plannedOnDay',
-                                'Planned on a day ({{count}})',
-                                { count: plannedOnDays.length }
-                            )}
-                        </button>
-                        {showPlanned && (
-                            <div role="list" className="flex flex-col gap-2">
-                                <SortableContext
-                                    items={plannedOnDays.map(
-                                        ({ task, date: on }) =>
-                                            cardId(on, task.uid as string)
-                                    )}
-                                    strategy={verticalListSortingStrategy}
+                            </button>
+                            {showPlanned && (
+                                <div
+                                    role="list"
+                                    className="flex flex-col gap-2"
                                 >
-                                    {plannedOnDays.map(({ task, date: on }) => (
-                                        <div
-                                            key={task.uid}
-                                            data-card-date={on}
-                                            className="flex flex-col gap-0.5"
-                                        >
-                                            <span className="px-1 text-xs text-surface-on-variant">
-                                                {dayLabel.format(parseISO(on))}
-                                            </span>
-                                            <TaskCard
-                                                line={{
-                                                    ...lineFromDue(task, on),
-                                                    planned: true,
-                                                }}
-                                                date={on}
-                                                selected={
-                                                    openTaskUid === task.uid
-                                                }
-                                                onToggle={onToggle}
-                                                onOpen={onOpen}
-                                                onToggleSubtask={
-                                                    onToggleSubtask
-                                                }
-                                            />
-                                        </div>
-                                    ))}
-                                </SortableContext>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
+                                    <SortableContext
+                                        items={plannedOnDays.map(
+                                            ({ task, date: on }) =>
+                                                cardId(on, task.uid as string)
+                                        )}
+                                        strategy={verticalListSortingStrategy}
+                                    >
+                                        {plannedOnDays.map(
+                                            ({ task, date: on }) => (
+                                                <div
+                                                    key={task.uid}
+                                                    data-card-date={on}
+                                                    className="flex flex-col gap-0.5"
+                                                >
+                                                    <span className="px-1 text-xs text-surface-on-variant">
+                                                        {dayLabel.format(
+                                                            parseISO(on)
+                                                        )}
+                                                    </span>
+                                                    <TaskCard
+                                                        line={{
+                                                            ...lineFromDue(
+                                                                task,
+                                                                on
+                                                            ),
+                                                            planned: true,
+                                                        }}
+                                                        date={on}
+                                                        selected={
+                                                            openTaskUid ===
+                                                            task.uid
+                                                        }
+                                                        onToggle={onToggle}
+                                                        onOpen={onOpen}
+                                                        onToggleSubtask={
+                                                            onToggleSubtask
+                                                        }
+                                                    />
+                                                </div>
+                                            )
+                                        )}
+                                    </SortableContext>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
         </section>
     );
 };

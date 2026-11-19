@@ -6570,16 +6570,15 @@
     "next": "Следващ ден",
     "nextWeekHint": "Ангажирано за следващата седмица, без определен ден",
     "stripLabel": "Изпрати към хоризонт",
-    "stripOpen": "Отвори {{name}} в Хоризонти",
     "sentToHorizon": "Изпратена към {{name}}",
     "plannedOnDayHint_one": "{{count}} планирана за ден",
     "plannedOnDayHint_other": "{{count}} планирани за ден",
-    "weekLoad": "Тази седмица {{planned}} / {{available}}",
     "weekLoadTitle": "Планирано от днес до края на седмицата спрямо работните ти часове",
     "pickedMoved": "Избраните задачи са преместени",
     "pickedCount": "Избрани: {{count}}",
     "pickedClear": "Изчисти избора",
-    "aiTab": "Планирано от ИИ"
+    "aiTab": "Планирано от ИИ",
+    "sectionToggle": "Покажи или скрий {{name}}"
   },
   "offline": {
     "offline": "Офлайн",

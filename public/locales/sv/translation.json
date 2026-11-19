@@ -6570,16 +6570,15 @@
     "next": "Nästa dag",
     "nextWeekHint": "Planerad för nästa vecka, utan fast dag",
     "stripLabel": "Skicka till en horisont",
-    "stripOpen": "Öppna {{name}} i Horisonter",
     "sentToHorizon": "Skickad till {{name}}",
     "plannedOnDayHint_one": "{{count}} planerad på en dag",
     "plannedOnDayHint_other": "{{count}} planerade på en dag",
-    "weekLoad": "Den här veckan {{planned}} / {{available}}",
     "weekLoadTitle": "Planerat från i dag till veckans slut, mot dina dagtimmar",
     "pickedMoved": "Valda uppgifter flyttade",
     "pickedCount": "Valda: {{count}}",
     "pickedClear": "Rensa urvalet",
-    "aiTab": "Planerat av AI"
+    "aiTab": "Planerat av AI",
+    "sectionToggle": "Visa eller dölj {{name}}"
   },
   "offline": {
     "offline": "Offline",

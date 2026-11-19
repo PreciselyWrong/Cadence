@@ -6684,18 +6684,17 @@
     "next": "Następny dzień",
     "nextWeekHint": "Zaplanowane na przyszły tydzień, bez stałego dnia",
     "stripLabel": "Wyślij do horyzontu",
-    "stripOpen": "Otwórz {{name}} w Horyzontach",
     "sentToHorizon": "Wysłano do: {{name}}",
     "plannedOnDayHint_one": "Zaplanowane na dzień: {{count}}",
     "plannedOnDayHint_few": "Zaplanowane na dzień: {{count}}",
     "plannedOnDayHint_many": "Zaplanowane na dzień: {{count}}",
     "plannedOnDayHint_other": "Zaplanowane na dzień: {{count}}",
-    "weekLoad": "Ten tydzień {{planned}} / {{available}}",
     "weekLoadTitle": "Zaplanowane od dziś do końca tygodnia wobec twoich godzin dnia",
     "pickedMoved": "Przeniesiono zaznaczone zadania",
     "pickedCount": "Zaznaczone: {{count}}",
     "pickedClear": "Wyczyść zaznaczenie",
-    "aiTab": "Plan AI"
+    "aiTab": "Plan AI",
+    "sectionToggle": "Pokaż lub ukryj {{name}}"
   },
   "offline": {
     "offline": "Offline",

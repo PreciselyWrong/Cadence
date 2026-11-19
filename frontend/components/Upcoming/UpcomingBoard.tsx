@@ -105,11 +105,11 @@ import type { CardData } from './TaskCard';
 import ViewMenu from './ViewMenu';
 import JumpToDate from './JumpToDate';
 import HorizonColumn, { horizonFromCardDate } from './HorizonColumn';
-import HorizonStrip from './HorizonStrip';
 import Menu, { MenuEntry } from '../Shared/ui/Menu';
 import type { HorizonDropData } from './HorizonColumn';
 import {
     HORIZON_KEYS,
+    HorizonBuckets,
     HorizonKey,
     bucketHorizons,
     horizonColumns,
@@ -175,6 +175,7 @@ import ProposalButton from '../Proposals/ProposalButton';
 import { useProposalChanged } from '../Proposals/useProposalChanged';
 import { SPREAD_DAYS, spreadOverdue } from './spreadOverdue';
 import { weekLoad } from './weekLoad';
+import WeekLoadBadge from './WeekLoadBadge';
 import { PickedCardsContext } from './pickedCards';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PROPOSAL_PARAM, setProposalParam } from '../Proposals/proposalLinks';
@@ -524,7 +525,10 @@ const UpcomingBoard: React.FC = () => {
     inboxTasksRef.current = inboxTasks;
     const openInboxCount =
         openInboxItems(inboxItems).length + inboxTasks.length;
+    // A thin bar only in Horizons: in Days the inbox is a section of the
+    // left column, among the horizons under it.
     const inboxIsCollapsed =
+        horizonsMode &&
         !inboxLoading &&
         unsorted.tasks !== null &&
         inboxCollapsed(openInboxCount + toPlanTotal, inboxChoice);
@@ -619,6 +623,27 @@ const UpcomingBoard: React.FC = () => {
                 : null,
         [horizon.tasks, today, firstDayOfWeek, options.filters, shownDays]
     );
+    // The left column's horizons (Days layout): a task already shown on a
+    // day of the board (planned there, or due there) is not listed again.
+    const leftHorizons = useMemo(() => {
+        if (!buckets) return null;
+        const onBoard = new Set<string>();
+        Object.entries(shownDays).forEach(([date, day]) => {
+            if (date < today) return;
+            (day.plan?.items ?? []).forEach((item) =>
+                onBoard.add(item.task_uid)
+            );
+            (day.due ?? []).forEach(
+                (task) => task.uid && onBoard.add(task.uid)
+            );
+        });
+        return Object.fromEntries(
+            HORIZON_KEYS.map((key) => [
+                key,
+                buckets[key].filter((task) => !onBoard.has(task.uid as string)),
+            ])
+        ) as HorizonBuckets;
+    }, [buckets, shownDays, today]);
     const bucketsRef = useRef(buckets);
     bucketsRef.current = buckets;
     // « À planifier » under the inbox, in the Days layout only.
@@ -689,7 +714,7 @@ const UpcomingBoard: React.FC = () => {
         async (only?: string[]) => {
             await Promise.all([
                 reloadDays(only),
-                horizonsMode ? reloadHorizonTasks() : undefined,
+                reloadHorizonTasks(),
                 reloadUnsorted(),
             ]);
         },
@@ -1534,22 +1559,6 @@ const UpcomingBoard: React.FC = () => {
         );
     };
 
-    // A strip target clicked: Horizons, scrolled to that column.
-    const [revealHorizon, setRevealHorizon] = useState<HorizonKey | null>(null);
-    const openHorizon = (key: HorizonKey) => {
-        setRevealHorizon(key);
-        patchOptions({ mode: 'horizons' });
-    };
-    useEffect(() => {
-        if (!horizonsMode || !revealHorizon) return;
-        const column = boardRef.current?.querySelector<HTMLElement>(
-            `[data-testid="horizon-column"][data-horizon="${revealHorizon}"]`
-        );
-        if (!column) return;
-        column.scrollIntoView?.({ block: 'nearest', inline: 'start' });
-        setRevealHorizon(null);
-    }, [horizonsMode, revealHorizon, buckets]);
-
     // The card menu of the Days layout (right click, or a long press that
     // does not start a drag): send the card to a horizon.
     const [cardMenu, setCardMenu] = useState<{
@@ -1802,7 +1811,11 @@ const UpcomingBoard: React.FC = () => {
             ? inboxTasksRef.current.filter((task) => task.uid === data.uid)
             : data.date === TO_PLAN_CARD_DATE
               ? toPlanTasksRef.current.filter((task) => task.uid === data.uid)
-              : [];
+              : horizonFromCardDate(data.date)
+                ? (bucketsRef.current?.[
+                      horizonFromCardDate(data.date) as HorizonKey
+                  ].filter((task) => task.uid === data.uid) ?? [])
+                : [];
 
     const onDragEnd = (event: DragEndEvent) => {
         endDrag();
@@ -1851,8 +1864,10 @@ const UpcomingBoard: React.FC = () => {
         }
         if (toHorizon) {
             if (data.kind !== 'card') return;
-            if (horizonsMode) void moveToHorizon(data.uid, toHorizon);
-            else void sendToHorizon(data, toHorizon);
+            // From one horizon to another: only the commitment changes.
+            if (horizonsMode || horizonFromCardDate(data.date)) {
+                void moveToHorizon(data.uid, toHorizon);
+            } else void sendToHorizon(data, toHorizon);
             return;
         }
         if (over.kind === 'horizon') return;
@@ -2830,6 +2845,40 @@ const UpcomingBoard: React.FC = () => {
                                                 </section>
                                             </div>
                                         )}
+                                        {toPlanBox &&
+                                            !previewing &&
+                                            !horizonsMode && (
+                                                <ToPlanBox
+                                                    box={{
+                                                        ...toPlanBox,
+                                                        week: [],
+                                                        month: [],
+                                                    }}
+                                                    today={today}
+                                                    openTaskUid={openTaskUid}
+                                                    collapsed={toPlanCollapsed}
+                                                    onCollapsedChange={
+                                                        setToPlanCollapsed
+                                                    }
+                                                    thin={inboxIsCollapsed}
+                                                    width={openInboxWidth}
+                                                    onExpand={() => {
+                                                        setInboxCollapsed(
+                                                            false
+                                                        );
+                                                        setToPlanCollapsed(
+                                                            false
+                                                        );
+                                                    }}
+                                                    onOpenTask={(line) =>
+                                                        openLine(line)
+                                                    }
+                                                    onToggleTask={toggle}
+                                                    onToggleSubtask={
+                                                        toggleSubtask
+                                                    }
+                                                />
+                                            )}
                                         <div
                                             className={`flex ${
                                                 inboxIsCollapsed
@@ -2856,7 +2905,9 @@ const UpcomingBoard: React.FC = () => {
                                                 onToggleSubtask={toggleSubtask}
                                                 collapsed={inboxIsCollapsed}
                                                 onCollapsedChange={
-                                                    setInboxCollapsed
+                                                    horizonsMode
+                                                        ? setInboxCollapsed
+                                                        : undefined
                                                 }
                                                 onIdeaToTask={() =>
                                                     void reloadUnsorted()
@@ -2875,28 +2926,64 @@ const UpcomingBoard: React.FC = () => {
                                                 />
                                             </div>
                                         )}
-                                        {toPlanBox && !previewing && (
-                                            <ToPlanBox
-                                                box={toPlanBox}
-                                                today={today}
-                                                openTaskUid={openTaskUid}
-                                                collapsed={toPlanCollapsed}
-                                                onCollapsedChange={
-                                                    setToPlanCollapsed
-                                                }
-                                                thin={inboxIsCollapsed}
-                                                width={openInboxWidth}
-                                                onExpand={() => {
-                                                    setInboxCollapsed(false);
-                                                    setToPlanCollapsed(false);
-                                                }}
-                                                onOpenTask={(line) =>
-                                                    openLine(line)
-                                                }
-                                                onToggleTask={toggle}
-                                                onToggleSubtask={toggleSubtask}
-                                            />
-                                        )}
+                                        {!horizonsMode &&
+                                            !previewing &&
+                                            HORIZON_KEYS.map((key) => (
+                                                <div
+                                                    key={key}
+                                                    style={{
+                                                        width: openInboxWidth,
+                                                    }}
+                                                    className="shrink-0"
+                                                >
+                                                    <HorizonColumn
+                                                        horizon={key}
+                                                        title={
+                                                            horizonTitles[key]
+                                                        }
+                                                        hint={horizonHints[key]}
+                                                        tasks={
+                                                            leftHorizons?.[
+                                                                key
+                                                            ] ?? null
+                                                        }
+                                                        today={today}
+                                                        openTaskUid={
+                                                            openTaskUid
+                                                        }
+                                                        onOpen={(line) =>
+                                                            openLine(line)
+                                                        }
+                                                        onToggle={toggle}
+                                                        onToggleSubtask={
+                                                            toggleSubtask
+                                                        }
+                                                        onAdd={(name) =>
+                                                            void addToHorizon(
+                                                                key,
+                                                                name
+                                                            )
+                                                        }
+                                                        fill={false}
+                                                        collapsible
+                                                        defaultCollapsed={
+                                                            key === 'someday'
+                                                        }
+                                                        headerExtra={
+                                                            key === 'week' ? (
+                                                                <WeekLoadBadge
+                                                                    load={weekLoad(
+                                                                        days,
+                                                                        today,
+                                                                        firstDayOfWeek,
+                                                                        DEFAULT_DAY_MINUTES
+                                                                    )}
+                                                                />
+                                                            ) : undefined
+                                                        }
+                                                    />
+                                                </div>
+                                            ))}
                                     </div>
                                     {!inboxIsCollapsed && (
                                         // Sits in the gap: as wide as the gap alone.
@@ -3054,29 +3141,6 @@ const UpcomingBoard: React.FC = () => {
                                               })}
                                     </div>
                                 </div>
-                                {!horizonsMode && (
-                                    <HorizonStrip
-                                        titles={horizonTitles}
-                                        week={weekLoad(
-                                            days,
-                                            today,
-                                            firstDayOfWeek,
-                                            DEFAULT_DAY_MINUTES
-                                        )}
-                                        counts={
-                                            buckets
-                                                ? Object.fromEntries(
-                                                      STRIP_KEYS.map((key) => [
-                                                          key,
-                                                          buckets[key].length,
-                                                      ])
-                                                  )
-                                                : null
-                                        }
-                                        dragging={!!dragging}
-                                        onOpen={openHorizon}
-                                    />
-                                )}
                             </div>
 
                             {calendarVisible && placement === 'split' && (

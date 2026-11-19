@@ -1047,3 +1047,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : « En retard » est la première section de la colonne de gauche, au-dessus de la Boîte de réception : tout ce qui n'a pas de jour est à gauche, les jours gardent toute la hauteur. Cartes l'une sous l'autre, repliée en une ligne (« En retard (N) », « Replanifier ▾ »), l'aide est dans l'infobulle du bouton.
 - **Android** : Échues est déjà une section de la liste de Planifier.
 
+## Plan : une seule colonne de gauche, dans l'ordre du temps (2026-11-19)
+
+- **Problème** : les horizons apparaissaient trois fois (bande du bas, « À planifier » à gauche, page Horizons) ; Cette semaine et Ce mois-ci en double ; la bande du bas ne faisait que recevoir des cartes et ouvrir Horizons.
+- **Décision** : la colonne de gauche liste tout ce qui n'a pas de jour : En retard, À replanifier (s'il y en a), Boîte de réception, Cette semaine (avec la charge « 2 h / 40 h »), Semaine prochaine, Ce mois-ci, Le mois prochain, Un jour. Chaque section se replie (Un jour replié au départ), reçoit des cartes et en donne aux jours. Une tâche déjà sur un jour du tableau n'y est pas répétée. Plus de bande du bas ; la Boîte ne se réduit plus en barre dans Jours.
+- **Android** : Planifier est déjà une liste à sections (Inbox, Échues, jours, horizons) ; rien à reprendre.
+

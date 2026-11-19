@@ -6570,16 +6570,15 @@
     "next": "Sonraki gün",
     "nextWeekHint": "Gelecek haftaya ayrıldı, sabit gün yok",
     "stripLabel": "Bir ufka gönder",
-    "stripOpen": "{{name}} ögesini Ufuklar'da aç",
     "sentToHorizon": "{{name}} ufkuna gönderildi",
     "plannedOnDayHint_one": "{{count}} tanesi bir güne planlandı",
     "plannedOnDayHint_other": "{{count}} tanesi bir güne planlandı",
-    "weekLoad": "Bu hafta {{planned}} / {{available}}",
     "weekLoadTitle": "Bugünden hafta sonuna kadar planlanan, günlük saatlerine göre",
     "pickedMoved": "Seçili görevler taşındı",
     "pickedCount": "Seçili: {{count}}",
     "pickedClear": "Seçimi temizle",
-    "aiTab": "Yapay zekâ planı"
+    "aiTab": "Yapay zekâ planı",
+    "sectionToggle": "{{name}} göster veya gizle"
   },
   "offline": {
     "offline": "Çevrimdışı",

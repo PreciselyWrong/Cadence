@@ -6571,15 +6571,14 @@
     "next": "次の日",
     "nextWeekHint": "来週に予定済み、曜日は未定",
     "stripLabel": "期間へ送る",
-    "stripOpen": "期間で{{name}}を開く",
     "sentToHorizon": "{{name}}に送りました",
     "plannedOnDayHint_other": "{{count}}件は日付に予定済み",
-        "weekLoad": "今週 {{planned}} / {{available}}",
         "weekLoadTitle": "今日から週末までの予定と、1日の作業時間との比較",
         "pickedMoved": "選択したタスクを移動しました",
         "pickedCount": "選択中: {{count}}",
         "pickedClear": "選択を解除",
-        "aiTab": "AIの計画"
+        "aiTab": "AIの計画",
+        "sectionToggle": "{{name}}を表示／非表示"
   },
   "offline": {
     "offline": "オフライン",

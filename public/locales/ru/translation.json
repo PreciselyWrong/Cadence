@@ -6684,18 +6684,17 @@
     "next": "Следующий день",
     "nextWeekHint": "Запланировано на следующую неделю, без конкретного дня",
     "stripLabel": "Отправить на горизонт",
-    "stripOpen": "Открыть {{name}} в Горизонтах",
     "sentToHorizon": "Отправлено: {{name}}",
     "plannedOnDayHint_one": "Запланировано на день: {{count}}",
     "plannedOnDayHint_few": "Запланировано на день: {{count}}",
     "plannedOnDayHint_many": "Запланировано на день: {{count}}",
     "plannedOnDayHint_other": "Запланировано на день: {{count}}",
-    "weekLoad": "Эта неделя {{planned}} / {{available}}",
     "weekLoadTitle": "Запланировано с сегодня до конца недели относительно ваших рабочих часов",
     "pickedMoved": "Выбранные задачи перемещены",
     "pickedCount": "Выбрано: {{count}}",
     "pickedClear": "Снять выделение",
-    "aiTab": "План ИИ"
+    "aiTab": "План ИИ",
+    "sectionToggle": "Показать или скрыть {{name}}"
   },
   "offline": {
     "offline": "Нет связи",

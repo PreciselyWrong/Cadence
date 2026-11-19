@@ -6579,16 +6579,15 @@
     "next": "Nächster Tag",
     "nextWeekHint": "Für nächste Woche vorgesehen, ohne festen Tag",
     "stripLabel": "An einen Horizont senden",
-    "stripOpen": "{{name}} in Horizonte öffnen",
     "sentToHorizon": "Nach {{name}} verschoben",
     "plannedOnDayHint_one": "{{count}} an einem Tag geplant",
     "plannedOnDayHint_other": "{{count}} an einem Tag geplant",
-    "weekLoad": "Diese Woche {{planned}} / {{available}}",
     "weekLoadTitle": "Geplant von heute bis Wochenende, gegenüber deinen Tagesstunden",
     "pickedMoved": "Ausgewählte Aufgaben verschoben",
     "pickedCount": "Ausgewählt: {{count}}",
     "pickedClear": "Auswahl aufheben",
-    "aiTab": "Von der KI geplant"
+    "aiTab": "Von der KI geplant",
+    "sectionToggle": "{{name}} ein- oder ausblenden"
   },
   "offline": {
     "offline": "Offline",

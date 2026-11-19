@@ -6572,16 +6572,15 @@
     "next": "Día siguiente",
     "nextWeekHint": "Comprometida para la próxima semana, sin día fijo",
     "stripLabel": "Enviar a un horizonte",
-    "stripOpen": "Abrir {{name}} en Horizontes",
     "sentToHorizon": "Enviada a {{name}}",
     "plannedOnDayHint_one": "{{count}} planificada en un día",
     "plannedOnDayHint_other": "{{count}} planificadas en un día",
-    "weekLoad": "Esta semana {{planned}} / {{available}}",
     "weekLoadTitle": "Planificado de hoy al fin de semana, frente a tus horas del día",
     "pickedMoved": "Tareas seleccionadas movidas",
     "pickedCount": "Seleccionadas: {{count}}",
     "pickedClear": "Vaciar la selección",
-    "aiTab": "Planificado por la IA"
+    "aiTab": "Planificado por la IA",
+    "sectionToggle": "Mostrar u ocultar {{name}}"
   },
   "offline": {
     "offline": "Sin conexión",

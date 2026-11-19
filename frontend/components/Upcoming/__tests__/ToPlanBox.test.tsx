@@ -78,10 +78,9 @@ describe('ToPlanBox', () => {
         renderBox({ replan: [task('r')], week: [], month: [] });
         const box = screen.getByTestId('to-plan-box');
         expect(box).not.toHaveClass('overflow-y-auto');
-        expect(screen.getByRole('button', { name: /To plan/ })).toHaveClass(
-            'sticky',
-            'top-0'
-        );
+        expect(
+            screen.getByRole('button', { name: /To (re)?plan/ })
+        ).toHaveClass('sticky', 'top-0');
     });
 
     it('collapses as a whole', () => {
@@ -90,7 +89,7 @@ describe('ToPlanBox', () => {
             { collapsed: true }
         );
         expect(screen.queryByText('Task r')).not.toBeInTheDocument();
-        fireEvent.click(screen.getByRole('button', { name: /To plan/ }));
+        fireEvent.click(screen.getByRole('button', { name: /To (re)?plan/ }));
         expect(onCollapsedChange).toHaveBeenCalledWith(false);
     });
 

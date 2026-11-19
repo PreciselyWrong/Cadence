@@ -6542,16 +6542,15 @@
     "next": "Next day",
     "nextWeekHint": "Committed to next week, no fixed day",
     "stripLabel": "Send to a horizon",
-    "stripOpen": "Open {{name}} in Horizons",
     "sentToHorizon": "Sent to {{name}}",
     "plannedOnDayHint_one": "{{count}} planned on a day",
     "plannedOnDayHint_other": "{{count}} planned on a day",
-    "weekLoad": "This week {{planned}} / {{available}}",
     "weekLoadTitle": "Planned from today to the end of the week, against your day hours",
     "pickedMoved": "Selected tasks moved",
     "pickedCount": "Selected: {{count}}",
     "pickedClear": "Clear the selection",
-    "aiTab": "Planned by AI"
+    "aiTab": "Planned by AI",
+    "sectionToggle": "Show or hide {{name}}"
   },
   "offline": {
     "offline": "Offline",

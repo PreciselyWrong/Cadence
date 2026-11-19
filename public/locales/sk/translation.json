@@ -6639,18 +6639,17 @@
     "next": "Nasledujúci deň",
     "nextWeekHint": "Naplánované na budúci týždeň, bez pevného dňa",
     "stripLabel": "Poslať do horizontu",
-    "stripOpen": "Otvoriť {{name}} v Horizontoch",
     "sentToHorizon": "Odoslané do: {{name}}",
     "plannedOnDayHint_one": "Naplánované na deň: {{count}}",
     "plannedOnDayHint_few": "Naplánované na deň: {{count}}",
     "plannedOnDayHint_many": "Naplánované na deň: {{count}}",
     "plannedOnDayHint_other": "Naplánované na deň: {{count}}",
-    "weekLoad": "Tento týždeň {{planned}} / {{available}}",
     "weekLoadTitle": "Naplánované od dnes do konca týždňa oproti tvojim denným hodinám",
     "pickedMoved": "Vybrané úlohy presunuté",
     "pickedCount": "Vybrané: {{count}}",
     "pickedClear": "Zrušiť výber",
-    "aiTab": "Plán AI"
+    "aiTab": "Plán AI",
+    "sectionToggle": "Zobraziť alebo skryť {{name}}"
   },
   "offline": {
     "offline": "Offline",

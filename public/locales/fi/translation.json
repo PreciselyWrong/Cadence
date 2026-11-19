@@ -6570,16 +6570,15 @@
     "next": "Seuraava päivä",
     "nextWeekHint": "Ensi viikon tehtävä, ei kiinteää päivää",
     "stripLabel": "Siirrä näkymään",
-    "stripOpen": "Avaa {{name}} Näkymissä",
     "sentToHorizon": "Siirretty: {{name}}",
     "plannedOnDayHint_one": "{{count}} suunniteltu päivälle",
     "plannedOnDayHint_other": "{{count}} suunniteltu päivälle",
-    "weekLoad": "Tällä viikolla {{planned}} / {{available}}",
     "weekLoadTitle": "Suunniteltu tästä päivästä viikon loppuun päivätuntejasi vasten",
     "pickedMoved": "Valitut tehtävät siirretty",
     "pickedCount": "Valittu: {{count}}",
     "pickedClear": "Tyhjennä valinta",
-    "aiTab": "Tekoälyn suunnitelma"
+    "aiTab": "Tekoälyn suunnitelma",
+    "sectionToggle": "Näytä tai piilota {{name}}"
   },
   "offline": {
     "offline": "Offline-tilassa",

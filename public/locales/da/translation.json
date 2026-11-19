@@ -6570,16 +6570,15 @@
     "next": "Næste dag",
     "nextWeekHint": "Planlagt til næste uge, uden fast dag",
     "stripLabel": "Send til en horisont",
-    "stripOpen": "Åbn {{name}} i Horisonter",
     "sentToHorizon": "Sendt til {{name}}",
     "plannedOnDayHint_one": "{{count}} planlagt på en dag",
     "plannedOnDayHint_other": "{{count}} planlagt på en dag",
-    "weekLoad": "Denne uge {{planned}} / {{available}}",
     "weekLoadTitle": "Planlagt fra i dag til ugens slutning, mod dine dagtimer",
     "pickedMoved": "Valgte opgaver flyttet",
     "pickedCount": "Valgt: {{count}}",
     "pickedClear": "Ryd valget",
-    "aiTab": "Planlagt af AI"
+    "aiTab": "Planlagt af AI",
+    "sectionToggle": "Vis eller skjul {{name}}"
   },
   "offline": {
     "offline": "Offline",

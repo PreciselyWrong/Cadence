@@ -547,12 +547,6 @@ describe('UpcomingBoard', () => {
         ).toHaveTextContent('Calendar');
     });
 
-    it('shows the rest of the week against its hours in the strip', async () => {
-        renderBoard();
-        const week = await screen.findByTestId('week-load');
-        expect(week).toHaveTextContent(/^This week .+ \/ .+$/);
-    });
-
     it('opens the inbox field on N, not while typing', async () => {
         renderBoard();
         await screen.findByTestId('inbox-column');
@@ -983,10 +977,20 @@ describe('UpcomingBoard', () => {
         expect(mockApply).not.toHaveBeenCalled();
     });
 
-    it('collapses an empty inbox into a bar', async () => {
+    it('collapses an empty inbox into a bar in Horizons, never in Days', async () => {
         useStore.getState().inboxStore.setInboxItems([]);
-        renderBoard();
+        const { unmount } = renderBoard();
         await screen.findAllByTestId('upcoming-column');
+        expect(screen.getByTestId('inbox-column')).not.toHaveAttribute(
+            'data-collapsed'
+        );
+        unmount();
+        localStorage.setItem(
+            'upcoming.viewOptions',
+            JSON.stringify({ mode: 'horizons' })
+        );
+        renderBoard();
+        await screen.findAllByTestId('horizon-column');
         expect(screen.getByTestId('inbox-column')).toHaveAttribute(
             'data-collapsed',
             'true'
@@ -1649,6 +1653,10 @@ describe('UpcomingBoard', () => {
             metrics: {} as never,
         }));
         localStorage.setItem('upcoming.inboxCollapsed', '1');
+        localStorage.setItem(
+            'upcoming.viewOptions',
+            JSON.stringify({ mode: 'horizons' })
+        );
         renderBoard();
         expect(
             await screen.findByRole('button', { name: 'Show the inbox (1)' })
@@ -1691,94 +1699,109 @@ describe('UpcomingBoard', () => {
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
     });
 
-    describe('« À planifier » box', () => {
-        // Nothing of the box is left once it is empty: no header, empty
-        // state, border, reserved space nor collapsed bar.
-        const boxNodes = () =>
-            document.querySelectorAll('[data-testid^="to-plan"]');
-
-        it('disappears with no reload once its last card is planned on a day', async () => {
-            const week = task('w1', 'Prepare the meeting', {
+    describe('left column of the Days layout', () => {
+        const nextWeekStart = () => {
+            const at = new Date(`${isoWeekStart(TODAY)}T00:00:00Z`);
+            at.setUTCDate(at.getUTCDate() + 7);
+            return at.toISOString().slice(0, 10);
+        };
+        const horizonTasks = () => [
+            task('w1', 'Prepare the meeting', {
                 week_of: isoWeekStart(TODAY),
-            } as Partial<Task>);
-            const server = fakeServer({}, { '2099-01-01': [week] });
+            } as Partial<Task>),
+            task('n1', 'Call the notary', {
+                week_of: nextWeekStart(),
+            } as Partial<Task>),
+            task('m1', 'Renew the domain', {
+                month_of: `${TODAY.slice(0, 8)}01`,
+            } as Partial<Task>),
+            task('s1', 'Learn the cello', {
+                tags: [{ name: 'someday' }],
+            } as Partial<Task>),
+        ];
+        const sections = () =>
+            Array.from(
+                screen
+                    .getByTestId('plan-left-column')
+                    .querySelectorAll(
+                        '[data-testid="upcoming-overdue"], [data-testid="inbox-column"], [data-testid="horizon-column"]'
+                    )
+            ).map(
+                (el) =>
+                    (el as HTMLElement).dataset.horizon ??
+                    el.getAttribute('data-testid')
+            );
+
+        beforeEach(() => {
+            const tasks = horizonTasks();
             mockFetchTasks.mockImplementation(async (query?: string) => ({
-                tasks: query === '?status=active' ? [week] : [],
+                tasks: query === '?status=active' ? tasks : [],
                 metrics: {} as never,
             }));
-            renderBoard();
-            const box = await screen.findByTestId('to-plan-box');
-            const card = within(box)
-                .getByText('Prepare the meeting')
-                .closest(CARD) as HTMLElement;
-            await settle();
-            const loads = mockFetchTasks.mock.calls.length;
-
-            fireEvent.keyDown(card, { key: 't' });
-
-            await waitFor(() => expect(boxNodes()).toHaveLength(0));
-            expect(server.uids(TODAY)).toEqual(['w1']);
-            expect(
-                within(column(TODAY)).getByText('Prepare the meeting')
-            ).toBeInTheDocument();
-            // The plan line alone hid it: the task list was not reloaded.
-            expect(
-                mockFetchTasks.mock.calls
-                    .slice(loads)
-                    .filter(([query]) => query === '?status=active')
-            ).toHaveLength(0);
         });
 
-        it('renders nothing when every group is empty after the filters', async () => {
-            mockFetchTasks.mockResolvedValue({
-                tasks: [task('x', 'Plain task')],
-                metrics: {} as never,
-            });
+        it('lists what has no day in time order, each horizon once, and no strip', async () => {
+            withOverdue([
+                task('late', 'Renew passport', {
+                    due_date: shift(-3),
+                } as Partial<Task>),
+            ]);
             renderBoard();
-            await within(column(TODAY)).findByText('Write report');
-            await settle();
-            expect(boxNodes()).toHaveLength(0);
-        });
-    });
-
-    describe('horizon strip of the Days layout', () => {
-        it('shows the horizons past this week with their counts', async () => {
-            mockFetchTasks.mockResolvedValue({
-                tasks: [
-                    task('s1', 'Learn the cello', {
-                        tags: [{ name: 'someday' }],
-                    } as Partial<Task>),
-                ],
-                metrics: {} as never,
-            });
-            renderBoard();
-            const strip = await screen.findByTestId('horizon-strip');
-            const targets = within(strip).getAllByTestId(
-                'horizon-strip-target'
-            );
-            expect(targets.map((el) => el.dataset.horizon)).toEqual([
+            await screen.findByText('Prepare the meeting');
+            expect(sections()).toEqual([
+                'upcoming-overdue',
+                'inbox-column',
+                'week',
                 'next_week',
                 'this_month',
                 'next_month',
                 'someday',
             ]);
-            await waitFor(() =>
-                expect(targets[3]).toHaveTextContent('Someday1')
-            );
-        });
-
-        it('opens Horizons when a target is clicked', async () => {
-            renderBoard();
-            const strip = await screen.findByTestId('horizon-strip');
-            fireEvent.click(
-                within(strip).getAllByTestId('horizon-strip-target')[1]
-            );
-            expect(await screen.findAllByTestId('horizon-column')).toHaveLength(
-                5
-            );
             expect(screen.queryByTestId('horizon-strip')).toBeNull();
+            expect(screen.queryByTestId('to-plan-box')).toBeNull();
+            expect(screen.getAllByText('Prepare the meeting')).toHaveLength(1);
+            // The week section carries the week's load.
+            const week = screen
+                .getAllByTestId('horizon-column')
+                .find((el) => el.dataset.horizon === 'week')!;
+            expect(within(week).getByTestId('week-load')).toBeInTheDocument();
         });
 
+        it('plans a horizon task on today with t, and it leaves its section', async () => {
+            const server = fakeServer({}, { '2099-01-01': horizonTasks() });
+            renderBoard();
+            const card = (await screen.findByText('Call the notary')).closest(
+                CARD
+            ) as HTMLElement;
+            await settle();
+            fireEvent.keyDown(card, { key: 't' });
+            await waitFor(() => expect(server.uids(TODAY)).toEqual(['n1']));
+            await waitFor(() =>
+                expect(
+                    within(column(TODAY)).getByText('Call the notary')
+                ).toBeInTheDocument()
+            );
+            expect(screen.getAllByText('Call the notary')).toHaveLength(1);
+        });
+
+        it('folds a section and remembers it; Someday starts folded', async () => {
+            renderBoard();
+            await screen.findByText('Prepare the meeting');
+            expect(screen.queryByText('Learn the cello')).toBeNull();
+            const next = screen
+                .getAllByTestId('horizon-column')
+                .find((el) => el.dataset.horizon === 'next_week')!;
+            fireEvent.click(
+                within(next).getByRole('button', { expanded: true })
+            );
+            expect(screen.queryByText('Call the notary')).toBeNull();
+            expect(
+                localStorage.getItem('upcoming.leftCollapsed.next_week')
+            ).toBe('1');
+        });
+    });
+
+    describe('sending a card to a horizon', () => {
         it('sends a planned card to next week: off its day, committed, one undo', async () => {
             const server = fakeServer({
                 [TODAY]: [

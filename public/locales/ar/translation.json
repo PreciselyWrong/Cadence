@@ -6664,7 +6664,6 @@
     "next": "اليوم التالي",
     "nextWeekHint": "مخطط للأسبوع القادم دون يوم محدد",
     "stripLabel": "إرسال إلى أفق",
-    "stripOpen": "فتح {{name}} في الآفاق",
     "sentToHorizon": "أُرسلت إلى {{name}}",
     "plannedOnDayHint_zero": "{{count}} مخططة في يوم",
     "plannedOnDayHint_one": "{{count}} مخططة في يوم",
@@ -6672,12 +6671,12 @@
     "plannedOnDayHint_few": "{{count}} مخططة في يوم",
     "plannedOnDayHint_many": "{{count}} مخططة في يوم",
     "plannedOnDayHint_other": "{{count}} مخططة في يوم",
-    "weekLoad": "هذا الأسبوع {{planned}} / {{available}}",
     "weekLoadTitle": "المخطط من اليوم حتى نهاية الأسبوع مقابل ساعات يومك",
     "pickedMoved": "نُقلت المهام المحددة",
     "pickedCount": "المحدد: {{count}}",
     "pickedClear": "مسح التحديد",
-    "aiTab": "خطة الذكاء الاصطناعي"
+    "aiTab": "خطة الذكاء الاصطناعي",
+    "sectionToggle": "إظهار أو إخفاء {{name}}"
   },
   "offline": {
     "offline": "غير متصل",

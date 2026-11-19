@@ -6688,18 +6688,17 @@
     "next": "Naslednji dan",
     "nextWeekHint": "Načrtovano za naslednji teden, brez določenega dne",
     "stripLabel": "Pošlji v obzorje",
-    "stripOpen": "Odpri {{name}} v Obzorjih",
     "sentToHorizon": "Poslano v: {{name}}",
     "plannedOnDayHint_one": "Načrtovano za dan: {{count}}",
     "plannedOnDayHint_two": "Načrtovano za dan: {{count}}",
     "plannedOnDayHint_few": "Načrtovano za dan: {{count}}",
     "plannedOnDayHint_other": "Načrtovano za dan: {{count}}",
-    "weekLoad": "Ta teden {{planned}} / {{available}}",
     "weekLoadTitle": "Načrtovano od danes do konca tedna glede na tvoje dnevne ure",
     "pickedMoved": "Izbrana opravila premaknjena",
     "pickedCount": "Izbrano: {{count}}",
     "pickedClear": "Počisti izbor",
-    "aiTab": "Načrt UI"
+    "aiTab": "Načrt UI",
+    "sectionToggle": "Pokaži ali skrij {{name}}"
   },
   "offline": {
     "offline": "Brez povezave",

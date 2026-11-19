@@ -93,7 +93,11 @@ const ToPlanBox: React.FC<ToPlanBoxProps> = ({
         week: t('upcoming.thisWeek', 'This week'),
         month: t('upcoming.thisMonth', 'This month'),
     };
-    const title = t('upcoming.toPlan', 'To plan');
+    // One group left (on Plan's left column, only « To replan »): its title
+    // is the box's, with no second header.
+    const filled = GROUPS.filter((group) => box[group].length > 0);
+    const single = filled.length === 1 ? filled[0] : null;
+    const title = single ? titles[single] : t('upcoming.toPlan', 'To plan');
 
     if (thin) {
         return (
@@ -169,33 +173,37 @@ const ToPlanBox: React.FC<ToPlanBoxProps> = ({
                                     : ''
                             }`}
                         >
-                            <button
-                                type="button"
-                                aria-expanded={open[group]}
-                                onClick={() =>
-                                    setOpen((current) => ({
-                                        ...current,
-                                        [group]: !current[group],
-                                    }))
-                                }
-                                className={`flex h-7 items-center gap-1.5 rounded-lg px-1.5 text-body-m font-semibold hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary ${
-                                    replan ? 'text-danger' : 'text-surface-on'
-                                }`}
-                            >
-                                <ChevronRightIcon
-                                    aria-hidden="true"
-                                    className={`h-3.5 w-3.5 shrink-0 transition-transform duration-150 ${
-                                        open[group] ? 'rotate-90' : ''
+                            {!single && (
+                                <button
+                                    type="button"
+                                    aria-expanded={open[group]}
+                                    onClick={() =>
+                                        setOpen((current) => ({
+                                            ...current,
+                                            [group]: !current[group],
+                                        }))
+                                    }
+                                    className={`flex h-7 items-center gap-1.5 rounded-lg px-1.5 text-body-m font-semibold hover:bg-surface-high/60 focus-visible:outline-2 focus-visible:outline-primary ${
+                                        replan
+                                            ? 'text-danger'
+                                            : 'text-surface-on'
                                     }`}
-                                />
-                                <span className="min-w-0 flex-1 truncate text-left">
-                                    {titles[group]}
-                                </span>
-                                <span className="text-xs tabular-nums text-surface-on-variant">
-                                    {tasks.length}
-                                </span>
-                            </button>
-                            {open[group] && (
+                                >
+                                    <ChevronRightIcon
+                                        aria-hidden="true"
+                                        className={`h-3.5 w-3.5 shrink-0 transition-transform duration-150 ${
+                                            open[group] ? 'rotate-90' : ''
+                                        }`}
+                                    />
+                                    <span className="min-w-0 flex-1 truncate text-left">
+                                        {titles[group]}
+                                    </span>
+                                    <span className="text-xs tabular-nums text-surface-on-variant">
+                                        {tasks.length}
+                                    </span>
+                                </button>
+                            )}
+                            {(single || open[group]) && (
                                 <div
                                     role="list"
                                     data-card-date={TO_PLAN_CARD_DATE}

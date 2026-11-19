@@ -6570,16 +6570,15 @@
     "next": "Volgende dag",
     "nextWeekHint": "Vastgelegd voor volgende week, zonder vaste dag",
     "stripLabel": "Naar een horizon sturen",
-    "stripOpen": "{{name}} openen in Horizonnen",
     "sentToHorizon": "Verplaatst naar {{name}}",
     "plannedOnDayHint_one": "{{count}} ingepland op een dag",
     "plannedOnDayHint_other": "{{count}} ingepland op een dag",
-    "weekLoad": "Deze week {{planned}} / {{available}}",
     "weekLoadTitle": "Gepland van vandaag tot het eind van de week, tegenover je daguren",
     "pickedMoved": "Geselecteerde taken verplaatst",
     "pickedCount": "Geselecteerd: {{count}}",
     "pickedClear": "Selectie wissen",
-    "aiTab": "Gepland door AI"
+    "aiTab": "Gepland door AI",
+    "sectionToggle": "{{name}} tonen of verbergen"
   },
   "offline": {
     "offline": "Offline",

@@ -6571,15 +6571,14 @@
     "next": "Hari berikutnya",
     "nextWeekHint": "Dijadwalkan untuk minggu depan, tanpa hari tetap",
     "stripLabel": "Kirim ke horizon",
-    "stripOpen": "Buka {{name}} di Horizon",
     "sentToHorizon": "Dikirim ke {{name}}",
     "plannedOnDayHint_other": "{{count}} direncanakan pada suatu hari",
-        "weekLoad": "Minggu ini {{planned}} / {{available}}",
         "weekLoadTitle": "Direncanakan dari hari ini hingga akhir minggu, dibanding jam harianmu",
         "pickedMoved": "Tugas terpilih dipindahkan",
         "pickedCount": "Terpilih: {{count}}",
         "pickedClear": "Kosongkan pilihan",
-        "aiTab": "Rencana AI"
+        "aiTab": "Rencana AI",
+        "sectionToggle": "Tampilkan atau sembunyikan {{name}}"
   },
   "offline": {
     "offline": "Offline",

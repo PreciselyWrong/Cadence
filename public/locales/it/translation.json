@@ -6585,16 +6585,15 @@
     "next": "Giorno successivo",
     "nextWeekHint": "Impegnata per la prossima settimana, senza giorno fisso",
     "stripLabel": "Invia a un orizzonte",
-    "stripOpen": "Apri {{name}} in Orizzonti",
     "sentToHorizon": "Inviata a {{name}}",
     "plannedOnDayHint_one": "{{count}} pianificata in un giorno",
     "plannedOnDayHint_other": "{{count}} pianificate in un giorno",
-    "weekLoad": "Questa settimana {{planned}} / {{available}}",
     "weekLoadTitle": "Pianificato da oggi a fine settimana, rispetto alle tue ore giornaliere",
     "pickedMoved": "Attività selezionate spostate",
     "pickedCount": "Selezionate: {{count}}",
     "pickedClear": "Svuota la selezione",
-    "aiTab": "Pianificato dall’IA"
+    "aiTab": "Pianificato dall’IA",
+    "sectionToggle": "Mostra o nascondi {{name}}"
   },
   "offline": {
     "offline": "Offline",
