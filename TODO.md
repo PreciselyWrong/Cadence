@@ -147,6 +147,11 @@ Branche `feat/habit-stats-bdad4581`.
 
 ## Next
 
+- Plan web : « En retard » dans la colonne de gauche, au-dessus de la Boîte de réception
+  Raison : la bande « En retard » prend le haut du tableau ; la colonne de gauche deviendrait tout ce qui n'a pas de jour, dans l'ordre En retard, Boîte, Cette semaine, Semaine prochaine, Ce mois-ci, et les jours gardent toute la hauteur. Garder « Replanifier » et « ▾ » sur l'en-tête de la section. Vérif : à 1500 px, plus de bande au-dessus des jours ; Replanifier et le glisser-déposer des échues marchent depuis la colonne.
+- Plan web : voir les tâches que je repousse sans cesse
+  Raison : rien ne montre les tâches reportées encore et encore ; Cadence compte déjà les reports (liste « repoussées » de la revue). Badge « reportée N× » sur la carte et section repliable « Repoussées » dans la colonne de gauche, avec les choix habituels (faite, abandonner, un horizon, découper). Vérif : une tâche reportée 3 fois montre le badge et apparaît dans la section ; Android dans la même étape ou noté ici.
+
 - Add-on Firefox Cadence signé en non listé (web-ext sign --channel=unlisted, clés AMO dans .env, gecko.id fixe, script publish.ps1 -Sign) pour une installation permanente sans le site de Mozilla.
 
 - Cartes « Mail » dans « À trier » (web et Android)
