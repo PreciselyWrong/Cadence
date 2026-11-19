@@ -22,6 +22,7 @@ import kotlin.math.roundToInt
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Event
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
@@ -57,8 +58,10 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.planning.PlanBoard
+import ch.nicolab.cadence.tasks.proposals.MorningRitual
 import ch.nicolab.cadence.tasks.proposals.ProposalKind
 import ch.nicolab.cadence.tasks.proposals.ProposalPhase
+import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.proposals.WeekPlanning
 import ch.nicolab.cadence.tasks.ui.proposals.rememberProposalAction
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -211,6 +214,9 @@ internal fun TodayTab(
     }
 
     val weekAction = rememberProposalAction(ProposalKind.WEEK)
+    val proposalRepo = remember(context) { ProposalRepository.of(context) }
+    val latestProposals by proposalRepo.latest.collectAsStateWithLifecycle()
+    val morningProposal = latestProposals[ProposalKind.WEEK]?.takeIf { MorningRitual.isReadyForToday(it, today) }
     val listState = rememberLazyListState()
     val drag = remember(listState) { TodayDragState(listState) }
     val nowMinute = minuteOfDay(moment.now, zone)
@@ -270,6 +276,42 @@ internal fun TodayTab(
 
     Box(modifier) {
     LazyColumn(modifier = Modifier.fillMaxSize(), state = listState, contentPadding = tasksListPadding()) {
+        if (morningProposal != null) {
+            item(key = "morning-ritual-entry") {
+                CardSlot {
+                    ch.nicolab.cadence.designsystem.components.Panel(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable(role = Role.Button) { proposalRepo.showRitual(morningProposal.uid) },
+                    ) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                Icons.Outlined.AutoAwesome,
+                                contentDescription = null,
+                                tint = cadence.primary,
+                                modifier = Modifier.size(Size.icon),
+                            )
+                            androidx.compose.foundation.layout.Spacer(Modifier.size(Space.md))
+                            androidx.compose.foundation.layout.Column(Modifier.weight(1f)) {
+                                Text(
+                                    stringResource(R.string.ritual_today_card_title),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = cadence.onSurface,
+                                )
+                                Text(
+                                    stringResource(R.string.ritual_today_card_subtitle),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = cadence.onSurfaceVariant,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
         // « Planifier ma semaine (IA) » : un lien discret le dimanche et le lundi, ou quand la semaine est prête ou en
         // préparation ; le reste du temps, dans le menu ⋯ de l'en-tête.
         if (WeekPlanning.linkVisible(today, weekAction.phase)) {

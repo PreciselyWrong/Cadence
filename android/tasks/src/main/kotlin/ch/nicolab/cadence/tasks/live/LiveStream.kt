@@ -70,9 +70,10 @@ data class LiveNotification(
     val kind: String? = null,
     /** Niveau de la notification : `info`, `success`, `warning` ou `error`. */
     val level: String? = null,
-    /** Proposition d'agent (`data.proposal_uid`, `docs/47-proposals.md`) : son uid et son statut. */
+    /** Proposition d'agent (`data.proposal_uid`, `docs/47-proposals.md`) : son uid, son statut et son déclencheur. */
     val proposalUid: String? = null,
     val proposalStatus: String? = null,
+    val trigger: String? = null,
     /** Projet visé (`data.projectUid`) : le toucher ouvre sa page. */
     val projectUid: String? = null,
 ) {
@@ -80,7 +81,7 @@ data class LiveNotification(
     val forMobile: Boolean get() = MOBILE in sources
 
     /** Champs qui décident de la cible du toucher ([NotificationTargets.of]). */
-    fun payload(): NotificationPayload = NotificationPayload(kind, proposalUid, pluginId, openPath, taskUid, projectUid)
+    fun payload(): NotificationPayload = NotificationPayload(kind, proposalUid, pluginId, openPath, taskUid, projectUid, trigger)
 
     companion object {
         const val EVENT = "notification"
@@ -107,6 +108,7 @@ data class LiveNotification(
                 level = body.text("level"),
                 proposalUid = data?.text("proposal_uid"),
                 proposalStatus = data?.text("status"),
+                trigger = data?.text("trigger"),
                 projectUid = data?.text("projectUid"),
             )
         }
@@ -128,6 +130,7 @@ data class LiveNotification(
                     notification.agent?.let { put("agent", it) }
                     notification.agentLabel?.let { put("agentLabel", it) }
                     notification.kind?.let { put("kind", it) }
+                    notification.trigger?.let { put("trigger", it) }
                 },
             )
         }.toString()

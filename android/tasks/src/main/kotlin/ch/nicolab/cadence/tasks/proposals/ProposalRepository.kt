@@ -29,6 +29,13 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
     /** Uid de la semaine prête dont la feuille est ouverte ; null hors feuille. */
     val sheet: StateFlow<String?> = _sheet.asStateFlow()
 
+    private val _ritual = MutableStateFlow<String?>(null)
+
+    /** Uid du rituel du matin ouvert ; null hors rituel. */
+    val ritual: StateFlow<String?> = _ritual.asStateFlow()
+
+    private val details = HashMap<String, ProposalDto>()
+
     private val _tab = MutableStateFlow<ProposalTab?>(null)
 
     /** Onglet demandé ; l'écran le consomme. */
@@ -49,8 +56,10 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
         refresh().getOrThrow()
     }
 
-    /** La proposition avec ses faits, pour la feuille. */
-    suspend fun detail(uid: String): Result<ProposalDto> = attempt { ProposalJson.decodeFromJsonElement<ProposalDto>(client.get(uid)) }
+    /** La proposition avec ses faits, pour la feuille ou le rituel (relu du cache en cas d'échec réseau). */
+    suspend fun detail(uid: String): Result<ProposalDto> = attempt {
+        ProposalJson.decodeFromJsonElement<ProposalDto>(client.get(uid)).also { details[uid] = it }
+    }.recoverCatching { error -> details[uid] ?: throw error }
 
     suspend fun reply(uid: String, text: String): Result<Unit> = attempt {
         client.reply(uid, text)
@@ -106,14 +115,23 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
         _sheet.value = null
     }
 
+    fun showRitual(uid: String) {
+        _ritual.value = uid
+    }
+
+    fun closeRitual() {
+        _ritual.value = null
+    }
+
     fun consumeTab() {
         _tab.value = null
     }
 
-    /** Route une notification ou un lancement : la feuille d'une semaine prête, ou un onglet. */
+    /** Route une notification ou un lancement : la feuille d'une semaine prête, le rituel du matin, ou un onglet. */
     fun route(intent: Intent?) {
         when (intent?.getStringExtra(ProposalNotifications.EXTRA_ROUTE)) {
             ProposalNotifications.ROUTE_SHOW -> intent.getStringExtra(ProposalNotifications.EXTRA_UID)?.let(::show)
+            ProposalNotifications.ROUTE_MORNING -> intent.getStringExtra(ProposalNotifications.EXTRA_UID)?.let(::showRitual)
             ProposalNotifications.ROUTE_PLAN -> _tab.value = ProposalTab.PLAN
             ProposalNotifications.ROUTE_REVIEW -> _tab.value = ProposalTab.REVIEW
             ProposalNotifications.ROUTE_CAREER -> _tab.value = ProposalTab.CAREER

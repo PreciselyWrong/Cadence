@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.live
 
+import ch.nicolab.cadence.tasks.proposals.MorningRitual
 import ch.nicolab.cadence.tasks.proposals.ProposalKind
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNull
@@ -11,6 +12,9 @@ import kotlinx.serialization.json.contentOrNull
 sealed interface NotificationTarget {
     /** Semaine prête : sa feuille. */
     data class ProposalSheet(val uid: String) : NotificationTarget
+
+    /** Rituel du matin prêt (`trigger = "morning"`). */
+    data class MorningRitual(val uid: String) : NotificationTarget
 
     /** Revue prête : l'écran de la revue (Bilan). */
     data object Review : NotificationTarget
@@ -46,6 +50,7 @@ data class NotificationPayload(
     val openPath: String? = null,
     val taskUid: String? = null,
     val projectUid: String? = null,
+    val trigger: String? = null,
 )
 
 /** Règles pures des cibles : le toucher de l'écran et celui de la notification système passent par elles. */
@@ -68,7 +73,11 @@ object NotificationTargets {
                 ProposalKind.REVIEW -> NotificationTarget.Review
                 ProposalKind.CAREER -> NotificationTarget.Career
                 ProposalKind.WEEKEND -> NotificationTarget.Weekend(uid)
-                ProposalKind.WEEK, null -> NotificationTarget.ProposalSheet(uid)
+                ProposalKind.WEEK, null -> if (payload.trigger == MorningRitual.TRIGGER_MORNING) {
+                    NotificationTarget.MorningRitual(uid)
+                } else {
+                    NotificationTarget.ProposalSheet(uid)
+                }
             }
         }
         if (payload.pluginId != null) {
@@ -82,6 +91,7 @@ object NotificationTargets {
     /** Forme gardée dans l'extra d'une notification ou d'un intent ; [decode] la relit et la revalide. */
     fun encode(target: NotificationTarget): String = when (target) {
         is NotificationTarget.ProposalSheet -> "proposal:${target.uid}"
+        is NotificationTarget.MorningRitual -> "morning:${target.uid}"
         NotificationTarget.Review -> REVIEW
         NotificationTarget.Career -> CAREER
         is NotificationTarget.Weekend -> "weekend:${target.uid}"
@@ -102,6 +112,7 @@ object NotificationTargets {
         raw == DECISIONS -> NotificationTarget.DecisionsDeck
         raw == CENTER -> NotificationTarget.Center
         raw.startsWith("proposal:") -> raw.removePrefix("proposal:").takeIf(UID::matches)?.let(NotificationTarget::ProposalSheet)
+        raw.startsWith("morning:") -> raw.removePrefix("morning:").takeIf(UID::matches)?.let(NotificationTarget::MorningRitual)
         raw.startsWith("weekend:") -> raw.removePrefix("weekend:").takeIf(UID::matches)?.let(NotificationTarget::Weekend)
         raw.startsWith("task:") -> raw.removePrefix("task:").takeIf(UID::matches)?.let(NotificationTarget::Task)
         raw.startsWith("project:") -> raw.removePrefix("project:").takeIf(UID::matches)?.let(NotificationTarget::Project)
@@ -141,6 +152,7 @@ object CenterNotifications {
                     openPath = data?.text("openPath"),
                     taskUid = data?.text("taskUid"),
                     projectUid = data?.text("projectUid"),
+                    trigger = data?.text("trigger"),
                 ),
             )
         }

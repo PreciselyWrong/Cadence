@@ -41,11 +41,13 @@ data class ProposalDto(
     val uid: String = "",
     val kind: String = "",
     val status: String = "",
+    val trigger: String? = null,
     val error: String? = null,
     val answer: ProposalAnswerDto? = null,
     val facts: JsonObject? = null,
     @SerialName("period_start") val periodStart: String? = null,
     @SerialName("period_end") val periodEnd: String? = null,
+    @SerialName("created_at") val createdAt: String? = null,
     /** Jours de la période, calculés à chaque lecture (week seulement) ; absent sur un serveur d'avant : la charge vient des faits. */
     val days: List<ProposalDayDto>? = null,
 )
@@ -87,6 +89,7 @@ data class ProposalAnswerDto(
     val questions: List<QuestionDto> = emptyList(),
     val changes: List<ChangeDto> = emptyList(),
     val items: List<ReviewItemDto> = emptyList(),
+    val focus: List<String> = emptyList(),
 )
 
 @Serializable
@@ -113,6 +116,8 @@ internal data class FactTaskDto(
     val name: String = "",
     val due: String? = null,
     val overdue: Boolean = false,
+    val project: String? = null,
+    @SerialName("estimate_min") val estimateMin: Int? = null,
 )
 
 @Serializable
@@ -173,7 +178,14 @@ enum class ProposalOp(val wire: String) {
 data class WeekChange(val taskUid: String, val op: ProposalOp, val date: LocalDate?, val reason: String)
 
 /** Une tâche des faits : ce que la feuille montre ; [overdue] range la ligne dans « Échues ». */
-data class FactTask(val uid: String, val name: String, val due: LocalDate?, val overdue: Boolean)
+data class FactTask(
+    val uid: String,
+    val name: String,
+    val due: LocalDate?,
+    val overdue: Boolean,
+    val project: String? = null,
+    val estimateMin: Int? = null,
+)
 
 data class DayItem(val taskUid: String, val name: String, val minutes: Int)
 
@@ -437,7 +449,16 @@ object Proposals {
 
     fun factTasks(facts: JsonObject?): Map<String, FactTask> =
         parseFacts(facts)?.tasks.orEmpty().filter { it.uid.isNotBlank() }
-            .associate { it.uid to FactTask(it.uid, it.name, dateOrNull(it.due), it.overdue) }
+            .associate {
+                it.uid to FactTask(
+                    uid = it.uid,
+                    name = it.name,
+                    due = dateOrNull(it.due),
+                    overdue = it.overdue,
+                    project = it.project?.takeIf(String::isNotBlank),
+                    estimateMin = it.estimateMin,
+                )
+            }
 
     fun factToday(facts: JsonObject?): LocalDate? = dateOrNull(parseFacts(facts)?.today)
 

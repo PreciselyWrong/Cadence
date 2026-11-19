@@ -16,7 +16,8 @@ class NotificationTargetsTest {
         openPath: String? = null,
         taskUid: String? = null,
         projectUid: String? = null,
-    ) = NotificationTargets.of(NotificationPayload(kind, proposalUid, pluginId, openPath, taskUid, projectUid))
+        trigger: String? = null,
+    ) = NotificationTargets.of(NotificationPayload(kind, proposalUid, pluginId, openPath, taskUid, projectUid, trigger))
 
     @Test
     fun mailReadyOpensTheMailDeck() {
@@ -31,6 +32,7 @@ class NotificationTargetsTest {
     @Test
     fun proposalKindChoosesItsScreen() {
         assertEquals(NotificationTarget.ProposalSheet("p1"), of(kind = "week", proposalUid = "p1"))
+        assertEquals(NotificationTarget.MorningRitual("p1"), of(kind = "week", proposalUid = "p1", trigger = "morning"))
         assertEquals(NotificationTarget.Review, of(kind = "review", proposalUid = "p1"))
         assertEquals(NotificationTarget.Career, of(kind = "career", proposalUid = "p1"))
         assertEquals(NotificationTarget.Weekend("p1"), of(kind = "weekend", proposalUid = "p1"))
@@ -61,6 +63,7 @@ class NotificationTargetsTest {
     fun encodeAndDecodeRoundTrip() {
         val targets = listOf(
             NotificationTarget.ProposalSheet("p1"),
+            NotificationTarget.MorningRitual("p2"),
             NotificationTarget.Review,
             NotificationTarget.Career,
             NotificationTarget.Weekend("w-1"),

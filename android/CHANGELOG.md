@@ -1,3 +1,7 @@
+## [1.41.0] : 19 novembre 2026
+
+- Rituel du matin : le matin, quand des tâches sont en retard, la notification ouvre trois étapes de grandes cartes : trier chaque retard d'un glissement (droite = conseil de l'IA, gauche = demain, haut = plus tard) ou par de grands boutons avec Annuler, vérifier « Ta journée » (priorités « Ce qui compte » avec étoile, événements, tâches et charge), puis « C'est parti » pour tout appliquer et revenir sur Aujourd'hui. Une carte « Ma matinée » reste en haut d'Aujourd'hui tant que le rituel du jour n'est pas validé.
+
 ## [1.40.0] : 15 novembre 2026
 
 - Nouveau paquet « Décider » dans « À trier » : les agents y posent ce qu'ils te demandent de trancher (abonnements à garder ou résilier, mises à jour risquées, qui accompagne les enfants, contrats à renouveler, souvenirs contradictoires). Le conseil est mis en avant, un geste décide, l'agent applique ensuite. Une notification « N décisions à prendre » ouvre le paquet.
