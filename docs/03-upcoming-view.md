@@ -35,6 +35,8 @@ In the days layout, a slim strip under the day columns (Semaine prochaine, Ce mo
 
 ### « À planifier » (Days layout)
 
+The inbox column is 260 px wide by default and widens or narrows from the handle on its right (drag, arrow keys, Home / End; a double click brings back 260 px): 220 to 560 px, and never so wide that the board loses its two day columns or, when the calendar sits beside it, the narrowest calendar. The width is kept per browser (`upcoming.inboxWidth`); « À planifier » below follows it. Web only: the phone shows one column.
+
 Under the inbox column, a box « À planifier » (`ToPlanBox.tsx`, rule `toPlan` in `horizons.ts`; Android `PlanBoard.toSchedule`), open top-level tasks without #someday:
 
 - **À replanifier** (first, red): not recurring, `week_of` before this week or `month_of` before this month, placed in no horizon by `bucketHorizons`, and with no plan line today or later. A task already shown elsewhere is left out: overdue (non-recurring, due before today: « En retard » / « Échues ») or unsorted (no project and no area, or `needs_when`: « Tâches à classer »). Its chip then shows its red due date, not « À replanifier ».

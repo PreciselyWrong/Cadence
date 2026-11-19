@@ -7,6 +7,9 @@ export const BOARD_DAYS = 14;
 export const DAY_COLUMN_WIDTH = 264;
 export const COLUMN_GAP = 12;
 export const INBOX_WIDTH = 260;
+// The inbox column can be dragged wider, from its handle on the right.
+export const INBOX_MIN = 220;
+export const INBOX_MAX = 560;
 export const INBOX_COLLAPSED_WIDTH = 44;
 // Left and right padding of the board pane (pl-5 pr-2) and of the strip (p-1).
 const BOARD_PADDING = 36;
@@ -36,6 +39,33 @@ export const minBoardWidth = (inboxWidth: number): number =>
     2 * DAY_COLUMN_WIDTH +
     COLUMN_GAP +
     BOARD_PADDING;
+
+// Widest the inbox may be: the board keeps two day columns and, when the
+// calendar is shown beside it, the narrowest calendar (0: not measured yet).
+export const inboxMaxWidth = (
+    available: number,
+    calendarShown: boolean
+): number => {
+    if (available <= 0) return INBOX_MAX;
+    const room =
+        available -
+        minBoardWidth(0) -
+        COLUMN_GAP -
+        (calendarShown ? CALENDAR_MIN : 0);
+    return Math.max(INBOX_MIN, Math.min(INBOX_MAX, room));
+};
+
+// The inbox width actually used; a missing or broken stored width gives the
+// default.
+export const clampInboxWidth = (
+    width: number,
+    available: number,
+    calendarShown: boolean
+): number => {
+    const max = inboxMaxWidth(available, calendarShown);
+    const wanted = Number.isFinite(width) && width > 0 ? width : INBOX_WIDTH;
+    return Math.round(Math.max(INBOX_MIN, Math.min(max, wanted)));
+};
 
 // Widest the calendar may be in `available` px (0: not measured yet).
 export const calendarMaxWidth = (

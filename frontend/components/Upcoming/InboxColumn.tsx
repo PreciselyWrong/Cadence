@@ -15,6 +15,7 @@ import { InboxItem } from '../../entities/InboxItem';
 import { Task } from '../../entities/Task';
 import { DayLine, lineFromDue } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
+import { INBOX_WIDTH } from './boardDates';
 import { taskCardClass } from '../Shared/task/TaskCardBody';
 import { plainPreview } from '../Shared/task/plainText';
 import TriageEntry from '../Inbox/TriageEntry';
@@ -107,6 +108,8 @@ const InboxCard: React.FC<{ item: InboxItem; onOpen(): void }> = ({
 
 export interface InboxColumnProps {
     items: InboxItem[];
+    // Width of the open column, set from its handle on the board.
+    width?: number;
     // Inbox › « Tâches à classer »: open tasks with no moment decided.
     tasks?: Task[];
     today: string;
@@ -195,6 +198,7 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
     onIdeaToTask,
     collapsed = false,
     onCollapsedChange,
+    width = INBOX_WIDTH,
 }) => {
     const { t } = useTranslation();
     const open = openInboxItems(items);
@@ -283,7 +287,8 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
         <section
             aria-label={t('sidebar.inbox', 'Inbox')}
             data-testid="inbox-column"
-            className="flex min-h-0 w-[260px] shrink-0 flex-col gap-2 rounded-2xl p-2"
+            style={{ width }}
+            className="flex min-h-0 shrink-0 flex-col gap-2 rounded-2xl p-2"
         >
             <header className="px-2.5 py-2">
                 <div className="flex items-center gap-2">

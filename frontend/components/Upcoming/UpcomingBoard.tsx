@@ -155,6 +155,7 @@ import {
 import {
     CALENDAR_MIN,
     INBOX_COLLAPSED_WIDTH,
+    INBOX_MIN,
     INBOX_WIDTH,
     anchorFor,
     boardDates,
@@ -162,6 +163,8 @@ import {
     calendarPlacement,
     calendarStart,
     clampCalendarWidth,
+    clampInboxWidth,
+    inboxMaxWidth,
     minBoardWidth,
     neighbourDate,
     shiftWeek,
@@ -177,6 +180,7 @@ const DEFAULT_DAY_MINUTES = 8 * 60;
 // Calendar width before the user drags the splitter, per day shown.
 const CALENDAR_WIDTH: Record<number, number> = { 1: 360, 3: 520, 7: 600 };
 const WIDTH_KEY = 'upcoming.calendarWidth';
+const INBOX_WIDTH_KEY = 'upcoming.inboxWidth';
 const OVERDUE_KEY = 'upcoming.overdueCollapsed';
 const KEY_STEP = 24;
 // The pseudo-day of the overdue strip's cards: planned on no day.
@@ -300,40 +304,58 @@ const filterDay = (day: DayResponse, filters: PlanFilters): DayResponse => ({
     overdue: filterTasks(day.overdue ?? [], filters),
 });
 
-interface CalendarSplitterProps {
+interface PaneSplitterProps {
+    label: string;
+    testId: string;
     width: number;
+    min: number;
     max: number;
+    // The edge of `containerRef` the pane is measured from: the calendar
+    // from the right of the panes, the inbox from its own left.
+    from: 'left' | 'right';
     containerRef: React.RefObject<HTMLElement>;
+    // Double click brings it back.
+    defaultWidth: number;
     onChange(width: number, persist?: boolean): void;
 }
 
-// The handle between the board and the calendar. It reports the calendar's
-// width (what is remembered), dragged or with the arrow keys.
-const CalendarSplitter: React.FC<CalendarSplitterProps> = ({
+// A handle between two panes. It reports the pane's width (what is
+// remembered), dragged or with the arrow keys; the handle moves with the
+// arrow.
+const PaneSplitter: React.FC<PaneSplitterProps> = ({
+    label,
+    testId,
     width,
+    min,
     max,
+    from,
     containerRef,
+    defaultWidth,
     onChange,
 }) => {
-    const { t } = useTranslation();
     const dragging = useRef(false);
-    const widthAt = (clientX: number) =>
-        (containerRef.current?.getBoundingClientRect().right ?? 0) - clientX;
+    const widthAt = (clientX: number) => {
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (!rect) return width;
+        return from === 'right' ? rect.right - clientX : clientX - rect.left;
+    };
     const end = (event: React.PointerEvent<HTMLDivElement>) => {
         if (!dragging.current) return;
         dragging.current = false;
         onChange(widthAt(event.clientX), true);
     };
+    const grow = from === 'right' ? 'ArrowLeft' : 'ArrowRight';
+    const shrink = from === 'right' ? 'ArrowRight' : 'ArrowLeft';
     return (
         <div
             role="separator"
             aria-orientation="vertical"
-            aria-label={t('upcoming.resizeCalendar', 'Calendar width')}
-            aria-valuemin={CALENDAR_MIN}
+            aria-label={label}
+            aria-valuemin={min}
             aria-valuemax={Math.round(max)}
             aria-valuenow={Math.round(width)}
             tabIndex={0}
-            data-testid="pane-splitter"
+            data-testid={testId}
             className="w-1.5 shrink-0 cursor-col-resize touch-none self-stretch rounded transition-colors hover:bg-primary/30 focus-visible:bg-primary/40 focus:outline-none active:bg-primary/50"
             onPointerDown={(event) => {
                 event.preventDefault();
@@ -347,16 +369,15 @@ const CalendarSplitter: React.FC<CalendarSplitterProps> = ({
             onPointerCancel={end}
             onKeyDown={(event) => {
                 let next: number | null = null;
-                // The handle moves with the arrow: left widens the calendar.
-                if (event.key === 'ArrowLeft') next = width + KEY_STEP;
-                if (event.key === 'ArrowRight') next = width - KEY_STEP;
-                if (event.key === 'Home') next = CALENDAR_MIN;
+                if (event.key === grow) next = width + KEY_STEP;
+                if (event.key === shrink) next = width - KEY_STEP;
+                if (event.key === 'Home') next = min;
                 if (event.key === 'End') next = max;
                 if (next === null) return;
                 event.preventDefault();
                 onChange(next, true);
             }}
-            onDoubleClick={() => onChange(CALENDAR_WIDTH[1], true)}
+            onDoubleClick={() => onChange(defaultWidth, true)}
         />
     );
 };
@@ -419,6 +440,9 @@ const UpcomingBoard: React.FC = () => {
         const stored = Number(readStored(WIDTH_KEY));
         return stored > 0 ? stored : (CALENDAR_WIDTH[span] ?? 360);
     });
+    const [storedInboxWidth, setStoredInboxWidth] = useState(() =>
+        Number(readStored(INBOX_WIDTH_KEY))
+    );
     const [pendingFocus, setPendingFocus] = useState<{
         date: string;
         uid: string;
@@ -426,6 +450,7 @@ const UpcomingBoard: React.FC = () => {
     const boardRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
     const panesRef = useRef<HTMLDivElement>(null);
+    const inboxRef = useRef<HTMLDivElement>(null);
     const panesWidth = useElementWidth(panesRef);
     const boardWidth = useElementWidth(boardRef);
 
@@ -467,7 +492,21 @@ const UpcomingBoard: React.FC = () => {
         !inboxLoading &&
         unsorted.tasks !== null &&
         inboxCollapsed(openInboxCount + toPlanTotal, inboxChoice);
-    const inboxWidth = inboxIsCollapsed ? INBOX_COLLAPSED_WIDTH : INBOX_WIDTH;
+    // The inbox leaves room for the calendar only when the calendar sits
+    // beside a board with the usual inbox; a drawer takes no room.
+    const calendarBeside =
+        !narrow &&
+        options.showCalendar &&
+        calendarPlacement(viewport, panesWidth, minBoardWidth(INBOX_WIDTH)) ===
+            'split';
+    const openInboxWidth = clampInboxWidth(
+        storedInboxWidth,
+        panesWidth,
+        calendarBeside
+    );
+    const inboxWidth = inboxIsCollapsed
+        ? INBOX_COLLAPSED_WIDTH
+        : openInboxWidth;
     const minBoard = minBoardWidth(inboxWidth);
     const placement = narrow
         ? 'drawer'
@@ -1837,6 +1876,12 @@ const UpcomingBoard: React.FC = () => {
         if (persist) writeStored(WIDTH_KEY, String(next));
     };
 
+    const setInboxWidth = (width: number, persist = false) => {
+        const next = clampInboxWidth(width, panesWidth, calendarBeside);
+        setStoredInboxWidth(next);
+        if (persist) writeStored(INBOX_WIDTH_KEY, String(next));
+    };
+
     const setInboxCollapsed = (collapsed: boolean) => {
         setInboxChoice(collapsed);
         saveInboxCollapsed(collapsed);
@@ -2315,9 +2360,13 @@ const UpcomingBoard: React.FC = () => {
                             </section>
                         )}
                         <div className="flex min-h-0 min-w-0 flex-1 gap-3">
-                            <div className="flex min-h-0 shrink-0 flex-col gap-2 p-1">
+                            <div
+                                ref={inboxRef}
+                                className="flex min-h-0 shrink-0 flex-col gap-2 p-1"
+                            >
                                 <div className="flex min-h-0 flex-1">
                                     <InboxColumn
+                                        width={openInboxWidth}
                                         items={inboxItems}
                                         tasks={inboxTasks}
                                         today={today}
@@ -2345,6 +2394,7 @@ const UpcomingBoard: React.FC = () => {
                                         collapsed={toPlanCollapsed}
                                         onCollapsedChange={setToPlanCollapsed}
                                         thin={inboxIsCollapsed}
+                                        width={openInboxWidth}
                                         onExpand={() => {
                                             setInboxCollapsed(false);
                                             setToPlanCollapsed(false);
@@ -2355,6 +2405,28 @@ const UpcomingBoard: React.FC = () => {
                                     />
                                 )}
                             </div>
+                            {!inboxIsCollapsed && (
+                                // Sits in the gap: as wide as the gap alone.
+                                <div className="-mx-[9px] flex">
+                                    <PaneSplitter
+                                        label={t(
+                                            'upcoming.resizeInbox',
+                                            'Inbox width'
+                                        )}
+                                        testId="inbox-splitter"
+                                        width={openInboxWidth}
+                                        min={INBOX_MIN}
+                                        max={inboxMaxWidth(
+                                            panesWidth,
+                                            calendarBeside
+                                        )}
+                                        from="left"
+                                        containerRef={inboxRef}
+                                        defaultWidth={INBOX_WIDTH}
+                                        onChange={setInboxWidth}
+                                    />
+                                </div>
+                            )}
                             <div
                                 ref={boardRef}
                                 data-testid="upcoming-columns"
@@ -2482,10 +2554,18 @@ const UpcomingBoard: React.FC = () => {
 
                     {calendarVisible && placement === 'split' && (
                         <>
-                            <CalendarSplitter
+                            <PaneSplitter
+                                label={t(
+                                    'upcoming.resizeCalendar',
+                                    'Calendar width'
+                                )}
+                                testId="pane-splitter"
                                 width={calendarWidth}
+                                min={CALENDAR_MIN}
                                 max={calendarMax}
+                                from="right"
                                 containerRef={panesRef}
+                                defaultWidth={CALENDAR_WIDTH[1]}
                                 onChange={setCalendarWidth}
                             />
                             <section

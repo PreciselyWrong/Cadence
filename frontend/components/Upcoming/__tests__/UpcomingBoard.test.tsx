@@ -472,11 +472,43 @@ describe('UpcomingBoard', () => {
     it('clamps a stale calendar width and reports it on the splitter', async () => {
         localStorage.setItem('upcoming.calendarWidth', '1077');
         renderBoard();
-        const splitter = await screen.findByRole('separator');
+        const splitter = await screen.findByRole('separator', {
+            name: 'Calendar width',
+        });
         expect(splitter).toHaveAttribute('aria-valuenow', '600');
         expect(splitter).toHaveAttribute('aria-valuemin', '280');
         expect(screen.getByTestId('upcoming-calendar')).toHaveStyle({
             width: '600px',
+        });
+    });
+
+    it('widens the inbox column with its handle and remembers it', async () => {
+        renderBoard();
+        const splitter = await screen.findByRole('separator', {
+            name: 'Inbox width',
+        });
+        const inbox = screen.getByTestId('inbox-column');
+        expect(inbox).toHaveStyle({ width: '260px' });
+
+        fireEvent.keyDown(splitter, { key: 'ArrowRight' });
+        expect(screen.getByTestId('inbox-column')).toHaveStyle({
+            width: '284px',
+        });
+        expect(splitter).toHaveAttribute('aria-valuenow', '284');
+        expect(localStorage.getItem('upcoming.inboxWidth')).toBe('284');
+
+        // A double click brings back the usual width.
+        fireEvent.doubleClick(splitter);
+        expect(screen.getByTestId('inbox-column')).toHaveStyle({
+            width: '260px',
+        });
+    });
+
+    it('opens the inbox at its remembered width', async () => {
+        localStorage.setItem('upcoming.inboxWidth', '400');
+        renderBoard();
+        expect(await screen.findByTestId('inbox-column')).toHaveStyle({
+            width: '400px',
         });
     });
 
@@ -492,7 +524,9 @@ describe('UpcomingBoard', () => {
             'data-drawer',
             'true'
         );
-        expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('separator', { name: 'Calendar width' })
+        ).not.toBeInTheDocument();
         fireEvent.click(
             screen.getByRole('button', { name: 'Close the calendar' })
         );

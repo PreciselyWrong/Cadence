@@ -8,6 +8,10 @@ import {
     calendarPlacement,
     calendarStart,
     clampCalendarWidth,
+    clampInboxWidth,
+    INBOX_MAX,
+    INBOX_MIN,
+    INBOX_WIDTH,
     minBoardWidth,
     neighbourDate,
     shiftWeek,
@@ -68,6 +72,26 @@ describe('calendar width', () => {
 
     it('falls back to a default for a width that is not a number', () => {
         expect(clampCalendarWidth(NaN, 2400, minBoard)).toBe(360);
+    });
+
+    describe('inbox width', () => {
+        it('keeps a stored width within its bounds', () => {
+            expect(clampInboxWidth(380, 2400, true)).toBe(380);
+            expect(clampInboxWidth(100, 2400, true)).toBe(INBOX_MIN);
+            expect(clampInboxWidth(5000, 2400, true)).toBe(INBOX_MAX);
+        });
+
+        it('falls back to the default for a missing or broken width', () => {
+            expect(clampInboxWidth(0, 2400, true)).toBe(INBOX_WIDTH);
+            expect(clampInboxWidth(NaN, 2400, true)).toBe(INBOX_WIDTH);
+        });
+
+        it('leaves the board two columns and the narrowest calendar', () => {
+            const rest = minBoardWidth(0) + 12;
+            expect(clampInboxWidth(500, rest + 300 + 280, true)).toBe(300);
+            // Without the calendar the inbox may take its room.
+            expect(clampInboxWidth(500, rest + 300 + 280, false)).toBe(500);
+        });
     });
 
     it('becomes a drawer under 1180 px or when the board would be squeezed', () => {

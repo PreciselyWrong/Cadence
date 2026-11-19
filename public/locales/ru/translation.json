@@ -6591,6 +6591,7 @@
     "hideCompleted": "Скрыть выполненные",
     "showCompletedTasks": "Показать выполненные",
     "resizeCalendar": "Ширина календаря",
+    "resizeInbox": "Inbox width",
     "thisWeekHint": "Запланировано на эту неделю, без конкретного дня",
     "thisMonthHint": "Когда-нибудь в этом месяце, без конкретного дня",
     "nextMonthHint": "Запланировано на следующий месяц",

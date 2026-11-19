@@ -11,6 +11,7 @@ import {
 import { Task } from '../../entities/Task';
 import { DayLine, lineFromDue } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
+import { INBOX_WIDTH } from './boardDates';
 import type { ToPlanBox as Box } from './horizons';
 
 // The pseudo-day of a card of the box: planned nowhere, so a drop on a day
@@ -51,6 +52,8 @@ export interface ToPlanBoxProps {
     // Under a collapsed inbox: a 44 px bar with the count; `onExpand` opens
     // the column and the box.
     thin?: boolean;
+    // Width of the inbox column it sits under.
+    width?: number;
     onExpand?(): void;
     onOpenTask(line: DayLine): void;
     onToggleTask(line: DayLine): void;
@@ -71,6 +74,7 @@ const ToPlanBox: React.FC<ToPlanBoxProps> = ({
     collapsed,
     onCollapsedChange,
     thin = false,
+    width = INBOX_WIDTH,
     onExpand,
     onOpenTask,
     onToggleTask,
@@ -127,7 +131,8 @@ const ToPlanBox: React.FC<ToPlanBoxProps> = ({
         <section
             aria-label={title}
             data-testid="to-plan-box"
-            className={`flex w-[260px] shrink-0 flex-col gap-1.5 overflow-y-auto rounded-2xl px-2 pb-2 ${
+            style={{ width }}
+            className={`flex shrink-0 flex-col gap-1.5 overflow-y-auto rounded-2xl px-2 pb-2 ${
                 collapsed ? '' : 'max-h-[45%]'
             }`}
         >

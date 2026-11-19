@@ -1009,3 +1009,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : cocher la case d'une tâche dans sa fiche (ou passer son statut à Terminée) laissait la fiche ouverte sur une tâche finie.
 - **Décision** : la fiche flottante et le panneau de tâche se ferment dès que la complétion est enregistrée ; rouvrir une tâche terminée les laisse ouverts. Une tâche récurrente revient « non commencée » avec sa prochaine échéance : c'est le geste de terminer qui ferme, pas le statut renvoyé.
 - **Android** : la fiche se fermait déjà à la case (`TaskDetailSheet.kt`).
+
+## Plan : colonne Boîte de réception redimensionnable (2026-11-19)
+
+- **Problème** : la colonne Boîte de réception / « À planifier » faisait 260 px fixes ; les titres longs s'y coupaient sur quatre lignes.
+- **Décision** : poignée à droite de la colonne, comme celle du calendrier (glisser, flèches, Début / Fin, double clic pour revenir à 260 px), de 220 à 560 px sans retirer au tableau ses deux jours ni, s'il est à côté, le calendrier le plus étroit ; largeur gardée par navigateur.
+- **Android** : sans objet, Planifier tient en une colonne.

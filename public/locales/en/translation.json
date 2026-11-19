@@ -6449,6 +6449,7 @@
     "hideCompleted": "Hide completed",
     "showCompletedTasks": "Show completed",
     "resizeCalendar": "Calendar width",
+    "resizeInbox": "Inbox width",
     "thisWeekHint": "Committed to this week, no fixed day",
     "thisMonthHint": "Sometime this month, no fixed day",
     "nextMonthHint": "Lined up for next month",

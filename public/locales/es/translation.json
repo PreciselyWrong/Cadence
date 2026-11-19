@@ -6479,6 +6479,7 @@
     "hideCompleted": "Ocultar completadas",
     "showCompletedTasks": "Mostrar completadas",
     "resizeCalendar": "Ancho del calendario",
+    "resizeInbox": "Ancho de la bandeja de entrada",
     "thisWeekHint": "Comprometida esta semana, sin día fijo",
     "thisMonthHint": "Algún día de este mes, sin día fijo",
     "nextMonthHint": "Prevista para el próximo mes",
