@@ -644,7 +644,7 @@ private fun ChipView(chip: ParsedChip) {
 
 /** Raccourcis de date : mêmes libellés, même ordre que la feuille de date. */
 @Composable
-private fun DateShortcuts(
+internal fun DateShortcuts(
     today: LocalDate,
     date: LocalDate?,
     onPick: (LocalDate) -> Unit,

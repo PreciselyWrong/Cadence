@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.FieldGroup
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.theme.Radius
@@ -51,10 +52,12 @@ import ch.nicolab.cadence.tasks.quickadd.ShareAction
 import ch.nicolab.cadence.tasks.quickadd.ShareSession
 import ch.nicolab.cadence.tasks.widget.openTaskIntent
 import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDate
 
 /**
  * Feuille de partage, au-dessus de l'appli d'origine. Sans adresse : Inbox d'office, Tâche. Avec une adresse : l'aperçu,
- * « Déjà dans » si elle est connue, le nom de la tâche, le projet et les étiquettes, puis Tâche (primaire), et Projet…,
+ * « Déjà dans » si elle est connue, le nom de la tâche, le projet, les étiquettes et l'échéance
+ * (Aujourd'hui, Demain, Week-end, Choisir…), puis Tâche (primaire), et Projet…,
  * Note, Inbox. Fermer la feuille range le partage dans l'Inbox.
  */
 @Composable
@@ -69,6 +72,8 @@ internal fun ShareSheet(session: ShareSession, onDone: () -> Unit) {
         value = url?.let { session.placesOf(it) }
     }
     var pickingProject by remember { mutableStateOf(false) }
+    var pickingDate by remember { mutableStateOf(false) }
+    val today = remember { LocalDate.now() }
     LaunchedEffect(session.text, pageTitle) { session.followSuggestedName(pageTitle) }
 
     val decide: (ShareAction) -> Unit = { action ->
@@ -117,6 +122,14 @@ internal fun ShareSheet(session: ShareSession, onDone: () -> Unit) {
                 tagUids = session.tagUids,
                 onTag = session::toggleTag,
             )
+            FieldGroup(stringResource(R.string.tasks_field_due)) {
+                DateShortcuts(
+                    today = today,
+                    date = session.dueDate,
+                    onPick = { session.pickDate(it) },
+                    onMore = { pickingDate = true },
+                )
+            }
             if (url == null) {
                 Row(
                     Modifier.fillMaxWidth(),
@@ -124,8 +137,14 @@ internal fun ShareSheet(session: ShareSession, onDone: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(Modifier.weight(1f))
-                    SecondaryAction(stringResource(R.string.tasks_share_to_task)) { decide(ShareAction.TASK) }
-                    PrimaryAction(stringResource(R.string.tasks_share_to_inbox)) { decide(ShareAction.INBOX) }
+                    // Une date choisie annonce une tâche : « Tâche » passe en bouton principal.
+                    if (session.dueDate == null) {
+                        SecondaryAction(stringResource(R.string.tasks_share_to_task)) { decide(ShareAction.TASK) }
+                        PrimaryAction(stringResource(R.string.tasks_share_to_inbox)) { decide(ShareAction.INBOX) }
+                    } else {
+                        SecondaryAction(stringResource(R.string.tasks_share_to_inbox)) { decide(ShareAction.INBOX) }
+                        PrimaryAction(stringResource(R.string.tasks_share_to_task)) { decide(ShareAction.TASK) }
+                    }
                 }
             } else {
                 FlowRow(
@@ -143,6 +162,17 @@ internal fun ShareSheet(session: ShareSession, onDone: () -> Unit) {
                 }
             }
         }
+    }
+
+    if (pickingDate) {
+        TaskDateSheet(
+            title = stringResource(R.string.tasks_field_due),
+            today = today,
+            date = session.dueDate,
+            time = session.dueTime,
+            onApply = { picked, time -> session.pickDate(picked, time) },
+            onDismiss = { pickingDate = false },
+        )
     }
 }
 

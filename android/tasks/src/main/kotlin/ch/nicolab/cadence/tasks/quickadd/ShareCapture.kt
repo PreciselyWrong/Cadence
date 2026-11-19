@@ -16,6 +16,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ch.nicolab.cadence.tasks.ui.wireTime
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.UUID
 
 /**
@@ -70,7 +73,8 @@ internal object ShareCapture {
     /**
      * Ce qu'écrit [action]. La tâche prend [taskName] s'il est saisi, sinon le nom de [IdeaTasks] (titre de la page
      * [pageTitle], verbe du genre de page) ; avec une adresse, elle attend « Quand ? » tant qu'aucun projet n'est
-     * choisi, et garde l'adresse comme origine. « Liens » et « Note » sans adresse retombent sur l'Inbox.
+     * choisi ni
+     * date ([dueDate], heure [dueTime] facultative), et garde l'adresse comme origine. « Liens » et « Note » sans adresse retombent sur l'Inbox.
      */
     fun plan(
         action: ShareAction,
@@ -80,6 +84,8 @@ internal object ShareCapture {
         projectUid: String?,
         verbs: TaskVerbs,
         taskName: String? = null,
+        dueDate: LocalDate? = null,
+        dueTime: LocalTime? = null,
     ): ShareWrite = when (action) {
         ShareAction.INBOX -> ShareWrite.Inbox(text)
         ShareAction.TASK -> {
@@ -91,7 +97,9 @@ internal object ShareCapture {
                     note = IdeaTasks.taskNote(text),
                     projectUid = projectUid,
                     tagUids = tagUids.distinct(),
-                    needsWhen = url != null && projectUid == null,
+                    dueDate = dueDate,
+                    dueTime = dueTime?.takeIf { dueDate != null }?.let(::wireTime),
+                    needsWhen = url != null && projectUid == null && dueDate == null,
                     source = url?.let { SOURCE_LINK },
                     sourceUrl = url,
                 ),

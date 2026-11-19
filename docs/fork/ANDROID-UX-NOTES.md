@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-19 — Partage : choisir l'échéance de la tâche
+
+- **Problème** : un lien partagé devenait une tâche sans date ; impossible de dire « pour aujourd'hui » ou « pour demain » sans rouvrir la tâche.
+- **Décision** : la feuille de partage a une ligne « Échéance » (Aujourd'hui, Demain, Ce week-end, Choisir…), la même que la saisie rapide ; toucher la date choisie la retire. Elle ne vaut que pour « Tâche » ; avec une date, la tâche ne va plus dans « Tâches à classer », et sans adresse « Tâche » devient le bouton principal.
+- **Web** : à reprendre dans l'add-on Firefox (`TODO.md`) ; le web n'a pas de feuille de partage.
+
 ### 2026-11-14 — Aujourd'hui : glisser les tâches
 
 - **Problème** : depuis la ligne du temps, plus aucune ligne d'Aujourd'hui ne se déplaçait au doigt : ni ranger « À caser », ni décaler une tâche de « Ma journée », ni tirer une échue dans la journée.

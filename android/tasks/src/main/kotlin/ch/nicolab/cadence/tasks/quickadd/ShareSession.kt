@@ -14,6 +14,8 @@ import ch.nicolab.cadence.tasks.model.TagItem
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import java.time.LocalDate
+import java.time.LocalTime
 
 /**
  * Un partage en cours dans la feuille : le texte (modifiable), les étiquettes et le projet choisis. Il survit à une
@@ -32,6 +34,19 @@ internal class ShareSession(application: Application) : AndroidViewModel(applica
     var tagUids by mutableStateOf(emptyList<String>())
         private set
     var projectUid by mutableStateOf<String?>(null)
+
+    /** Échéance de la tâche (« Tâche » seulement) ; null : sans date. */
+    var dueDate by mutableStateOf<LocalDate?>(null)
+        private set
+    var dueTime by mutableStateOf<LocalTime?>(null)
+        private set
+
+    /** Pose la date ; la même date une seconde fois la retire. */
+    fun pickDate(date: LocalDate?, time: LocalTime? = null) {
+        val clear = date == null || (date == dueDate && time == null)
+        dueDate = if (clear) null else date
+        dueTime = if (clear) null else time
+    }
 
     /** Nom de la tâche proposé par la feuille ; il suit le titre de la page tant que l'utilisateur ne l'a pas modifié. */
     var taskName by mutableStateOf("")
@@ -90,6 +105,8 @@ internal class ShareSession(application: Application) : AndroidViewModel(applica
             projectUid,
             ShareCapture.verbs(getApplication()),
             taskName,
+            dueDate,
+            dueTime,
         )
         ShareCapture.save(getApplication(), write)
         return true

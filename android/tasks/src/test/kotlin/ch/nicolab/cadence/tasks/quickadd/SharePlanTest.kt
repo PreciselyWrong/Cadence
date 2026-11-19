@@ -5,6 +5,8 @@ import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskVerbs
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
+import java.time.LocalTime
 
 class SharePlanTest {
     private val text = "https://github.com/jqlang/jq pour les logs"
@@ -17,8 +19,25 @@ class SharePlanTest {
         }
     }
 
-    private fun plan(action: ShareAction, shared: String = text, title: String? = "jq", project: String? = "p1", taskName: String? = null) =
-        ShareCapture.plan(action, shared, title, listOf("t1", "t1"), project, verbs, taskName)
+    private fun plan(
+        action: ShareAction,
+        shared: String = text,
+        title: String? = "jq",
+        project: String? = "p1",
+        taskName: String? = null,
+        due: LocalDate? = null,
+        time: LocalTime? = null,
+    ) = ShareCapture.plan(action, shared, title, listOf("t1", "t1"), project, verbs, taskName, due, time)
+
+    @Test
+    fun `la date choisie dans la feuille devient l'échéance et la tâche n'attend plus Quand`() {
+        val day = LocalDate.of(2026, 11, 20)
+        val dated = plan(ShareAction.TASK, project = null, due = day, time = LocalTime.of(9, 30)) as ShareWrite.Task
+        assertEquals(day, dated.draft.dueDate)
+        assertEquals("09:30", dated.draft.dueTime)
+        assertEquals(false, dated.draft.needsWhen)
+        assertEquals(null, (plan(ShareAction.TASK, time = LocalTime.of(9, 30)) as ShareWrite.Task).draft.dueTime)
+    }
 
     @Test
     fun `Inbox garde le texte tel quel`() {
