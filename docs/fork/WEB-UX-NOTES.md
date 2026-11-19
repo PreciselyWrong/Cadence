@@ -1071,3 +1071,10 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : parler d'une tâche à l'IA demandait d'ouvrir la page Agents et de recopier la tâche.
 - **Décision** : icône de bulle dans l'en-tête de la fiche, seulement quand le plugin de l'IA tourne ; elle ouvre la conversation sur cette tâche (`?view=chat&about=<uid>`), la page du plugin lit la tâche et lance l'échange. Rouvrir la même tâche reprend la conversation.
 - **Android** : à reprendre dans la fiche de tâche (`TODO.md` › Now).
+
+## Plan : calendrier fusionné dans l'ordre de l'heure (2026-11-19)
+
+- **Problème** : les événements s'empilaient en haut du jour, au-dessus de toutes les tâches ; une tâche à 13 h 45 paraissait après un événement de 15 h.
+- **Décision** : journée entière d'abord, puis chaque événement avant la première tâche plus tardive (créneau, sinon heure d'échéance) ou sans heure (`dayAgenda.ts`). Tâches groupées ou triées autrement que par l'heure : événements en haut.
+- **Android** : non, Plan du bureau web seul (décision du 2026-11-19).
+
