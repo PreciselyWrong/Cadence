@@ -72,6 +72,8 @@ data class ProjectEntity(
     val parentProjectUid: String? = null,
     /** Bannière du projet (`image_url`) ; posée depuis le web, affichée seulement ici. */
     val imageUrl: String? = null,
+    /** Description Markdown du projet (`description`). */
+    val description: String? = null,
 )
 
 /** Objectif, résultat clé (un objectif parent) ou envie de la liste d'envies (`bucket`). */

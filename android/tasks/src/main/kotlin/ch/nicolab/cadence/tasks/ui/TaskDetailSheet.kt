@@ -56,6 +56,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -89,7 +90,9 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.links.TaskLinks
+import ch.nicolab.cadence.tasks.relations.TaskRelations
 import ch.nicolab.cadence.tasks.model.DetailTitle
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
 import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
@@ -117,12 +120,13 @@ import ch.nicolab.cadence.tasks.swipe.FileOwnedField
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private const val AUTOSAVE_DELAY_MS = 700L
 private const val MAX_TAG_BADGES = 2
 private const val NO_PRIORITY = -1
 
-private enum class Picker { Dates, Repeat, Estimate, Priority, Status, Tags, Project, Actions, Focus }
+private enum class Picker { Dates, Repeat, Estimate, Priority, Status, Tags, Project, Actions, Focus, RelationLink }
 
 private enum class DateTab { Start, Due }
 
@@ -198,6 +202,11 @@ internal fun TaskDetailSheet(
     val openRef = rememberContentRefOpener(viewModel, onOpenNote = { openedNote = it }, onOpenTask = { openedSubtask = it })
     val openWiki = rememberWikiOpener(viewModel, allNotes, onOpenNote = { openedNote = it })
     val everyTask by viewModel.allTasks.collectAsStateWithLifecycle()
+    val relationsRepo = remember(context) { TasksGraph.relations(context) }
+    val relations by remember(current.uid, relationsRepo) { relationsRepo.observe(current.uid) }
+        .collectAsStateWithLifecycle(initialValue = emptyList())
+    LaunchedEffect(current.uid, relationsRepo) { relationsRepo.refresh(current.uid) }
+    val scope = rememberCoroutineScope()
     val targets = remember(allNotes, everyTask) { ContentTargets(allNotes, everyTask) }
     var noteEditing by remember(current.uid) { mutableStateOf(false) }
     val noteOutline = rememberOutlineEditorState(current.uid, note, "task:${current.uid}") { note = it }
@@ -245,6 +254,7 @@ internal fun TaskDetailSheet(
                 titleReadOnly = textLocked,
                 closed = current.isClosed,
                 highPriority = current.priority == TaskPriority.HIGH,
+                isBlocked = TaskRelations.hasOpenBlocker(relations),
                 // Terminer est la case, à côté du titre (comme une ligne) : plus de gros bouton pris pour « Enregistrer ».
                 onToggle = {
                     flushText()
@@ -324,6 +334,12 @@ internal fun TaskDetailSheet(
                 )
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
                 if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
+                TaskRelationsSection(
+                    relations = relations,
+                    onOpenTask = { openedSubtask = it },
+                    onRemove = { rel -> scope.launch { relationsRepo.removeRelation(current.uid, rel) } },
+                    onAddClick = { picker = Picker.RelationLink },
+                )
                 BacklinksSection(
                     type = "task",
                     uid = current.uid,
@@ -468,6 +484,13 @@ internal fun TaskDetailSheet(
             onSelect = { viewModel.edit(latest, TaskEdits.project(latest, it)) },
             onDismiss = dismissPicker,
         )
+        Picker.RelationLink -> LinkTaskSheet(
+            taskUid = current.uid,
+            allTasks = everyTask,
+            existing = relations,
+            onPick = { target, type -> scope.launch { relationsRepo.addRelation(current.uid, target, type) } },
+            onDismiss = dismissPicker,
+        )
         Picker.Actions -> CadenceSheet(
             title = stringResource(R.string.tasks_detail_actions_title),
             subtitle = null,
@@ -586,6 +609,7 @@ private fun DetailHeader(
     titleReadOnly: Boolean,
     closed: Boolean,
     highPriority: Boolean,
+    isBlocked: Boolean,
     onToggle: () -> Unit,
     onTitleChange: (String) -> Unit,
     onBack: () -> Unit,
@@ -611,6 +635,13 @@ private fun DetailHeader(
                 style = HeaderButtonStyle.Plain,
                 onClick = onBack,
             )
+            if (isBlocked) {
+                Spacer(Modifier.width(Space.sm))
+                CadenceBadge(
+                    text = stringResource(R.string.task_relations_blocked_badge),
+                    tone = BadgeTone.Warning,
+                )
+            }
             Spacer(Modifier.weight(1f))
             onOpenLink?.let { openLink ->
                 RoundHeaderButton(

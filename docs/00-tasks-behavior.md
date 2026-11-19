@@ -256,7 +256,8 @@ Any task can be linked to another task, in a different project or none, from the
 ### Blocked Tasks
 
 - A task is **blocked** while any task that blocks it is still open (not done, archived or cancelled). This is derived on read: completing the blocker unblocks the task, with nothing to clear
-- Blocked tasks show a "Blocked" badge in lists
+- Blocked tasks show a "Blocked" badge in lists (and in the task sheet header on Android)
+- Android task sheet (`TaskDetailSheet` / `TaskRelationsSection.kt`): shows « Liens » (« Bloque : … », « Bloquée par : … », tap opens the linked task, « + Lier » with task picker, remove). Reads `GET /api/v1/task/:uid/relations` online when opened with per-task cache for offline display; adds and removes via the deferred-call queue.
 - Completing a blocked task is allowed. The UI asks for confirmation first, and the MCP `complete_task` result carries a warning
 - Blocked state never hides a task: Today, Upcoming, Next and Inbox are unchanged
 - To list them, open `/tasks?type=all&blocked=true`, or `blocked=false` for tasks with no open blocker. The API (`GET /api/tasks?blocked=true`) and the MCP `list_tasks` tool accept the same filter

@@ -668,6 +668,19 @@ internal class RoomTaskRepository(
         if (written) afterLocalWrite()
     }
 
+    override suspend fun setProjectDescription(uid: String, description: String?) {
+        val clean = description?.trim()?.ifEmpty { null }
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = projectDao.get(uid) ?: return@withTransaction false
+            if (existing.description == clean) return@withTransaction false
+            projectDao.upsert(existing.copy(description = clean))
+            outbox.insert(LocalOps.upsert("project", uid, mapOf("description" to jsonString(clean)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
     override suspend fun setProjectIcon(uid: String, icon: String?) {
         require(IconIds.isValid(icon)) { "Identifiant d'icône invalide" }
         val value = IconIds.normalize(icon)

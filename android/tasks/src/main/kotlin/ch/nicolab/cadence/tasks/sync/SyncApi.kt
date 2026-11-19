@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.tasks.sync
 
 import ch.nicolab.cadence.domain.QuietHours
+import ch.nicolab.cadence.tasks.model.DayHoursRange
+import ch.nicolab.cadence.tasks.model.VisibleHours
 import java.io.IOException
 import kotlinx.serialization.json.JsonObject
 
@@ -56,6 +58,8 @@ data class AccountProfile(
     val quietHours: QuietHours? = null,
     /** `uid` du compte : avec l'adresse du serveur, il dit à qui appartiennent les habitudes du téléphone. */
     val uid: String? = null,
+    val visibleHours: VisibleHours = VisibleHours.WHOLE_DAY,
+    val dayHours: DayHoursRange? = null,
 )
 
 /** [rejectedFields] : champs d'un `conflict` dont la valeur du serveur, plus récente, a été gardée. */

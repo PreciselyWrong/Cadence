@@ -50,22 +50,23 @@ fun trayItems(tasks: List<TaskItem>, projectColors: Map<String, Int?>, today: Lo
         .sortedWith(compareBy<TrayItem, LocalDate?>(nullsLast()) { it.pastDue }.thenBy { it.title.lowercase() })
         .toList()
 
-/** Minute de la journée sous [yPx] (relatif au haut de la grille), arrondie au pas et bornée au jour. */
-fun dropMinute(yPx: Float, hourHeightPx: Float, step: Int = DROP_STEP_MINUTES): Int {
-    val raw = yPx / hourHeightPx * MINUTES_PER_HOUR
+/** Minute de la journée sous [yPx] (relatif au haut de la grille démarrant à [startHour]), arrondie au pas et bornée au jour. */
+fun dropMinute(yPx: Float, hourHeightPx: Float, step: Int = DROP_STEP_MINUTES, startHour: Int = 0): Int {
+    val raw = startHour * MINUTES_PER_HOUR + yPx / hourHeightPx * MINUTES_PER_HOUR
     val snapped = (raw / step).roundToInt() * step
     return snapped.coerceIn(0, MINUTES_PER_DAY - step)
 }
 
-fun dropDateTime(day: LocalDate, yPx: Float, hourHeightPx: Float): LocalDateTime =
-    day.atTime(LocalTime.of(0, 0)).plusMinutes(dropMinute(yPx, hourHeightPx).toLong())
+fun dropDateTime(day: LocalDate, yPx: Float, hourHeightPx: Float, startHour: Int = 0): LocalDateTime =
+    day.atTime(LocalTime.of(0, 0)).plusMinutes(dropMinute(yPx, hourHeightPx, startHour = startHour).toLong())
 
 /** Pas des créneaux vides : une case de la grille correspond à une demi-heure. */
 const val SLOT_STEP_MINUTES = 30
 
 /** Début du créneau de [day] touché à [yPx] : l'heure de la demi-heure en cours, jamais la suivante. */
-fun slotDateTime(day: LocalDate, yPx: Float, hourHeightPx: Float): LocalDateTime {
-    val minutes = (yPx / hourHeightPx * MINUTES_PER_HOUR / SLOT_STEP_MINUTES).toInt() * SLOT_STEP_MINUTES
+fun slotDateTime(day: LocalDate, yPx: Float, hourHeightPx: Float, startHour: Int = 0): LocalDateTime {
+    val rawMinutes = startHour * MINUTES_PER_HOUR + yPx / hourHeightPx * MINUTES_PER_HOUR
+    val minutes = (rawMinutes / SLOT_STEP_MINUTES).toInt() * SLOT_STEP_MINUTES
     return day.atTime(LocalTime.of(0, 0)).plusMinutes(minutes.coerceIn(0, MINUTES_PER_DAY - SLOT_STEP_MINUTES).toLong())
 }
 
@@ -85,12 +86,13 @@ fun dropTarget(
     hourHeightPx: Float,
     gutterPx: Float,
     days: List<LocalDate>,
+    startHour: Int = 0,
 ): LocalDateTime? {
     if (days.isEmpty()) return null
     if (x < left + gutterPx || x >= left + width || y < top || y >= top + height) return null
     val columnWidth = (width - gutterPx) / days.size
     val column = ((x - left - gutterPx) / columnWidth).toInt().coerceIn(0, days.lastIndex)
-    return dropDateTime(days[column], y - top + scrollPx, hourHeightPx)
+    return dropDateTime(days[column], y - top + scrollPx, hourHeightPx, startHour = startHour)
 }
 
 /** Modification envoyée au dépôt de tâches : la voie normale de mise à jour, donc synchronisée. */

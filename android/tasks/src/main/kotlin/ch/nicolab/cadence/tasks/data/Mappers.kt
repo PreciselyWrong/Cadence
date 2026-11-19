@@ -73,6 +73,7 @@ internal fun ProjectEntity.toItem() = ProjectItem(
     icon = icon,
     parentProjectUid = parentProjectUid,
     imageUrl = imageUrl,
+    description = description,
 )
 
 internal fun GoalEntity.toItem() = GoalItem(

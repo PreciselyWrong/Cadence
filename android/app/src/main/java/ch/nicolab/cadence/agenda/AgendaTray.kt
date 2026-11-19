@@ -92,6 +92,7 @@ internal class TrayDragState {
     var days: List<LocalDate> = emptyList()
     var hourHeightPx: Float = 0f
     var gutterPx: Float = 0f
+    var startHour: Int = 0
 
     /** Instant sous le doigt, ou null quand il est hors de la grille. */
     val target: LocalDateTime?
@@ -109,6 +110,7 @@ internal class TrayDragState {
                 hourHeightPx = hourHeightPx,
                 gutterPx = gutterPx,
                 days = days,
+                startHour = startHour,
             )
         }
 }

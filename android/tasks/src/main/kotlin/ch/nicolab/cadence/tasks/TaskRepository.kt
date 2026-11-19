@@ -161,6 +161,9 @@ interface TaskRepository {
     /** Épingle le projet (`pin_to_sidebar`, la barre latérale du web) ; rien n'est écrit si rien ne change. */
     suspend fun setProjectPinned(uid: String, pinned: Boolean)
 
+    /** Met à jour la description Markdown du projet [uid] (null pour effacer) ; rien n'est écrit si rien ne change. */
+    suspend fun setProjectDescription(uid: String, description: String?)
+
     /** Pose ou retire l'icône de l'étiquette [uid]. */
     suspend fun setTagIcon(uid: String, icon: String?)
 

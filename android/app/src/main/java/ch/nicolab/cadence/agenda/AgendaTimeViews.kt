@@ -67,6 +67,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.tasks.model.DayHoursRange
+import ch.nicolab.cadence.tasks.model.VisibleHours
 import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -122,6 +124,9 @@ internal fun ColumnScope.TimeAgenda(
         if (state.mode == AgendaMode.DAY) listOf(state.selected) else threeDays(state.selected, state.options.weekends)
     }
     val layouts = remember(state.entries, days) { days.associateWith { layoutDay(state.entries, it) } }
+    val visibleHours = remember(state.visibleHours, layouts) {
+        AgendaHours.effectiveVisibleHours(state.visibleHours, layouts.values)
+    }
     Column(Modifier.weight(1f)) {
         if (state.mode == AgendaMode.DAY) {
             TrayRow(items = state.tray, drag = drag, onDrop = onDrop)
@@ -139,6 +144,8 @@ internal fun ColumnScope.TimeAgenda(
         TimeGrid(
             days = days,
             layouts = layouts,
+            visibleHours = visibleHours,
+            dayHours = state.dayHours,
             today = state.today,
             now = now,
             compactHours = state.mode != AgendaMode.DAY,
@@ -321,6 +328,8 @@ private fun BlockTitle(entry: AgendaEntry, colors: BlockColors, style: ComposeTe
 private fun TimeGrid(
     days: List<LocalDate>,
     layouts: Map<LocalDate, DayLayout>,
+    visibleHours: VisibleHours,
+    dayHours: DayHoursRange?,
     today: LocalDate,
     now: LocalTime,
     compactHours: Boolean,
@@ -333,10 +342,14 @@ private fun TimeGrid(
 ) {
     val palette = cadence
     val density = LocalDensity.current
-    val startHour = if (today in days) (now.hour - 1).coerceAtLeast(0) else DEFAULT_START_HOUR
-    val scroll = rememberScrollState(initial = with(density) { (Size.agendaHour * startHour).toPx().roundToInt() })
-    val gridHeight = Size.agendaHour * HOURS_PER_DAY
+    val visibleStartHour = visibleHours.startHour
+    val hourCount = visibleHours.hourCount
+    val startHour = AgendaHours.initialScrollHour(visibleHours, dayHours, now, today in days)
+    val scroll = rememberScrollState(initial = with(density) { (Size.agendaHour * (startHour - visibleStartHour)).toPx().roundToInt() })
+    val gridHeight = Size.agendaHour * hourCount
     val lineColor = palette.outlineVariant
+    val offWorkColor = palette.outlineVariant.copy(alpha = 0.22f)
+    val offWorkBands = remember(visibleHours, dayHours) { AgendaHours.offWorkBands(visibleHours, dayHours) }
     val navClearance = navigationClearance()
     val hourHeightPx = with(density) { Size.agendaHour.toPx() }
     val gutterPx = with(density) { Size.agendaGutter.toPx() }
@@ -346,6 +359,7 @@ private fun TimeGrid(
         drag.days = days
         drag.hourHeightPx = hourHeightPx
         drag.gutterPx = gutterPx
+        drag.startHour = visibleStartHour
     }
     // Pendant un glisser, le doigt près du bord haut ou bas fait défiler la grille vers l'heure visée.
     LaunchedEffect(drag, scroll) {
@@ -372,7 +386,7 @@ private fun TimeGrid(
             .padding(bottom = navClearance),
     ) {
         Column(Modifier.width(Size.agendaGutter).height(gridHeight)) {
-            repeat(HOURS_PER_DAY) { hour ->
+            for (hour in visibleStartHour until visibleHours.endHour) {
                 Box(Modifier.height(Size.agendaHour).fillMaxWidth()) {
                     Text(
                         text = if (compactHours) "%02d".format(hour) else "%02d:00".format(hour),
@@ -391,23 +405,34 @@ private fun TimeGrid(
                     .weight(1f)
                     .height(gridHeight)
                     .drawBehind {
+                        val hourPx = Size.agendaHour.toPx()
+                        offWorkBands.forEach { band ->
+                            val topY = hourPx * ((band.startMinute - visibleStartHour * 60) / 60f)
+                            val bottomY = hourPx * ((band.endMinute - visibleStartHour * 60) / 60f)
+                            drawRect(
+                                color = offWorkColor,
+                                topLeft = Offset(0f, topY),
+                                size = androidx.compose.ui.geometry.Size(size.width, bottomY - topY),
+                            )
+                        }
                         val hairline = Size.hairline.toPx()
-                        repeat(HOURS_PER_DAY + 1) { hour ->
-                            val y = (Size.agendaHour.toPx() * hour)
+                        repeat(hourCount + 1) { hourOffset ->
+                            val y = hourPx * hourOffset
                             drawLine(lineColor, Offset(0f, y), Offset(size.width, y), strokeWidth = hairline)
                         }
                         if (index > 0) {
                             drawLine(lineColor, Offset(0f, 0f), Offset(0f, size.height), strokeWidth = hairline)
                         }
                     }
-                    .pointerInput(day, hourHeightPx) {
-                        detectTapGestures { offset -> onSlotTap(slotDateTime(day, offset.y, hourHeightPx)) }
+                    .pointerInput(day, hourHeightPx, visibleStartHour) {
+                        detectTapGestures { offset -> onSlotTap(slotDateTime(day, offset.y, hourHeightPx, startHour = visibleStartHour)) }
                     },
             ) {
                 BoxWithConstraints(Modifier.fillMaxSize()) {
                     layout.timed.forEach { block ->
                         TimedBlockView(
                             block = block,
+                            visibleStartHour = visibleStartHour,
                             checkEvents = checkEvents,
                             onToggleEvent = onToggleEvent,
                             hourHeightPx = hourHeightPx,
@@ -419,11 +444,12 @@ private fun TimeGrid(
                     if (dragged != null && target != null && target.toLocalDate() == day) {
                         DropPreview(
                             startMinute = target.hour * 60 + target.minute,
+                            visibleStartHour = visibleStartHour,
                             minutes = dropBlockMinutes(dragged.estimateMinutes),
                             color = dragged.colorArgb?.let { Color(it) } ?: palette.primary,
                         )
                     }
-                    if (day == today) NowLine(now)
+                    if (day == today) NowLine(now, visibleStartHour, visibleHours.endHour)
                 }
             }
         }
@@ -432,10 +458,10 @@ private fun TimeGrid(
 
 /** Créneau visé par le doigt : un bloc fantôme de la durée de la tâche, calé sur le cran de 15 minutes. */
 @Composable
-private fun BoxWithConstraintsScope.DropPreview(startMinute: Int, minutes: Int, color: Color) {
+private fun BoxWithConstraintsScope.DropPreview(startMinute: Int, visibleStartHour: Int, minutes: Int, color: Color) {
     Box(
         Modifier
-            .offset(y = Size.agendaHour * (startMinute / 60f))
+            .offset(y = Size.agendaHour * ((startMinute - visibleStartHour * 60) / 60f))
             .fillMaxWidth()
             .height(Size.agendaHour * (minutes / 60f))
             .padding(horizontal = Space.xs)
@@ -452,6 +478,7 @@ private fun BoxWithConstraintsScope.DropPreview(startMinute: Int, minutes: Int, 
 @Composable
 private fun BoxWithConstraintsScope.TimedBlockView(
     block: TimedBlock,
+    visibleStartHour: Int,
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
     hourHeightPx: Float,
@@ -466,7 +493,7 @@ private fun BoxWithConstraintsScope.TimedBlockView(
     val task = (entry as? AgendaEntry.Task)?.takeIf { !it.done }
     var liveEnd by remember(block.startMinute, block.endMinute) { mutableStateOf<Int?>(null) }
     val endMinute = liveEnd ?: block.endMinute
-    val top = Size.agendaHour * (block.startMinute / 60f)
+    val top = Size.agendaHour * ((block.startMinute - visibleStartHour * 60) / 60f)
     val height = Size.agendaHour * ((endMinute - block.startMinute) / 60f)
     // Colonne étroite (3 jours, chevauchements) : un corps plus petit loge deux ou trois lignes de titre.
     val narrow = columnWidth < NARROW_COLUMN
@@ -638,9 +665,11 @@ private fun ResizeHandle(
 }
 
 @Composable
-private fun BoxWithConstraintsScope.NowLine(now: LocalTime) {
+private fun BoxWithConstraintsScope.NowLine(now: LocalTime, visibleStartHour: Int, visibleEndHour: Int) {
+    val nowMinute = now.hour * 60 + now.minute
+    if (nowMinute < visibleStartHour * 60 || nowMinute > visibleEndHour * 60) return
     val palette = cadence
-    val top = Size.agendaHour * ((now.hour * 60 + now.minute) / 60f)
+    val top = Size.agendaHour * ((nowMinute - visibleStartHour * 60) / 60f)
     Box(
         Modifier
             .offset(y = top)
