@@ -314,7 +314,7 @@ internal fun TodayTab(
         }
         // « Planifier ma semaine (IA) » : un lien discret le dimanche et le lundi, ou quand la semaine est prête ou en
         // préparation ; le reste du temps, dans le menu ⋯ de l'en-tête.
-        if (WeekPlanning.linkVisible(today, weekAction.phase)) {
+        if (weekAction.visible && WeekPlanning.linkVisible(today, weekAction.phase)) {
             item(key = "week-link") {
                 Text(
                     weekAction.label,

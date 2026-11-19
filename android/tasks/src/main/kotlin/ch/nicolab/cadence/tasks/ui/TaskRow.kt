@@ -140,9 +140,11 @@ internal fun TaskRow(
         }
     }
     val showClosed = task.isClosed || completing || forceClosed
-    // Une adresse dans la note se lit par son site et l'image de sa page, pas par l'adresse brute.
-    val link = remember(task.note, task.source, task.sourceUrl) { TaskLinks.of(task) }
+    // Une adresse dans la note ou en nom seul se lit par son site et l'image de sa page, pas par l'adresse brute.
+    val link = remember(task.name, task.note, task.source, task.sourceUrl) { TaskLinks.of(task) }
     val preview = rememberLinkPreview(link?.url.takeUnless { calm })
+    val displayTitle = remember(task.name, link, preview?.title) { TaskLinks.titleOf(task.name, link, preview?.title) }
+    val uriHandler = LocalUriHandler.current
 
     val swipeConfig = rememberSwipeConfig()
     SwipeActionContainer(
@@ -208,10 +210,18 @@ internal fun TaskRow(
             )
             Spacer(Modifier.width(8.dp))
             Column(Modifier.weight(1f).padding(vertical = if (calm) 0.dp else 6.dp)) {
-                StrikingTitle(task.name, struck = showClosed)
+                StrikingTitle(displayTitle, struck = showClosed)
                 if (!calm) {
                     TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor, plannedAt)
-                    link?.let { SiteLine(it, preview?.siteName, Modifier.padding(top = 2.dp)) }
+                    link?.let {
+                        SiteLine(
+                            it,
+                            preview?.siteName,
+                            Modifier
+                                .padding(top = 2.dp)
+                                .clickable(role = Role.Button, onClick = { runCatching { uriHandler.openUri(it.url) } }),
+                        )
+                    }
                 }
                 subtitle?.let {
                     Text(

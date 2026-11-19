@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="task_menu_open">Ouvrir</string>
+    <string name="task_menu_complete">Terminer</string>
+    <string name="task_menu_reopen">Rouvrir</string>
+    <string name="task_menu_date">Date</string>
+    <string name="task_menu_priority">Priorité</string>
+    <string name="task_menu_project">Projet</string>
+    <string name="task_menu_pin">Épingler</string>
+    <string name="task_menu_unpin">Désépingler</string>
+    <string name="task_menu_duplicate">Dupliquer</string>
+    <string name="task_menu_to_project">Transformer en projet</string>
+    <string name="task_menu_copy_link">Copier le lien</string>
+    <string name="task_menu_copy_title">Copier le titre</string>
+    <string name="task_menu_delete">Supprimer</string>
+    <string name="task_menu_link_copied">Lien copié</string>
+    <string name="task_menu_title_copied">Titre copié</string>
+    <string name="task_menu_duplicated">Tâche dupliquée</string>
+    <string name="tasks_open_link">Ouvrir le lien</string>
+    <string name="tasks_discuss_ai">Discuter avec l\'IA</string>
+    <string name="plan_pushed_badge">Reportée %1$d fois en 30 jours</string>
+</resources>

@@ -202,7 +202,7 @@ fun TasksScreen(
                         )
                         val weekAction = if ((tab == TasksTab.TODAY || tab == TasksTab.UPCOMING) && openProjectUid == null) rememberProposalAction(ProposalKind.WEEK) else null
                         HeaderMoreMenu(
-                            screenAction = weekAction?.let { HeaderToggle(it.label, it.onClick) },
+                            screenAction = weekAction?.takeIf { it.visible }?.let { HeaderToggle(it.label, it.onClick) },
                             notesToggle = if (tab == TasksTab.NOTES && openProjectUid == null) {
                                 HeaderToggle(
                                     stringResource(if (notesGallery) R.string.links_show_list else R.string.links_show_gallery),

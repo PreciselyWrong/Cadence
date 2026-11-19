@@ -26,7 +26,7 @@ class TaskOverviewsTest {
         val projects = listOf(
             ProjectItem("p1", "Rénovation", areaUid = "home"),
             ProjectItem("p2", "Cadence", areaUid = "work"),
-            ProjectItem("p3", "Sans domaine"),
+            ProjectItem("p3", "Sans zone"),
         )
         val tasks = listOf(
             done("a", friday, "p1"), done("b", friday, "p1"), open("c", "p1", due = friday.plusDays(2)), open("d", "p1", due = friday.plusDays(1)),

@@ -39,7 +39,7 @@
     <string name="triage_mail_task_due">Échéance</string>
     <string name="triage_mail_task_due_on">Échéance : %1$s</string>
     <string name="triage_mail_task_no_due">Sans échéance</string>
-    <string name="triage_mail_create_task">Créer la tâche</string>
+    <string name="triage_mail_create_task">Créer une tâche</string>
     <string name="triage_mail_task_created">Tâche créée</string>
     <string name="triage_mail_replied">Réponse ouverte dans Gmail</string>
     <string name="triage_mail_postponed">Revient demain</string>

@@ -24,6 +24,11 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
     private val _latest = MutableStateFlow<Map<ProposalKind, ProposalDto>>(emptyMap())
     val latest: StateFlow<Map<ProposalKind, ProposalDto>> = _latest.asStateFlow()
 
+    private val _agentAvailable = MutableStateFlow(false)
+
+    /** Faux tant que le serveur n'a pas confirmé qu'un agent écoute ; masque les boutons IA sinon. */
+    val agentAvailable: StateFlow<Boolean> = _agentAvailable.asStateFlow()
+
     private val _sheet = MutableStateFlow<String?>(null)
 
     /** Uid de la semaine prête dont la feuille est ouverte ; null hors feuille. */
@@ -45,7 +50,9 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
     val judgements: Flow<Map<String, ReviewJudgement>> = latest.map { Proposals.judgementsOf(it[ProposalKind.REVIEW]) }
 
     suspend fun refresh(): Result<Unit> = attempt {
-        _latest.value = ProposalJson.decodeFromJsonElement<ProposalListDto>(client.list()).proposals
+        val list = ProposalJson.decodeFromJsonElement<ProposalListDto>(client.list())
+        _agentAvailable.value = list.agent
+        _latest.value = list.proposals
             .mapNotNull { dto -> ProposalKind.of(dto.kind)?.let { it to dto } }
             .toMap()
     }

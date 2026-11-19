@@ -149,7 +149,7 @@ In Minimal mode a click on a task row opens the task in a pane on the right. On 
 - Escape closes the pane. "Open full page" goes to the task page.
 - J and K open the next and previous task of the page (rows in reading order, the pane's own subtasks left out), unless focus is in a text field or a menu or dialog is open.
 - On a wide window (1280 px and up) the sheet is a column a third of the window wide, on the side away from the click that opened it (a task clicked on the left opens on the right, and the reverse), so the clicked row stays in view; « Expand » still fills the page. Narrower windows keep the bottom sheet, phones the full-screen sheet.
-- **Discuss with the AI** (chat icon in the header, only while the AI plugin runs): opens the plugin's chat page with `?view=chat&about=<uid>`. The page reads the task and starts a conversation on it; the agent writes to Cadence only when asked in that conversation (plugin `hermes` 3.10.0, its README › Discuter d'une tâche). Android: not yet (`TODO.md`).
+- **Discuss with the AI** (chat icon in the header, only while the AI plugin runs): opens the plugin's chat page with `?view=chat&about=<uid>`. The page reads the task and starts a conversation on it; the agent writes to Cadence only when asked in that conversation (plugin `hermes` 3.10.0, its README › Discuter d'une tâche). Android: the same header button in the task sheet when the `hermes` plugin entry is in the menu.
 - A saved change is merged into the Tasks list without another request. Other lists update when they reload.
 - Dense mode keeps the inline expansion on the row.
 

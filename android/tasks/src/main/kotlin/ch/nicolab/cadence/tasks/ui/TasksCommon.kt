@@ -17,7 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import ch.nicolab.cadence.calendar.toDetail
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -131,10 +134,19 @@ internal fun TaskOverlays(
             }
         }
     }
-    selectedTaskUid?.let { uid ->
-        TaskDetailSheet(taskUid = uid, viewModel = viewModel, onDismiss = onCloseTask)
+    var menuOpenedTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
+    val activeTaskUid = selectedTaskUid ?: menuOpenedTaskUid
+    activeTaskUid?.let { uid ->
+        TaskDetailSheet(
+            taskUid = uid,
+            viewModel = viewModel,
+            onDismiss = {
+                menuOpenedTaskUid = null
+                onCloseTask()
+            },
+        )
     }
-    SwipeSheets(viewModel)
+    SwipeSheets(viewModel, onOpenTask = { menuOpenedTaskUid = it })
     EventSheets(viewModel)
     pendingScope?.let { pending ->
         RecurringScopeDialog(
@@ -183,11 +195,14 @@ private fun EventSheets(viewModel: TasksViewModel) {
 
 /** Feuille ouverte par un balayage (planifier, projet, priorité). */
 @Composable
-private fun SwipeSheets(viewModel: TasksViewModel) {
+private fun SwipeSheets(viewModel: TasksViewModel, onOpenTask: (String) -> Unit) {
     val sheet by viewModel.sheet.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    var serverBaseUrl by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(Unit) { serverBaseUrl = ch.nicolab.cadence.tasks.data.currentServerSession(context)?.baseUrl }
     // Premier jour du compte (profil), comme « Cette semaine » ; jamais celui de la langue de l'appareil.
     val firstDay = weekStart.dayOfWeek
     when (val open = sheet) {
@@ -197,9 +212,14 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
             today = moment.today,
             firstDayOfWeek = firstDay,
             weekStart = weekStart,
+            onOpen = { onOpenTask(open.task.uid) },
             onSchedule = { viewModel.reschedule(open.task, it) },
             onAction = { viewModel.swipe(open.task, it) },
             onFunnel = { viewModel.funnel(open.task, it) },
+            onPin = { viewModel.edit(open.task, ch.nicolab.cadence.tasks.model.TaskChange(pinned = open.task.pinnedAt == null)) },
+            onDuplicate = { viewModel.duplicate(open.task) },
+            onCopyLink = { context.copyText(open.task.name, ch.nicolab.cadence.tasks.menu.TaskMenu.taskUrl(serverBaseUrl, open.task.uid)) },
+            onCopyTitle = { context.copyText(open.task.name, open.task.name) },
             nextAction = if (NextAction.canDesignate(open.task)) NextAction.isDesignated(open.task, projects) else null,
             onNextAction = { viewModel.toggleNextAction(open.task) },
             onToProject = { viewModel.convertToProject(open.task) },

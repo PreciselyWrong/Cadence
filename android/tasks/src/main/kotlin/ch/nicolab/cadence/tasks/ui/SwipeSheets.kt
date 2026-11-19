@@ -8,16 +8,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Event
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +41,9 @@ import ch.nicolab.cadence.designsystem.components.SettingRow
 import ch.nicolab.cadence.designsystem.components.rowGroupShape
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.menu.TaskMenu
+import ch.nicolab.cadence.tasks.menu.TaskMenuAction
+import ch.nicolab.cadence.tasks.menu.TaskMenuInput
 import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.model.ProjectItem
@@ -65,9 +72,14 @@ internal fun TaskMenuSheet(
     today: LocalDate,
     firstDayOfWeek: DayOfWeek,
     weekStart: LocalDate,
+    onOpen: () -> Unit = {},
     onSchedule: (LocalDate?) -> Unit,
     onAction: (SwipeAction) -> Unit,
     onFunnel: (FunnelStage) -> Unit,
+    onPin: () -> Unit = {},
+    onDuplicate: () -> Unit = {},
+    onCopyLink: () -> Unit = {},
+    onCopyTitle: () -> Unit = {},
     /** null : la tâche ne peut pas être une prochaine action ; sinon, l'est-elle déjà ? */
     nextAction: Boolean? = null,
     onNextAction: () -> Unit = {},
@@ -79,54 +91,112 @@ internal fun TaskMenuSheet(
 ) {
     var picking by remember { mutableStateOf(false) }
     var confirmingProject by remember { mutableStateOf(false) }
+    val menuEntries = remember(task, onMoveUp != null, onMoveDown != null, nextAction) {
+        TaskMenu.entries(
+            TaskMenuInput(
+                task = task,
+                canMoveUp = onMoveUp != null,
+                canMoveDown = onMoveDown != null,
+                nextAction = nextAction,
+            ),
+        )
+    }
     class Entry(val icon: ImageVector, val label: Int, val onClick: () -> Unit)
-    // Une série ou une sous-tâche n'entre pas dans l'entonnoir, comme dans la revue du serveur.
-    val funnel = if (task.isRecurring || task.parentTaskUid != null) emptyList() else FunnelStage.entries.map { stage ->
-        val on = Funnel.has(task, stage, weekStart)
-        Entry(funnelIcon(stage), if (on) funnelOffLabel(stage) else funnelLabel(stage)) { onFunnel(stage) }
-    }
-    val quickDates = listOf(SchedulePreset.TODAY, SchedulePreset.TOMORROW, SchedulePreset.WEEKEND).map { preset ->
-        Entry(presetIcon(preset), presetLabel(preset)) { onSchedule(SchedulePreset.dateFor(preset, today, firstDayOfWeek)) }
-    }
-    val entries = listOfNotNull(
-        onMoveUp?.let { move ->
-            Entry(Icons.Outlined.ArrowUpward, R.string.today_move_up) {
-                move()
+    val rows = menuEntries.map { entry ->
+        when (entry.action) {
+            TaskMenuAction.MOVE_UP -> Entry(Icons.Outlined.ArrowUpward, R.string.today_move_up) {
+                onMoveUp?.invoke()
                 onDismiss()
             }
-        },
-        onMoveDown?.let { move ->
-            Entry(Icons.Outlined.ArrowDownward, R.string.today_move_down) {
-                move()
+            TaskMenuAction.MOVE_DOWN -> Entry(Icons.Outlined.ArrowDownward, R.string.today_move_down) {
+                onMoveDown?.invoke()
                 onDismiss()
             }
-        },
-    ) + quickDates + listOf(
-        Entry(presetIcon(SchedulePreset.PICK), R.string.swipe_menu_pick) { picking = true },
-    ) + funnel + listOfNotNull(
-        nextAction?.let { on ->
-            Entry(Icons.Outlined.Flag, if (on) R.string.next_action_menu_clear else R.string.next_action_menu_set, onNextAction)
-        },
-    ) + listOf(
-        Entry(swipeActionIcon(SwipeAction.PRIORITY), R.string.swipe_action_priority) { onAction(SwipeAction.PRIORITY) },
-    ) + listOfNotNull(
-        Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) }
-            .takeIf { FileBackedActions.allowsSwipe(task, SwipeAction.MOVE_PROJECT) },
-        Entry(Icons.Outlined.AccountTree, R.string.tasks_action_to_project) { confirmingProject = true }
-            .takeIf { canBecomeProject(task) },
-        Entry(swipeActionIcon(SwipeAction.DELETE), R.string.swipe_action_delete) { onAction(SwipeAction.DELETE) }
-            .takeIf { FileBackedActions.allowsSwipe(task, SwipeAction.DELETE) },
-    )
+            TaskMenuAction.OPEN -> Entry(Icons.AutoMirrored.Outlined.OpenInNew, R.string.task_menu_open) {
+                onOpen()
+                onDismiss()
+            }
+            TaskMenuAction.TOGGLE -> Entry(
+                Icons.Outlined.Check,
+                if (entry.active) R.string.task_menu_reopen else R.string.task_menu_complete,
+            ) {
+                onAction(SwipeAction.COMPLETE)
+                onDismiss()
+            }
+            TaskMenuAction.DATE -> Entry(Icons.Outlined.CalendarMonth, R.string.task_menu_date) {
+                onAction(SwipeAction.SCHEDULE)
+            }
+            TaskMenuAction.PRIORITY -> Entry(swipeActionIcon(SwipeAction.PRIORITY), R.string.task_menu_priority) {
+                onAction(SwipeAction.PRIORITY)
+            }
+            TaskMenuAction.PROJECT -> Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.task_menu_project) {
+                onAction(SwipeAction.MOVE_PROJECT)
+            }
+            TaskMenuAction.PIN -> Entry(
+                Icons.Outlined.PushPin,
+                if (entry.active) R.string.task_menu_unpin else R.string.task_menu_pin,
+            ) {
+                onPin()
+                onDismiss()
+            }
+            TaskMenuAction.FUNNEL_IN_VIEW -> {
+                val on = Funnel.has(task, FunnelStage.IN_VIEW, weekStart)
+                Entry(funnelIcon(FunnelStage.IN_VIEW), if (on) funnelOffLabel(FunnelStage.IN_VIEW) else funnelLabel(FunnelStage.IN_VIEW)) {
+                    onFunnel(FunnelStage.IN_VIEW)
+                }
+            }
+            TaskMenuAction.FUNNEL_THIS_WEEK -> {
+                val on = Funnel.has(task, FunnelStage.THIS_WEEK, weekStart)
+                Entry(funnelIcon(FunnelStage.THIS_WEEK), if (on) funnelOffLabel(FunnelStage.THIS_WEEK) else funnelLabel(FunnelStage.THIS_WEEK)) {
+                    onFunnel(FunnelStage.THIS_WEEK)
+                }
+            }
+            TaskMenuAction.FUNNEL_LATER -> {
+                val on = Funnel.has(task, FunnelStage.LATER, weekStart)
+                Entry(funnelIcon(FunnelStage.LATER), if (on) funnelOffLabel(FunnelStage.LATER) else funnelLabel(FunnelStage.LATER)) {
+                    onFunnel(FunnelStage.LATER)
+                }
+            }
+            TaskMenuAction.NEXT_ACTION -> Entry(
+                Icons.Outlined.Flag,
+                if (entry.active) R.string.next_action_menu_clear else R.string.next_action_menu_set,
+            ) {
+                onNextAction()
+                onDismiss()
+            }
+            TaskMenuAction.DUPLICATE -> Entry(Icons.Outlined.ContentCopy, R.string.task_menu_duplicate) {
+                onDuplicate()
+                onDismiss()
+            }
+            TaskMenuAction.TURN_INTO_PROJECT -> Entry(Icons.Outlined.AccountTree, R.string.task_menu_to_project) {
+                confirmingProject = true
+            }
+            TaskMenuAction.COPY_LINK -> Entry(Icons.Outlined.Link, R.string.task_menu_copy_link) {
+                onCopyLink()
+                onDismiss()
+            }
+            TaskMenuAction.COPY_TITLE -> Entry(Icons.Outlined.ContentCopy, R.string.task_menu_copy_title) {
+                onCopyTitle()
+                onDismiss()
+            }
+            TaskMenuAction.DELETE -> Entry(swipeActionIcon(SwipeAction.DELETE), R.string.task_menu_delete) {
+                onAction(SwipeAction.DELETE)
+                onDismiss()
+            }
+        }
+    }
     CadenceSheet(title = stringResource(R.string.swipe_menu_title), subtitle = task.name, dismiss = onDismiss) {
-        RowGroup {
-            entries.forEachIndexed { index, entry ->
-                SettingRow(
-                    title = stringResource(entry.label),
-                    icon = entry.icon,
-                    shape = rowGroupShape(index, entries.size),
-                    trailing = {},
-                    onClick = entry.onClick,
-                )
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            RowGroup {
+                rows.forEachIndexed { index, entry ->
+                    SettingRow(
+                        title = stringResource(entry.label),
+                        icon = entry.icon,
+                        shape = rowGroupShape(index, rows.size),
+                        trailing = {},
+                        onClick = entry.onClick,
+                    )
+                }
             }
         }
     }
