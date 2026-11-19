@@ -38,6 +38,8 @@ import {
     saveSuggestionSettings,
 } from '../../../utils/dailyPlanService';
 import { fetchProjects } from '../../../utils/projectsService';
+import { fetchProfile, updateUiSettings } from '../../../utils/profileService';
+import { listProposals } from '../../../utils/proposalsService';
 import { Project } from '../../../entities/Project';
 import { getUserTimezone } from '../../../utils/dateUtils';
 import {
@@ -215,9 +217,35 @@ const PlanningTab: React.FC<PlanningTabProps> = ({ isActive }) => {
         SuggestionSettingsResponse['options'] | null
     >(null);
     const [projects, setProjects] = useState<Project[]>([]);
+    const [agentListening, setAgentListening] = useState(false);
+    const [morningReplan, setMorningReplan] = useState({
+        enabled: true,
+        time: '06:30',
+    });
 
     useEffect(() => {
         if (!isActive) return;
+        listProposals()
+            .then(({ agent }) => setAgentListening(Boolean(agent)))
+            .catch(() => setAgentListening(false));
+        fetchProfile()
+            .then((profile) => {
+                const saved = profile.ui_settings?.planning?.morningReplan;
+                if (saved) {
+                    setMorningReplan({
+                        enabled:
+                            typeof saved.enabled === 'boolean'
+                                ? saved.enabled
+                                : true,
+                        time:
+                            typeof saved.time === 'string' &&
+                            /^([01]\d|2[0-3]):[0-5]\d$/.test(saved.time)
+                                ? saved.time
+                                : '06:30',
+                    });
+                }
+            })
+            .catch(() => undefined);
         fetchSuggestionSettings()
             .then((response) => {
                 setSuggestions(response.settings);
@@ -451,6 +479,23 @@ const PlanningTab: React.FC<PlanningTabProps> = ({ isActive }) => {
                 t(
                     'profile.planning.suggestionsSaveError',
                     'Could not save your suggestion settings'
+                )
+            );
+        });
+    };
+
+    const changeMorningReplan = (
+        patch: Partial<{ enabled: boolean; time: string }>
+    ) => {
+        const previous = morningReplan;
+        const next = { ...morningReplan, ...patch };
+        setMorningReplan(next);
+        updateUiSettings({ planning: { morningReplan: next } }).catch(() => {
+            setMorningReplan(previous);
+            showErrorToast(
+                t(
+                    'profile.planning.morningReplanSaveError',
+                    'Could not save your morning replan settings'
                 )
             );
         });
@@ -1066,6 +1111,74 @@ const PlanningTab: React.FC<PlanningTabProps> = ({ isActive }) => {
                     loadingText
                 )}
             </PlanningCard>
+
+            {agentListening && (
+                <PlanningCard
+                    icon={ClockIcon}
+                    title={t(
+                        'profile.planning.morningReplanTitle',
+                        'Morning overdue replan (AI)'
+                    )}
+                    description={t(
+                        'profile.planning.morningReplanDescription',
+                        'Every morning at your chosen time, prepare a week proposal when you have overdue tasks.'
+                    )}
+                    testId="planning-morning-replan"
+                >
+                    <div className="space-y-4">
+                        <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+                            <input
+                                type="checkbox"
+                                checked={morningReplan.enabled}
+                                onChange={(e) =>
+                                    changeMorningReplan({
+                                        enabled: e.target.checked,
+                                    })
+                                }
+                                className={checkbox}
+                                data-testid="planning-morning-replan-enabled"
+                            />
+                            <span>
+                                {t(
+                                    'profile.planning.morningReplanToggle',
+                                    'Prepare a proposal automatically in the morning'
+                                )}
+                            </span>
+                        </label>
+                        <div>
+                            <label
+                                htmlFor="planning-morning-replan-time"
+                                className={fieldLabel}
+                            >
+                                {t(
+                                    'profile.planning.morningReplanTime',
+                                    'Time ({{timezone}})',
+                                    { timezone: getUserTimezone() }
+                                )}
+                            </label>
+                            <input
+                                id="planning-morning-replan-time"
+                                type="time"
+                                value={morningReplan.time}
+                                disabled={!morningReplan.enabled}
+                                onChange={(e) => {
+                                    if (
+                                        /^([01]\d|2[0-3]):[0-5]\d$/.test(
+                                            e.target.value
+                                        )
+                                    ) {
+                                        changeMorningReplan({
+                                            time: e.target.value,
+                                        });
+                                    }
+                                }}
+                                className={`${FORM.input} w-36 disabled:opacity-50`}
+                                data-testid="planning-morning-replan-time"
+                            />
+                        </div>
+                    </div>
+                </PlanningCard>
+            )}
         </div>
     );
 };

@@ -175,4 +175,23 @@ describe('ProposalButton', () => {
             )
         );
     });
+
+    it('accepts custom label, variant and testId props', async () => {
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [],
+            agent: true,
+        });
+        render(
+            <MemoryRouter initialEntries={['/upcoming']}>
+                <ProposalButton
+                    kind="week"
+                    label="Reschedule with AI"
+                    variant="ghost"
+                    testId="overdue-replan-ai"
+                />
+            </MemoryRouter>
+        );
+        const btn = await screen.findByTestId('overdue-replan-ai');
+        expect(btn).toHaveTextContent('Reschedule with AI');
+    });
 });

@@ -11,6 +11,7 @@ const {
     Project,
     Tag,
     Task,
+    User,
 } = require('../../models');
 const permissionsService = require('../../services/permissionsService');
 
@@ -238,6 +239,31 @@ async function findWeekCandidates(
 
 const notify = (attributes) => Notification.createNotification(attributes);
 
+const findAllUsers = () =>
+    User.findAll({
+        attributes: [
+            'id',
+            'uid',
+            'timezone',
+            'ui_settings',
+            'first_day_of_week',
+        ],
+    });
+
+const hasWeekProposalPendingOrToday = async (userId, startOfTodayUtc) => {
+    const count = await Proposal.count({
+        where: {
+            user_id: userId,
+            kind: 'week',
+            [Op.or]: [
+                { status: 'pending' },
+                { created_at: { [Op.gte]: startOfTodayUtc } },
+            ],
+        },
+    });
+    return count > 0;
+};
+
 module.exports = {
     create,
     dismissReady,
@@ -252,4 +278,6 @@ module.exports = {
     findWeekCandidates,
     countOpenTasksByProject,
     notify,
+    findAllUsers,
+    hasWeekProposalPendingOrToday,
 };

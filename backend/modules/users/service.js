@@ -98,6 +98,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { getConfig } = require('../../config/config');
 const { normalizeQuietHours } = require('../../utils/quietHours');
+const { normalizeMorningReplan } = require('../daily-plan/planningSettings');
 
 const config = getConfig();
 
@@ -1069,6 +1070,7 @@ class UsersService {
             summary,
             viewTypes,
             everyone,
+            planning,
         } = data;
 
         const currentSettings =
@@ -1148,6 +1150,26 @@ class UsersService {
 
         if (everyone !== undefined) {
             newSettings.everyone = sanitizeEveryone(everyone);
+        }
+
+        if (
+            planning !== undefined &&
+            planning &&
+            typeof planning === 'object'
+        ) {
+            const nextPlanning = { ...(currentSettings.planning || {}) };
+            if (planning.morningReplan !== undefined) {
+                const base = normalizeMorningReplan(currentSettings.planning);
+                const patch =
+                    planning.morningReplan &&
+                    typeof planning.morningReplan === 'object'
+                        ? planning.morningReplan
+                        : {};
+                nextPlanning.morningReplan = normalizeMorningReplan({
+                    morningReplan: { ...base, ...patch },
+                });
+            }
+            newSettings.planning = nextPlanning;
         }
 
         await usersRepository.update(user, { ui_settings: newSettings });

@@ -41,6 +41,7 @@ const getCronExpression = (frequency) => {
         held_notifications: '* * * * *',
         context_purge: '30 2 * * *',
         triage_assistant: '50 3 * * *',
+        morning_replan: '*/15 * * * *',
     };
     return expressions[frequency];
 };
@@ -86,6 +87,9 @@ const runJob = async (frequency) => {
     } else if (frequency === 'context_purge') {
         const { purgeContexts } = require('../triage/contexts');
         await purgeContexts();
+    } else if (frequency === 'morning_replan') {
+        const { runMorningReplan } = require('../proposals/morning');
+        await runMorningReplan();
     } else {
         await processSummariesForFrequency(frequency);
     }
@@ -120,6 +124,7 @@ const createJobEntries = () => {
         'held_notifications',
         'context_purge',
         'triage_assistant',
+        'morning_replan',
     ];
 
     return frequencies.map((frequency) => {

@@ -1,7 +1,9 @@
 const {
     DEFAULT_SUGGESTIONS,
+    DEFAULT_MORNING_REPLAN,
     PROJECT_STATUSES,
     normalizeSuggestionSettings,
+    normalizeMorningReplan,
     validateSuggestionUpdate,
     isSuggestible,
 } = require('../../../modules/daily-plan/planningSettings');
@@ -211,5 +213,41 @@ describe('isSuggestible', () => {
         expect(
             isSuggestible(touched(100), settings({ staleAfterDays: 180 }), now)
         ).toBe(true);
+    });
+});
+
+describe('normalizeMorningReplan', () => {
+    it('returns the default when absent or invalid', () => {
+        expect(DEFAULT_MORNING_REPLAN).toEqual({
+            enabled: true,
+            time: '06:30',
+        });
+        expect(normalizeMorningReplan(undefined)).toEqual(
+            DEFAULT_MORNING_REPLAN
+        );
+        expect(normalizeMorningReplan(null)).toEqual(DEFAULT_MORNING_REPLAN);
+        expect(normalizeMorningReplan({ morningReplan: 'bad' })).toEqual(
+            DEFAULT_MORNING_REPLAN
+        );
+    });
+
+    it('keeps valid enabled and HH:MM time and falls back on bad fields', () => {
+        expect(
+            normalizeMorningReplan({
+                morningReplan: { enabled: false, time: '07:45' },
+            })
+        ).toEqual({ enabled: false, time: '07:45' });
+
+        expect(
+            normalizeMorningReplan({
+                morningReplan: { enabled: 'no', time: '25:99' },
+            })
+        ).toEqual(DEFAULT_MORNING_REPLAN);
+
+        expect(
+            normalizeMorningReplan({
+                morningReplan: { enabled: false, time: '6:30' },
+            })
+        ).toEqual({ enabled: false, time: '06:30' });
     });
 });

@@ -2872,6 +2872,14 @@ const UpcomingBoard: React.FC = () => {
                                                                             date: today,
                                                                         }}
                                                                     />
+                                                                    <ProposalButton
+                                                                        kind="week"
+                                                                        label={t(
+                                                                            'upcoming.overdueAiReplan',
+                                                                            'Reschedule with AI'
+                                                                        )}
+                                                                        testId="overdue-replan-ai"
+                                                                    />
                                                                     <div className="flex items-center">
                                                                         <Button
                                                                             size="sm"

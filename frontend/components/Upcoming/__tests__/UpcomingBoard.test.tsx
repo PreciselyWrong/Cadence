@@ -12,6 +12,7 @@ import { MemoryRouter } from 'react-router-dom';
 import UpcomingBoard from '../UpcomingBoard';
 import {
     applyProposal,
+    createProposal,
     getProposal,
     listProposals,
 } from '../../../utils/proposalsService';
@@ -1432,6 +1433,43 @@ describe('UpcomingBoard', () => {
         expect(
             screen.queryByTestId('overdue-replan-date')
         ).not.toBeInTheDocument();
+    });
+
+    it('shows Reschedule with AI in the overdue strip only when an agent listens and starts a week proposal', async () => {
+        withOverdue([
+            task('late', 'Renew passport', {
+                due_date: shift(-3),
+            } as Partial<Task>),
+        ]);
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [],
+            agent: false,
+        });
+        const { unmount } = renderBoard();
+        const stripNoAgent = await screen.findByTestId('upcoming-overdue');
+        await waitFor(() => expect(listProposals).toHaveBeenCalled());
+        expect(
+            within(stripNoAgent).queryByTestId('overdue-replan-ai')
+        ).toBeNull();
+        unmount();
+
+        (listProposals as jest.Mock).mockResolvedValue({
+            proposals: [],
+            agent: true,
+        });
+        (createProposal as jest.Mock).mockResolvedValue({
+            uid: 'p-morning',
+            status: 'pending',
+        });
+        renderBoard();
+        const stripWithAgent = await screen.findByTestId('upcoming-overdue');
+        const aiBtn =
+            await within(stripWithAgent).findByTestId('overdue-replan-ai');
+        expect(aiBtn).toHaveTextContent('Reschedule with AI');
+        fireEvent.click(aiBtn);
+        await waitFor(() =>
+            expect(createProposal).toHaveBeenCalledWith('week')
+        );
     });
 
     it('shows the plugin buttons of the overdue place in the strip', async () => {

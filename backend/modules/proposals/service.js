@@ -79,11 +79,13 @@ const TITLES = {
 const todayIn = (timezone) => moment.tz(timezone).format('YYYY-MM-DD');
 
 // What the agent receives: the facts without the bookkeeping that decides
-// reuse (`stamps`) or the second pass (`round`, `notes`, sent in the event).
+// reuse (`stamps`), the second pass (`round`, `notes`, sent in the event)
+// or morning run idempotency (`last_morning_run`).
 const agentFacts = ({
     stamps: _stamps,
     round: _round,
     notes: _notes,
+    last_morning_run: _lastMorningRun,
     ...facts
 }) => facts;
 
@@ -156,13 +158,25 @@ async function requestAgent(row, extra = {}) {
     }
 }
 
+function outcomeTitle(row, ready) {
+    if (ready && row.kind === 'week' && row.facts?.trigger === 'morning') {
+        const count = overdueOf(row.facts).size;
+        return count === 1
+            ? '1 retard replacé, à valider'
+            : count > 1
+              ? `${count} retards replacés, à valider`
+              : 'Retards replacés, à valider';
+    }
+    return TITLES[row.kind][ready ? 'ready' : 'failed'];
+}
+
 // The message of a ready proposal is its headline; a failed one has none.
 async function notifyOutcome(row) {
     const ready = row.status === 'ready';
     await repository.notify({
         userId: row.user_id,
         type: 'proposal',
-        title: TITLES[row.kind][ready ? 'ready' : 'failed'],
+        title: outcomeTitle(row, ready),
         message: ready ? row.answer?.headline : undefined,
         level: ready ? 'success' : 'error',
         data: { proposal_uid: row.uid, kind: row.kind, status: row.status },
@@ -397,7 +411,7 @@ async function agentAvailable(user) {
     );
 }
 
-async function createProposal(user, { kind, start, end } = {}) {
+async function createProposal(user, { kind, start, end, trigger } = {}) {
     if (!KINDS.has(kind)) {
         throw new ValidationError('kind must be week or review');
     }
@@ -419,11 +433,15 @@ async function createProposal(user, { kind, start, end } = {}) {
             timezone,
             today
         );
+        const extraFacts =
+            trigger === 'morning'
+                ? { trigger: 'morning', last_morning_run: today }
+                : {};
         const row = await repository.create({
             ...base,
             period_start: period.start,
             period_end: period.end,
-            facts: { ...facts, round: 1, notes: [] },
+            facts: { ...facts, ...extraFacts, round: 1, notes: [] },
         });
         await requestAgent(row);
         return { row, created: true };

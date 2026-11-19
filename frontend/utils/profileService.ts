@@ -89,6 +89,12 @@ interface Profile {
         everyone?: {
             column_order?: string[];
         };
+        planning?: {
+            morningReplan?: {
+                enabled: boolean;
+                time: string;
+            };
+        };
     };
 }
 

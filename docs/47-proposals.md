@@ -301,6 +301,18 @@ Read-only list of the career proposals the agent prepared (`kind: career`, serve
 - **Links**: an offer opens its `url`, a followup its `draft_url` (Ouvrir le brouillon); only http and https open (`CareerModel.safeUrl`), through the app's URI handler.
 - **Pure rules** in `proposals/CareerModel.kt` (tests in `CareerModelTest.kt`): open items are those without a decision; decided items keep their title and op; stats accept numbers or strings. Staging, body and settled keys are pure too.
 
+## Morning run
+
+Once a day, a scheduled job (`morning_replan` in `backend/modules/tasks/taskScheduler.js`, `*/15 * * * *`, under `withJobLock`) checks each user (`backend/modules/proposals/morning.js`, pure gate in `backend/modules/proposals/core/morning.js`) and calls `createProposal(user, { kind: 'week', trigger: 'morning' })` when all four conditions hold:
+
+1. **Setting on and time reached**: `ui_settings.planning.morningReplan` (`{ enabled: boolean, time: "HH:MM" }`, default `{ enabled: true, time: "06:30" }`, sanitized in `backend/modules/daily-plan/planningSettings.js` and `backend/modules/users/service.js`) is enabled and the user's local clock in `user.timezone` is between `time` and three hours after it (a proposal is never started in the evening).
+2. **Agent listening**: `agentAvailable(user)` is true.
+3. **Not already run today**: the user has no `week` proposal with `status = 'pending'` or `created_at >= startOfToday` (in `user.timezone`). Never retried automatically on failure.
+4. **Overdue tasks exist**: `dailyPlan.getOverdueTasks(user)` (same definition as the Today page) returns at least one task.
+
+The created row stores `facts.trigger = 'morning'` (sent to the agent) and `facts.last_morning_run = today` (stripped by `agentFacts`). When the agent answers with `ready`, `notifyOutcome` uses the French title « N retards replacés, à valider » (`1 retard replacé, à valider` for one). In Profile › Planning (`PlanningTab.tsx`), the « Morning overdue replan (AI) » card is shown only when an agent listens.
+
+
 ## Not done yet
 
 - The web rail entry `career` is not in `MINIMAL_RAIL_KEYS` (`backend/modules/users/validation.js`): a place chosen for it in Profile › Sidebar is dropped on save and the default (rail) comes back.

@@ -261,6 +261,23 @@ async function getPlan(user, date, scopeQuery = null) {
 
 const DAY_COMPLETED_LIMIT = 50;
 
+// Overdue open tasks for today in the user's timezone, excluding tasks
+// planned today or on a later day (same definition as getDay).
+async function getOverdueTasks(user) {
+    const timezone = getSafeTimezone(user.timezone);
+    const today = getCurrentDateInTimezone(timezone);
+    const visibleWhere = await visibleTaskWhere(user.id);
+    const lines = await repository.findPlanLinesFrom(user.id, today, today);
+    const plannedOnDay = [...planIdsOn(lines, today)];
+    const overdueTasks = await repository.findOverdueBefore(
+        visibleWhere,
+        getTodayBoundsInUTC(timezone).start,
+        plannedOnDay
+    );
+    const laterDays = laterPlanDays(lines, { today });
+    return overdueTasks.filter((task) => !laterDays.has(task.id));
+}
+
 // The Today page for one day (GET /daily-plan/day): the plan, the tasks due
 // that day that are not planned on a day from today on, the overdue tasks
 // (split: `overdue` not planned later, `overdue_planned` planned on a later
@@ -1111,6 +1128,7 @@ async function saveFocusBlocks(user, body) {
 
 module.exports = {
     getDay,
+    getOverdueTasks,
     saveTodayOrder,
     readFocus,
     getFocusBlocks,
