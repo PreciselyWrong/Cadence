@@ -5482,7 +5482,8 @@
       "thisMonth": "Bu ay",
       "nextMonth": "Gelecek ay",
       "later": "Daha sonra",
-      "drop": "Bırak"
+      "drop": "Bırak",
+      "done": "Yapıldı"
     },
     "groups": {
       "thisWeek": "Bu hafta",

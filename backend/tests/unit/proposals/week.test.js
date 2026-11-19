@@ -120,6 +120,35 @@ describe('weekFacts', () => {
         ]);
     });
 
+    it('adds the inbox and the later horizons, after the tasks of the week', () => {
+        const { tasks: shown } = facts([
+            task('unfiled'),
+            task('waiting', { filed: true, needs_when: true }),
+            task('filed', { filed: true }),
+            task('next', { week_of: '2026-11-23' }),
+            task('month', { month_of: '2026-11-01' }),
+            task('nextMonth', { month_of: '2026-12-01' }),
+            task('parked', { someday: true }),
+            task('old', { month_of: '2026-10-01', filed: true }),
+            task('due', { due: '2026-11-18' }),
+        ]);
+        expect(shown.map((t) => t.uid)).toEqual([
+            'due',
+            'unfiled',
+            'waiting',
+            'month',
+            'next',
+            'nextMonth',
+        ]);
+        expect(shown.find((t) => t.uid === 'unfiled')).toMatchObject({
+            inbox: true,
+        });
+        expect(shown.find((t) => t.uid === 'month')).toEqual(
+            expect.objectContaining({ month_of: '2026-11-01' })
+        );
+        expect(shown.find((t) => t.uid === 'due').inbox).toBeUndefined();
+    });
+
     it('never sends recurring tasks or subtasks', () => {
         const { tasks: shown } = facts([
             task('routine', { due: '2026-11-18', recurring: true }),
@@ -188,6 +217,7 @@ describe('validateWeekAnswer', () => {
         tasks: [
             task('a', { due: '2026-11-17' }),
             task('b', { due: '2026-11-18' }),
+            task('c', { due: '2026-11-19' }),
         ],
         plans: new Map(),
         events: [],
@@ -303,6 +333,7 @@ describe('validateWeekAnswer', () => {
                 { task_uid: 'b', op: 'explode', reason: 'bad op' },
                 { task_uid: 'b', op: 'later', reason: 'ok' },
                 { task_uid: 'b', op: 'drop', reason: 'duplicate' },
+                { task_uid: 'c', op: 'done', reason: 'déjà faite' },
             ],
         });
         expect(answer.changes).toEqual([
@@ -313,6 +344,7 @@ describe('validateWeekAnswer', () => {
                 date: '2026-11-19',
             },
             { task_uid: 'b', op: 'later', reason: 'ok' },
+            { task_uid: 'c', op: 'done', reason: 'déjà faite' },
         ]);
         expect(answer.questions).toEqual([
             { id: 'q1', text: 'Mardi ?', choices: ['Oui', 'Non'] },
@@ -387,11 +419,11 @@ describe('checkWeekDecisions', () => {
     it('takes the operation the user chose, even one the agent did not propose', () => {
         expect(
             checkWeekDecisions(decisionFacts, [
-                { task_uid: 'a', op: 'later' },
+                { task_uid: 'a', op: 'done' },
                 { task_uid: 'b', op: 'plan_day', date: '2026-11-20' },
             ])
         ).toEqual([
-            { task_uid: 'a', op: 'later' },
+            { task_uid: 'a', op: 'done' },
             { task_uid: 'b', op: 'plan_day', date: '2026-11-20' },
         ]);
     });

@@ -5482,7 +5482,8 @@
       "thisMonth": "Denna månad",
       "nextMonth": "Nästa månad",
       "later": "Senare",
-      "drop": "Släpp"
+      "drop": "Släpp",
+      "done": "Klar"
     },
     "groups": {
       "thisWeek": "Denna vecka",

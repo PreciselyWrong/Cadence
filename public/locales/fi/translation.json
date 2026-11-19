@@ -5482,7 +5482,8 @@
       "thisMonth": "Tämä kuukausi",
       "nextMonth": "Ensi kuu",
       "later": "Myöhemmin",
-      "drop": "Hylkää"
+      "drop": "Hylkää",
+      "done": "Tehty"
     },
     "groups": {
       "thisWeek": "Tämä viikko",

@@ -5482,7 +5482,8 @@
       "thisMonth": "이번 달",
       "nextMonth": "다음 달",
       "later": "나중에",
-      "drop": "삭제"
+      "drop": "삭제",
+      "done": "완료"
     },
     "groups": {
       "thisWeek": "이번 주",

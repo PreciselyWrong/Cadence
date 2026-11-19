@@ -68,6 +68,33 @@ describe('contextFacts', () => {
         expect(goals).toEqual([{ uid: 'g9', title: 'Zeta' }]);
     });
 
+    it('tells what each project is: a short description and its open tasks', () => {
+        const { projects } = contextFacts({
+            projects: [
+                {
+                    name: 'Fermeture Nakama',
+                    area: 'Business',
+                    description:
+                        'Fermer la société avant la fin de l’année. '.repeat(
+                            10
+                        ),
+                    open_tasks: 7,
+                    due: '2026-12-31',
+                },
+                { name: 'Vide', open_tasks: 0, description: '' },
+            ],
+        });
+        expect(projects[0]).toEqual({
+            name: 'Fermeture Nakama',
+            area: 'Business',
+            about: expect.any(String),
+            open_tasks: 7,
+            due: '2026-12-31',
+        });
+        expect(projects[0].about.length).toBeLessThanOrEqual(160);
+        expect(projects[1]).toEqual({ name: 'Vide' });
+    });
+
     it('keeps area names unique, ten at most, and projects fifteen at most with their area', () => {
         const areas = [
             ...Array.from({ length: 12 }, (_, i) => `Domaine ${i}`),

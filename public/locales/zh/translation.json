@@ -5482,7 +5482,8 @@
       "thisMonth": "本月",
       "nextMonth": "下月",
       "later": "稍后",
-      "drop": "放弃"
+      "drop": "放弃",
+      "done": "已完成"
     },
     "groups": {
       "thisWeek": "本周",

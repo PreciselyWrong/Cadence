@@ -5487,7 +5487,8 @@
       "thisMonth": "Denne måneden",
       "nextMonth": "Neste måned",
       "later": "Senere",
-      "drop": "Slipp"
+      "drop": "Slipp",
+      "done": "Utført"
     },
     "groups": {
       "thisWeek": "Denne uken",

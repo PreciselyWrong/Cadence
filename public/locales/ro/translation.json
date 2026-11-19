@@ -5499,7 +5499,8 @@
       "thisMonth": "Luna aceasta",
       "nextMonth": "Luna viitoare",
       "later": "Mai târziu",
-      "drop": "Renunță"
+      "drop": "Renunță",
+      "done": "Făcută"
     },
     "groups": {
       "thisWeek": "Săptămâna aceasta",

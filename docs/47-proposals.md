@@ -23,7 +23,7 @@ Kind `weekend` (« Week-end ») : voir `docs/48-weekend.md`.
 
 `POST /api/proposals { "kind": "week", "start"?, "end"? }`. The period defaults to today and six days after (tomorrow and six days after once the user's day hours are over, Profil › Planning, so nothing lands on an evening already gone); it is at most 14 days, `end` not before `start`.
 
-Tasks sent: open tasks that are overdue, due in the period, planned in the period, decided for this week (`week_of` = this week's first day) or in view. Never recurring tasks, subtasks, closed or habit tasks. Overdue first, then by due date, at most 40. Calendar events come from the calendars shown on the agenda (`calendar-feeds`, the same reading as the agenda). Load is the sum of the planned durations of a day.
+Tasks sent: open tasks that are overdue, due in the period, planned in the period, decided for this week (`week_of` = this week's first day), in view; then the inbox (no due date and filed nowhere, or `needs_when`; a past week or month counts as nothing decided) and the later horizons: this month, next week, next month (`month_of`, `week_of`). Never #someday, recurring tasks, subtasks, closed or habit tasks. In that order of rank (overdue, due, planned, this week, in view, inbox, this month, next week, next month), then by due date, at most 60 (2026-11-19, was 40: about 30 tokens a task). An inbox task carries `inbox: true`; a horizon task its `week_of` or `month_of`. Calendar events come from the calendars shown on the agenda (`calendar-feeds`, the same reading as the agenda). Load is the sum of the planned durations of a day.
 
 Facts sent in `proposal.requested` (`data.facts`):
 
@@ -68,7 +68,7 @@ Answer (`POST /api/proposals/:uid/answer`, `answer` object, contract v2):
 
 Operations the agent may propose:
 
-**Daily cap**: a day holds at most `facts.max_tasks_per_day` tasks (`ui_settings.planning.maxTasksPerDay`, default 5), counting `facts.days[].task_count`: what the Today page already lists that day, i.e. its plan lines, the unplanned tasks due that day (recurring ones included, though never sent) and, on `facts.today`, the unplanned overdue tasks. `facts.days[].due` names those due or overdue tasks that are in `facts.tasks`. The answer's `plan_day` changes over the cap, in the agent's order, become `this_week`; a change that takes a task off its day (a plan line moved, a `plan_day`, `due` or `drop` on a task due there, any operation on an overdue one) frees its place first. The agent plans a task with a due date close to it, never days ahead, and keeps today light.
+**Daily cap**: a day holds at most `facts.max_tasks_per_day` tasks (`ui_settings.planning.maxTasksPerDay`, default 5), counting `facts.days[].task_count`: what the Today page already lists that day, i.e. its plan lines, the unplanned tasks due that day (recurring ones included, though never sent) and, on `facts.today`, the unplanned overdue tasks. `facts.days[].due` names those due or overdue tasks that are in `facts.tasks`. The answer's `plan_day` changes over the cap, in the agent's order, become `this_week`; a change that takes a task off its day (a plan line moved, a `plan_day`, `due`, `done` or `drop` on a task due there, any operation on an overdue one) frees its place first. The agent plans a task with a due date close to it, never days ahead, and keeps today light.
 
 **Overdue tasks** (`facts.tasks[].overdue`): a `plan_day` also sets the due date to that day, and a horizon (`this_week`, `next_week`, `this_month`, `next_month`, `later`) clears it, so a task the user places again is no longer overdue. Other tasks keep their due date.
 
@@ -80,11 +80,12 @@ Operations the agent may propose:
 | `this_month`, `next_month` | — | `update_task { month_of: <op>, week_of: null, later: false }` |
 | `later` | — | `update_task { later: true }` (the `#someday` tag) |
 | `due` | required, in the period | `update_task { due_date }` |
+| `done` | — | `complete_task` (the task is done; since 2026-11-19) |
 | `drop` | — | `update_task { status: "cancelled" }` (not deleted) |
 
 ### Apply (week)
 
-`POST /api/proposals/:uid/apply { "decisions": [{ "task_uid", "op", "date"? }] }`. The user may pick, for any task of `facts.tasks`, any of `plan_day`, `this_week`, `next_week`, `this_month`, `next_month`, `later`, `due`, `drop` or `keep` (`keep`: nothing, and no result line). The operation can differ from the agent's. `date` is required for `plan_day` and `due` and must fall in `period.start` to `period.end` + 30 days. A task not in `facts.tasks` is refused with 400 (`Task … is not in this proposal`), as is a task decided twice, an unknown operation or a date out of the window. The legacy body `{ "task_uids": [...] }` still works: each uid takes the agent's operation (a uid the agent did not propose is 400).
+`POST /api/proposals/:uid/apply { "decisions": [{ "task_uid", "op", "date"? }] }`. The user may pick, for any task of `facts.tasks`, any of `plan_day`, `this_week`, `next_week`, `this_month`, `next_month`, `later`, `due`, `done`, `drop` or `keep` (`keep`: nothing, and no result line). The operation can differ from the agent's. `date` is required for `plan_day` and `due` and must fall in `period.start` to `period.end` + 30 days. A task not in `facts.tasks` is refused with 400 (`Task … is not in this proposal`), as is a task decided twice, an unknown operation or a date out of the window. The legacy body `{ "task_uids": [...] }` still works: each uid takes the agent's operation (a uid the agent did not propose is 400).
 
 ### Send with notes (week)
 
@@ -169,7 +170,7 @@ Computed by code on every week and review (`backend/modules/proposals/core/conte
 
 - `goals`: active Cadence goals (objectives and key results), the earliest due date first, 8 at most: `{ uid, title, due?, progress? }`, `progress` being the goal's own percent when it has linked items.
 - `areas`: names of the areas the user can see, 10 at most.
-- `projects`: active projects only (`not_started`, `in_progress`, `planned`, `waiting`; not paused, done, cancelled or archived), the most recently touched first, 15 at most: `{ name, area? }`.
+- `projects`: active projects only (`not_started`, `in_progress`, `planned`, `waiting`; not paused, done, cancelled or archived), the most recently touched first, 15 at most: `{ name, area?, about?, open_tasks?, due? }`: `about` is the project's description cut to 160 characters, `open_tasks` its open top-level tasks, `due` its due day.
 - No free text about the user. Who the user is comes from the planner's own memory (Hermes, `memoire_chercher`), not from a Cadence setting.
 
 Each week task may carry `goal` (the title of its goal) and `area` (its own area, else its goal's, else its project's) when linked.

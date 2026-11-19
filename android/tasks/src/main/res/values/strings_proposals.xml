@@ -26,6 +26,7 @@
     <string name="proposal_op_next_month">Le mois prochain</string>
     <string name="proposal_op_later">Plus tard</string>
     <string name="proposal_op_due">Échéance le %1$s</string>
+    <string name="proposal_op_done">Faite</string>
     <string name="proposal_op_drop">Abandonner</string>
     <string name="proposal_op_keep">Garder tel quel</string>
     <string name="proposal_op_other_date">Autre date</string>

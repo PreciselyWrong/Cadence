@@ -20,6 +20,7 @@ export type WeekOp =
     | 'next_month'
     | 'later'
     | 'due'
+    | 'done'
     | 'drop'
     | 'keep';
 

@@ -160,6 +160,7 @@ enum class ProposalOp(val wire: String) {
     NEXT_MONTH("next_month"),
     LATER("later"),
     DUE("due"),
+    DONE("done"),
     DROP("drop"),
     KEEP("keep");
 
@@ -293,7 +294,7 @@ object Proposals {
     fun focusDay(decision: WeekDecision, period: Pair<LocalDate, LocalDate>?): LocalDate? =
         (decision.date.takeIf { decision.op == ProposalOp.PLAN_DAY }) ?: period?.first
 
-    /** Options du menu d'une tâche : chaque jour de la période, puis cette semaine, la suivante, les mois, plus tard, garder et abandonner. */
+    /** Options du menu d'une tâche : chaque jour de la période, puis cette semaine, la suivante, les mois, plus tard, garder, faite et abandonner. */
     fun menuOptions(start: LocalDate?, end: LocalDate?): List<WeekDecision> {
         val days = if (start != null && end != null && !end.isBefore(start)) {
             generateSequence(start) { it.plusDays(1) }.takeWhile { !it.isAfter(end) }.take(MAX_MENU_DAYS)
@@ -308,6 +309,7 @@ object Proposals {
             WeekDecision(ProposalOp.NEXT_MONTH),
             WeekDecision(ProposalOp.LATER),
             WeekDecision(ProposalOp.KEEP),
+            WeekDecision(ProposalOp.DONE),
             WeekDecision(ProposalOp.DROP),
         )
     }

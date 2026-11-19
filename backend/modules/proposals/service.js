@@ -23,7 +23,7 @@ const calendarFeeds = require('../calendar-feeds/service');
 const goalsService = require('../goals/service');
 const repository = require('./repository');
 const { cleanText } = require('./core/text');
-const { listDays } = require('./core/day');
+const { listDays, addDays } = require('./core/day');
 const { weekDays } = require('./core/weekDays');
 const { contextFacts } = require('./core/context');
 const {
@@ -208,6 +208,9 @@ async function userContext(user) {
         repository.findAreaNames(user.id),
         repository.findActiveProjects(user.id),
     ]);
+    const openTasks = await repository.countOpenTasksByProject(
+        projects.map((project) => project.id)
+    );
     return contextFacts({
         goals: goals.map((goal) => ({
             uid: goal.uid,
@@ -220,6 +223,9 @@ async function userContext(user) {
         projects: projects.map((project) => ({
             name: project.name,
             area: project.Area?.name ?? null,
+            description: project.description ?? null,
+            open_tasks: openTasks.get(project.id) ?? 0,
+            due: dayOf(project.due_date_at),
         })),
     });
 }
@@ -274,6 +280,8 @@ async function computeWeek(user, { start, end }, timezone, today) {
         repository.findWeekCandidates(user.id, {
             periodEnd: period.end,
             weekStart,
+            nextWeekStart: addDays(weekStart, 7),
+            monthStart: `${today.slice(0, 8)}01`,
             plannedUids,
         }),
         periodEvents(user, period),
@@ -290,6 +298,9 @@ async function computeWeek(user, { start, end }, timezone, today) {
         priority: PRIORITY_SHOWN[task.priority] ?? null,
         estimate_min: task.estimated_minutes ?? null,
         week_of: dayOf(task.week_of),
+        month_of: dayOf(task.month_of),
+        filed: Boolean(task.project_id || task.area_id),
+        needs_when: Boolean(task.needs_when),
         in_view: Boolean(task.in_view),
         someday: (task.tags ?? []).some((tag) => tag.name === 'someday'),
         recurring: isRecurring(task),
@@ -546,7 +557,7 @@ async function announceAnswers(userId, uid, answers) {
 
 // Changes of a week, by task. The operations are the ones the user can do
 // by hand: a plan line on a day (the due date stays), this week, later, a
-// new due date, dropped (cancelled, not deleted).
+// new due date, done, dropped (cancelled, not deleted).
 async function applyWeekChange(user, change) {
     const run = toolsFor(user);
     const id = change.task_uid;
@@ -582,6 +593,9 @@ async function applyWeekChange(user, change) {
             return;
         case 'due':
             await run('update_task', { id, due_date: change.date });
+            return;
+        case 'done':
+            await run('complete_task', { id });
             return;
         case 'drop':
             await run('update_task', { id, status: 'cancelled' });

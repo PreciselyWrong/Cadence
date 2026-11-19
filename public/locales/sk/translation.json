@@ -5695,7 +5695,8 @@
       "thisMonth": "Tento mesiac",
       "nextMonth": "Budúci mesiac",
       "later": "Neskôr",
-      "drop": "Zahodiť"
+      "drop": "Zahodiť",
+      "done": "Hotovo"
     },
     "groups": {
       "thisWeek": "Tento týždeň",

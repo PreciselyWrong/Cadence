@@ -7,7 +7,8 @@ const { ValidationError } = require('../../../shared/errors');
 const { isDay, addDays, daysBetween, listDays } = require('./day');
 const { cleanText } = require('./text');
 
-const MAX_TASKS = 40;
+// Room for the inbox and the later horizons too (about 30 tokens a task).
+const MAX_TASKS = 60;
 // Tasks on one day's plan at most, unless the user sets another cap
 // (ui_settings.planning.maxTasksPerDay).
 const MAX_TASKS_PER_DAY = 5;
@@ -24,6 +25,7 @@ const OPS = [
     'next_month',
     'later',
     'due',
+    'done',
     'drop',
 ];
 // The user may pick any of these per task; keep does nothing.
@@ -64,10 +66,30 @@ function resolvePeriod({ today, start, end, dayOver = false }) {
     return { start: from, end: to };
 }
 
-// Tasks worth the agent's time: overdue, due in the period, decided for this
-// week, in view, or planned in the period. Closed, recurring and subtasks are
-// never sent. Most urgent first, capped.
-const RANK = { overdue: 0, due: 1, planned: 2, week: 3, view: 4 };
+// Tasks worth the agent's time: overdue, due in the period, planned in it,
+// decided for this week, in view; then the inbox (filed nowhere, or filed and
+// waiting for « Quand ? ») and the later horizons (next week, this month and
+// next month). #someday and closed, recurring and subtasks are never sent.
+// Most urgent first, capped.
+const RANK = {
+    overdue: 0,
+    due: 1,
+    planned: 2,
+    week: 3,
+    view: 4,
+    inbox: 5,
+    month: 6,
+    nextWeek: 7,
+    nextMonth: 8,
+};
+
+const monthStartOf = (day) => `${day.slice(0, 8)}01`;
+const nextMonthStartOf = (day) => {
+    const [y, m] = day.split('-').map(Number);
+    return m === 12
+        ? `${y + 1}-01-01`
+        : `${y}-${String(m + 1).padStart(2, '0')}-01`;
+};
 
 function rankOf(task, { today, period, plannedUids, weekStart }) {
     if (task.due && task.due < today) return RANK.overdue;
@@ -77,6 +99,18 @@ function rankOf(task, { today, period, plannedUids, weekStart }) {
     if (plannedUids.has(task.uid)) return RANK.planned;
     if (task.week_of === weekStart) return RANK.week;
     if (task.in_view) return RANK.view;
+    if (task.someday) return null;
+    const month = monthStartOf(today);
+    const nextMonth = nextMonthStartOf(today);
+    if (task.week_of === addDays(weekStart, 7)) return RANK.nextWeek;
+    if (task.month_of === month) return RANK.month;
+    if (task.month_of === nextMonth) return RANK.nextMonth;
+    // A past week or month decided nothing: such a task is back in the inbox.
+    const decided =
+        task.due ||
+        (task.week_of && task.week_of >= weekStart) ||
+        (task.month_of && task.month_of >= month);
+    if (!decided && (!task.filed || task.needs_when)) return RANK.inbox;
     return null;
 }
 
@@ -102,7 +136,9 @@ function selectTasks(tasks, context) {
         }
         if (task.estimate_min) out.estimate_min = task.estimate_min;
         if (rank === RANK.overdue) out.overdue = true;
+        if (rank === RANK.inbox) out.inbox = true;
         if (task.week_of) out.week_of = task.week_of;
+        if (task.month_of && rank !== RANK.inbox) out.month_of = task.month_of;
         if (task.someday) out.someday = true;
         if (task.goal) out.goal = task.goal;
         if (task.area) out.area = task.area;
@@ -205,10 +241,10 @@ function cleanQuestion(raw) {
 }
 
 // Operations that take a task off the due list of its day: a plan line hides
-// it there, a new due date or a drop moves it. An overdue task leaves on any
+// it there, a new due date, done or a drop moves it. An overdue task leaves on any
 // operation, since placing it again also sets or clears its due date
 // (service.js, applyWeekDecisions).
-const LEAVES_DUE_DAY = new Set(['plan_day', 'due', 'drop']);
+const LEAVES_DUE_DAY = new Set(['plan_day', 'due', 'done', 'drop']);
 
 // A day never holds more than the daily cap: the tasks staying on it (those
 // of other plans, the tasks due there and, today, the overdue ones, minus

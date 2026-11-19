@@ -5548,7 +5548,8 @@
       "thisMonth": "This month",
       "nextMonth": "Next month",
       "later": "Later",
-      "drop": "Drop"
+      "drop": "Drop",
+      "done": "Done"
     },
     "groups": {
       "thisWeek": "This week",

@@ -154,11 +154,7 @@ export function dayLoad(minutes: number, day?: WeekDay): DayLoad {
         day.events.some((event) => event.all_day) ||
         (!!day.work && capacity === 0);
     const full = busy || (capacity > 0 && minutes >= capacity);
-    const share = busy
-        ? 1
-        : capacity > 0
-          ? Math.min(minutes / capacity, 1)
-          : 0;
+    const share = busy ? 1 : capacity > 0 ? Math.min(minutes / capacity, 1) : 0;
     return { minutes, share, full, busy };
 }
 

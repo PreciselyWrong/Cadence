@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Hermes : la semaine voit l'Inbox, les horizons et les projets, et peut proposer « faite » (2026-11-19)
+  Raison : Cadence envoie désormais les tâches de l'Inbox (`inbox: true`), des horizons (`week_of`, `month_of`), les projets avec `about`, `open_tasks`, `due`, et accepte l'opération `done` (`docs/47-proposals.md`). Reste côté plugin Hermes : décrire ces champs et `done` dans le prompt `week` (`lib/proposals.js`) et le skill `planificateur`, garder les deux identiques au contrat. Vérif : une vraie semaine propose de placer une tâche de l'Inbox et une de « Cette semaine », et propose « faite » pour une tâche déjà faite ; tokens du run notés (≲ 20 k).
 - Android : Planifier rattrape la revue UX du web (2026-11-19)
   Raison : le web a la bande « En retard » repliée en une ligne avec « Replanifier » qui répartit (la règle est déjà partagée : `PlanBoard.spread`), les jours vides sans texte ni zéro, la sélection de plusieurs cartes (Ctrl/Maj + clic, barre « Sélection : N ») et « Cette semaine 6 h 30 / 35 h » en tête de la bande des horizons (`docs/03-upcoming-view.md`, `docs/fork/WEB-UX-NOTES.md` 2026-11-19). Vérif : sur le téléphone, Échues tient en une ligne et « Replanifier » répartit comme le web ; un appui long puis « Sélectionner » permet de planifier plusieurs tâches d'un coup ; la charge de la semaine est la même que sur le web avec le même compte.
 - Hermes : exécuter les suppressions de mails et remplir l'horizon (2026-11-15)

@@ -837,6 +837,7 @@ private fun chipLabel(decision: WeekDecision): String = when (decision.op) {
     ProposalOp.NEXT_MONTH -> stringResource(R.string.proposal_op_next_month)
     ProposalOp.LATER -> stringResource(R.string.proposal_op_later)
     ProposalOp.DUE -> stringResource(R.string.proposal_chip_due, decision.date?.format(dueDay).orEmpty())
+    ProposalOp.DONE -> stringResource(R.string.proposal_op_done)
     ProposalOp.DROP -> stringResource(R.string.proposal_op_drop)
     ProposalOp.KEEP -> stringResource(R.string.proposal_chip_keep)
 }
@@ -854,6 +855,7 @@ private fun optionLabel(option: WeekDecision, loads: List<DayLoad>): String = wh
     ProposalOp.NEXT_MONTH -> stringResource(R.string.proposal_op_next_month)
     ProposalOp.LATER -> stringResource(R.string.proposal_op_later)
     ProposalOp.DUE -> stringResource(R.string.proposal_op_due, option.date?.format(dueDay).orEmpty())
+    ProposalOp.DONE -> stringResource(R.string.proposal_op_done)
     ProposalOp.DROP -> stringResource(R.string.proposal_op_drop)
     ProposalOp.KEEP -> stringResource(R.string.proposal_op_keep)
 }

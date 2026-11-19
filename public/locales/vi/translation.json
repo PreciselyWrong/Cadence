@@ -5482,7 +5482,8 @@
       "thisMonth": "Tháng này",
       "nextMonth": "Tháng sau",
       "later": "Để sau",
-      "drop": "Bỏ"
+      "drop": "Bỏ",
+      "done": "Đã xong"
     },
     "groups": {
       "thisWeek": "Tuần này",

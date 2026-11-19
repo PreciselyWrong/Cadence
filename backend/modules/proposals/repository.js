@@ -126,7 +126,7 @@ async function findActiveProjects(userId) {
             ],
         },
         include: [{ model: Area, attributes: ['name'], required: false }],
-        attributes: ['name'],
+        attributes: ['id', 'name', 'description', 'due_date_at'],
         order: [
             ['updated_at', 'DESC'],
             ['id', 'DESC'],
@@ -135,12 +135,35 @@ async function findActiveProjects(userId) {
     });
 }
 
+// Open top-level tasks of each project, by project id.
+async function countOpenTasksByProject(projectIds) {
+    if (projectIds.length === 0) return new Map();
+    const rows = await Task.findAll({
+        where: {
+            project_id: { [Op.in]: projectIds },
+            status: { [Op.notIn]: CLOSED_STATUSES },
+            parent_task_id: null,
+            recurring_parent_id: null,
+            habit_mode: false,
+        },
+        attributes: [
+            'project_id',
+            [Task.sequelize.fn('COUNT', Task.sequelize.col('id')), 'count'],
+        ],
+        group: ['project_id'],
+        raw: true,
+    });
+    return new Map(rows.map((row) => [row.project_id, Number(row.count)]));
+}
+
 // Open tasks that could appear in a week: overdue, due before the period
-// ends, planned in it, decided for the week, or in view. Recurring
+// ends, planned in it, decided for the week or a later horizon (next week,
+// this or next month), in view, or in the inbox (no due date, filed nowhere
+// or waiting for « Quand ? »). Recurring
 // occurrences and subtasks are left out here; the rules keep the rest.
 async function findWeekCandidates(
     userId,
-    { periodEnd, weekStart, plannedUids }
+    { periodEnd, weekStart, nextWeekStart, monthStart, plannedUids }
 ) {
     const where = {
         [Op.and]: [
@@ -159,7 +182,10 @@ async function findWeekCandidates(
                                 .toDate(),
                         },
                     },
-                    { week_of: weekStart },
+                    { week_of: { [Op.in]: [weekStart, nextWeekStart] } },
+                    { month_of: { [Op.gte]: monthStart } },
+                    { due_date: null, project_id: null, area_id: null },
+                    { due_date: null, needs_when: true },
                     { in_view_at: { [Op.ne]: null } },
                     {
                         uid: {
@@ -215,5 +241,6 @@ module.exports = {
     findAreaNames,
     findActiveProjects,
     findWeekCandidates,
+    countOpenTasksByProject,
     notify,
 };

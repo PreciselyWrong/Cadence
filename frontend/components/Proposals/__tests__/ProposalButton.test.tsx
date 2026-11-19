@@ -83,7 +83,9 @@ describe('ProposalButton', () => {
         renderButton();
 
         fireEvent.click(
-            await screen.findByRole('button', { name: 'Planifier ma semaine (IA)' })
+            await screen.findByRole('button', {
+                name: 'Planifier ma semaine (IA)',
+            })
         );
 
         await waitFor(() =>

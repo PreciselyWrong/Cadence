@@ -204,13 +204,14 @@ describe('ProposalSheet', () => {
         const rows = within(menu)
             .getAllByRole('menuitemradio')
             .map((option) => option.textContent);
-        expect(rows.slice(-7)).toEqual([
+        expect(rows.slice(-8)).toEqual([
             'Cette semaine',
             'Semaine prochaine',
             'Ce mois-ci',
             'Le mois prochain',
             'Plus tard',
             'Garder tel quel',
+            'Faite',
             'Abandonner',
         ]);
         fireEvent.keyDown(menu, { key: 'Escape' });
@@ -234,6 +235,26 @@ describe('ProposalSheet', () => {
                     { task_uid: 't3', op: 'drop' },
                 ],
             })
+        );
+    });
+
+    it('marks a task done from its menu', async () => {
+        (applyProposal as jest.Mock).mockResolvedValue(appliedOutcome);
+        renderSheet();
+        await screen.findByText('Valider le devis');
+
+        pick('Valider le devis', 'Faite');
+        expect(trigger('Valider le devis')).toHaveTextContent('Faite');
+        fireEvent.click(screen.getByRole('button', { name: 'Appliquer (3)' }));
+        await waitFor(() =>
+            expect(applyProposal).toHaveBeenCalledWith(
+                UID,
+                expect.objectContaining({
+                    decisions: expect.arrayContaining([
+                        { task_uid: 't1', op: 'done' },
+                    ]),
+                })
+            )
         );
     });
 
@@ -708,13 +729,14 @@ describe('week sheet: sections, day strip and picker', () => {
         expect(options[1]).toHaveAttribute('aria-checked', 'true');
         expect(options[3]).toHaveTextContent('· libre');
         // The horizons follow the days, in their usual order.
-        expect(options.slice(-7).map((o) => o.textContent)).toEqual([
+        expect(options.slice(-8).map((o) => o.textContent)).toEqual([
             'Cette semaine',
             'Semaine prochaine',
             'Ce mois-ci',
             'Le mois prochain',
             'Plus tard',
             'Garder tel quel',
+            'Faite',
             'Abandonner',
         ]);
     });

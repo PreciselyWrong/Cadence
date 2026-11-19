@@ -189,6 +189,10 @@ const DecisionMenu: React.FC<DecisionMenuProps> = ({
             label: t('proposals.decide.keep', 'Garder tel quel'),
         },
         {
+            decision: { op: 'done' },
+            label: t('proposals.ops.done', 'Faite'),
+        },
+        {
             decision: { op: 'drop' },
             label: t('proposals.ops.drop', 'Abandonner'),
         },

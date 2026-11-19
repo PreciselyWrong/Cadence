@@ -549,10 +549,22 @@ describe('proposals', () => {
             .send({ kind: 'week', start: today, end: day(6) });
         await answerAs(created.uid, { answer: { headline: 'Rien' } });
 
+        // Filed in a project with no moment: neither in the week nor in
+        // the inbox, so not in the facts.
+        const project = await Project.create({
+            user_id: user.id,
+            name: 'Atelier',
+            status: 'in_progress',
+        });
+        const filed = await Task.create({
+            user_id: user.id,
+            name: 'Poncer la table',
+            project_id: project.id,
+        });
         const notListed = await agent
             .post(`/api/proposals/${created.uid}/apply`)
             .send({
-                decisions: [{ task_uid: taskUid(planned), op: 'later' }],
+                decisions: [{ task_uid: filed.uid, op: 'later' }],
             });
         expect(notListed.status).toBe(400);
 
@@ -567,6 +579,41 @@ describe('proposals', () => {
 
         const row = await Task.findOne({ where: { uid: taskUid(dueSoon) } });
         expect(row.due_date).not.toBeNull();
+    });
+
+    it('sends the inbox and the later horizons, and can mark a task done', async () => {
+        const next = JSON.parse(
+            (await run('create_task', { name: 'Appeler le notaire' }))
+                .content[0].text
+        );
+        await run('update_task', { id: taskUid(next), week_of: 'next_week' });
+        const { body: created } = await agent
+            .post('/api/proposals')
+            .send({ kind: 'week', start: today, end: day(6) });
+        const { facts } = requested().at(-1)[2].data;
+        expect(
+            facts.tasks.find((t) => t.uid === taskUid(planned))
+        ).toMatchObject({ inbox: true });
+        expect(facts.tasks.find((t) => t.uid === taskUid(next))).toMatchObject({
+            week_of: expect.any(String),
+        });
+
+        await answerAs(created.uid, {
+            answer: {
+                headline: 'Déjà fait',
+                changes: [
+                    { task_uid: taskUid(planned), op: 'done', reason: 'fait' },
+                ],
+            },
+        });
+        const applied = await agent
+            .post(`/api/proposals/${created.uid}/apply`)
+            .send({ decisions: [{ task_uid: taskUid(planned), op: 'done' }] });
+        expect(applied.body.results).toEqual([
+            { task_uid: taskUid(planned), state: 'applied' },
+        ]);
+        const row = await Task.findOne({ where: { uid: taskUid(planned) } });
+        expect(row.status).toBe(Task.STATUS.DONE);
     });
 
     it('sends the goals, areas and projects as facts', async () => {
@@ -584,11 +631,20 @@ describe('proposals', () => {
             name: 'Cuisine rénovée',
             status: 'in_progress',
             area_id: area.id,
+            description: 'Plan de travail et peinture.',
+        });
+        const kitchen = await Project.findOne({
+            where: { name: 'Cuisine rénovée' },
         });
         await Task.update(
             { goal_id: goal.id },
             { where: { uid: taskUid(dueSoon) } }
         );
+        await Task.create({
+            user_id: user.id,
+            name: 'Choisir la peinture',
+            project_id: kitchen.id,
+        });
         await agent
             .post('/api/proposals')
             .send({ kind: 'week', start: today, end: day(6) });
@@ -604,7 +660,12 @@ describe('proposals', () => {
             },
         ]);
         expect(facts.projects).toEqual([
-            { name: 'Cuisine rénovée', area: 'Santé' },
+            {
+                name: 'Cuisine rénovée',
+                area: 'Santé',
+                about: 'Plan de travail et peinture.',
+                open_tasks: 1,
+            },
         ]);
         expect(
             facts.tasks.find((t) => t.uid === taskUid(dueSoon))

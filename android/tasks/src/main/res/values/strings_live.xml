@@ -28,7 +28,7 @@
     <string name="live_reply_not_sent">%1$s · Pas envoyé</string>
     <string name="live_reply_busy">Une réponse est déjà en cours. Réessayez plus tard.</string>
     <string name="live_reply_gone">Ce message a été supprimé.</string>
-    <string name="live_reply_not_configured">Hermes n’est pas configuré sur le serveur.</string>
+    <string name="live_reply_not_configured">L’IA n’est pas configurée sur le serveur.</string>
     <string name="live_reply_no_server">Aucun serveur connecté.</string>
     <string name="live_reply_refused">Réponse refusée par le serveur (%1$d).</string>
     <string name="live_reply_yours">Votre réponse : %1$s</string>

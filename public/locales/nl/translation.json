@@ -5482,7 +5482,8 @@
       "thisMonth": "Deze maand",
       "nextMonth": "Volgende maand",
       "later": "Later",
-      "drop": "Laten vallen"
+      "drop": "Laten vallen",
+      "done": "Klaar"
     },
     "groups": {
       "thisWeek": "Deze week",

@@ -759,6 +759,8 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
                 return t('proposals.ops.later', 'Plus tard');
             case 'keep':
                 return t('proposals.decide.kept', 'Tel quel');
+            case 'done':
+                return t('proposals.ops.done', 'Faite');
             default:
                 return t('proposals.ops.drop', 'Abandonner');
         }
@@ -805,7 +807,10 @@ const ProposalSheet: React.FC<ProposalSheetProps> = ({ uid, onClose }) => {
         const label = decisionLabel(decision);
         const name = nameOf(change.task_uid);
         const quiet =
-            !noted && (decision.op === 'keep' || decision.op === 'drop');
+            !noted &&
+            (decision.op === 'keep' ||
+                decision.op === 'drop' ||
+                decision.op === 'done');
         const open = menu?.taskUid === change.task_uid;
         const editing = noteOpen === change.task_uid;
         return (

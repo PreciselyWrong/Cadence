@@ -5491,7 +5491,8 @@
       "thisMonth": "Diesen Monat",
       "nextMonth": "Nächsten Monat",
       "later": "Später",
-      "drop": "Verwerfen"
+      "drop": "Verwerfen",
+      "done": "Erledigt"
     },
     "groups": {
       "thisWeek": "Diese Woche",

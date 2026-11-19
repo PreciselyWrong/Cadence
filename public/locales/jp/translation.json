@@ -5482,7 +5482,8 @@
       "thisMonth": "今月",
       "nextMonth": "来月",
       "later": "あとで",
-      "drop": "取りやめ"
+      "drop": "取りやめ",
+      "done": "完了"
     },
     "groups": {
       "thisWeek": "今週",

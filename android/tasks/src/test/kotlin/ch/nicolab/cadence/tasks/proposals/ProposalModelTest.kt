@@ -341,7 +341,7 @@ class ProposalModelTest {
     }
 
     @Test
-    fun `the menu offers each day of the period, then this week, next week, this month, next month, later, keep and drop`() {
+    fun `the menu offers each day of the period, then this week, next week, this month, next month, later, keep, done and drop`() {
         val options = Proposals.menuOptions(monday, monday.plusDays(6))
 
         assertEquals((0..6).map { WeekDecision(ProposalOp.PLAN_DAY, monday.plusDays(it.toLong())) }, options.take(7))
@@ -353,12 +353,14 @@ class ProposalModelTest {
                 WeekDecision(ProposalOp.NEXT_MONTH),
                 WeekDecision(ProposalOp.LATER),
                 WeekDecision(ProposalOp.KEEP),
+                WeekDecision(ProposalOp.DONE),
                 WeekDecision(ProposalOp.DROP),
             ),
             options.drop(7),
         )
-        assertEquals(7, Proposals.menuOptions(null, null).size)
-        assertEquals(7, Proposals.menuOptions(tuesday, monday).size)
+        assertEquals(8, Proposals.menuOptions(null, null).size)
+        assertEquals(8, Proposals.menuOptions(tuesday, monday).size)
+        assertEquals(ProposalOp.DONE, ProposalOp.of("done"))
     }
 
     @Test

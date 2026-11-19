@@ -5514,7 +5514,8 @@
       "thisMonth": "Ce mois-ci",
       "nextMonth": "Le mois prochain",
       "later": "Plus tard",
-      "drop": "Abandonner"
+      "drop": "Abandonner",
+      "done": "Faite"
     },
     "groups": {
       "thisWeek": "Cette semaine",
