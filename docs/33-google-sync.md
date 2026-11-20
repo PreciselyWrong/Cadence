@@ -67,7 +67,7 @@ With only one switch on, that side takes every task it can hold: calendars only 
 Profile → Calendars → **Sync log** (collapsed; loaded when opened, refreshed after each sync) lists the user's last 50 entries, newest first: time, kind and message, linked to the task when there is one.
 
 - **conflict**: an item changed on both sides; says which edit was kept.
-- **error**: an item Google refused (the run goes on), or a whole run that failed. `last_error` on the account still holds the latest run's summary, as before.
+- **error**: an item Google refused (the run goes on), or a whole run that failed. `last_error` on the account still holds the latest run's summary, as before. A whole run that fails also warns in the app (bell, phone, Linux client) until a run works again ([36-notifications.md](36-notifications.md), 2026-11-20).
 - **info**: a task marked done because its Google Task was deleted, task events moved to another calendar.
 
 Entries are written at the end of each run (`google_sync_logs`); older ones are dropped. Disconnecting clears the log.

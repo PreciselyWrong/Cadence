@@ -9,6 +9,7 @@ const {
     GoogleEvent,
     GoogleTaskLink,
     GoogleSyncLog,
+    Notification,
 } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 const { createFakeGoogle } = require('../helpers/fakeGoogle');
@@ -944,6 +945,56 @@ describe('Google sync', () => {
         await expect(syncUser(user.id)).rejects.toThrow(/revoked/);
         const res = await agent.get('/api/google');
         expect(res.body.last_error).toMatch(/Connect Google again/);
+    });
+
+    describe('alert in the app', () => {
+        const alerts = () =>
+            Notification.findAll({
+                where: { user_id: user.id, type: 'system' },
+            }).then((rows) =>
+                rows.filter((row) => row.data?.kind === 'google_sync')
+            );
+        const revoke = async () => {
+            const account = await GoogleAccount.findOne({
+                where: { user_id: user.id },
+            });
+            await account.update({ access_token_expires_at: new Date(0) });
+            google.state.tokenRevoked = true;
+        };
+
+        it('warns once while the sync keeps failing, on every client', async () => {
+            await connect();
+            await revoke();
+            await expect(syncUser(user.id)).rejects.toThrow(/revoked/);
+            await expect(syncUser(user.id)).rejects.toThrow(/revoked/);
+
+            const rows = await alerts();
+            expect(rows).toHaveLength(1);
+            expect(rows[0].level).toBe('error');
+            expect(rows[0].read_at).toBeNull();
+            expect(rows[0].message).toMatch(/Reconnecte Google/);
+            expect(rows[0].sources).toEqual(
+                expect.arrayContaining(['mobile', 'desktop'])
+            );
+            expect(rows[0].data.openPath).toBe('/profile?section=calendars');
+        });
+
+        it('clears the warning once the sync works again', async () => {
+            await connect();
+            await revoke();
+            await expect(syncUser(user.id)).rejects.toThrow(/revoked/);
+            google.state.tokenRevoked = false;
+            await syncUser(user.id);
+
+            const rows = await alerts();
+            expect(rows).toHaveLength(1);
+            expect(rows[0].read_at).not.toBeNull();
+        });
+
+        it('stays quiet when the sync works', async () => {
+            await connect();
+            expect(await alerts()).toHaveLength(0);
+        });
     });
 
     it('disconnects and keeps the tasks', async () => {

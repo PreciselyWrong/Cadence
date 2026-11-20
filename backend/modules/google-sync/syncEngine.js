@@ -7,6 +7,7 @@ const { GoogleClient, GoogleAuthRevokedError } = require('./client');
 const { syncCalendars } = require('./calendarsSync');
 const { syncTasks } = require('./tasksSync');
 const syncLog = require('./syncLog');
+const alert = require('./alert');
 
 // One run per user at a time in this process.
 const running = new Map();
@@ -34,6 +35,7 @@ async function runSync(account) {
                   )
                 : null,
         });
+        await alert.clear(account.user_id);
     } catch (error) {
         const message =
             error instanceof GoogleAuthRevokedError
@@ -42,6 +44,9 @@ async function runSync(account) {
         logError(`Google sync for user ${account.user_id} failed:`, error);
         await account.update({ last_error: message.slice(0, 1000) });
         ctx.log('error', message);
+        await alert.warn(account.user_id, {
+            revoked: error instanceof GoogleAuthRevokedError,
+        });
         throw error;
     } finally {
         try {

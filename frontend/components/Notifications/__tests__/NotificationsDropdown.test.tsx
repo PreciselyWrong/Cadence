@@ -121,6 +121,68 @@ describe('NotificationsDropdown', () => {
         expect(screen.getByText('/triage?deck=mail')).toBeInTheDocument();
     });
 
+    it('opens the calendar settings for a failed Google sync, keeping it unread', async () => {
+        const syncAlert = {
+            id: 3,
+            uid: 'n-google',
+            type: 'system',
+            title: 'Synchronisation Google en échec',
+            message: 'Reconnecte Google',
+            level: 'error',
+            source: 'system',
+            read_at: null,
+            created_at: new Date().toISOString(),
+            data: {
+                kind: 'google_sync',
+                openPath: '/profile?section=calendars',
+            },
+        };
+        (global as any).fetch = jest.fn((url: string) =>
+            Promise.resolve({
+                ok: true,
+                json: () =>
+                    Promise.resolve(
+                        String(url).includes('unread-count')
+                            ? { count: 1 }
+                            : { notifications: [syncAlert] }
+                    ),
+            })
+        );
+        fetchWithCsrf.mockClear();
+        const Location = () => {
+            const location = useLocation();
+            return <p>{location.pathname + location.search}</p>;
+        };
+        await act(async () => {
+            render(
+                <MemoryRouter initialEntries={['/today']}>
+                    <NotificationsDropdown isDarkMode={false} />
+                    <Routes>
+                        <Route path="/today" element={<p>today</p>} />
+                        <Route path="/profile" element={<Location />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        });
+        await act(async () => {
+            fireEvent.click(
+                screen.getByRole('button', { name: 'profile.notifications' })
+            );
+        });
+        await act(async () => {
+            fireEvent.click(
+                screen.getByText('Synchronisation Google en échec')
+            );
+        });
+        expect(
+            screen.getByText('/profile?section=calendars')
+        ).toBeInTheDocument();
+        expect(fetchWithCsrf).not.toHaveBeenCalledWith(
+            expect.stringContaining('notifications/n-google/read'),
+            expect.anything()
+        );
+    });
+
     it('names the agent and opens its message, marking it read', async () => {
         await open();
         expect(screen.getByText('Trieur')).toBeInTheDocument();

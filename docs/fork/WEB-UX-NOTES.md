@@ -1136,3 +1136,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : une tâche repoussée au 18 décembre depuis la fiche restait sur la journée du jour.
 - **Décision** : une tâche simple quitte les plans d'avant sa nouvelle échéance (serveur, tous les clients) ; pour une récurrente, la question « cette occurrence ou la série » propose « Retirer aussi de ma journée », cochée.
 - **Android** : les tâches simples suivent déjà par le serveur ; la case des récurrentes est dans `TODO.md`.
+
+### 2026-11-20 : alerte de synchronisation Google
+
+- **Décision** : une synchro Google en échec pose une alerte rouge dans la cloche, une seule tant que ça échoue, retirée par le serveur dès que ça remarche ; le clic ouvre Profil › Calendriers sans la marquer lue.
+- **Android** : rien à coder, l'alerte arrive par le flux (`sources` `mobile`), groupée sous « Agenda Google » ; la reconnexion reste sur le web.

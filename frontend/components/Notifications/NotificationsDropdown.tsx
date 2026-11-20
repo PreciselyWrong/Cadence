@@ -306,7 +306,11 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
 
     const handleNotificationClick = (notification: Notification) => {
         const proposalUid = notification.data?.proposal_uid;
-        if (notification.type === 'mail_ready') {
+        if (notification.data?.kind === 'google_sync') {
+            // Stays unread: the server clears it once a sync works again.
+            setIsOpen(false);
+            navigate('/profile?section=calendars');
+        } else if (notification.type === 'mail_ready') {
             setIsOpen(false);
             if (!notification.read_at) handleMarkAsRead(notification.uid);
             navigate('/triage?deck=mail');
