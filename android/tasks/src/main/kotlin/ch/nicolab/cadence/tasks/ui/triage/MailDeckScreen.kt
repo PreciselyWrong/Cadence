@@ -124,6 +124,7 @@ internal fun MailDeckScreen(
     onUndo: () -> Unit,
     onClose: () -> Unit,
     skipped: List<String> = emptyList(),
+    doneLabel: String? = null,
 ) {
     BackHandler(onBack = onClose)
     val cards = MailDeck.cards(items, skipped)
@@ -170,7 +171,7 @@ internal fun MailDeckScreen(
                                 message = stringResource(R.string.triage_deck_done_message),
                             )
                             PrimaryAction(
-                                stringResource(R.string.triage_deck_back),
+                                doneLabel ?: stringResource(R.string.triage_deck_back),
                                 Modifier.fillMaxWidth().padding(horizontal = Space.gutter),
                                 onClick = onClose,
                             )

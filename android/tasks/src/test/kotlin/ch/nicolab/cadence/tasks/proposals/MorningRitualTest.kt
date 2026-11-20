@@ -235,4 +235,22 @@ class MorningRitualTest {
         assertFalse(MorningRitual.isReadyForToday(dto.copy(status = "applied"), today))
         assertFalse(MorningRitual.isReadyForToday(dto.copy(trigger = null), today))
     }
+
+    @Test
+    fun `morning starts with the mails, then the overdue tasks and the day`() {
+        assertEquals(listOf(MorningStep.MAILS, MorningStep.RITUAL), MorningRitual.steps(mailsWaiting = 3, ritualReady = true))
+        assertEquals(listOf(MorningStep.MAILS), MorningRitual.steps(mailsWaiting = 2, ritualReady = false))
+        assertEquals(listOf(MorningStep.RITUAL), MorningRitual.steps(mailsWaiting = 0, ritualReady = true))
+        assertEquals(emptyList<MorningStep>(), MorningRitual.steps(mailsWaiting = 0, ritualReady = false))
+    }
+
+    @Test
+    fun `morning entry shows for a ready ritual all day, for mails only in the morning`() {
+        val nine = java.time.LocalTime.of(9, 0)
+        val afternoon = java.time.LocalTime.of(14, 0)
+        assertTrue(MorningRitual.entryVisible(mailsWaiting = 0, ritualReady = true, now = afternoon))
+        assertTrue(MorningRitual.entryVisible(mailsWaiting = 4, ritualReady = false, now = nine))
+        assertFalse(MorningRitual.entryVisible(mailsWaiting = 4, ritualReady = false, now = afternoon))
+        assertFalse(MorningRitual.entryVisible(mailsWaiting = 0, ritualReady = false, now = nine))
+    }
 }

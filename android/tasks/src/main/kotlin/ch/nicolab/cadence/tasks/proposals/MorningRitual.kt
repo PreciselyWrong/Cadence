@@ -50,8 +50,24 @@ data class MorningDayPlan(
  * Règles pures du rituel du matin (`docs/50-morning-ritual.md`) : cartes de l'étape 1, balayages,
  * journée de l'étape 2 et corps de `POST /api/proposals/:uid/apply`.
  */
+/** Étapes de « Ma matinée », dans l'ordre : les mails d'abord, puis les retards et la journée ; Aujourd'hui ensuite. */
+enum class MorningStep { MAILS, RITUAL }
+
 object MorningRitual {
     const val TRIGGER_MORNING = "morning"
+
+    /** Les mails seuls n'appellent « Ma matinée » que le matin ; un rituel prêt reste proposé toute la journée. */
+    private val MAILS_UNTIL = LocalTime.NOON
+
+    /** Ce que « Ma matinée » enchaîne : le paquet Mail s'il reste des cartes, puis le rituel s'il est prêt. */
+    fun steps(mailsWaiting: Int, ritualReady: Boolean): List<MorningStep> = buildList {
+        if (mailsWaiting > 0) add(MorningStep.MAILS)
+        if (ritualReady) add(MorningStep.RITUAL)
+    }
+
+    /** L'entrée « Ma matinée » d'Aujourd'hui : un rituel prêt, ou des mails à trier avant midi. */
+    fun entryVisible(mailsWaiting: Int, ritualReady: Boolean, now: LocalTime): Boolean =
+        ritualReady || (mailsWaiting > 0 && now < MAILS_UNTIL)
     const val MAX_FOCUS = 3
     const val DEFAULT_TASK_MINUTES = 30
 

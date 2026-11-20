@@ -20,7 +20,11 @@ enum class ProposalTab { PLAN, REVIEW, CAREER }
  * ouverte, et l'onglet demandé par une notification. Rien n'est gardé sur le téléphone ; hors ligne, les appels
  * échouent avec une [java.io.IOException] que l'appelant montre.
  */
-class ProposalRepository internal constructor(private val client: ProposalsClient) {
+class ProposalRepository internal constructor(
+    private val client: ProposalsClient,
+    // Des cartes Mail attendent (« Ma matinée » commence alors par elles).
+    private val mailsWaiting: () -> Boolean = { false },
+) {
     private val _latest = MutableStateFlow<Map<ProposalKind, ProposalDto>>(emptyMap())
     val latest: StateFlow<Map<ProposalKind, ProposalDto>> = _latest.asStateFlow()
 
@@ -38,6 +42,12 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
 
     /** Uid du rituel du matin ouvert ; null hors rituel. */
     val ritual: StateFlow<String?> = _ritual.asStateFlow()
+
+    private val _morningMails = MutableStateFlow(false)
+
+    /** Vrai pendant l'étape Mails de « Ma matinée » (le paquet « Trier mes mails » ouvert seul). */
+    val morningMails: StateFlow<Boolean> = _morningMails.asStateFlow()
+    private var ritualAfterMails: String? = null
 
     private val details = HashMap<String, ProposalDto>()
 
@@ -130,6 +140,28 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
         _ritual.value = null
     }
 
+    /**
+     * « Ma matinée » (`docs/50-morning-ritual.md`) : les mails d'abord s'il en reste, puis le rituel [ritualUid] s'il
+     * est prêt. Sans mails, le rituel s'ouvre tout de suite.
+     */
+    fun startMorning(ritualUid: String?, mailsFirst: Boolean = mailsWaiting()) {
+        if (mailsFirst) {
+            ritualAfterMails = ritualUid
+            _morningMails.value = true
+        } else {
+            ritualUid?.let(::showRitual)
+        }
+    }
+
+    /** Fin de l'étape Mails : ouvre le rituel qui suit et rend son uid, ou null quand la matinée finit sur Aujourd'hui. */
+    fun mailsDone(): String? {
+        _morningMails.value = false
+        val next = ritualAfterMails
+        ritualAfterMails = null
+        next?.let(::showRitual)
+        return next
+    }
+
     fun consumeTab() {
         _tab.value = null
     }
@@ -138,7 +170,7 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
     fun route(intent: Intent?) {
         when (intent?.getStringExtra(ProposalNotifications.EXTRA_ROUTE)) {
             ProposalNotifications.ROUTE_SHOW -> intent.getStringExtra(ProposalNotifications.EXTRA_UID)?.let(::show)
-            ProposalNotifications.ROUTE_MORNING -> intent.getStringExtra(ProposalNotifications.EXTRA_UID)?.let(::showRitual)
+            ProposalNotifications.ROUTE_MORNING -> intent.getStringExtra(ProposalNotifications.EXTRA_UID)?.let(::startMorning)
             ProposalNotifications.ROUTE_PLAN -> _tab.value = ProposalTab.PLAN
             ProposalNotifications.ROUTE_REVIEW -> _tab.value = ProposalTab.REVIEW
             ProposalNotifications.ROUTE_CAREER -> _tab.value = ProposalTab.CAREER
@@ -158,7 +190,10 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
         private var instance: ProposalRepository? = null
 
         fun of(context: Context): ProposalRepository = instance ?: synchronized(this) {
-            instance ?: ProposalRepository(proposalsClient(context)).also { instance = it }
+            instance ?: ProposalRepository(proposalsClient(context)) {
+                val triage = ch.nicolab.cadence.tasks.TasksGraph.triage(context)
+                ch.nicolab.cadence.tasks.triage.MailDeck.cards(triage.queue.value?.items.orEmpty()).isNotEmpty()
+            }.also { instance = it }
         }
     }
 }

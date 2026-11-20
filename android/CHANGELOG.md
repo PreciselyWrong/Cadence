@@ -1,3 +1,8 @@
+## [1.43.0] : 20 novembre 2026
+
+- « Ma matinée » enchaîne tout : les mails à trier d'abord, puis les retards replacés par l'IA, puis ta journée, et Aujourd'hui pour finir. La carte apparaît aussi le matin quand il n'y a que des mails à trier ; la notification du matin ouvre la même suite.
+- Carte Mail : un résumé de 2 ou 3 lignes d'abord, puis le mail entier en texte quand on touche « Lire le mail ».
+
 ## [1.42.2] : 19 novembre 2026
 
 - Notifications : la liste ne garde que ce qui attend encore. Une notification lue, ici ou sur le web, disparaît ; « 3 mails à trier », les décisions et les propositions s'effacent d'elles-mêmes une fois traitées, même depuis le PC.

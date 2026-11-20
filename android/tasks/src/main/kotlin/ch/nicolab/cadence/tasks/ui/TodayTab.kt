@@ -45,6 +45,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import ch.nicolab.cadence.tasks.triage.MailDeck
+import ch.nicolab.cadence.tasks.TasksGraph
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -217,6 +219,10 @@ internal fun TodayTab(
     val proposalRepo = remember(context) { ProposalRepository.of(context) }
     val latestProposals by proposalRepo.latest.collectAsStateWithLifecycle()
     val morningProposal = latestProposals[ProposalKind.WEEK]?.takeIf { MorningRitual.isReadyForToday(it, today) }
+    // « Ma matinée » : les mails à trier d'abord, puis les retards et la journée (`docs/50-morning-ritual.md`).
+    val triageQueue by remember(context) { TasksGraph.triage(context).queue }.collectAsStateWithLifecycle()
+    val mailsWaiting = remember(triageQueue) { MailDeck.cards(triageQueue?.items.orEmpty()).size }
+    val morningEntry = MorningRitual.entryVisible(mailsWaiting, morningProposal != null, localNow)
     val listState = rememberLazyListState()
     val drag = remember(listState) { TodayDragState(listState) }
     val nowMinute = minuteOfDay(moment.now, zone)
@@ -276,13 +282,13 @@ internal fun TodayTab(
 
     Box(modifier) {
     LazyColumn(modifier = Modifier.fillMaxSize(), state = listState, contentPadding = tasksListPadding()) {
-        if (morningProposal != null) {
+        if (morningEntry) {
             item(key = "morning-ritual-entry") {
                 CardSlot {
                     ch.nicolab.cadence.designsystem.components.Panel(
                         Modifier
                             .fillMaxWidth()
-                            .clickable(role = Role.Button) { proposalRepo.showRitual(morningProposal.uid) },
+                            .clickable(role = Role.Button) { proposalRepo.startMorning(morningProposal?.uid, mailsWaiting > 0) },
                     ) {
                         Row(
                             Modifier.fillMaxWidth(),
@@ -302,7 +308,15 @@ internal fun TodayTab(
                                     color = cadence.onSurface,
                                 )
                                 Text(
-                                    stringResource(R.string.ritual_today_card_subtitle),
+                                    when {
+                                        mailsWaiting > 0 && morningProposal != null -> pluralStringResource(
+                                            R.plurals.ritual_today_card_mails_then_ritual, mailsWaiting, mailsWaiting,
+                                        )
+                                        mailsWaiting > 0 -> pluralStringResource(
+                                            R.plurals.ritual_today_card_mails_then_day, mailsWaiting, mailsWaiting,
+                                        )
+                                        else -> stringResource(R.string.ritual_today_card_subtitle)
+                                    },
                                     style = MaterialTheme.typography.bodySmall,
                                     color = cadence.onSurfaceVariant,
                                 )

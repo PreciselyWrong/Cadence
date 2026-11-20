@@ -12,6 +12,10 @@ The morning run (`docs/47-proposals.md` › Morning run) prepares a week proposa
 
 Nothing is written before the last step: choices stay on the phone, then one `POST /api/proposals/:uid/apply` with the decisions of the tasks the ritual showed. The other tasks of the proposal are left as they are (`keep`).
 
+## Step 0: « Mails »
+
+« Ma matinée » starts with the mail cards when some wait (2026-11-20): the « Trier mes mails » deck opens alone, full screen ([mail triage](43-mail-triage.md)). Closing it, or « Continuer » once it is empty, goes to step 1 when a morning proposal is ready, otherwise straight to Aujourd'hui. Pure rules in `MorningRitual.steps` (mails, then ritual) and `MorningRitual.entryVisible`: the « Ma matinée » entry of Aujourd'hui shows for a ready morning proposal all day, and for waiting mail cards alone until noon; its subtitle counts the mails (« 3 mails, puis mes retards et ma journée »). The morning notification starts the same sequence (`ProposalRepository.startMorning`, the deck's count read from the cached triage queue).
+
 ## Step 1: « Hier et retards »
 
 One large card per overdue task (`facts.tasks[].overdue`), one at a time, full width, with a progress line (« 2 / 6 »):

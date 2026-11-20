@@ -96,12 +96,29 @@ internal fun TriageEntry(count: Int, onOpen: () -> Unit) {
 
 /** « À trier » ouvert directement (notification du classement). Même écran que depuis Ma journée. */
 @Composable
-fun TriageRoute(onBack: () -> Unit, openDeck: Boolean = false, openDecisions: Boolean = false) =
-    TriageScreen(today = LocalDate.now(), onBack = onBack, openDeck = openDeck, openDecisions = openDecisions)
+fun TriageRoute(
+    onBack: () -> Unit,
+    openDeck: Boolean = false,
+    openDecisions: Boolean = false,
+    onDeckDone: (() -> Unit)? = null,
+) = TriageScreen(
+    today = LocalDate.now(),
+    onBack = onBack,
+    openDeck = openDeck,
+    openDecisions = openDecisions,
+    onDeckDone = onDeckDone,
+)
 
 /** Une proposition à la fois, avec sa raison en une ligne : valider, corriger, garder telle quelle ou passer. */
 @Composable
-internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolean = false, openDecisions: Boolean = false) {
+internal fun TriageScreen(
+    today: LocalDate,
+    onBack: () -> Unit,
+    openDeck: Boolean = false,
+    openDecisions: Boolean = false,
+    // « Ma matinée » : fermer le paquet passe à l'étape suivante au lieu de revenir à la file.
+    onDeckDone: (() -> Unit)? = null,
+) {
     val viewModel: TriageViewModel = viewModel()
     val tasksViewModel: TasksViewModel = viewModel()
     val projects by tasksViewModel.projects.collectAsStateWithLifecycle()
@@ -157,8 +174,9 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit, openDeck: Boolea
             onArchiveBatch = viewModel::archiveMailBatch,
             onSkip = { item -> viewModel.skip(item) },
             onUndo = viewModel::undoLast,
-            onClose = { deckOpen = false },
+            onClose = { if (onDeckDone != null) onDeckDone() else deckOpen = false },
             skipped = skippedKeys,
+            doneLabel = onDeckDone?.let { stringResource(R.string.ritual_mails_next) },
         )
         return
     }

@@ -210,6 +210,7 @@ internal fun CadenceAppScreen(
     val proposals = androidx.compose.runtime.remember(proposalContext) { ProposalRepository.of(proposalContext) }
     val proposalSheet by proposals.sheet.collectAsStateWithLifecycle()
     val proposalRitual by proposals.ritual.collectAsStateWithLifecycle()
+    val morningMails by proposals.morningMails.collectAsStateWithLifecycle()
     val proposalTab by proposals.tab.collectAsStateWithLifecycle()
     androidx.compose.runtime.LaunchedEffect(proposalTab) {
         when (proposalTab) {
@@ -299,7 +300,7 @@ internal fun CadenceAppScreen(
         notificationsOpen = false
         when (target) {
             is NotificationTarget.ProposalSheet -> proposals.show(target.uid)
-            is NotificationTarget.MorningRitual -> proposals.showRitual(target.uid)
+            is NotificationTarget.MorningRitual -> proposals.startMorning(target.uid)
             NotificationTarget.Review -> {
                 tab = Tab.BILAN
                 reviewOpen = true
@@ -487,6 +488,13 @@ internal fun CadenceAppScreen(
                 triageDeck = false
                 triageDecisions = false
             }, openDeck = triageDeck, openDecisions = triageDecisions)
+            if (morningMails) {
+                // « Ma matinée », étape Mails : le paquet seul, puis le rituel, ou Aujourd'hui s'il n'y en a pas.
+                val next = {
+                    if (proposals.mailsDone() == null) tab = Tab.TASKS
+                }
+                TriageRoute(onBack = next, openDeck = true, onDeckDone = next)
+            }
             if (notificationsOpen) NotificationsScreen(onBack = { notificationsOpen = false }, onOpen = openTarget)
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
             proposalRitual?.let { uid ->
@@ -502,7 +510,7 @@ internal fun CadenceAppScreen(
             if (weekendOpen) WeekendSheet(weekendUid, onClose = { weekendOpen = false })
             if (addTaskOpen) QuickAddSheet(onDismiss = { addTaskOpen = false })
             NavigationBarScrim()
-            val fullOverlay = settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen || notificationsOpen || proposalRitual != null
+            val fullOverlay = settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen || notificationsOpen || proposalRitual != null || morningMails
             if (!fullOverlay) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action ?: defaultAdd) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()

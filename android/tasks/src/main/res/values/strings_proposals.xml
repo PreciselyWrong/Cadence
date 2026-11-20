@@ -199,4 +199,13 @@
     <string name="ritual_empty_day">Rien de prévu pour l\'instant.</string>
     <string name="ritual_today_card_title">Ma matinée</string>
     <string name="ritual_today_card_subtitle">Trier mes retards et voir ma journée</string>
+    <plurals name="ritual_today_card_mails_then_ritual">
+        <item quantity="one">%d mail, puis mes retards et ma journée</item>
+        <item quantity="other">%d mails, puis mes retards et ma journée</item>
+    </plurals>
+    <plurals name="ritual_today_card_mails_then_day">
+        <item quantity="one">%d mail à trier, puis ma journée</item>
+        <item quantity="other">%d mails à trier, puis ma journée</item>
+    </plurals>
+    <string name="ritual_mails_next">Continuer</string>
 </resources>
