@@ -4,6 +4,13 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.20
+
+- Trier mes mails : un résumé de 2 ou 3 lignes d'abord (qui écrit, de quoi il s'agit, quoi faire et pour quand), puis le mail entier en texte propre sous « Lire le mail », même s'il arrive en HTML.
+- Une tâche dont on repousse l'échéance quitte la journée. Pour une tâche récurrente, la question « cette occurrence ou la série » propose « Retirer aussi de ma journée ».
+- « Appliquer » sur « Ta semaine est prête » ne reste plus bloqué : les appels à l'IA et les propositions ne passent plus par la file hors ligne du navigateur.
+- Android 1.43.0 : « Ma matinée » enchaîne mails, retards et journée (`android/CHANGELOG.md`).
+
 ## 2026.11.19.6
 
 - Cloche des notifications : seulement ce qui attend encore. Une notification lue disparaît, et celles dont le travail est fait (mails triés, décisions prises, proposition validée ou remplacée) passent en lues d'elles-mêmes, sur le web comme sur le téléphone.
