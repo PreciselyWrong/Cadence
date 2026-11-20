@@ -41,6 +41,8 @@ The corner pill (`frontend/components/Offline/OfflineStatus.tsx`, mounted next t
 
 AI (assistant and `/api/ai-assistant/*` insights, classification, text analysis), AI proposals (`/api/proposals/*`: applied later, a week plan would act on stale facts), sign-in, push subscriptions, CalDAV and calendar feeds, Google sync, Telegram, MCP pairing, admin, billing, link previews (`/api/url/*`), uploads (attachments, banners, avatars). These answer `503` offline and the UI shows its usual error. One of them left in the outbox by an older worker is dropped at replay, never sent (2026-11-20: a slow `/api/ai-assistant/project-insights` had been queued, replayed in a loop and held every later write behind it). Search over the server answers only what was cached.
 
+A replayed write that gets no answer while `/api/health` does (a slow endpoint, not a lost server) no longer marks the client offline: it is tried again on the next replay and set aside as `timeout` after the third try, so reads keep reaching the server (2026-11-20: one slow write had latched the Linux client offline, and Settings, never cached, failed to load).
+
 ## Limits
 
 - A view never opened online stays empty offline (it is cached the first time it is opened).

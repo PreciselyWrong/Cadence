@@ -4,6 +4,10 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.20.4
+
+- Client Linux et web : une écriture en attente qui met trop de temps à répondre ne fait plus passer toute l'app « hors ligne ». Les réglages (Planification, Classement…) se chargent de nouveau ; l'écriture est retentée puis mise de côté.
+
 ## 2026.11.20.3
 
 - Profil › Calendriers montre de nouveau la connexion Google (Agenda et Tasks), pas seulement les agendas ICS. Quand la synchro échoue, un bouton « Reconnecter Google » apparaît.

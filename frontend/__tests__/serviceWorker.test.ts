@@ -624,6 +624,37 @@ describe('service worker replay', () => {
         });
     });
 
+    it('stays online when one write times out but the server answers', async () => {
+        const sw = loadWorker(down);
+        await sw.request('/api/task/slow', patch({ name: 'slow' }));
+        sw.setServer((req) => {
+            if (health(req)) return json({ status: 'ok' });
+            if (csrf(req)) return json({ csrfToken: 't' });
+            if (req.url.endsWith('/api/task/slow')) {
+                throw new TypeError('timed out');
+            }
+            return json({ start: 480 });
+        });
+        await sw.message({ type: 'PROBE' });
+        await flush();
+
+        expect(sw.outbox()[0].attempts).toBe(1);
+        const state = sw.posted.filter((m) => m.type === 'OFFLINE_STATE').pop();
+        expect(state).toMatchObject({ offline: false });
+        const read = await sw.request('/api/daily-plan/hours');
+        expect(read.headers.get('X-Cadence-Offline')).toBeNull();
+        expect(await read.json()).toEqual({ start: 480 });
+
+        await sw.message({ type: 'PROBE' });
+        await flush();
+        await sw.message({ type: 'PROBE' });
+        await flush();
+        expect(sw.outbox()).toHaveLength(0);
+        expect(sw.rejected()).toEqual([
+            expect.objectContaining({ error: 'timeout' }),
+        ]);
+    });
+
     it('stops on an expired session and keeps the writes', async () => {
         const sw = loadWorker(down);
         await sw.request('/api/task/t1', patch({ name: 'x' }));

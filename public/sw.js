@@ -587,6 +587,19 @@ self.addEventListener('sync', (event) => {
     }
 });
 
+// True when the server answers its health check.
+async function serverAnswers() {
+    try {
+        const response = await fetchWithTimeout(
+            new Request(scopeUrl('api/health')),
+            READ_TIMEOUT_MS
+        );
+        return !core.isUnreachableStatus(response.status);
+    } catch {
+        return false;
+    }
+}
+
 async function probe() {
     try {
         const response = await fetchWithTimeout(
@@ -675,6 +688,25 @@ async function runReplay() {
                 );
             } catch {
                 response = null;
+            }
+            if (!response && (await serverAnswers())) {
+                // Only this write is slow or failing: the reads keep reaching
+                // the server, and it is tried again, then set aside.
+                const attempts = (stored.attempts || 0) + 1;
+                if (attempts < MAX_ATTEMPTS) {
+                    await idbPut(OUTBOX, { ...stored, attempts });
+                    result.stopped = 'error';
+                    break outer;
+                }
+                await idbPut(REJECTED, {
+                    ...stored,
+                    status: 0,
+                    error: 'timeout',
+                    rejected_at: Date.now(),
+                });
+                await idbDelete(OUTBOX, stored.id);
+                result.rejected += 1;
+                continue;
             }
             if (!response || core.isUnreachableStatus(response.status)) {
                 markOffline();
