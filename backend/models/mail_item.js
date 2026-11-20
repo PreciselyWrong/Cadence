@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { uid } = require('../utils/uid');
 
 // A mail thread an agent proposed to the triage queue (docs/43-mail-triage.md).
-// It holds what the card shows, never the body of a message.
+// It holds what the card shows, including the mail body as plain text.
 module.exports = (sequelize) => {
     const MailItem = sequelize.define(
         'MailItem',
@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
             from_address: { type: DataTypes.STRING(320), allowNull: true },
             subject: { type: DataTypes.STRING(500), allowNull: true },
             received_at: { type: DataTypes.DATE, allowNull: false },
-            summary: { type: DataTypes.STRING(200), allowNull: false },
+            summary: { type: DataTypes.STRING(500), allowNull: false },
             suggestion: { type: DataTypes.JSON, allowNull: true },
             draft_excerpt: { type: DataTypes.STRING(280), allowNull: true },
             gmail_url: { type: DataTypes.STRING(2048), allowNull: false },
@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
             recommended: { type: DataTypes.STRING(16), allowNull: true },
             // { body }: the prepared Gmail draft, for the agent to create.
             draft: { type: DataTypes.JSON, allowNull: true },
-            // The start of the mail, as plain text, for the card.
+            // The complete mail, as plain text, for the card.
             excerpt: { type: DataTypes.TEXT, allowNull: true },
             // { text }: the user's answer to the agent.
             note: { type: DataTypes.JSON, allowNull: true },

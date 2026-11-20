@@ -605,7 +605,7 @@ const MailDeck: React.FC<MailDeckProps> = ({
                             {mail.subject ||
                                 t('triage.mail.noSubject', '(sans objet)')}
                         </h2>
-                        <p className="mt-3 text-body text-surface-on">
+                        <p className="mt-3 whitespace-pre-line text-body text-surface-on">
                             {mail.summary}
                         </p>
                         {event && (

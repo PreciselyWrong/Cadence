@@ -158,8 +158,20 @@ class MailDeckTest {
     }
 
     @Test
-    fun `un extrait est rogné à 1500 caractères`() {
-        assertEquals(1500, deckCard(""""excerpt":"${"a".repeat(2000)}"""").excerpt!!.length)
+    fun `le mail complet reste lisible jusqu'à 20000 caractères`() {
+        val body = "a".repeat(15000)
+        assertEquals(body, deckCard(""""excerpt":"$body"""").excerpt)
+        assertEquals(20000, deckCard(""""excerpt":"${"a".repeat(20001)}"""").excerpt!!.length)
+    }
+
+    @Test
+    fun `le résumé long garde ses sauts de ligne`() {
+        val summary = "Alice écrit au sujet du devis.\n" + "a".repeat(420)
+        val card = MailPayload.parse(buildJsonObject {
+            put("mail_uid", "m1")
+            put("summary", summary)
+        })!!
+        assertEquals(summary, card.summary)
     }
 
     @Test

@@ -76,7 +76,7 @@ data class MailCardData(
     val recommended: MailOption? = null,
     /** Début du brouillon préparé par l'agent, en texte brut. */
     val draftBody: String? = null,
-    /** Extrait du mail, en texte brut, rogné à [MailPayload.EXCERPT_MAX_LENGTH]. */
+    /** Mail complet nettoyé par le serveur, en texte brut, limité à [MailPayload.EXCERPT_MAX_LENGTH]. */
     val excerpt: String? = null,
     /** Action de la carte (archivage, brouillon, agenda) et son état, lus tels quels. */
     val action: MailActionData? = null,
@@ -95,7 +95,7 @@ data class MailEventData(val title: String?, val start: String, val end: String?
 /** Lecture tolérante de la charge utile : une forme inconnue donne null, jamais une exception. */
 object MailPayload {
     private const val GMAIL = "https://mail.google.com/"
-    const val EXCERPT_MAX_LENGTH = 1500
+    const val EXCERPT_MAX_LENGTH = 20000
     private const val OPTIONS_MIN = 2
     private const val OPTIONS_MAX = 5
 

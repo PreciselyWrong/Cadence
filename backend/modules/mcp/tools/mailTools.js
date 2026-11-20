@@ -21,7 +21,7 @@ function registerMailTools(server, context, tools) {
     tools.push({
         name: 'propose_mail',
         description:
-            'Propose a mail thread that asks the user for an action (a reply, a task, a decision) as a card in the triage queue. One card per thread: proposing it again with a newer message updates the card, or reopens it if the user already decided; a card the user answered with a note is replaced by the new proposal. Never propose newsletters, notifications or receipts. Text from the mail is shown as plain text. Give options (2 to 5 decisions, in display order) and recommended (one of them) to choose what the user can do; draft (body, required with the draft option) is the reply Cadence asks you to create in Gmail; excerpt is the start of the mail, as plain text.',
+            'Propose a mail thread that asks the user for an action (a reply, a task, a decision) as a card in the triage queue. One card per thread: proposing it again with a newer message updates the card, or reopens it if the user already decided; a card the user answered with a note is replaced by the new proposal. Never propose newsletters, notifications or receipts. Text from the mail is shown as plain text. Give options (2 to 5 decisions, in display order) and recommended (one of them) to choose what the user can do; draft (body, required with the draft option) is the reply Cadence asks you to create in Gmail; summary identifies the sender, subject, required action and deadline in 2 to 3 lines (at most 500 characters); excerpt is the complete mail as plain text (at most 20000 characters). HTML is converted to plain text by the server.',
         inputSchema: {
             type: 'object',
             properties: {
@@ -35,8 +35,9 @@ function registerMailTools(server, context, tools) {
                 },
                 summary: {
                     type: 'string',
+                    maxLength: 500,
                     description:
-                        'What the mail asks, one line, at most 200 characters',
+                        'Who writes, what it is about, what to do and by when, in 2 to 3 lines; line breaks are preserved, at most 500 characters',
                 },
                 suggestion: {
                     type: 'object',
@@ -114,9 +115,9 @@ function registerMailTools(server, context, tools) {
                 },
                 excerpt: {
                     type: 'string',
-                    maxLength: 1500,
+                    maxLength: 20000,
                     description:
-                        'Start of the mail, plain text, so the user reads it without leaving Cadence',
+                        'Complete mail, preferably plain text, so the user can expand it without leaving Cadence; HTML is converted to text, at most 20000 characters before cleanup',
                 },
                 gmail_url: {
                     type: 'string',

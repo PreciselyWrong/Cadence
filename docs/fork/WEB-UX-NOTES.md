@@ -12,6 +12,11 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-20 : résumé utile et mail complet dans « Trier mes mails »
+
+- **Décision** : le résumé accepte 500 caractères et garde ses sauts de ligne, en visant 2 à 3 lignes qui disent qui écrit, le sujet, l'action et son échéance. Le mail complet (`excerpt`, 20 000 caractères maximum) reste replié sur 5 lignes ; « Lire le mail » le déplie entièrement, « Réduire » le replie. Le serveur retire le HTML et décode ses entités ; le rendu reste du texte simple.
+- **Android** : le résumé du paquet garde déjà ses sauts de ligne ; la limite du parseur du mail passe à 20 000 caractères. La ligne compacte du choix d'archivage reste sur une ligne.
+
 ### 2026-11-19 : un seul menu de tâche, sélection multiple, ajout rapide lu (web)
 
 - **Problème** : trois menus clic droit différents (listes en densité minimale seulement, Aujourd'hui, Planifier), aucun complet ; « Supprimer » absent d'Aujourd'hui et de Planifier, enterré sous la liste des projets ailleurs ; rien sur les cartes des jours de Planifier ni en densité dense ; pas de sélection multiple dans les listes ; « Ajouter une tâche » ne lisait ni date ni priorité. Audit : `docs/fork/QOL-AUDIT-WEB.md`.

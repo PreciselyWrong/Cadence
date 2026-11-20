@@ -82,7 +82,7 @@ Notes and task descriptions are Markdown outlines: fold, zoom, move a branch, tu
 
 ### To sort, and agent cards
 
-« À trier » shows one decision at a time: a task that needs a date, a mail an agent read for you (archive, pay, reply, accept the meeting), a renewal or an update waiting for a yes. The agent's advice is the big button; you choose, with undo and the keyboard. [Docs](docs/40-triage.md), [mails](docs/43-mail-triage.md), [decisions](docs/49-agent-decisions.md)
+« À trier » shows one decision at a time: a task that needs a date, a mail an agent read for you (archive, pay, reply, accept the meeting), a renewal or an update waiting for a yes. The mail card leads with a useful summary and unfolds the complete mail as clean plain text. The agent's advice is the big button; you choose, with undo and the keyboard. [Docs](docs/40-triage.md), [mails](docs/43-mail-triage.md), [decisions](docs/49-agent-decisions.md)
 
 <table>
   <tr>

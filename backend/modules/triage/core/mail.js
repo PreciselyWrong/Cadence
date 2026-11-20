@@ -4,12 +4,13 @@
 // comes from a mail, so it is untrusted text: control characters go, lengths
 // are capped, and the only address kept must open Gmail.
 const moment = require('moment-timezone');
+const { decode } = require('he');
 const { ValidationError } = require('../../../shared/errors');
 
-const SUMMARY_MAX = 200;
+const SUMMARY_MAX = 500;
 const EXCERPT_MAX = 280;
-// The start of the mail, read in the card (contract v2).
-const MAIL_EXCERPT_MAX = 1500;
+// The complete mail, read as plain text in the card.
+const MAIL_EXCERPT_MAX = 20000;
 const DRAFT_MAX = 4000;
 const NOTE_MAX = 500;
 const CODE = /^[a-z][a-z_]{0,39}$/;
@@ -293,7 +294,7 @@ function actionCode(value) {
 // The card fields of a proposal, or a ValidationError naming the bad field.
 function normalizeProposal(input = {}) {
     const key = threadKey(input);
-    const summary = clean(input.summary);
+    const summary = clean(input.summary, null, { lines: true });
     if (!summary || summary.length > SUMMARY_MAX) {
         throw new ValidationError(
             `summary is required, at most ${SUMMARY_MAX} characters`
@@ -336,7 +337,40 @@ function excerptFields(value) {
             `excerpt is at most ${MAIL_EXCERPT_MAX} characters`
         );
     }
-    return clean(value, null, { lines: true });
+    return mailText(value);
+}
+
+// A body that is HTML, not plain text quoting <alice@example.ch> or <https://…>.
+const HTML_BODY =
+    /<(?:!doctype|html|head|body|div|p|br|table|span|a|ul|li|style|script)\b[^>]*>/i;
+
+// Also used when reading older cards, which may still contain raw HTML.
+function mailText(value) {
+    if (typeof value !== 'string') return null;
+    const decoded = decode(value);
+    if (!HTML_BODY.test(decoded)) {
+        return spaced(clean(decoded, null, { lines: true }));
+    }
+    const text = (clean(decoded, null, { lines: true }) || '')
+        .replace(/<!--[\s\S]*?(?:-->|$)/g, '')
+        .replace(/<(script|style|head)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, '')
+        .replace(/<\s*(?:br\b[^>]*|\/(?:p|div)\s*|li\b[^>]*)>/gi, '\n')
+        .replace(
+            /<(?:!|\/?[a-z][a-z\d:-]*\b)(?:[^>"']|"[^"]*"|'[^']*')*>/gi,
+            ''
+        );
+    return spaced(clean(text, null, { lines: true }));
+}
+
+// Runs of spaces become one, at most two empty lines in a row.
+function spaced(text) {
+    return (
+        text
+            ?.replace(/[^\S\n]+/g, ' ')
+            .replace(/ *\n */g, '\n')
+            .replace(/\n{4,}/g, '\n\n\n')
+            .trim() || null
+    );
 }
 
 function normalizeAddress(value) {
@@ -353,6 +387,7 @@ function normalizeAddress(value) {
 module.exports = {
     normalizeProposal,
     normalizeAddress,
+    mailText,
     threadKey,
     clean,
     isDay,

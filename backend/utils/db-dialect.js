@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const { isDeepStrictEqual } = require('util');
 const { Op, Transaction } = require('sequelize');
 const { getDialect } = require('../config/db');
+const { safeChangeColumn } = require('./migration-utils');
 
 // The one place application code is allowed to branch on the database engine.
 
@@ -19,6 +20,20 @@ function isSqlite() {
 // PostgreSQL needs ILIKE for the same behaviour.
 function ciLike(pattern) {
     return isPostgres() ? { [Op.iLike]: pattern } : { [Op.like]: pattern };
+}
+
+// SQLite does not enforce VARCHAR lengths. Rebuilding only to change that
+// annotation would lose indexes and foreign keys with safeChangeColumn.
+async function widenStringColumn(queryInterface, table, column, definition) {
+    if (queryInterface.sequelize.getDialect() === 'sqlite') return;
+    const tables = await queryInterface.showAllTables();
+    if (!tables.includes(table)) return;
+    const info = (await queryInterface.describeTable(table))[column];
+    if (!info) return;
+    const currentLength = Number(info.type.match(/\((\d+)\)/)?.[1]);
+    if (!currentLength || currentLength >= definition.type.options.length)
+        return;
+    await safeChangeColumn(queryInterface, table, column, definition);
 }
 
 // Runs `fn` with SQLite foreign key enforcement switched off. On PostgreSQL
@@ -184,6 +199,7 @@ module.exports = {
     isPostgres,
     isSqlite,
     ciLike,
+    widenStringColumn,
     withForeignKeyChecksDisabled,
     truncateTables,
 };

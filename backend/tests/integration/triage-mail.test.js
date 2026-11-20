@@ -78,6 +78,37 @@ describe('triage › mail cards', () => {
         });
     });
 
+    it('stores a multiline summary and the full cleaned mail for both clients', async () => {
+        const summary =
+            'Alice écrit au sujet du devis.\nValider avant vendredi.\n' +
+            'x'.repeat(390);
+        const excerpt =
+            '<div>Bonjour &Eacute;lodie,<br>' + 'x'.repeat(15000) + '</div>';
+        const { mail_uid: uid } = await propose({ summary, excerpt });
+        const [item] = await mailItems();
+        expect(item.payload.summary).toBe(summary);
+        expect(item.payload.excerpt).toBe(
+            'Bonjour Élodie,\n' + 'x'.repeat(15000)
+        );
+        const stored = await MailItem.findOne({ where: { uid } });
+        expect(stored.summary).toBe(summary);
+        expect(stored.excerpt).toBe(item.payload.excerpt);
+    });
+
+    it('cleans HTML from older stored cards before returning it', async () => {
+        const { mail_uid: uid } = await propose();
+        await MailItem.update(
+            { excerpt: '<div>R&eacute;pondre<br>avant vendredi</div>' },
+            { where: { uid } }
+        );
+        const [item] = await mailItems();
+        expect(item.payload.excerpt).toBe('Répondre\navant vendredi');
+        const { cards } = JSON.parse(
+            (await run('list_mail_cards', {})).content[0].text
+        );
+        expect(cards[0].excerpt).toBe(item.payload.excerpt);
+    });
+
     it('parks the task on the suggested horizon when the mail gives no day', async () => {
         const { mail_uid: uid } = await propose({
             suggestion: {
@@ -157,7 +188,7 @@ describe('triage › mail cards', () => {
         await expect(
             propose({ gmail_url: 'javascript:alert(1)' })
         ).rejects.toThrow(/gmail_url/);
-        await expect(propose({ summary: 'x'.repeat(201) })).rejects.toThrow(
+        await expect(propose({ summary: 'x'.repeat(501) })).rejects.toThrow(
             /summary/
         );
         expect(await MailItem.count()).toBe(0);
@@ -477,8 +508,8 @@ describe('triage › mail cards', () => {
                     },
                 ],
                 [
-                    'an excerpt over 1500 characters',
-                    { ...draftChoice, excerpt: 'x'.repeat(1501) },
+                    'an excerpt over 20000 characters',
+                    { ...draftChoice, excerpt: 'x'.repeat(20001) },
                 ],
             ])('refuses %s', async (_label, fields) => {
                 await expect(propose(fields)).rejects.toThrow();

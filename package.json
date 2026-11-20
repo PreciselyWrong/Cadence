@@ -163,6 +163,7 @@
     "express": "^4.21.2",
     "express-rate-limit": "^8.6.2",
     "express-session": "~1.18.1",
+    "he": "^1.2.0",
     "helmet": "~8.1.0",
     "ical.js": "^2.1.0",
     "jose": "^6.0.0",

@@ -2,7 +2,7 @@
 
 // Mail cards in « À trier » (docs/43-mail-triage.md): an agent proposes the
 // threads that ask something of the user, one card per thread; the user
-// decides. Cadence stores no message body and never sends.
+// decides. Cadence stores the plain-text mail and never sends it.
 const moment = require('moment-timezone');
 const { Op } = require('sequelize');
 const { MailItem, MailSenderRule } = require('../../models');
@@ -15,6 +15,7 @@ const {
 const {
     normalizeProposal,
     normalizeAddress,
+    mailText,
     threadKey,
     clean,
     isDay,
@@ -251,7 +252,7 @@ async function listCards(user) {
             options: row.options ?? null,
             recommended: row.recommended ?? null,
             draft: row.draft ?? null,
-            excerpt: row.excerpt ?? null,
+            excerpt: mailText(row.excerpt),
             action: row.action ?? null,
             action_error: row.action_error ?? null,
             note: row.note ?? null,
@@ -282,6 +283,7 @@ async function queueItems(userId, now = new Date()) {
             mail_uid: row.uid,
             account: row.account,
             ...pick(row),
+            excerpt: mailText(row.excerpt),
             action: row.action ?? null,
             action_error: row.action_error ?? null,
         },

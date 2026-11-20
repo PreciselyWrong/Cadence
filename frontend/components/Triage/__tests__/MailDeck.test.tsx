@@ -366,9 +366,22 @@ describe('MailDeck', () => {
         );
     });
 
-    it('folds a long mail under « Lire le mail »', () => {
-        renderDeck([v2('a', { excerpt: 'Une ligne.\n'.repeat(12) })]);
+    it('preserves line breaks in the useful summary', () => {
+        const summary =
+            'Alice écrit au sujet du devis.\nValider avant vendredi.';
+        renderDeck([v2('a', { summary })]);
+        const text = screen.getByText(
+            (_, node) => node?.textContent === summary
+        );
+        expect(text.textContent).toBe(summary);
+        expect(text).toHaveClass('whitespace-pre-line');
+    });
+
+    it('expands the complete long mail and folds it again', () => {
+        const excerpt = 'a'.repeat(14988) + 'Fin du mail.';
+        renderDeck([v2('a', { excerpt })]);
         const toggle = screen.getByRole('button', { name: 'Lire le mail' });
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
         expect(screen.getByTestId('mail-deck-excerpt')).toHaveClass(
             'line-clamp-5'
         );
@@ -380,6 +393,16 @@ describe('MailDeck', () => {
             'aria-expanded',
             'true'
         );
+        expect(screen.getByTestId('mail-deck-excerpt').textContent).toBe(
+            excerpt
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'Réduire' }));
+        expect(screen.getByTestId('mail-deck-excerpt')).toHaveClass(
+            'line-clamp-5'
+        );
+        expect(
+            screen.getByRole('button', { name: 'Lire le mail' })
+        ).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('shows why the last action failed at the top of the card', () => {
