@@ -2234,6 +2234,7 @@
     "duplicated": "Η εργασία αντιγράφηκε",
     "duplicate": "Δημιουργία αντιγράφου",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Επεξεργασία αυτής της εργασίας ή της σειράς;",
       "deleteTitle": "Διαγραφή αυτής της εργασίας ή της σειράς;",
       "optionThis": "Μόνο αυτή η επανάληψη",

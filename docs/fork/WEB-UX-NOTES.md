@@ -1130,3 +1130,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : la cloche et l'écran Notifications gardaient les notifications lues et celles déjà traitées sur l'autre client (« 3 mails à trier » après le tri).
 - **Décision** : non lues seulement (`includeRead=false`) ; une lue quitte la liste ; le serveur passe en lues celles dont le travail est fait (`backend/modules/notifications/settle.js`) ; plus de fond « non lu », devenu sans objet.
 - **Android** : livré dans 1.42.2.
+
+### 2026-11-20 : échéance repoussée, la tâche quitte la journée
+
+- **Problème** : une tâche repoussée au 18 décembre depuis la fiche restait sur la journée du jour.
+- **Décision** : une tâche simple quitte les plans d'avant sa nouvelle échéance (serveur, tous les clients) ; pour une récurrente, la question « cette occurrence ou la série » propose « Retirer aussi de ma journée », cochée.
+- **Android** : les tâches simples suivent déjà par le serveur ; la case des récurrentes est dans `TODO.md`.

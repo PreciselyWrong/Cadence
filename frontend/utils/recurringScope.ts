@@ -7,6 +7,7 @@ import {
     RecurringScope,
     updateTask,
 } from './tasksService';
+import { fetchDailyPlan } from './dailyPlanService';
 import {
     TASK_PANEL_SAVED_EVENT,
     TaskPanelSavedDetail,
@@ -23,6 +24,9 @@ export const isRecurringScopeCancelled = (error: unknown): boolean =>
 
 interface PendingRecurringScope {
     kind: RecurringScopeKind;
+    // Offered when a due date moves a recurring task planned today to a later
+    // day: true = also take it off today (the default), null = not offered.
+    leaveToday: boolean | null;
     resolve: (scope: RecurringScope | null) => void;
 }
 
@@ -31,16 +35,40 @@ export const useRecurringScopeStore = create<{
 }>(() => ({ pending: null }));
 
 // A newer prompt replaces an unanswered one, which resolves as cancelled.
+const askScope = (kind: RecurringScopeKind, offerLeaveToday: boolean) =>
+    new Promise<{ scope: RecurringScope; leaveToday: boolean } | null>(
+        (resolve) => {
+            useRecurringScopeStore.getState().pending?.resolve(null);
+            useRecurringScopeStore.setState({
+                pending: {
+                    kind,
+                    leaveToday: offerLeaveToday ? true : null,
+                    resolve: (scope) => {
+                        const { leaveToday } = latestAnswer;
+                        resolve(scope ? { scope, leaveToday } : null);
+                    },
+                },
+            });
+        }
+    );
+
+// The offer's state when the prompt was answered, read by askScope.
+const latestAnswer = { leaveToday: false };
+
 export const askRecurringScope = (kind: RecurringScopeKind = 'edit') =>
-    new Promise<RecurringScope | null>((resolve) => {
-        useRecurringScopeStore.getState().pending?.resolve(null);
-        useRecurringScopeStore.setState({ pending: { kind, resolve } });
-    });
+    askScope(kind, false).then((answer) => answer?.scope ?? null);
+
+export const setLeaveToday = (leaveToday: boolean) => {
+    const { pending } = useRecurringScopeStore.getState();
+    if (!pending || pending.leaveToday === null) return;
+    useRecurringScopeStore.setState({ pending: { ...pending, leaveToday } });
+};
 
 export const answerRecurringScope = (scope: RecurringScope | null) => {
     const { pending } = useRecurringScopeStore.getState();
     if (!pending) return;
     useRecurringScopeStore.setState({ pending: null });
+    latestAnswer.leaveToday = pending.leaveToday === true;
     pending.resolve(scope);
 };
 
@@ -111,23 +139,42 @@ const announce = (series: Task, edited: Task) => {
 // without an error toast.
 export const saveTaskEdit = async (
     task: Task,
-    changes: Record<string, unknown>
+    changes: Record<string, unknown>,
+    offerLeaveToday = false
 ): Promise<Task> => {
     if (!task.uid) throw new Error('Task has no uid');
     if (!needsRecurringScope(task, changes)) {
         return updateTask(task.uid, changes as Partial<Task>);
     }
 
-    const scope = await askRecurringScope('edit');
-    if (!scope) throw new Error(RECURRING_SCOPE_CANCELLED);
+    const answer = await askScope('edit', offerLeaveToday);
+    if (!answer) throw new Error(RECURRING_SCOPE_CANCELLED);
 
     const { task: series, edited } = await editTaskOccurrence(task.uid, {
-        scope,
+        scope: answer.scope,
         occurrence_date: dayOf(task.due_date as string),
         changes,
     });
+    if (answer.leaveToday) {
+        await updateTask(task.uid, { unplan: true } as Partial<Task>);
+    }
     announce(series, edited);
     return edited;
+};
+
+// True when a recurring task sits in today's plan and its due date moves to
+// a later day: the prompt then offers to take it off today. A one-off task
+// leaves on its own (backend/modules/daily-plan/leaveOnMove.js).
+const leavesTodayOffer = async (task: Task, dueDate: string) => {
+    try {
+        const { date, plan } = await fetchDailyPlan();
+        return (
+            dayOf(dueDate) > date &&
+            !!plan?.items.some((item) => item.task_uid === task.uid)
+        );
+    } catch {
+        return false;
+    }
 };
 
 // Saves a due date. Leaving the day and time as they are, or clearing the
@@ -148,9 +195,13 @@ export const moveTaskDue = (
     if (!due_date || !task.due_date || unchanged) {
         return updateTask(task.uid, { due_date, due_time });
     }
-    return saveTaskEdit(
-        task,
-        due_time === undefined ? { due_date } : { due_date, due_time }
+    const changes =
+        due_time === undefined ? { due_date } : { due_date, due_time };
+    if (!needsRecurringScope(task, changes)) {
+        return saveTaskEdit(task, changes);
+    }
+    return leavesTodayOffer(task, due_date).then((offer) =>
+        saveTaskEdit(task, changes, offer)
     );
 };
 

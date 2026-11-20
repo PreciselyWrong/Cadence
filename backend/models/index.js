@@ -782,6 +782,14 @@ require('../modules/sync/journal').install({
 
 require('../modules/projects/nextAction').install({ Task, Project });
 
+// A one-off task whose due date moves later leaves the plans before it.
+require('../modules/daily-plan/leaveOnMove').install({
+    Task,
+    User,
+    DailyPlan,
+    DailyPlanItem,
+});
+
 require('../modules/tasks/dependencies/push').install({
     Task,
     TaskRelation,

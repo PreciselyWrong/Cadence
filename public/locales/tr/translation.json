@@ -2245,6 +2245,7 @@
     "duplicated": "Görev çoğaltıldı",
     "duplicate": "Çoğalt",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Bu görevi mi yoksa seriyi mi düzenlemek istiyorsunuz?",
       "deleteTitle": "Bu görevi mi yoksa seriyi mi silmek istiyorsunuz?",
       "optionThis": "Yalnızca bu tekrar",

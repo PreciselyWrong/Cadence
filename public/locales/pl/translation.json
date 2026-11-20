@@ -2285,6 +2285,7 @@
     "duplicated": "Zadanie zduplikowane",
     "duplicate": "Duplikuj",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Edytować to zadanie czy serię?",
       "deleteTitle": "Usunąć to zadanie czy serię?",
       "optionThis": "Tylko to wystąpienie",

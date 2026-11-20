@@ -2242,6 +2242,7 @@
     "duplicated": "Tehtävä kopioitu",
     "duplicate": "Kopioi",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Muokataanko tätä tehtävää vai sarjaa?",
       "deleteTitle": "Poistetaanko tämä tehtävä vai sarja?",
       "optionThis": "Vain tämä toistokerta",

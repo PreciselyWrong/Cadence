@@ -2239,6 +2239,7 @@
     "duplicated": "Uppgiften duplicerades",
     "duplicate": "Duplicera",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Redigera den här uppgiften eller serien?",
       "deleteTitle": "Ta bort den här uppgiften eller serien?",
       "optionThis": "Endast denna förekomst",

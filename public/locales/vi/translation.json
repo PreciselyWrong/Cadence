@@ -2245,6 +2245,7 @@
     "duplicated": "Đã nhân bản công việc",
     "duplicate": "Nhân bản",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Sửa công việc này hay cả chuỗi?",
       "deleteTitle": "Xóa công việc này hay cả chuỗi?",
       "optionThis": "Chỉ lần này",

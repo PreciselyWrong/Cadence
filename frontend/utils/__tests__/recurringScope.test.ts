@@ -7,6 +7,7 @@ import {
     needsRecurringScope,
     RECURRING_SCOPE_CANCELLED,
     saveTaskEdit,
+    setLeaveToday,
     useRecurringScopeStore,
 } from '../recurringScope';
 import {
@@ -15,7 +16,9 @@ import {
     updateTask,
 } from '../tasksService';
 import { Task } from '../../entities/Task';
+import { fetchDailyPlan } from '../dailyPlanService';
 
+jest.mock('../dailyPlanService', () => ({ fetchDailyPlan: jest.fn() }));
 jest.mock('../tasksService', () => ({
     editTaskOccurrence: jest.fn(),
     deleteTaskOccurrence: jest.fn(),
@@ -29,6 +32,12 @@ const mockedDelete = deleteTaskOccurrence as jest.MockedFunction<
     typeof deleteTaskOccurrence
 >;
 const mockedUpdate = updateTask as jest.MockedFunction<typeof updateTask>;
+const mockedPlan = fetchDailyPlan as jest.MockedFunction<typeof fetchDailyPlan>;
+const planToday = (uids: string[]) =>
+    mockedPlan.mockResolvedValue({
+        date: '2026-11-20',
+        plan: { items: uids.map((task_uid) => ({ task_uid })) },
+    } as never);
 
 const recurring = (overrides: Partial<Task> = {}) =>
     ({
@@ -49,6 +58,7 @@ describe('recurringScope', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockedUpdate.mockResolvedValue({ uid: 'parent-uid' } as Task);
+        planToday([]);
         mockedEdit.mockResolvedValue({
             task: { uid: 'parent-uid' } as Task,
             edited: { uid: 'parent-uid' } as Task,
@@ -189,6 +199,49 @@ describe('recurringScope', () => {
 
         expect(mockedEdit).not.toHaveBeenCalled();
         expect(mockedUpdate).toHaveBeenCalledTimes(2);
+    });
+
+    describe('a recurring task planned today', () => {
+        it('offers to take it off today when its due date moves later', async () => {
+            planToday(['parent-uid']);
+            const pending = moveTaskDue(recurring({ due_date: '2026-11-20' }), {
+                due_date: '2026-12-18',
+            });
+            await flush();
+            expect(useRecurringScopeStore.getState().pending?.leaveToday).toBe(
+                true
+            );
+            answerRecurringScope('all');
+            await pending;
+            expect(mockedUpdate).toHaveBeenCalledWith('parent-uid', {
+                unplan: true,
+            });
+        });
+
+        it('keeps it on today when the user unticks the offer', async () => {
+            planToday(['parent-uid']);
+            const pending = moveTaskDue(recurring({ due_date: '2026-11-20' }), {
+                due_date: '2026-12-18',
+            });
+            await flush();
+            setLeaveToday(false);
+            answerRecurringScope('this');
+            await pending;
+            expect(mockedUpdate).not.toHaveBeenCalled();
+        });
+
+        it('does not offer it for a task not planned today', async () => {
+            const pending = moveTaskDue(recurring({ due_date: '2026-11-20' }), {
+                due_date: '2026-12-18',
+            });
+            await flush();
+            expect(
+                useRecurringScopeStore.getState().pending?.leaveToday
+            ).toBeNull();
+            answerRecurringScope('all');
+            await pending;
+            expect(mockedUpdate).not.toHaveBeenCalled();
+        });
     });
 
     describe('deleting', () => {

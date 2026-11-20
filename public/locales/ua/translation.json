@@ -2418,6 +2418,7 @@
     "duplicated": "Завдання продубльовано",
     "duplicate": "Дублювати",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Змінити це завдання чи серію?",
       "deleteTitle": "Видалити це завдання чи серію?",
       "optionThis": "Лише це повторення",

@@ -2241,6 +2241,7 @@
     "duplicated": "Tarefa duplicada",
     "duplicate": "Duplicar",
     "recurringScope": {
+      "leaveToday": "Tirar também do meu dia",
       "editTitle": "Editar esta tarefa ou a série?",
       "deleteTitle": "Excluir esta tarefa ou a série?",
       "optionThis": "Apenas esta ocorrência",

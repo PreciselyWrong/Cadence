@@ -4,11 +4,15 @@ import {
     answerRecurringScope,
     RecurringScope,
     RecurringScopeKind,
+    setLeaveToday,
     useRecurringScopeStore,
 } from '../../utils/recurringScope';
 
 interface RecurringScopeDialogProps {
     kind: RecurringScopeKind;
+    // null: not offered; otherwise the « also take it off today » box.
+    leaveToday?: boolean | null;
+    onLeaveTodayChange?: (leaveToday: boolean) => void;
     onSelect: (scope: RecurringScope) => void;
     onCancel: () => void;
 }
@@ -16,6 +20,8 @@ interface RecurringScopeDialogProps {
 // Asks which occurrences of a recurring task an edit or a deletion reaches.
 export const RecurringScopeDialog: React.FC<RecurringScopeDialogProps> = ({
     kind,
+    leaveToday = null,
+    onLeaveTodayChange,
     onSelect,
     onCancel,
 }) => {
@@ -91,6 +97,22 @@ export const RecurringScopeDialog: React.FC<RecurringScopeDialogProps> = ({
                         {t('task.recurringScope.optionAll', 'All occurrences')}
                     </button>
                 </div>
+                {leaveToday !== null && (
+                    <label className="mb-6 flex items-center gap-3 text-gray-800 dark:text-gray-100">
+                        <input
+                            type="checkbox"
+                            checked={leaveToday}
+                            onChange={(event) =>
+                                onLeaveTodayChange?.(event.target.checked)
+                            }
+                            data-testid="recurring-scope-leave-today"
+                        />
+                        {t(
+                            'task.recurringScope.leaveToday',
+                            'Also take it off my day'
+                        )}
+                    </label>
+                )}
                 <div className="flex justify-end">
                     <button
                         type="button"
@@ -114,6 +136,8 @@ export const RecurringScopeDialogHost: React.FC = () => {
     return (
         <RecurringScopeDialog
             kind={pending.kind}
+            leaveToday={pending.leaveToday}
+            onLeaveTodayChange={setLeaveToday}
             onSelect={(scope) => answerRecurringScope(scope)}
             onCancel={() => answerRecurringScope(null)}
         />

@@ -2247,6 +2247,7 @@
     "duplicated": "Sarcină duplicată",
     "duplicate": "Duplică",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Editezi această sarcină sau seria?",
       "deleteTitle": "Ștergi această sarcină sau seria?",
       "optionThis": "Doar această apariție",

@@ -2241,6 +2241,7 @@
     "duplicated": "Taak gedupliceerd",
     "duplicate": "Dupliceren",
     "recurringScope": {
+      "leaveToday": "Ook van mijn dag halen",
       "editTitle": "Deze taak of de reeks bewerken?",
       "deleteTitle": "Deze taak of de reeks verwijderen?",
       "optionThis": "Alleen deze keer",

@@ -2240,6 +2240,7 @@
     "duplicated": "Oppgave duplisert",
     "duplicate": "Dupliser",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Rediger denne oppgaven eller serien?",
       "deleteTitle": "Slett denne oppgaven eller serien?",
       "optionThis": "Bare denne forekomsten",

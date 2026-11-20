@@ -2245,6 +2245,7 @@
     "duplicated": "Tugas diduplikasi",
     "duplicate": "Duplikat",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Edit tugas ini atau rangkaiannya?",
       "deleteTitle": "Hapus tugas ini atau rangkaiannya?",
       "optionThis": "Hanya kemunculan ini",

@@ -2269,6 +2269,7 @@
     "duplicated": "تم تكرار المهمة",
     "duplicate": "تكرار",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "تعديل هذه المهمة أم السلسلة؟",
       "deleteTitle": "حذف هذه المهمة أم السلسلة؟",
       "optionThis": "هذا الموعد فقط",

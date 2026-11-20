@@ -2563,6 +2563,7 @@
     "duplicated": "Úloha duplikovaná",
     "duplicate": "Duplikovať",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Upraviť túto úlohu alebo sériu?",
       "deleteTitle": "Odstrániť túto úlohu alebo sériu?",
       "optionThis": "Iba tento výskyt",

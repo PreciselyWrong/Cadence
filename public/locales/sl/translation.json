@@ -2286,6 +2286,7 @@
     "duplicated": "Naloga podvojena",
     "duplicate": "Podvoji",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Urediti to opravilo ali serijo?",
       "deleteTitle": "Izbrisati to opravilo ali serijo?",
       "optionThis": "Samo to ponovitev",

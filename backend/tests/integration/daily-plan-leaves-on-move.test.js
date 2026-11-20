@@ -4,21 +4,21 @@ const app = require('../../app');
 const { Task } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
-// The day plan records what the user intends to do on a day. A due date
-// never moves a task off its planned day, whatever changed it (task API,
-// sync push, MCP). Only the plan's own ops change the plan.
-describe('Daily plan: a due date move keeps the planned day', () => {
+// A one-off task whose due date moves past a planned day (today or later)
+// leaves that day's plan, whatever changed it (task API, sync push, MCP).
+// A recurring task keeps its plan: the clients ask first, then send unplan.
+describe('Daily plan: a due date moved later leaves the planned day', () => {
     const TZ = 'Europe/Athens';
     let agent, today, tomorrow, nextWeek;
 
     beforeEach(async () => {
         await createTestUser({
-            email: 'keeps-on-move@example.com',
+            email: 'leaves-on-move@example.com',
             timezone: TZ,
         });
         agent = request.agent(app);
         await agent.post('/api/login').send({
-            email: 'keeps-on-move@example.com',
+            email: 'leaves-on-move@example.com',
             password: 'password123',
         });
         today = moment.tz(TZ).format('YYYY-MM-DD');
@@ -49,7 +49,7 @@ describe('Daily plan: a due date move keeps the planned day', () => {
         return (res.body.plan?.items || []).map((item) => item.task_uid);
     };
 
-    it('keeps a task planned today when its due date moves to a later day', async () => {
+    it('takes a task off today when its due date moves to a later day', async () => {
         const moved = await makeTask('Write report', today);
         const kept = await makeTask('File receipts', today);
         await plan(today, [moved, kept]);
@@ -59,19 +59,19 @@ describe('Daily plan: a due date move keeps the planned day', () => {
             .send({ due_date: nextWeek });
         expect(res.status).toBe(200);
 
-        expect(await plannedUids(today)).toEqual([moved.uid, kept.uid]);
+        expect(await plannedUids(today)).toEqual([kept.uid]);
     });
 
-    it('keeps a task on a later planned day when its due date moves past it', async () => {
+    it('takes a task off a later planned day when its due date moves past it', async () => {
         const task = await makeTask('Call the bank', tomorrow);
         await plan(tomorrow, [task]);
 
         await agent.patch(`/api/task/${task.uid}`).send({ due_date: nextWeek });
 
-        expect(await plannedUids(tomorrow)).toEqual([task.uid]);
+        expect(await plannedUids(tomorrow)).toEqual([]);
     });
 
-    it('keeps a task planned early when its later due date moves again', async () => {
+    it('takes a task planned early off today when its later due date moves again', async () => {
         const task = await makeTask('Draft talk', nextWeek);
         await plan(today, [task]);
 
@@ -79,7 +79,40 @@ describe('Daily plan: a due date move keeps the planned day', () => {
             due_date: moment(nextWeek).add(1, 'day').format('YYYY-MM-DD'),
         });
 
+        expect(await plannedUids(today)).toEqual([]);
+    });
+
+    it('keeps a task planned on its new due day', async () => {
+        const task = await makeTask('Renew domain', today);
+        await plan(nextWeek, [task]);
+
+        await agent.patch(`/api/task/${task.uid}`).send({ due_date: nextWeek });
+
+        expect(await plannedUids(nextWeek)).toEqual([task.uid]);
+    });
+
+    it('keeps a recurring task on today when its due date moves', async () => {
+        const task = await makeTask('Water plants', today, {
+            recurrence_type: 'weekly',
+        });
+        await plan(today, [task]);
+
+        await agent.patch(`/api/task/${task.uid}`).send({ due_date: nextWeek });
+
         expect(await plannedUids(today)).toEqual([task.uid]);
+    });
+
+    it('takes a recurring task off today when the client sends unplan', async () => {
+        const task = await makeTask('Water plants', today, {
+            recurrence_type: 'weekly',
+        });
+        await plan(today, [task]);
+
+        await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ due_date: nextWeek, unplan: true });
+
+        expect(await plannedUids(today)).toEqual([]);
     });
 
     it('keeps the task when its due date moves earlier or loses its date', async () => {
@@ -95,7 +128,7 @@ describe('Daily plan: a due date move keeps the planned day', () => {
         expect(await plannedUids(today)).toEqual([undated.uid]);
     });
 
-    it('keeps a task planned today when a sync push moves its due date', async () => {
+    it('takes a task off today when a sync push moves its due date later', async () => {
         const task = await makeTask('Pay invoice', today);
         await plan(today, [task]);
 
@@ -103,7 +136,7 @@ describe('Daily plan: a due date move keeps the planned day', () => {
         const res = await agent.post('/api/v1/sync/push').send({
             ops: [
                 {
-                    op_id: 'keeps-on-move-push',
+                    op_id: 'leaves-on-move-push',
                     entity: 'task',
                     uid: task.uid,
                     action: 'upsert',
@@ -118,6 +151,6 @@ describe('Daily plan: a due date move keeps the planned day', () => {
         });
         expect(res.body.results[0].status).toBe('applied');
 
-        expect(await plannedUids(today)).toEqual([task.uid]);
+        expect(await plannedUids(today)).toEqual([]);
     });
 });

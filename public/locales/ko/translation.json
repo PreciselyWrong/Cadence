@@ -2245,6 +2245,7 @@
     "duplicated": "작업을 복제했습니다",
     "duplicate": "복제",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "이 작업만 편집할까요, 아니면 시리즈 전체를 편집할까요?",
       "deleteTitle": "이 작업만 삭제할까요, 아니면 시리즈 전체를 삭제할까요?",
       "optionThis": "이 일정만",

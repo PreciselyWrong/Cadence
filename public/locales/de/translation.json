@@ -2213,6 +2213,7 @@
     "duplicated": "Aufgabe dupliziert",
     "duplicate": "Duplizieren",
     "recurringScope": {
+      "leaveToday": "Auch aus meinem Tag entfernen",
       "editTitle": "Diese Aufgabe oder die Serie bearbeiten?",
       "deleteTitle": "Diese Aufgabe oder die Serie löschen?",
       "optionThis": "Nur dieses Vorkommen",

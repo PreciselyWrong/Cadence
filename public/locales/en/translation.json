@@ -2268,6 +2268,7 @@
     "duplicated": "Task duplicated",
     "duplicate": "Duplicate",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Edit this task or the series?",
       "deleteTitle": "Delete this task or the series?",
       "optionThis": "Only this occurrence",

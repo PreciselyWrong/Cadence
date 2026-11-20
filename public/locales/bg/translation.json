@@ -2239,6 +2239,7 @@
     "duplicated": "Задачата е дублирана",
     "duplicate": "Дублирай",
     "recurringScope": {
+      "leaveToday": "Also take it off my day",
       "editTitle": "Да се редактира ли тази задача или серията?",
       "deleteTitle": "Да се изтрие ли тази задача или серията?",
       "optionThis": "Само това повторение",

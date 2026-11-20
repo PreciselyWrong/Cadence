@@ -4,6 +4,9 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : « Retirer aussi de ma journée » quand on repousse l'échéance d'une tâche récurrente planifiée aujourd'hui (2026-11-20)
+  Raison : parité avec le web (`docs/20-daily-plan.md`, Due date moved later) ; les tâches simples quittent déjà la journée par le serveur. Vérif : repousser une récurrente du jour au mois prochain sur le téléphone propose la case ; cochée, elle disparaît d'Aujourd'hui.
+
 - Add-on Firefox : échéance Aujourd'hui / Demain quand la page devient une tâche (2026-11-19)
   Raison : parité avec la feuille de partage Android (`docs/fork/ANDROID-UX-NOTES.md`, 2026-11-19). Vérif : une page envoyée en tâche « Demain » apparaît demain dans Plan, hors « Tâches à classer ».
 

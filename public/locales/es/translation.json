@@ -2213,6 +2213,7 @@
     "duplicated": "Tarea duplicada",
     "duplicate": "Duplicar",
     "recurringScope": {
+      "leaveToday": "Quitarla también de mi día",
       "editTitle": "¿Editar esta tarea o la serie?",
       "deleteTitle": "¿Eliminar esta tarea o la serie?",
       "optionThis": "Solo esta repetición",
