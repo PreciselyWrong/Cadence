@@ -1588,6 +1588,7 @@
     "templatesDescription": "Proje yapılarını kaydedip yeniden kullanmak için Proje Şablonlarını etkinleştir.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google yanıt vermedi",
       "title": "Google Takvim ve Görevler",
       "description": "İki yönlü senkronizasyon: Google takvimleriniz burada görünür ve Cadence'ten düzenlenebilir, tarihli görevler Google'da bir \"Cadence\" takvimine gider, tüm görevleriniz Google Görevler ile senkronize olur. Her iki taraftaki değişiklikler birkaç dakika içinde yansır.",

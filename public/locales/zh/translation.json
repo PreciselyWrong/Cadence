@@ -1588,6 +1588,7 @@
     "templatesDescription": "启用项目模板,保存并复用项目结构。",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google 没有响应",
       "title": "Google 日历和任务",
       "description": "双向同步：你的 Google 日历会显示在这里，并可从 Cadence 编辑；有日期的任务会进入 Google 中的“Cadence”日历，你的所有任务会与 Google Tasks 同步。两端的更改会在几分钟内同步。",

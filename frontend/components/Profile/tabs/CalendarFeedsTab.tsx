@@ -7,6 +7,10 @@ import {
     CalendarFeed,
     fetchCalendarFeeds,
 } from '../../../utils/calendarFeedsService';
+import {
+    fetchGoogleStatus,
+    GoogleStatus,
+} from '../../../utils/googleSyncService';
 
 interface CalendarFeedsTabProps {
     isActive: boolean;
@@ -17,6 +21,8 @@ const CalendarFeedsTab: React.FC<CalendarFeedsTabProps> = ({ isActive }) => {
     const { showErrorToast } = useToast();
     const [feeds, setFeeds] = useState<CalendarFeed[]>([]);
     const [loading, setLoading] = useState(false);
+    // Google Calendar and Tasks: connect, reconnect and settings live here too.
+    const [googleStatus, setGoogleStatus] = useState<GoogleStatus | null>(null);
 
     useEffect(() => {
         if (!isActive) return;
@@ -29,6 +35,9 @@ const CalendarFeedsTab: React.FC<CalendarFeedsTabProps> = ({ isActive }) => {
                 )
             )
             .finally(() => setLoading(false));
+        fetchGoogleStatus()
+            .then(setGoogleStatus)
+            .catch(() => setGoogleStatus(null));
     }, [isActive]);
 
     if (!isActive) return null;
@@ -51,6 +60,8 @@ const CalendarFeedsTab: React.FC<CalendarFeedsTabProps> = ({ isActive }) => {
                 feeds={feeds}
                 loading={loading}
                 onFeedsChange={(update) => setFeeds(update)}
+                googleStatus={googleStatus}
+                onGoogleStatusChange={setGoogleStatus}
             />
         </div>
     );

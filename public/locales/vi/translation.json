@@ -1588,6 +1588,7 @@
     "templatesDescription": "Bật Mẫu dự án để lưu và dùng lại cấu trúc dự án.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google không phản hồi",
       "title": "Google Calendar và Google Tasks",
       "description": "Đồng bộ hai chiều: lịch Google của bạn hiện ở đây và có thể sửa từ Cadence, công việc có ngày được gửi vào lịch \"Cadence\" trên Google, và mọi công việc đồng bộ với Google Tasks. Thay đổi ở bên nào cũng được cập nhật trong vài phút.",

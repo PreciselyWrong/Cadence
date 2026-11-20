@@ -1588,6 +1588,7 @@
     "templatesDescription": "Aktivera Projektmallar för att spara och återanvända projektstrukturer.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google svarade inte",
       "title": "Google Kalender och Uppgifter",
       "description": "Tvåvägssynk: dina Google-kalendrar visas här och kan ändras från Cadence, datumsatta uppgifter går till en kalender ”Cadence” i Google och alla dina uppgifter synkas med Google Uppgifter. Ändringar på någon av sidorna följer efter några minuter.",

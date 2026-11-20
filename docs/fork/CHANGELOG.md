@@ -4,6 +4,10 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.20.3
+
+- Profil › Calendriers montre de nouveau la connexion Google (Agenda et Tasks), pas seulement les agendas ICS. Quand la synchro échoue, un bouton « Reconnecter Google » apparaît.
+
 ## 2026.11.20.2
 
 - Synchronisation Google en échec (accès expiré, Google injoignable) : une alerte dans la cloche, sur le téléphone et sur le client Linux, qui disparaît d'elle-même dès que la synchro remarche. Sur le web, elle ouvre Profil › Calendriers.

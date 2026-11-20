@@ -1589,6 +1589,7 @@
     "templatesDescription": "Ativar Modelos de projeto para guardar e reutilizar estruturas de projetos.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconectar Google",
       "error": "O Google não respondeu",
       "title": "Google Agenda e Tarefas",
       "description": "Sincronização nos dois sentidos: suas agendas do Google aparecem aqui e podem ser editadas no Cadence, tarefas com data vão para uma agenda “Cadence” no Google, e todas as suas tarefas sincronizam com o Google Tarefas. Mudanças de qualquer lado chegam em alguns minutos.",

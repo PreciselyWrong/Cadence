@@ -1588,6 +1588,7 @@
     "templatesDescription": "Schakel Projectsjablonen in om projectstructuren op te slaan en te hergebruiken.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Google opnieuw koppelen",
       "error": "Google heeft niet geantwoord",
       "title": "Google Agenda en Taken",
       "description": "Synchronisatie in twee richtingen: je Google-agenda's verschijnen hier en kunnen vanuit Cadence worden bewerkt, taken met een datum gaan naar een agenda \"Cadence\" in Google, en al je taken synchroniseren met Google Taken. Wijzigingen aan beide kanten worden binnen enkele minuten doorgevoerd.",

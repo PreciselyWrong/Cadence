@@ -1595,6 +1595,7 @@
     "templatesDescription": "Activează Șabloanele de proiect pentru a salva și refolosi structuri de proiecte.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google nu a răspuns",
       "title": "Calendarul și sarcinile Google",
       "description": "Sincronizare în ambele sensuri: calendarele tale Google apar aici și pot fi editate din Cadence, sarcinile cu dată merg într-un calendar „Cadence” din Google, iar toate sarcinile tale se sincronizează cu Google Tasks. Modificările de pe oricare parte ajung în câteva minute.",

@@ -1886,6 +1886,7 @@
     "telegramRequiredForSummaries": "Na používanie súhrnov úloh musí byť nastavená integrácia s Telegramom.",
     "sendSummaryFailed": "Súhrn sa nepodarilo odoslať.",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google neodpovedal",
       "title": "Kalendár a úlohy Google",
       "description": "Obojsmerná synchronizácia: vaše kalendáre Google sa zobrazia tu a dajú sa upravovať z Cadence, úlohy s termínom idú do kalendára „Cadence“ v Google a všetky úlohy sa synchronizujú s Google Tasks. Zmeny na ktorejkoľvek strane sa prenesú do niekoľkých minút.",

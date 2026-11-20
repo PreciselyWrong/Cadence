@@ -1588,6 +1588,7 @@
     "templatesDescription": "プロジェクト構成を保存して再利用できるプロジェクトテンプレートを有効にします。",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Googleから応答がありませんでした",
       "title": "Googleカレンダーとタスク",
       "description": "双方向の同期です。Googleカレンダーの予定がここに表示され、Cadenceから編集できます。期限のあるタスクはGoogleの「Cadence」カレンダーに追加され、すべてのタスクはGoogle Tasksと同期されます。どちら側での変更も数分以内に反映されます。",

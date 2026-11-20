@@ -1426,6 +1426,7 @@
     "telegramRequiredForSummaries": "Para usar los resúmenes de tareas hay que configurar la integración con Telegram.",
     "sidebarSectionDescription": "Mostrar la sección {{name}} en la barra lateral.",
     "google": {
+      "reconnect": "Volver a conectar Google",
       "error": "Google no respondió",
       "title": "Google Calendar y Tasks",
       "description": "Sincronización en ambos sentidos: tus calendarios de Google aparecen aquí y se editan desde Cadence, las tareas con fecha van a un calendario «Cadence» en Google y todas tus tareas se sincronizan con Google Tasks. Los cambios de un lado llegan al otro en pocos minutos.",

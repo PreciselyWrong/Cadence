@@ -6,6 +6,7 @@ import {
     updateGoogleCalendar,
     updateGoogleSettings,
     fetchGoogleSyncLog,
+    startGoogleConnect,
 } from '../../../utils/googleSyncService';
 
 jest.mock('react-i18next', () => {
@@ -61,6 +62,35 @@ const status = () => ({
 
 describe('GoogleSyncSection', () => {
     beforeEach(() => jest.clearAllMocks());
+
+    it('offers to reconnect when the sync fails', async () => {
+        (startGoogleConnect as jest.Mock).mockResolvedValue(
+            'https://accounts.google.com/o/oauth2'
+        );
+        render(
+            <GoogleSyncSection
+                status={{
+                    ...status(),
+                    last_error:
+                        'Google access was revoked or expired. Connect Google again.',
+                }}
+                onStatusChange={jest.fn()}
+            />
+        );
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Reconnect Google' })
+        );
+        await waitFor(() => expect(startGoogleConnect).toHaveBeenCalled());
+    });
+
+    it('offers no reconnect while the sync works', () => {
+        render(
+            <GoogleSyncSection status={status()} onStatusChange={jest.fn()} />
+        );
+        expect(
+            screen.queryByRole('button', { name: 'Reconnect Google' })
+        ).not.toBeInTheDocument();
+    });
 
     it('sets a calendar to two-way', async () => {
         const onStatusChange = jest.fn();

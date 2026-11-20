@@ -2131,6 +2131,7 @@
     "telegramRequiredForSummaries": "Für Aufgabenzusammenfassungen muss die Telegram-Integration eingerichtet sein.",
     "sidebarSectionDescription": "Den Bereich {{name}} in der Seitenleiste anzeigen.",
     "google": {
+      "reconnect": "Google erneut verbinden",
       "error": "Google hat nicht geantwortet",
       "title": "Google Kalender und Tasks",
       "description": "Synchronisierung in beide Richtungen: Deine Google-Kalender erscheinen hier und lassen sich in Cadence bearbeiten, Aufgaben mit Datum landen in einem Kalender „Cadence“ bei Google, und alle Aufgaben werden mit Google Tasks abgeglichen. Änderungen auf einer Seite folgen innerhalb weniger Minuten.",

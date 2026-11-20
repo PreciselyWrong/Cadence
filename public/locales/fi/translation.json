@@ -1588,6 +1588,7 @@
     "templatesDescription": "Ota käyttöön Projektimallit projektirakenteiden tallentamiseen ja uudelleenkäyttöön.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google ei vastannut",
       "title": "Google Kalenteri ja Tehtävät",
       "description": "Kaksisuuntainen synkronointi: Google-kalenterisi näkyvät täällä ja niitä voi muokata Cadencesta, päivämäärälliset tehtävät menevät Googlen ”Cadence”-kalenteriin, ja kaikki tehtäväsi synkronoituvat Google Tasksiin. Muutokset kummallakin puolella näkyvät muutaman minuutin kuluessa.",

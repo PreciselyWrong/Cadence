@@ -1610,6 +1610,7 @@
     "templatesDescription": "Omogoči Predloge projektov za shranjevanje in ponovno uporabo struktur projektov.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google ni odgovoril",
       "title": "Google Koledar in Google Tasks",
       "description": "Dvosmerna sinhronizacija: vaši koledarji Google so vidni tukaj in jih je mogoče urejati v Cadence, datirane naloge gredo v koledar »Cadence« v Googlu, vse naloge pa se sinhronizirajo z Google Tasks. Spremembe na eni ali drugi strani se prenesejo v nekaj minutah.",

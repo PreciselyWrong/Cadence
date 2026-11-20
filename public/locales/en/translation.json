@@ -1615,6 +1615,7 @@
     "telegramRequiredForSummaries": "Telegram integration must be set up to use task summaries.",
     "sendSummaryFailed": "Failed to send the summary.",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google did not answer",
       "title": "Google Calendar and Tasks",
       "description": "Two-way sync: your Google calendars appear here and can be edited from Cadence, dated tasks go to a \"Cadence\" calendar in Google, and all your tasks sync with Google Tasks. Changes on either side follow within a few minutes.",

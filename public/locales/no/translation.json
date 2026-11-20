@@ -1589,6 +1589,7 @@
     "templatesDescription": "Slå på Prosjektmaler for å lagre og gjenbruke prosjektstrukturer.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google svarte ikke",
       "title": "Google Kalender og Oppgaver",
       "description": "Toveissynk: Google-kalenderne dine vises her og kan redigeres fra Cadence. Datoede oppgaver går til en «Cadence»-kalender i Google, og alle oppgavene dine synkroniseres med Google Oppgaver. Endringer på begge sider følger innen noen minutter.",

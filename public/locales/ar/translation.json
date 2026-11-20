@@ -1608,6 +1608,7 @@
     "templatesDescription": "تفعيل قوالب المشاريع لحفظ هياكل المشاريع وإعادة استخدامها.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "لم يستجب Google",
       "title": "تقويم Google والمهام",
       "description": "مزامنة في الاتجاهين: تظهر تقويمات Google هنا ويمكن تعديلها من Cadence، وتُرسل المهام ذات التواريخ إلى تقويم «Cadence» في Google، وتتزامن كل مهامك مع مهام Google. تنعكس التغييرات على الجانبين خلال بضع دقائق.",

@@ -2320,6 +2320,7 @@
     "templatesDescription": "Увімкнути Шаблони проєктів, щоб зберігати й повторно використовувати структуру проєктів.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google не відповів",
       "title": "Google Calendar і Google Tasks",
       "description": "Двостороння синхронізація: ваші календарі Google з’являються тут і їх можна редагувати в Cadence, завдання з датою потрапляють до календаря «Cadence» у Google, а всі завдання синхронізуються з Google Tasks. Зміни з будь-якого боку переносяться протягом кількох хвилин.",

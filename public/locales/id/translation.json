@@ -1588,6 +1588,7 @@
     "templatesDescription": "Aktifkan Templat Proyek untuk menyimpan dan memakai ulang struktur proyek.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google tidak merespons",
       "title": "Google Kalender dan Tugas",
       "description": "Sinkronisasi dua arah: kalender Google Anda muncul di sini dan bisa diubah dari Cadence, tugas yang punya tanggal masuk ke kalender \"Cadence\" di Google, dan semua tugas Anda disinkronkan dengan Google Tasks. Perubahan di kedua sisi diikuti dalam beberapa menit.",

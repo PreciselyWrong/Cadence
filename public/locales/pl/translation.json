@@ -1606,6 +1606,7 @@
     "templatesDescription": "Włącz Szablony projektów, aby zapisywać i ponownie używać struktur projektów.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google nie odpowiedział",
       "title": "Kalendarz i zadania Google",
       "description": "Synchronizacja dwukierunkowa: Twoje kalendarze Google pojawiają się tutaj i można je edytować z poziomu Cadence, zadania z terminem trafiają do kalendarza \"Cadence\" w Google, a wszystkie zadania synchronizują się z Google Tasks. Zmiany po obu stronach są widoczne w ciągu kilku minut.",

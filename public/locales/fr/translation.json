@@ -1614,6 +1614,7 @@
     "telegramRequiredForSummaries": "L'intégration Telegram doit être configurée pour utiliser les résumés de tâches.",
     "sidebarSectionDescription": "Afficher la section {{name}} dans la barre latérale.",
     "google": {
+      "reconnect": "Reconnecter Google",
       "error": "Google n'a pas répondu",
       "title": "Google Agenda et Tasks",
       "description": "Synchronisation dans les deux sens : vos agendas Google s'affichent ici et se modifient depuis Cadence, les tâches datées vont dans un agenda « Cadence » sur Google, et toutes vos tâches se synchronisent avec Google Tasks. Les changements d'un côté suivent de l'autre en quelques minutes.",

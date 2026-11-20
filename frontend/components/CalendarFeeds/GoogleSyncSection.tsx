@@ -256,6 +256,16 @@ const GoogleSyncSection: React.FC<GoogleSyncSectionProps> = ({
                             ` · ${t('profile.google.firstSync', 'first sync running…')}`
                         )}
                     </p>
+                    {status.last_error && (
+                        <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => void connect()}
+                            className={`${buttonClass} bg-primary text-primary-on hover:bg-primary/90`}
+                        >
+                            {t('profile.google.reconnect', 'Reconnect Google')}
+                        </button>
+                    )}
 
                     <div className="space-y-3">
                         <label className="flex items-center justify-between gap-3 text-sm text-gray-800 dark:text-gray-200">

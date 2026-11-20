@@ -1589,6 +1589,7 @@
     "telegramRequiredForSummaries": "Per usare i riepiloghi delle attività serve l'integrazione Telegram.",
     "sidebarSectionDescription": "Mostra la sezione {{name}} nella barra laterale.",
     "google": {
+      "reconnect": "Ricollega Google",
       "error": "Google non ha risposto",
       "title": "Google Calendar e Tasks",
       "description": "Sincronizzazione in entrambe le direzioni: i tuoi calendari Google compaiono qui e si modificano da Cadence, le attività con data vanno in un calendario «Cadence» su Google e tutte le attività si sincronizzano con Google Tasks. Le modifiche da una parte arrivano all'altra in pochi minuti.",

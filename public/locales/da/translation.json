@@ -1588,6 +1588,7 @@
     "templatesDescription": "Aktivér Projektskabeloner for at gemme og genbruge projektstrukturer.",
     "aiApiKeyPlaceholder": "sk-...",
     "google": {
+      "reconnect": "Reconnect Google",
       "error": "Google svarede ikke",
       "title": "Google Kalender og Opgaver",
       "description": "Tovejssynkronisering: dine Google-kalendere vises her og kan redigeres fra Cadence, datoopgaver går til en \"Cadence\"-kalender i Google, og alle dine opgaver synkroniseres med Google Opgaver. Ændringer på begge sider følger efter få minutter.",
