@@ -4,6 +4,10 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.20.2
+
+- Synchronisation Google en échec (accès expiré, Google injoignable) : une alerte dans la cloche, sur le téléphone et sur le client Linux, qui disparaît d'elle-même dès que la synchro remarche. Sur le web, elle ouvre Profil › Calendriers.
+
 ## 2026.11.20
 
 - Trier mes mails : un résumé de 2 ou 3 lignes d'abord (qui écrit, de quoi il s'agit, quoi faire et pour quand), puis le mail entier en texte propre sous « Lire le mail », même s'il arrive en HTML.
