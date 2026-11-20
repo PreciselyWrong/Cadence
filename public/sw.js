@@ -38,6 +38,9 @@ const NO_QUEUE_PATHS = [
     '/api/csrf-token',
     '/api/assistant',
     '/api/ai/',
+    '/api/ai-assistant/',
+    // An AI proposal applied later would act on facts that have moved on.
+    '/api/proposals/',
     '/api/auto-classify',
     '/api/url/',
     '/api/caldav',
@@ -51,6 +54,10 @@ const NO_QUEUE_PATHS = [
 // A plugin's run button (a Hermes job started now): replayed later, it would
 // start the job at a time nobody asked for.
 const NO_QUEUE_PATTERNS = [/\/api\/plugins\/[^/]+\/actions\/[^/]+\/run$/];
+
+const neverQueued = (pathname) =>
+    NO_QUEUE_PATHS.some((p) => pathname.includes(p)) ||
+    NO_QUEUE_PATTERNS.some((pattern) => pattern.test(pathname));
 
 // The development build registers this worker as /sw.js?push-only so push
 // notifications can be tried on the dev server. In that mode nothing is
@@ -211,10 +218,7 @@ self.addEventListener('fetch', (event) => {
     if (url.pathname.includes('/api/')) {
         if (request.method === 'GET') {
             event.respondWith(handleApiGet(request));
-        } else if (
-            NO_QUEUE_PATHS.some((p) => url.pathname.includes(p)) ||
-            NO_QUEUE_PATTERNS.some((pattern) => pattern.test(url.pathname))
-        ) {
+        } else if (neverQueued(url.pathname)) {
             event.respondWith(handleApiNoQueue(request));
         } else {
             event.respondWith(handleApiMutation(request));
@@ -657,6 +661,11 @@ async function runReplay() {
         if (csrf === undefined) csrf = await freshCsrfToken();
 
         for (const stored of entries) {
+            // Queued by an older worker before the path joined the list.
+            if (neverQueued(new URL(stored.url).pathname)) {
+                await idbDelete(OUTBOX, stored.id);
+                continue;
+            }
             const entry = core.rewriteTempIds(stored, idMap);
             let response;
             try {

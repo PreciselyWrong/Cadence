@@ -504,6 +504,20 @@ describe('service worker offline writes', () => {
         expect(response.status).toBe(503);
         expect(sw.outbox()).toHaveLength(0);
     });
+
+    it.each([
+        '/api/ai-assistant/project-insights',
+        '/api/proposals/p1/apply',
+        '/api/proposals/p1/send',
+    ])(
+        'never queues %s: replayed later, it would act on stale facts',
+        async (url) => {
+            const sw = loadWorker(down);
+            const response = await sw.request(url, post({ decisions: [] }));
+            expect(response.status).toBe(503);
+            expect(sw.outbox()).toHaveLength(0);
+        }
+    );
 });
 
 describe('service worker replay', () => {
@@ -637,6 +651,22 @@ describe('service worker replay', () => {
         await flush();
         expect(sw.seen.some((r) => r.url.endsWith('/api/task/t1'))).toBe(false);
         expect(sw.outbox()).toHaveLength(1);
+    });
+
+    it('drops, without sending, an AI call an older worker had queued', async () => {
+        const sw = loadWorker(down);
+        await sw.request('/api/task/t1', patch({ name: 'old' }));
+        sw.outbox()[0].url = `${ORIGIN}/api/ai-assistant/project-insights`;
+        sw.setServer((req) =>
+            health(req) || csrf(req) ? json({ csrfToken: 't' }) : json({})
+        );
+        sw.seen.length = 0;
+        await sw.message({ type: 'PROBE' });
+        await flush();
+        expect(sw.seen.some((r) => r.url.includes('/api/ai-assistant/'))).toBe(
+            false
+        );
+        expect(sw.outbox()).toHaveLength(0);
     });
 
     it('queues a write behind earlier ones even when online', async () => {
