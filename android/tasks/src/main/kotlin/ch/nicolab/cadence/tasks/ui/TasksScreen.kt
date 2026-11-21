@@ -102,6 +102,7 @@ fun TasksScreen(
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteIsNew by rememberSaveable { mutableStateOf(false) }
     val notes by viewModel.notes.collectAsStateWithLifecycle()
+    val tags by viewModel.tags.collectAsStateWithLifecycle()
     DeletionUndoEffect(viewModel, snackbar)
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
@@ -344,7 +345,7 @@ fun TasksScreen(
             },
             current = tab,
             todayCount = overdueCount + todayState.today.size + eventCount,
-            pinned = remember(projects, notes) { PinnedShortcuts.of(projects, notes) },
+            pinned = remember(projects, notes, tags) { PinnedShortcuts.of(projects, notes, tags) },
             areas = areas,
             areaFilter = areaFilter,
             withLink = withLink,
@@ -365,12 +366,17 @@ fun TasksScreen(
                         selectedNoteIsNew = false
                         selectedNoteUid = shortcut.uid
                     }
+                    PinnedShortcut.Kind.TAG -> {
+                        tab = TasksTab.TAGS
+                        openTagUid = shortcut.uid
+                    }
                 }
             },
             onUnpin = { shortcut ->
                 when (shortcut.kind) {
                     PinnedShortcut.Kind.PROJECT -> viewModel.setProjectPinned(shortcut.uid, false)
                     PinnedShortcut.Kind.NOTE -> viewModel.saveNoteAttributes(shortcut.uid, NoteChange(pinned = false))
+                    PinnedShortcut.Kind.TAG -> viewModel.setTagPinned(shortcut.uid, false)
                 }
             },
             onSelectArea = viewModel::selectArea,

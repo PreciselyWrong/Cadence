@@ -151,6 +151,7 @@ internal fun TaskOverlays(
     pendingScope?.let { pending ->
         RecurringScopeDialog(
             action = if (pending is PendingScope.Delete) RecurringAction.DELETE else RecurringAction.EDIT,
+            offerLeaveToday = (pending as? PendingScope.Edit)?.offerLeaveToday == true,
             onAnswer = viewModel::answerScope,
         )
     }

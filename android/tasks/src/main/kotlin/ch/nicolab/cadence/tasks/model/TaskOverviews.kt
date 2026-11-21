@@ -67,7 +67,10 @@ object TaskOverviews {
                 nextTaskName = open.firstOrNull()?.name,
                 nextActionName = NextAction.of(project, own)?.name,
             )
-        }.sortedBy { it.project.name.lowercase() }
+        }.sortedWith(
+            compareByDescending<ProjectCard> { it.project.updatedAt }
+                .thenBy { it.project.name.lowercase() },
+        )
         val known = areas.mapTo(HashSet()) { it.uid }
         val grouped = areas.mapNotNull { area ->
             cards.filter { it.project.areaUid == area.uid }.takeIf { it.isNotEmpty() }?.let { AreaGroup(area, it) }
@@ -89,6 +92,15 @@ object TaskOverviews {
             stash = groups { it.isStash },
             closed = groups { it.isClosed },
         )
+    }
+
+    /** Avancement d'un projet (terminées sur total ouvertes + terminées) ; null avant la première tâche faite. */
+    fun projectProgress(tasks: List<TaskItem>, projectUid: String): Pair<Int, Int>? {
+        val own = tasks.filter { it.projectUid == projectUid }
+        val done = own.count { it.status == TaskStatus.DONE }
+        if (done == 0) return null
+        val total = done + own.count { !it.isClosed }
+        return done to total
     }
 
     /** Étiquettes avec leurs tâches ouvertes ; un parent compte aussi celles de ses sous-étiquettes. */

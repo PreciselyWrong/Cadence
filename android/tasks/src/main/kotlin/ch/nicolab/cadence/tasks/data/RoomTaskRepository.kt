@@ -645,24 +645,26 @@ internal class RoomTaskRepository(
     }
 
     override suspend fun setProjectStatus(uid: String, status: ProjectStatus) {
+        val now = nowMs()
         val clock = hlc.now()
         val fields = mapOf("status" to JsonPrimitive(status.wire))
         val written = database.withTransaction {
             val existing = projectDao.get(uid) ?: return@withTransaction false
-            projectDao.upsert(existing.copy(status = status.wire))
-            outbox.insert(LocalOps.upsert("project", uid, fields, clock, nowMs()))
+            projectDao.upsert(existing.copy(status = status.wire, updatedAtRaw = Instant.ofEpochMilli(now).toString()))
+            outbox.insert(LocalOps.upsert("project", uid, fields, clock, now))
             true
         }
         if (written) afterLocalWrite()
     }
 
     override suspend fun setProjectPinned(uid: String, pinned: Boolean) {
+        val now = nowMs()
         val clock = hlc.now()
         val written = database.withTransaction {
             val existing = projectDao.get(uid) ?: return@withTransaction false
             if (existing.pinToSidebar == pinned) return@withTransaction false
-            projectDao.upsert(existing.copy(pinToSidebar = pinned))
-            outbox.insert(LocalOps.upsert("project", uid, mapOf("pin_to_sidebar" to JsonPrimitive(pinned)), clock, nowMs()))
+            projectDao.upsert(existing.copy(pinToSidebar = pinned, updatedAtRaw = Instant.ofEpochMilli(now).toString()))
+            outbox.insert(LocalOps.upsert("project", uid, mapOf("pin_to_sidebar" to JsonPrimitive(pinned)), clock, now))
             true
         }
         if (written) afterLocalWrite()
@@ -670,12 +672,13 @@ internal class RoomTaskRepository(
 
     override suspend fun setProjectDescription(uid: String, description: String?) {
         val clean = description?.trim()?.ifEmpty { null }
+        val now = nowMs()
         val clock = hlc.now()
         val written = database.withTransaction {
             val existing = projectDao.get(uid) ?: return@withTransaction false
             if (existing.description == clean) return@withTransaction false
-            projectDao.upsert(existing.copy(description = clean))
-            outbox.insert(LocalOps.upsert("project", uid, mapOf("description" to jsonString(clean)), clock, nowMs()))
+            projectDao.upsert(existing.copy(description = clean, updatedAtRaw = Instant.ofEpochMilli(now).toString()))
+            outbox.insert(LocalOps.upsert("project", uid, mapOf("description" to jsonString(clean)), clock, now))
             true
         }
         if (written) afterLocalWrite()
@@ -704,6 +707,18 @@ internal class RoomTaskRepository(
             if (existing.icon == value) return@withTransaction false
             tagDao.upsert(existing.copy(icon = value))
             outbox.insert(LocalOps.upsert("tag", uid, mapOf("icon" to jsonString(value)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
+    override suspend fun setTagPinned(uid: String, pinned: Boolean) {
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = tagDao.get(uid) ?: return@withTransaction false
+            if (existing.pinned == pinned) return@withTransaction false
+            tagDao.upsert(existing.copy(pinned = pinned))
+            outbox.insert(LocalOps.upsert("tag", uid, mapOf("pinned" to JsonPrimitive(pinned)), clock, nowMs()))
             true
         }
         if (written) afterLocalWrite()

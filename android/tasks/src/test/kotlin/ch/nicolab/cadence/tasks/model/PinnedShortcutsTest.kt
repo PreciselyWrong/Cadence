@@ -42,4 +42,25 @@ class PinnedShortcutsTest {
     fun `rien d'epingle, rien a montrer`() {
         assertEquals(emptyList<PinnedShortcut>(), PinnedShortcuts.of(listOf(ProjectItem(uid = "p", name = "P")), emptyList()))
     }
+
+    @Test
+    fun `les etiquettes epinglees suivent les projets et les notes`() {
+        val shortcuts = PinnedShortcuts.of(
+            projects = listOf(ProjectItem(uid = "p1", name = "Jardin", pinToSidebar = true)),
+            notes = listOf(NoteItem(uid = "n1", title = "Lectures", content = "", pinned = true)),
+            tags = listOf(
+                TagItem(uid = "t1", name = "urgent", color = "#b91c1c", icon = "bolt", pinned = true),
+                TagItem(uid = "t2", name = "courses", pinned = false),
+            ),
+        )
+
+        assertEquals(
+            listOf(
+                PinnedShortcut(PinnedShortcut.Kind.PROJECT, "p1", "Jardin"),
+                PinnedShortcut(PinnedShortcut.Kind.NOTE, "n1", "Lectures"),
+                PinnedShortcut(PinnedShortcut.Kind.TAG, "t1", "urgent", icon = "bolt", color = "#b91c1c"),
+            ),
+            shortcuts,
+        )
+    }
 }

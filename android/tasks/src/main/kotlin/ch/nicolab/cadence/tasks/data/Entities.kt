@@ -74,6 +74,8 @@ data class ProjectEntity(
     val imageUrl: String? = null,
     /** Description Markdown du projet (`description`). */
     val description: String? = null,
+    /** Dernière modification du projet (`updated_at`), utilisée pour trier les projets par activité. */
+    val updatedAtRaw: String? = null,
 )
 
 /** Objectif, résultat clé (un objectif parent) ou envie de la liste d'envies (`bucket`). */
@@ -107,6 +109,8 @@ data class TagEntity(
     val icon: String? = null,
     /** Étiquette parente (`parent_uid`) ; le nom porte déjà le chemin complet. */
     val parentUid: String? = null,
+    /** Épinglée dans « Épinglés » et en tête de la liste des étiquettes (`pinned`). */
+    @ColumnInfo(defaultValue = "0") val pinned: Boolean = false,
 )
 
 @Entity(tableName = "notes")

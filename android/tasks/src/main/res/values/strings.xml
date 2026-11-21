@@ -152,6 +152,8 @@
     <string name="recurring_delete_this_hint">Cette date est ignorée, la série continue.</string>
     <string name="recurring_delete_following_hint">Cette occurrence et les suivantes sont supprimées, la série s\'arrête avant.</string>
     <string name="recurring_delete_all_hint">La tâche et toutes ses occurrences sont supprimées.</string>
+    <string name="recurring_leave_today">Retirer aussi de ma journée</string>
+    <string name="tasks_project_progress">%1$d sur %2$d faites</string>
     <string name="recurring_unsupported">Cette répétition ne se modifie que pour toute la série.</string>
 
     <string name="tasks_connect_title">Serveur Cadence</string>

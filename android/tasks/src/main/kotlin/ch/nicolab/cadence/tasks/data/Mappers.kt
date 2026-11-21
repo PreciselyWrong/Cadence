@@ -74,6 +74,7 @@ internal fun ProjectEntity.toItem() = ProjectItem(
     parentProjectUid = parentProjectUid,
     imageUrl = imageUrl,
     description = description,
+    updatedAt = parseInstant(updatedAtRaw),
 )
 
 internal fun GoalEntity.toItem() = GoalItem(
@@ -91,7 +92,7 @@ internal fun GoalEntity.toItem() = GoalItem(
 
 internal fun AreaEntity.toItem() = AreaItem(uid, name, color)
 
-internal fun TagEntity.toItem() = TagItem(uid, name, color, icon, parentUid)
+internal fun TagEntity.toItem() = TagItem(uid, name, color, icon, parentUid, pinned)
 
 internal fun NoteRow.toItem() = NoteItem(
     uid = note.uid,

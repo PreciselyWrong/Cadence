@@ -65,6 +65,38 @@ class TaskOverviewsTest {
     }
 
     @Test
+    fun `projects sort by last activity newest first`() {
+        val t1 = Instant.parse("2026-11-18T10:00:00Z")
+        val t2 = Instant.parse("2026-11-20T10:00:00Z")
+        val projects = listOf(
+            ProjectItem("a", "Alpha", updatedAt = t1),
+            ProjectItem("b", "Bravo", updatedAt = t2),
+            ProjectItem("c", "Charlie", updatedAt = null),
+        )
+        val sorted = TaskOverviews.projectGroups(projects, emptyList(), emptyList(), now)
+            .single().projects.map { it.project.name }
+        assertEquals(listOf("Bravo", "Alpha", "Charlie"), sorted)
+    }
+
+    @Test
+    fun `project progress returns done over total only when at least one task is done`() {
+        val tasks = listOf(
+            done("d1", friday, "p1"),
+            done("d2", friday, "p1"),
+            done("d3", friday, "p1"),
+            open("o1", "p1"),
+            open("o2", "p1"),
+            open("o3", "p1"),
+            open("o4", "p1"),
+            open("o5", "p1"),
+            open("o6", "p2"),
+        )
+        assertEquals(3 to 8, TaskOverviews.projectProgress(tasks, "p1"))
+        assertNull(TaskOverviews.projectProgress(tasks, "p2"))
+        assertNull(TaskOverviews.projectProgress(tasks, "empty"))
+    }
+
+    @Test
     fun `project status groups follow the status values`() {
         assertEquals(ProjectStatus.IN_PROGRESS, ProjectStatus.fromWire("in_progress"))
         assertEquals(ProjectStatus.NOT_STARTED, ProjectStatus.fromWire(null))

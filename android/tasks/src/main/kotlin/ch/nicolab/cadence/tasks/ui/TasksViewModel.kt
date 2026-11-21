@@ -64,7 +64,9 @@ import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
 import ch.nicolab.cadence.tasks.notes.NoteFields
 import ch.nicolab.cadence.tasks.notes.NotePatch
+import ch.nicolab.cadence.tasks.data.RecurringEdits
 import ch.nicolab.cadence.tasks.planning.AddTask
+import ch.nicolab.cadence.tasks.planning.RemoveTask
 import kotlinx.coroutines.flow.first
 import ch.nicolab.cadence.tasks.notes.WikiLinks
 import ch.nicolab.cadence.tasks.planning.Horizon
@@ -173,7 +175,12 @@ internal data class PendingDeletion(
 internal sealed interface PendingScope {
     val task: TaskItem
 
-    data class Edit(override val task: TaskItem, val change: TaskChange, val occurrence: LocalDate? = null) : PendingScope
+    data class Edit(
+        override val task: TaskItem,
+        val change: TaskChange,
+        val occurrence: LocalDate? = null,
+        val offerLeaveToday: Boolean = false,
+    ) : PendingScope
     data class Delete(override val task: TaskItem) : PendingScope
 }
 
@@ -544,7 +551,8 @@ internal class TasksViewModel(
      */
     fun edit(task: TaskItem, change: TaskChange) {
         if (task.isRecurring && OccurrenceFields.isScoped(change)) {
-            _pendingScope.value = PendingScope.Edit(task, change)
+            val offerLeaveToday = RecurringEdits.shouldOfferLeaveToday(task, change, planSlots.entries(), moment.value.today)
+            _pendingScope.value = PendingScope.Edit(task, change, offerLeaveToday = offerLeaveToday)
         } else {
             update(task.uid, change)
         }
@@ -673,17 +681,17 @@ internal class TasksViewModel(
     }
 
     /** Réponse à « Cette tâche ou la série ? » ; null = annulé, rien n'est écrit. */
-    fun answerScope(scope: RecurringScope?) {
+    fun answerScope(scope: RecurringScope?, leaveToday: Boolean = false) {
         val pending = _pendingScope.value ?: return
         _pendingScope.value = null
         if (scope == null) return
         when (pending) {
-            is PendingScope.Edit -> applyEdit(pending, scope)
+            is PendingScope.Edit -> applyEdit(pending, scope, leaveToday)
             is PendingScope.Delete -> applyDelete(pending.task, scope)
         }
     }
 
-    private fun applyEdit(pending: PendingScope.Edit, scope: RecurringScope) = launchAction {
+    private fun applyEdit(pending: PendingScope.Edit, scope: RecurringScope, leaveToday: Boolean) = launchAction {
         val uid = pending.task.uid
         val scoped = OccurrenceFields.scoped(pending.change)
         // Le jour seul se décale sur le serveur (il déplace aussi la règle) ; le reste s'écrit hors ligne.
@@ -697,6 +705,9 @@ internal class TasksViewModel(
             repository.editRecurring(uid, scope, pending.occurrence, pending.change).getOrElse { throw recurringFailure(it) }
         }
         OccurrenceFields.rest(pending.change).takeIf { it != TaskChange() }?.let { repository.updateTask(uid, it) }
+        if (leaveToday && pending.offerLeaveToday) {
+            planEdits.apply(listOf(RemoveTask(moment.value.today, uid)))
+        }
     }
 
     private fun applyDelete(task: TaskItem, scope: RecurringScope) {
@@ -824,6 +835,8 @@ internal class TasksViewModel(
     fun setProjectIcon(uid: String, icon: String?) = launchAction { repository.setProjectIcon(uid, icon) }
 
     fun setProjectPinned(uid: String, pinned: Boolean) = launchAction { repository.setProjectPinned(uid, pinned) }
+
+    fun setTagPinned(uid: String, pinned: Boolean) = launchAction { repository.setTagPinned(uid, pinned) }
 
     fun setTagIcon(uid: String, icon: String?) = launchAction { repository.setTagIcon(uid, icon) }
 

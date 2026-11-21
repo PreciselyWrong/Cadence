@@ -5,19 +5,31 @@ package ch.nicolab.cadence.tasks.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.RowGroup
 import ch.nicolab.cadence.designsystem.components.SettingRow
 import ch.nicolab.cadence.designsystem.components.rowGroupShape
+import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.RecurringScope
 
@@ -45,12 +57,27 @@ private fun choices(action: RecurringAction): List<ScopeChoice> = when (action) 
  */
 @Composable
 fun RecurringScopeDialog(action: RecurringAction, onAnswer: (RecurringScope?) -> Unit) {
+    RecurringScopeDialog(action = action, offerLeaveToday = false) { scope, _ -> onAnswer(scope) }
+}
+
+/**
+ * « Cette tâche ou la série ? » : posée une fois par enregistrement d'une tâche récurrente, quelle que soit la
+ * surface (fiche, menu, balayage, Agenda). Annuler, ou fermer la feuille, répond null et n'écrit rien.
+ */
+@Composable
+fun RecurringScopeDialog(
+    action: RecurringAction,
+    offerLeaveToday: Boolean = false,
+    onAnswer: (RecurringScope?, Boolean) -> Unit,
+) {
     val options = choices(action)
     val title = when (action) {
         RecurringAction.EDIT -> R.string.recurring_edit_title
         RecurringAction.DELETE -> R.string.recurring_delete_title
     }
-    CadenceSheet(title = stringResource(title), subtitle = null, dismiss = { onAnswer(null) }) {
+    val showLeaveToday = action == RecurringAction.EDIT && offerLeaveToday
+    var leaveToday by remember(action, offerLeaveToday) { mutableStateOf(true) }
+    CadenceSheet(title = stringResource(title), subtitle = null, dismiss = { onAnswer(null, false) }) {
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
             RowGroup {
                 options.forEachIndexed { index, choice ->
@@ -58,11 +85,27 @@ fun RecurringScopeDialog(action: RecurringAction, onAnswer: (RecurringScope?) ->
                         title = stringResource(choice.title),
                         subtitle = stringResource(choice.description),
                         shape = rowGroupShape(index, options.size),
-                        onClick = { onAnswer(choice.scope) },
+                        onClick = { onAnswer(choice.scope, showLeaveToday && leaveToday) },
                     )
                 }
             }
-            TextButton(onClick = { onAnswer(null) }, modifier = Modifier.align(Alignment.End)) {
+            if (showLeaveToday) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = Size.touch)
+                        .toggleable(value = leaveToday, role = Role.Checkbox, onValueChange = { leaveToday = it }),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Checkbox(checked = leaveToday, onCheckedChange = null)
+                    Text(
+                        stringResource(R.string.recurring_leave_today),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = cadence.onSurface,
+                    )
+                }
+            }
+            TextButton(onClick = { onAnswer(null, false) }, modifier = Modifier.align(Alignment.End)) {
                 Text(stringResource(R.string.tasks_cancel))
             }
         }

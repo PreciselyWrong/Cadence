@@ -167,6 +167,9 @@ interface TaskRepository {
     /** Pose ou retire l'icône de l'étiquette [uid]. */
     suspend fun setTagIcon(uid: String, icon: String?)
 
+    /** Épingle ou désépingle l'étiquette (`pinned`) ; rien n'est écrit si rien ne change. */
+    suspend fun setTagPinned(uid: String, pinned: Boolean)
+
     /** Pose (`#rrggbb`) ou retire (null) la couleur de l'étiquette [uid] ; refuse toute autre valeur. Sans effet si l'étiquette est inconnue. */
     suspend fun setTagColor(uid: String, color: String?)
 

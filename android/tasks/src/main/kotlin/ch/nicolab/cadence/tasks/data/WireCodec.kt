@@ -106,6 +106,7 @@ internal object WireCodec {
         parentProjectUid = wire.string("parent_project_uid"),
         imageUrl = wire.string("image_url"),
         description = wire.string("description"),
+        updatedAtRaw = wire.string("updated_at"),
     )
 
     fun goalFromWire(wire: JsonObject) = GoalEntity(
@@ -133,6 +134,7 @@ internal object WireCodec {
         color = wire.string("color"),
         icon = wire.string("icon"),
         parentUid = wire.string("parent_uid"),
+        pinned = wire.bool("pinned"),
     )
 
     fun noteFromWire(wire: JsonObject) = NoteEntity(

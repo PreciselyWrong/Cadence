@@ -153,4 +153,18 @@ class TagPathsTest {
             TagPaths.rows(tags, usage = usage).map { it.label },
         )
     }
+
+    @Test
+    fun `les étiquettes épinglées passent en tête avant l'usage`() {
+        val tags = listOf(
+            TagItem("t", "travail"),
+            TagItem("e", "epinglee", pinned = true),
+            TagItem("a", "achats"),
+        )
+        val usage = mapOf("t" to 10, "a" to 3, "e" to 0)
+        assertEquals(
+            listOf("epinglee", "travail", "achats"),
+            TagPaths.rows(tags, usage = usage).map { it.label },
+        )
+    }
 }

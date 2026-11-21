@@ -3,7 +3,10 @@ package ch.nicolab.cadence.tasks.data
 import ch.nicolab.cadence.tasks.model.RecurrenceExpansion
 import ch.nicolab.cadence.tasks.model.RecurrenceRule
 import ch.nicolab.cadence.tasks.model.RecurringScope
+import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskStatus
+import ch.nicolab.cadence.tasks.planning.PlanEntry
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -55,6 +58,23 @@ internal object RecurringEdits {
         "recurrence_type", "recurrence_interval", "recurrence_weekday", "recurrence_weekdays",
         "recurrence_month_day", "recurrence_week_of_month", "completion_based",
     )
+
+    /**
+     * Propose « Retirer aussi de ma journée » quand l'échéance d'une tâche récurrente placée aujourd'hui est
+     * repoussée à un jour futur. Une tâche simple quitte déjà le plan côté serveur.
+     */
+    fun shouldOfferLeaveToday(
+        task: TaskItem,
+        change: TaskChange,
+        plan: List<PlanEntry>,
+        today: LocalDate,
+    ): Boolean {
+        val nextDay = change.dueDate ?: return false
+        return task.isRecurring &&
+            nextDay.isAfter(today) &&
+            nextDay != task.dueDay &&
+            plan.any { it.day == today && it.uid == task.uid }
+    }
 
     fun edit(
         series: JsonObject,

@@ -394,6 +394,7 @@ internal fun ProjectTasksPane(
     // La prochaine action choisie ; sinon la suggestion automatique (la première tâche ouverte).
     val nextLine = project?.let { NextAction.of(it, tasks) }?.let { stringResource(R.string.next_action_line, it.name) }
         ?: tasks.firstOrNull()?.let { stringResource(R.string.tasks_projects_next, it.name) }
+    val progress = remember(allTasks, projectUid) { TaskOverviews.projectProgress(allTasks, projectUid) }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item {
@@ -478,6 +479,16 @@ internal fun ProjectTasksPane(
                 TodoMdRepoLine(
                     projectUid = projectUid,
                     onChanged = viewModel::requestSync,
+                    modifier = Modifier.padding(start = Space.md, end = Space.md, bottom = Space.xs),
+                )
+            }
+        }
+        if (progress != null) {
+            item(key = "progress") {
+                Text(
+                    stringResource(R.string.tasks_project_progress, progress.first, progress.second),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = cadence.onSurfaceVariant,
                     modifier = Modifier.padding(start = Space.md, end = Space.md, bottom = Space.xs),
                 )
             }

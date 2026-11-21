@@ -131,6 +131,8 @@ data class ProjectItem(
     val imageUrl: String? = null,
     /** Description Markdown du projet (`description`). */
     val description: String? = null,
+    /** Dernière activité du projet (`updated_at`). */
+    val updatedAt: Instant? = null,
 ) {
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
     val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)
@@ -174,6 +176,7 @@ data class TagItem(
     val color: String? = null,
     val icon: String? = null,
     val parentUid: String? = null,
+    val pinned: Boolean = false,
 )
 
 data class NoteItem(

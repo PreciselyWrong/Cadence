@@ -1,6 +1,9 @@
 package ch.nicolab.cadence.tasks.data
 
 import ch.nicolab.cadence.tasks.model.RecurringScope
+import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.planning.PlanEntry
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -321,5 +324,22 @@ class RecurringEditsTest {
         assertEquals(LocalDate.of(2026, 11, 15), rule.endDay)
         assertNull(TaskExtras.recurrenceRule("{}", paris).endDay)
         assertTrue(rule.endDay!!.isBefore(laterMonday))
+    }
+
+    @Test
+    fun `offers leaving today only when a recurring task planned today moves to a later day`() {
+        val today = LocalDate.of(2026, 11, 21)
+        val tomorrow = today.plusDays(1)
+        val recurring = TaskItem(uid = "T", name = "Sport", dueDay = today, recurrenceType = "weekly")
+        val oneOff = TaskItem(uid = "O", name = "Courses", dueDay = today)
+        val planToday = listOf(PlanEntry("T", today, null, null), PlanEntry("O", today, null, null))
+        val planTomorrow = listOf(PlanEntry("T", tomorrow, null, null))
+
+        assertTrue(RecurringEdits.shouldOfferLeaveToday(recurring, TaskChange(dueDate = tomorrow), planToday, today))
+        assertFalse(RecurringEdits.shouldOfferLeaveToday(oneOff, TaskChange(dueDate = tomorrow), planToday, today))
+        assertFalse(RecurringEdits.shouldOfferLeaveToday(recurring, TaskChange(dueDate = tomorrow), planTomorrow, today))
+        assertFalse(RecurringEdits.shouldOfferLeaveToday(recurring, TaskChange(dueDate = today), planToday, today))
+        assertFalse(RecurringEdits.shouldOfferLeaveToday(recurring, TaskChange(name = "Renommée"), planToday, today))
+        assertFalse(RecurringEdits.shouldOfferLeaveToday(recurring.copy(dueDay = tomorrow), TaskChange(dueDate = tomorrow), planToday, today))
     }
 }

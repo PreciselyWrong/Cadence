@@ -110,7 +110,11 @@ object TagPaths {
         val childrenOf = HashMap<String?, MutableList<TagItem>>()
         tags.forEach { tag -> childrenOf.getOrPut(nearestListedAncestor(tag.name, byName)) { mutableListOf() }.add(tag) }
         fun build(parent: String?): List<TagNode> = childrenOf[parent].orEmpty()
-            .sortedWith(compareByDescending<TagItem> { usage[it.uid] ?: 0 }.thenBy { it.name.lowercase() })
+            .sortedWith(
+                compareByDescending<TagItem> { it.pinned }
+                    .thenByDescending { usage[it.uid] ?: 0 }
+                    .thenBy { it.name.lowercase() },
+            )
             .map { TagNode(it, build(it.name)) }
         return build(null)
     }

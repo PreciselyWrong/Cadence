@@ -22,7 +22,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyncConflictEntity::class,
         DeferredCallEntity::class,
     ],
-    version = 24,
+    version = 25,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -317,6 +317,18 @@ internal val MIGRATION_22_23 = object : Migration(22, 23) {
 internal val MIGRATION_23_24 = object : Migration(23, 24) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE projects ADD COLUMN description TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Ajoute `pinned` aux étiquettes et `updatedAtRaw` aux projets. Le curseur est retiré : le prochain instantané
+ * apporte les étiquettes épinglées et la dernière activité des projets déjà sur le serveur.
+ */
+internal val MIGRATION_24_25 = object : Migration(24, 25) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tags ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE projects ADD COLUMN updatedAtRaw TEXT")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }
