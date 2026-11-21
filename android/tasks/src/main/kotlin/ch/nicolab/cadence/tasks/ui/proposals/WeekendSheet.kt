@@ -63,11 +63,13 @@ import ch.nicolab.cadence.tasks.proposals.WeekendEvent
 import ch.nicolab.cadence.tasks.proposals.WeekendElsewhere
 import ch.nicolab.cadence.tasks.proposals.WeekendEventState
 import ch.nicolab.cadence.tasks.proposals.WeekendModel
+import ch.nicolab.cadence.tasks.proposals.WeekendNearby
 import ch.nicolab.cadence.tasks.proposals.WeekendOp
 import ch.nicolab.cadence.tasks.proposals.WeekendPart
 import ch.nicolab.cadence.tasks.proposals.WeekendProposal
 import ch.nicolab.cadence.tasks.proposals.WeekendSlot
 import ch.nicolab.cadence.tasks.proposals.WeekendWeather
+import ch.nicolab.cadence.tasks.ui.LinkThumb
 import ch.nicolab.cadence.tasks.ui.tasksLocale
 import java.io.IOException
 import java.time.LocalDate
@@ -181,6 +183,15 @@ fun WeekendSheet(uid: String?, onClose: () -> Unit) {
                         onOpen = { uriHandler.openUri(it) },
                     )
                 }
+                if (current.nearby.isNotEmpty()) {
+                    item(key = "nearby") {
+                        SectionHeader(title = stringResource(R.string.weekend_nearby), modifier = Modifier.padding(top = Space.md))
+                    }
+                    val nearbyItems = WeekendModel.groupNearbyByDay(current.nearby).flatMap { it.second }
+                    items(nearbyItems.size, key = { idx -> "n:$idx:${nearbyItems[idx].title}" }) { idx ->
+                        NearbyRow(nearbyItems[idx], onOpen = { uriHandler.openUri(it) })
+                    }
+                }
                 if (current.elsewhere.isNotEmpty()) {
                     item(key = "elsewhere") {
                         SectionHeader(title = stringResource(R.string.weekend_elsewhere), modifier = Modifier.padding(top = Space.md))
@@ -256,21 +267,34 @@ private fun SlotBlock(
         val busy = slot.busy
         if (activity != null) {
             val linkModifier = activity.url?.let { url -> Modifier.clickable { onOpen(url) } } ?: Modifier
-            Text(
-                activity.title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = palette.onSurface,
-                textDecoration = if (activity.url != null) TextDecoration.Underline else null,
-                modifier = linkModifier,
-            )
-            val timing = when {
-                activity.start != null && activity.end != null -> "${activity.start}–${activity.end}"
-                else -> activity.start
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                verticalAlignment = Alignment.Top,
+            ) {
+                LinkThumb(
+                    imageUrl = activity.image,
+                    modifier = Modifier.size(56.dp).then(linkModifier),
+                )
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                    Text(
+                        activity.title,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = palette.onSurface,
+                        textDecoration = if (activity.url != null) TextDecoration.Underline else null,
+                        modifier = linkModifier,
+                    )
+                    WeekendModel.activityMetaLine(activity)?.let {
+                        Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
+                    }
+                    activity.note?.let {
+                        Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
+                    }
+                    (activity.after ?: slot.after)?.let {
+                        Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurface)
+                    }
+                }
             }
-            listOfNotNull(timing, activity.note, activity.travel).joinToString(" · ").takeIf { it.isNotEmpty() }?.let {
-                Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
-            }
-            activity.after?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = palette.onSurface) }
 
             val decision = slot.decision
             if (decision?.op?.final == true) {
@@ -342,6 +366,40 @@ private fun WeatherTag(weather: WeekendWeather?, temp: Int?, feels: Int?) {
             temp?.let { Text(stringResource(R.string.weekend_degrees, it), style = MaterialTheme.typography.labelLarge, color = palette.onSurface) }
         }
         feels?.let { Text(stringResource(R.string.weekend_feels, it), style = MaterialTheme.typography.labelSmall, color = palette.onSurfaceVariant) }
+    }
+}
+
+@Composable
+private fun NearbyRow(item: WeekendNearby, onOpen: (String) -> Unit) {
+    val palette = cadence
+    val linkModifier = item.url?.let { url -> Modifier.clickable { onOpen(url) } } ?: Modifier
+    val day = item.date.format(weekendDayFormat)
+    Row(
+        Modifier.fillMaxWidth().padding(vertical = Space.xs),
+        horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        verticalAlignment = Alignment.Top,
+    ) {
+        LinkThumb(
+            imageUrl = item.image,
+            modifier = Modifier.size(40.dp).then(linkModifier),
+        )
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+            Text(
+                item.title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = palette.onSurface,
+                textDecoration = if (item.url != null) TextDecoration.Underline else null,
+                modifier = linkModifier,
+            )
+            Text(
+                WeekendModel.nearbyMetaLine(item, day),
+                style = MaterialTheme.typography.bodySmall,
+                color = palette.onSurfaceVariant,
+            )
+            item.note?.let {
+                Text(it, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
+            }
+        }
     }
 }
 

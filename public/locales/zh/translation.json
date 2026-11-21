@@ -48,6 +48,7 @@
             "fog": "雾"
         },
         "days": "两天",
+        "nearby": "Nearby",
         "elsewhere": "别处更好",
         "elsewhereLine": "{{place}}，{{day}}：{{weather}}，{{temp}}°"
     },

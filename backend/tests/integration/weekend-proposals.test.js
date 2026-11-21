@@ -35,6 +35,8 @@ describe('proposals › weekend', () => {
                 activity: {
                     title: 'Marché de Morges',
                     url: 'https://example.com/marche',
+                    image: 'https://example.com/marche.jpg',
+                    place: 'Morges, Place du Marché',
                     travel: '20 min',
                 },
             },
@@ -51,6 +53,18 @@ describe('proposals › weekend', () => {
                 date: '2026-11-14',
                 part: 'afternoon',
                 busy: 'Foire aux livres, Penthalaz',
+            },
+        ],
+        nearby: [
+            {
+                title: 'Atelier céramique',
+                date: '2026-11-14',
+                start: '14:00',
+                place: 'La Sarraz, La Filature',
+                travel: '5 min',
+                url: 'https://example.com/atelier',
+                image: 'https://example.com/atelier.jpg',
+                note: 'Sur inscription',
             },
         ],
         elsewhere: [

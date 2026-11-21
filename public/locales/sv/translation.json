@@ -48,6 +48,7 @@
             "fog": "dimma"
         },
         "days": "Båda dagarna",
+        "nearby": "Nearby",
         "elsewhere": "Finare någon annanstans",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

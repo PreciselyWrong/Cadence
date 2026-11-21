@@ -48,6 +48,7 @@
             "fog": "ομίχλη"
         },
         "days": "Και οι δύο μέρες",
+        "nearby": "Nearby",
         "elsewhere": "Καλύτερα αλλού",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

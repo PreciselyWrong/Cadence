@@ -149,6 +149,7 @@
     <string name="weekend_event_open">Ouvrir dans l\'agenda</string>
     <string name="weekend_event_failed">Pas ajouté</string>
     <string name="weekend_elsewhere">Plus beau ailleurs</string>
+    <string name="weekend_nearby">Près de chez nous</string>
     <string name="weekend_elsewhere_line">%1$s&#8239;: %2$s</string>
     <plurals name="weekend_count_calendar">
         <item quantity="one">%d sortie à l\'agenda</item>

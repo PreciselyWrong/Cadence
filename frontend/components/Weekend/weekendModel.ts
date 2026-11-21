@@ -1,6 +1,8 @@
 import type {
+    WeekendActivity,
     WeekendAnswer,
     WeekendDecisionInput,
+    WeekendNearby,
     WeekendOp,
     WeekendPart,
     WeekendSlot,
@@ -168,4 +170,32 @@ export const safeHttpsUrl = (value: string | undefined): string | null => {
     } catch {
         return null;
     }
+};
+
+export const activityMetaLine = (activity: WeekendActivity): string =>
+    [activity.place, activity.start, activity.travel]
+        .filter(Boolean)
+        .join(' · ');
+
+export const nearbyMetaLine = (
+    item: WeekendNearby,
+    language: string
+): string => {
+    const day = dayName(item.date, language);
+    const when = item.start ? `${day} ${item.start}` : day;
+    return [when, item.place, item.travel].filter(Boolean).join(' · ');
+};
+
+// Groups nearby events by day in the order each day first appears.
+export const groupNearbyByDay = (
+    nearby: readonly WeekendNearby[] | undefined
+): Array<{ date: string; items: WeekendNearby[] }> => {
+    if (!nearby || nearby.length === 0) return [];
+    const byDate = new Map<string, WeekendNearby[]>();
+    for (const item of nearby) {
+        const list = byDate.get(item.date);
+        if (list) list.push(item);
+        else byDate.set(item.date, [item]);
+    }
+    return [...byDate.entries()].map(([date, items]) => ({ date, items }));
 };

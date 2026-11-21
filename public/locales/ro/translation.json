@@ -48,6 +48,7 @@
             "fog": "ceață"
         },
         "days": "Ambele zile",
+        "nearby": "Nearby",
         "elsewhere": "Mai frumos în altă parte",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

@@ -48,6 +48,7 @@
             "fog": "megla"
         },
         "days": "Oba dneva",
+        "nearby": "Nearby",
         "elsewhere": "Lepše drugje",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

@@ -48,6 +48,7 @@
             "fog": "hmla"
         },
         "days": "Oba dni",
+        "nearby": "Nearby",
         "elsewhere": "Inde krajšie",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

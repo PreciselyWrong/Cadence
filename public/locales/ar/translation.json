@@ -48,6 +48,7 @@
             "fog": "ضباب"
         },
         "days": "اليومان",
+        "nearby": "Nearby",
         "elsewhere": "أجمل في مكان آخر",
         "elsewhereLine": "{{place}}، {{day}}: {{weather}}، {{temp}}°"
     },

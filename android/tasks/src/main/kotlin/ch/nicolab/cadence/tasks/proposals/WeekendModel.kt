@@ -60,11 +60,24 @@ data class WeekendDay(val date: LocalDate, val weather: WeekendWeather?, val min
 data class WeekendActivity(
     val title: String,
     val url: String?,
+    val image: String? = null,
+    val place: String? = null,
     val note: String?,
     val travel: String?,
     val start: String?,
     val end: String?,
     val after: String?,
+)
+
+data class WeekendNearby(
+    val title: String,
+    val date: LocalDate,
+    val start: String?,
+    val place: String?,
+    val travel: String?,
+    val url: String?,
+    val image: String?,
+    val note: String?,
 )
 
 data class WeekendDecision(val op: WeekendOp, val note: String?)
@@ -106,6 +119,7 @@ data class WeekendProposal(
     val subtitle: String?,
     val days: List<WeekendDay>,
     val slots: List<WeekendSlot>,
+    val nearby: List<WeekendNearby> = emptyList(),
     val elsewhere: List<WeekendElsewhere>,
 )
 
@@ -143,6 +157,9 @@ data class WeekendCounts(val calendar: Int, val other: Int, val skip: Int)
 object WeekendModel {
     /** Longueur maximale d'une remarque envoyée avec une décision. */
     const val NOTE_MAX_LENGTH = 500
+    private const val NEARBY_LIMIT = 12
+    private const val TITLE_MAX_LENGTH = 120
+    private const val PLACE_MAX_LENGTH = 60
 
     private val SLOT_ID = Regex("""^[A-Za-z0-9_-]{1,64}$""")
 
@@ -196,19 +213,48 @@ object WeekendModel {
         skip = draft.picks.values.count { it == WeekendOp.SKIP },
     )
 
+    fun activityMetaLine(activity: WeekendActivity): String? =
+        listOfNotNull(activity.place, activity.start, activity.travel)
+            .joinToString(" · ")
+            .takeIf { it.isNotEmpty() }
+
+    fun nearbyMetaLine(item: WeekendNearby, dayName: String): String {
+        val whenPart = item.start?.let { "$dayName $it" } ?: dayName
+        return listOfNotNull(whenPart, item.place, item.travel).joinToString(" · ")
+    }
+
+    fun groupNearbyByDay(nearby: List<WeekendNearby>): List<Pair<LocalDate, List<WeekendNearby>>> =
+        nearby.groupBy { it.date }.entries.map { (date, items) -> date to items }
+
     private fun toProposal(dto: WeekendProposalDto): WeekendProposal {
         val answer = dto.answer
+        val days = answer?.days.orEmpty().mapNotNull { day ->
+            val date = dateOrNull(day.date) ?: return@mapNotNull null
+            WeekendDay(date, WeekendWeather.of(day.weather), day.min, day.max)
+        }
+        val dayDates = days.map { it.date }.toSet()
         return WeekendProposal(
             uid = dto.uid,
             status = ProposalStatus.of(dto.status),
             createdAt = dto.createdAt,
             headline = text(answer?.headline),
             subtitle = text(answer?.subtitle),
-            days = answer?.days.orEmpty().mapNotNull { day ->
-                val date = dateOrNull(day.date) ?: return@mapNotNull null
-                WeekendDay(date, WeekendWeather.of(day.weather), day.min, day.max)
-            },
+            days = days,
             slots = answer?.slots.orEmpty().mapNotNull(::toSlot),
+            nearby = answer?.nearby.orEmpty().mapNotNull { item ->
+                val title = text(item.title)?.take(TITLE_MAX_LENGTH) ?: return@mapNotNull null
+                val date = dateOrNull(item.date)?.takeIf { it in dayDates } ?: return@mapNotNull null
+                WeekendNearby(
+                    title = title,
+                    date = date,
+                    start = text(item.start),
+                    place = text(item.place)?.take(PLACE_MAX_LENGTH),
+                    travel = text(item.travel),
+                    url = safeUrl(item.url),
+                    image = safeUrl(item.image),
+                    note = text(item.note),
+                )
+            }.take(NEARBY_LIMIT),
             elsewhere = answer?.elsewhere.orEmpty().mapNotNull { item ->
                 text(item.place)?.let { WeekendElsewhere(it, dateOrNull(item.date), WeekendWeather.of(item.weather), item.temp, text(item.travel)) }
             },
@@ -225,6 +271,8 @@ object WeekendModel {
                 WeekendActivity(
                     title = it,
                     url = safeUrl(act.url),
+                    image = safeUrl(act.image),
+                    place = text(act.place)?.take(PLACE_MAX_LENGTH),
                     note = text(act.note),
                     travel = text(act.travel),
                     start = text(act.start),
@@ -273,6 +321,7 @@ internal data class WeekendAnswerDto(
     val subtitle: String? = null,
     val days: List<WeekendDayDto> = emptyList(),
     val slots: List<WeekendSlotDto> = emptyList(),
+    val nearby: List<WeekendNearbyDto> = emptyList(),
     val elsewhere: List<WeekendElsewhereDto> = emptyList(),
 )
 
@@ -299,11 +348,25 @@ internal data class WeekendSlotDto(
 internal data class WeekendActivityDto(
     val title: String? = null,
     val url: String? = null,
+    val image: String? = null,
+    val place: String? = null,
     val note: String? = null,
     val travel: String? = null,
     val start: String? = null,
     val end: String? = null,
     val after: String? = null,
+)
+
+@Serializable
+internal data class WeekendNearbyDto(
+    val title: String? = null,
+    val date: String? = null,
+    val start: String? = null,
+    val place: String? = null,
+    val travel: String? = null,
+    val url: String? = null,
+    val image: String? = null,
+    val note: String? = null,
 )
 
 @Serializable

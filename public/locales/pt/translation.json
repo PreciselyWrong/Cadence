@@ -48,6 +48,7 @@
             "fog": "nevoeiro"
         },
         "days": "Os dois dias",
+        "nearby": "Nearby",
         "elsewhere": "Melhor noutro sítio",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

@@ -48,6 +48,7 @@
             "fog": "туман"
         },
         "days": "Обидва дні",
+        "nearby": "Nearby",
         "elsewhere": "Краще деінде",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

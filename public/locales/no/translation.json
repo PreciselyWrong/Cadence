@@ -48,6 +48,7 @@
             "fog": "tåke"
         },
         "days": "Begge dagene",
+        "nearby": "Nearby",
         "elsewhere": "Penere andre steder",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

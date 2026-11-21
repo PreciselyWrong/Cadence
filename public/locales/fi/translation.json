@@ -48,6 +48,7 @@
             "fog": "sumua"
         },
         "days": "Molemmat päivät",
+        "nearby": "Nearby",
         "elsewhere": "Kauniimpaa muualla",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

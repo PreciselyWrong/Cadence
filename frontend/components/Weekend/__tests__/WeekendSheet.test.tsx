@@ -66,8 +66,12 @@ const PROPOSAL = {
                 activity: {
                     title: 'Marché de Morges',
                     url: 'https://example.com/marche',
+                    image: 'https://example.com/marche.jpg',
+                    place: 'Morges, Place du Marché',
+                    start: '09:00',
                     note: 'produits locaux',
                     travel: '20 min',
+                    after: 'Ensuite : café au bord du lac',
                 },
                 recommended: true,
             },
@@ -84,6 +88,22 @@ const PROPOSAL = {
                 date: '2026-11-15',
                 part: 'morning',
                 busy: 'Foire aux livres, Penthalaz',
+            },
+        ],
+        nearby: [
+            {
+                title: 'Atelier céramique',
+                date: '2026-11-14',
+                start: '14:00',
+                place: 'La Sarraz',
+                travel: '5 min',
+                url: 'https://example.com/atelier',
+                image: 'https://example.com/atelier.jpg',
+            },
+            {
+                title: 'Marché artisanal',
+                date: '2026-11-15',
+                place: 'Cossonay',
             },
         ],
         elsewhere: [
@@ -118,6 +138,21 @@ describe('WeekendSheet', () => {
         expect(
             screen.getByRole('link', { name: 'Marché de Morges' })
         ).toHaveAttribute('href', 'https://example.com/marche');
+        expect(
+            screen.getByText('Morges, Place du Marché · 09:00 · 20 min')
+        ).toBeInTheDocument();
+        expect(screen.getByText('produits locaux')).toBeInTheDocument();
+        expect(
+            screen.getByText('Ensuite : café au bord du lac')
+        ).toBeInTheDocument();
+        expect(screen.getByText('Près de chez nous')).toBeInTheDocument();
+        expect(
+            screen.getByRole('link', { name: 'Atelier céramique' })
+        ).toHaveAttribute('href', 'https://example.com/atelier');
+        expect(
+            screen.getByText('samedi 14:00 · La Sarraz · 5 min')
+        ).toBeInTheDocument();
+        expect(screen.getByText('dimanche · Cossonay')).toBeInTheDocument();
         expect(screen.getByText('Plus beau ailleurs')).toBeInTheDocument();
         expect(
             screen.getByText('Pontarlier, samedi : ensoleillé, 10° · 1 h')

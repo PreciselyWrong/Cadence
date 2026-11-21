@@ -48,6 +48,7 @@
             "fog": "kabut"
         },
         "days": "Kedua hari",
+        "nearby": "Nearby",
         "elsewhere": "Lebih bagus di tempat lain",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

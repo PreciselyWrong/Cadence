@@ -48,6 +48,7 @@
             "fog": "мъгла"
         },
         "days": "И двата дни",
+        "nearby": "Nearby",
         "elsewhere": "По-хубаво другаде",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

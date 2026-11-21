@@ -48,6 +48,7 @@
             "fog": "туман"
         },
         "days": "Оба дня",
+        "nearby": "Nearby",
         "elsewhere": "Лучше в другом месте",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

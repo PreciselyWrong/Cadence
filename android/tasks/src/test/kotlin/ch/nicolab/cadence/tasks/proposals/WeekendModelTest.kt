@@ -19,13 +19,19 @@ class WeekendModelTest {
            "days":[{"date":"2026-11-14","weather":"sun","min":2,"max":10},{"date":"2026-11-15","weather":"rain","min":4,"max":7}],
            "slots":[
              {"id":"s1","date":"2026-11-14","part":"morning","weather":"sun","temp":5,"feels":2,"recommended":true,
-              "activity":{"title":"Marché de Morges","url":"https://example.org/m","note":"Fromages","travel":"20 min","start":"09:00","end":"12:00"}},
+              "activity":{"title":"Marché de Morges","url":"https://example.org/m","image":"https://example.org/m.jpg","place":"Morges, Place du Marché","note":"Fromages","travel":"20 min","start":"09:00","end":"12:00"}},
              {"id":"s2","date":"2026-11-14","part":"afternoon","busy":"Foire aux livres, Penthalaz"},
-             {"id":"s3","date":"2026-11-15","part":"morning","activity":{"title":"Musée","url":"http://insecure.example"},"decision":{"op":"skip"}},
+             {"id":"s3","date":"2026-11-15","part":"morning","activity":{"title":"Musée","url":"http://insecure.example","image":"http://insecure.example/i.jpg"},"decision":{"op":"skip"}},
              {"id":"s4","date":"2026-11-15","part":"evening","activity":{"title":"Créneau invalide"}},
              {"id":"s5","date":"2026-11-15","part":"day","activity":{"title":"Piscine","after":"Ensuite : balade à Dizy"},
               "decision":{"op":"calendar","note":"ok"},"event":{"state":"created","link":"https://calendar.google.com/e/1"}},
              {"id":"s6","date":"2026-11-14","part":"day","activity":{"title":"Vélo"},"decision":{"op":"other","note":"plutôt la piscine"}}
+           ],
+           "nearby":[
+             {"title":"Atelier céramique","date":"2026-11-14","start":"14:00","place":"La Sarraz","travel":"5 min","url":"https://example.org/a","image":"https://example.org/a.jpg","note":"Entrée libre"},
+             {"title":"Hors week-end","date":"2026-11-20","place":"Yverdon"},
+             {"title":"Marché","date":"2026-11-15","place":"Cossonay","image":"http://insecure.example/x.jpg"},
+             {"title":"Concert","date":"2026-11-14","start":"20:00"}
            ],
            "elsewhere":[{"place":"Pontarlier","date":"2026-11-14","weather":"sun","temp":10,"travel":"1 h"}]}}
         """.trimIndent(),
@@ -42,8 +48,14 @@ class WeekendModelTest {
         assertEquals(WeekendWeather.SUN, proposal.days[0].weather)
         assertEquals(listOf("s1", "s2", "s3", "s5", "s6"), proposal.slots.map { it.id })
         assertEquals("https://example.org/m", slot("s1").activity?.url)
+        assertEquals("https://example.org/m.jpg", slot("s1").activity?.image)
+        assertEquals("Morges, Place du Marché", slot("s1").activity?.place)
         assertEquals("09:00", slot("s1").activity?.start)
         assertNull(slot("s3").activity?.url)
+        assertNull(slot("s3").activity?.image)
+        assertEquals(3, proposal.nearby.size)
+        assertEquals("https://example.org/a.jpg", proposal.nearby[0].image)
+        assertNull(proposal.nearby[1].image)
         assertNull(slot("s2").activity)
         assertEquals("Foire aux livres, Penthalaz", slot("s2").busy)
         assertEquals(WeekendOp.CALENDAR, slot("s5").decision?.op)
@@ -130,5 +142,25 @@ class WeekendModelTest {
         assertEquals(mapOf("s1" to WeekendOp.SKIP), WeekendModel.reconcile(kept, proposal).picks)
         val restarted = WeekendDraft(uid = "old", picks = mapOf("s6" to WeekendOp.OTHER))
         assertEquals(mapOf("s1" to WeekendOp.CALENDAR), WeekendModel.reconcile(restarted, proposal).picks)
+    }
+
+    @Test
+    fun formatsActivityAndNearbyMetaLinesAndGroupsNearbyByDay() {
+        assertEquals(
+            "Morges, Place du Marché · 09:00 · 20 min",
+            WeekendModel.activityMetaLine(slot("s1").activity!!),
+        )
+        assertEquals(
+            "samedi 14:00 · La Sarraz · 5 min",
+            WeekendModel.nearbyMetaLine(proposal.nearby[0], "samedi"),
+        )
+        assertEquals(
+            "dimanche · Cossonay",
+            WeekendModel.nearbyMetaLine(proposal.nearby[1], "dimanche"),
+        )
+        val groups = WeekendModel.groupNearbyByDay(proposal.nearby)
+        assertEquals(listOf(LocalDate.of(2026, 11, 14), LocalDate.of(2026, 11, 15)), groups.map { it.first })
+        assertEquals(listOf("Atelier céramique", "Concert"), groups[0].second.map { it.title })
+        assertEquals(listOf("Marché"), groups[1].second.map { it.title })
     }
 }

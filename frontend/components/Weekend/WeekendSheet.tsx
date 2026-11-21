@@ -24,13 +24,16 @@ import {
 } from '../../utils/proposalsService';
 import { PROPOSAL_CHANGED_EVENT } from '../Proposals/proposalLinks';
 import {
+    activityMetaLine,
     applyBody,
     countLine,
     dayName,
     decisionLabel,
+    groupNearbyByDay,
     initialPicks,
     isBusySlot,
     isOpenSlot,
+    nearbyMetaLine,
     NOTE_MAX,
     safeHttpsUrl,
     slotTitle,
@@ -70,6 +73,41 @@ const WeatherIcon: React.FC<{ weather: WeekendWeather; label: string }> = ({
             data-weather={weather}
             title={label}
         />
+    );
+};
+
+const WeekendThumb: React.FC<{
+    image?: string;
+    url?: string;
+    sizeClass: string;
+}> = ({ image, url, sizeClass }) => {
+    const src = safeHttpsUrl(image);
+    const href = safeHttpsUrl(url);
+    const [failed, setFailed] = useState(false);
+    useEffect(() => setFailed(false), [src]);
+    if (!src || failed) return null;
+    const img = (
+        <img
+            src={src}
+            alt=""
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => setFailed(true)}
+            className={`${sizeClass} shrink-0 rounded-inner bg-surface-high object-cover`}
+        />
+    );
+    if (!href) return img;
+    return (
+        <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-hidden="true"
+            tabIndex={-1}
+            className="shrink-0 rounded-inner"
+        >
+            {img}
+        </a>
     );
 };
 
@@ -230,33 +268,47 @@ const WeekendSheet: React.FC<WeekendSheetProps> = ({ uid, onClose }) => {
                 )}
 
                 {slot.activity && (
-                    <div className="mt-1">
-                        <p className="text-body font-medium text-surface-on">
-                            {url ? (
-                                <a
-                                    href={url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={titleLink}
-                                >
-                                    {slot.activity.title}
-                                </a>
-                            ) : (
-                                slot.activity.title
-                            )}
-                        </p>
-                        {join([slot.activity.note, slot.activity.travel]) && (
-                            <p className="text-body-m text-surface-on-variant">
-                                {join([
-                                    slot.activity.note,
-                                    slot.activity.travel,
-                                ])}
+                    <div className="mt-1.5 flex items-start gap-3">
+                        <WeekendThumb
+                            image={slot.activity.image}
+                            url={url ?? undefined}
+                            sizeClass="h-14 w-14"
+                        />
+                        <div className="min-w-0 flex-1">
+                            <p className="text-body font-medium text-surface-on">
+                                {url ? (
+                                    <a
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={titleLink}
+                                    >
+                                        {slot.activity.title}
+                                    </a>
+                                ) : (
+                                    slot.activity.title
+                                )}
                             </p>
-                        )}
+                            {activityMetaLine(slot.activity) && (
+                                <p className="text-body-m text-surface-on-variant">
+                                    {activityMetaLine(slot.activity)}
+                                </p>
+                            )}
+                            {slot.activity.note && (
+                                <p className="text-body-m text-surface-on-variant">
+                                    {slot.activity.note}
+                                </p>
+                            )}
+                            {after && (
+                                <p className="mt-0.5 text-body-m text-surface-on-variant">
+                                    {after}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 )}
 
-                {after && (
+                {!slot.activity && after && (
                     <p className="mt-0.5 text-body-m text-surface-on-variant">
                         {after}
                     </p>
@@ -411,6 +463,7 @@ const WeekendSheet: React.FC<WeekendSheetProps> = ({ uid, onClose }) => {
     }
 
     const days = answer.days ?? [];
+    const nearbyGroups = groupNearbyByDay(answer.nearby);
     const elsewhere = answer.elsewhere ?? [];
 
     const body = (
@@ -447,6 +500,70 @@ const WeekendSheet: React.FC<WeekendSheetProps> = ({ uid, onClose }) => {
             <ul className="divide-y divide-outline-variant/60">
                 {answer.slots.map(renderSlot)}
             </ul>
+
+            {nearbyGroups.length > 0 && (
+                <section
+                    aria-labelledby="weekend-nearby"
+                    className="mt-3 rounded-card bg-surface-low p-3"
+                >
+                    <h3
+                        id="weekend-nearby"
+                        className="text-body font-medium text-surface-on"
+                    >
+                        {t('weekend.nearby', 'Près de chez nous')}
+                    </h3>
+                    <div className="mt-2 space-y-2.5">
+                        {nearbyGroups.map((group) => (
+                            <ul key={group.date} className="space-y-2">
+                                {group.items.map((item, idx) => {
+                                    const itemUrl = safeHttpsUrl(item.url);
+                                    return (
+                                        <li
+                                            key={`${group.date}-${idx}-${item.title}`}
+                                            className="flex items-start gap-2.5"
+                                        >
+                                            <WeekendThumb
+                                                image={item.image}
+                                                url={itemUrl ?? undefined}
+                                                sizeClass="h-10 w-10"
+                                            />
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-body-m font-medium text-surface-on">
+                                                    {itemUrl ? (
+                                                        <a
+                                                            href={itemUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className={
+                                                                titleLink
+                                                            }
+                                                        >
+                                                            {item.title}
+                                                        </a>
+                                                    ) : (
+                                                        item.title
+                                                    )}
+                                                </p>
+                                                <p className="text-body-m text-surface-on-variant">
+                                                    {nearbyMetaLine(
+                                                        item,
+                                                        language
+                                                    )}
+                                                </p>
+                                                {item.note && (
+                                                    <p className="text-body-m text-surface-on-variant">
+                                                        {item.note}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {elsewhere.length > 0 && (
                 <section

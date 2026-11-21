@@ -14,11 +14,12 @@ Open to the same API key as `propose_career` and `propose_mail`.
   - `part` ∈ `morning`, `afternoon`, `day`. `date` must be one of `days[].date`.
   - `busy` (120): what the calendar already holds (« Foire aux livres, Penthalaz »). A busy slot has no `activity` and no decision.
   - `after` (120): a follow-up line of the slot itself (« Ensuite : balade à Dizy »), shown on a busy slot or under an activity.
-  - `activity`: `{ title (120), url? (https), note? (140), travel? (30), start? (HH:MM), end? (HH:MM), after? (120) }`. `after`: an optional follow-up line (« Ensuite : balade à Dizy »).
+  - `activity`: `{ title (120), url? (https), image? (https), place? (60), note? (140), travel? (30), start? (HH:MM), end? (HH:MM), after? (120) }`. `after`: an optional follow-up line (« Ensuite : balade à Dizy »).
   - `recommended`: the agent advises « Mettre à l'agenda » (preselected in the sheet).
+- `nearby`: `[{ title (120), date, start? (HH:MM), place? (60), travel? (30), url? (https), image? (https), note? (140) }]`, 12 at most (`date` must be one of `days[].date`); other local events without decisions.
 - `elsewhere`: `[{ place (60), date, weather, temp, travel? (30) }]`, 5 at most: places with better weather than home.
 
-`id`: letters, digits, `_` or `-`, 1 to 64. Texts are cut to their limits; a slot with a bad id, date or part is dropped; an activity with a non-https url loses the url. Refused (400): no headline, or no slot.
+`id`: letters, digits, `_` or `-`, 1 to 64. Texts are cut to their limits; a slot with a bad id, date or part is dropped; an activity or nearby entry with a non-https `url` or `image` loses that address; a nearby entry without a title or with a date outside `days` is dropped. Refused (400): no headline, or no slot.
 
 A new weekend proposal replaces the ready one. Decisions of the replaced one carry over to slots of the new one with the same `id` (so an outing already accepted is not lost, and is not asked again). It is stored `ready` and notifies (desktop and mobile): title = headline, message = subtitle, `data: { proposal_uid, kind: "weekend" }`.
 
@@ -50,10 +51,11 @@ From the notification, the bell (`proposal_uid`, `kind: "weekend"`) and a « Wee
 1. Headline (centered), subtitle.
 2. Two day tiles: day name, weather icon, `min° · max°`.
 3. One block per slot, in order: title « Samedi matin », weather and temperature on the right (« ressenti » when `feels`).
-   - Activity: title (link when `url`), muted line `note · travel`, `after` if any; chips « Mettre à l'agenda », « Autre idée », « Ignorer », and a note button. `recommended` preselects « Mettre à l'agenda ». Picks are local until « Valider ».
+   - Activity: square thumbnail on the left (56 px / 56 dp, hidden when absent or failed, opens `url` on tap), title (link when `url`), muted line `place · start · travel`, `note`, `after` if any; chips « Mettre à l'agenda », « Autre idée », « Ignorer », and a note button. `recommended` preselects « Mettre à l'agenda ». Picks are local until « Valider ».
    - Busy: calendar icon, « Occupé : <busy> », `after` if any; no chips.
    - Decided: the decision as a muted label, and the event state.
-4. « Plus beau ailleurs » (only when `elsewhere` is not empty): sun icon, « Pontarlier, samedi : dégagé, 10° · 1 h ».
-5. Footer: count line (« 1 sortie à l'agenda », « 1 autre idée demandée »), button « Valider » (one apply with every picked slot).
+4. « Près de chez nous » (only when `nearby` is not empty, grouped by day in received order): 40 px / 40 dp thumbnail if any, title (link when `url`), muted line « samedi 14:00 · La Sarraz · 5 min », `note` if any.
+5. « Plus beau ailleurs » (only when `elsewhere` is not empty): sun icon, « Pontarlier, samedi : dégagé, 10° · 1 h ».
+6. Footer: count line (« 1 sortie à l'agenda », « 1 autre idée demandée »), button « Valider » (one apply with every picked slot).
 
 Weather words (FR): `sun` « ensoleillé », `partly` « éclaircies », `cloud` « nuageux », `rain` « pluie », `snow` « neige », `storm` « orage », `fog` « brouillard ».

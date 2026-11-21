@@ -1,10 +1,13 @@
 import {
+    activityMetaLine,
     applyBody,
     countLine,
     decisionLabel,
+    groupNearbyByDay,
     initialPicks,
     isBusySlot,
     isOpenSlot,
+    nearbyMetaLine,
     safeHttpsUrl,
     togglePick,
     Translate,
@@ -149,5 +152,49 @@ describe('weekend rules', () => {
         );
         expect(safeHttpsUrl('http://example.com/a')).toBeNull();
         expect(safeHttpsUrl('javascript:alert(1)')).toBeNull();
+    });
+
+    it('formats the activity meta line from present parts only', () => {
+        expect(
+            activityMetaLine({
+                title: 'Expo',
+                place: 'La Sarraz, La Filature',
+                start: '14:00',
+                travel: '5 min',
+            })
+        ).toBe('La Sarraz, La Filature · 14:00 · 5 min');
+        expect(
+            activityMetaLine({
+                title: 'Expo',
+                travel: '20 min',
+            })
+        ).toBe('20 min');
+    });
+
+    it('formats the nearby meta line and groups nearby items by day in received order', () => {
+        expect(
+            nearbyMetaLine(
+                {
+                    title: 'Concert',
+                    date: '2026-11-14',
+                    start: '14:00',
+                    place: 'La Sarraz',
+                    travel: '5 min',
+                },
+                'fr'
+            )
+        ).toBe('samedi 14:00 · La Sarraz · 5 min');
+
+        const groups = groupNearbyByDay([
+            { title: 'A', date: '2026-11-14' },
+            { title: 'B', date: '2026-11-15' },
+            { title: 'C', date: '2026-11-14' },
+        ]);
+        expect(groups.map((g) => g.date)).toEqual([
+            '2026-11-14',
+            '2026-11-15',
+        ]);
+        expect(groups[0].items.map((i) => i.title)).toEqual(['A', 'C']);
+        expect(groups[1].items.map((i) => i.title)).toEqual(['B']);
     });
 });

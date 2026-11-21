@@ -70,6 +70,8 @@ describe('validateWeekend', () => {
             activity: {
                 title: 'Marché de Morges',
                 url: 'https://example.com/marche',
+                image: null,
+                place: null,
                 note: null,
                 travel: null,
                 start: null,
@@ -77,6 +79,7 @@ describe('validateWeekend', () => {
                 after: null,
             },
         });
+        expect(answer.nearby).toEqual([]);
         expect(answer.elsewhere).toEqual([
             {
                 place: 'Pontarlier',
@@ -214,6 +217,82 @@ describe('validateWeekend', () => {
         expect(answer.days).toHaveLength(2);
         expect(answer.slots).toHaveLength(6);
         expect(answer.elsewhere).toHaveLength(5);
+    });
+
+    it('keeps https image and cuts place to 60 characters on an activity', () => {
+        const answer = answerOf({
+            slots: [
+                slot({
+                    id: 'ok',
+                    activity: {
+                        title: 'La Filature',
+                        image: 'https://example.com/filature.jpg',
+                        place: 'p'.repeat(80),
+                    },
+                }),
+                slot({
+                    id: 'bad-img',
+                    activity: {
+                        title: 'Expo',
+                        image: 'http://example.com/expo.jpg',
+                    },
+                }),
+            ],
+        });
+        expect(answer.slots[0].activity.image).toBe(
+            'https://example.com/filature.jpg'
+        );
+        expect(answer.slots[0].activity.place).toHaveLength(60);
+        expect(answer.slots[1].activity.image).toBeNull();
+    });
+
+    it('keeps valid nearby events up to 12 and drops invalid dates or non-https links', () => {
+        const many = Array.from({ length: 14 }, (_, i) => ({
+            title: `Événement ${i + 1}`,
+            date: i % 2 === 0 ? '2026-11-14' : '2026-11-15',
+            start: '14:00',
+            place: 'La Sarraz',
+            travel: '5 min',
+            url: 'https://example.com/ev',
+            image: 'https://example.com/ev.jpg',
+            note: 'Entrée libre',
+        }));
+        const answer = answerOf({
+            nearby: [
+                { title: '   ', date: '2026-11-14' },
+                { title: 'Hors week-end', date: '2026-11-20' },
+                {
+                    title: 'Concert',
+                    date: '2026-11-14',
+                    start: '99:99',
+                    place: 'p'.repeat(80),
+                    url: 'http://insecure.example',
+                    image: 'ftp://insecure.example/a.jpg',
+                },
+                ...many,
+            ],
+        });
+        expect(answer.nearby).toHaveLength(12);
+        expect(answer.nearby[0]).toEqual({
+            title: 'Concert',
+            date: '2026-11-14',
+            start: null,
+            place: 'p'.repeat(60),
+            travel: null,
+            url: null,
+            image: null,
+            note: null,
+        });
+        expect(answer.nearby[1]).toEqual({
+            title: 'Événement 1',
+            date: '2026-11-14',
+            start: '14:00',
+            place: 'La Sarraz',
+            travel: '5 min',
+            url: 'https://example.com/ev',
+            image: 'https://example.com/ev.jpg',
+            note: 'Entrée libre',
+        });
     });
 });
 

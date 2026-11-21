@@ -48,6 +48,7 @@
             "fog": "mist"
         },
         "days": "Beide dagen",
+        "nearby": "Nearby",
         "elsewhere": "Elders mooier",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

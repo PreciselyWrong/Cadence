@@ -48,6 +48,7 @@
             "fog": "sis"
         },
         "days": "İki gün",
+        "nearby": "Nearby",
         "elsewhere": "Başka yerde daha güzel",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

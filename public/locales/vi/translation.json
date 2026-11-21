@@ -48,6 +48,7 @@
             "fog": "sương mù"
         },
         "days": "Cả hai ngày",
+        "nearby": "Nearby",
         "elsewhere": "Đẹp hơn ở nơi khác",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

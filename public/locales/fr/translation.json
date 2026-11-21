@@ -48,6 +48,7 @@
             "fog": "brouillard"
         },
         "days": "Les deux jours",
+        "nearby": "Près de chez nous",
         "elsewhere": "Plus beau ailleurs",
         "elsewhereLine": "{{place}}, {{day}} : {{weather}}, {{temp}}°"
     },

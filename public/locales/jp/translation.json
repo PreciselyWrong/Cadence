@@ -48,6 +48,7 @@
             "fog": "霧"
         },
         "days": "両日",
+        "nearby": "Nearby",
         "elsewhere": "他の場所がより良い",
         "elsewhereLine": "{{place}}、{{day}}: {{weather}}、{{temp}}°"
     },

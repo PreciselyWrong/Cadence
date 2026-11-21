@@ -10,7 +10,7 @@ const { cleanText } = require('./text');
 
 const HEADLINE_MAX = 60;
 const SUBTITLE_MAX = 160;
-const LIMITS = { days: 2, slots: 6, places: 5 };
+const LIMITS = { days: 2, slots: 6, places: 5, nearby: 12 };
 const BUSY_MAX = 120;
 const TITLE_MAX = 120;
 const NOTE_MAX = 140;
@@ -111,6 +111,8 @@ function readActivity(entry) {
     return {
         title,
         url: httpsUrl(entry.url),
+        image: httpsUrl(entry.image),
+        place: textOf(entry.place, PLACE_MAX),
         note: textOf(entry.note, NOTE_MAX),
         travel: textOf(entry.travel, TRAVEL_MAX),
         start: timeOf(entry.start),
@@ -154,6 +156,22 @@ const readPlace = (entry) => {
     };
 };
 
+const readNearby = (entry, dates) => {
+    const title = cleanText(entry.title, TITLE_MAX);
+    const date = dayOf(entry.date);
+    if (!title || !date || !dates.has(date)) return null;
+    return {
+        title,
+        date,
+        start: timeOf(entry.start),
+        place: textOf(entry.place, PLACE_MAX),
+        travel: textOf(entry.travel, TRAVEL_MAX),
+        url: httpsUrl(entry.url),
+        image: httpsUrl(entry.image),
+        note: textOf(entry.note, NOTE_MAX),
+    };
+};
+
 // The checked payload, kept as the proposal's answer. Throws a ValidationError
 // when there is no headline or no valid slot.
 function validateWeekend(raw) {
@@ -174,6 +192,9 @@ function validateWeekend(raw) {
         subtitle: textOf(raw.subtitle, SUBTITLE_MAX),
         days,
         slots,
+        nearby: listOf(raw.nearby, LIMITS.nearby, (entry) =>
+            readNearby(entry, dates)
+        ),
         elsewhere: listOf(raw.elsewhere, LIMITS.places, readPlace),
     };
 }

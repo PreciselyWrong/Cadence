@@ -48,6 +48,7 @@
             "fog": "nebbia"
         },
         "days": "Entrambi i giorni",
+        "nearby": "Nearby",
         "elsewhere": "Meglio altrove",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },

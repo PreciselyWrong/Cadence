@@ -413,11 +413,24 @@ export interface WeekendDay {
 export interface WeekendActivity {
     title: string;
     url?: string;
+    image?: string;
+    place?: string;
     note?: string;
     travel?: string;
     start?: string;
     end?: string;
     after?: string;
+}
+
+export interface WeekendNearby {
+    title: string;
+    date: string;
+    start?: string;
+    place?: string;
+    travel?: string;
+    url?: string;
+    image?: string;
+    note?: string;
 }
 
 export interface WeekendDecision {
@@ -459,6 +472,7 @@ export interface WeekendAnswer {
     subtitle?: string;
     days: WeekendDay[];
     slots: WeekendSlot[];
+    nearby?: WeekendNearby[];
     elsewhere?: WeekendElsewhere[];
 }
 

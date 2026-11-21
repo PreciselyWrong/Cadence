@@ -48,6 +48,7 @@
             "fog": "안개"
         },
         "days": "이틀 모두",
+        "nearby": "Nearby",
         "elsewhere": "다른 곳이 더 좋음",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
     },
