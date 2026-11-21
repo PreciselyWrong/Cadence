@@ -182,7 +182,37 @@
         return `${protocol}//${hostname}/*`;
     }
 
+    const GMAIL = 'mail.google.com';
+
+    // The message open in Gmail, as a task to add; null outside a message.
+    function gmailMessage({ href, subject }) {
+        let url;
+        try {
+            url = new URL(href);
+        } catch {
+            return null;
+        }
+        const name = String(subject ?? '').replace(/\s+/g, ' ').trim();
+        if (url.protocol !== 'https:' || url.hostname !== GMAIL || !name) return null;
+        if (!/^#[^/]+\/.+/.test(url.hash)) return null;
+        return { url: url.href, name };
+    }
+
+    // The Gmail button speaks to the background, which holds the token:
+    // only this add-on's script on a Gmail page is listened to.
+    function trustedGmailSender(sender, addonId) {
+        if (!sender || sender.id !== addonId) return false;
+        try {
+            const url = new URL(sender.url);
+            return url.protocol === 'https:' && url.hostname === GMAIL;
+        } catch {
+            return false;
+        }
+    }
+
     return {
+        gmailMessage,
+        trustedGmailSender,
         originPattern,
         normalizeServer,
         isSavable,

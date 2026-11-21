@@ -152,3 +152,22 @@ test('the pages of a project are read to open them', () => {
         'https://b',
     ]);
 });
+
+test('an open Gmail message becomes a task named by its subject', () => {
+    assert.deepEqual(
+        core.gmailMessage({
+            href: 'https://mail.google.com/mail/u/0/#inbox/FMfcgzQXJWbcdefgh',
+            subject: '  Facture   de novembre ',
+        }),
+        { url: 'https://mail.google.com/mail/u/0/#inbox/FMfcgzQXJWbcdefgh', name: 'Facture de novembre' }
+    );
+    assert.equal(core.gmailMessage({ href: 'https://mail.google.com/mail/u/0/#inbox', subject: '' }), null);
+    assert.equal(core.gmailMessage({ href: 'https://a.example/#inbox/x', subject: 'Salut' }), null);
+});
+
+test('only a Gmail page of this add-on may ask for a task', () => {
+    const id = 'cadence-links@nicolab.ch';
+    assert.equal(core.trustedGmailSender({ id, url: 'https://mail.google.com/mail/u/0/#inbox/x' }, id), true);
+    assert.equal(core.trustedGmailSender({ id, url: 'https://evil.example/mail.google.com' }, id), false);
+    assert.equal(core.trustedGmailSender({ id: 'other', url: 'https://mail.google.com/' }, id), false);
+});

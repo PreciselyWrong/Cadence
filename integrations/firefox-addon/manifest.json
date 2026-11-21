@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_name__",
   "description": "__MSG_description__",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "default_locale": "fr",
   "browser_specific_settings": {
     "gecko": {
@@ -54,5 +54,19 @@
       },
       "description": "__MSG_save_page__"
     }
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": [
+        "gmail.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*"
+  ]
 }

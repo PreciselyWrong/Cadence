@@ -263,11 +263,27 @@ async function lookup(user, { url: raw, title } = {}) {
     };
 }
 
+// A Gmail message is named by the part after « # », which cleaning the
+// address would drop: it is kept whole, and the task wears the Gmail badge.
+function gmailMessageAddress(value) {
+    if (typeof value !== 'string' || value.length > 2048) return null;
+    let parsed;
+    try {
+        parsed = new URL(value.trim());
+    } catch {
+        return null;
+    }
+    if (parsed.protocol !== 'https:' || parsed.hostname !== 'mail.google.com') {
+        return null;
+    }
+    return parsed.href;
+}
+
 // An address made a task in one gesture (add-on, agents): named by its kind
 // unless a name is given, the address in the note, waiting in « Tâches à
 // classer » for « Quand ? » unless a project or due_date is given.
 async function captureTask(user, body = {}) {
-    const url = validAddress(body.url);
+    const url = gmailMessageAddress(body.url) ?? validAddress(body.url);
     const dueDateString = validDueDate(body.due_date);
     const dueDate = dueDateString
         ? processDueDateForStorage(
@@ -293,7 +309,7 @@ async function captureTask(user, body = {}) {
         project_id: projectId,
         due_date: dueDate,
         needs_when: !projectId && !dueDate,
-        source: 'link',
+        source: gmailMessageAddress(url) ? 'gmail' : 'link',
         source_url: url,
     });
     return { task: { uid: task.uid, name: task.name, note: task.note } };

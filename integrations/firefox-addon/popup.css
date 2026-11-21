@@ -13,3 +13,4 @@ button[type='submit'] { width: 100%; min-height: 36px; border: 0; border-radius:
 #projects { margin-top: 12px; padding-top: 8px; border-top: 1px solid #8884; }
 .row { display: flex; flex-wrap: wrap; gap: 6px; }
 .row button { flex: 1 1 auto; min-height: 30px; border: 1px solid #8888; border-radius: 8px; background: transparent; color: inherit; font: inherit; font-size: 12px; cursor: pointer; }
+.row button:disabled { opacity: 0.45; cursor: default; }

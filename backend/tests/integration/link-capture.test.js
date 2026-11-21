@@ -52,6 +52,22 @@ describe('Link capture', () => {
             );
         });
 
+        it('marks a Gmail message as coming from Gmail, keeping its address', async () => {
+            const url =
+                'https://mail.google.com/mail/u/0/#inbox/FMfcgzQXJWbcdefgh';
+            const res = await agent.post('/api/links/task').send({
+                url,
+                name: 'Répondre à Léa',
+            });
+            expect(res.status).toBe(201);
+            const task = await Task.findOne({
+                where: { uid: res.body.task.uid },
+            });
+            expect(task.source).toBe('gmail');
+            expect(task.source_url).toBe(url);
+            expect(task.name).toBe('Répondre à Léa');
+        });
+
         it('keeps a name the user typed, and adds their words under the address', async () => {
             const res = await agent.post('/api/links/task').send({
                 url: 'https://example.com/a',

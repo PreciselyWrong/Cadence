@@ -96,6 +96,11 @@ async function projects(settings, tab) {
         return;
     }
     if (list.length === 0) return;
+    // No project until one is picked: the task above goes to none.
+    const none = document.createElement('option');
+    none.value = '';
+    none.textContent = message('project_choose');
+    $('project').append(none);
     for (const project of list) {
         const option = document.createElement('option');
         option.value = project.uid;
@@ -118,6 +123,12 @@ async function projects(settings, tab) {
             say('result_unreachable');
         }
     };
+    const actions = [$('send-tab'), $('send-group'), $('open-project')];
+    const sync = () => {
+        for (const button of actions) button.disabled = !$('project').value;
+    };
+    $('project').addEventListener('change', sync);
+    sync();
     $('send-tab').addEventListener('click', () => send([tab]));
     $('send-group').addEventListener('click', async () =>
         send(await browser.tabs.query({ groupId: tab.groupId }))

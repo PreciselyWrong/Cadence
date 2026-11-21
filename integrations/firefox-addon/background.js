@@ -46,3 +46,18 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
     });
     await showResult(tab?.id, result);
 });
+
+// The « + Cadence » button of Gmail (gmail.js): the open message becomes a
+// task, with its Gmail address so the badge reopens it.
+browser.runtime.onMessage.addListener(async (request, sender) => {
+    if (request?.type !== 'cadence-gmail-task') return undefined;
+    if (!CadenceCore.trustedGmailSender(sender, browser.runtime.id)) return 'refused';
+    const message = CadenceCore.gmailMessage({ href: request.href, subject: request.name });
+    if (!message) return 'refused';
+    const settings = await browser.storage.local.get(['server', 'token']);
+    if (!settings.server || !settings.token) return 'not_set';
+    return CadenceCore.addTask(fetch, settings, {
+        ...message,
+        due_date: CadenceCore.dueDateFor(request.due) ?? undefined,
+    });
+});

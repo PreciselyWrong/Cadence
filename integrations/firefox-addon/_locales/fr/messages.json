@@ -110,5 +110,14 @@
   },
   "result_no_pages": {
     "message": "Ce projet n'a pas encore de pages."
+  },
+  "gmail_add": {
+    "message": "Ajouter ce mail à Cadence"
+  },
+  "action_close": {
+    "message": "Fermer"
+  },
+  "project_choose": {
+    "message": "Choisir un projet…"
   }
 }
