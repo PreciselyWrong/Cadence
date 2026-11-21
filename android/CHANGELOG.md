@@ -1,3 +1,7 @@
+## [1.45.0] : 21 novembre 2026
+
+- Week-end : chaque sortie proposée montre une petite image et son lieu, et une section « Près de chez nous » liste les autres événements du week-end autour de la maison, avec leur lien.
+
 ## [1.44.0] : 21 novembre 2026
 
 - Réglages › Agendas : « Connecter Google » ou « Reconnecter Google » ouvre la connexion dans le navigateur et revient dans l'app ; l'alerte de synchro en échec y mène.
