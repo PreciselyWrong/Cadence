@@ -205,4 +205,20 @@
         <item quantity="one">%1$d échue</item>
         <item quantity="other">%1$d échues</item>
     </plurals>
+    <string name="project_view_list">Liste</string>
+    <string name="project_view_board">Tableau</string>
+    <string name="project_board_unsectioned">Sans section</string>
+    <string name="project_board_add_section">+ Section</string>
+    <string name="project_board_new_section_title">Nouvelle section</string>
+    <string name="project_board_rename_section_title">Renommer la section</string>
+    <string name="project_board_section_name_hint">Nom de la section</string>
+    <string name="project_board_section_more">Options de la section</string>
+    <string name="project_board_rename">Renommer</string>
+    <string name="project_board_delete">Supprimer</string>
+    <string name="project_board_delete_title">Supprimer « %1$s » ?</string>
+    <string name="project_board_delete_body">Les tâches de cette colonne reviendront dans « Sans section ».</string>
+    <string name="project_board_empty">Aucune tâche</string>
+    <string name="project_board_move_to">Déplacer vers…</string>
+    <string name="project_board_move_to_title">Déplacer vers une section</string>
+    <string name="project_board_card_more">Actions de la carte</string>
 </resources>

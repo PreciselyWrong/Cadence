@@ -777,6 +777,7 @@ require('../modules/sync/journal').install({
     Goal,
     Link,
     Comment,
+    ProjectSection,
     ...cadenceHabitModels,
     SyncChange,
 });

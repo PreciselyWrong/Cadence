@@ -463,6 +463,8 @@ The two `order` calls take the column's cards in order: each listed task gets `s
 
 Move a task with `PATCH /api/task/:uid` and `{ "section_uid": "<uid>" }`, or `null` for Unsectioned; a section of another project is refused with 400. A task that changes column this way loses its `section_position` and goes to the end of the column.
 
+**Android.** The project page (`ProjectTasksPane`) has a **Liste / Tableau** switch remembered per project (`LayoutStore`). **Tableau** (`ProjectBoardView`) renders horizontally scrolling columns (~85% of screen width on phone, **Sans section** first then sections by `position`) and a **+ Section** card at the end. Column headers expose **Renommer** and **Supprimer** (with confirmation; tasks return to **Sans section**). Cards reuse `TaskRow`, support long-press drag-and-drop between columns or positions (with edge auto-scroll), and offer **Déplacer vers…** in the card menu as an accessible non-drag alternative. Sections (`project_section`) and task placement (`section_uid`, `section_position`) sync offline through `/api/v1/sync`.
+
 For every project at once over a quarter, with summary bars and goals, see the [Roadmap](31-roadmap.md).
 
 ## Tasks and Notes in Projects

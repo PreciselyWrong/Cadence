@@ -8,6 +8,7 @@ import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.addressKey
 import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.BoardTaskPlacement
 import ch.nicolab.cadence.tasks.model.CommentItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
@@ -27,6 +28,7 @@ import ch.nicolab.cadence.tasks.model.PlaceRef
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectHierarchy
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.ProjectSectionItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
@@ -95,6 +97,7 @@ internal class RoomTaskRepository(
 ) : TaskRepository {
     private val taskDao = database.taskDao()
     private val projectDao = database.projectDao()
+    private val projectSectionDao = database.projectSectionDao()
     private val areaDao = database.areaDao()
     private val tagDao = database.tagDao()
     private val inboxDao = database.inboxDao()
@@ -426,8 +429,19 @@ internal class RoomTaskRepository(
                 change.dueDate != null -> putAll(dueFields(change.dueDate, change.dueTime))
                 change.dueTime != null -> putAll(dueFields(keptDate, change.dueTime))
             }
-            if (change.clearProject) put("project_uid", JsonNull)
-            change.projectUid?.let { put("project_uid", JsonPrimitive(it)) }
+            if (change.clearProject) {
+                put("project_uid", JsonNull)
+                put("section_uid", JsonNull)
+                put("section_position", JsonNull)
+            }
+            change.projectUid?.let { newProjectUid ->
+                put("project_uid", JsonPrimitive(newProjectUid))
+                val existing = taskDao.get(uid)
+                if (existing != null && existing.projectUid != newProjectUid && existing.sectionUid != null) {
+                    put("section_uid", JsonNull)
+                    put("section_position", JsonNull)
+                }
+            }
             change.tagUids?.let { put("tag_uids", jsonArray(it)) }
             when {
                 change.clearStart -> putAll(TaskFields.start(null, null, accountZone, deviceZone.value))
@@ -624,8 +638,19 @@ internal class RoomTaskRepository(
             if (change.clearColor) put("color", JsonNull)
             change.color?.let { put("color", JsonPrimitive(it)) }
             change.pinned?.let { put("pin_to_sidebar", JsonPrimitive(it)) }
-            if (change.clearProject) put("project_uid", JsonNull)
-            change.projectUid?.let { put("project_uid", JsonPrimitive(it)) }
+            if (change.clearProject) {
+                put("project_uid", JsonNull)
+                put("section_uid", JsonNull)
+                put("section_position", JsonNull)
+            }
+            change.projectUid?.let { newProjectUid ->
+                put("project_uid", JsonPrimitive(newProjectUid))
+                val existing = taskDao.get(uid)
+                if (existing != null && existing.projectUid != newProjectUid && existing.sectionUid != null) {
+                    put("section_uid", JsonNull)
+                    put("section_position", JsonNull)
+                }
+            }
             change.tagUids?.let { put("tag_uids", jsonArray(it)) }
         }
         if (fields.isEmpty()) return
@@ -930,6 +955,81 @@ internal class RoomTaskRepository(
             outbox.insert(LocalOps.delete("comment", existing.uid, clock, nowMs()))
         }
         afterLocalWrite()
+    }
+
+    override fun observeProjectSections(projectUid: String): Flow<List<ProjectSectionItem>> =
+        projectSectionDao.observeForProject(projectUid).map { list -> list.map { it.toItem() } }
+
+    override suspend fun createProjectSection(projectUid: String, name: String): String? {
+        val trimmed = name.trim().take(255)
+        if (trimmed.isEmpty()) return null
+        val uid = UUID.randomUUID().toString()
+        val existing = projectSectionDao.listForProject(projectUid)
+        val position = (existing.maxOfOrNull { it.position } ?: -1) + 1
+        val clock = hlc.now()
+        val entity = ProjectSectionEntity(uid = uid, projectUid = projectUid, name = trimmed, position = position)
+        val fields = mapOf(
+            "project_uid" to JsonPrimitive(projectUid),
+            "name" to JsonPrimitive(trimmed),
+            "position" to JsonPrimitive(position),
+        )
+        database.withTransaction {
+            projectSectionDao.upsert(entity)
+            outbox.insert(LocalOps.upsert("project_section", uid, fields, clock, nowMs()))
+        }
+        afterLocalWrite()
+        return uid
+    }
+
+    override suspend fun renameProjectSection(sectionUid: String, name: String) {
+        val trimmed = name.trim().take(255)
+        if (trimmed.isEmpty()) return
+        val existing = projectSectionDao.get(sectionUid) ?: return
+        if (existing.name == trimmed) return
+        val clock = hlc.now()
+        database.withTransaction {
+            projectSectionDao.upsert(existing.copy(name = trimmed))
+            outbox.insert(
+                LocalOps.upsert("project_section", sectionUid, mapOf("name" to JsonPrimitive(trimmed)), clock, nowMs()),
+            )
+        }
+        afterLocalWrite()
+    }
+
+    override suspend fun deleteProjectSection(sectionUid: String) {
+        val existing = projectSectionDao.get(sectionUid) ?: return
+        val clock = hlc.now()
+        database.withTransaction {
+            taskDao.clearSection(sectionUid)
+            projectSectionDao.delete(sectionUid)
+            outbox.insert(LocalOps.delete("project_section", existing.uid, clock, nowMs()))
+        }
+        afterLocalWrite()
+    }
+
+    override suspend fun moveBoardTasks(placements: List<BoardTaskPlacement>) {
+        if (placements.isEmpty()) return
+        var wrote = false
+        database.withTransaction {
+            for (placement in placements) {
+                val existing = taskDao.get(placement.taskUid) ?: continue
+                if (existing.sectionUid == placement.sectionUid && existing.sectionPosition == placement.sectionPosition) {
+                    continue
+                }
+                val fields = buildMap<String, JsonElement> {
+                    put("section_uid", placement.sectionUid?.let(::JsonPrimitive) ?: JsonNull)
+                    put("section_position", placement.sectionPosition?.let(::JsonPrimitive) ?: JsonNull)
+                }
+                val updated = existing.copy(
+                    sectionUid = placement.sectionUid,
+                    sectionPosition = placement.sectionPosition,
+                )
+                taskDao.upsert(updated)
+                outbox.insert(LocalOps.upsert("task", existing.uid, fields, hlc.now(), nowMs()))
+                wrote = true
+            }
+        }
+        if (wrote) afterLocalWrite()
     }
 
     /** Garde un appel à l'API pour le prochain passage ; un appel de même clé est remplacé. */

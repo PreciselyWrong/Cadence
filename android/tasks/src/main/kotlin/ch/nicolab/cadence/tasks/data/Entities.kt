@@ -49,6 +49,9 @@ data class TaskEntity(
     val sourceKey: String? = null,
     /** Personne assignée (`assigned_to`, uid de la personne). */
     val assignedTo: String? = null,
+    /** Colonne du tableau Kanban (`section_uid`, `section_position`). */
+    val sectionUid: String? = null,
+    val sectionPosition: Int? = null,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
 }
@@ -254,4 +257,15 @@ data class CommentEntity(
     val createdAtRaw: String? = null,
     val updatedAtRaw: String? = null,
     val deletedAtRaw: String? = null,
+)
+
+@Entity(
+    tableName = "project_sections",
+    indices = [Index(value = ["projectUid", "position"], name = "index_project_sections_projectUid_position")],
+)
+data class ProjectSectionEntity(
+    @PrimaryKey val uid: String,
+    val projectUid: String,
+    val name: String,
+    val position: Int,
 )

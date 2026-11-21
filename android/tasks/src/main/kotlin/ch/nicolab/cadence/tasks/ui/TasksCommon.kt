@@ -228,6 +228,7 @@ private fun SwipeSheets(viewModel: TasksViewModel, onOpenTask: (String) -> Unit)
                 ?.let { list -> { viewModel.moveInToday(open.task, list, -1) } },
             onMoveDown = open.todayList.takeIf { it.lastOrNull()?.uid != open.task.uid && it.isNotEmpty() }
                 ?.let { list -> { viewModel.moveInToday(open.task, list, 1) } },
+            onMoveSection = open.onMoveSection,
             onDismiss = viewModel::dismissSheet,
         )
         is SwipeSheet.Schedule -> ScheduleSheet(

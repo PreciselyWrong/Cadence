@@ -12,6 +12,7 @@ import ch.nicolab.cadence.tasks.project.canBecomeProject
 enum class TaskMenuAction {
     MOVE_UP,
     MOVE_DOWN,
+    MOVE_SECTION,
     OPEN,
     TOGGLE,
     DATE,
@@ -33,6 +34,7 @@ data class TaskMenuInput(
     val task: TaskItem,
     val canMoveUp: Boolean = false,
     val canMoveDown: Boolean = false,
+    val canMoveSection: Boolean = false,
     val nextAction: Boolean? = null,
     val includeFunnel: Boolean = true,
 )
@@ -51,6 +53,7 @@ object TaskMenu {
 
         if (input.canMoveUp) list += TaskMenuEntry(TaskMenuAction.MOVE_UP)
         if (input.canMoveDown) list += TaskMenuEntry(TaskMenuAction.MOVE_DOWN)
+        if (input.canMoveSection) list += TaskMenuEntry(TaskMenuAction.MOVE_SECTION)
 
         list += TaskMenuEntry(TaskMenuAction.OPEN)
         list += TaskMenuEntry(TaskMenuAction.TOGGLE, active = task.isClosed)

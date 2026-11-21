@@ -57,6 +57,7 @@ internal class RoomSyncStore(
     override suspend fun clearSyncedRows() = database.withTransaction {
         database.taskDao().deleteSynced()
         database.projectDao().deleteAll()
+        database.projectSectionDao().deleteSynced()
         database.areaDao().deleteAll()
         database.goalDao().deleteAll()
         database.tagDao().deleteAll()
@@ -78,6 +79,7 @@ internal class RoomSyncStore(
             when (entity) {
                 "task" -> database.taskDao().upsert(WireCodec.taskFromWire(merged))
                 "project" -> database.projectDao().upsert(WireCodec.projectFromWire(merged))
+                "project_section" -> database.projectSectionDao().upsert(WireCodec.sectionFromWire(merged))
                 "area" -> database.areaDao().upsert(WireCodec.areaFromWire(merged))
                 "goal" -> database.goalDao().upsert(WireCodec.goalFromWire(merged))
                 "tag" -> database.tagDao().upsert(WireCodec.tagFromWire(merged))
@@ -98,6 +100,7 @@ internal class RoomSyncStore(
         when (entity) {
             "task" -> database.taskDao().delete(uid)
             "project" -> database.projectDao().delete(uid)
+            "project_section" -> database.projectSectionDao().delete(uid)
             "area" -> database.areaDao().delete(uid)
             "goal" -> database.goalDao().delete(uid)
             "tag" -> database.tagDao().delete(uid)
@@ -198,6 +201,7 @@ internal class RoomSyncStore(
     private suspend fun displayName(entity: String, uid: String): String? = when (entity) {
         "task" -> database.taskDao().get(uid)?.name
         "project" -> database.projectDao().get(uid)?.name
+        "project_section" -> database.projectSectionDao().get(uid)?.name
         "area" -> database.areaDao().get(uid)?.name
         "goal" -> database.goalDao().get(uid)?.title
         "tag" -> database.tagDao().get(uid)?.name

@@ -10,6 +10,7 @@ import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.ProjectSectionItem
 import ch.nicolab.cadence.tasks.model.Repetition
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -59,6 +60,8 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         goalUid = extras["goal_uid"],
         recurrence = TaskExtras.recurrenceRule(extrasJson, accountZone),
         assignedTo = assignedTo,
+        sectionUid = sectionUid,
+        sectionPosition = sectionPosition,
     )
 }
 
@@ -145,6 +148,13 @@ internal fun CommentRow.toItem(currentUserUid: String?) = CommentItem(
     updatedAt = parseInstant(comment.updatedAtRaw),
     isOwn = (comment.authorUid == null && pendingSync) || (currentUserUid != null && comment.authorUid == currentUserUid),
     pendingSync = pendingSync,
+)
+
+internal fun ProjectSectionEntity.toItem() = ProjectSectionItem(
+    uid = uid,
+    projectUid = projectUid,
+    name = name,
+    position = position,
 )
 
 /**

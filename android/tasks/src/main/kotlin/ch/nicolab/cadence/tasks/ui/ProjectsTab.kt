@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PushPin
 import ch.nicolab.cadence.designsystem.components.CadenceMenu
+import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -390,7 +392,10 @@ internal fun ProjectTasksPane(
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
     var outline by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.OUTLINE)) }
+    var boardMode by rememberSaveable(projectUid) { mutableStateOf(layouts.isBoard(projectUid)) }
     var selectedRow by rememberSaveable(projectUid) { mutableStateOf<String?>(null) }
+    val sections by remember(projectUid) { viewModel.observeProjectSections(projectUid) }
+        .collectAsStateWithLifecycle(initialValue = emptyList())
     val every by viewModel.everyTask.collectAsStateWithLifecycle()
     val tree = remember(tasks, every) { Outline.tree(tasks, every) }
     // La prochaine action choisie ; sinon la suggestion automatique (la première tâche ouverte).
@@ -398,16 +403,16 @@ internal fun ProjectTasksPane(
         ?: tasks.firstOrNull()?.let { stringResource(R.string.tasks_projects_next, it.name) }
     val progress = remember(allTasks, projectUid) { TaskOverviews.projectProgress(allTasks, projectUid) }
 
-    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
-        item {
-            ProjectPageHeader(
-                name = projectName,
-                icon = headerIcon,
-                iconColor = headerColor,
-                onBack = onBack,
-                breadcrumb = { if (ancestors.isNotEmpty()) ProjectBreadcrumb(ancestors, onOpenProject) },
-                banner = { ProjectBanner(project?.imageUrl) },
-            ) {
+    val renderHeader: @Composable () -> Unit = {
+        ProjectPageHeader(
+            name = projectName,
+            icon = headerIcon,
+            iconColor = headerColor,
+            onBack = onBack,
+            breadcrumb = { if (ancestors.isNotEmpty()) ProjectBreadcrumb(ancestors, onOpenProject) },
+            banner = { if (!boardMode) ProjectBanner(project?.imageUrl) },
+        ) {
+            if (!boardMode) {
                 IconButton(
                     onClick = {
                         outline = !outline
@@ -419,77 +424,113 @@ internal fun ProjectTasksPane(
                         contentDescription = stringResource(if (outline) R.string.outline_hide else R.string.outline_show),
                     )
                 }
-                if (project != null) {
-                    TextButton(onClick = { editingStatus = true }) {
-                        Text(stringResource(projectStatusLabel(project.projectStatus)))
+            }
+            if (project != null) {
+                TextButton(onClick = { editingStatus = true }) {
+                    Text(stringResource(projectStatusLabel(project.projectStatus)))
+                }
+                // Épingler sert rarement : dans le menu, comme sur le web, jamais en bouton visible.
+                Box {
+                    IconButton(onClick = { menuOpen = true }) {
+                        Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.tasks_project_more))
                     }
-                    // Épingler sert rarement : dans le menu, comme sur le web, jamais en bouton visible.
-                    Box {
-                        IconButton(onClick = { menuOpen = true }) {
-                            Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.tasks_project_more))
+                    CadenceMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(if (project.pinToSidebar) R.string.tasks_action_unpin else R.string.tasks_action_pin)) },
+                            leadingIcon = { Icon(if (project.pinToSidebar) Icons.Filled.PushPin else Icons.Outlined.PushPin, contentDescription = null) },
+                            onClick = {
+                                menuOpen = false
+                                viewModel.setProjectPinned(project.uid, !project.pinToSidebar)
+                            },
+                        )
+                        if (todoMdFiles.value != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.todo_md_file_title)) },
+                                leadingIcon = { Icon(Icons.Outlined.Description, contentDescription = null) },
+                                onClick = {
+                                    menuOpen = false
+                                    choosingTodoMd = true
+                                },
+                            )
                         }
-                        CadenceMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.tasks_note_new)) },
+                            onClick = {
+                                menuOpen = false
+                                onNewNote()
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.templates_save_as)) },
+                            onClick = {
+                                menuOpen = false
+                                savingTemplate = true
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.project_pages_add)) },
+                            onClick = {
+                                menuOpen = false
+                                pageDialog = ProjectPageDialog.Add
+                            },
+                        )
+                        if (pages.isNotEmpty()) {
                             DropdownMenuItem(
-                                text = { Text(stringResource(if (project.pinToSidebar) R.string.tasks_action_unpin else R.string.tasks_action_pin)) },
-                                leadingIcon = { Icon(if (project.pinToSidebar) Icons.Filled.PushPin else Icons.Outlined.PushPin, contentDescription = null) },
+                                text = { Text(stringResource(R.string.project_pages_copy_markdown)) },
                                 onClick = {
                                     menuOpen = false
-                                    viewModel.setProjectPinned(project.uid, !project.pinToSidebar)
-                                },
-                            )
-                            if (todoMdFiles.value != null) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.todo_md_file_title)) },
-                                    leadingIcon = { Icon(Icons.Outlined.Description, contentDescription = null) },
-                                    onClick = {
-                                        menuOpen = false
-                                        choosingTodoMd = true
-                                    },
-                                )
-                            }
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.tasks_note_new)) },
-                                onClick = {
-                                    menuOpen = false
-                                    onNewNote()
-                                },
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.templates_save_as)) },
-                                onClick = {
-                                    menuOpen = false
-                                    savingTemplate = true
+                                    context.copyText(projectName, ProjectPages.markdown(pages))
+                                    Toast.makeText(context, R.string.project_pages_copied, Toast.LENGTH_SHORT).show()
                                 },
                             )
                             DropdownMenuItem(
-                                text = { Text(stringResource(R.string.project_pages_add)) },
+                                text = { Text(stringResource(R.string.project_pages_check)) },
                                 onClick = {
                                     menuOpen = false
-                                    pageDialog = ProjectPageDialog.Add
+                                    pageDialog = ProjectPageDialog.Check
                                 },
                             )
-                            if (pages.isNotEmpty()) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.project_pages_copy_markdown)) },
-                                    onClick = {
-                                        menuOpen = false
-                                        context.copyText(projectName, ProjectPages.markdown(pages))
-                                        Toast.makeText(context, R.string.project_pages_copied, Toast.LENGTH_SHORT).show()
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.project_pages_check)) },
-                                    onClick = {
-                                        menuOpen = false
-                                        pageDialog = ProjectPageDialog.Check
-                                    },
-                                )
-                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    val renderViewSwitch: @Composable () -> Unit = {
+        SegmentedTabs(
+            labels = listOf(stringResource(R.string.project_view_list), stringResource(R.string.project_view_board)),
+            selected = if (boardMode) 1 else 0,
+            onSelect = { index ->
+                val board = index == 1
+                boardMode = board
+                layouts.setBoard(projectUid, board)
+            },
+            modifier = Modifier.padding(horizontal = Space.md, vertical = Space.xs),
+        )
+    }
+
+    if (boardMode) {
+        Column(modifier = modifier.fillMaxSize()) {
+            renderHeader()
+            renderViewSwitch()
+            ProjectBoardView(
+                projectUid = projectUid,
+                sections = sections,
+                tasks = tasks,
+                moment = moment,
+                viewModel = viewModel,
+                onOpen = onOpen,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(bottom = Size.navBar + Space.lg),
+            )
+        }
+    } else {
+        LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+            item { renderHeader() }
+            item(key = "view-switch") { renderViewSwitch() }
         if (project?.isFileBacked == true) {
             item(key = "todo-md-repo") {
                 TodoMdRepoLine(
@@ -591,6 +632,7 @@ internal fun ProjectTasksPane(
                 target = ch.nicolab.cadence.tasks.attachments.AttachmentTarget.Project(projectUid),
                 modifier = Modifier.padding(horizontal = Space.md, vertical = Space.sm),
             )
+        }
         }
     }
 

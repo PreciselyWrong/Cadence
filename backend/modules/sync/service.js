@@ -152,14 +152,26 @@ async function resolveRefs(def, userId, fields, transaction, loose = false) {
             columns[key] = null;
             continue;
         }
-        let target = await models()[ENTITIES[ref.entity].model].findOne({
+        const refDef = ENTITIES[ref.entity];
+        const RefModel = models()[refDef.model];
+        const hasUserId = 'user_id' in RefModel.rawAttributes;
+        let target = await RefModel.findOne({
             where:
-                ref.accessible || ref.anyUser
+                ref.accessible || ref.anyUser || !hasUserId
                     ? { uid }
                     : { uid, user_id: userId },
-            attributes: ref.accessible ? ['id', 'uid'] : ['id'],
+            attributes: ref.accessible
+                ? ['id', 'uid']
+                : hasUserId
+                  ? ['id']
+                  : undefined,
             transaction,
         });
+        if (target && !hasUserId && refDef.authorize) {
+            if (!(await refDef.authorize(userId, target, transaction))) {
+                target = null;
+            }
+        }
         if (target && ref.accessible) {
             const permissionsService = require('../../services/permissionsService');
             const access = await permissionsService.getAccess(
@@ -299,7 +311,9 @@ function rowKey(userId, op) {
 }
 
 async function refuseUpsert(userId, op, row, transaction) {
-    if (row && row.user_id !== userId) return rejected('forbidden');
+    if (row && row.user_id !== undefined && row.user_id !== userId) {
+        return rejected('forbidden');
+    }
     const def = ENTITIES[op.entity];
     if (row && def.authorize) {
         const allowed = await def.authorize(userId, row, transaction);
@@ -453,7 +467,9 @@ async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
                 {
                     ...values,
                     uid: op.uid,
-                    user_id: userId,
+                    ...('user_id' in Model.rawAttributes
+                        ? { user_id: userId }
+                        : {}),
                     field_clocks: clocks,
                 },
                 writeOptions
@@ -505,7 +521,9 @@ async function applyDelete(userId, op) {
     const def = ENTITIES[op.entity];
     const row = await findByUid(def, userId, op.uid);
     if (!row) return { status: 'applied' };
-    if (row.user_id !== userId) return rejected('forbidden');
+    if (row.user_id !== undefined && row.user_id !== userId) {
+        return rejected('forbidden');
+    }
     if (def.authorize && !(await def.authorize(userId, row))) {
         return rejected('forbidden');
     }

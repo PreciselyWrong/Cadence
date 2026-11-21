@@ -135,10 +135,14 @@ async function recordOfflineLosses(entity, instance, options) {
     const losses = instance._offlineLost;
     if (!losses) return;
     instance._offlineLost = null;
+    const def = ENTITIES[entity];
+    const userId = def.ownerId
+        ? await def.ownerId(instance, options.transaction)
+        : instance.user_id;
     const rows = [];
     for (const loss of losses.lost) {
         rows.push({
-            user_id: instance.user_id,
+            user_id: userId,
             entity,
             uid: instance.uid,
             field: loss.field,
@@ -276,7 +280,11 @@ function install(models) {
                         uid: instance.uid,
                         op: 'upsert',
                         data,
-                        op_id: uId === instance.user_id ? opId : null,
+                        op_id:
+                            instance.user_id === undefined ||
+                            uId === instance.user_id
+                                ? opId
+                                : null,
                     },
                     options.transaction
                 );
@@ -300,7 +308,11 @@ function install(models) {
                         uid: instance.uid,
                         op: 'delete',
                         data,
-                        op_id: uId === instance.user_id ? opId : null,
+                        op_id:
+                            instance.user_id === undefined ||
+                            uId === instance.user_id
+                                ? opId
+                                : null,
                     },
                     options.transaction
                 );

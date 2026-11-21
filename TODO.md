@@ -4,12 +4,6 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-- Android : « Retirer aussi de ma journée » quand on repousse l'échéance d'une tâche récurrente planifiée aujourd'hui (2026-11-20)
-  Raison : parité avec le web (`docs/20-daily-plan.md`, Due date moved later) ; les tâches simples quittent déjà la journée par le serveur. Vérif : repousser une récurrente du jour au mois prochain sur le téléphone propose la case ; cochée, elle disparaît d'Aujourd'hui.
-
-- Add-on Firefox : échéance Aujourd'hui / Demain quand la page devient une tâche (2026-11-19)
-  Raison : parité avec la feuille de partage Android (`docs/fork/ANDROID-UX-NOTES.md`, 2026-11-19). Vérif : une page envoyée en tâche « Demain » apparaît demain dans Plan, hors « Tâches à classer ».
-
 - Hermes : mesurer les tokens de « Discuter avec l'IA » et du passage du matin (2026-11-19)
   Raison : budgets de `.agents/skills/hermes-calls/SKILL.md` (≲ 20 k par run interactif). « Discuter avec l'IA » n'a pas encore servi ; le passage du matin part demain à 6 h 30 s'il y a des retards. Vérif : tokens du premier échange et du premier passage du matin notés dans `docs/47-proposals.md`.
 
@@ -50,8 +44,6 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - **Quand le besoin se montre.**
   - Parité, venus de l'amont et web seulement : quitter un partage, choisir qui reprend les tâches d'un membre retiré ; Android n'a pas d'écran de partage.
   - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.
-  - Étiquettes épinglées sur Android : le web les montre dans « Épinglés », Android non, car `pinned` des étiquettes n'est pas gardé dans Room (colonne et migration à ajouter). Vérif : une étiquette épinglée sur le web apparaît sous « Épinglés » dans Listes.
-  - Fiche d'événement ICS sur Android : Android n'a pas d'agendas abonnés (ICS), seulement ceux de l'appareil.
   - « Cocher une fois passé » par agenda : Android seulement, car le web n'a pas d'événements cochables. À reprendre si le web en gagne. Vérif : un événement terminé d'un agenda réglé apparaît fait.
 - Hors périmètre volontaire
   limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
@@ -84,7 +76,7 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   Une colonne au lieu du tableau, feuille « Planifier » à l'appui long, pas de calendrier à droite. Vérif sur le téléphone : une tâche mise dans « Ce mois-ci » sur le web apparaît dans le même horizon, et inversement ; « Ajouter » d'un jour la prévoit ce jour sans échéance.
 - [x] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
 - [x] Android : reprendre les décisions du style bureau (2026-11-12)
-  Fait en 1.28.0 : cases rondes, rouges seulement en priorité haute ; étiquettes par usage ; « Tâches à classer » limitée à cinq puis « Tout afficher ». Déjà conformes : projets en lignes sans statut « actif », compte ouvert à droite ; notes des pages de projet seulement quand elles existent. Restent (Room) : épinglées en tête des étiquettes (`pinned` absent de Room), tri des projets par dernière activité (`updated_at` des projets absent de Room), ligne d'avancement sur la page projet.
+  Fait en 1.28.0 : cases rondes, rouges seulement en priorité haute ; étiquettes par usage ; « Tâches à classer » limitée à cinq puis « Tout afficher ». Déjà conformes : projets en lignes sans statut « actif », compte ouvert à droite ; notes des pages de projet seulement quand elles existent. Repris le 2026-11-21 (Room v25) : épinglées en tête des étiquettes, tri des projets par dernière activité, ligne d'avancement sur la page projet.
   Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée du 2026-11-12, « À reprendre sur Android »). Étiquettes : épinglées puis les plus utilisées ; Projets : statut seulement hors « actif », tâches ouvertes à droite, tri par dernière activité ; Liens : « Ajouter une note » dans le ⋯ ; Inbox : « Tâches à classer » limitée à cinq lignes puis « Tout afficher » ; page projet : avancement en une ligne de texte ; ligne et carte de tâche uniques (case ronde, rouge seulement pour la haute priorité, échéance en pastille « Aujourd'hui / Demain / date », ⋯ au clic droit ou sur la ligne sélectionnée), en-têtes et états vides des pages comme le web. Vérif : mêmes listes sur le téléphone que sur le web avec la même base.
 - [x] Android : horizon « Semaine prochaine » et envoi vers un horizon depuis Jours (2026-11-12)
   Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée « Planifier : envoyer vers un horizon depuis Jours »). Vérif : une tâche mise dans « Semaine prochaine » sur le web apparaît dans le même horizon sur le téléphone, et inversement ; une carte envoyée depuis un jour garde son échéance et se retire du jour.
@@ -147,12 +139,11 @@ Branche `feat/habit-stats-bdad4581`.
   (umzug n'en lit que 21 dans `SequelizeMeta`) et rejoue d'anciennes migrations qui contiennent des `PRAGMA` (`safeRemoveColumn`, `safeChangeColumn` de `migration-utils.js`). Antérieur au résumé du jour (ses 4 migrations passent sur PG 16, rejouées deux fois). Aucun test ne lance les migrations sur PG. Vérif : base PG vide → `db-prepare.js` → `db:migrate` deux fois sans erreur, `migration:status` à jour.
 - Fusionner l'amont (`chrisvel/tududi`) chaque semaine
   (dernière synchro : `eda9aa60`, v1.14.0 ; vérifié le 2026-11-01 : rien de neuf).
-- Parité web → Android (inventaire du 2026-11-04 ; absent du code Android)
-  (1) « Nouvelle note » depuis la page projet ; (2) commentaires de tâche ; (3) pièces jointes tâche et projet ; (4) relations entre tâches ; (5) personne assignée ; (6) vues enregistrées ; (7) Kanban, chronologie, calendrier de projet ; (8) modèles de projet ; (9) partage public de note ; (10) agendas ICS/CalDAV abonnés. Chaque point porte des données : passer par `backend/modules/sync/`. Vérif par point : créé sur le web, visible et modifiable hors ligne sur Android, retour sur le web.
+- [x] Parité web → Android (inventaire du 2026-11-04, livré le 2026-11-21)
+  (1) « Nouvelle note » depuis la page projet ; (2) commentaires de tâche et (5) personne assignée, synchronisés (Room v26) ; (3) pièces jointes tâche et projet, en ligne ; (4) relations entre tâches (déjà dans la fiche, 1.43.0) ; (6) vues enregistrées (épinglées dans Listes, filtres sur les tâches locales ; création web seulement) ; (7) Kanban de projet avec sections synchronisées (Room v27 ; Chronologie et calendrier de projet restent web, `docs/fork/DECISIONS.md`) ; (8) modèles de projet ; (9) partage public de note ; (10) agendas ICS abonnés, en lecture dans l'Agenda. Vérif sur le téléphone : chaque point créé sur le web, visible (hors ligne pour 1, 2, 5, 7) et modifiable sur Android, retour sur le web ; « Reconnecter Google » de Réglages › Agendas jusqu'au retour dans l'app.
 - Parité Android → web
   revue rapide une idée à la fois (le tri des liens est commun depuis la refonte Inbox + Liens). Vérif : mêmes gestes sur le web à 390 px et en bureau. Sans équivalent web (par nature) : widgets, Health Connect, agendas de l'appareil.
-- `docs/fork/CADENCE-PARITY.md`
-  aucune case cochée sur 64 ; le remettre à jour ou le remplacer par ces deux entrées.
+- [x] `docs/fork/CADENCE-PARITY.md` archivé le 2026-11-21 : la parité se suit dans les deux entrées ci-dessus.
 - [x] Liens : n'extraire que les liens qui portent une vraie action
   Problème : la bibliothèque de liens se remplit automatiquement de toutes les URL trouvées dans les tâches (Gitea, memo.nicolab.ch, fondations.nicolab.ch, fil LinkedIn, Gmail, run GitHub Actions, recherche Google, conversation Gemini, page Cailler…). Bruit, aucun intérêt.
   Voulu : un lien n'entre dans la bibliothèque que s'il porte un vrai truc à faire (outil/dépôt à tester, article à lire, ressource à évaluer).

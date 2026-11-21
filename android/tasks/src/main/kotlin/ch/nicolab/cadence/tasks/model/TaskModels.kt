@@ -83,6 +83,9 @@ data class TaskItem(
     val virtual: Boolean = false,
     /** Personne assignée (`assigned_to`, uid de la personne). */
     val assignedTo: String? = null,
+    /** Colonne du tableau Kanban (`section_uid`, `section_position`). */
+    val sectionUid: String? = null,
+    val sectionPosition: Int? = null,
 ) {
     /** Clé de liste : la tâche enregistrée et ses occurrences à venir partagent le même [uid]. */
     val rowKey: String get() = if (virtual) "$uid|$dueDay" else uid
@@ -139,6 +142,21 @@ data class ProjectItem(
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
     val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)
 }
+
+/** Colonne du tableau Kanban d'un projet (`project_section`). */
+data class ProjectSectionItem(
+    val uid: String,
+    val projectUid: String,
+    val name: String,
+    val position: Int,
+)
+
+/** Placement d'une tâche dans une colonne du tableau Kanban. */
+data class BoardTaskPlacement(
+    val taskUid: String,
+    val sectionUid: String?,
+    val sectionPosition: Int?,
+)
 
 /**
  * Statut d'un projet côté serveur, dans l'ordre du sélecteur. Terminé, abandonné et archivé

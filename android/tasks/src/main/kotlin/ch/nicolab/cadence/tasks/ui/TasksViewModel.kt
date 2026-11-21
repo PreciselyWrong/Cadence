@@ -20,6 +20,8 @@ import ch.nicolab.cadence.tasks.data.UnsupportedRecurrence
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.AreaFilter
+import ch.nicolab.cadence.tasks.model.BoardTaskPlacement
+import ch.nicolab.cadence.tasks.model.ProjectSectionItem
 import ch.nicolab.cadence.tasks.model.WithLinkFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.CommentItem
@@ -201,7 +203,11 @@ internal sealed interface SwipeSheet {
     val task: TaskItem
 
     /** [todayList] : la liste Aujourd'hui quand le menu vient de là ; on peut alors y déplacer la tâche. */
-    data class Menu(override val task: TaskItem, val todayList: List<TaskItem> = emptyList()) : SwipeSheet
+    data class Menu(
+        override val task: TaskItem,
+        val todayList: List<TaskItem> = emptyList(),
+        val onMoveSection: (() -> Unit)? = null,
+    ) : SwipeSheet
     data class Schedule(override val task: TaskItem) : SwipeSheet
     data class Project(override val task: TaskItem) : SwipeSheet
     data class Priority(override val task: TaskItem) : SwipeSheet
@@ -603,8 +609,8 @@ internal class TasksViewModel(
     }
 
     /** Menu contextuel d'une ligne (appui long). */
-    fun openMenu(task: TaskItem, todayList: List<TaskItem> = emptyList()) {
-        _sheet.value = SwipeSheet.Menu(task, todayList)
+    fun openMenu(task: TaskItem, todayList: List<TaskItem> = emptyList(), onMoveSection: (() -> Unit)? = null) {
+        _sheet.value = SwipeSheet.Menu(task, todayList, onMoveSection)
     }
 
     /**
@@ -1178,6 +1184,26 @@ internal class TasksViewModel(
 
     /** À appeler après l'octroi de READ_CALENDAR, pour relire les agendas sans attendre le prochain changement. */
     fun refreshCalendar() = calendar.refresh()
+
+    fun observeProjectSections(projectUid: String): Flow<List<ProjectSectionItem>> =
+        repository.observeProjectSections(projectUid)
+
+    fun createProjectSection(projectUid: String, name: String) {
+        launchAction { repository.createProjectSection(projectUid, name) }
+    }
+
+    fun renameProjectSection(sectionUid: String, name: String) {
+        launchAction { repository.renameProjectSection(sectionUid, name) }
+    }
+
+    fun deleteProjectSection(sectionUid: String) {
+        launchAction { repository.deleteProjectSection(sectionUid) }
+    }
+
+    fun moveBoardTasks(placements: List<BoardTaskPlacement>) {
+        if (placements.isEmpty()) return
+        launchAction { repository.moveBoardTasks(placements) }
+    }
 
     private fun launchAction(block: suspend () -> Unit) {
         viewModelScope.launch {

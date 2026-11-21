@@ -33,6 +33,10 @@ module.exports = (sequelize) => {
                 allowNull: false,
                 defaultValue: 0,
             },
+            field_clocks: {
+                type: DataTypes.JSON,
+                allowNull: true,
+            },
         },
         {
             tableName: 'project_sections',

@@ -17,18 +17,20 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         InboxItemEntity::class,
         LinkEntity::class,
         CommentEntity::class,
+        ProjectSectionEntity::class,
         OutboxEntity::class,
         FailedOpEntity::class,
         SyncMetaEntity::class,
         SyncConflictEntity::class,
         DeferredCallEntity::class,
     ],
-    version = 26,
+    version = 27,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun projectDao(): ProjectDao
+    abstract fun projectSectionDao(): ProjectSectionDao
     abstract fun areaDao(): AreaDao
     abstract fun goalDao(): GoalDao
     abstract fun linkDao(): LinkDao
@@ -347,6 +349,23 @@ internal val MIGRATION_25_26 = object : Migration(25, 26) {
                 "`authorUid` TEXT, `authorName` TEXT, `createdAtRaw` TEXT, `updatedAtRaw` TEXT, `deletedAtRaw` TEXT, PRIMARY KEY(`uid`))",
         )
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_comments_taskUid` ON `comments` (`taskUid`)")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Ajoute `sectionUid` et `sectionPosition` aux tâches et la table `project_sections` pour les colonnes
+ * Kanban d'un projet. Le curseur est retiré : le prochain instantané apporte les sections et placements.
+ */
+internal val MIGRATION_26_27 = object : Migration(26, 27) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tasks ADD COLUMN sectionUid TEXT")
+        db.execSQL("ALTER TABLE tasks ADD COLUMN sectionPosition INTEGER")
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `project_sections` (`uid` TEXT NOT NULL, `projectUid` TEXT NOT NULL, " +
+                "`name` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`uid`))",
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_project_sections_projectUid_position` ON `project_sections` (`projectUid`, `position`)")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

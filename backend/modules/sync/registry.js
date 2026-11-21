@@ -1,5 +1,8 @@
 'use strict';
 
+// Positions fit a 32-bit int on every client (Android Int) and engine.
+const MAX_POSITION = 2147483647;
+
 // The single list of what syncs. Adding an entity means adding an entry
 // here (and a field_clocks column on its table); the protocol, journal and
 // merge stay as they are. `serverFields` are sent to clients but written only
@@ -63,8 +66,38 @@ const ENTITIES = {
             'source',
             'source_url',
             'assigned_to',
+            'section_position',
         ],
         validate: async (row, values, userId) => {
+            if (
+                'section_position' in values &&
+                values.section_position !== null &&
+                !(
+                    Number.isInteger(values.section_position) &&
+                    values.section_position >= 0 &&
+                    values.section_position <= MAX_POSITION
+                )
+            ) {
+                return 'invalid_value';
+            }
+            if ('section_id' in values && values.section_id !== null) {
+                const { ProjectSection } = require('../../models');
+                const finalProjectId =
+                    'project_id' in values
+                        ? values.project_id
+                        : (row?.project_id ?? null);
+                const section = await ProjectSection.findByPk(
+                    values.section_id,
+                    { attributes: ['id', 'project_id'] }
+                );
+                if (
+                    !section ||
+                    !finalProjectId ||
+                    section.project_id !== finalProjectId
+                ) {
+                    return 'invalid_reference:section_uid';
+                }
+            }
             if (!('assigned_to' in values)) return null;
             if (values.assigned_to === null || values.assigned_to === '') {
                 values.assigned_to = null;
@@ -101,6 +134,7 @@ const ENTITIES = {
             area_uid: { column: 'area_id', entity: 'area' },
             parent_task_uid: { column: 'parent_task_id', entity: 'task' },
             goal_uid: { column: 'goal_id', entity: 'goal' },
+            section_uid: { column: 'section_id', entity: 'project_section' },
         },
         lists: {
             tag_uids: {
@@ -111,8 +145,19 @@ const ENTITIES = {
             },
         },
         // A reminder moved on a device fires again at its new time, as a
-        // web edit does (applyReminderAt).
+        // web edit does (applyReminderAt). Moving a task to another project
+        // clears its section as REST does.
         prepareValues: (row, values) => {
+            if (
+                row &&
+                'project_id' in values &&
+                (values.project_id ?? null) !== (row.project_id ?? null) &&
+                !('section_id' in values) &&
+                row.section_id
+            ) {
+                values.section_id = null;
+                values.section_position = null;
+            }
             if (!('reminder_at' in values)) return;
             const before = row?.reminder_at ? row.reminder_at.getTime() : null;
             const after = values.reminder_at
@@ -612,6 +657,81 @@ const ENTITIES = {
                 author_name: authorDisplayName(author, selfPerson),
             };
         },
+    },
+    project_section: {
+        model: 'ProjectSection',
+        version: 1,
+        fields: ['name', 'position'],
+        refs: {
+            project_uid: { column: 'project_id', entity: 'project' },
+        },
+        authorize: async (userId, row, transaction) => {
+            const { Project } = require('../../models');
+            const project = await Project.findByPk(row.project_id, {
+                attributes: ['user_id'],
+                transaction,
+            });
+            return Boolean(project && project.user_id === userId);
+        },
+        validate: async (row, values) => {
+            if (!row && !values.project_id) return 'project_required';
+            if (
+                row &&
+                'project_id' in values &&
+                values.project_id !== row.project_id
+            ) {
+                return 'invalid_value';
+            }
+            if ('name' in values) {
+                if (typeof values.name !== 'string') return 'invalid_value';
+                const trimmed = values.name.trim();
+                if (!trimmed || trimmed.length > 255) return 'invalid_value';
+                values.name = trimmed;
+            } else if (!row) {
+                return 'invalid_value';
+            }
+            if (
+                'position' in values &&
+                !(
+                    Number.isInteger(values.position) &&
+                    values.position >= 0 &&
+                    values.position <= MAX_POSITION
+                )
+            ) {
+                return 'invalid_value';
+            }
+            return null;
+        },
+        destroy: (row) =>
+            require('../project-sections/repository').destroy(row),
+        snapshotWhere: async (userId) => {
+            const { Op } = require('sequelize');
+            const { sequelize, Project } = require('../../models');
+            const sql = sequelize
+                .getQueryInterface()
+                .queryGenerator.selectQuery(
+                    'projects',
+                    { attributes: ['id'], where: { user_id: userId } },
+                    Project
+                )
+                .replace(/;$/, '');
+            return { project_id: { [Op.in]: sequelize.literal(`(${sql})`) } };
+        },
+        // A section has no user_id: it belongs to its project's owner.
+        ownerId: async (row, transaction) => {
+            const { Project } = require('../../models');
+            const project = await Project.findByPk(row.project_id, {
+                attributes: ['user_id'],
+                transaction,
+            });
+            if (!project) {
+                throw new Error(`Section ${row.uid} has no project`);
+            }
+            return project.user_id;
+        },
+        journalUsers: async (row, transaction) => [
+            await ENTITIES.project_section.ownerId(row, transaction),
+        ],
     },
 };
 

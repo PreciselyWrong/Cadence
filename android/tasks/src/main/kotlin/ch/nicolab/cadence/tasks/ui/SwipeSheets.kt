@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material.icons.outlined.SwapHoriz
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -87,16 +88,18 @@ internal fun TaskMenuSheet(
     /** Dans la liste Aujourd'hui : monter ou descendre d'un rang ; null au bord ou hors de cette liste. */
     onMoveUp: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
+    onMoveSection: (() -> Unit)? = null,
     onDismiss: () -> Unit,
 ) {
     var picking by remember { mutableStateOf(false) }
     var confirmingProject by remember { mutableStateOf(false) }
-    val menuEntries = remember(task, onMoveUp != null, onMoveDown != null, nextAction) {
+    val menuEntries = remember(task, onMoveUp != null, onMoveDown != null, onMoveSection != null, nextAction) {
         TaskMenu.entries(
             TaskMenuInput(
                 task = task,
                 canMoveUp = onMoveUp != null,
                 canMoveDown = onMoveDown != null,
+                canMoveSection = onMoveSection != null,
                 nextAction = nextAction,
             ),
         )
@@ -111,6 +114,10 @@ internal fun TaskMenuSheet(
             TaskMenuAction.MOVE_DOWN -> Entry(Icons.Outlined.ArrowDownward, R.string.today_move_down) {
                 onMoveDown?.invoke()
                 onDismiss()
+            }
+            TaskMenuAction.MOVE_SECTION -> Entry(Icons.Outlined.SwapHoriz, R.string.project_board_move_to) {
+                onDismiss()
+                onMoveSection?.invoke()
             }
             TaskMenuAction.OPEN -> Entry(Icons.AutoMirrored.Outlined.OpenInNew, R.string.task_menu_open) {
                 onOpen()

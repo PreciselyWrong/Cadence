@@ -18,6 +18,7 @@ const REAPPLICABLE = new Set([
     'note',
     'inbox_item',
     'link',
+    'project_section',
 ]);
 
 const NAME_MAX = 120;
@@ -50,9 +51,15 @@ async function labelOf(entity, field, value) {
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
 async function findRow(entity, userId, uid) {
-    return models()[ENTITIES[entity].model].findOne({
-        where: { uid, user_id: userId },
-    });
+    const def = ENTITIES[entity];
+    const Model = models()[def.model];
+    if ('user_id' in Model.rawAttributes) {
+        return Model.findOne({ where: { uid, user_id: userId } });
+    }
+    const row = await Model.findOne({ where: { uid } });
+    if (!row) return null;
+    if (def.authorize && !(await def.authorize(userId, row))) return null;
+    return row;
 }
 
 // A conflict is still open while its row exists and holds another value

@@ -73,6 +73,9 @@ interface TaskDao {
     @Query("DELETE FROM tasks WHERE uid = :uid")
     suspend fun delete(uid: String)
 
+    @Query("UPDATE tasks SET sectionUid = NULL, sectionPosition = NULL WHERE sectionUid = :sectionUid")
+    suspend fun clearSection(sectionUid: String)
+
     @Query("DELETE FROM tasks WHERE uid NOT IN (SELECT uid FROM outbox WHERE entity = 'task')")
     suspend fun deleteSynced()
 }
@@ -96,6 +99,27 @@ interface ProjectDao {
 
     @Query("DELETE FROM projects")
     suspend fun deleteAll()
+}
+
+@Dao
+interface ProjectSectionDao {
+    @Query("SELECT * FROM project_sections WHERE projectUid = :projectUid ORDER BY position ASC, uid ASC")
+    fun observeForProject(projectUid: String): Flow<List<ProjectSectionEntity>>
+
+    @Query("SELECT * FROM project_sections WHERE projectUid = :projectUid ORDER BY position ASC, uid ASC")
+    suspend fun listForProject(projectUid: String): List<ProjectSectionEntity>
+
+    @Query("SELECT * FROM project_sections WHERE uid = :uid")
+    suspend fun get(uid: String): ProjectSectionEntity?
+
+    @Upsert
+    suspend fun upsert(section: ProjectSectionEntity)
+
+    @Query("DELETE FROM project_sections WHERE uid = :uid")
+    suspend fun delete(uid: String)
+
+    @Query("DELETE FROM project_sections WHERE uid NOT IN (SELECT uid FROM outbox WHERE entity = 'project_section')")
+    suspend fun deleteSynced()
 }
 
 @Dao

@@ -36,6 +36,12 @@ The protocol stays the same.
 - `task.assigned_to`: person `uid` (nullable string). Validated against the caller's assignable people on push (`invalid_assignee` otherwise).
 - `comment`: fields `body`, `mentioned_person_uids`; server field `deleted_at` (plus read-only `author_uid`, `author_name`); refs `task_uid` (`task`, accessible via ownership or sharing) and `parent_comment_uid` (`comment`, same task, top-level only). Snapshot and journal scope comments to tasks the user can access; only the author (with current access to the task) may update or delete (`forbidden` otherwise). Deleting a comment via sync soft-deletes it (clearing `body` and setting `deleted_at`) so replies survive; pushing `body` onto a soft-deleted comment is refused (`deleted`). Revocation of task access does not purge already-synced comments on a device until a reset; a deleted task's comments disappear with the task on the device. Reactions and image uploads are web-only (« réactions et images : web seulement »); inline image Markdown in a comment body renders as text/links on Android.
 
+### Project sections (Kanban board)
+
+- `project_section`: fields `name` (non-empty trimmed, max 255 chars), `position` (non-negative integer); ref `project_uid` (`project`, owned by the caller). Scoped to the project owner's rows (`snapshotWhere`, `journalUsers`, `authorize`). Deleting a section via sync clears `section_id` and `section_position` on its tasks inside the same transaction through model hooks so those task updates are journaled alongside the section tombstone.
+- `task.section_uid`: reference to `project_section` (nullable). Validated on push so the section belongs to the task's project (`invalid_reference:section_uid` otherwise). Moving a task to another project without specifying `section_uid` clears `section_id` and `section_position`, matching REST.
+- `task.section_position`: non-negative integer (nullable), ordering cards within a column.
+
 ### Cadence habit entities
 
 Listed in `GET /sync/meta` in dependency order. Field names, types, units and rules of each one are in [21-habits.md](21-habits.md#cadence-habits): that page is the contract the Android sync and the web UI are built from. Their wire names are the snake_case of the Room properties (a Room `habitId` is the reference `habit_uid`).

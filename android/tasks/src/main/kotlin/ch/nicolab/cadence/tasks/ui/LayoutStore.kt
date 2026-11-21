@@ -11,8 +11,13 @@ internal class LayoutStore(context: Context) {
 
     fun set(screen: String, on: Boolean) = prefs.edit { putBoolean(screen, on) }
 
+    fun isBoard(projectUid: String): Boolean = prefs.getBoolean("$BOARD_PREFIX$projectUid", false)
+
+    fun setBoard(projectUid: String, board: Boolean) = prefs.edit { putBoolean("$BOARD_PREFIX$projectUid", board) }
+
     companion object {
         const val NOTES = "notes"
+        private const val BOARD_PREFIX = "project_board:"
 
         /** Page d'un projet : liste des tâches ou outliner. */
         const val OUTLINE = "project_outline"

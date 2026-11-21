@@ -14,7 +14,9 @@ import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
+import ch.nicolab.cadence.tasks.model.BoardTaskPlacement
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.ProjectSectionItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
@@ -218,6 +220,21 @@ interface TaskRepository {
 
     /** Supprime un commentaire créé par l'utilisateur (file d'envoi). */
     suspend fun deleteComment(uid: String)
+
+    /** Sections (colonnes Kanban) d'un projet, triées par position. */
+    fun observeProjectSections(projectUid: String): Flow<List<ProjectSectionItem>>
+
+    /** Ajoute une section en fin de tableau ; retourne son uid, ou null si le nom est vide. */
+    suspend fun createProjectSection(projectUid: String, name: String): String?
+
+    /** Renomme une section existante. */
+    suspend fun renameProjectSection(sectionUid: String, name: String)
+
+    /** Supprime une section : ses tâches reviennent dans « Sans section ». */
+    suspend fun deleteProjectSection(sectionUid: String)
+
+    /** Déplace ou réordonne des tâches dans les colonnes du tableau Kanban. */
+    suspend fun moveBoardTasks(placements: List<BoardTaskPlacement>)
 
     /** Demande une synchronisation au plus tôt (sans attendre la fin). */
     fun requestSync()

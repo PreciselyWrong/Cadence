@@ -24,6 +24,7 @@ internal object WireCodec {
         "uid", "name", "note", "status", "priority", "due_date", "due_has_time", "defer_until",
         "reminder_at", "recurrence_type", "project_uid", "area_uid", "parent_task_uid", "tag_uids",
         "completed_at", "pinned_at", "field_clocks", "in_view_at", "week_of", "month_of", "source", "source_url", "needs_when", "review_on", "reviewed_at", "source_key", "assigned_to",
+        "section_uid", "section_position",
     )
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -57,6 +58,8 @@ internal object WireCodec {
         reviewOn = wire.string("review_on"),
         reviewedAtRaw = wire.string("reviewed_at"),
         assignedTo = wire.string("assigned_to"),
+        sectionUid = wire.string("section_uid"),
+        sectionPosition = wire.int("section_position"),
     )
 
     fun taskToWire(task: TaskEntity): JsonObject {
@@ -88,6 +91,8 @@ internal object WireCodec {
             put("reviewed_at", task.reviewedAtRaw)
             put("source_key", task.sourceKey)
             put("assigned_to", task.assignedTo)
+            put("section_uid", task.sectionUid)
+            put("section_position", task.sectionPosition)
         }
         val extras = json.parseToJsonElement(task.extrasJson).jsonObject
         return JsonObject(extras + known)
@@ -197,6 +202,20 @@ internal object WireCodec {
         updatedAtRaw = wire.string("updated_at"),
         deletedAtRaw = wire.string("deleted_at"),
     )
+
+    fun sectionFromWire(wire: JsonObject) = ProjectSectionEntity(
+        uid = wire.requireString("uid"),
+        projectUid = wire.requireString("project_uid"),
+        name = wire.string("name").orEmpty(),
+        position = wire.int("position") ?: 0,
+    )
+
+    fun sectionToWire(section: ProjectSectionEntity): JsonObject = buildJsonObject {
+        put("uid", section.uid)
+        put("project_uid", section.projectUid)
+        put("name", section.name)
+        put("position", section.position)
+    }
 
     fun decodeTagUids(tagUidsJson: String): List<String> =
         json.decodeFromString(ListSerializer(String.serializer()), tagUidsJson)

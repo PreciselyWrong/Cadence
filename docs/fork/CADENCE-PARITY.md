@@ -1,5 +1,7 @@
 # Parité Cadence
 
+> Archivé le 2026-11-21 : inventaire de départ, jamais coché. La parité web ↔ Android se suit dans `TODO.md` (Next › Parité web → Android, Parité Android → web).
+
 Toutes les fonctionnalités de Cadence sont reprises, pas son design. Chemins relatifs à `Cadence/`. Cocher une colonne quand la fonctionnalité y est livrée et testée ; rien n'est terminé tant qu'une case attendue reste vide. `—` : sans objet sur cette cible.
 
 Linux/web n'a pas de widget : son équivalent est l'icône de la barre système, l'ajout rapide global et les notifications natives.

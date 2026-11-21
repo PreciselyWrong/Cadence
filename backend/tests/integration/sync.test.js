@@ -3,6 +3,7 @@ const app = require('../../app');
 const {
     Task,
     Project,
+    ProjectSection,
     Area,
     SyncOp,
     SyncChange,
@@ -1768,6 +1769,290 @@ describe('Offline sync API', () => {
                 where: { user_id: owner.user.id, type: 'comment_added' },
             });
             expect(notif).not.toBeNull();
+        });
+    });
+
+    describe('project_section sync', () => {
+        it('keeps a queued web rename that loses to a newer device edit as a conflict', async () => {
+            const proj = await agent.post('/api/project').send({ name: 'Q' });
+            const sec = await agent
+                .post(`/api/project/${proj.body.uid}/sections`)
+                .send({ name: 'A' });
+            await push(agent, [
+                upsert(
+                    'op-sec-newer',
+                    'project_section',
+                    sec.body.uid,
+                    { name: 'Phone' },
+                    hlc(Date.now() + 3600e3)
+                ),
+            ]);
+            const res = await agent
+                .patch(`/api/project/${proj.body.uid}/sections/${sec.body.uid}`)
+                .set(
+                    'X-Cadence-Offline-Clock',
+                    hlc(Date.now() - 1000, 0, 'web')
+                )
+                .send({ name: 'Web old' });
+            expect(res.status).toBeLessThan(300);
+            const row = await ProjectSection.findOne({
+                where: { uid: sec.body.uid },
+            });
+            expect(row.name).toBe('Phone');
+        });
+
+        it('journals a delete for each section when the project is deleted', async () => {
+            const proj = await agent.post('/api/project').send({ name: 'D' });
+            const sec = await agent
+                .post(`/api/project/${proj.body.uid}/sections`)
+                .send({ name: 'S' });
+            const del = await agent.delete(`/api/project/${proj.body.uid}`);
+            expect(del.status).toBeLessThan(300);
+            const pullRes = await agent.get('/api/v1/sync/pull?cursor=0');
+            const ops = pullRes.body.changes
+                .filter(
+                    (c) =>
+                        c.entity === 'project_section' && c.uid === sec.body.uid
+                )
+                .map((c) => c.op);
+            expect(ops[ops.length - 1]).toBe('delete');
+        });
+
+        it('refuses a section position beyond 32-bit range', async () => {
+            const proj = await agent.post('/api/project').send({ name: 'H' });
+            const res = await push(agent, [
+                upsert(
+                    'op-sec-huge',
+                    'project_section',
+                    'secuidhuge00001',
+                    { name: 'n', position: 1e20, project_uid: proj.body.uid },
+                    hlc(100)
+                ),
+            ]);
+            expect(res.body.results[0].status).toBe('rejected');
+        });
+
+        it('pulls a section created on the web', async () => {
+            const proj = await agent
+                .post('/api/project')
+                .send({ name: 'Web Board' });
+            const sec = await agent
+                .post(`/api/project/${proj.body.uid}/sections`)
+                .send({ name: 'In Progress' });
+            expect(sec.status).toBe(201);
+
+            const pullRes = await agent.get('/api/v1/sync/pull?cursor=0');
+            expect(pullRes.status).toBe(200);
+            const change = pullRes.body.changes.find(
+                (c) => c.entity === 'project_section' && c.uid === sec.body.uid
+            );
+            expect(change).toBeDefined();
+            expect(change.op).toBe('upsert');
+            expect(change.data).toMatchObject({
+                uid: sec.body.uid,
+                name: 'In Progress',
+                position: 0,
+                project_uid: proj.body.uid,
+            });
+        });
+
+        it('pushes a section from phone and lists it in GET project sections', async () => {
+            const proj = await agent
+                .post('/api/project')
+                .send({ name: 'Phone Board' });
+
+            const res = await push(agent, [
+                upsert(
+                    'op-sec-1',
+                    'project_section',
+                    'secuid000000001',
+                    {
+                        name: 'Backlog',
+                        position: 0,
+                        project_uid: proj.body.uid,
+                    },
+                    hlc(100)
+                ),
+            ]);
+            expect(res.status).toBe(200);
+            expect(res.body.results[0]).toEqual({
+                op_id: 'op-sec-1',
+                status: 'applied',
+            });
+
+            const list = await agent.get(
+                `/api/project/${proj.body.uid}/sections`
+            );
+            expect(list.status).toBe(200);
+            expect(list.body).toHaveLength(1);
+            expect(list.body[0]).toMatchObject({
+                uid: 'secuid000000001',
+                name: 'Backlog',
+                position: 0,
+            });
+
+            // Rejects blank name or foreign project
+            const other = await signIn('sec-other@example.com');
+            const otherProj = await other.agent
+                .post('/api/project')
+                .send({ name: 'Foreign' });
+            const bad = await push(agent, [
+                upsert(
+                    'op-sec-blank',
+                    'project_section',
+                    'secuid000000002',
+                    {
+                        name: '   ',
+                        position: 1,
+                        project_uid: proj.body.uid,
+                    },
+                    hlc(101)
+                ),
+                upsert(
+                    'op-sec-foreign',
+                    'project_section',
+                    'secuid000000003',
+                    {
+                        name: 'Hijack',
+                        position: 0,
+                        project_uid: otherProj.body.uid,
+                    },
+                    hlc(102)
+                ),
+            ]);
+            expect(bad.body.results[0].status).toBe('rejected');
+            expect(bad.body.results[1].status).toBe('rejected');
+            expect(bad.body.results[1].reason).toBe(
+                'invalid_reference:project_uid'
+            );
+        });
+
+        it('moves a task to a section via push and shows on web, refusing section of another project', async () => {
+            const p1 = await agent.post('/api/project').send({ name: 'P1' });
+            const p2 = await agent.post('/api/project').send({ name: 'P2' });
+            const sec1 = await agent
+                .post(`/api/project/${p1.body.uid}/sections`)
+                .send({ name: 'Col 1' });
+            const sec2 = await agent
+                .post(`/api/project/${p2.body.uid}/sections`)
+                .send({ name: 'Col 2' });
+            const task = await agent
+                .post('/api/task')
+                .send({ name: 'Card', project_id: p1.body.id });
+
+            const moveOk = await push(agent, [
+                upsert(
+                    'op-task-sec-1',
+                    'task',
+                    task.body.uid,
+                    {
+                        section_uid: sec1.body.uid,
+                        section_position: 2,
+                    },
+                    hlc(200)
+                ),
+            ]);
+            expect(moveOk.body.results[0].status).toBe('applied');
+
+            const webTask = await agent.get(`/api/task/${task.body.uid}`);
+            expect(webTask.status).toBe(200);
+            expect(webTask.body.section_uid).toBe(sec1.body.uid);
+            expect(webTask.body.section_position).toBe(2);
+
+            // Section from another project is refused
+            const moveBad = await push(agent, [
+                upsert(
+                    'op-task-sec-bad',
+                    'task',
+                    task.body.uid,
+                    { section_uid: sec2.body.uid, section_position: 0 },
+                    hlc(201)
+                ),
+            ]);
+            expect(moveBad.body.results[0].status).toBe('rejected');
+            expect(moveBad.body.results[0].reason).toMatch(
+                /^invalid_reference/
+            );
+
+            // Moving task to another project without section_uid clears its section
+            const moveProj = await push(agent, [
+                upsert(
+                    'op-task-proj-2',
+                    'task',
+                    task.body.uid,
+                    { project_uid: p2.body.uid },
+                    hlc(Date.now() + 2 * 60 * 60 * 1000)
+                ),
+            ]);
+            expect(moveProj.body.results[0].status).toBe('applied');
+            const afterMove = await Task.findOne({
+                where: { uid: task.body.uid },
+            });
+            expect(afterMove.section_id).toBeNull();
+            expect(afterMove.section_position).toBeNull();
+        });
+
+        it('deletes a section via sync like REST and journals task unsectioning', async () => {
+            const proj = await agent
+                .post('/api/project')
+                .send({ name: 'Del Board' });
+            const sec = await agent
+                .post(`/api/project/${proj.body.uid}/sections`)
+                .send({ name: 'Temp' });
+            const createdTask = await agent.post('/api/task').send({
+                name: 'Card in Temp',
+                project_id: proj.body.id,
+            });
+            const task = await agent
+                .patch(`/api/task/${createdTask.body.uid}`)
+                .send({ section_uid: sec.body.uid });
+            expect(task.body.section_uid).toBe(sec.body.uid);
+
+            const before = await agent.get('/api/v1/sync/pull?cursor=0');
+            const cursor = before.body.cursor;
+
+            const delRes = await push(agent, [
+                {
+                    op_id: 'op-sec-del',
+                    entity: 'project_section',
+                    uid: sec.body.uid,
+                    action: 'delete',
+                    hlc: hlc(300),
+                },
+            ]);
+            expect(delRes.body.results[0]).toEqual({
+                op_id: 'op-sec-del',
+                status: 'applied',
+            });
+
+            expect(
+                await ProjectSection.findOne({ where: { uid: sec.body.uid } })
+            ).toBeNull();
+
+            const dbTask = await Task.findOne({
+                where: { uid: task.body.uid },
+            });
+            expect(dbTask.section_id).toBeNull();
+            expect(dbTask.section_position).toBeNull();
+
+            // Task unsectioning and section tombstone are both journaled
+            const pullAfter = await agent.get(
+                `/api/v1/sync/pull?cursor=${cursor}`
+            );
+            const taskUpsert = pullAfter.body.changes.find(
+                (c) => c.entity === 'task' && c.uid === task.body.uid
+            );
+            expect(taskUpsert).toBeDefined();
+            expect(taskUpsert.op).toBe('upsert');
+            expect(taskUpsert.data.section_uid).toBeNull();
+            expect(taskUpsert.data.section_position).toBeNull();
+
+            const secTombstone = pullAfter.body.changes.find(
+                (c) => c.entity === 'project_section' && c.uid === sec.body.uid
+            );
+            expect(secTombstone).toBeDefined();
+            expect(secTombstone.op).toBe('delete');
+            expect(secTombstone.op_id).toBe('op-sec-del');
         });
     });
 });

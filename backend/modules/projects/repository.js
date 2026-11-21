@@ -429,6 +429,14 @@ class ProjectsRepository extends BaseRepository {
             transaction,
         });
 
+        // One by one through the model so devices learn of each section;
+        // the database cascade would remove them without a journal row.
+        await ProjectSection.destroy({
+            where: { project_id: project.id },
+            individualHooks: true,
+            transaction,
+        });
+
         // Delete the project
         await project.destroy({ transaction });
     }
