@@ -103,6 +103,8 @@ import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
 import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
+import ch.nicolab.cadence.tasks.google.GoogleOAuthOutcome
+import ch.nicolab.cadence.tasks.google.GoogleOAuthRoute
 import ch.nicolab.cadence.tasks.live.NotificationRoute
 import ch.nicolab.cadence.tasks.live.NotificationTarget
 import ch.nicolab.cadence.tasks.live.pluginPageIntent
@@ -321,6 +323,7 @@ internal fun CadenceAppScreen(
                 triageDecisions = true
                 triageOpen = true
             }
+            NotificationTarget.CalendarSettings -> openSettings(CALENDARS_SETTINGS_PAGE)
             is NotificationTarget.Plugin -> scope.launch { pluginPageIntent(context, target.page)?.let(context::startActivity) }
             is NotificationTarget.Task -> {
                 tab = Tab.TASKS
@@ -339,6 +342,20 @@ internal fun CadenceAppScreen(
             NotificationRoute.consume()
             openTarget(target)
         }
+    }
+    val googleOutcome by GoogleOAuthRoute.pending.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(googleOutcome) {
+        val outcome = googleOutcome ?: return@LaunchedEffect
+        GoogleOAuthRoute.consume()
+        val text = when (outcome) {
+            GoogleOAuthOutcome.Connected -> context.getString(R.string.google_oauth_connected)
+            GoogleOAuthOutcome.Denied -> context.getString(R.string.google_oauth_denied)
+            is GoogleOAuthOutcome.Error -> outcome.message?.let {
+                context.getString(R.string.google_oauth_error_message, it)
+            } ?: context.getString(R.string.google_oauth_error)
+        }
+        snackbar.currentSnackbarData?.dismiss()
+        snackbar.showSnackbar(text)
     }
     val destinations = Tab.entries.map { NavDestination(stringResource(it.label), it.icon, it.selectedIcon) }
     val settingsDeps = SettingsDeps(

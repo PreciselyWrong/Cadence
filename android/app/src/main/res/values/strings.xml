@@ -598,6 +598,15 @@
     <string name="settings_page_calendars">Agendas</string>
     <string name="calendars_intro">Pour chaque agenda, choisissez où ses événements apparaissent.</string>
     <string name="calendars_source_google">Google</string>
+    <string name="calendars_google_subtitle">Google Agenda et Tasks</string>
+    <string name="calendars_google_connect">Connecter Google</string>
+    <string name="calendars_google_reconnect">Reconnecter Google</string>
+    <string name="calendars_google_synced">Synchronisé %1$s</string>
+    <string name="calendars_google_open_error">Impossible d’ouvrir le navigateur</string>
+    <string name="google_oauth_connected">Google est connecté</string>
+    <string name="google_oauth_denied">Connexion à Google refusée</string>
+    <string name="google_oauth_error">Connexion à Google impossible</string>
+    <string name="google_oauth_error_message">Connexion à Google impossible : %1$s</string>
     <string name="calendars_surface_agenda">Agenda</string>
     <string name="calendars_surface_tasks">Liste Tâches</string>
     <string name="calendars_auto_done_past">Cocher une fois passé</string>

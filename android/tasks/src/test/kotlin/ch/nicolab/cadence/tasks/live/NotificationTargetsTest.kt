@@ -30,6 +30,16 @@ class NotificationTargetsTest {
     }
 
     @Test
+    fun googleSyncOpensCalendarSettings() {
+        assertEquals(NotificationTarget.CalendarSettings, of(kind = "google_sync"))
+        assertEquals(NotificationTarget.CalendarSettings, of(openPath = "/profile?section=calendars"))
+        assertEquals(
+            NotificationTarget.CalendarSettings,
+            of(kind = "google_sync", openPath = "/profile?section=calendars"),
+        )
+    }
+
+    @Test
     fun proposalKindChoosesItsScreen() {
         assertEquals(NotificationTarget.ProposalSheet("p1"), of(kind = "week", proposalUid = "p1"))
         assertEquals(NotificationTarget.MorningRitual("p1"), of(kind = "week", proposalUid = "p1", trigger = "morning"))
@@ -69,6 +79,7 @@ class NotificationTargetsTest {
             NotificationTarget.Weekend("w-1"),
             NotificationTarget.MailDeck,
             NotificationTarget.DecisionsDeck,
+            NotificationTarget.CalendarSettings,
             NotificationTarget.Plugin(LiveTarget.Plugin("hermes", "?msg=m1&x=a:b")),
             NotificationTarget.Task("t-1"),
             NotificationTarget.Project("p-1"),

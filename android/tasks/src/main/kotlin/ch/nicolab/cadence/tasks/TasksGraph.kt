@@ -92,6 +92,10 @@ object TasksGraph {
     /** Écritures du plan du jour (Reporter, Placer) : plan local d'abord, appels différés ensuite. */
     internal fun planEdits(context: Context): PlanEdits = createPlanEdits(context.applicationContext)
 
+    /** Client en ligne pour l'état et la reconnexion Google côté serveur. */
+    fun googleSync(context: Context): ch.nicolab.cadence.tasks.google.GoogleSyncClient =
+        ch.nicolab.cadence.tasks.google.GoogleSyncClient { serverSession(context) }
+
     fun connection(context: Context): ServerConnection =
         connection ?: synchronized(this) {
             connection ?: createServerConnection(context.applicationContext).also { connection = it }

@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.tasks.autoclassify.EXTRA_OPEN_TRIAGE
+import ch.nicolab.cadence.tasks.google.GoogleOAuthRoute
 import ch.nicolab.cadence.tasks.links.ProvideCadenceUriHandler
 import ch.nicolab.cadence.tasks.live.NotificationRoute
 import ch.nicolab.cadence.tasks.proposals.ProposalRepository
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
     private fun routeIntent(intent: Intent?) {
         ProposalRepository.of(this).route(intent)
         NotificationRoute.route(intent)
+        GoogleOAuthRoute.route(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

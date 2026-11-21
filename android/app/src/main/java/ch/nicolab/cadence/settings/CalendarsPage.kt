@@ -1,6 +1,29 @@
 package ch.nicolab.cadence.settings
 
+import android.content.Intent
+import android.net.Uri
+import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.readableTintOf
+import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.google.GoogleAccountStatus
+import ch.nicolab.cadence.tasks.google.GoogleOAuthRoute
+import ch.nicolab.cadence.tasks.model.SyncStatusText
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import java.time.Instant
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircleOutline
@@ -59,6 +82,7 @@ internal fun CalendarsPage() {
     val scope = rememberCoroutineScope()
     val palette = cadence
 
+    GoogleAccountSection()
     Text(
         stringResource(R.string.calendars_intro),
         style = MaterialTheme.typography.bodyMedium,
@@ -130,6 +154,118 @@ private fun HiddenEventsSection(hidden: List<HiddenEvent>, onRestore: (EventInst
                 },
                 onClick = { onRestore(item.key) },
             )
+        }
+    }
+}
+
+/** Section « Google » de Réglages › Agendas : état de la synchro serveur et (re)connexion dans le navigateur. */
+@Composable
+private fun GoogleAccountSection() {
+    val context = LocalContext.current
+    val client = remember(context) { TasksGraph.googleSync(context) }
+    val refreshCount by GoogleOAuthRoute.refreshCount.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
+    val palette = cadence
+    var status by remember { mutableStateOf<GoogleAccountStatus?>(null) }
+    var connecting by remember { mutableStateOf(false) }
+    var connectError by remember { mutableStateOf<String?>(null) }
+    var resumeTrigger by remember { mutableStateOf(0) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) resumeTrigger++
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    LaunchedEffect(client, refreshCount, resumeTrigger) {
+        client.status().onSuccess { status = it }
+    }
+
+    val current = status ?: return
+    if (!current.configured) return
+
+    val openErrorFallback = stringResource(R.string.calendars_google_open_error)
+    val startConnect: () -> Unit = {
+        scope.launch {
+            connecting = true
+            connectError = null
+            client.connectUrl()
+                .onSuccess { url ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        .addCategory(Intent.CATEGORY_BROWSABLE)
+                    runCatching { context.startActivity(intent) }
+                        .onFailure { connectError = openErrorFallback }
+                }
+                .onFailure { err ->
+                    connectError = err.message ?: openErrorFallback
+                }
+            connecting = false
+        }
+    }
+
+    Panel {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+            Text(
+                stringResource(R.string.calendars_source_google),
+                style = MaterialTheme.typography.titleMedium,
+                color = palette.onSurface,
+            )
+            if (!current.connected) {
+                Text(
+                    stringResource(R.string.calendars_google_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = palette.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(Space.xs))
+                PrimaryAction(
+                    label = stringResource(R.string.calendars_google_connect),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !connecting,
+                    onClick = startConnect,
+                )
+            } else {
+                current.email?.let { email ->
+                    Text(
+                        email,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = palette.onSurface,
+                    )
+                }
+                current.lastSyncedAt?.let { syncedAt ->
+                    Text(
+                        stringResource(
+                            R.string.calendars_google_synced,
+                            SyncStatusText.ago(syncedAt, Instant.now()),
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = palette.onSurfaceVariant,
+                    )
+                }
+                current.lastError?.let { err ->
+                    Text(
+                        err,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = palette.error,
+                    )
+                    Spacer(Modifier.height(Space.xs))
+                    PrimaryAction(
+                        label = stringResource(R.string.calendars_google_reconnect),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !connecting,
+                        onClick = startConnect,
+                    )
+                }
+            }
+            connectError?.let { err ->
+                Text(
+                    err,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = palette.error,
+                )
+            }
         }
     }
 }
