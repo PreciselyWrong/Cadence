@@ -6,6 +6,7 @@ Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `d
 
 ## 2026.11.21
 
+- Week-end : plusieurs sorties proposées pour la même demi-journée (16 au plus), chacune à choisir ou à ignorer.
 - Week-end : chaque sortie peut afficher une vignette (`image`) et un lieu (`place`), et la feuille ajoute la section « Près de chez nous » (`nearby`) sur le web et Android.
 - Google : la connexion (ou la reconnexion) peut se faire depuis le téléphone, dans Réglages › Agendas ; l'alerte de synchro en échec y mène.
 - Add-on Firefox 2.1.1 : la tâche capturée peut recevoir l'échéance Aujourd'hui ou Demain.

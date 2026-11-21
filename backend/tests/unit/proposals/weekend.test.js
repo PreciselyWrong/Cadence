@@ -124,6 +124,15 @@ describe('validateWeekend', () => {
         expect(answer.slots.map((item) => item.id)).toEqual(['sun-pm']);
     });
 
+    it('keeps alternatives for the same half-day, up to 16 slots', () => {
+        const alternatives = Array.from({ length: 18 }, (_, i) =>
+            slot({ id: `sat-am-${i}`, activity: { title: `Option ${i}` } })
+        );
+        const answer = answerOf({ slots: alternatives });
+        expect(answer.slots).toHaveLength(16);
+        expect(new Set(answer.slots.map((s) => s.part))).toEqual(new Set(['morning']));
+    });
+
     it('drops a repeated slot id after the first', () => {
         const answer = answerOf({
             slots: [slot(), slot({ activity: { title: 'Autre' } })],
@@ -199,14 +208,14 @@ describe('validateWeekend', () => {
         expect(answer.slots[0].recommended).toBe(false);
     });
 
-    it('caps the days at 2, the slots at 6 and the places at 5', () => {
+    it('caps the days at 2, the slots at 16 and the places at 5', () => {
         const answer = answerOf({
             days: [
                 day(),
                 day({ date: '2026-11-15' }),
                 day({ date: '2026-11-16' }),
             ],
-            slots: [...[1, 2, 3, 4, 5, 6, 7].map((n) => slot({ id: `s${n}` }))],
+            slots: Array.from({ length: 17 }, (_, n) => slot({ id: `s${n}` })),
             elsewhere: [1, 2, 3, 4, 5, 6].map((n) => ({
                 place: `Lieu ${n}`,
                 date: '2026-11-14',
@@ -215,7 +224,7 @@ describe('validateWeekend', () => {
             })),
         });
         expect(answer.days).toHaveLength(2);
-        expect(answer.slots).toHaveLength(6);
+        expect(answer.slots).toHaveLength(16);
         expect(answer.elsewhere).toHaveLength(5);
     });
 

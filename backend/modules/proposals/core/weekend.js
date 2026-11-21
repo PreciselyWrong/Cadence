@@ -10,7 +10,7 @@ const { cleanText } = require('./text');
 
 const HEADLINE_MAX = 60;
 const SUBTITLE_MAX = 160;
-const LIMITS = { days: 2, slots: 6, places: 5, nearby: 12 };
+const LIMITS = { days: 2, slots: 16, places: 5, nearby: 12 };
 const BUSY_MAX = 120;
 const TITLE_MAX = 120;
 const NOTE_MAX = 140;

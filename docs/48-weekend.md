@@ -10,7 +10,7 @@ Open to the same API key as `propose_career` and `propose_mail`.
 
 - `headline` (required, 60 characters), `subtitle` (160).
 - `days`: `[{ date, weather, min, max }]`, 2 at most. `weather` ∈ `sun`, `partly`, `cloud`, `rain`, `snow`, `storm`, `fog`; `min`, `max` integers (°C).
-- `slots`: `[{ id, date, part, weather?, temp?, feels?, busy?, activity?, recommended? }]`, 6 at most.
+- `slots`: `[{ id, date, part, weather?, temp?, feels?, busy?, activity?, recommended? }]`, 16 at most. Several slots may share a `date` and `part`: they are alternatives for the same half-day, each decided on its own.
   - `part` ∈ `morning`, `afternoon`, `day`. `date` must be one of `days[].date`.
   - `busy` (120): what the calendar already holds (« Foire aux livres, Penthalaz »). A busy slot has no `activity` and no decision.
   - `after` (120): a follow-up line of the slot itself (« Ensuite : balade à Dizy »), shown on a busy slot or under an activity.

@@ -111,7 +111,7 @@ function registerWeekendTools(server, context, tools) {
     tools.push({
         name: 'propose_weekend',
         description:
-            'Push the week-end outing proposal: a headline, up to two days with their weather, up to six slots (morning, afternoon or day) with an activity to decide, or busy when the calendar already holds the slot, up to twelve nearby events, and up to five places with better weather. Replaces the ready weekend proposal; the final decisions of the slots with the same id carry over. Invalid entries are dropped; a payload without a valid slot is refused. Cadence computes nothing here: send what you found.',
+            'Push the week-end outing proposal: a headline, up to two days with their weather, up to sixteen slots (morning, afternoon or day; several slots may share a day part to offer alternatives) with an activity to decide, or busy when the calendar already holds the slot, up to twelve nearby events, and up to five places with better weather. Replaces the ready weekend proposal; the final decisions of the slots with the same id carry over. Invalid entries are dropped; a payload without a valid slot is refused. Cadence computes nothing here: send what you found.',
         inputSchema: {
             type: 'object',
             properties: {
@@ -124,7 +124,7 @@ function registerWeekendTools(server, context, tools) {
                     description: 'At most 160 characters',
                 },
                 days: { type: 'array', items: DAY_ITEM, maxItems: 2 },
-                slots: { type: 'array', items: SLOT, maxItems: 6 },
+                slots: { type: 'array', items: SLOT, maxItems: 16 },
                 nearby: { type: 'array', items: NEARBY_ITEM, maxItems: 12 },
                 elsewhere: { type: 'array', items: PLACE, maxItems: 5 },
             },
