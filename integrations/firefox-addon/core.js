@@ -74,6 +74,9 @@
             options: {
                 method: 'POST',
                 headers: authHeaders(settings),
+                // Without the Cadence session of the browser, which the
+                // server would check against a CSRF token: the token suffices.
+                credentials: 'omit',
                 body: JSON.stringify(taskBody(page)),
             },
         };
@@ -85,7 +88,7 @@
         if (title) query.set('title', title);
         return {
             url: `${settings.server}/api/links/lookup?${query}`,
-            options: { headers: authHeaders(settings) },
+            options: { headers: authHeaders(settings), credentials: 'omit' },
         };
     }
 
@@ -144,6 +147,9 @@
             options: {
                 method: 'POST',
                 headers: authHeaders(settings),
+                // Without the Cadence session of the browser, which the
+                // server would check against a CSRF token: the token suffices.
+                credentials: 'omit',
                 body: JSON.stringify({ pages }),
             },
         };
@@ -152,14 +158,14 @@
     function projectsRequest(settings) {
         return {
             url: `${settings.server}/api/projects`,
-            options: { headers: authHeaders(settings) },
+            options: { headers: authHeaders(settings), credentials: 'omit' },
         };
     }
 
     function pagesRequest(settings, projectUid) {
         return {
             url: `${settings.server}/api/projects/${encodeURIComponent(projectUid)}/pages`,
-            options: { headers: authHeaders(settings) },
+            options: { headers: authHeaders(settings), credentials: 'omit' },
         };
     }
 

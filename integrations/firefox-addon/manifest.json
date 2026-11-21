@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_name__",
   "description": "__MSG_description__",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "default_locale": "fr",
   "browser_specific_settings": {
     "gecko": {
@@ -35,7 +35,7 @@
   },
   "options_ui": {
     "page": "options.html",
-    "open_in_tab": false
+    "open_in_tab": true
   },
   "permissions": [
     "activeTab",

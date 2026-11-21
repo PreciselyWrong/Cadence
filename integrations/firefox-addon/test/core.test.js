@@ -171,3 +171,16 @@ test('only a Gmail page of this add-on may ask for a task', () => {
     assert.equal(core.trustedGmailSender({ id, url: 'https://evil.example/mail.google.com' }, id), false);
     assert.equal(core.trustedGmailSender({ id: 'other', url: 'https://mail.google.com/' }, id), false);
 });
+
+test('requests never carry the browser session: the token alone signs them', () => {
+    const settings = { server: 'https://c.example', token: 'tt_x' };
+    for (const request of [
+        core.taskRequest(settings, { url: 'https://a.example' }),
+        core.lookupRequest(settings, { url: 'https://a.example' }),
+        core.sendPagesRequest(settings, 'p1', [{ url: 'https://a.example' }]),
+        core.projectsRequest(settings),
+        core.pagesRequest(settings, 'p1'),
+    ]) {
+        assert.equal(request.options.credentials, 'omit');
+    }
+});

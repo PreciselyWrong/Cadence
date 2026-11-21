@@ -286,14 +286,12 @@ app.use(caldavRoutes);
 // CSRF protects against cross-site requests that hijack an existing browser session;
 // unauthenticated requests and Bearer-token requests have no session to hijack.
 const lusca = require('lusca');
-const { csrfMiddleware } = require('./middleware/csrf');
+const { csrfMiddleware, needsCsrf } = require('./middleware/csrf');
 
 app.use((req, res, next) => {
-    const statefulMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
-    const hasSession = !!(req.session && req.session.userId);
     const isTest = process.env.NODE_ENV === 'test';
 
-    if (!isTest && hasSession && statefulMethods.includes(req.method)) {
+    if (!isTest && needsCsrf(req)) {
         return csrfMiddleware(req, res, next);
     }
     return next();
