@@ -61,7 +61,7 @@ internal val LocalAgendaEventActions = staticCompositionLocalOf { AgendaEventAct
 @Composable
 internal fun Modifier.eventTouch(entry: AgendaEntry): Modifier {
     val actions = LocalAgendaEventActions.current
-    if (entry !is AgendaEntry.Event) return clickable(role = Role.Button) { actions.tap(entry) }
+    if (entry !is AgendaEntry.Event || entry.readOnly) return clickable(role = Role.Button) { actions.tap(entry) }
     val haptic = rememberCadenceHaptic()
     return combinedClickable(
         onClick = { actions.tap(entry) },
@@ -97,6 +97,17 @@ internal fun AgendaEventSheets(
         return
     }
     val detail = entry.toDetail()
+    if (entry.readOnly) {
+        EventDetailSheet(
+            detail = detail,
+            checkable = false,
+            onToggle = {},
+            onHide = {},
+            onDismiss = { onSheet(null) },
+            readOnly = true,
+        )
+        return
+    }
     when (open) {
         is AgendaEventSheet.Menu -> EventMenuSheet(
             detail = detail,

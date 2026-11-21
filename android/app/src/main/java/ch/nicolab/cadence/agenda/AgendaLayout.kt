@@ -47,6 +47,8 @@ sealed interface AgendaEntry {
         override val colorArgb: Int,
         val location: String? = null,
         val description: String? = null,
+        val readOnly: Boolean = false,
+        val stableId: String? = null,
     ) : AgendaEntry
 
     /** Tâche datée : sans heure c'est une entrée de journée ; avec heure, un instant (fin = début). */

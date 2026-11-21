@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="attachments_title">Pièces jointes</string>
+    <string name="attachments_add">Ajouter</string>
+    <string name="attachments_uploading">Envoi…</string>
+    <string name="attachments_empty">Aucune pièce jointe</string>
+    <string name="attachments_offline">Hors ligne</string>
+    <string name="attachments_no_app">Aucune application ne peut ouvrir ce fichier</string>
+    <string name="attachments_delete_title">Supprimer la pièce jointe ?</string>
+    <string name="attachments_delete_confirm">Supprimer</string>
+    <string name="attachments_delete_cancel">Annuler</string>
+    <string name="attachments_upload_error">Impossible d’envoyer le fichier</string>
+    <string name="attachments_delete_error">Impossible de supprimer la pièce jointe</string>
+    <string name="attachments_download_error">Impossible d’ouvrir la pièce jointe</string>
+</resources>

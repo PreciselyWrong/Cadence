@@ -370,6 +370,9 @@ internal fun TaskDetailSheet(
                     uid = current.uid,
                     onOpen = { link -> if (link.type == "note") openedNote = link.uid else openedSubtask = link.uid },
                 )
+                AttachmentsSection(
+                    target = ch.nicolab.cadence.tasks.attachments.AttachmentTarget.Task(current.uid),
+                )
                 val keyedFields = detailFields(
                         task = current,
                         today = today,

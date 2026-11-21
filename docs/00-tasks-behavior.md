@@ -309,6 +309,10 @@ Task responses include `is_blocked` and `blocked_by_count`. Names of blockers co
     - Deleting task removes all attachments and their files
     - Files on an Inbox item move onto the task when the item is converted to a task
 
+### Android
+
+On Android, the task sheet shows an online-only **Pièces jointes** section (hidden when the `attachments` feature flag is off): lists attachments (name, size, date), adds files via the system document picker (`POST /api/v1/upload/task-attachment`), downloads to cache and opens with `ACTION_VIEW` via `FileProvider`, and deletes on long press with confirmation.
+
 ---
 
 ## **Project Assignment**

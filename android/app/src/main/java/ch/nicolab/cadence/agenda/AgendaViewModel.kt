@@ -14,6 +14,7 @@ import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.TaskRepository
+import ch.nicolab.cadence.tasks.calendarfeeds.CalendarFeedsClient
 import ch.nicolab.cadence.tasks.model.DayHoursRange
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.TaskChange
@@ -90,6 +91,7 @@ private const val KEY_WEEK_NUMBERS = "week_numbers"
 
 /** La liste couvre le mois qui vient, à partir d'aujourd'hui. */
 internal const val AGENDA_LIST_DAYS = 30
+private const val DEFAULT_SUBSCRIBED_COLOR = 0xFF64748B.toInt()
 
 /**
  * Agenda : combine les événements de l'appareil, les tâches datées et les habitudes prévues
@@ -98,6 +100,7 @@ internal const val AGENDA_LIST_DAYS = 30
 internal class AgendaViewModel(application: Application) : AndroidViewModel(application) {
     private val calendar: CalendarRepository = CalendarGraph.repository(application)
     private val tasks: TaskRepository = TasksGraph.repository(application)
+    private val calendarFeeds = TasksGraph.calendarFeeds(application)
     private val connection = TasksGraph.connection(application)
     private val planningStore = PlanningStore.of(application)
     private val habitRepository = (application as CadenceApp).repository
@@ -112,6 +115,25 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
         windowFor(mode, selected)
     }.distinctUntilChanged()
 
+    init {
+        viewModelScope.launch {
+            calendarFeeds.refreshFeeds()
+            calendarFeeds.refreshGoogleStatus()
+        }
+    }
+
+    private fun subscribedEvents(w: AgendaWindow): Flow<List<AgendaEntry.Event>> {
+        val start = w.first.toString()
+        val end = w.first.plusDays(w.days.toLong() - 1).toString()
+        val fetched = kotlinx.coroutines.flow.flow {
+            emit(calendarFeeds.eventsForRange(start, end))
+        }.onStart { emit(emptyList()) }
+        return combine(fetched, calendarFeeds.feeds, calendarFeeds.googleShown) { events, feeds, googleShown ->
+            val visible = CalendarFeedsClient.visibleEvents(events, feeds, googleShown)
+            mapFeedEvents(visible, zone, DEFAULT_SUBSCRIBED_COLOR)
+        }
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val entries: Flow<List<AgendaEntry>> = combine(window, _options) { w, options -> w to options }
         .flatMapLatest { (w, options) ->
@@ -120,7 +142,8 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
                 tasks.observeTasks(),
                 tasks.observeProjects(),
                 habitEntries(w, options.habits),
-            ) { events, allTasks, projects, habits ->
+                subscribedEvents(w),
+            ) { events, allTasks, projects, habits, subscribed ->
                 val colors = projects.associate { it.uid to parseProjectColor(it.color) }
                 val range = w.first..w.first.plusDays(w.days.toLong() - 1)
                 val dated = allTasks
@@ -128,7 +151,7 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
                     .filter { it.start.toLocalDate() in range }
                     .filter { options.showDone || !it.done }
                     .map { if (!options.timedTasks && !it.allDay) it.withoutTime() else it }
-                events.map { agendaEvent(it, zone) } + dated + habits.filter { options.showDone || !it.done }
+                events.map { agendaEvent(it, zone) } + subscribed + dated + habits.filter { options.showDone || !it.done }
             }
         }
 

@@ -74,6 +74,10 @@ internal fun createTemplates(context: Context): ch.nicolab.cadence.tasks.project
 
 internal fun createViews(context: Context): ch.nicolab.cadence.tasks.views.ViewsClient = TasksRuntime.get(context).views
 
+internal fun createAttachments(context: Context): ch.nicolab.cadence.tasks.attachments.AttachmentsClient = TasksRuntime.get(context).attachments
+
+internal fun createCalendarFeeds(context: Context): ch.nicolab.cadence.tasks.calendarfeeds.CalendarFeedsRepository = TasksRuntime.get(context).calendarFeeds
+
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
 
@@ -148,6 +152,16 @@ internal class TasksRuntime private constructor(context: Context) {
     val views = ch.nicolab.cadence.tasks.views.ViewsClient(
         callJson = { method, path, query -> api.callJson(method, path, query) },
         callObj = { method, path, body -> api.call(method, path, body = body) },
+    )
+    val attachments = ch.nicolab.cadence.tasks.attachments.AttachmentsClient(
+        session = { connection.currentSession() },
+        callObj = { method, path, body -> api.call(method, path, body = body) },
+        callJson = { method, path -> api.callJson(method, path) },
+    )
+    val calendarFeeds = ch.nicolab.cadence.tasks.calendarfeeds.CalendarFeedsRepository(
+        client = ch.nicolab.cadence.tasks.calendarfeeds.CalendarFeedsClient { method, path, query, body ->
+            api.call(method, path, query = query, body = body)
+        },
     )
     val people = ch.nicolab.cadence.tasks.contentlinks.PeopleClient(
         { method, path, query -> api.callJson(method, path, query) },

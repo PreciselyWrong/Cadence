@@ -123,7 +123,7 @@ internal enum class MarkShape { TASK, EVENT_CHECK, EVENT_DOT, HABIT }
 
 internal fun markShapeOf(entry: AgendaEntry, checkEvents: Boolean): MarkShape = when (entry) {
     is AgendaEntry.Task -> MarkShape.TASK
-    is AgendaEntry.Event -> if (checkEvents) MarkShape.EVENT_CHECK else MarkShape.EVENT_DOT
+    is AgendaEntry.Event -> if (checkEvents && !entry.readOnly) MarkShape.EVENT_CHECK else MarkShape.EVENT_DOT
     is AgendaEntry.Habit -> MarkShape.HABIT
 }
 

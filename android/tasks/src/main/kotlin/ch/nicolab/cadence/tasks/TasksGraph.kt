@@ -108,6 +108,14 @@ object TasksGraph {
     fun googleSync(context: Context): ch.nicolab.cadence.tasks.google.GoogleSyncClient =
         ch.nicolab.cadence.tasks.google.GoogleSyncClient { serverSession(context) }
 
+    /** Pièces jointes des tâches et projets, en ligne seulement. */
+    fun attachments(context: Context): ch.nicolab.cadence.tasks.attachments.AttachmentsClient =
+        ch.nicolab.cadence.tasks.data.createAttachments(context.applicationContext)
+
+    /** Agendas ICS abonnés et leurs événements en ligne (cache mémoire de session). */
+    fun calendarFeeds(context: Context): ch.nicolab.cadence.tasks.calendarfeeds.CalendarFeedsRepository =
+        ch.nicolab.cadence.tasks.data.createCalendarFeeds(context.applicationContext)
+
     fun connection(context: Context): ServerConnection =
         connection ?: synchronized(this) {
             connection ?: createServerConnection(context.applicationContext).also { connection = it }

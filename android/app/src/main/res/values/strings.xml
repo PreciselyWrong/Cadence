@@ -624,6 +624,18 @@
     <string name="calendars_use">Utiliser dans Cadence</string>
     <string name="calendars_use_hint">Les agendas non utilisés n’apparaissent nulle part dans Cadence. Un même événement présent sur plusieurs agendas n’est montré qu’une fois.</string>
     <string name="calendars_unused_header">Non utilisés (%1$d)</string>
+    <string name="calendars_ics_title">Agendas abonnés (ICS)</string>
+    <string name="calendars_ics_add">Ajouter un agenda</string>
+    <string name="calendars_ics_empty">Aucun agenda abonné.</string>
+    <string name="calendars_ics_name_label">Nom</string>
+    <string name="calendars_ics_url_label">Adresse HTTPS</string>
+    <string name="calendars_ics_missing_fields">Indiquez un nom et une adresse</string>
+    <string name="calendars_ics_add_confirm">Ajouter</string>
+    <string name="calendars_ics_cancel">Annuler</string>
+    <string name="calendars_ics_delete_title">Supprimer l’agenda ?</string>
+    <string name="calendars_ics_delete_confirm">Supprimer</string>
+    <string name="calendars_ics_offline">Hors ligne</string>
+    <string name="calendars_ics_error">Impossible de joindre l’agenda</string>
     <string name="routine_open_habits">Ouvrir les habitudes</string>
     <string name="routine_limit_value">%1$s max</string>
 

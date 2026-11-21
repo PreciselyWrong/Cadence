@@ -346,7 +346,7 @@ internal fun agendaMeta(entry: AgendaEntry): String {
 
 /** Clé stable d'une ligne : l'animation de retrait suit l'élément, pas sa position. */
 private fun AgendaEntry.rowKey(): String = when (this) {
-    is AgendaEntry.Event -> "e-${eventKey.calendarId}-${eventKey.eventId}-${eventKey.instanceBegin}"
+    is AgendaEntry.Event -> stableId?.let { "sub-$it" } ?: "e-${eventKey.calendarId}-${eventKey.eventId}-${eventKey.instanceBegin}"
     is AgendaEntry.Task -> if (virtual) "t-$uid-$start" else "t-$uid"
     is AgendaEntry.Habit -> "h-$habitId-$start"
 }

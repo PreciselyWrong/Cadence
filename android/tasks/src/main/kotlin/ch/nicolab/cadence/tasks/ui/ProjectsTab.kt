@@ -586,6 +586,12 @@ internal fun ProjectTasksPane(
                 NoteListRow(note, onClick = { onOpenNote(note) }, modifier = Modifier.padding(bottom = Space.sm))
             }
         }
+        item(key = "attachments") {
+            AttachmentsSection(
+                target = ch.nicolab.cadence.tasks.attachments.AttachmentTarget.Project(projectUid),
+                modifier = Modifier.padding(horizontal = Space.md, vertical = Space.sm),
+            )
+        }
     }
 
     if (editingStatus && project != null) {

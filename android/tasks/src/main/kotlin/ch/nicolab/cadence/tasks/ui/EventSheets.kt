@@ -78,6 +78,7 @@ fun EventDetailSheet(
     onToggle: () -> Unit,
     onHide: () -> Unit,
     onDismiss: () -> Unit,
+    readOnly: Boolean = false,
 ) {
     val palette = cadence
     val context = LocalContext.current
@@ -155,32 +156,34 @@ fun EventDetailSheet(
                     onClick = { openUrl(context, url, noApp) },
                 )
             }
-            SecondaryAction(
-                label = stringResource(R.string.tasks_event_open_calendar),
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { openInCalendar(context, detail, calendarNoApp) },
-            )
-            Row(
-                Modifier.fillMaxWidth().padding(bottom = Space.md),
-                horizontalArrangement = Arrangement.spacedBy(Space.md),
-            ) {
+            if (!readOnly) {
                 SecondaryAction(
-                    label = stringResource(R.string.tasks_event_hide),
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        onHide()
-                        onDismiss()
-                    },
+                    label = stringResource(R.string.tasks_event_open_calendar),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { openInCalendar(context, detail, calendarNoApp) },
                 )
-                if (checkable) {
-                    PrimaryAction(
-                        label = stringResource(if (detail.done) R.string.tasks_event_reopen else R.string.tasks_event_complete),
+                Row(
+                    Modifier.fillMaxWidth().padding(bottom = Space.md),
+                    horizontalArrangement = Arrangement.spacedBy(Space.md),
+                ) {
+                    SecondaryAction(
+                        label = stringResource(R.string.tasks_event_hide),
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            onToggle()
+                            onHide()
                             onDismiss()
                         },
                     )
+                    if (checkable) {
+                        PrimaryAction(
+                            label = stringResource(if (detail.done) R.string.tasks_event_reopen else R.string.tasks_event_complete),
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                onToggle()
+                                onDismiss()
+                            },
+                        )
+                    }
                 }
             }
         }
