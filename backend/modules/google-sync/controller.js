@@ -5,6 +5,7 @@ const eventsService = require('./eventsService');
 const syncLog = require('./syncLog');
 const { syncUser } = require('./syncEngine');
 const { GoogleApiError, GoogleAuthRevokedError } = require('./client');
+const { User } = require('../../models');
 const { UnauthorizedError } = require('../../shared/errors');
 const { getConfig } = require('../../config/config');
 const { logError } = require('../../services/logService');
@@ -41,7 +42,7 @@ module.exports = {
         res.json(await accountService.status(user.id));
     }),
 
-    connect: handle(async (req, res) => {
+    connect: handle(async (req, res, user) => {
         const origin =
             typeof req.query.origin === 'string' &&
             /^https?:\/\//.test(req.query.origin)
@@ -49,9 +50,38 @@ module.exports = {
                 : getConfig().frontendUrl;
         const basePath = req.baseUrl || '/api';
         res.json(
-            accountService.startConnect(req.session, { origin, basePath })
+            accountService.startConnect(req.session, {
+                origin,
+                basePath,
+                app: req.query.client === 'app',
+                userId: user.id,
+            })
         );
     }),
+
+    // Google's answer to a sign-in started by the phone app: public, the
+    // state alone names the user. Any other state goes on to the signed-in
+    // callback below.
+    appCallback: async (req, res, next) => {
+        const pending = accountService.takeAppPending(req.query.state);
+        if (!pending) return next();
+        try {
+            const user = await User.findByPk(pending.userId);
+            if (!user) throw new UnauthorizedError('Authentication required');
+            const { returnTo, account } = await accountService.completeConnect(
+                pending,
+                user,
+                req.query
+            );
+            if (account) startBackgroundSync(user.id);
+            res.redirect(returnTo);
+        } catch (error) {
+            logError('Google connection from the app failed:', error);
+            res.redirect(
+                `${pending.returnTo}?google=error&message=${encodeURIComponent(error.message)}`
+            );
+        }
+    },
 
     // Google sends the browser back here; it answers with a redirect.
     callback: async (req, res) => {

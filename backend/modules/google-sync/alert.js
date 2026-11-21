@@ -20,7 +20,7 @@ async function openAlerts(userId) {
 
 function messageFor(revoked) {
     return revoked
-        ? "L'accès Google a expiré. Reconnecte Google sur le web, dans Profil › Calendriers : en attendant, l'agenda et les tâches ne se synchronisent plus."
+        ? "L'accès Google a expiré. Reconnecte Google dans Réglages › Agendas sur le téléphone, ou sur le web dans Profil › Calendriers : en attendant, l'agenda et les tâches ne se synchronisent plus."
         : 'La dernière synchronisation avec Google a échoué ; elle sera retentée toute seule. Détail sur le web, dans Profil › Calendriers.';
 }
 

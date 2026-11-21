@@ -23,6 +23,24 @@ const {
 
 const CALLBACK_PATH = '/google/oauth/callback';
 
+// The phone app opens Google in the device browser, which has no Cadence
+// session: its sign-in waits here, found again by its state, and Google's
+// answer goes back to the app by its own address.
+const APP_RETURN = 'cadence://google';
+const APP_PENDING_MS = 10 * 60 * 1000;
+const appPending = new Map();
+
+function takeAppPending(state) {
+    const now = Date.now();
+    for (const [key, entry] of appPending) {
+        if (entry.expiresAt <= now) appPending.delete(key);
+    }
+    if (typeof state !== 'string') return null;
+    const entry = appPending.get(state);
+    appPending.delete(state);
+    return entry || null;
+}
+
 function serializeCalendar(calendar) {
     return {
         uid: calendar.uid,
@@ -76,7 +94,7 @@ function redirectUriFor(origin, basePath) {
     return `${origin.replace(/\/$/, '')}${basePath}${CALLBACK_PATH}`;
 }
 
-function startConnect(session, { origin, basePath }) {
+function startConnect(session, { origin, basePath, app = false, userId }) {
     if (!isConfigured()) {
         throw new ValidationError(
             'Google is not set up on this server: set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET'
@@ -89,17 +107,32 @@ function startConnect(session, { origin, basePath }) {
     }
     const redirectUri = redirectUriFor(origin, basePath);
     const state = crypto.randomBytes(24).toString('hex');
-    session.googleOAuth = {
-        state,
-        redirectUri,
-        returnTo: `${new URL(redirectUri).origin}/calendar`,
-    };
+    if (app) {
+        takeAppPending(null);
+        appPending.set(state, {
+            state,
+            redirectUri,
+            returnTo: APP_RETURN,
+            userId,
+            expiresAt: Date.now() + APP_PENDING_MS,
+        });
+    } else {
+        session.googleOAuth = {
+            state,
+            redirectUri,
+            returnTo: `${new URL(redirectUri).origin}/calendar`,
+        };
+    }
     return { url: client.buildAuthUrl(redirectUri, state) };
 }
 
-async function finishConnect(session, user, { code, state, error }) {
+async function finishConnect(session, user, query) {
     const pending = session.googleOAuth;
     delete session.googleOAuth;
+    return completeConnect(pending, user, query);
+}
+
+async function completeConnect(pending, user, { code, state, error }) {
     if (!pending || !state || pending.state !== state) {
         throw new ValidationError(
             'This Google sign-in link is no longer valid'
@@ -259,6 +292,8 @@ module.exports = {
     status,
     startConnect,
     finishConnect,
+    completeConnect,
+    takeAppPending,
     updateSettings,
     updateCalendar,
     disconnect,

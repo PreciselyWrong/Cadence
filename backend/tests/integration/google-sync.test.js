@@ -127,6 +127,41 @@ describe('Google sync', () => {
         ).toBe(true);
     });
 
+    it('connects from the phone app in a browser without a Cadence session', async () => {
+        const start = await agent
+            .get('/api/google/connect')
+            .query({ origin: 'https://tududi.example', client: 'app' });
+        expect(start.status).toBe(200);
+        const state = new URL(start.body.url).searchParams.get('state');
+        const browser = request(app);
+        const back = await browser
+            .get('/api/google/oauth/callback')
+            .query({ code: 'abc', state });
+        expect(back.status).toBe(302);
+        expect(back.headers.location).toBe('cadence://google?google=connected');
+        const account = await GoogleAccount.findOne({
+            where: { user_id: user.id },
+        });
+        expect(account).not.toBeNull();
+
+        const again = await browser
+            .get('/api/google/oauth/callback')
+            .query({ code: 'abc', state });
+        expect(again.status).toBe(401);
+    });
+
+    it('tells the phone app when Google access is refused', async () => {
+        const start = await agent
+            .get('/api/google/connect')
+            .query({ origin: 'https://tududi.example', client: 'app' });
+        const state = new URL(start.body.url).searchParams.get('state');
+        const back = await request(app)
+            .get('/api/google/oauth/callback')
+            .query({ error: 'access_denied', state });
+        expect(back.headers.location).toBe('cadence://google?google=denied');
+        expect(await GoogleAccount.count()).toBe(0);
+    });
+
     it('rejects a callback with a wrong state', async () => {
         const res = await agent
             .get('/api/google/oauth/callback')

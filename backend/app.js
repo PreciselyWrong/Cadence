@@ -575,6 +575,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, blogModule.routes);
     // Task feed (.ics): the secret address is the key
     app.use(basePath, taskFeedModule.publicRoutes);
+    app.use(basePath, googleSyncModule.publicRoutes);
 
     app.use(basePath, requireAuth);
     // Writes the web UI made offline and replays now (docs/fork/WEB-OFFLINE.md).

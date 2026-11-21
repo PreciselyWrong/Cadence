@@ -90,6 +90,10 @@ The Cadence server must reach `oauth2.googleapis.com`, `www.googleapis.com`, `ta
 
 Then each user: Profile → Calendars (or Calendar → Calendars) → **Connect Google**.
 
+## Connecting from the phone
+
+Android's Réglages › Agendas shows the Google state and **Connecter Google** / **Reconnecter Google** (with the last error when a run failed). The app asks `GET /google/connect?origin=<server address>&client=app` with its token, then opens Google in the device browser, which has no Cadence session: the server keeps that sign-in in memory for 10 minutes, keyed by its `state`, and the public callback finds the user from it (one use only; any other state falls through to the signed-in web callback). Google's answer goes back to the app at `cadence://google?google=connected|denied|error`. The redirect URI is the same `<server address>/api/google/oauth/callback`, so the phone must reach the server at an address registered in the Google OAuth client (or set `GOOGLE_REDIRECT_URI`). A server restart during the sign-in loses it: start again.
+
 ## Disconnecting
 
 **Disconnect** revokes the token and deletes every Google copy and link kept in Cadence. Cadence tasks stay, and so does everything already on Google (including the "Cadence" calendar and the lists). Turning one switch off (calendars or tasks) unlinks that side only; turning it back on starts a fresh link, which can create duplicates of items that were left on Google meanwhile.
@@ -101,8 +105,8 @@ All under `/api`, signed in.
 | Method         | Path                                   |                                                                                                                                       |
 | -------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | GET            | `/google`                              | Connection status, settings, calendars                                                                                                |
-| GET            | `/google/connect?origin=`              | `{ url }` of Google's sign-in page                                                                                                    |
-| GET            | `/google/oauth/callback`               | Google sends the browser back here; redirects to `/calendar?google=connected`                                                         |
+| GET            | `/google/connect?origin=`              | `{ url }` of Google's sign-in page; `&client=app` for the phone app (see below)                                                       |
+| GET            | `/google/oauth/callback`               | Google sends the browser back here; redirects to `/calendar?google=connected` (web) or `cadence://google?google=connected` (app)      |
 | DELETE         | `/google`                              | Disconnect                                                                                                                            |
 | PATCH          | `/google/settings`                     | `{ sync_events, sync_tasks, task_calendar_uid }` (null: "Cadence")                                                                                                       |
 | GET            | `/google/log`                          | `{ entries: [{ created_at, kind, message, task_uid }] }`, last 50, newest first |
