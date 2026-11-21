@@ -42,6 +42,21 @@ test('a page becomes a task: the request carries the token and only what was fil
     assert.deepEqual(core.taskBody({ url: 'https://a.example', name: ' ' }), {
         url: 'https://a.example',
     });
+    assert.deepEqual(
+        core.taskBody({ url: 'https://a.example', due_date: '2026-11-21' }),
+        { url: 'https://a.example', due_date: '2026-11-21' }
+    );
+    assert.deepEqual(core.taskBody({ url: 'https://a.example', due_date: '' }), {
+        url: 'https://a.example',
+    });
+});
+
+test('dueDateFor computes local YYYY-MM-DD across month, year and leap boundaries', () => {
+    assert.equal(core.dueDateFor('today', new Date(2026, 10, 21, 23, 30)), '2026-11-21');
+    assert.equal(core.dueDateFor('tomorrow', new Date(2026, 10, 30, 12, 0)), '2026-12-01');
+    assert.equal(core.dueDateFor('tomorrow', new Date(2026, 11, 31, 23, 59)), '2027-01-01');
+    assert.equal(core.dueDateFor('tomorrow', new Date(2024, 1, 28, 12, 0)), '2024-02-29');
+    assert.equal(core.dueDateFor(null, new Date(2026, 10, 21)), null);
 });
 
 test('the lookup asks where the page already is, with its title', () => {

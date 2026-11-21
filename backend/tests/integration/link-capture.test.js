@@ -1,6 +1,10 @@
 const request = require('supertest');
 const app = require('../../app');
 const { Link, Project, Task, User } = require('../../models');
+const {
+    getSafeTimezone,
+    processDueDateForStorage,
+} = require('../../utils/timezone-utils');
 const { createTestUser } = require('../helpers/testUtils');
 
 // A shared or captured address becomes a task (docs/37-links.md, Capture).
@@ -92,6 +96,44 @@ describe('Link capture', () => {
                 .post('/api/links/task')
                 .send({ url: 'javascript:alert(1)' });
             expect(res.status).toBe(400);
+        });
+
+        it('sets due_date and clears needs_when when due_date is given', async () => {
+            await User.update(
+                { timezone: 'Europe/Paris' },
+                { where: { id: user.id } }
+            );
+            const res = await agent.post('/api/links/task').send({
+                url: 'https://example.com/article',
+                title: 'Article',
+                due_date: '2026-11-21',
+            });
+            expect(res.status).toBe(201);
+            const task = await Task.findOne({
+                where: { uid: res.body.task.uid },
+            });
+            expect(task.needs_when).toBe(false);
+            expect(task.due_date).toEqual(
+                processDueDateForStorage(
+                    '2026-11-21',
+                    getSafeTimezone('Europe/Paris')
+                )
+            );
+
+            const unsorted = await agent.get('/api/tasks?type=unsorted');
+            expect(unsorted.body.tasks.map((t) => t.uid)).not.toContain(
+                res.body.task.uid
+            );
+        });
+
+        it('refuses an invalid due_date', async () => {
+            for (const bad of ['2026-02-30', '21-11-2026', 'tomorrow', 123]) {
+                const res = await agent.post('/api/links/task').send({
+                    url: 'https://example.com/article',
+                    due_date: bad,
+                });
+                expect(res.status).toBe(400);
+            }
         });
     });
 

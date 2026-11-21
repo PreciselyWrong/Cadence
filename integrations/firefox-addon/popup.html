@@ -12,6 +12,13 @@
             </p>
             <label><span data-i18n="field_task_name"></span><input id="name" /></label>
             <p id="url" class="muted"></p>
+            <div class="due-field">
+                <span id="due-label" class="field-label" data-i18n="field_due_date"></span>
+                <div class="row due-row" role="group" aria-labelledby="due-label">
+                    <button id="due-today" type="button" data-due="today" aria-pressed="false" data-i18n="due_today"></button>
+                    <button id="due-tomorrow" type="button" data-due="tomorrow" aria-pressed="false" data-i18n="due_tomorrow"></button>
+                </div>
+            </div>
             <button id="save" type="submit" data-i18n="action_task"></button>
         </form>
         <section id="projects" hidden>

@@ -14,6 +14,10 @@ const entitlements = require('../../services/entitlementsService');
 const { validateProjectAccess } = require('../tasks/utils/validation');
 const permissionsService = require('../../services/permissionsService');
 const {
+    getSafeTimezone,
+    processDueDateForStorage,
+} = require('../../utils/timezone-utils');
+const {
     ConflictError,
     ForbiddenError,
     NotFoundError,
@@ -187,6 +191,27 @@ function validAddress(value) {
     return url;
 }
 
+function validDueDate(value) {
+    if (value === undefined || value === null || value === '') return null;
+    if (typeof value !== 'string') {
+        throw new ValidationError('due_date must be YYYY-MM-DD');
+    }
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    if (!match) throw new ValidationError('due_date must be YYYY-MM-DD');
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    const probe = new Date(Date.UTC(year, month - 1, day));
+    if (
+        probe.getUTCFullYear() !== year ||
+        probe.getUTCMonth() !== month - 1 ||
+        probe.getUTCDate() !== day
+    ) {
+        throw new ValidationError('due_date must be a valid calendar date');
+    }
+    return value;
+}
+
 // The name of the task an address becomes, in the user's language.
 function taskName(user, { url, title, kind }) {
     return taskNameFor({ url, title, kind }, (key) =>
@@ -240,9 +265,16 @@ async function lookup(user, { url: raw, title } = {}) {
 
 // An address made a task in one gesture (add-on, agents): named by its kind
 // unless a name is given, the address in the note, waiting in « Tâches à
-// classer » for « Quand ? » unless a project is given.
+// classer » for « Quand ? » unless a project or due_date is given.
 async function captureTask(user, body = {}) {
     const url = validAddress(body.url);
+    const dueDateString = validDueDate(body.due_date);
+    const dueDate = dueDateString
+        ? processDueDateForStorage(
+              dueDateString,
+              getSafeTimezone(user?.timezone)
+          )
+        : null;
     const projectId = body.project_uid
         ? await projectChange(user.id, body.project_uid)
         : null;
@@ -259,7 +291,8 @@ async function captureTask(user, body = {}) {
         note: [url, words].filter(Boolean).join('\n\n').slice(0, MAX_NOTE),
         status: 0,
         project_id: projectId,
-        needs_when: !projectId,
+        due_date: dueDate,
+        needs_when: !projectId && !dueDate,
         source: 'link',
         source_url: url,
     });

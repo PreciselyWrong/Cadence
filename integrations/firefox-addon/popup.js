@@ -40,6 +40,17 @@ async function start() {
     $('name').addEventListener('input', () => {
         edited = true;
     });
+    let selectedDue = null;
+    const dueButtons = [$('due-today'), $('due-tomorrow')];
+    for (const button of dueButtons) {
+        button.addEventListener('click', () => {
+            const choice = button.dataset.due;
+            selectedDue = selectedDue === choice ? null : choice;
+            for (const other of dueButtons) {
+                other.setAttribute('aria-pressed', String(other.dataset.due === selectedDue));
+            }
+        });
+    }
     CadenceCore.lookup(fetch, settings, page).then((found) => {
         if (!found) return;
         if (!edited && found.task_name) $('name').value = found.task_name;
@@ -56,9 +67,11 @@ async function start() {
     $('form').addEventListener('submit', async (event) => {
         event.preventDefault();
         $('save').disabled = true;
+        const due_date = selectedDue ? CadenceCore.dueDateFor(selectedDue) : undefined;
         const result = await CadenceCore.addTask(fetch, settings, {
             ...page,
             name: $('name').value,
+            due_date,
         });
         say(`result_${result}`);
         if (result === 'saved') {

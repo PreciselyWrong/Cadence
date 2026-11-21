@@ -59,6 +59,15 @@
   "field_task_name": {
     "message": "Task name"
   },
+  "field_due_date": {
+    "message": "Due date"
+  },
+  "due_today": {
+    "message": "Today"
+  },
+  "due_tomorrow": {
+    "message": "Tomorrow"
+  },
   "action_task": {
     "message": "Create the task"
   },
