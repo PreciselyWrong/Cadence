@@ -120,6 +120,13 @@ Branche `feat/habit-stats-bdad4581`.
 
 - [x] Plan web : « En retard » dans la colonne de gauche, au-dessus de la Boîte de réception
 - [x] Plan web : voir les tâches que je repousse sans cesse
+- Découper une tâche en petites étapes minutées par l'IA (web et Android)
+  Modèle de comportement : l'outil Task Breakdown de brightmind.club (rien n'en est repris, aucun appel à ce service).
+  - Serveur : `POST /api/tasks/:uid/breakdown` (taille : quelques / petites / minuscules, contexte facultatif) par le fournisseur de l'Assistant IA ; l'IA rend `[{name, minutes}]`, le code impose une première étape de 2 min au plus, calcule le total et crée les sous-tâches (`estimated_minutes`) après validation ; tests du contrat JSON.
+  - Web et Android : feuille « Découper en étapes » (aperçu modifiable, total, « Plus petit » sur une ligne, « Créer les sous-tâches ») depuis le menu de tâche, les tâches repoussées et les cartes de retard du rituel du matin ; Android en ligne, résultat par la synchro des sous-tâches.
+  - Sans IA : « Première étape de 2 min ? » crée une sous-tâche.
+  - À vérifier : sous-tâches imbriquées possibles ? Sinon « Plus petit » remplace l'étape par des sœurs. Plus tard : mode focus une étape à la fois.
+  Vérif : une tâche découpée sur le web donne des sous-tâches minutées visibles sur Android ; 26 locales ; `docs/13-ai-assistant.md`, `FORK.md`, `WEB-UX-NOTES.md` à jour.
 - Add-on Firefox Cadence signé en non listé (web-ext sign --channel=unlisted, clés AMO dans .env, gecko.id fixe, script publish.ps1 -Sign) pour une installation permanente sans le site de Mozilla.
 
 - Cartes « Mail » dans « À trier » (web et Android)
