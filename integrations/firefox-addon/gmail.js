@@ -98,7 +98,7 @@
             try {
                 result = await browser.runtime.sendMessage({
                     type: 'cadence-gmail-task',
-                    href: location.href,
+                    href: message.href ?? location.href,
                     name: $('.name').value,
                     due,
                 });
@@ -138,6 +138,50 @@
         subject.after(button);
     }
 
+    // The list: a « Cadence » action beside Archive and Delete, shown on hover
+    // like them; a click makes the row's thread a task without opening it.
+    const ROW_MARK = 'cadenceRow';
+
+    function rowMessage(row) {
+        const id = row.querySelector('[data-legacy-thread-id]')?.getAttribute('data-legacy-thread-id');
+        if (!id) return null;
+        const subject = row.querySelector('span.bog')?.textContent ?? '';
+        return { href: `${location.href.split('#')[0]}#all/${id}`, name: subject };
+    }
+
+    function rowButton(row) {
+        const button = document.createElement('li');
+        button.setAttribute('role', 'button');
+        button.title = t('gmail_add');
+        button.setAttribute('aria-label', t('gmail_add'));
+        button.textContent = '+';
+        button.style.cssText =
+            'display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;' +
+            'margin:0 6px;border-radius:50%;background:#5e5ce6;color:#fff;cursor:pointer;' +
+            'font:700 15px/1 system-ui,sans-serif;list-style:none;vertical-align:middle;';
+        const stop = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+        button.addEventListener('mousedown', stop);
+        button.addEventListener('click', (event) => {
+            stop(event);
+            const message = rowMessage(row);
+            if (message) openPanel(message);
+        });
+        return button;
+    }
+
+    function placeRowButtons() {
+        for (const row of document.querySelectorAll('tr.zA')) {
+            if (row.dataset[ROW_MARK] || !rowMessage(row)) continue;
+            const actions = row.querySelector('ul.bqY') ?? row.querySelector('td.yf');
+            if (!actions) continue;
+            row.dataset[ROW_MARK] = '1';
+            actions.prepend(rowButton(row));
+        }
+    }
+
     let scheduled = false;
     new MutationObserver(() => {
         if (scheduled) return;
@@ -145,8 +189,10 @@
         requestAnimationFrame(() => {
             scheduled = false;
             placeButton();
+            placeRowButtons();
         });
     }).observe(document.body, { childList: true, subtree: true });
     window.addEventListener('hashchange', closePanel);
     placeButton();
+    placeRowButtons();
 })();

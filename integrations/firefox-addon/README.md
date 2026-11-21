@@ -4,7 +4,7 @@ Makes the current page or a link a Cadence task, through `POST /api/links/task` 
 
 - Toolbar button or Alt+Shift+K: the proposed task name (editable), optional due date (« Aujourd'hui » / « Demain »), « Déjà dans … » with Open when the page is already in an open task or a project (`GET /api/links/lookup`), then « Créer la tâche ».
 - Right click on a page or a link: a task in one click, the button shows a mark.
-- Gmail: a « + Cadence » button beside the subject of the open message opens a small panel over Gmail (name from the subject, « Aujourd'hui » / « Demain »); the task keeps the message address and the Gmail badge. The button speaks to the background, which holds the token (`gmail.js`).
+- Gmail: in the list, a « + » action beside Archive and Delete on each row (shown on hover, opens the panel without opening the mail); in an open message, a « + Cadence » button beside the subject opens a small panel over Gmail (name from the subject, « Aujourd'hui » / « Demain »); the task keeps the message address and the Gmail badge. The button speaks to the background, which holds the token (`gmail.js`).
 - Project (in the popup): nothing is chosen until you pick a project; the task above always goes to none. « Envoyer au projet » adds the tab to a project's pages, « Envoyer le groupe » every tab of its tab group, « Ouvrir le projet » opens the project's pages in a tab group named like it (Firefox 139+).
 - Settings: the server address and an API token (Cadence: Profile › API tokens). The add-on asks for access to that server only, and reads no page beyond the tab you save, except Gmail, where it adds its button.
 
