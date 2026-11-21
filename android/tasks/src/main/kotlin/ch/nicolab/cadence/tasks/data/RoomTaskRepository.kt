@@ -8,6 +8,7 @@ import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.addressKey
 import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.CommentItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
 import ch.nicolab.cadence.tasks.model.SyncConflictMerge
@@ -61,6 +62,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
@@ -97,6 +99,7 @@ internal class RoomTaskRepository(
     private val tagDao = database.tagDao()
     private val inboxDao = database.inboxDao()
     private val noteDao = database.noteDao()
+    private val commentDao = database.commentDao()
     private val outbox = database.outboxDao()
 
     /** Tâches dont la conversion en projet attend l'envoi : elles disparaissent des listes tout de suite. */
@@ -444,6 +447,8 @@ internal class RoomTaskRepository(
             change.todayOrder?.let { put("today_order", JsonPrimitive(it)) }
             if (change.hasDecision()) putAll(decisionFields(uid, change))
             change.needsWhen?.let { put("needs_when", JsonPrimitive(it)) }
+            if (change.clearAssignee) put("assigned_to", JsonNull)
+            change.assignedTo?.let { put("assigned_to", JsonPrimitive(it)) }
         }
     }
 
@@ -880,6 +885,52 @@ internal class RoomTaskRepository(
     }
 
     override fun requestSync() = SyncScheduler.requestNow(context)
+
+    override fun observeComments(taskUid: String): Flow<List<CommentItem>> =
+        combine(
+            commentDao.observeForTask(taskUid),
+            connection.observe().map { it?.userUid }.distinctUntilChanged(),
+        ) { rows, userUid ->
+            rows.map { it.toItem(userUid) }
+        }
+
+    override suspend fun addComment(taskUid: String, body: String): String? {
+        val trimmed = body.trim()
+        if (trimmed.isEmpty()) return null
+        val uid = UUID.randomUUID().toString()
+        val nowIso = Instant.ofEpochMilli(nowMs()).toString()
+        val userUid = connection.observe().firstOrNull()?.userUid
+        val clock = hlc.now()
+        val fields = mapOf(
+            "task_uid" to JsonPrimitive(taskUid),
+            "body" to JsonPrimitive(trimmed),
+        )
+        database.withTransaction {
+            commentDao.upsert(
+                CommentEntity(
+                    uid = uid,
+                    taskUid = taskUid,
+                    body = trimmed,
+                    authorUid = userUid,
+                    createdAtRaw = nowIso,
+                    updatedAtRaw = nowIso,
+                ),
+            )
+            outbox.insert(LocalOps.upsert("comment", uid, fields, clock, nowMs()))
+        }
+        afterLocalWrite()
+        return uid
+    }
+
+    override suspend fun deleteComment(uid: String) {
+        val existing = commentDao.get(uid) ?: return
+        val clock = hlc.now()
+        database.withTransaction {
+            commentDao.delete(uid)
+            outbox.insert(LocalOps.delete("comment", existing.uid, clock, nowMs()))
+        }
+        afterLocalWrite()
+    }
 
     /** Garde un appel à l'API pour le prochain passage ; un appel de même clé est remplacé. */
     suspend fun defer(call: DeferredCall): Result<Delivery> {

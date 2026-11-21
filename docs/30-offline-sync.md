@@ -31,6 +31,11 @@ The protocol stays the same.
 
 `task` also carries `reminder_sent_at` (instant, or null): the server reminder job's bookkeeping, written when the job has handled the reminder (even if it sent nothing), listed in `server_fields` of `GET /sync/meta` and refused (`rejected`) when a client pushes it. The server clears it when `reminder_at` is moved from a device. Devices must not use it to silence their own alarms: the phone rings every task reminder and keeps its own per-device record of what it rang ([Notifications](36-notifications.md)).
 
+### Task assignee and comments
+
+- `task.assigned_to`: person `uid` (nullable string). Validated against the caller's assignable people on push (`invalid_assignee` otherwise).
+- `comment`: fields `body`, `mentioned_person_uids`; server field `deleted_at` (plus read-only `author_uid`, `author_name`); refs `task_uid` (`task`, accessible via ownership or sharing) and `parent_comment_uid` (`comment`, same task, top-level only). Snapshot and journal scope comments to tasks the user can access; only the author (with current access to the task) may update or delete (`forbidden` otherwise). Deleting a comment via sync soft-deletes it (clearing `body` and setting `deleted_at`) so replies survive; pushing `body` onto a soft-deleted comment is refused (`deleted`). Revocation of task access does not purge already-synced comments on a device until a reset; a deleted task's comments disappear with the task on the device. Reactions and image uploads are web-only (« réactions et images : web seulement »); inline image Markdown in a comment body renders as text/links on Android.
+
 ### Cadence habit entities
 
 Listed in `GET /sync/meta` in dependency order. Field names, types, units and rules of each one are in [21-habits.md](21-habits.md#cadence-habits): that page is the contract the Android sync and the web UI are built from. Their wire names are the snake_case of the Room properties (a Room `habitId` is the reference `habit_uid`).

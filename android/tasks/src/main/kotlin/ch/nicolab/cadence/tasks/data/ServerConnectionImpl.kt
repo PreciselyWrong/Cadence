@@ -37,6 +37,7 @@ private val Context.connectionStore by preferencesDataStore(name = "tududi_conne
 
 private object ConnectionKeys {
     val SERVER_URL = stringPreferencesKey("server_url")
+    val USER_UID = stringPreferencesKey("user_uid")
     val USER_EMAIL = stringPreferencesKey("user_email")
     val ACCOUNT_TIMEZONE = stringPreferencesKey("account_timezone")
     val FIRST_DAY_OF_WEEK = intPreferencesKey("first_day_of_week")
@@ -80,6 +81,7 @@ internal class ServerConnectionImpl(
                         prefs[ConnectionKeys.DAY_HOURS_START],
                         prefs[ConnectionKeys.DAY_HOURS_END],
                     ),
+                    prefs[ConnectionKeys.USER_UID],
                 )
             }
         }
@@ -126,6 +128,7 @@ internal class ServerConnectionImpl(
                     parseZone(profile.timezone),
                     Funnel.firstDayOf(profile.firstDayOfWeek),
                     profile.quietHours,
+                    userUid = profile.uid,
                 ),
             )
         } catch (error: CancellationException) {
@@ -181,6 +184,7 @@ internal class ServerConnectionImpl(
 }
 
 private fun applyProfile(prefs: MutablePreferences, profile: AccountProfile) {
+    setOrRemove(prefs, ConnectionKeys.USER_UID, profile.uid)
     setOrRemove(prefs, ConnectionKeys.USER_EMAIL, profile.email)
     setOrRemove(prefs, ConnectionKeys.ACCOUNT_TIMEZONE, profile.timezone)
     setOrRemove(prefs, ConnectionKeys.FIRST_DAY_OF_WEEK, profile.firstDayOfWeek)

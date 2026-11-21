@@ -23,7 +23,7 @@ internal object WireCodec {
     private val taskKeys = setOf(
         "uid", "name", "note", "status", "priority", "due_date", "due_has_time", "defer_until",
         "reminder_at", "recurrence_type", "project_uid", "area_uid", "parent_task_uid", "tag_uids",
-        "completed_at", "pinned_at", "field_clocks", "in_view_at", "week_of", "month_of", "source", "source_url", "needs_when", "review_on", "reviewed_at", "source_key",
+        "completed_at", "pinned_at", "field_clocks", "in_view_at", "week_of", "month_of", "source", "source_url", "needs_when", "review_on", "reviewed_at", "source_key", "assigned_to",
     )
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -56,6 +56,7 @@ internal object WireCodec {
         needsWhen = wire.bool("needs_when"),
         reviewOn = wire.string("review_on"),
         reviewedAtRaw = wire.string("reviewed_at"),
+        assignedTo = wire.string("assigned_to"),
     )
 
     fun taskToWire(task: TaskEntity): JsonObject {
@@ -86,6 +87,7 @@ internal object WireCodec {
             put("review_on", task.reviewOn)
             put("reviewed_at", task.reviewedAtRaw)
             put("source_key", task.sourceKey)
+            put("assigned_to", task.assignedTo)
         }
         val extras = json.parseToJsonElement(task.extrasJson).jsonObject
         return JsonObject(extras + known)
@@ -183,6 +185,17 @@ internal object WireCodec {
         content = wire.string("content").orEmpty(),
         status = wire.string("status").orEmpty(),
         createdAtRaw = wire.string("created_at"),
+    )
+
+    fun commentFromWire(wire: JsonObject) = CommentEntity(
+        uid = wire.requireString("uid"),
+        taskUid = wire.requireString("task_uid"),
+        body = wire.string("body").orEmpty(),
+        authorUid = wire.string("author_uid"),
+        authorName = wire.string("author_name"),
+        createdAtRaw = wire.string("created_at"),
+        updatedAtRaw = wire.string("updated_at"),
+        deletedAtRaw = wire.string("deleted_at"),
     )
 
     fun decodeTagUids(tagUidsJson: String): List<String> =

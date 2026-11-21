@@ -110,8 +110,11 @@ async function snapshot(userId, entity, after, limit, startCursor = null) {
     // Later pages carry the first page's cursor back, so a row edited
     // between pages is pulled again instead of skipped.
     const cursor = startCursor ?? (await latestCursor(userId));
+    const scopeWhere = def.snapshotWhere
+        ? await def.snapshotWhere(userId)
+        : { user_id: userId };
     const rows = await models()[def.model].findAll({
-        where: { user_id: userId, id: { [Op.gt]: after } },
+        where: { ...scopeWhere, id: { [Op.gt]: after } },
         order: [['id', 'ASC']],
         limit: limit + 1,
     });
@@ -149,11 +152,25 @@ async function resolveRefs(def, userId, fields, transaction, loose = false) {
             columns[key] = null;
             continue;
         }
-        const target = await models()[ENTITIES[ref.entity].model].findOne({
-            where: { uid, user_id: userId },
-            attributes: ['id'],
+        let target = await models()[ENTITIES[ref.entity].model].findOne({
+            where:
+                ref.accessible || ref.anyUser
+                    ? { uid }
+                    : { uid, user_id: userId },
+            attributes: ref.accessible ? ['id', 'uid'] : ['id'],
             transaction,
         });
+        if (target && ref.accessible) {
+            const permissionsService = require('../../services/permissionsService');
+            const access = await permissionsService.getAccess(
+                userId,
+                ref.entity,
+                target.uid
+            );
+            if (access === permissionsService.ACCESS.NONE) {
+                target = null;
+            }
+        }
         if (!target) {
             // Someone else's row is refused; only a row gone for good drops.
             if (
@@ -283,6 +300,15 @@ function rowKey(userId, op) {
 
 async function refuseUpsert(userId, op, row, transaction) {
     if (row && row.user_id !== userId) return rejected('forbidden');
+    const def = ENTITIES[op.entity];
+    if (row && def.authorize) {
+        const allowed = await def.authorize(userId, row, transaction);
+        if (!allowed) return rejected('forbidden');
+    }
+    if (row && def.refuseUpsert) {
+        const reason = def.refuseUpsert(row, op.fields);
+        if (reason) return rejected(reason);
+    }
     // Delete wins: an edit made offline to a row removed elsewhere must
     // not bring it back.
     if (!row && (await wasDeleted(userId, op.entity, op.uid, transaction))) {
@@ -331,6 +357,26 @@ function mergeLocked(userId, op, lastTry) {
         if (error instanceof Refusal) return error;
         throw error;
     });
+}
+
+const VALIDATION_ERRORS = new Set([
+    'SequelizeValidationError',
+    'SequelizeUniqueConstraintError',
+    'SequelizeForeignKeyConstraintError',
+]);
+
+// A pushed value the database refused (Postgres SQLSTATE class 22 bad data,
+// 23 constraint) is the op's fault: refused, so the device moves on. Anything
+// else (deadlock 40P01, serialization 40001, lock timeout, lost connection)
+// fails the push so the device retries it.
+function isBadValue(error) {
+    if (VALIDATION_ERRORS.has(error.name)) return true;
+    const code = error.parent?.code ?? error.original?.code;
+    return (
+        error.name === 'SequelizeDatabaseError' &&
+        typeof code === 'string' &&
+        (code.startsWith('22') || code.startsWith('23'))
+    );
 }
 
 // Reads the row under the lock, merges the pushed fields by clock and writes
@@ -426,9 +472,7 @@ async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
         if (!row && !lastTry && (await lostCreateRace(error))) {
             throw new CreateRaceLost();
         }
-        if (error.name && error.name.startsWith('Sequelize')) {
-            throw new Refusal('invalid_value');
-        }
+        if (isBadValue(error)) throw new Refusal('invalid_value');
         throw error;
     }
 
@@ -462,6 +506,9 @@ async function applyDelete(userId, op) {
     const row = await findByUid(def, userId, op.uid);
     if (!row) return { status: 'applied' };
     if (row.user_id !== userId) return rejected('forbidden');
+    if (def.authorize && !(await def.authorize(userId, row))) {
+        return rejected('forbidden');
+    }
     const fromFile = await todoMdSync.intercept(userId, op, row);
     if (fromFile) return fromFile;
     hlc.observe(op.hlc);

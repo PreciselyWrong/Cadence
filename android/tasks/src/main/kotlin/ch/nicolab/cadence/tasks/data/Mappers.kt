@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.data
 
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.CommentItem
 import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalHorizon
 import ch.nicolab.cadence.tasks.model.GoalItem
@@ -57,6 +58,7 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         someday = someday,
         goalUid = extras["goal_uid"],
         recurrence = TaskExtras.recurrenceRule(extrasJson, accountZone),
+        assignedTo = assignedTo,
     )
 }
 
@@ -130,6 +132,18 @@ internal fun InboxRow.toEntry() = InboxEntry(
     content = item.content,
     status = item.status,
     createdAt = parseInstant(item.createdAtRaw),
+    pendingSync = pendingSync,
+)
+
+internal fun CommentRow.toItem(currentUserUid: String?) = CommentItem(
+    uid = comment.uid,
+    taskUid = comment.taskUid,
+    body = comment.body,
+    authorUid = comment.authorUid,
+    authorName = comment.authorName,
+    createdAt = parseInstant(comment.createdAtRaw),
+    updatedAt = parseInstant(comment.updatedAtRaw),
+    isOwn = (comment.authorUid == null && pendingSync) || (currentUserUid != null && comment.authorUid == currentUserUid),
     pendingSync = pendingSync,
 )
 

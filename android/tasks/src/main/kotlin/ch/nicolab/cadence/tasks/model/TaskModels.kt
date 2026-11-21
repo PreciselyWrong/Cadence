@@ -81,6 +81,8 @@ data class TaskItem(
     val recurrence: RecurrenceRule = RecurrenceRule(),
     /** Occurrence à venir d'une série ([RecurrenceExpansion]) : copie de la tâche enregistrée à un autre jour, ni cochable ni modifiable. */
     val virtual: Boolean = false,
+    /** Personne assignée (`assigned_to`, uid de la personne). */
+    val assignedTo: String? = null,
 ) {
     /** Clé de liste : la tâche enregistrée et ses occurrences à venir partagent le même [uid]. */
     val rowKey: String get() = if (virtual) "$uid|$dueDay" else uid
@@ -296,6 +298,22 @@ data class TaskChange(
     val order: Int? = null,
     /** Rang dans la liste Aujourd'hui, choisi à la main (`today_order`). */
     val todayOrder: Int? = null,
+    /** Personne assignée (`assigned_to`, uid de la personne) ; [clearAssignee] retire la personne. */
+    val assignedTo: String? = null,
+    val clearAssignee: Boolean = false,
+)
+
+/** Commentaire d'une tâche, synchronisé hors ligne. */
+data class CommentItem(
+    val uid: String,
+    val taskUid: String,
+    val body: String,
+    val authorUid: String? = null,
+    val authorName: String? = null,
+    val createdAt: Instant? = null,
+    val updatedAt: Instant? = null,
+    val isOwn: Boolean = false,
+    val pendingSync: Boolean = false,
 )
 
 enum class RecurringScope(val wire: String) { THIS("this"), FOLLOWING("following"), ALL("all") }

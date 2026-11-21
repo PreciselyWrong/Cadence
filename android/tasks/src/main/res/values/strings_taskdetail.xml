@@ -47,4 +47,18 @@
     <string name="tasks_to_project_title">Transformer « %1$s » en projet ?</string>
     <string name="tasks_to_project_message">Les sous-tâches deviennent ses tâches, les adresses de la note ses pages.</string>
     <string name="tasks_to_project_confirm">Transformer</string>
+
+    <!-- Commentaires et personne assignée -->
+    <string name="tasks_comments_title">Commentaires</string>
+    <string name="tasks_comments_add_hint">Ajouter un commentaire</string>
+    <string name="tasks_comments_send">Envoyer</string>
+    <string name="tasks_comments_author_me">Moi</string>
+    <string name="tasks_comments_just_now">À l\'instant</string>
+    <string name="tasks_comments_minutes_ago">Il y a %1$d min</string>
+    <string name="tasks_comments_hours_ago">Il y a %1$d h</string>
+    <string name="tasks_comments_days_ago">Il y a %1$d j</string>
+    <string name="tasks_comment_deleted">Commentaire supprimé</string>
+    <string name="tasks_assigned_to">Assignée à %1$s</string>
+    <string name="tasks_assigned_to_label">Assignée à</string>
+    <string name="tasks_assigned_to_nobody">Personne</string>
 </resources>

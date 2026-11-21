@@ -317,4 +317,5 @@ private fun deletionMessage(context: Context, deletion: PendingDeletion): String
     DeletionKind.Note -> context.getString(R.string.tasks_note_deleted)
     DeletionKind.Idea -> context.getString(R.string.tasks_idea_deleted)
     DeletionKind.Goal -> context.getString(R.string.goals_deleted, deletion.title.orEmpty())
+    DeletionKind.Comment -> context.getString(R.string.tasks_comment_deleted)
 }

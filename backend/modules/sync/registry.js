@@ -62,7 +62,35 @@ const ENTITIES = {
             'completed_at',
             'source',
             'source_url',
+            'assigned_to',
         ],
+        validate: async (row, values, userId) => {
+            if (!('assigned_to' in values)) return null;
+            if (values.assigned_to === null || values.assigned_to === '') {
+                values.assigned_to = null;
+                return null;
+            }
+            if (typeof values.assigned_to !== 'string') {
+                return 'invalid_assignee';
+            }
+            const { validateAssignee } = require('../tasks/utils/validation');
+            try {
+                values.assigned_to = await validateAssignee(
+                    values.assigned_to,
+                    userId,
+                    {
+                        projectId:
+                            'project_id' in values
+                                ? values.project_id
+                                : (row?.project_id ?? null),
+                        currentAssignedTo: row?.assigned_to ?? null,
+                    }
+                );
+                return null;
+            } catch {
+                return 'invalid_assignee';
+            }
+        },
         // Set when the server (or any device) has already notified the
         // reminder; a device must not ring one that was sent after it.
         // The key of a task mirrored from a TODO.md bullet: only its check box
@@ -332,6 +360,257 @@ const ENTITIES = {
                 otherKey: 'tag_id',
                 entity: 'tag',
             },
+        },
+    },
+    comment: {
+        model: 'Comment',
+        version: 1,
+        fields: ['body', 'mentioned_person_uids'],
+        serverFields: ['deleted_at'],
+        refs: {
+            task_uid: { column: 'task_id', entity: 'task', accessible: true },
+            parent_comment_uid: {
+                column: 'parent_comment_id',
+                entity: 'comment',
+                anyUser: true,
+            },
+        },
+        destroy: async (row) => {
+            if (row.deleted_at) return;
+            await row.update({
+                body: '',
+                mentioned_person_uids: [],
+                deleted_at: new Date(),
+            });
+        },
+        authorize: async (userId, row, transaction) => {
+            const { Task } = require('../../models');
+            const permissionsService = require('../../services/permissionsService');
+            const task = await Task.findByPk(row.task_id, {
+                attributes: ['uid'],
+                transaction,
+            });
+            if (!task) return false;
+            const access = await permissionsService.getAccess(
+                userId,
+                'task',
+                task.uid
+            );
+            return access !== permissionsService.ACCESS.NONE;
+        },
+        refuseUpsert: (row, fields) =>
+            row.deleted_at && fields && 'body' in fields ? 'deleted' : null,
+        validate: async (row, values) => {
+            if (!row && !values.task_id) return 'task_required';
+            if (row && 'task_id' in values && values.task_id !== row.task_id) {
+                return 'invalid_value';
+            }
+            if (row && row.deleted_at && 'body' in values) {
+                return 'deleted';
+            }
+            if ('body' in values) {
+                if (typeof values.body !== 'string') return 'invalid_value';
+                const trimmed = values.body.trim();
+                if (!trimmed || trimmed.length > 10000) return 'invalid_value';
+                values.body = trimmed;
+            } else if (!row) {
+                return 'invalid_value';
+            }
+            if ('mentioned_person_uids' in values) {
+                if (
+                    !Array.isArray(values.mentioned_person_uids) ||
+                    !values.mentioned_person_uids.every(
+                        (v) => typeof v === 'string'
+                    )
+                ) {
+                    return 'invalid_value';
+                }
+            }
+            if (
+                'parent_comment_id' in values &&
+                values.parent_comment_id !== null
+            ) {
+                const taskId = values.task_id ?? row?.task_id;
+                const { Comment } = require('../../models');
+                const parent = await Comment.findByPk(
+                    values.parent_comment_id,
+                    {
+                        attributes: [
+                            'id',
+                            'task_id',
+                            'parent_comment_id',
+                            'deleted_at',
+                        ],
+                    }
+                );
+                if (!parent || parent.task_id !== taskId) {
+                    return 'invalid_reference:parent_comment_uid';
+                }
+                if (
+                    parent.deleted_at ||
+                    parent.parent_comment_id ||
+                    (row && parent.id === row.id)
+                ) {
+                    return 'invalid_value';
+                }
+            }
+            return null;
+        },
+        afterApply: async ({ row, previous, userId }) => {
+            if (!previous) {
+                await require('../comments/service').recordCreatedSideEffects(
+                    row,
+                    userId
+                );
+            }
+        },
+        snapshotWhere: async (userId) => {
+            const { Op } = require('sequelize');
+            const { sequelize, Task } = require('../../models');
+            const permissionsService = require('../../services/permissionsService');
+            const taskWhere =
+                await permissionsService.ownershipOrPermissionWhere(
+                    'task',
+                    userId
+                );
+            const sql = sequelize
+                .getQueryInterface()
+                .queryGenerator.selectQuery(
+                    'tasks',
+                    { attributes: ['id'], where: taskWhere },
+                    Task
+                )
+                .replace(/;$/, '');
+            return { task_id: { [Op.in]: sequelize.literal(`(${sql})`) } };
+        },
+        journalUsers: async (row, transaction) => {
+            const { Task, Project, Area } = require('../../models');
+            const permissionSources = require('../../services/permissionSources');
+            const permissionsService = require('../../services/permissionsService');
+            const {
+                resolveAssigneeUser,
+            } = require('../tasks/operations/assignment');
+            const candidates = new Set([row.user_id]);
+            const task = await Task.findByPk(row.task_id, {
+                attributes: [
+                    'id',
+                    'uid',
+                    'user_id',
+                    'project_id',
+                    'area_id',
+                    'parent_task_id',
+                    'assigned_to',
+                ],
+                transaction,
+            });
+            if (!task) return Array.from(candidates);
+            candidates.add(task.user_id);
+
+            const taskPerms = await permissionSources.findAccepted(
+                { resource_type: 'task', resource_uid: task.uid },
+                ['user_id']
+            );
+            for (const p of taskPerms) candidates.add(p.user_id);
+
+            // Walk parent chain to collect project and area collaborators.
+            let projectId = task.project_id;
+            const areaIds = new Set();
+            if (task.area_id) areaIds.add(task.area_id);
+            let current = task;
+            const seenTasks = new Set([task.id]);
+            while (
+                current.parent_task_id &&
+                !seenTasks.has(current.parent_task_id)
+            ) {
+                seenTasks.add(current.parent_task_id);
+                current = await Task.findByPk(current.parent_task_id, {
+                    attributes: [
+                        'id',
+                        'user_id',
+                        'project_id',
+                        'area_id',
+                        'parent_task_id',
+                    ],
+                    transaction,
+                });
+                if (!current) break;
+                candidates.add(current.user_id);
+                if (!projectId && current.project_id) {
+                    projectId = current.project_id;
+                }
+                if (current.area_id) areaIds.add(current.area_id);
+            }
+
+            if (projectId) {
+                const project = await Project.findByPk(projectId, {
+                    attributes: ['uid', 'user_id', 'area_id'],
+                    transaction,
+                });
+                if (project) {
+                    candidates.add(project.user_id);
+                    if (project.area_id) areaIds.add(project.area_id);
+                    const projPerms = await permissionSources.findAccepted(
+                        { resource_type: 'project', resource_uid: project.uid },
+                        ['user_id']
+                    );
+                    for (const p of projPerms) candidates.add(p.user_id);
+                }
+            }
+
+            for (const areaId of areaIds) {
+                const area = await Area.findByPk(areaId, {
+                    attributes: ['uid', 'user_id'],
+                    transaction,
+                });
+                if (area) {
+                    candidates.add(area.user_id);
+                    const areaPerms = await permissionSources.findAccepted(
+                        { resource_type: 'area', resource_uid: area.uid },
+                        ['user_id']
+                    );
+                    for (const p of areaPerms) candidates.add(p.user_id);
+                }
+            }
+
+            if (task.assigned_to) {
+                const assignee = await resolveAssigneeUser(task.assigned_to);
+                if (assignee) candidates.add(assignee.id);
+            }
+
+            const allowed = [];
+            for (const uid of candidates) {
+                const access = await permissionsService.getAccess(
+                    uid,
+                    'task',
+                    task.uid
+                );
+                if (access !== permissionsService.ACCESS.NONE) {
+                    allowed.push(uid);
+                }
+            }
+            return allowed;
+        },
+        extraFields: async (row, transaction) => {
+            const { User, Person } = require('../../models');
+            const { authorDisplayName } = require('../comments/service');
+            const author = await User.findByPk(row.user_id, {
+                attributes: ['id', 'uid', 'name', 'surname', 'email'],
+                transaction,
+            });
+            if (!author) return { author_uid: null, author_name: null };
+            const selfPerson = await Person.findOne({
+                where: {
+                    linked_user_id: row.user_id,
+                    user_id: row.user_id,
+                },
+                attributes: ['name'],
+                raw: true,
+                transaction,
+            });
+            return {
+                author_uid: author.uid,
+                author_name: authorDisplayName(author, selfPerson),
+            };
         },
     },
 };

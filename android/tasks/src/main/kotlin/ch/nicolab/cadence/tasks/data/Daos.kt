@@ -352,3 +352,29 @@ interface SyncMetaDao {
     @Query("DELETE FROM sync_meta WHERE `key` = :key")
     suspend fun delete(key: String)
 }
+
+data class CommentRow(
+    @Embedded val comment: CommentEntity,
+    val pendingSync: Boolean,
+)
+
+@Dao
+interface CommentDao {
+    @Query(
+        """SELECT comments.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'comment' AND outbox.uid = comments.uid) AS pendingSync
+        FROM comments WHERE taskUid = :taskUid AND deletedAtRaw IS NULL AND EXISTS(SELECT 1 FROM tasks WHERE tasks.uid = comments.taskUid) ORDER BY createdAtRaw ASC, uid ASC""",
+    )
+    fun observeForTask(taskUid: String): Flow<List<CommentRow>>
+
+    @Query("SELECT * FROM comments WHERE uid = :uid")
+    suspend fun get(uid: String): CommentEntity?
+
+    @Upsert
+    suspend fun upsert(comment: CommentEntity)
+
+    @Query("DELETE FROM comments WHERE uid = :uid")
+    suspend fun delete(uid: String)
+
+    @Query("DELETE FROM comments WHERE uid NOT IN (SELECT uid FROM outbox WHERE entity = 'comment')")
+    suspend fun deleteSynced()
+}

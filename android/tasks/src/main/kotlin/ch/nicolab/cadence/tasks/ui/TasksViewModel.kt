@@ -22,6 +22,7 @@ import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.WithLinkFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.CommentItem
 import ch.nicolab.cadence.tasks.model.AreaSuggestions
 import ch.nicolab.cadence.tasks.model.DecisionContext
 import ch.nicolab.cadence.tasks.model.Delivery
@@ -159,7 +160,7 @@ internal data class TodayState(
     val plannedDays: Map<String, LocalDate> = emptyMap(),
 )
 
-internal enum class DeletionKind { Note, Idea, Goal }
+internal enum class DeletionKind { Note, Idea, Goal, Comment }
 
 /** Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion] ; [title] nomme un objectif. */
 internal data class PendingDeletion(
@@ -888,6 +889,20 @@ internal class TasksViewModel(
     }
 
     fun deleteNoteWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Note, uid)) { repository.deleteNote(uid) }
+
+    fun deleteCommentWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Comment, uid)) { repository.deleteComment(uid) }
+
+    fun observeComments(taskUid: String): Flow<List<CommentItem>> =
+        combine(repository.observeComments(taskUid), hidden) { list, hiddenUids ->
+            list.filter { it.uid !in hiddenUids }
+        }
+
+    fun addComment(taskUid: String, body: String) = launchAction { repository.addComment(taskUid, body) }
+
+    fun assignTask(task: TaskItem, personUid: String?) {
+        val change = if (personUid == null) TaskChange(clearAssignee = true) else TaskChange(assignedTo = personUid)
+        edit(task, change)
+    }
 
     fun deleteIdeaWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Idea, uid)) { repository.deleteInboxItem(uid) }
 

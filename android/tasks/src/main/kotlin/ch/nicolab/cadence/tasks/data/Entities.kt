@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -46,6 +47,8 @@ data class TaskEntity(
     val reviewedAtRaw: String? = null,
     /** Clé de la ligne du TODO.md dont vient la tâche (`source_key`, posé par le serveur) ; seule la case se modifie alors ici. */
     val sourceKey: String? = null,
+    /** Personne assignée (`assigned_to`, uid de la personne). */
+    val assignedTo: String? = null,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
 }
@@ -236,4 +239,19 @@ data class DeferredCallEntity(
 data class SyncMetaEntity(
     @PrimaryKey val key: String,
     val value: String,
+)
+
+@Entity(
+    tableName = "comments",
+    indices = [Index(value = ["taskUid"], name = "index_comments_taskUid")],
+)
+data class CommentEntity(
+    @PrimaryKey val uid: String,
+    val taskUid: String,
+    val body: String,
+    val authorUid: String? = null,
+    val authorName: String? = null,
+    val createdAtRaw: String? = null,
+    val updatedAtRaw: String? = null,
+    val deletedAtRaw: String? = null,
 )

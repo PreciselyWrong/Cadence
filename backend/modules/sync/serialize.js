@@ -41,6 +41,9 @@ async function serializeRow(entity, row, transaction) {
     for (const [key, list] of Object.entries(listsOf(entity))) {
         data[key] = await listUids(list, row.id, transaction);
     }
+    if (def.extraFields) {
+        Object.assign(data, await def.extraFields(row, transaction));
+    }
     data.field_clocks = row.get('field_clocks') ?? {};
     data.created_at = plain(row.get('created_at'));
     data.updated_at = plain(row.get('updated_at'));

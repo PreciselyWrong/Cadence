@@ -63,6 +63,7 @@ internal class RoomSyncStore(
         database.noteDao().deleteSynced()
         database.inboxDao().deleteSynced()
         database.linkDao().deleteSynced()
+        database.commentDao().deleteSynced()
     }
 
     override suspend fun applyServerRow(entity: String, data: JsonObject) {
@@ -83,6 +84,7 @@ internal class RoomSyncStore(
                 "note" -> database.noteDao().upsert(WireCodec.noteFromWire(merged))
                 "inbox_item" -> database.inboxDao().upsert(WireCodec.inboxFromWire(merged))
                 "link" -> database.linkDao().upsert(WireCodec.linkFromWire(merged))
+                "comment" -> database.commentDao().upsert(WireCodec.commentFromWire(merged))
                 else -> Unit
             }
         }
@@ -102,6 +104,7 @@ internal class RoomSyncStore(
             "note" -> database.noteDao().delete(uid)
             "inbox_item" -> database.inboxDao().delete(uid)
             "link" -> database.linkDao().delete(uid)
+            "comment" -> database.commentDao().delete(uid)
         }
     }
 

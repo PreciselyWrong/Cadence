@@ -21,6 +21,7 @@ data class ConnectionInfo(
     val quietHours: QuietHours? = null,
     val visibleHours: VisibleHours = VisibleHours.WHOLE_DAY,
     val dayHours: DayHoursRange? = null,
+    val userUid: String? = null,
 ) {
     val quiet: QuietPolicy get() = QuietPolicy(quietHours, accountZone)
 }

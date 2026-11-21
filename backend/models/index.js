@@ -776,6 +776,7 @@ require('../modules/sync/journal').install({
     InboxItem,
     Goal,
     Link,
+    Comment,
     ...cadenceHabitModels,
     SyncChange,
 });

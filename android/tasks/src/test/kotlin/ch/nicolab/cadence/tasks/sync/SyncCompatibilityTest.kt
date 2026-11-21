@@ -55,7 +55,7 @@ class SyncCompatibilityTest {
 
         assertEquals(SyncResult.Synced, result)
         assertEquals(null, engine.state.value.lastError)
-        assertEquals(listOf("link"), engine.state.value.unsupported)
+        assertEquals(listOf("link", "comment"), engine.state.value.unsupported)
         assertEquals(12L, store.cursor())
         assertEquals(listOf("area", "goal", "project", "tag", "note", "task", "inbox_item"), api.snapshotEntities)
         assertFalse("link" in store.snapshotted!!)

@@ -2,6 +2,7 @@
 
 const {
     Task,
+    Comment,
     TaskAttachment,
     User,
     Person,
@@ -297,6 +298,41 @@ async function notifyAboutComment(
     }
 }
 
+async function recordCreatedSideEffects(
+    comment,
+    userId,
+    { task = null, parentAuthorUserId = undefined } = {}
+) {
+    const resolvedTask =
+        task ||
+        (await Task.findByPk(comment.task_id, {
+            attributes: ['id', 'uid', 'name', 'user_id', 'assigned_to'],
+        }));
+    if (!resolvedTask) return;
+
+    let resolvedParentAuthor = parentAuthorUserId;
+    if (resolvedParentAuthor === undefined && comment.parent_comment_id) {
+        const parent = await Comment.findByPk(comment.parent_comment_id, {
+            attributes: ['user_id'],
+        });
+        resolvedParentAuthor = parent ? parent.user_id : null;
+    }
+
+    await taskEventService.logEvent({
+        taskId: resolvedTask.id,
+        userId,
+        eventType: 'comment_added',
+        metadata: { action: 'comment_added', commentUid: comment.uid },
+    });
+
+    await notifyAboutComment(
+        resolvedTask,
+        comment,
+        userId,
+        resolvedParentAuthor ?? null
+    );
+}
+
 async function addComment(
     userId,
     taskUid,
@@ -336,14 +372,10 @@ async function addComment(
         parentCommentId: parentId,
     });
 
-    await taskEventService.logEvent({
-        taskId: task.id,
-        userId,
-        eventType: 'comment_added',
-        metadata: { action: 'comment_added', commentUid: comment.uid },
+    await recordCreatedSideEffects(comment, userId, {
+        task,
+        parentAuthorUserId,
     });
-
-    await notifyAboutComment(task, comment, userId, parentAuthorUserId);
 
     comment.Author = await User.findByPk(userId, {
         attributes: ['id', 'uid', 'name', 'surname', 'email'],
@@ -472,4 +504,6 @@ module.exports = {
     addInlineImage,
     removeComment,
     setReaction,
+    authorDisplayName,
+    recordCreatedSideEffects,
 };

@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks
 
 import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.CommentItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
 import ch.nicolab.cadence.tasks.model.SyncConflictItem
@@ -208,6 +209,15 @@ interface TaskRepository {
 
     /** Remet dans l'Inbox une idée traitée : « Annuler » d'une décision. Une idée inconnue n'écrit rien. */
     suspend fun reopenInboxItem(uid: String)
+
+    /** Commentaires d'une tâche, les plus anciens d'abord. */
+    fun observeComments(taskUid: String): Flow<List<CommentItem>>
+
+    /** Ajoute un commentaire sur [taskUid] hors ligne ; retourne son uid, ou null si le texte est vide. */
+    suspend fun addComment(taskUid: String, body: String): String?
+
+    /** Supprime un commentaire créé par l'utilisateur (file d'envoi). */
+    suspend fun deleteComment(uid: String)
 
     /** Demande une synchronisation au plus tôt (sans attendre la fin). */
     fun requestSync()

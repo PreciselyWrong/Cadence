@@ -243,43 +243,68 @@ function install(models) {
             stamp(entity, instance, options)
         );
 
+        const targetUsers = async (instance, transaction) => {
+            const def = ENTITIES[entity];
+            const users = def.journalUsers
+                ? await def.journalUsers(instance, transaction)
+                : [instance.user_id];
+            const list = users.length > 0 ? users : [instance.user_id];
+            // Ascending user_id order avoids lock-order deadlocks on Postgres
+            // when two transactions journal for overlapping audiences.
+            return [...new Set(list)].sort((a, b) => Number(a) - Number(b));
+        };
+
         const record = async (instance, options) => {
             if (instance._syncChanged === false && !options.syncApplied) {
                 return;
             }
-            await append(
-                SyncChange,
-                {
-                    user_id: instance.user_id,
-                    entity,
-                    uid: instance.uid,
-                    op: 'upsert',
-                    data: await serializeRow(
-                        entity,
-                        instance,
-                        options.transaction
-                    ),
-                    op_id: currentOpId(),
-                },
+            const data = await serializeRow(
+                entity,
+                instance,
                 options.transaction
             );
+            const opId = currentOpId();
+            for (const uId of await targetUsers(
+                instance,
+                options.transaction
+            )) {
+                await append(
+                    SyncChange,
+                    {
+                        user_id: uId,
+                        entity,
+                        uid: instance.uid,
+                        op: 'upsert',
+                        data,
+                        op_id: uId === instance.user_id ? opId : null,
+                    },
+                    options.transaction
+                );
+            }
         };
         Model.addHook('afterCreate', record);
         Model.addHook('afterUpdate', record);
 
         Model.addHook('afterDestroy', async (instance, options) => {
-            await append(
-                SyncChange,
-                {
-                    user_id: instance.user_id,
-                    entity,
-                    uid: instance.uid,
-                    op: 'delete',
-                    data: { hlc: hlc.now() },
-                    op_id: currentOpId(),
-                },
+            const opId = currentOpId();
+            const data = { hlc: hlc.now() };
+            for (const uId of await targetUsers(
+                instance,
                 options.transaction
-            );
+            )) {
+                await append(
+                    SyncChange,
+                    {
+                        user_id: uId,
+                        entity,
+                        uid: instance.uid,
+                        op: 'delete',
+                        data,
+                        op_id: uId === instance.user_id ? opId : null,
+                    },
+                    options.transaction
+                );
+            }
         });
     }
 }

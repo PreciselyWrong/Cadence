@@ -15,6 +15,9 @@ import kotlin.coroutines.cancellation.CancellationException
 /** Une personne qu'on peut mentionner (`@[Nom](person:uid)`). */
 data class MentionPerson(val uid: String, val name: String)
 
+/** Résultat de la liste des personnes assignables, avec l'état en ligne du serveur. */
+data class AssignablePeople(val people: List<MentionPerson>, val online: Boolean)
+
 /**
  * Personnes du choix `@` : les personnes ne sont pas synchronisées sur Android, la liste se lit en ligne
  * (`GET /api/v1/people?archived=false`, comme le web) et la dernière lue est gardée sur l'appareil pour écrire une
@@ -26,22 +29,46 @@ class PeopleClient internal constructor(
 ) {
     /** La liste du serveur, ou la dernière gardée si le serveur ne répond pas. */
     suspend fun list(): List<MentionPerson> = try {
-        parse(call("GET", "/api/v1/people", mapOf("archived" to "false"))).also { save(it) }
+        parse(call("GET", "/api/v1/people", mapOf("archived" to "false"))).also { save(KEY, it) }
     } catch (e: CancellationException) {
         throw e
     } catch (_: Exception) {
-        cached()
+        cached(KEY)
     }
 
-    private fun cached(): List<MentionPerson> = prefs.getString(KEY, null)?.let { raw ->
+    /** Personnes assignables à une tâche du projet [projectUid] (ou de l'espace sans projet). */
+    suspend fun assignable(projectUid: String?): AssignablePeople {
+        val path = if (projectUid != null) "/api/v1/projects/$projectUid/assignable-people" else "/api/v1/people/assignable"
+        val cacheKey = "assignable:${projectUid ?: "workspace"}"
+        return try {
+            val people = parse(call("GET", path, emptyMap())).also { save(cacheKey, it) }
+            AssignablePeople(people, online = true)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            AssignablePeople(cached(cacheKey), online = false)
+        }
+    }
+
+    /** Nom connu localement pour [uid] (dernier cache des personnes), ou null. */
+    fun cachedNameOf(uid: String, projectUid: String? = null): String? {
+        val keys = listOfNotNull(
+            projectUid?.let { "assignable:$it" },
+            "assignable:workspace",
+            KEY,
+        )
+        return keys.firstNotNullOfOrNull { key -> cached(key).firstOrNull { it.uid == uid }?.name }
+    }
+
+    private fun cached(key: String): List<MentionPerson> = prefs.getString(key, null)?.let { raw ->
         runCatching { parse(Json.parseToJsonElement(raw)) }.getOrNull()
     }.orEmpty()
 
-    private fun save(people: List<MentionPerson>) {
+    private fun save(key: String, people: List<MentionPerson>) {
         val json = buildJsonObject {
             put("people", buildJsonArray { people.forEach { add(buildJsonObject { put("uid", it.uid); put("name", it.name) }) } })
         }
-        prefs.edit().putString(KEY, json.toString()).apply()
+        prefs.edit().putString(key, json.toString()).apply()
     }
 
     companion object {

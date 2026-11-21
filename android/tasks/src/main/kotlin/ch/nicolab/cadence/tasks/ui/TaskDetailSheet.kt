@@ -35,6 +35,7 @@ import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.HourglassEmpty
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Schedule
@@ -91,6 +92,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.contentlinks.AssignablePeople
 import ch.nicolab.cadence.tasks.links.TaskLinks
 import ch.nicolab.cadence.tasks.relations.TaskRelations
 import ch.nicolab.cadence.tasks.model.DetailTitle
@@ -126,7 +128,7 @@ private const val AUTOSAVE_DELAY_MS = 700L
 private const val MAX_TAG_BADGES = 2
 private const val NO_PRIORITY = -1
 
-private enum class Picker { Dates, Repeat, Estimate, Priority, Status, Tags, Project, Actions, Focus, RelationLink }
+private enum class Picker { Dates, Repeat, Estimate, Priority, Status, Tags, Project, Assignee, Actions, Focus, RelationLink }
 
 private enum class DateTab { Start, Due }
 
@@ -156,6 +158,7 @@ internal fun TaskDetailSheet(
     val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
+    val comments by viewModel.observeComments(current.uid).collectAsStateWithLifecycle(initialValue = emptyList())
     val tagColors = remember(tags) { tagBadgeColorsByName(tags) }
     val zone = moment.zone
     val today = moment.today
@@ -163,6 +166,18 @@ internal fun TaskDetailSheet(
     val commitment = PlanBoard.commitment(current, today, weekStart)
     val palette = cadence
     val context = LocalContext.current
+    val peopleClient = remember(context) { TasksGraph.people(context) }
+    var assignable by remember(current.uid, current.projectUid) {
+        mutableStateOf(AssignablePeople(emptyList(), online = false))
+    }
+    LaunchedEffect(current.uid, current.projectUid) {
+        assignable = peopleClient.assignable(current.projectUid)
+    }
+    val assigneeName = current.assignedTo?.let { uid ->
+        assignable.people.firstOrNull { it.uid == uid }?.name
+            ?: peopleClient.cachedNameOf(uid, current.projectUid)
+            ?: uid
+    }
 
     var title by remember(current.uid) { mutableStateOf(current.name) }
     var note by remember(current.uid) { mutableStateOf(current.note.orEmpty()) }
@@ -293,12 +308,15 @@ internal fun TaskDetailSheet(
                     projectColor = current.projectUid?.let { projectColors[it] }?.let(::Color),
                     tagNames = tags.filter { it.uid in current.tagUids }.map { it.name },
                     tagColors = tagColors,
+                    assigneeName = assigneeName,
+                    assigneeEnabled = assignable.online,
                     onDates = { openDates(DateTab.Due) },
                     onPriority = { picker = Picker.Priority },
                     onProject = { picker = Picker.Project },
                     onStatus = { picker = Picker.Status },
                     onTags = { picker = Picker.Tags },
                     onRepeat = { picker = Picker.Repeat },
+                    onAssignee = { picker = Picker.Assignee },
                 )
                 // Horizon et prochaine action : seulement s'ils servent déjà, sinon derrière « Plus de champs ».
                 val funnelInUse = current.someday || current.reviewOn != null ||
@@ -333,6 +351,13 @@ internal fun TaskDetailSheet(
                     onToggleTask = { viewModel.toggle(it) },
                 )
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
+                TaskCommentsSection(
+                    comments = comments,
+                    onAdd = { viewModel.addComment(current.uid, it) },
+                    onDelete = { viewModel.deleteCommentWithUndo(it) },
+                    onRef = openRef,
+                    onWikiLink = openWiki,
+                )
                 if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
                 TaskRelationsSection(
                     relations = relations,
@@ -482,6 +507,14 @@ internal fun TaskDetailSheet(
             projects = ProjectChoices.forTask(projects, current.projectUid),
             selectedUid = current.projectUid,
             onSelect = { viewModel.edit(latest, TaskEdits.project(latest, it)) },
+            onDismiss = dismissPicker,
+        )
+        Picker.Assignee -> ChoiceSheet(
+            title = stringResource(R.string.tasks_assigned_to_label),
+            choices = listOf(SheetChoice<String?>(null, stringResource(R.string.tasks_assigned_to_nobody))) +
+                assignable.people.map { SheetChoice<String?>(it.uid, it.name) },
+            selected = current.assignedTo,
+            onSelect = { viewModel.assignTask(latest, it) },
             onDismiss = dismissPicker,
         )
         Picker.RelationLink -> LinkTaskSheet(
@@ -708,12 +741,15 @@ private fun DetailBadges(
     projectColor: Color?,
     tagNames: List<String>,
     tagColors: Map<String, Color>,
+    assigneeName: String?,
+    assigneeEnabled: Boolean,
     onDates: () -> Unit,
     onPriority: () -> Unit,
     onProject: () -> Unit,
     onStatus: () -> Unit,
     onTags: () -> Unit,
     onRepeat: () -> Unit,
+    onAssignee: () -> Unit,
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(Space.sm),
@@ -779,6 +815,23 @@ private fun DetailBadges(
         if (tagNames.size > MAX_TAG_BADGES) {
             TapBadge(onTags) {
                 CadenceBadge(text = stringResource(R.string.tasks_detail_more_tags, tagNames.size - MAX_TAG_BADGES))
+            }
+        }
+        if (assigneeName != null) {
+            TapBadge(onAssignee, assigneeEnabled) {
+                CadenceBadge(
+                    text = stringResource(R.string.tasks_assigned_to, assigneeName),
+                    tone = BadgeTone.Neutral,
+                    icon = Icons.Outlined.Person,
+                )
+            }
+        } else if (assigneeEnabled) {
+            TapBadge(onAssignee, true) {
+                CadenceBadge(
+                    text = stringResource(R.string.tasks_assigned_to_label),
+                    tone = BadgeTone.Neutral,
+                    icon = Icons.Outlined.Person,
+                )
             }
         }
     }

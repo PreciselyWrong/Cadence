@@ -1,6 +1,21 @@
 const request = require('supertest');
 const app = require('../../app');
-const { Task, Project, SyncOp, Tag } = require('../../models');
+const {
+    Task,
+    Project,
+    Area,
+    SyncOp,
+    SyncChange,
+    Tag,
+    Comment,
+    Person,
+    Permission,
+    UserGroup,
+    GroupShare,
+    GroupPermission,
+    TaskEvent,
+    Notification,
+} = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
 const hlc = (ms, counter = 0, node = 'devA') =>
@@ -1029,6 +1044,730 @@ describe('Offline sync API', () => {
             expect(
                 await Task.count({ where: { uid: 'clienttask00007' } })
             ).toBe(0);
+        });
+    });
+
+    describe('comments and assigned_to', () => {
+        it('lists comment entity and task.assigned_to in /sync/meta', async () => {
+            const res = await agent.get('/api/v1/sync/meta');
+            expect(res.status).toBe(200);
+            const comment = res.body.entities.find((e) => e.name === 'comment');
+            expect(comment).toBeDefined();
+            expect(comment.fields).toContain('body');
+            expect(comment.refs.task_uid).toBe('task');
+
+            const task = res.body.entities.find((e) => e.name === 'task');
+            expect(task.fields).toContain('assigned_to');
+        });
+
+        it('pulls a comment created on the web', async () => {
+            const snap = await agent.get('/api/v1/sync/snapshot?entity=task');
+            const cursor = snap.body.cursor;
+
+            const createdTask = await agent
+                .post('/api/task')
+                .send({ name: 'Task with web comment' });
+            const taskUid = createdTask.body.uid;
+
+            const createdComment = await agent
+                .post(`/api/task/${taskUid}/comments`)
+                .send({ body: 'Hello from web' });
+            expect(createdComment.status).toBe(201);
+
+            const pulled = await agent.get(
+                `/api/v1/sync/pull?cursor=${cursor}`
+            );
+            expect(pulled.status).toBe(200);
+            const commentChange = pulled.body.changes.find(
+                (c) =>
+                    c.entity === 'comment' && c.uid === createdComment.body.uid
+            );
+            expect(commentChange).toBeDefined();
+            expect(commentChange.op).toBe('upsert');
+            expect(commentChange.data.body).toBe('Hello from web');
+            expect(commentChange.data.task_uid).toBe(taskUid);
+            expect(commentChange.data.author_uid).toBeTruthy();
+        });
+
+        it('pushes a comment from phone and exposes it in GET /task/:uid/comments', async () => {
+            await push(agent, [
+                upsert(
+                    'op-t-cmt',
+                    'task',
+                    'clienttaskcmt01',
+                    { name: 'Phone task' },
+                    hlc(10)
+                ),
+                upsert(
+                    'op-c-1',
+                    'comment',
+                    'clientcmt000001',
+                    { body: 'From phone', task_uid: 'clienttaskcmt01' },
+                    hlc(11)
+                ),
+            ]).then((r) => {
+                expect(r.status).toBe(200);
+                expect(r.body.results.map((x) => x.status)).toEqual([
+                    'applied',
+                    'applied',
+                ]);
+            });
+
+            const list = await agent.get('/api/task/clienttaskcmt01/comments');
+            expect(list.status).toBe(200);
+            expect(list.body.comments).toHaveLength(1);
+            expect(list.body.comments[0].uid).toBe('clientcmt000001');
+            expect(list.body.comments[0].body).toBe('From phone');
+            expect(list.body.comments[0].is_own).toBe(true);
+        });
+
+        it('soft-deletes a comment via sync, journals an upsert with deleted_at, and preserves replies', async () => {
+            const owner = await signIn('cmt-reply-owner@example.com');
+            const collab = await signIn('cmt-reply-survive@example.com');
+            await push(owner.agent, [
+                upsert(
+                    'op-t-delc',
+                    'task',
+                    'clienttaskcmt02',
+                    { name: 'Task' },
+                    hlc(10)
+                ),
+                upsert(
+                    'op-c-del1',
+                    'comment',
+                    'clientcmt000002',
+                    { body: 'To delete', task_uid: 'clienttaskcmt02' },
+                    hlc(11)
+                ),
+            ]);
+            await Permission.create({
+                user_id: collab.user.id,
+                resource_type: 'task',
+                resource_uid: 'clienttaskcmt02',
+                access_level: 'rw',
+                granted_by_user_id: owner.user.id,
+                status: 'accepted',
+            });
+            await push(collab.agent, [
+                upsert(
+                    'op-c-reply-keep',
+                    'comment',
+                    'clientcmt000003',
+                    {
+                        body: 'Reply survives',
+                        task_uid: 'clienttaskcmt02',
+                        parent_comment_uid: 'clientcmt000002',
+                    },
+                    hlc(11, 1)
+                ),
+            ]);
+            const snap = await owner.agent.get(
+                '/api/v1/sync/snapshot?entity=comment'
+            );
+            const cursor = snap.body.cursor;
+
+            const del = await push(owner.agent, [
+                {
+                    op_id: 'op-c-del2',
+                    entity: 'comment',
+                    uid: 'clientcmt000002',
+                    action: 'delete',
+                    hlc: hlc(12),
+                },
+            ]);
+            expect(del.body.results[0].status).toBe('applied');
+            const deletedRow = await Comment.findOne({
+                where: { uid: 'clientcmt000002' },
+            });
+            expect(deletedRow).not.toBeNull();
+            expect(deletedRow.body).toBe('');
+            expect(deletedRow.deleted_at).not.toBeNull();
+
+            const replyRow = await Comment.findOne({
+                where: { uid: 'clientcmt000003' },
+            });
+            expect(replyRow).not.toBeNull();
+            expect(replyRow.body).toBe('Reply survives');
+            expect(replyRow.deleted_at).toBeNull();
+
+            const pulled = await owner.agent.get(
+                `/api/v1/sync/pull?cursor=${cursor}`
+            );
+            const tomb = pulled.body.changes.find(
+                (c) => c.entity === 'comment' && c.uid === 'clientcmt000002'
+            );
+            expect(tomb).toBeDefined();
+            expect(tomb.op).toBe('upsert');
+            expect(tomb.data.deleted_at).toBeTruthy();
+        });
+
+        it('scopes shared task comments: collaborator can read and add own, cannot edit/delete others', async () => {
+            const owner = await signIn('cmt-owner@example.com');
+            const collab = await signIn('cmt-collab@example.com');
+
+            const taskRes = await owner.agent
+                .post('/api/task')
+                .send({ name: 'Shared task' });
+            const taskUid = taskRes.body.uid;
+
+            await Permission.create({
+                user_id: collab.user.id,
+                resource_type: 'task',
+                resource_uid: taskUid,
+                access_level: 'rw',
+                granted_by_user_id: owner.user.id,
+            });
+
+            const ownerComment = await owner.agent
+                .post(`/api/task/${taskUid}/comments`)
+                .send({ body: 'Owner note' });
+            expect(ownerComment.status).toBe(201);
+
+            const snap = await collab.agent.get(
+                '/api/v1/sync/snapshot?entity=comment'
+            );
+            expect(snap.status).toBe(200);
+            expect(
+                snap.body.rows.some((r) => r.uid === ownerComment.body.uid)
+            ).toBe(true);
+
+            // Collab cannot overwrite or delete owner's comment
+            const steal = await push(collab.agent, [
+                upsert(
+                    'op-steal-cmt',
+                    'comment',
+                    ownerComment.body.uid,
+                    { body: 'Hacked' },
+                    hlc(50)
+                ),
+            ]);
+            expect(steal.body.results[0].status).toBe('rejected');
+            expect(steal.body.results[0].reason).toBe('forbidden');
+
+            const del = await push(collab.agent, [
+                {
+                    op_id: 'op-del-other-cmt',
+                    entity: 'comment',
+                    uid: ownerComment.body.uid,
+                    action: 'delete',
+                    hlc: hlc(51),
+                },
+            ]);
+            expect(del.body.results[0].status).toBe('rejected');
+            expect(del.body.results[0].reason).toBe('forbidden');
+
+            // Collab can push their own comment on the shared task
+            const own = await push(collab.agent, [
+                upsert(
+                    'op-collab-cmt',
+                    'comment',
+                    'collabcmt000001',
+                    { body: 'Collab reply', task_uid: taskUid },
+                    hlc(52)
+                ),
+            ]);
+            expect(own.body.results[0].status).toBe('applied');
+        });
+
+        it('syncs task.assigned_to by person uid and rejects unauthorized assignees', async () => {
+            const owner = await signIn('assign-sync@example.com');
+            const person = await Person.create({
+                name: 'Alice',
+                user_id: owner.user.id,
+            });
+            const stranger = await signIn('stranger-sync@example.com');
+            const strangerPerson = await Person.create({
+                name: 'Bob',
+                user_id: stranger.user.id,
+            });
+
+            const res = await push(owner.agent, [
+                upsert(
+                    'op-assign-1',
+                    'task',
+                    'clienttaskasg01',
+                    { name: 'Assigned task', assigned_to: person.uid },
+                    hlc(20)
+                ),
+                upsert(
+                    'op-assign-bad',
+                    'task',
+                    'clienttaskasg02',
+                    { name: 'Bad assign', assigned_to: strangerPerson.uid },
+                    hlc(21)
+                ),
+            ]);
+            expect(res.body.results[0].status).toBe('applied');
+            expect(res.body.results[1].status).toBe('rejected');
+            expect(res.body.results[1].reason).toBe('invalid_assignee');
+
+            const snap = await owner.agent.get(
+                '/api/v1/sync/snapshot?entity=task'
+            );
+            const row = snap.body.rows.find((r) => r.uid === 'clienttaskasg01');
+            expect(row.assigned_to).toBe(person.uid);
+        });
+
+        it('excludes pending invitees and includes group-share, area, and subtask-parent users in comment pull', async () => {
+            const owner = await signIn('cmt-aud-owner@example.com');
+            const pendingUser = await signIn('cmt-aud-pending@example.com');
+            const groupUser = await signIn('cmt-aud-group@example.com');
+            const areaCollab = await signIn('cmt-aud-area@example.com');
+            const parentProjCollab = await signIn('cmt-aud-pproj@example.com');
+
+            const pendingSnap = await pendingUser.agent.get(
+                '/api/v1/sync/snapshot?entity=comment'
+            );
+            const groupSnap = await groupUser.agent.get(
+                '/api/v1/sync/snapshot?entity=comment'
+            );
+            const areaSnap = await areaCollab.agent.get(
+                '/api/v1/sync/snapshot?entity=comment'
+            );
+            const pProjSnap = await parentProjCollab.agent.get(
+                '/api/v1/sync/snapshot?entity=comment'
+            );
+
+            const area = await Area.create({
+                name: 'Shared Area',
+                user_id: owner.user.id,
+            });
+            await Permission.create({
+                user_id: areaCollab.user.id,
+                resource_type: 'area',
+                resource_uid: area.uid,
+                access_level: 'ro',
+                status: 'accepted',
+                granted_by_user_id: owner.user.id,
+            });
+
+            const project = await Project.create({
+                name: 'Shared Parent Project',
+                user_id: owner.user.id,
+            });
+            await Permission.create({
+                user_id: parentProjCollab.user.id,
+                resource_type: 'project',
+                resource_uid: project.uid,
+                access_level: 'ro',
+                status: 'accepted',
+                granted_by_user_id: owner.user.id,
+            });
+
+            const areaTask = await Task.create({
+                name: 'Area task',
+                user_id: owner.user.id,
+                area_id: area.id,
+            });
+            await Permission.create({
+                user_id: pendingUser.user.id,
+                resource_type: 'task',
+                resource_uid: areaTask.uid,
+                access_level: 'rw',
+                status: 'pending',
+                granted_by_user_id: owner.user.id,
+            });
+            const group = await UserGroup.create({ name: 'Comment Group' });
+            const groupShare = await GroupShare.create({
+                group_id: group.id,
+                resource_type: 'task',
+                resource_uid: areaTask.uid,
+                access_level: 'ro',
+                granted_by_user_id: owner.user.id,
+            });
+            await GroupPermission.create({
+                group_share_id: groupShare.id,
+                user_id: groupUser.user.id,
+                resource_type: 'task',
+                resource_uid: areaTask.uid,
+                access_level: 'ro',
+                status: 'accepted',
+                granted_by_user_id: owner.user.id,
+            });
+
+            const parentTask = await Task.create({
+                name: 'Parent task',
+                user_id: owner.user.id,
+                project_id: project.id,
+            });
+            const subTask = await Task.create({
+                name: 'Subtask',
+                user_id: owner.user.id,
+                parent_task_id: parentTask.id,
+            });
+
+            const c1 = await owner.agent
+                .post(`/api/task/${areaTask.uid}/comments`)
+                .send({ body: 'Secret to pending' });
+            expect(c1.status).toBe(201);
+
+            const c2 = await owner.agent
+                .post(`/api/task/${subTask.uid}/comments`)
+                .send({ body: 'Subtask comment' });
+            expect(c2.status).toBe(201);
+
+            const pendingPull = await pendingUser.agent.get(
+                `/api/v1/sync/pull?cursor=${pendingSnap.body.cursor}`
+            );
+            expect(
+                pendingPull.body.changes.some((c) => c.uid === c1.body.uid)
+            ).toBe(false);
+
+            const groupPull = await groupUser.agent.get(
+                `/api/v1/sync/pull?cursor=${groupSnap.body.cursor}`
+            );
+            expect(
+                groupPull.body.changes.some((c) => c.uid === c1.body.uid)
+            ).toBe(true);
+
+            const areaPull = await areaCollab.agent.get(
+                `/api/v1/sync/pull?cursor=${areaSnap.body.cursor}`
+            );
+            expect(
+                areaPull.body.changes.some((c) => c.uid === c1.body.uid)
+            ).toBe(true);
+
+            const pProjPull = await parentProjCollab.agent.get(
+                `/api/v1/sync/pull?cursor=${pProjSnap.body.cursor}`
+            );
+            expect(
+                pProjPull.body.changes.some((c) => c.uid === c2.body.uid)
+            ).toBe(true);
+
+            // Snapshot also includes group-share user
+            const groupSnapAfter = await groupUser.agent.get(
+                '/api/v1/sync/snapshot?entity=comment'
+            );
+            expect(
+                groupSnapAfter.body.rows.some((r) => r.uid === c1.body.uid)
+            ).toBe(true);
+        });
+
+        it('orders SyncChange rows by ascending numeric user_id when journaling a comment', async () => {
+            const owner = await signIn('cmt-ord-owner@example.com');
+            const collab = await signIn('cmt-ord-collab@example.com');
+            expect(collab.user.id).toBeGreaterThan(owner.user.id);
+
+            const taskRes = await owner.agent
+                .post('/api/task')
+                .send({ name: 'Ordered journal task' });
+            await Permission.create({
+                user_id: collab.user.id,
+                resource_type: 'task',
+                resource_uid: taskRes.body.uid,
+                access_level: 'rw',
+                status: 'accepted',
+                granted_by_user_id: owner.user.id,
+            });
+
+            // Collab (higher user_id) creates the comment, so row.user_id > owner.user.id
+            const res = await push(collab.agent, [
+                upsert(
+                    'op-ord-1',
+                    'comment',
+                    'ordcmt000000001',
+                    { body: 'Hi owner', task_uid: taskRes.body.uid },
+                    hlc(30)
+                ),
+            ]);
+            expect(res.body.results[0].status).toBe('applied');
+
+            const changes = await SyncChange.findAll({
+                where: { entity: 'comment', uid: 'ordcmt000000001' },
+                order: [['id', 'ASC']],
+                raw: true,
+            });
+            expect(changes.map((c) => c.user_id)).toEqual([
+                owner.user.id,
+                collab.user.id,
+            ]);
+        });
+
+        it('rethrows generic Sequelize database errors instead of mapping them to invalid_value', async () => {
+            const { Sequelize } = require('sequelize');
+            const taskRes = await agent
+                .post('/api/task')
+                .send({ name: 'DB err task' });
+            const spy = jest.spyOn(Comment, 'create').mockRejectedValueOnce(
+                new Sequelize.DatabaseError(
+                    Object.assign(new Error('deadlock detected'), {
+                        code: '40P01',
+                    })
+                )
+            );
+            try {
+                const res = await push(agent, [
+                    upsert(
+                        'op-dberr-1',
+                        'comment',
+                        'dberrcmt0000001',
+                        { body: 'Fail 500', task_uid: taskRes.body.uid },
+                        hlc(31)
+                    ),
+                ]);
+                expect(res.status).toBe(500);
+            } finally {
+                spy.mockRestore();
+            }
+        });
+
+        it('refuses a value the database rejects as bad data (Postgres 22xxx)', async () => {
+            const { Sequelize } = require('sequelize');
+            const taskRes = await agent
+                .post('/api/task')
+                .send({ name: 'Bad data task' });
+            const spy = jest.spyOn(Comment, 'create').mockRejectedValueOnce(
+                new Sequelize.DatabaseError(
+                    Object.assign(new Error('invalid input syntax'), {
+                        code: '22P02',
+                    })
+                )
+            );
+            try {
+                const res = await push(agent, [
+                    upsert(
+                        'op-baddata-1',
+                        'comment',
+                        'baddatacmt00001',
+                        { body: 'Bad', task_uid: taskRes.body.uid },
+                        hlc(32)
+                    ),
+                ]);
+                expect(res.status).toBe(200);
+                expect(res.body.results[0]).toMatchObject({
+                    status: 'rejected',
+                    reason: 'invalid_value',
+                });
+            } finally {
+                spy.mockRestore();
+            }
+        });
+
+        it('refuses comment upsert and delete with forbidden when task access was revoked', async () => {
+            const owner = await signIn('cmt-rev-owner@example.com');
+            const collab = await signIn('cmt-rev-collab@example.com');
+
+            const taskRes = await owner.agent
+                .post('/api/task')
+                .send({ name: 'Revocable task' });
+            const perm = await Permission.create({
+                user_id: collab.user.id,
+                resource_type: 'task',
+                resource_uid: taskRes.body.uid,
+                access_level: 'rw',
+                status: 'accepted',
+                granted_by_user_id: owner.user.id,
+            });
+
+            const created = await push(collab.agent, [
+                upsert(
+                    'op-rev-create',
+                    'comment',
+                    'revcmt000000001',
+                    { body: 'Initial', task_uid: taskRes.body.uid },
+                    hlc(40)
+                ),
+            ]);
+            expect(created.body.results[0].status).toBe('applied');
+
+            await perm.destroy();
+
+            const editRes = await push(collab.agent, [
+                upsert(
+                    'op-rev-edit',
+                    'comment',
+                    'revcmt000000001',
+                    { body: 'After revoke' },
+                    hlc(41)
+                ),
+            ]);
+            expect(editRes.body.results[0]).toMatchObject({
+                status: 'rejected',
+                reason: 'forbidden',
+            });
+
+            const delRes = await push(collab.agent, [
+                {
+                    op_id: 'op-rev-del',
+                    entity: 'comment',
+                    uid: 'revcmt000000001',
+                    action: 'delete',
+                    hlc: hlc(42),
+                },
+            ]);
+            expect(delRes.body.results[0]).toMatchObject({
+                status: 'rejected',
+                reason: 'forbidden',
+            });
+        });
+
+        it('refuses pushing body onto a soft-deleted comment with deleted', async () => {
+            const taskRes = await agent
+                .post('/api/task')
+                .send({ name: 'Deleted body task' });
+            const cmt = await agent
+                .post(`/api/task/${taskRes.body.uid}/comments`)
+                .send({ body: 'Will delete' });
+            const delRes = await agent.delete(`/api/comment/${cmt.body.uid}`);
+            expect(delRes.status).toBe(200);
+
+            const res = await push(agent, [
+                upsert(
+                    'op-push-del-body',
+                    'comment',
+                    cmt.body.uid,
+                    { body: 'Resurrect' },
+                    hlc(50)
+                ),
+            ]);
+            expect(res.body.results[0]).toMatchObject({
+                status: 'rejected',
+                reason: 'deleted',
+            });
+        });
+
+        it('refuses changing task_uid on an existing comment with invalid_value', async () => {
+            const t1 = await agent.post('/api/task').send({ name: 'T1' });
+            const t2 = await agent.post('/api/task').send({ name: 'T2' });
+
+            const created = await push(agent, [
+                upsert(
+                    'op-move-c1',
+                    'comment',
+                    'movecmt00000001',
+                    { body: 'On T1', task_uid: t1.body.uid },
+                    hlc(60)
+                ),
+            ]);
+            expect(created.body.results[0].status).toBe('applied');
+
+            const moved = await push(agent, [
+                upsert(
+                    'op-move-c2',
+                    'comment',
+                    'movecmt00000001',
+                    { task_uid: t2.body.uid },
+                    hlc(61)
+                ),
+            ]);
+            expect(moved.body.results[0]).toMatchObject({
+                status: 'rejected',
+                reason: 'invalid_value',
+            });
+        });
+
+        it('refuses replying to a reply or across tasks, and allows replying to another user comment', async () => {
+            const owner = await signIn('cmt-rep-owner@example.com');
+            const collab = await signIn('cmt-rep-collab@example.com');
+
+            const t1 = await owner.agent
+                .post('/api/task')
+                .send({ name: 'Thread task' });
+            const t2 = await owner.agent
+                .post('/api/task')
+                .send({ name: 'Other task' });
+            await Permission.create({
+                user_id: collab.user.id,
+                resource_type: 'task',
+                resource_uid: t1.body.uid,
+                access_level: 'rw',
+                status: 'accepted',
+                granted_by_user_id: owner.user.id,
+            });
+
+            const root = await owner.agent
+                .post(`/api/task/${t1.body.uid}/comments`)
+                .send({ body: 'Root' });
+            const otherTaskCmt = await owner.agent
+                .post(`/api/task/${t2.body.uid}/comments`)
+                .send({ body: 'Other' });
+
+            // Collab replies to owner's root comment
+            const replyRes = await push(collab.agent, [
+                upsert(
+                    'op-rep-ok',
+                    'comment',
+                    'repcmt000000001',
+                    {
+                        body: 'Reply 1',
+                        task_uid: t1.body.uid,
+                        parent_comment_uid: root.body.uid,
+                    },
+                    hlc(70)
+                ),
+            ]);
+            expect(replyRes.body.results[0].status).toBe('applied');
+
+            // Reply to a reply -> refused
+            const nestedRes = await push(owner.agent, [
+                upsert(
+                    'op-rep-nested',
+                    'comment',
+                    'repcmt000000002',
+                    {
+                        body: 'Reply 2',
+                        task_uid: t1.body.uid,
+                        parent_comment_uid: 'repcmt000000001',
+                    },
+                    hlc(71)
+                ),
+            ]);
+            expect(nestedRes.body.results[0].status).toBe('rejected');
+
+            // Reply across tasks -> refused
+            const crossRes = await push(owner.agent, [
+                upsert(
+                    'op-rep-cross',
+                    'comment',
+                    'repcmt000000003',
+                    {
+                        body: 'Cross',
+                        task_uid: t1.body.uid,
+                        parent_comment_uid: otherTaskCmt.body.uid,
+                    },
+                    hlc(72)
+                ),
+            ]);
+            expect(crossRes.body.results[0].status).toBe('rejected');
+        });
+
+        it('logs comment_added task event and creates notification when comment is created via sync', async () => {
+            const owner = await signIn('cmt-fx-owner@example.com');
+            const collab = await signIn('cmt-fx-collab@example.com');
+
+            const t = await owner.agent
+                .post('/api/task')
+                .send({ name: 'Notify task' });
+            await Permission.create({
+                user_id: collab.user.id,
+                resource_type: 'task',
+                resource_uid: t.body.uid,
+                access_level: 'rw',
+                status: 'accepted',
+                granted_by_user_id: owner.user.id,
+            });
+
+            const res = await push(collab.agent, [
+                upsert(
+                    'op-fx-1',
+                    'comment',
+                    'fxcmt0000000001',
+                    { body: 'Ping owner', task_uid: t.body.uid },
+                    hlc(80)
+                ),
+            ]);
+            expect(res.body.results[0].status).toBe('applied');
+
+            const task = await Task.findOne({ where: { uid: t.body.uid } });
+            const event = await TaskEvent.findOne({
+                where: { task_id: task.id, event_type: 'comment_added' },
+            });
+            expect(event).not.toBeNull();
+
+            const notif = await Notification.findOne({
+                where: { user_id: owner.user.id, type: 'comment_added' },
+            });
+            expect(notif).not.toBeNull();
         });
     });
 });

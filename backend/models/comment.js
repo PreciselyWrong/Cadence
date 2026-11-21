@@ -16,6 +16,10 @@ module.exports = (sequelize) => {
                 unique: true,
                 defaultValue: uid,
             },
+            field_clocks: {
+                type: DataTypes.JSON,
+                allowNull: true,
+            },
             task_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,

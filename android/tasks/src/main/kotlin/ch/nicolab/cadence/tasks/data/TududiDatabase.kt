@@ -16,13 +16,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         LinkPreviewEntity::class,
         InboxItemEntity::class,
         LinkEntity::class,
+        CommentEntity::class,
         OutboxEntity::class,
         FailedOpEntity::class,
         SyncMetaEntity::class,
         SyncConflictEntity::class,
         DeferredCallEntity::class,
     ],
-    version = 25,
+    version = 26,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -31,6 +32,7 @@ abstract class TududiDatabase : RoomDatabase() {
     abstract fun areaDao(): AreaDao
     abstract fun goalDao(): GoalDao
     abstract fun linkDao(): LinkDao
+    abstract fun commentDao(): CommentDao
     abstract fun tagDao(): TagDao
     abstract fun noteDao(): NoteDao
     abstract fun linkPreviewDao(): LinkPreviewDao
@@ -329,6 +331,22 @@ internal val MIGRATION_24_25 = object : Migration(24, 25) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE tags ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0")
         db.execSQL("ALTER TABLE projects ADD COLUMN updatedAtRaw TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Ajoute `assignedTo` aux tâches et la table `comments` pour les commentaires de tâche. Le curseur est retiré :
+ * le prochain instantané apporte les personnes assignées et les commentaires déjà sur le serveur.
+ */
+internal val MIGRATION_25_26 = object : Migration(25, 26) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tasks ADD COLUMN assignedTo TEXT")
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `comments` (`uid` TEXT NOT NULL, `taskUid` TEXT NOT NULL, `body` TEXT NOT NULL, " +
+                "`authorUid` TEXT, `authorName` TEXT, `createdAtRaw` TEXT, `updatedAtRaw` TEXT, `deletedAtRaw` TEXT, PRIMARY KEY(`uid`))",
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_comments_taskUid` ON `comments` (`taskUid`)")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }
