@@ -1,3 +1,12 @@
+## [1.44.0] : 21 novembre 2026
+
+- Réglages › Agendas : « Connecter Google » ou « Reconnecter Google » ouvre la connexion dans le navigateur et revient dans l'app ; l'alerte de synchro en échec y mène.
+- Commentaires de tâche et personne assignée dans la fiche, synchronisés même hors ligne.
+- Sections de projet synchronisées, et vue Tableau (Kanban) dans la page projet.
+- Pièces jointes des tâches et projets, agendas ICS abonnés dans l'Agenda (en ligne).
+- Nouvelle note depuis la page projet, partage public d'une note, modèles de projet, vues enregistrées.
+- Tâche récurrente : « Retirer aussi de ma journée » ; étiquettes épinglées ; projets triés par activité.
+
 ## [1.43.0] : 20 novembre 2026
 
 - « Ma matinée » enchaîne tout : les mails à trier d'abord, puis les retards replacés par l'IA, puis ta journée, et Aujourd'hui pour finir. La carte apparaît aussi le matin quand il n'y a que des mails à trier ; la notification du matin ouvre la même suite.
