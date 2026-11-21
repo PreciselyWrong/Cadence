@@ -35,8 +35,10 @@ import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -54,6 +56,7 @@ import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.PinnedShortcut
 import ch.nicolab.cadence.tasks.model.PinnedShortcuts
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.views.SavedView
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -96,11 +99,15 @@ fun TasksScreen(
     var tab by rememberSaveable { mutableStateOf(TasksTab.TODAY) }
     var openProjectUid by rememberSaveable { mutableStateOf(showProjectUid) }
     var openTagUid by rememberSaveable { mutableStateOf<String?>(null) }
+    var openViewUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedTaskUid by rememberSaveable { mutableStateOf(openTaskUid) }
     var quickAddOpen by rememberSaveable { mutableStateOf(false) }
+    var projectAddChooserOpen by rememberSaveable { mutableStateOf(false) }
+    var templatesPickerOpen by rememberSaveable { mutableStateOf(false) }
     var switcherOpen by rememberSaveable { mutableStateOf(false) }
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteIsNew by rememberSaveable { mutableStateOf(false) }
+    var selectedNoteProjectUid by rememberSaveable { mutableStateOf<String?>(null) }
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     DeletionUndoEffect(viewModel, snackbar)
@@ -135,8 +142,15 @@ fun TasksScreen(
     }
     BackHandler(enabled = openProjectUid != null) { openProjectUid = null }
     BackHandler(enabled = openTagUid != null && openProjectUid == null) { openTagUid = null }
+    BackHandler(enabled = openViewUid != null && openProjectUid == null && openTagUid == null) { openViewUid = null }
 
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val viewsClient = remember(context) { ch.nicolab.cadence.tasks.TasksGraph.views(context) }
+    var savedViews by remember { mutableStateOf<List<SavedView>>(emptyList()) }
+    LaunchedEffect(switcherOpen) {
+        runCatching { viewsClient.listAll() }.onSuccess { savedViews = it }
+    }
     val layouts = remember(context) { LayoutStore(context) }
     var notesGallery by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.NOTES)) }
     var hideDoneToday by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.HIDE_DONE_TODAY)) }
@@ -252,6 +266,7 @@ fun TasksScreen(
                     modifier = Modifier.weight(1f),
                 ) {
                     val projectUid = openProjectUid
+                    val currentView = openViewUid?.let { uid -> savedViews.firstOrNull { it.uid == uid } }
                     when {
                         projectUid != null -> ProjectTasksPane(
                             viewModel = viewModel,
@@ -261,8 +276,21 @@ fun TasksScreen(
                             onOpen = { selectedTaskUid = it.uid },
                             onOpenNote = {
                                 selectedNoteIsNew = false
+                                selectedNoteProjectUid = null
                                 selectedNoteUid = it.uid
                             },
+                            onNewNote = {
+                                selectedNoteIsNew = true
+                                selectedNoteProjectUid = projectUid
+                                selectedNoteUid = UUID.randomUUID().toString()
+                            },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        currentView != null -> ViewTasksPane(
+                            viewModel = viewModel,
+                            savedView = currentView,
+                            onBack = { openViewUid = null },
+                            onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                         )
                         tab == TasksTab.TAGS && openTagUid != null -> TagTasksPane(
@@ -323,7 +351,10 @@ fun TasksScreen(
                 onClick = {
                     if (tab == TasksTab.NOTES) {
                         selectedNoteIsNew = true
+                        selectedNoteProjectUid = null
                         selectedNoteUid = UUID.randomUUID().toString()
+                    } else if (tab == TasksTab.PROJECTS && openProjectUid == null) {
+                        projectAddChooserOpen = true
                     } else {
                         quickAddOpen = true
                     }
@@ -345,7 +376,14 @@ fun TasksScreen(
             },
             current = tab,
             todayCount = overdueCount + todayState.today.size + eventCount,
-            pinned = remember(projects, notes, tags) { PinnedShortcuts.of(projects, notes, tags) },
+            pinned = remember(projects, notes, tags, savedViews) { PinnedShortcuts.of(projects, notes, tags, savedViews) },
+            views = savedViews,
+            onOpenView = { view ->
+                switcherOpen = false
+                openProjectUid = null
+                openTagUid = null
+                openViewUid = view.uid
+            },
             areas = areas,
             areaFilter = areaFilter,
             withLink = withLink,
@@ -353,6 +391,7 @@ fun TasksScreen(
                 tab = it
                 openTagUid = null
                 openProjectUid = null
+                openViewUid = null
                 switcherOpen = false
             },
             onOpenPinned = { shortcut ->
@@ -360,15 +399,23 @@ fun TasksScreen(
                 when (shortcut.kind) {
                     PinnedShortcut.Kind.PROJECT -> {
                         tab = TasksTab.PROJECTS
+                        openViewUid = null
                         openProjectUid = shortcut.uid
                     }
                     PinnedShortcut.Kind.NOTE -> {
                         selectedNoteIsNew = false
+                        selectedNoteProjectUid = null
                         selectedNoteUid = shortcut.uid
                     }
                     PinnedShortcut.Kind.TAG -> {
                         tab = TasksTab.TAGS
+                        openViewUid = null
                         openTagUid = shortcut.uid
+                    }
+                    PinnedShortcut.Kind.VIEW -> {
+                        openProjectUid = null
+                        openTagUid = null
+                        openViewUid = shortcut.uid
                     }
                 }
             },
@@ -377,6 +424,15 @@ fun TasksScreen(
                     PinnedShortcut.Kind.PROJECT -> viewModel.setProjectPinned(shortcut.uid, false)
                     PinnedShortcut.Kind.NOTE -> viewModel.saveNoteAttributes(shortcut.uid, NoteChange(pinned = false))
                     PinnedShortcut.Kind.TAG -> viewModel.setTagPinned(shortcut.uid, false)
+                    PinnedShortcut.Kind.VIEW -> scope.launch {
+                        runCatching { viewsClient.setPinned(shortcut.uid, false) }
+                            .onSuccess {
+                                savedViews = savedViews.map { if (it.uid == shortcut.uid) it.copy(isPinned = false) else it }
+                            }
+                            .onFailure {
+                                android.widget.Toast.makeText(context, R.string.views_unpin_offline, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 }
             },
             onSelectArea = viewModel::selectArea,
@@ -394,6 +450,28 @@ fun TasksScreen(
         selectedTaskUid = selectedTaskUid,
         onCloseTask = { selectedTaskUid = null },
     )
+    if (projectAddChooserOpen) {
+        ProjectAddChooserSheet(
+            onAddTaskOrNote = { quickAddOpen = true },
+            onFromTemplate = { templatesPickerOpen = true },
+            onDismiss = { projectAddChooserOpen = false },
+        )
+    }
+    if (templatesPickerOpen) {
+        val ctx = LocalContext.current
+        TemplatesPickerSheet(
+            onCloned = { createdName ->
+                templatesPickerOpen = false
+                viewModel.requestSync()
+                android.widget.Toast.makeText(
+                    ctx,
+                    ctx.getString(R.string.templates_cloned_notice, createdName),
+                    android.widget.Toast.LENGTH_SHORT,
+                ).show()
+            },
+            onDismiss = { templatesPickerOpen = false },
+        )
+    }
     if (quickAddOpen) {
         QuickAddSheet(
             onDismiss = { quickAddOpen = false },
@@ -401,12 +479,27 @@ fun TasksScreen(
             initialProjectUid = openProjectUid,
             onNoteCreated = {
                 selectedNoteIsNew = false
+                selectedNoteProjectUid = null
                 selectedNoteUid = it
             },
         )
     }
     selectedNoteUid?.let { uid ->
-        NoteScreen(viewModel, uid, isNew = selectedNoteIsNew, onBack = { selectedNoteUid = null }, onOpenNote = { selectedNoteUid = it }, onOpenTask = { selectedTaskUid = it })
+        NoteScreen(
+            viewModel,
+            uid,
+            isNew = selectedNoteIsNew,
+            onBack = {
+                selectedNoteUid = null
+                selectedNoteProjectUid = null
+            },
+            onOpenNote = {
+                selectedNoteProjectUid = null
+                selectedNoteUid = it
+            },
+            onOpenTask = { selectedTaskUid = it },
+            initialProjectUid = selectedNoteProjectUid,
+        )
     }
 }
 

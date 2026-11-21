@@ -457,6 +457,11 @@ An unknown link, a link that was switched off and a deleted note all show the sa
 
 Note payloads never include the token. They carry `is_public` (boolean) instead, so a collaborator who can read a note cannot lift its public link. Stored in `notes.public_token` (unique) and `notes.public_shared_at`; a note is public while both are set, and turning sharing off clears only `public_shared_at`.
 
+### Android
+
+- In the note editor's `⋯` menu, **Partager publiquement** opens an online sheet (`PublicShareSheet`) to enable sharing, copy or share the public URL via the system sheet, rotate the link (with confirmation), or disable sharing.
+- The menu entry is hidden when the `public_notes` feature is disabled on the server, and actions are disabled with an offline notice when the server is unreachable.
+
 ---
 
 ## Responsive Behavior

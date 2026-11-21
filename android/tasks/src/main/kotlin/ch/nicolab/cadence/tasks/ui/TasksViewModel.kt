@@ -801,6 +801,12 @@ internal class TasksViewModel(
 
     private val noteSessions = HashMap<String, NoteEditSession>()
     private val noteSavers = HashMap<String, Autosaver<NotePatch>>()
+    private val noteInitialProjects = HashMap<String, String>()
+
+    /** Associe un projet initial à une nouvelle note avant sa première saisie. */
+    fun setNoteInitialProject(uid: String, projectUid: String?) {
+        if (projectUid != null) noteInitialProjects[uid] = projectUid else noteInitialProjects.remove(uid)
+    }
 
     /** Session de saisie d'une note, conservée tant que l'éditeur est ouvert (survit à une rotation). */
     fun noteSession(uid: String, initial: NoteFields): NoteEditSession = noteSessions.getOrPut(uid) { NoteEditSession(initial) }
@@ -826,6 +832,7 @@ internal class TasksViewModel(
             runSaving { noteSavers[uid]?.flush() }
             noteSavers.remove(uid)
             noteSessions.remove(uid)
+            noteInitialProjects.remove(uid)
         }
     }
 
@@ -930,7 +937,11 @@ internal class TasksViewModel(
     private fun noteSaver(uid: String, session: NoteEditSession) = noteSavers.getOrPut(uid) {
         Autosaver(viewModelScope, NOTE_SAVE_DELAY_MS) { patch ->
             runSaving {
-                repository.saveNote(uid, NoteChange(title = patch.title, content = patch.content))
+                val initialProject = noteInitialProjects.remove(uid)
+                repository.saveNote(
+                    uid,
+                    NoteChange(title = patch.title, content = patch.content, projectUid = initialProject),
+                )
                 session.markSaved(patch)
             }
         }

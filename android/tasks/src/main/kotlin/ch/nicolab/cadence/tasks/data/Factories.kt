@@ -68,6 +68,12 @@ internal fun createDecisions(context: Context): ch.nicolab.cadence.tasks.decisio
 
 internal fun createRelations(context: Context): ch.nicolab.cadence.tasks.relations.TaskRelationsRepository = TasksRuntime.get(context).relations
 
+internal fun createPublicShare(context: Context): ch.nicolab.cadence.tasks.notes.PublicShareClient = TasksRuntime.get(context).publicShare
+
+internal fun createTemplates(context: Context): ch.nicolab.cadence.tasks.project.TemplatesClient = TasksRuntime.get(context).templates
+
+internal fun createViews(context: Context): ch.nicolab.cadence.tasks.views.ViewsClient = TasksRuntime.get(context).views
+
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
 
@@ -134,6 +140,15 @@ internal class TasksRuntime private constructor(context: Context) {
     val pageChecks = PageCheckClient(api::call)
     val alignDue = ch.nicolab.cadence.tasks.planning.AlignDueClient(api::call)
     val backlinks = ch.nicolab.cadence.tasks.contentlinks.BacklinksClient { method, path, query -> api.callJson(method, path, query) }
+    val publicShare = ch.nicolab.cadence.tasks.notes.PublicShareClient(
+        call = { method, path, body -> api.call(method, path, body = body) },
+        baseUrlProvider = { connection.currentSession()?.baseUrl },
+    )
+    val templates = ch.nicolab.cadence.tasks.project.TemplatesClient { method, path, body -> api.call(method, path, body = body) }
+    val views = ch.nicolab.cadence.tasks.views.ViewsClient(
+        callJson = { method, path, query -> api.callJson(method, path, query) },
+        callObj = { method, path, body -> api.call(method, path, body = body) },
+    )
     val people = ch.nicolab.cadence.tasks.contentlinks.PeopleClient(
         { method, path, query -> api.callJson(method, path, query) },
         appContext.getSharedPreferences("cadence_people", Context.MODE_PRIVATE),

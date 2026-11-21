@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Partage public de note -->
+    <string name="note_public_share_menu">Partager publiquement</string>
+    <string name="note_public_share_title">Partage public</string>
+    <string name="note_public_share_offline">Hors ligne : impossible de joindre le serveur.</string>
+    <string name="note_public_share_enable">Activer le partage public</string>
+    <string name="note_public_share_hint">Toute personne ayant l’adresse pourra lire cette note.</string>
+    <string name="note_public_share_url_label">Adresse publique</string>
+    <string name="note_public_share_copy">Copier</string>
+    <string name="note_public_share_copied">Adresse copiée.</string>
+    <string name="note_public_share_share">Partager</string>
+    <string name="note_public_share_rotate">Nouvelle adresse</string>
+    <string name="note_public_share_rotate_confirm_title">Créer une nouvelle adresse ?</string>
+    <string name="note_public_share_rotate_confirm_body">L’ancienne adresse cessera de fonctionner aussitôt.</string>
+    <string name="note_public_share_rotate_confirm_yes">Remplacer</string>
+    <string name="note_public_share_disable">Arrêter le partage</string>
+    <string name="note_public_share_disabled">Partage public arrêté.</string>
+    <string name="note_public_share_cancel">Annuler</string>
+
+    <!-- Modèles de projet -->
+    <string name="templates_add_task_or_note">Tâche, idée ou note</string>
+    <string name="templates_from_template">Depuis un modèle</string>
+    <string name="templates_pick_title">Nouveau projet depuis un modèle</string>
+    <string name="templates_empty">Aucun modèle enregistré.</string>
+    <string name="templates_offline">Hors ligne : impossible de charger les modèles.</string>
+    <string name="templates_action_offline">Hors ligne : impossible d’envoyer au serveur.</string>
+    <string name="templates_clone_title">Créer le projet</string>
+    <string name="templates_clone_name_label">Nom du projet</string>
+    <string name="templates_clone_confirm">Créer</string>
+    <string name="templates_cloned_notice">Projet « %1$s » créé.</string>
+    <string name="templates_save_as">Enregistrer comme modèle</string>
+    <string name="templates_save_title">Enregistrer comme modèle</string>
+    <string name="templates_save_name_label">Nom du modèle</string>
+    <string name="templates_save_confirm">Enregistrer</string>
+    <string name="templates_saved_notice">Modèle « %1$s » enregistré.</string>
+    <plurals name="templates_task_count">
+        <item quantity="one">%1$d tâche</item>
+        <item quantity="other">%1$d tâches</item>
+    </plurals>
+
+    <!-- Vues enregistrées -->
+    <string name="views_section_title">Vues</string>
+    <string name="views_empty">Aucune tâche ne correspond à cette vue.</string>
+    <string name="views_web_only">Vue disponible sur le web</string>
+    <string name="views_offline">Hors ligne : impossible de lire cette vue.</string>
+    <string name="views_unpin_offline">Hors ligne : impossible de désépingler la vue.</string>
+</resources>

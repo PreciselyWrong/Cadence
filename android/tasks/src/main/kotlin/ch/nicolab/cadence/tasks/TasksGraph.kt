@@ -85,6 +85,18 @@ object TasksGraph {
     internal fun relations(context: Context): ch.nicolab.cadence.tasks.relations.TaskRelationsRepository =
         ch.nicolab.cadence.tasks.data.createRelations(context.applicationContext)
 
+    /** Partage public des notes, en ligne seulement. */
+    fun publicShare(context: Context): ch.nicolab.cadence.tasks.notes.PublicShareClient =
+        ch.nicolab.cadence.tasks.data.createPublicShare(context.applicationContext)
+
+    /** Modèles de projet, en ligne seulement. */
+    fun templates(context: Context): ch.nicolab.cadence.tasks.project.TemplatesClient =
+        ch.nicolab.cadence.tasks.data.createTemplates(context.applicationContext)
+
+    /** Vues enregistrées, lues en ligne. */
+    fun views(context: Context): ch.nicolab.cadence.tasks.views.ViewsClient =
+        ch.nicolab.cadence.tasks.data.createViews(context.applicationContext)
+
     /** Classement automatique : réglages, marques et annulation (en ligne), réponses aux suggestions (file différée). */
     fun autoClassify(context: Context): ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRepository =
         ch.nicolab.cadence.tasks.autoclassify.autoClassifyRepository(context)

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Extension
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
@@ -63,6 +64,7 @@ import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.PinnedShortcut
 import ch.nicolab.cadence.tasks.plugins.PluginMenuItem
+import ch.nicolab.cadence.tasks.views.SavedView
 
 /**
  * Sélecteur de liste, ouvert par le titre de Tâches : il remplace les rangées de pastilles (épinglés, onglets,
@@ -86,6 +88,8 @@ internal fun ListSwitcherSheet(
     onDismiss: () -> Unit,
     plugins: List<PluginMenuItem> = emptyList(),
     onOpenPlugin: (PluginMenuItem) -> Unit = {},
+    views: List<SavedView> = emptyList(),
+    onOpenView: (SavedView) -> Unit = {},
 ) {
     val palette = cadence
     CadenceSheet(title = stringResource(R.string.tasks_lists_title), subtitle = null, dismiss = onDismiss) {
@@ -136,6 +140,17 @@ internal fun ListSwitcherSheet(
                     onClick = { onSelectWithLink(!withLink) },
                 )
             }
+            if (views.isNotEmpty()) {
+                HorizontalDivider(Modifier.padding(vertical = Space.sm), color = palette.outlineVariant)
+                SheetLabel(stringResource(R.string.views_section_title))
+                views.forEach { view ->
+                    SwitcherRow(
+                        label = view.name,
+                        leading = { Icon(Icons.Outlined.FilterList, contentDescription = null, tint = palette.onSurfaceVariant, modifier = Modifier.size(Size.icon)) },
+                        onClick = { onOpenView(view) },
+                    )
+                }
+            }
             if (plugins.isNotEmpty()) {
                 HorizontalDivider(Modifier.padding(vertical = Space.sm), color = palette.outlineVariant)
                 SheetLabel(stringResource(R.string.plugins_title))
@@ -181,7 +196,11 @@ private fun SheetLabel(text: String) {
 private fun PinnedIcon(shortcut: PinnedShortcut) {
     val palette = cadence
     val tint = projectRailColor(shortcut.color)?.let { readableTintOf(Color(it), palette.card, ICON_CONTRAST) } ?: palette.onSurfaceVariant
-    val icon = if (shortcut.kind == PinnedShortcut.Kind.NOTE) Icons.AutoMirrored.Outlined.StickyNote2 else entityIcon(shortcut.icon)
+    val icon = when (shortcut.kind) {
+        PinnedShortcut.Kind.NOTE -> Icons.AutoMirrored.Outlined.StickyNote2
+        PinnedShortcut.Kind.VIEW -> Icons.Outlined.FilterList
+        else -> entityIcon(shortcut.icon)
+    }
     if (icon != null) {
         EntityIcon(icon, tint = tint)
     } else {

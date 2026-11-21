@@ -43,8 +43,11 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Tune
+import ch.nicolab.cadence.designsystem.components.CadenceMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -243,8 +246,12 @@ internal fun NoteScreen(
     onOpenNote: (String) -> Unit,
     /** Une puce de tâche ou un rétrolien de tâche touché ; sans hôte de fiche, la tâche s'ouvre dans une feuille ici. */
     onOpenTask: ((String) -> Unit)? = null,
+    initialProjectUid: String? = null,
 ) {
     BackHandler(onBack = onBack)
+    LaunchedEffect(noteUid, isNew, initialProjectUid) {
+        if (isNew && initialProjectUid != null) viewModel.setNoteInitialProject(noteUid, initialProjectUid)
+    }
     val flow = remember(noteUid) { viewModel.observeNote(noteUid) }
     val note by flow.collectAsStateWithLifecycle(initialValue = null)
     var openedTask by remember(noteUid) { mutableStateOf<String?>(null) }
@@ -282,6 +289,16 @@ private fun NoteEditor(
     val openWiki = rememberWikiOpener(viewModel, allNotes, onOpenNote)
     var editing by rememberSaveable(uid) { mutableStateOf(note == null || note.content.isBlank()) }
     var organizing by rememberSaveable(uid) { mutableStateOf(false) }
+    var menuOpen by remember { mutableStateOf(false) }
+    var publicShareOpen by rememberSaveable(uid) { mutableStateOf(false) }
+    var publicNotesEnabled by remember(uid) { mutableStateOf(true) }
+    LaunchedEffect(note?.uid) {
+        if (note != null) {
+            publicNotesEnabled = runCatching {
+                ch.nicolab.cadence.tasks.TasksGraph.publicShare(context).isPublicNotesEnabled()
+            }.getOrDefault(true)
+        }
+    }
     val titleFocus = remember { FocusRequester() }
     val bodyFocus = remember { FocusRequester() }
     val tags by viewModel.tags.collectAsStateWithLifecycle()
@@ -353,6 +370,25 @@ private fun NoteEditor(
                         onBack()
                     },
                 )
+                if (publicNotesEnabled) {
+                    Box {
+                        RoundHeaderButton(
+                            icon = Icons.Outlined.MoreVert,
+                            contentDescription = stringResource(R.string.tasks_project_more),
+                            style = HeaderButtonStyle.Plain,
+                            onClick = { menuOpen = true },
+                        )
+                        CadenceMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.note_public_share_menu)) },
+                                onClick = {
+                                    menuOpen = false
+                                    publicShareOpen = true
+                                },
+                            )
+                        }
+                    }
+                }
             }
         }
         Column(
@@ -444,6 +480,13 @@ private fun NoteEditor(
 
     if (organizing && note != null) {
         OrganizeSheet(note = note, viewModel = viewModel, onDismiss = { organizing = false })
+    }
+    if (publicShareOpen && note != null) {
+        PublicShareSheet(
+            noteUid = uid,
+            noteTitle = title.text,
+            onDismiss = { publicShareOpen = false },
+        )
     }
 }
 

@@ -453,6 +453,15 @@ A refused drop changes nothing and shows a short toast saying why.
 
 ---
 
+## **Android**
+
+- Saved views are fetched online (`GET /api/v1/views`). Pinned views appear under **Épinglés** and all views appear under **Vues** in the list switcher (`ListSwitcherSheet`).
+- Opening a view evaluates its task filters locally against Room tasks (`SavedViewFilter.evaluate`: status, priority, due, defer, tags, project, search text, and extras) when all criteria are supported on-device.
+- If a view uses filters Android cannot evaluate locally, it falls back to an online task query (`GET /api/v1/search`); views targeting non-task entities (Notes, Projects) or unavailable offline display « Vue disponible sur le web » (or « Hors ligne »).
+- Creating and editing views is **web only**.
+
+---
+
 ## **Related Documentation**
 
 - [Today Page Sections](02-today-page-sections.md) - How Today page filters tasks

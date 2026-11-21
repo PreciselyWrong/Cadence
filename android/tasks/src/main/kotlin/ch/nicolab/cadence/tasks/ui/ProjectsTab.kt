@@ -359,6 +359,7 @@ internal fun ProjectTasksPane(
     onOpenProject: (String) -> Unit,
     onOpen: (TaskItem) -> Unit,
     onOpenNote: (NoteItem) -> Unit,
+    onNewNote: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -381,6 +382,7 @@ internal fun ProjectTasksPane(
     var editingStatus by remember { mutableStateOf(false) }
     var menuOpen by remember { mutableStateOf(false) }
     var choosingTodoMd by remember { mutableStateOf(false) }
+    var savingTemplate by remember { mutableStateOf(false) }
     val todoMdFiles = rememberTodoMdFiles(projectUid)
     if (choosingTodoMd) {
         TodoMdFileDialog(projectUid, todoMdFiles, onChanged = viewModel::requestSync, onDismiss = { choosingTodoMd = false })
@@ -445,6 +447,20 @@ internal fun ProjectTasksPane(
                                     },
                                 )
                             }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.tasks_note_new)) },
+                                onClick = {
+                                    menuOpen = false
+                                    onNewNote()
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.templates_save_as)) },
+                                onClick = {
+                                    menuOpen = false
+                                    savingTemplate = true
+                                },
+                            )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.project_pages_add)) },
                                 onClick = {
@@ -556,7 +572,16 @@ internal fun ProjectTasksPane(
         }
         projectPageItems(pages, onMenu = { pageDialog = it })
         if (notes.isNotEmpty()) {
-            item(key = "notes") { SectionHeader(title = stringResource(R.string.tasks_inbox_segment_notes), count = notes.size) }
+            item(key = "notes") {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.weight(1f)) {
+                        SectionHeader(title = stringResource(R.string.tasks_inbox_segment_notes), count = notes.size)
+                    }
+                    TextButton(onClick = onNewNote) {
+                        Text(stringResource(R.string.tasks_note_new))
+                    }
+                }
+            }
             items(notes, key = { "note-${it.uid}" }) { note ->
                 NoteListRow(note, onClick = { onOpenNote(note) }, modifier = Modifier.padding(bottom = Space.sm))
             }
@@ -568,6 +593,17 @@ internal fun ProjectTasksPane(
     }
     pageDialog?.let { dialog ->
         ProjectPageDialogs(dialog, projectUid, pages, viewModel, onDismiss = { pageDialog = null })
+    }
+    if (savingTemplate && project != null) {
+        SaveAsTemplateDialog(
+            projectUid = project.uid,
+            projectName = project.name,
+            onSaved = { savedName ->
+                savingTemplate = false
+                Toast.makeText(context, context.getString(R.string.templates_saved_notice, savedName), Toast.LENGTH_SHORT).show()
+            },
+            onDismiss = { savingTemplate = false },
+        )
     }
 }
 
