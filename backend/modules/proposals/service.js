@@ -564,6 +564,9 @@ async function answerProposal(user, uid, body = {}) {
     if (body.error !== undefined && body.error !== null) {
         const code = String(body.error).toLowerCase();
         failure = ERROR_CODE.test(code) ? code : 'agent_error';
+    } else if (row.kind === 'weekend') {
+        // A weekend is answered with propose_weekend; here only its failure.
+        throw new ValidationError('weekend answers come by propose_weekend');
     } else {
         const checked = validateAnswer(row.kind, row.facts, body.answer);
         if (checked.error) {

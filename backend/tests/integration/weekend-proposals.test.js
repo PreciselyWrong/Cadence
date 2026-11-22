@@ -477,6 +477,23 @@ describe('proposals › weekend', () => {
             ]);
         });
 
+        it('takes a failure code from the agent, but no answer by that route', async () => {
+            const first = await ask([inDays(2)]);
+            const refused = await agent
+                .post(`/api/proposals/${first.body.uid}/answer`)
+                .send({ answer: { headline: 'Non' } });
+            expect(refused.status).toBe(400);
+            expect((await readBack(first.body.uid)).status).toBe('pending');
+
+            const failed = await agent
+                .post(`/api/proposals/${first.body.uid}/answer`)
+                .send({ error: 'paused' });
+            expect(failed.status).toBe(200);
+            expect(await readBack(first.body.uid)).toEqual(
+                expect.objectContaining({ status: 'failed', error: 'paused' })
+            );
+        });
+
         it('waits an hour for the agent before failing the request', async () => {
             const { body } = await ask([inDays(2)]);
             const backdate = (minutes) =>
