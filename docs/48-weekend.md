@@ -83,7 +83,7 @@ An image made on the device, nothing sent to the server: PNG 1080 px wide, heigh
 
 - Background: vertical gradient by the dominant weather of the days (`dominant` in the fixture): sun, partly `#FFB347` → `#FF5E62`; cloud, fog `#8E9EAB` → `#D7E1EC`; rain, storm `#2C5364` → `#0F2027`; snow `#E0EAFC` → `#B8CDEB`. White text on sun, partly, rain and storm; `#1B1B1F` on the others.
 - Top: « WEEK-END » in small spaced capitals, the headline (bold, 64 px), the subtitle (34 px).
-- One translucent rounded card per day (white at 18 % on dark backgrounds, 55 % on light ones, radius 36 px): « Samedi 28 novembre », weather glyph and `min° · max°` on the right, then its items (`share` in the fixture): part of the day in small capitals, title (36 px, semi-bold), muted line `place · start · travel`; a `calendar` item carries a pill « À l’agenda »; a `busy` item reads « Occupé : <busy> ». Skipped ideas are left out. A day without items shows only its weather.
+- One translucent rounded card per day (white at 18 % on dark backgrounds, 55 % on light ones, radius 36 px): « Samedi 28 novembre », weather glyph and `min° · max°` on the right, then its items (`share` in the fixture): part of the day in small capitals, once for the alternatives that follow each other, title (36 px, semi-bold), muted line `place · start · travel`; a `calendar` item carries a pill « À l’agenda »; a `busy` item reads « Occupé : <busy> ». Skipped ideas are left out. A day without items shows only its weather.
 - Bottom: « Préparé avec Cadence » (24 px, muted).
 
 Weather words (FR): `sun` « ensoleillé », `partly` « éclaircies », `cloud` « nuageux », `rain` « pluie », `snow` « neige », `storm` « orage », `fog` « brouillard ».

@@ -6,6 +6,8 @@ import {
     PROPOSAL_PARAM,
     proposalSearch,
     setProposalParam,
+    setWeekendParam,
+    WEEKEND_PARAM,
 } from './proposalLinks';
 
 const PLAN_PATH = '/upcoming';
@@ -53,7 +55,15 @@ const ProposalHost: React.FC = () => {
     // The close can fire after the page moved on: it keeps the place it has now.
     const latest = useRef(location);
     latest.current = location;
-    const uid = new URLSearchParams(location.search).get(PROPOSAL_PARAM);
+    const params = new URLSearchParams(location.search);
+    const uid = params.get(PROPOSAL_PARAM);
+    if (!uid && params.get(WEEKEND_PARAM) === '1') {
+        return (
+            <WeekendSheet
+                onClose={() => setWeekendParam(navigate, latest.current, false)}
+            />
+        );
+    }
     if (!uid) return null;
     return (
         <SheetByKind

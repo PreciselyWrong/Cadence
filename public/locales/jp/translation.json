@@ -5,6 +5,24 @@
         "close": "閉じる"
     },
     "weekend": {
+        "share": {
+            "error": "画像を作成できませんでした。",
+            "downloaded": "画像をダウンロードしました",
+            "copied": "画像をコピーしました",
+            "footer": "Cadence で準備",
+            "kicker": "週末",
+            "action": "共有"
+        },
+        "request": {
+            "error": "リクエストを送信できませんでした。",
+            "failed": "準備できませんでした（{{days}}）",
+            "pending": "{{days}} を準備中",
+            "submit": "準備する",
+            "hint": "AI が 1 日あたり少なくとも 5 つのアイデアを用意します。準備ができたら通知が届きます。",
+            "title": "日にちを準備",
+            "open": "別の日"
+        },
+        "dayList": "日にち",
         "title": "週末",
         "loadError": "週末の提案を開けませんでした。",
         "empty": "今週末は提案がありません。",
@@ -47,7 +65,6 @@
             "storm": "嵐",
             "fog": "霧"
         },
-        "days": "両日",
         "nearby": "Nearby",
         "elsewhere": "他の場所がより良い",
         "elsewhereLine": "{{place}}、{{day}}: {{weather}}、{{temp}}°"

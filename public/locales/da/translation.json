@@ -5,6 +5,24 @@
         "close": "Luk"
     },
     "weekend": {
+        "share": {
+            "error": "Billedet kunne ikke oprettes.",
+            "downloaded": "Billede downloadet",
+            "copied": "Billede kopieret",
+            "footer": "Forberedt med Cadence",
+            "kicker": "WEEKEND",
+            "action": "Del"
+        },
+        "request": {
+            "error": "Anmodningen kunne ikke sendes.",
+            "failed": "Kunne ikke forberedes ({{days}})",
+            "pending": "Forberedes til {{days}}",
+            "submit": "Forbered",
+            "hint": "AI forbereder mindst 5 idéer om dagen. Du får en notifikation, når det er klar.",
+            "title": "Forbered dage",
+            "open": "Andre dage"
+        },
+        "dayList": "Dagene",
         "title": "Weekend",
         "loadError": "Weekenden kunne ikke åbnes.",
         "empty": "Intet at foreslå i weekenden.",
@@ -47,7 +65,6 @@
             "storm": "storm",
             "fog": "tåge"
         },
-        "days": "Begge dage",
         "nearby": "Nearby",
         "elsewhere": "Pænere andetsteds",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

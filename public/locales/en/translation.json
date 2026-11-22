@@ -5,6 +5,24 @@
         "close": "Close"
     },
     "weekend": {
+        "share": {
+            "error": "The image could not be created.",
+            "downloaded": "Image downloaded",
+            "copied": "Image copied",
+            "footer": "Prepared with Cadence",
+            "kicker": "WEEKEND",
+            "action": "Share"
+        },
+        "request": {
+            "error": "The request could not be sent.",
+            "failed": "Could not be prepared ({{days}})",
+            "pending": "Being prepared for {{days}}",
+            "submit": "Prepare",
+            "hint": "AI prepares at least 5 ideas per day. A notification arrives when it is ready.",
+            "title": "Prepare some days",
+            "open": "Other days"
+        },
+        "dayList": "The days",
         "title": "Week-end",
         "loadError": "Couldn’t open the weekend.",
         "empty": "Nothing to suggest this weekend.",
@@ -47,7 +65,6 @@
             "storm": "storm",
             "fog": "fog"
         },
-        "days": "Both days",
         "nearby": "Nearby",
         "elsewhere": "Nicer elsewhere",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

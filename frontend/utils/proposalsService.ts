@@ -483,6 +483,9 @@ export interface WeekendProposal {
     created_at: string;
     updated_at?: string;
     answer: WeekendAnswer | null;
+    // The days the user asked for, on a weekend prepared on demand.
+    request?: { dates: string[] } | null;
+    error?: string | null;
 }
 
 export interface WeekendDecisionInput {
@@ -496,6 +499,29 @@ export interface WeekendApplyOutcome {
     status?: ProposalStatus;
     results?: { slot_id?: string; state?: string; error?: string }[];
 }
+
+// The latest weekends: a pending request first, then the last one shown
+// (docs/48-weekend.md › On demand).
+export const listWeekendProposals = (): Promise<WeekendProposal[]> =>
+    request(
+        'proposals?kind=weekend',
+        'GET',
+        undefined,
+        'Failed to load the weekend proposals.'
+    )
+        .then((response) => response.json())
+        .then((body) => (body?.proposals ?? []) as WeekendProposal[]);
+
+// Asks the agent for a weekend on the chosen days (1 to 4).
+export const requestWeekend = (
+    dates: string[]
+): Promise<{ uid: string; status: ProposalStatus }> =>
+    request(
+        'proposals',
+        'POST',
+        { kind: 'weekend', dates },
+        'Failed to ask for a weekend.'
+    ).then((response) => response.json());
 
 export const getWeekendProposal = (uid: string): Promise<WeekendProposal> =>
     request(

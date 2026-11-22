@@ -11,11 +11,21 @@ import WeekendSheet from '../WeekendSheet';
 import {
     applyWeekendDecisions,
     getWeekendProposal,
+    listWeekendProposals,
+    requestWeekend,
 } from '../../../utils/proposalsService';
+import { drawWeekendImage, shareImage } from '../shareImage';
+import { defaultDays } from '../weekendModel';
 
 jest.mock('../../../utils/proposalsService', () => ({
     getWeekendProposal: jest.fn(),
     applyWeekendDecisions: jest.fn(),
+    listWeekendProposals: jest.fn(),
+    requestWeekend: jest.fn(),
+}));
+jest.mock('../shareImage', () => ({
+    drawWeekendImage: jest.fn(),
+    shareImage: jest.fn(),
 }));
 const mockToasts = {
     showErrorToast: jest.fn(),
@@ -43,6 +53,16 @@ jest.mock('react-i18next', () => ({
 
 const getMock = getWeekendProposal as jest.Mock;
 const applyMock = applyWeekendDecisions as jest.Mock;
+const listMock = listWeekendProposals as jest.Mock;
+const requestMock = requestWeekend as jest.Mock;
+const drawMock = drawWeekendImage as jest.Mock;
+const shareMock = shareImage as jest.Mock;
+
+const localToday = () => {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
 
 const PROPOSAL = {
     uid: 'w1',
@@ -204,5 +224,92 @@ describe('WeekendSheet', () => {
 
         expect(screen.getByRole('button', { name: 'Valider' })).toBeDisabled();
         expect(applyMock).not.toHaveBeenCalled();
+    });
+
+    describe('on demand', () => {
+        const PENDING = {
+            uid: 'r1',
+            kind: 'weekend',
+            status: 'pending',
+            created_at: '2026-11-22T10:00:00',
+            answer: null,
+            request: { dates: ['2026-11-25', '2026-11-28'] },
+        };
+
+        it('opens the latest weekend with the request being prepared above it', async () => {
+            listMock.mockResolvedValue([PENDING, PROPOSAL]);
+            render(<WeekendSheet onClose={jest.fn()} />);
+
+            expect(
+                await screen.findByText('Un week-end doux')
+            ).toBeInTheDocument();
+            expect(screen.getByTestId('weekend-request')).toHaveTextContent(
+                /En préparation pour mer\.? 25, sam\.? 28/
+            );
+            expect(getMock).not.toHaveBeenCalled();
+            expect(screen.queryByTestId('weekend-picker')).toBeNull();
+        });
+
+        it('shows the day picker when there is no weekend yet and asks for the picked days', async () => {
+            listMock.mockResolvedValueOnce([]).mockResolvedValue([PENDING]);
+            requestMock.mockResolvedValue({ uid: 'r1', status: 'pending' });
+            render(<WeekendSheet onClose={jest.fn()} />);
+
+            const picker = await screen.findByTestId('weekend-picker');
+            const pressed = within(picker)
+                .getAllByRole('button', { pressed: true })
+                .map((b) => b.textContent);
+            expect(pressed).toHaveLength(defaultDays(localToday()).length);
+
+            fireEvent.click(
+                within(picker).getByRole('button', { name: 'Préparer' })
+            );
+
+            await waitFor(() =>
+                expect(requestMock).toHaveBeenCalledWith(
+                    defaultDays(localToday())
+                )
+            );
+            expect(
+                await screen.findByTestId('weekend-request')
+            ).toHaveTextContent('En préparation pour');
+        });
+
+        it('allows four days at most', async () => {
+            listMock.mockResolvedValue([]);
+            render(<WeekendSheet onClose={jest.fn()} />);
+            const picker = await screen.findByTestId('weekend-picker');
+            const free = () =>
+                within(picker)
+                    .getAllByRole('button', { pressed: false })
+                    .filter((b) => !(b as HTMLButtonElement).disabled);
+            while (
+                within(picker).getAllByRole('button', { pressed: true })
+                    .length < 4
+            ) {
+                fireEvent.click(free()[0]);
+            }
+            expect(free()).toHaveLength(0);
+        });
+
+        it('shares the image of the weekend with the picks not sent yet', async () => {
+            const blob = new Blob(['png']);
+            drawMock.mockResolvedValue(blob);
+            shareMock.mockResolvedValue('shared');
+            render(<WeekendSheet uid="w1" onClose={jest.fn()} />);
+            await screen.findByText('Un week-end doux');
+
+            fireEvent.click(screen.getByRole('button', { name: 'Partager' }));
+
+            await waitFor(() =>
+                expect(shareMock).toHaveBeenCalledWith(
+                    blob,
+                    'week-end-2026-11-14.png',
+                    'Un week-end doux'
+                )
+            );
+            const picks = drawMock.mock.calls[0][1] as Map<string, string>;
+            expect([...picks]).toEqual([['s1', 'calendar']]);
+        });
     });
 });

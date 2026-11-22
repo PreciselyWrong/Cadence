@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
@@ -30,6 +31,10 @@ class ProposalsClient(private val session: suspend () -> ServerSession?) {
     /** Demande une proposition ; [start] et [end] (ISO) ne partent que s'ils sont donnés (une journée : start == end). */
     suspend fun create(kind: ProposalKind, start: LocalDate? = null, end: LocalDate? = null): JsonObject =
         request("POST", "/api/proposals", createBody(kind, start, end))
+
+    /** Demande un week-end à la carte pour 1 à 4 jours choisis. */
+    suspend fun createWeekend(dates: List<LocalDate>): JsonObject =
+        request("POST", "/api/proposals", createWeekendBody(dates))
 
     suspend fun get(uid: String): JsonObject = request("GET", path(uid))
 
@@ -92,6 +97,11 @@ internal fun createBody(kind: ProposalKind, start: LocalDate?, end: LocalDate?):
     put("kind", kind.wire)
     start?.let { put("start", it.toString()) }
     end?.let { put("end", it.toString()) }
+}
+
+internal fun createWeekendBody(dates: List<LocalDate>): JsonObject = buildJsonObject {
+    put("kind", ProposalKind.WEEKEND.wire)
+    put("dates", buildJsonArray { dates.forEach { add(JsonPrimitive(it.toString())) } })
 }
 
 internal fun proposalsClient(context: Context): ProposalsClient {

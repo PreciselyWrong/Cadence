@@ -5,6 +5,24 @@
         "close": "Stäng"
     },
     "weekend": {
+        "share": {
+            "error": "Bilden kunde inte skapas.",
+            "downloaded": "Bild nedladdad",
+            "copied": "Bild kopierad",
+            "footer": "Förberett med Cadence",
+            "kicker": "HELG",
+            "action": "Dela"
+        },
+        "request": {
+            "error": "Begäran kunde inte skickas.",
+            "failed": "Kunde inte förberedas ({{days}})",
+            "pending": "Förbereds för {{days}}",
+            "submit": "Förbered",
+            "hint": "AI förbereder minst 5 idéer per dag. En avisering kommer när det är klart.",
+            "title": "Förbered dagar",
+            "open": "Andra dagar"
+        },
+        "dayList": "Dagarna",
         "title": "Helgen",
         "loadError": "Det gick inte att öppna helgen.",
         "empty": "Inget att föreslå den här helgen.",
@@ -47,7 +65,6 @@
             "storm": "åska",
             "fog": "dimma"
         },
-        "days": "Båda dagarna",
         "nearby": "Nearby",
         "elsewhere": "Finare någon annanstans",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

@@ -5,6 +5,24 @@
         "close": "关闭"
     },
     "weekend": {
+        "share": {
+            "error": "无法创建图片。",
+            "downloaded": "图片已下载",
+            "copied": "图片已复制",
+            "footer": "由 Cadence 准备",
+            "kicker": "周末",
+            "action": "分享"
+        },
+        "request": {
+            "error": "请求无法发送。",
+            "failed": "无法准备（{{days}}）",
+            "pending": "正在为 {{days}} 准备",
+            "submit": "准备",
+            "hint": "AI 每天至少准备 5 个点子。准备好后会收到通知。",
+            "title": "准备日期",
+            "open": "其他日期"
+        },
+        "dayList": "日期",
         "title": "周末",
         "loadError": "无法打开周末安排。",
         "empty": "这个周末没有可推荐的安排。",
@@ -47,7 +65,6 @@
             "storm": "暴风雨",
             "fog": "雾"
         },
-        "days": "两天",
         "nearby": "Nearby",
         "elsewhere": "别处更好",
         "elsewhereLine": "{{place}}，{{day}}：{{weather}}，{{temp}}°"

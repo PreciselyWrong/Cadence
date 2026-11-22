@@ -1,0 +1,62 @@
+{
+  "_doc": "Week-end on demand and its shared image (docs/48-weekend.md › On demand, › Share), replayed by frontend/components/Weekend/__tests__/weekendModel.test.ts and the Android WeekendModel tests. `defaultDays`: the days preselected in the day picker, the Saturday on or after `today` and the Sunday after it; on a Sunday, today only. `toggle`: a tap on a day adds it or removes it; at most 4 days, a fifth tap does nothing; the result is sorted. `pickerDays`: the 14 days from today. `share`: the days of the image, in the order of `answer.days`, each with the slots of its date in answer order: a busy slot is `busy` with its busy text as title; an activity decided or picked `skip` is left out; one decided or picked `calendar` is `calendar`; any other is `open`. `dominant`: the most frequent weather of the days (null ignored), a tie goes to the first of them in day order, no weather at all is `partly`.",
+  "defaultDays": [
+    { "today": "2026-11-22", "expect": ["2026-11-22"] },
+    { "today": "2026-11-23", "expect": ["2026-11-28", "2026-11-29"] },
+    { "today": "2026-11-27", "expect": ["2026-11-28", "2026-11-29"] },
+    { "today": "2026-11-28", "expect": ["2026-11-28", "2026-11-29"] }
+  ],
+  "toggle": [
+    { "selected": [], "date": "2026-11-28", "expect": ["2026-11-28"] },
+    { "selected": ["2026-11-29"], "date": "2026-11-24", "expect": ["2026-11-24", "2026-11-29"] },
+    { "selected": ["2026-11-24", "2026-11-29"], "date": "2026-11-24", "expect": ["2026-11-29"] },
+    { "selected": ["2026-11-24", "2026-11-25", "2026-11-28", "2026-11-29"], "date": "2026-11-30", "expect": ["2026-11-24", "2026-11-25", "2026-11-28", "2026-11-29"] }
+  ],
+  "pickerDays": [
+    { "today": "2026-11-22", "expect": ["2026-11-22", "2026-11-23", "2026-11-24", "2026-11-25", "2026-11-26", "2026-11-27", "2026-11-28", "2026-11-29", "2026-11-30", "2026-12-01", "2026-12-02", "2026-12-03", "2026-12-04", "2026-12-05"] }
+  ],
+  "share": [
+    {
+      "name": "skipped left out, calendar decided or picked, busy kept",
+      "answer": {
+        "days": [
+          { "date": "2026-11-28", "weather": "sun", "min": 2, "max": 9 },
+          { "date": "2026-11-29", "weather": "rain", "min": 3, "max": 6 }
+        ],
+        "slots": [
+          { "id": "a", "date": "2026-11-28", "part": "morning", "activity": { "title": "Marché de Morges", "place": "Morges", "start": "09:00", "travel": "20 min" }, "decision": { "op": "calendar" } },
+          { "id": "b", "date": "2026-11-28", "part": "morning", "activity": { "title": "Zoo de Servion", "place": "Servion", "travel": "35 min" } },
+          { "id": "c", "date": "2026-11-28", "part": "afternoon", "activity": { "title": "Musée", "place": "Lausanne" }, "decision": { "op": "skip" } },
+          { "id": "d", "date": "2026-11-28", "part": "afternoon", "busy": "Foire aux livres, Penthalaz" },
+          { "id": "e", "date": "2026-11-29", "part": "day", "activity": { "title": "Piscine" } },
+          { "id": "f", "date": "2026-11-29", "part": "afternoon", "activity": { "title": "Cinéma" } },
+          { "id": "g", "date": "2026-11-29", "part": "morning", "activity": { "title": "Brunch" }, "decision": { "op": "other" } }
+        ]
+      },
+      "picks": { "b": "calendar", "f": "skip" },
+      "expect": [
+        {
+          "date": "2026-11-28", "weather": "sun", "min": 2, "max": 9,
+          "items": [
+            { "id": "a", "part": "morning", "title": "Marché de Morges", "place": "Morges", "start": "09:00", "travel": "20 min", "state": "calendar" },
+            { "id": "b", "part": "morning", "title": "Zoo de Servion", "place": "Servion", "start": null, "travel": "35 min", "state": "calendar" },
+            { "id": "d", "part": "afternoon", "title": "Foire aux livres, Penthalaz", "place": null, "start": null, "travel": null, "state": "busy" }
+          ]
+        },
+        {
+          "date": "2026-11-29", "weather": "rain", "min": 3, "max": 6,
+          "items": [
+            { "id": "e", "part": "day", "title": "Piscine", "place": null, "start": null, "travel": null, "state": "open" },
+            { "id": "g", "part": "morning", "title": "Brunch", "place": null, "start": null, "travel": null, "state": "open" }
+          ]
+        }
+      ]
+    }
+  ],
+  "dominant": [
+    { "days": [{ "weather": "rain" }, { "weather": "sun" }, { "weather": "sun" }], "expect": "sun" },
+    { "days": [{ "weather": "rain" }, { "weather": "sun" }], "expect": "rain" },
+    { "days": [{ "weather": null }], "expect": "partly" },
+    { "days": [], "expect": "partly" }
+  ]
+}

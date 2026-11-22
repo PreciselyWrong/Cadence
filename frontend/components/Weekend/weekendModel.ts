@@ -1,6 +1,8 @@
 import type {
     WeekendActivity,
     WeekendAnswer,
+    WeekendDay,
+    WeekendProposal,
     WeekendDecisionInput,
     WeekendNearby,
     WeekendOp,
@@ -198,4 +200,157 @@ export const groupNearbyByDay = (
         else byDate.set(item.date, [item]);
     }
     return [...byDate.entries()].map(([date, items]) => ({ date, items }));
+};
+
+// On demand (docs/48-weekend.md › Day picker). Shared cases with Android:
+// fixtures/weekend/request-and-share.json.
+export const REQUEST_MAX_DAYS = 4;
+export const PICKER_DAYS = 14;
+
+const parseDay = (date: string): Date => new Date(`${date}T12:00:00Z`);
+const formatDay = (value: Date): string => value.toISOString().slice(0, 10);
+const addDays = (date: string, days: number): string => {
+    const value = parseDay(date);
+    value.setUTCDate(value.getUTCDate() + days);
+    return formatDay(value);
+};
+const weekdayOf = (date: string): number => parseDay(date).getUTCDay();
+
+// The 14 days the picker offers, from today.
+export const pickerDays = (today: string): string[] =>
+    Array.from({ length: PICKER_DAYS }, (_, i) => addDays(today, i));
+
+// The Saturday on or after today and its Sunday; on a Sunday, today only.
+export const defaultDays = (today: string): string[] => {
+    if (weekdayOf(today) === 0) return [today];
+    const saturday = addDays(today, (6 - weekdayOf(today) + 7) % 7);
+    return [saturday, addDays(saturday, 1)];
+};
+
+// A tap adds or removes a day; a fifth day is refused. Sorted.
+export const toggleDay = (
+    selected: readonly string[],
+    date: string
+): string[] => {
+    if (selected.includes(date)) return selected.filter((d) => d !== date);
+    if (selected.length >= REQUEST_MAX_DAYS) return [...selected];
+    return [...selected, date].sort();
+};
+
+export const isWeekendDay = (date: string): boolean =>
+    [0, 6].includes(weekdayOf(date));
+
+// « sam. 28 », the label of a day in the picker and the pending line.
+export const shortDay = (date: string, language: string): string => {
+    const value = parseDay(date);
+    const options: Intl.DateTimeFormatOptions = {
+        weekday: 'short',
+        timeZone: 'UTC',
+    };
+    let weekday: string;
+    try {
+        weekday = value.toLocaleDateString(language, options);
+    } catch {
+        weekday = value.toLocaleDateString('fr', options);
+    }
+    return `${weekday} ${value.getUTCDate()}`;
+};
+
+// What the sheet shows when opened without a uid: the pending request (if
+// any) and the last weekend shown, from the list of the server.
+export const latestWeekends = (
+    proposals: readonly WeekendProposal[]
+): { request: WeekendProposal | null; shown: WeekendProposal | null } => {
+    const first = proposals[0] ?? null;
+    const asked =
+        first && ['pending', 'failed'].includes(first.status) && !first.answer
+            ? first
+            : null;
+    const shown =
+        proposals.find(
+            (p) => p.answer && ['ready', 'applied'].includes(p.status)
+        ) ?? null;
+    return { request: asked, shown };
+};
+
+// Share (docs/48-weekend.md › Share).
+export type ShareState = 'calendar' | 'open' | 'busy';
+
+export interface ShareItem {
+    id: string;
+    part: WeekendPart;
+    title: string;
+    place: string | null;
+    start: string | null;
+    travel: string | null;
+    state: ShareState;
+}
+
+export interface ShareDay {
+    date: string;
+    weather: WeekendWeather | null;
+    min: number | null;
+    max: number | null;
+    items: ShareItem[];
+}
+
+// The days of the image: skipped ideas left out, calendar ones marked.
+export const shareDays = (answer: WeekendAnswer, picks: Picks): ShareDay[] =>
+    (answer.days ?? []).map((day) => ({
+        date: day.date,
+        weather: day.weather ?? null,
+        min: day.min ?? null,
+        max: day.max ?? null,
+        items: answer.slots
+            .filter((slot) => slot.date === day.date)
+            .flatMap((slot): ShareItem[] => {
+                const base = { id: slot.id, part: slot.part };
+                if (!slot.activity) {
+                    if (!slot.busy) return [];
+                    return [
+                        {
+                            ...base,
+                            title: slot.busy,
+                            place: null,
+                            start: null,
+                            travel: null,
+                            state: 'busy',
+                        },
+                    ];
+                }
+                const op = slot.decision?.op ?? null;
+                const pick = picks.get(slot.id) ?? null;
+                if (op === 'skip' || pick === 'skip') return [];
+                const chosen = op === 'calendar' || pick === 'calendar';
+                return [
+                    {
+                        ...base,
+                        title: slot.activity.title,
+                        place: slot.activity.place ?? null,
+                        start: slot.activity.start ?? null,
+                        travel: slot.activity.travel ?? null,
+                        state: chosen ? 'calendar' : 'open',
+                    },
+                ];
+            }),
+    }));
+
+// The most frequent weather of the days; a tie goes to the first of them.
+export const dominantWeather = (
+    days: readonly Pick<WeekendDay, 'weather'>[]
+): WeekendWeather => {
+    const counts = new Map<WeekendWeather, number>();
+    for (const day of days) {
+        if (day.weather)
+            counts.set(day.weather, (counts.get(day.weather) ?? 0) + 1);
+    }
+    let best: WeekendWeather = 'partly';
+    let top = 0;
+    for (const [weather, count] of counts) {
+        if (count > top) {
+            best = weather;
+            top = count;
+        }
+    }
+    return best;
 };

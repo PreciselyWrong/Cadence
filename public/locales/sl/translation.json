@@ -5,6 +5,24 @@
         "close": "Zapri"
     },
     "weekend": {
+        "share": {
+            "error": "Slike ni bilo mogoče ustvariti.",
+            "downloaded": "Slika prenesena",
+            "copied": "Slika kopirana",
+            "footer": "Pripravljeno s Cadence",
+            "kicker": "KONEC TEDNA",
+            "action": "Deli"
+        },
+        "request": {
+            "error": "Zahteve ni bilo mogoče poslati.",
+            "failed": "Ni bilo mogoče pripraviti ({{days}})",
+            "pending": "V pripravi za {{days}}",
+            "submit": "Pripravi",
+            "hint": "UI pripravi vsaj 5 idej na dan. Ko bo pripravljeno, prejmeš obvestilo.",
+            "title": "Pripravi dneve",
+            "open": "Drugi dnevi"
+        },
+        "dayList": "Dnevi",
         "title": "Konec tedna",
         "loadError": "Konca tedna ni bilo mogoče odpreti.",
         "empty": "Ta konec tedna ni predlogov.",
@@ -47,7 +65,6 @@
             "storm": "nevihta",
             "fog": "megla"
         },
-        "days": "Oba dneva",
         "nearby": "Nearby",
         "elsewhere": "Lepše drugje",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

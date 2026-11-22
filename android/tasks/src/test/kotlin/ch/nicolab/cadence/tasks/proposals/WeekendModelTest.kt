@@ -1,14 +1,19 @@
 package ch.nicolab.cadence.tasks.proposals
 
+import java.io.File
 import java.time.LocalDate
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 
 class WeekendModelTest {
     /** Proposition `weekend` telle que `GET /api/proposals/:uid` la renvoie (`docs/48-weekend.md`). */
@@ -163,4 +168,130 @@ class WeekendModelTest {
         assertEquals(listOf("Atelier céramique", "Concert"), groups[0].second.map { it.title })
         assertEquals(listOf("Marché"), groups[1].second.map { it.title })
     }
+
+    @Test
+    fun pickStateSelectsPendingFailedAndShownWithRequestDates() {
+        val list = WeekendModel.parseList(
+            Json.parseToJsonElement(
+                """
+                {"proposals":[
+                  {"uid":"p1","status":"pending","created_at":"2026-11-22T10:00:00Z","request":{"dates":["2026-11-28","2026-11-29"]},"answer":null},
+                  {"uid":"r1","status":"applied","created_at":"2026-11-20T17:00:00Z","answer":{"headline":"Ancien","days":[{"date":"2026-11-21"}]}},
+                  {"uid":"f1","status":"failed","created_at":"2026-11-21T10:00:00Z","error":"timeout","request":{"dates":["2026-11-28"]}}
+                ]}
+                """.trimIndent(),
+            ).jsonObject,
+        )
+        val state = WeekendModel.pickState(list)
+        assertEquals("p1", state.pending?.uid)
+        assertEquals(listOf(LocalDate.of(2026, 11, 28), LocalDate.of(2026, 11, 29)), state.pending?.requestedDates)
+        assertEquals("r1", state.shown?.uid)
+        assertNull(state.failed)
+
+        val failedOnly = WeekendModel.pickState(list.drop(1))
+        assertNull(failedOnly.pending)
+        assertEquals("f1", failedOnly.failed?.uid)
+        assertEquals("timeout", failedOnly.failed?.error)
+        assertEquals("r1", failedOnly.shown?.uid)
+    }
+
+    @Test
+    fun createWeekendBodySerializesKindAndDates() {
+        val body = createWeekendBody(listOf(LocalDate.of(2026, 11, 28), LocalDate.of(2026, 11, 29)))
+        assertEquals("weekend", body["kind"]!!.jsonPrimitive.content)
+        assertEquals(listOf("2026-11-28", "2026-11-29"), body["dates"]!!.jsonArray.map { it.jsonPrimitive.content })
+    }
+
+    private val fixture by lazy {
+        generateSequence(File("").absoluteFile) { it.parentFile }
+            .map { File(it, "fixtures/weekend/request-and-share.json") }
+            .first { it.isFile }
+            .let { Json.parseToJsonElement(it.readText()).jsonObject }
+    }
+
+    @TestFactory
+    fun `rejoue fixtures weekend defaultDays`(): List<DynamicTest> =
+        fixture.getValue("defaultDays").jsonArray.mapIndexed { idx, elem ->
+            val obj = elem.jsonObject
+            val today = obj.getValue("today").jsonPrimitive.content
+            DynamicTest.dynamicTest("defaultDays #$idx ($today)") {
+                val expected = obj.getValue("expect").jsonArray.map { LocalDate.parse(it.jsonPrimitive.content) }
+                assertEquals(expected, WeekendModel.defaultDays(LocalDate.parse(today)))
+            }
+        }
+
+    @TestFactory
+    fun `rejoue fixtures weekend toggle`(): List<DynamicTest> =
+        fixture.getValue("toggle").jsonArray.mapIndexed { idx, elem ->
+            val obj = elem.jsonObject
+            val date = obj.getValue("date").jsonPrimitive.content
+            DynamicTest.dynamicTest("toggle #$idx ($date)") {
+                val selected = obj.getValue("selected").jsonArray.map { LocalDate.parse(it.jsonPrimitive.content) }
+                val expected = obj.getValue("expect").jsonArray.map { LocalDate.parse(it.jsonPrimitive.content) }
+                assertEquals(expected, WeekendModel.toggleDay(selected, LocalDate.parse(date)))
+            }
+        }
+
+    @TestFactory
+    fun `rejoue fixtures weekend pickerDays`(): List<DynamicTest> =
+        fixture.getValue("pickerDays").jsonArray.mapIndexed { idx, elem ->
+            val obj = elem.jsonObject
+            val today = obj.getValue("today").jsonPrimitive.content
+            DynamicTest.dynamicTest("pickerDays #$idx ($today)") {
+                val expected = obj.getValue("expect").jsonArray.map { LocalDate.parse(it.jsonPrimitive.content) }
+                assertEquals(expected, WeekendModel.pickerDays(LocalDate.parse(today)))
+            }
+        }
+
+    @TestFactory
+    fun `rejoue fixtures weekend share`(): List<DynamicTest> =
+        fixture.getValue("share").jsonArray.map { elem ->
+            val obj = elem.jsonObject
+            val name = obj.getValue("name").jsonPrimitive.content
+            DynamicTest.dynamicTest("share: $name") {
+                val parsed = WeekendModel.parseProposal(
+                    kotlinx.serialization.json.buildJsonObject {
+                        put("uid", kotlinx.serialization.json.JsonPrimitive("w-share"))
+                        put("status", kotlinx.serialization.json.JsonPrimitive("ready"))
+                        put("answer", obj.getValue("answer"))
+                    },
+                )!!
+                val picks = obj.getValue("picks").jsonObject.mapValues { (_, v) -> WeekendOp.of(v.jsonPrimitive.content)!! }
+                val expected = obj.getValue("expect").jsonArray.map { dayElem ->
+                    val d = dayElem.jsonObject
+                    ShareDay(
+                        date = LocalDate.parse(d.getValue("date").jsonPrimitive.content),
+                        weather = WeekendWeather.of(d["weather"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.content),
+                        min = d["min"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.int,
+                        max = d["max"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.int,
+                        items = d.getValue("items").jsonArray.map { itemElem ->
+                            val item = itemElem.jsonObject
+                            ShareItem(
+                                id = item.getValue("id").jsonPrimitive.content,
+                                part = WeekendPart.of(item.getValue("part").jsonPrimitive.content)!!,
+                                title = item.getValue("title").jsonPrimitive.content,
+                                place = item["place"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.content,
+                                start = item["start"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.content,
+                                travel = item["travel"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.content,
+                                state = ShareItemState.entries.first { it.wire == item.getValue("state").jsonPrimitive.content },
+                            )
+                        },
+                    )
+                }
+                assertEquals(expected, WeekendModel.shareDays(parsed, picks))
+            }
+        }
+
+    @TestFactory
+    fun `rejoue fixtures weekend dominant`(): List<DynamicTest> =
+        fixture.getValue("dominant").jsonArray.mapIndexed { idx, elem ->
+            val obj = elem.jsonObject
+            val expect = obj.getValue("expect").jsonPrimitive.content
+            DynamicTest.dynamicTest("dominant #$idx -> $expect") {
+                val weathers = obj.getValue("days").jsonArray.map { dayElem ->
+                    WeekendWeather.of(dayElem.jsonObject["weather"]?.takeUnless { it is JsonNull }?.jsonPrimitive?.content)
+                }
+                assertEquals(WeekendWeather.of(expect), WeekendModel.dominantWeatherOf(weathers))
+            }
+        }
 }

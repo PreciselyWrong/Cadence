@@ -110,6 +110,17 @@ class ProposalRepository internal constructor(
         WeekendModel.newestReady(WeekendModel.parseList(client.listWeekend()))
     }
 
+    /** État du week-end : demande en cours ou échouée, plus la dernière semaine encore montrée. */
+    suspend fun weekendState(): Result<WeekendState> = attempt {
+        WeekendModel.pickState(WeekendModel.parseList(client.listWeekend()))
+    }
+
+    /** Demande un week-end à la carte pour les jours choisis. */
+    suspend fun requestWeekend(dates: List<LocalDate>): Result<Unit> = attempt {
+        client.createWeekend(dates)
+        Unit
+    }
+
     /** Une semaine de week-end précise (depuis sa notification), lue en ligne. */
     suspend fun weekend(uid: String): Result<WeekendProposal?> = attempt { WeekendModel.parseProposal(client.get(uid)) }
 

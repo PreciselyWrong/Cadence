@@ -5,6 +5,24 @@
         "close": "Închide"
     },
     "weekend": {
+        "share": {
+            "error": "Imaginea nu a putut fi creată.",
+            "downloaded": "Imagine descărcată",
+            "copied": "Imagine copiată",
+            "footer": "Pregătit cu Cadence",
+            "kicker": "WEEKEND",
+            "action": "Distribuie"
+        },
+        "request": {
+            "error": "Cererea nu a putut fi trimisă.",
+            "failed": "Nu a putut fi pregătit ({{days}})",
+            "pending": "În pregătire pentru {{days}}",
+            "submit": "Pregătește",
+            "hint": "IA pregătește cel puțin 5 idei pe zi. Primești o notificare când e gata.",
+            "title": "Pregătește zile",
+            "open": "Alte zile"
+        },
+        "dayList": "Zilele",
         "title": "Week-end",
         "loadError": "Week-endul nu a putut fi deschis.",
         "empty": "Nimic de propus în acest week-end.",
@@ -47,7 +65,6 @@
             "storm": "furtună",
             "fog": "ceață"
         },
-        "days": "Ambele zile",
         "nearby": "Nearby",
         "elsewhere": "Mai frumos în altă parte",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

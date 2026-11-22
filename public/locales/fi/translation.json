@@ -5,6 +5,24 @@
         "close": "Sulje"
     },
     "weekend": {
+        "share": {
+            "error": "Kuvaa ei voitu luoda.",
+            "downloaded": "Kuva ladattu",
+            "copied": "Kuva kopioitu",
+            "footer": "Valmisteltu Cadencella",
+            "kicker": "VIIKONLOPPU",
+            "action": "Jaa"
+        },
+        "request": {
+            "error": "Pyyntöä ei voitu lähettää.",
+            "failed": "Ei voitu valmistella ({{days}})",
+            "pending": "Valmistellaan: {{days}}",
+            "submit": "Valmistele",
+            "hint": "Tekoäly valmistelee vähintään 5 ideaa päivää kohden. Saat ilmoituksen, kun se on valmis.",
+            "title": "Valmistele päiviä",
+            "open": "Muut päivät"
+        },
+        "dayList": "Päivät",
         "title": "Viikonloppu",
         "loadError": "Viikonloppua ei voitu avata.",
         "empty": "Ei ehdotettavaa tälle viikonlopulle.",
@@ -47,7 +65,6 @@
             "storm": "ukkosta",
             "fog": "sumua"
         },
-        "days": "Molemmat päivät",
         "nearby": "Nearby",
         "elsewhere": "Kauniimpaa muualla",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

@@ -5,6 +5,24 @@
         "close": "닫기"
     },
     "weekend": {
+        "share": {
+            "error": "이미지를 만들 수 없습니다.",
+            "downloaded": "이미지를 다운로드했습니다",
+            "copied": "이미지를 복사했습니다",
+            "footer": "Cadence로 준비함",
+            "kicker": "주말",
+            "action": "공유"
+        },
+        "request": {
+            "error": "요청을 보낼 수 없습니다.",
+            "failed": "준비하지 못했습니다 ({{days}})",
+            "pending": "{{days}} 준비 중",
+            "submit": "준비",
+            "hint": "AI가 하루에 최소 5개의 아이디어를 준비합니다. 준비되면 알림이 옵니다.",
+            "title": "날짜 준비",
+            "open": "다른 날"
+        },
+        "dayList": "날짜",
         "title": "주말",
         "loadError": "주말 계획을 열 수 없습니다.",
         "empty": "이번 주말에 제안할 것이 없습니다.",
@@ -47,7 +65,6 @@
             "storm": "폭풍",
             "fog": "안개"
         },
-        "days": "이틀 모두",
         "nearby": "Nearby",
         "elsewhere": "다른 곳이 더 좋음",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

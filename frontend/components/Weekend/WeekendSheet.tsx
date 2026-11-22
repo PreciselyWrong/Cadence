@@ -6,6 +6,7 @@ import {
     CalendarDaysIcon,
     CloudArrowDownIcon,
     CloudIcon,
+    ShareIcon,
     SparklesIcon,
     SunIcon,
     XMarkIcon,
@@ -17,6 +18,8 @@ import { OfflineQueuedError } from '../../utils/authUtils';
 import {
     applyWeekendDecisions,
     getWeekendProposal,
+    listWeekendProposals,
+    requestWeekend,
     WeekendOp,
     WeekendProposal,
     WeekendSlot,
@@ -29,8 +32,15 @@ import {
     countLine,
     dayName,
     decisionLabel,
+    defaultDays,
     groupNearbyByDay,
     initialPicks,
+    isWeekendDay,
+    latestWeekends,
+    pickerDays,
+    REQUEST_MAX_DAYS,
+    shortDay,
+    toggleDay,
     isBusySlot,
     isOpenSlot,
     nearbyMetaLine,
@@ -41,6 +51,16 @@ import {
     Translate,
     weatherLabel,
 } from './weekendModel';
+import { drawWeekendImage, shareImage } from './shareImage';
+
+// While a request is prepared, the open sheet checks again this often.
+const PENDING_POLL_MS = 20000;
+
+const localToday = (): string => {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
 
 const WEATHER_ICON: Record<WeekendWeather, typeof SunIcon> = {
     sun: SunIcon,
@@ -112,7 +132,8 @@ const WeekendThumb: React.FC<{
 };
 
 interface WeekendSheetProps {
-    uid: string;
+    // Without a uid the sheet shows the latest weekend and its request.
+    uid?: string | null;
     onClose: () => void;
 }
 
@@ -125,9 +146,16 @@ const WeekendSheet: React.FC<WeekendSheetProps> = ({ uid, onClose }) => {
     const tr = t as unknown as Translate;
     const { showErrorToast, showSuccessToast } = useToast();
     const [proposal, setProposal] = useState<WeekendProposal | null>(null);
+    // The request on chosen days: pending, or failed without an answer.
+    const [asked, setAsked] = useState<WeekendProposal | null>(null);
     const [state, setState] = useState<'loading' | 'ready' | 'error'>(
         'loading'
     );
+    const [pickerOpen, setPickerOpen] = useState(false);
+    const [days, setDays] = useState<string[]>(() => defaultDays(localToday()));
+    const [asking, setAsking] = useState(false);
+    const [askError, setAskError] = useState<string | null>(null);
+    const [sharing, setSharing] = useState(false);
     // Picks are local until « Valider ».
     const [picks, setPicks] = useState<Map<string, WeekendOp>>(() => new Map());
     const [notes, setNotes] = useState<Map<string, string>>(() => new Map());
@@ -135,19 +163,96 @@ const WeekendSheet: React.FC<WeekendSheetProps> = ({ uid, onClose }) => {
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const load = useCallback(() => {
-        return getWeekendProposal(uid)
-            .then((next) => {
-                setProposal(next);
-                setPicks(initialPicks(next.answer));
-                setState('ready');
-            })
-            .catch(() => setState('error'));
-    }, [uid]);
+    const show = useCallback((next: WeekendProposal | null) => {
+        setProposal((current) => {
+            // A poll keeps the picks of the weekend already shown.
+            if (current?.uid !== next?.uid) {
+                setPicks(initialPicks(next?.answer ?? null));
+            }
+            return next;
+        });
+    }, []);
+
+    const load = useCallback(async () => {
+        try {
+            const one = uid ? await getWeekendProposal(uid) : null;
+            if (one && one.answer) {
+                show(one);
+                setAsked(null);
+            } else {
+                const latest = latestWeekends(await listWeekendProposals());
+                show(latest.shown);
+                setAsked(one ?? latest.request);
+            }
+            setState('ready');
+        } catch {
+            setState('error');
+        }
+    }, [uid, show]);
 
     useEffect(() => {
         void load();
     }, [load]);
+
+    const pending = asked?.status === 'pending';
+    useEffect(() => {
+        if (!pending) return undefined;
+        const timer = window.setInterval(() => void load(), PENDING_POLL_MS);
+        return () => window.clearInterval(timer);
+    }, [pending, load]);
+
+    const ask = () => {
+        if (asking || days.length === 0) return;
+        setAsking(true);
+        setAskError(null);
+        requestWeekend(days)
+            .then(() => {
+                setPickerOpen(false);
+                window.dispatchEvent(new Event(PROPOSAL_CHANGED_EVENT));
+                return load();
+            })
+            .catch(() =>
+                setAskError(
+                    t(
+                        'weekend.request.error',
+                        'La demande n’a pas pu être envoyée.'
+                    )
+                )
+            )
+            .finally(() => setAsking(false));
+    };
+
+    const share = async () => {
+        if (!proposal?.answer || sharing) return;
+        setSharing(true);
+        try {
+            const blob = await drawWeekendImage(
+                proposal.answer,
+                picks,
+                tr,
+                language
+            );
+            const first = proposal.answer.days[0]?.date ?? localToday();
+            const outcome = await shareImage(
+                blob,
+                `week-end-${first}.png`,
+                proposal.answer.headline
+            );
+            if (outcome === 'copied') {
+                showSuccessToast(t('weekend.share.copied', 'Image copiée'));
+            } else if (outcome === 'downloaded') {
+                showSuccessToast(
+                    t('weekend.share.downloaded', 'Image téléchargée')
+                );
+            }
+        } catch {
+            showErrorToast(
+                t('weekend.share.error', 'L’image n’a pas pu être créée.')
+            );
+        } finally {
+            setSharing(false);
+        }
+    };
 
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
@@ -405,6 +510,24 @@ const WeekendSheet: React.FC<WeekendSheetProps> = ({ uid, onClose }) => {
                     {answer.subtitle}
                 </p>
             )}
+            <div className="absolute left-3 top-3 flex gap-1 sm:left-4 sm:top-4">
+                <IconButton
+                    label={t('weekend.request.open', 'Autres jours')}
+                    aria-expanded={pickerOpen}
+                    onClick={() => setPickerOpen((open) => !open)}
+                >
+                    <CalendarDaysIcon />
+                </IconButton>
+                {answer && (
+                    <IconButton
+                        label={t('weekend.share.action', 'Partager')}
+                        disabled={sharing}
+                        onClick={() => void share()}
+                    >
+                        <ShareIcon />
+                    </IconButton>
+                )}
+            </div>
             <div className="absolute right-3 top-3 sm:right-4 sm:top-4">
                 <IconButton
                     label={t('proposals.sheet.close', 'Fermer')}
@@ -452,27 +575,138 @@ const WeekendSheet: React.FC<WeekendSheetProps> = ({ uid, onClose }) => {
         );
     }
 
-    if (state === 'error' || !answer) {
+    if (state === 'error') {
         return shell(
             <p className="py-6 text-body-m text-surface-on-variant">
-                {state === 'error'
-                    ? t('weekend.loadError', 'Impossible d’ouvrir le week-end.')
-                    : t('weekend.empty', 'Rien à proposer ce week-end.')}
+                {t('weekend.loadError', 'Impossible d’ouvrir le week-end.')}
             </p>
         );
     }
 
-    const days = answer.days ?? [];
+    const today = localToday();
+    const picker = (
+        <section
+            aria-labelledby="weekend-picker"
+            data-testid="weekend-picker"
+            className="mb-3 rounded-card bg-surface-low p-3"
+        >
+            <h3
+                id="weekend-picker"
+                className="text-body font-medium text-surface-on"
+            >
+                {t('weekend.request.title', 'Préparer des jours')}
+            </h3>
+            <ul className="mt-2 grid grid-cols-7 gap-1.5">
+                {pickerDays(today).map((date) => {
+                    const on = days.includes(date);
+                    const full = !on && days.length >= REQUEST_MAX_DAYS;
+                    return (
+                        <li key={date}>
+                            <button
+                                type="button"
+                                aria-pressed={on}
+                                disabled={full || asking}
+                                onClick={() =>
+                                    setDays((current) =>
+                                        toggleDay(current, date)
+                                    )
+                                }
+                                className={`w-full rounded-inner px-1 py-1.5 text-label-m tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-40 ${
+                                    on
+                                        ? 'bg-primary text-primary-on'
+                                        : isWeekendDay(date)
+                                          ? 'bg-primary/10 text-surface-on hover:bg-primary/20'
+                                          : 'bg-surface-card text-surface-on hover:bg-surface-high'
+                                }`}
+                            >
+                                {shortDay(date, language)}
+                            </button>
+                        </li>
+                    );
+                })}
+            </ul>
+            <p className="mt-2 text-label-m text-surface-on-variant">
+                {t(
+                    'weekend.request.hint',
+                    'L’IA prépare au moins 5 idées par jour. Une notification arrive quand c’est prêt.'
+                )}
+            </p>
+            {askError && (
+                <p className="mt-1 text-label-m text-danger">{askError}</p>
+            )}
+            <div className="mt-2 flex justify-end">
+                <Button
+                    variant="primary"
+                    size="sm"
+                    disabled={asking || days.length === 0}
+                    onClick={ask}
+                >
+                    {t('weekend.request.submit', 'Préparer')}
+                </Button>
+            </div>
+        </section>
+    );
+
+    const askedDays = (asked?.request?.dates ?? [])
+        .map((date) => shortDay(date, language))
+        .join(', ');
+    const requestLine = asked && (
+        <p
+            data-testid="weekend-request"
+            role="status"
+            className="mb-3 flex items-center gap-2 rounded-card bg-surface-low p-3 text-body-m text-surface-on-variant"
+        >
+            {pending && (
+                <span
+                    aria-hidden="true"
+                    className="h-3 w-3 shrink-0 animate-spin rounded-full border-2 border-primary border-t-transparent motion-reduce:animate-none"
+                />
+            )}
+            {pending
+                ? t('weekend.request.pending', 'En préparation pour {{days}}', {
+                      days: askedDays,
+                  })
+                : t(
+                      'weekend.request.failed',
+                      'Pas pu être préparé ({{days}})',
+                      { days: askedDays }
+                  )}
+        </p>
+    );
+    const showPicker =
+        pickerOpen || (!pending && (!answer || asked?.status === 'failed'));
+
+    if (!answer) {
+        return shell(
+            <>
+                {requestLine}
+                {showPicker && picker}
+                {!asked && !showPicker && (
+                    <p className="py-6 text-body-m text-surface-on-variant">
+                        {t('weekend.empty', 'Rien à proposer ce week-end.')}
+                    </p>
+                )}
+            </>
+        );
+    }
+
+    const dayTiles = answer.days ?? [];
     const nearbyGroups = groupNearbyByDay(answer.nearby);
     const elsewhere = answer.elsewhere ?? [];
 
     const body = (
         <>
+            {requestLine}
+            {showPicker && picker}
             <ul
-                className="grid grid-cols-2 gap-2"
-                aria-label={t('weekend.days', 'Les deux jours')}
+                className={`grid gap-2 ${
+                    dayTiles.length > 2
+                        ? 'grid-cols-2 sm:grid-cols-4'
+                        : 'grid-cols-2'
+                }`}
+                aria-label={t('weekend.dayList', 'Les jours')}
             >
-                {days.map((day) => {
+                {dayTiles.map((day) => {
                     const label = weatherLabel(day.weather, tr);
                     return (
                         <li

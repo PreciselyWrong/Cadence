@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-22 : Week-end à la demande, jours choisis et image partagée
+
+- **Problème** : la fiche Week-end n'arrivait que le jeudi pour samedi-dimanche, sans entrée sur le web, 2 à 4 idées par demi-journée, et rien pour la montrer à la famille.
+- **Décision** : bouton « Week-end » dans l'en-tête de Revue (`?weekend=1`, la feuille s'ouvre sur toute page) ; dans la feuille, « Autres jours » (icône agenda) montre les 14 prochains jours, 4 au plus, samedi et dimanche teintés, le prochain week-end présélectionné, puis « Préparer » ; la demande s'affiche « En préparation pour mer. 25, sam. 28 » au-dessus du dernier week-end, qui reste décidable ; au moins 5 idées par jour libre ; « Partager » (icône partage) crée une image PNG (dégradé selon la météo dominante, une carte par jour, nom de la demi-journée une seule fois, pastille « À l'agenda » sur les choix, idées ignorées absentes), envoyée par la feuille de partage du système, sinon copiée ou téléchargée.
+- **Android** : livré dans la même étape (1.46.0) : mêmes règles et mêmes cas (`fixtures/weekend/request-and-share.json`), image dessinée par `WeekendShareImage.kt` et partagée par `FileProvider`.
+
 ### 2026-11-20 : résumé utile et mail complet dans « Trier mes mails »
 
 - **Décision** : le résumé accepte 500 caractères et garde ses sauts de ligne, en visant 2 à 3 lignes qui disent qui écrit, le sujet, l'action et son échéance. Le mail complet (`excerpt`, 20 000 caractères maximum) reste replié sur 5 lignes ; « Lire le mail » le déplie entièrement, « Réduire » le replie. Le serveur retire le HTML et décode ses entités ; le rendu reste du texte simple.

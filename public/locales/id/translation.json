@@ -5,6 +5,24 @@
         "close": "Tutup"
     },
     "weekend": {
+        "share": {
+            "error": "Gambar tidak dapat dibuat.",
+            "downloaded": "Gambar diunduh",
+            "copied": "Gambar disalin",
+            "footer": "Disiapkan dengan Cadence",
+            "kicker": "AKHIR PEKAN",
+            "action": "Bagikan"
+        },
+        "request": {
+            "error": "Permintaan tidak dapat dikirim.",
+            "failed": "Tidak dapat disiapkan ({{days}})",
+            "pending": "Sedang disiapkan untuk {{days}}",
+            "submit": "Siapkan",
+            "hint": "AI menyiapkan setidaknya 5 ide per hari. Notifikasi datang saat sudah siap.",
+            "title": "Siapkan hari",
+            "open": "Hari lain"
+        },
+        "dayList": "Hari-hari",
         "title": "Akhir pekan",
         "loadError": "Akhir pekan tidak dapat dibuka.",
         "empty": "Tidak ada saran untuk akhir pekan ini.",
@@ -47,7 +65,6 @@
             "storm": "badai",
             "fog": "kabut"
         },
-        "days": "Kedua hari",
         "nearby": "Nearby",
         "elsewhere": "Lebih bagus di tempat lain",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

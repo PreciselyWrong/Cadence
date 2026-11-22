@@ -5,6 +5,24 @@
         "close": "Đóng"
     },
     "weekend": {
+        "share": {
+            "error": "Không thể tạo ảnh.",
+            "downloaded": "Đã tải ảnh xuống",
+            "copied": "Đã sao chép ảnh",
+            "footer": "Chuẩn bị với Cadence",
+            "kicker": "CUỐI TUẦN",
+            "action": "Chia sẻ"
+        },
+        "request": {
+            "error": "Không thể gửi yêu cầu.",
+            "failed": "Không thể chuẩn bị ({{days}})",
+            "pending": "Đang chuẩn bị cho {{days}}",
+            "submit": "Chuẩn bị",
+            "hint": "AI chuẩn bị ít nhất 5 ý tưởng mỗi ngày. Bạn sẽ nhận thông báo khi xong.",
+            "title": "Chuẩn bị ngày",
+            "open": "Ngày khác"
+        },
+        "dayList": "Các ngày",
         "title": "Cuối tuần",
         "loadError": "Không mở được đề xuất cuối tuần.",
         "empty": "Không có gì để đề xuất cuối tuần này.",
@@ -47,7 +65,6 @@
             "storm": "giông",
             "fog": "sương mù"
         },
-        "days": "Cả hai ngày",
         "nearby": "Nearby",
         "elsewhere": "Đẹp hơn ở nơi khác",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

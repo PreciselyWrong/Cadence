@@ -169,6 +169,16 @@
     <string name="weekend_weather_snow">neige</string>
     <string name="weekend_weather_storm">orage</string>
     <string name="weekend_weather_fog">brouillard</string>
+    <string name="weekend_other_days">Autres jours</string>
+    <string name="weekend_share">Partager</string>
+    <string name="weekend_picker_hint">L\'IA prépare au moins 5 idées par jour. Une notification arrive quand c\'est prêt.</string>
+    <string name="weekend_prepare">Préparer</string>
+    <string name="weekend_pending_for">En préparation pour %1$s</string>
+    <string name="weekend_failed">Pas pu être préparé</string>
+    <string name="weekend_share_kicker">WEEK-END</string>
+    <string name="weekend_share_calendar_pill">À l\'agenda</string>
+    <string name="weekend_share_footer">Préparé avec Cadence</string>
+    <string name="weekend_share_error">Impossible de partager l\'image.</string>
     <string name="proposal_morning_ready">Ta matinée est prête</string>
     <string name="proposal_morning_ready_text">Ouvre pour trier tes retards et voir ta journée.</string>
     <string name="ritual_step1_title">Hier et retards</string>

@@ -5,6 +5,24 @@
         "close": "Zamknij"
     },
     "weekend": {
+        "share": {
+            "error": "Nie udało się utworzyć obrazu.",
+            "downloaded": "Obraz pobrany",
+            "copied": "Obraz skopiowany",
+            "footer": "Przygotowano w Cadence",
+            "kicker": "WEEKEND",
+            "action": "Udostępnij"
+        },
+        "request": {
+            "error": "Nie udało się wysłać prośby.",
+            "failed": "Nie udało się przygotować ({{days}})",
+            "pending": "W przygotowaniu na {{days}}",
+            "submit": "Przygotuj",
+            "hint": "AI przygotowuje co najmniej 5 pomysłów na dzień. Powiadomienie przyjdzie, gdy będzie gotowe.",
+            "title": "Przygotuj dni",
+            "open": "Inne dni"
+        },
+        "dayList": "Dni",
         "title": "Weekend",
         "loadError": "Nie udało się otworzyć weekendu.",
         "empty": "Brak propozycji na ten weekend.",
@@ -47,7 +65,6 @@
             "storm": "burza",
             "fog": "mgła"
         },
-        "days": "Oba dni",
         "nearby": "Nearby",
         "elsewhere": "Ładniej gdzie indziej",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"

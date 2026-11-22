@@ -1,7 +1,7 @@
 import PageShell from '../Shared/ui/PageShell';
 import EmptyState from '../Shared/ui/EmptyState';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PageHeader from '../Shared/ui/PageHeader';
 import Button from '../Shared/ui/Button';
@@ -38,7 +38,10 @@ import WeekStep from './WeekStep';
 import QuickReview from './QuickReview';
 import { useDecisionKeys } from './useDecisionKeys';
 import ProposalButton from '../Proposals/ProposalButton';
-import { PROPOSAL_CHANGED_EVENT } from '../Proposals/proposalLinks';
+import {
+    PROPOSAL_CHANGED_EVENT,
+    setWeekendParam,
+} from '../Proposals/proposalLinks';
 import { useProposal } from '../Proposals/useProposal';
 import { useProposalChanged } from '../Proposals/useProposalChanged';
 import {
@@ -239,6 +242,7 @@ const LaterSorter: React.FC<LaterSorterProps> = ({
 const ReviewPage: React.FC = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
     const { showErrorToast, showSuccessToast, showUndoToast } = useToast();
     const { openTask } = useTaskPane();
     const [step, setStepState] = useState<Step>(readStep);
@@ -1027,6 +1031,14 @@ const ReviewPage: React.FC = () => {
                 actions={
                     quick ? undefined : (
                         <>
+                            <Button
+                                variant="secondary"
+                                onClick={() =>
+                                    setWeekendParam(navigate, location, true)
+                                }
+                            >
+                                {t('weekend.title', 'Week-end')}
+                            </Button>
                             <ProposalButton
                                 kind="review"
                                 onReady={() => void startQuick()}

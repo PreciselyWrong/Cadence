@@ -5,6 +5,24 @@
         "close": "Lukk"
     },
     "weekend": {
+        "share": {
+            "error": "Bildet kunne ikke lages.",
+            "downloaded": "Bilde lastet ned",
+            "copied": "Bilde kopiert",
+            "footer": "Forberedt med Cadence",
+            "kicker": "HELG",
+            "action": "Del"
+        },
+        "request": {
+            "error": "Forespørselen kunne ikke sendes.",
+            "failed": "Kunne ikke forberedes ({{days}})",
+            "pending": "Forberedes for {{days}}",
+            "submit": "Forbered",
+            "hint": "AI forbereder minst 5 ideer per dag. Du får et varsel når det er klart.",
+            "title": "Forbered dager",
+            "open": "Andre dager"
+        },
+        "dayList": "Dagene",
         "title": "Helg",
         "loadError": "Helgen kunne ikke åpnes.",
         "empty": "Ingenting å foreslå denne helgen.",
@@ -47,7 +65,6 @@
             "storm": "storm",
             "fog": "tåke"
         },
-        "days": "Begge dagene",
         "nearby": "Nearby",
         "elsewhere": "Penere andre steder",
         "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
