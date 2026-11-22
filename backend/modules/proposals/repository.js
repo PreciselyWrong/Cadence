@@ -67,6 +67,16 @@ const findPending = (userId, kind) =>
         order: [['created_at', 'DESC']],
     });
 
+// The latest proposal of one kind in one of the given statuses, if any.
+const findLatestIn = (userId, kind, statuses) =>
+    Proposal.findOne({
+        where: { user_id: userId, kind, status: statuses },
+        order: [
+            ['created_at', 'DESC'],
+            ['id', 'DESC'],
+        ],
+    });
+
 // The latest proposal of each kind, optionally only those in one status.
 async function findLatestPerKind(userId, status = null) {
     const rows = await Proposal.findAll({
@@ -272,6 +282,7 @@ module.exports = {
     findReady,
     findPending,
     findLatestPerKind,
+    findLatestIn,
     findJudgedReviews,
     findAreaNames,
     findActiveProjects,

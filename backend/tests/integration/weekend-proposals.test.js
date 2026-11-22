@@ -383,4 +383,128 @@ describe('proposals › weekend', () => {
             .send({ text: 'Plus court' });
         expect(res.status).toBe(400);
     });
+    describe('on demand', () => {
+        const moment = require('moment-timezone');
+        const inDays = (n) => moment.utc().add(n, 'days').format('YYYY-MM-DD');
+        const ask = (dates) =>
+            agent.post('/api/proposals').send({ kind: 'weekend', dates });
+        const requested = () =>
+            emit.mock.calls.filter(
+                ([, event]) => event === 'proposal.requested'
+            );
+        const forDates = (dates) =>
+            payload({
+                days: dates.map((date) => ({ date, weather: 'sun' })),
+                slots: dates.map((date, i) => ({
+                    id: `d${i}-am`,
+                    date,
+                    part: 'morning',
+                    activity: { title: `Sortie ${i}` },
+                })),
+                nearby: [],
+                elsewhere: [],
+            });
+
+        it('stores a pending request with the chosen days and asks the agent', async () => {
+            const dates = [inDays(9), inDays(3)];
+            const res = await ask(dates);
+
+            expect(res.status).toBe(201);
+            expect(res.body.status).toBe('pending');
+            const body = await readBack(res.body.uid);
+            expect(body.kind).toBe('weekend');
+            expect(body.request).toEqual({ dates: [inDays(3), inDays(9)] });
+            expect(requested()).toHaveLength(1);
+            expect(requested()[0][2].data).toEqual(
+                expect.objectContaining({
+                    uid: res.body.uid,
+                    kind: 'weekend',
+                    facts: { request: { dates: [inDays(3), inDays(9)] } },
+                })
+            );
+        });
+
+        it('refuses a request without valid days, and stores nothing', async () => {
+            for (const dates of [[], [inDays(-1)], [inDays(20)]]) {
+                expect((await ask(dates)).status).toBe(400);
+            }
+            expect(await Proposal.count({ where: { user_id: user.id } })).toBe(
+                0
+            );
+            expect(requested()).toHaveLength(0);
+        });
+
+        it('keeps the same pending request, and replaces it for other days', async () => {
+            const first = await ask([inDays(2)]);
+            const again = await ask([inDays(2)]);
+            expect(again.status).toBe(200);
+            expect(again.body.uid).toBe(first.body.uid);
+
+            const other = await ask([inDays(4)]);
+            expect(other.status).toBe(201);
+            expect(other.body.uid).not.toBe(first.body.uid);
+            expect((await readBack(first.body.uid)).status).toBe('dismissed');
+        });
+
+        it('fills the pending request with the agent proposal, under the same uid', async () => {
+            const dates = [inDays(2), inDays(3)];
+            const ready = JSON.parse((await propose()).content[0].text);
+            const pending = await ask(dates);
+
+            const filled = JSON.parse(
+                (await run('propose_weekend', forDates(dates))).content[0].text
+            );
+
+            expect(filled).toEqual({ uid: pending.body.uid, status: 'ready' });
+            const body = await readBack(pending.body.uid);
+            expect(body.answer.days.map((d) => d.date)).toEqual(dates);
+            expect(body.request).toEqual({ dates });
+            expect((await readBack(ready.uid)).status).toBe('dismissed');
+            expect(await Proposal.count({ where: { user_id: user.id } })).toBe(
+                2
+            );
+        });
+
+        it('lists the pending request and the last weekend still shown', async () => {
+            const ready = JSON.parse((await propose()).content[0].text);
+            const pending = await ask([inDays(2)]);
+
+            const list = await agent.get('/api/proposals?kind=weekend');
+
+            expect(list.body.proposals.map((p) => [p.uid, p.status])).toEqual([
+                [pending.body.uid, 'pending'],
+                [ready.uid, 'ready'],
+            ]);
+        });
+
+        it('waits an hour for the agent before failing the request', async () => {
+            const { body } = await ask([inDays(2)]);
+            const backdate = (minutes) =>
+                Proposal.sequelize.query(
+                    'UPDATE proposals SET updated_at = :at WHERE uid = :uid',
+                    {
+                        replacements: {
+                            at: moment
+                                .utc()
+                                .subtract(minutes, 'minutes')
+                                .toDate(),
+                            uid: body.uid,
+                        },
+                    }
+                );
+            await backdate(30);
+            expect((await readBack(body.uid)).status).toBe('pending');
+
+            await backdate(61);
+            const failed = await readBack(body.uid);
+            expect(failed).toEqual(
+                expect.objectContaining({ status: 'failed', error: 'timeout' })
+            );
+            const note = await Notification.findOne({
+                where: { user_id: user.id, type: 'proposal' },
+                order: [['id', 'DESC']],
+            });
+            expect(note.title).toBe('Le week-end n’a pas pu être préparé');
+        });
+    });
 });

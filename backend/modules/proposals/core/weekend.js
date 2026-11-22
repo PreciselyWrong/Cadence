@@ -10,7 +10,9 @@ const { cleanText } = require('./text');
 
 const HEADLINE_MAX = 60;
 const SUBTITLE_MAX = 160;
-const LIMITS = { days: 2, slots: 16, places: 5, nearby: 12 };
+const LIMITS = { days: 4, slots: 40, places: 5, nearby: 16 };
+// Days the user may ask for: the weather forecast reaches two weeks ahead.
+const REQUEST_HORIZON_DAYS = 14;
 const BUSY_MAX = 120;
 const TITLE_MAX = 120;
 const NOTE_MAX = 140;
@@ -333,7 +335,35 @@ function reportEvent(decisions, report) {
     );
 }
 
+// The days of an on-demand request: 1 to 4 distinct valid days, from today to
+// the end of the forecast, sorted. Throws a ValidationError otherwise.
+function checkWeekendRequest(raw, today) {
+    if (!Array.isArray(raw) || raw.length === 0) {
+        throw new ValidationError('dates must be a list of days');
+    }
+    const days = raw.map((value) =>
+        typeof value === 'string' && value.length === 10 ? dayOf(value) : null
+    );
+    if (days.includes(null)) {
+        throw new ValidationError('dates must be YYYY-MM-DD days');
+    }
+    const dates = [...new Set(days)].sort();
+    if (dates.length > LIMITS.days) {
+        throw new ValidationError(`at most ${LIMITS.days} days`);
+    }
+    const last = moment(today, 'YYYY-MM-DD')
+        .add(REQUEST_HORIZON_DAYS - 1, 'days')
+        .format('YYYY-MM-DD');
+    if (dates[0] < today || dates[dates.length - 1] > last) {
+        throw new ValidationError(
+            `dates must be from today and within ${REQUEST_HORIZON_DAYS} days`
+        );
+    }
+    return dates;
+}
+
 module.exports = {
+    checkWeekendRequest,
     validateWeekend,
     checkWeekendDecisions,
     recordDecisions,

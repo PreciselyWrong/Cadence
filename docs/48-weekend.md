@@ -1,27 +1,36 @@
 # Week-end (proposition d'agent)
 
-Kind `weekend` of the agent proposals (`docs/47-proposals.md`). The family agent (Hermes, profile `famille`, job « Météo du week-end », Thursday 17:00) proposes one outing per free slot of the weekend; the user picks per slot, then « Valider ». Nothing reaches the calendar before that. Accepted outings are created in the shared calendar « Commun » by capgw (Hermes side), without AI.
+Kind `weekend` of the agent proposals (`docs/47-proposals.md`). The family agent (Hermes, profile `famille`, job « Météo du week-end », Thursday 17:00 for the next Saturday and Sunday, or on demand for the days the user picks) proposes at least five outings per free day; the user picks per slot, then « Valider ». Nothing reaches the calendar before that. Accepted outings are created in the shared calendar « Commun » by capgw (Hermes side), without AI.
 
 Same rules as Career: the agent creates the proposal ready-made (no `pending`, no `proposal.requested`), facts are the payload, Cadence validates, nothing is applied without the user. Web and Android show the same sheet (mockup validated 2026-11-13).
+
+## On demand: `POST /api/proposals { kind: "weekend", dates }`
+
+The user picks 1 to 4 days, one by one (not necessarily in a row), from today to 13 days ahead (the forecast). `dates`: `YYYY-MM-DD` days; repeated days are merged, the list is sorted. Refused (400): no day, a bad day, a past day, a day beyond the forecast, more than 4 days.
+
+- Stored `pending` with `facts.request = { dates }`, shown as `request` on the proposal; emits `proposal.requested` with `data: { uid, kind: "weekend", facts: { request: { dates } } }`. The Hermes plugin runs the weekend job right away.
+- The same days asked again return the pending request (200); other days dismiss it and create a new one (201).
+- The agent has an hour (the job, then the sync that publishes every 10 minutes): after that the request is `failed` with `timeout` and notifies « Le week-end n’a pas pu être préparé ».
+- `GET /api/proposals?kind=weekend` lists the pending request first, then the last weekend still shown (`ready` or `applied`), so its outings stay decidable and its events are created meanwhile.
 
 ## Input: MCP tool `propose_weekend`
 
 Open to the same API key as `propose_career` and `propose_mail`.
 
 - `headline` (required, 60 characters), `subtitle` (160).
-- `days`: `[{ date, weather, min, max }]`, 2 at most. `weather` ∈ `sun`, `partly`, `cloud`, `rain`, `snow`, `storm`, `fog`; `min`, `max` integers (°C).
-- `slots`: `[{ id, date, part, weather?, temp?, feels?, busy?, activity?, recommended? }]`, 16 at most. Several slots may share a `date` and `part`: they are alternatives for the same half-day, each decided on its own.
+- `days`: `[{ date, weather, min, max }]`, 4 at most: the requested days when a request is pending, else Saturday and Sunday. `weather` ∈ `sun`, `partly`, `cloud`, `rain`, `snow`, `storm`, `fog`; `min`, `max` integers (°C).
+- `slots`: `[{ id, date, part, weather?, temp?, feels?, busy?, activity?, recommended? }]`, 40 at most. Several slots may share a `date` and `part`: they are alternatives for the same half-day, each decided on its own. A free day gets at least five activities (spread over its free half-days); Cadence keeps fewer if that is all the agent sends.
   - `part` ∈ `morning`, `afternoon`, `day`. `date` must be one of `days[].date`.
   - `busy` (120): what the calendar already holds (« Foire aux livres, Penthalaz »). A busy slot has no `activity` and no decision.
   - `after` (120): a follow-up line of the slot itself (« Ensuite : balade à Dizy »), shown on a busy slot or under an activity.
   - `activity`: `{ title (120), url? (https), image? (https), place? (60), note? (140), travel? (30), start? (HH:MM), end? (HH:MM), after? (120) }`. `after`: an optional follow-up line (« Ensuite : balade à Dizy »).
   - `recommended`: the agent advises « Mettre à l'agenda » (preselected in the sheet).
-- `nearby`: `[{ title (120), date, start? (HH:MM), place? (60), travel? (30), url? (https), image? (https), note? (140) }]`, 12 at most (`date` must be one of `days[].date`); other local events without decisions.
+- `nearby`: `[{ title (120), date, start? (HH:MM), place? (60), travel? (30), url? (https), image? (https), note? (140) }]`, 16 at most (`date` must be one of `days[].date`); other local events without decisions.
 - `elsewhere`: `[{ place (60), date, weather, temp, travel? (30) }]`, 5 at most: places with better weather than home.
 
 `id`: letters, digits, `_` or `-`, 1 to 64. Texts are cut to their limits; a slot with a bad id, date or part is dropped; an activity or nearby entry with a non-https `url` or `image` loses that address; a nearby entry without a title or with a date outside `days` is dropped. Refused (400): no headline, or no slot.
 
-A new weekend proposal replaces the ready one. Decisions of the replaced one carry over to slots of the new one with the same `id` (so an outing already accepted is not lost, and is not asked again). It is stored `ready` and notifies (desktop and mobile): title = headline, message = subtitle, `data: { proposal_uid, kind: "weekend" }`.
+A new weekend proposal fills the pending request when there is one (same `uid`, `request` kept), else it is a new proposal; it replaces the ready one. Decisions of the replaced one carry over to slots of the new one with the same `id` (so an outing already accepted is not lost, and is not asked again). It is stored `ready` and notifies (desktop and mobile): title = headline, message = subtitle, `data: { proposal_uid, kind: "weekend" }`.
 
 ## Decisions: `POST /api/proposals/:uid/apply { decisions }`
 

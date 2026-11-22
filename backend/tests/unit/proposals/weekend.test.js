@@ -9,6 +9,7 @@ const {
     isComplete,
     checkEventReport,
     reportEvent,
+    checkWeekendRequest,
 } = require('../../../modules/proposals/core/weekend');
 const { ValidationError, ConflictError } = require('../../../shared/errors');
 
@@ -124,13 +125,15 @@ describe('validateWeekend', () => {
         expect(answer.slots.map((item) => item.id)).toEqual(['sun-pm']);
     });
 
-    it('keeps alternatives for the same half-day, up to 16 slots', () => {
-        const alternatives = Array.from({ length: 18 }, (_, i) =>
+    it('keeps alternatives for the same half-day, up to 40 slots', () => {
+        const alternatives = Array.from({ length: 42 }, (_, i) =>
             slot({ id: `sat-am-${i}`, activity: { title: `Option ${i}` } })
         );
         const answer = answerOf({ slots: alternatives });
-        expect(answer.slots).toHaveLength(16);
-        expect(new Set(answer.slots.map((s) => s.part))).toEqual(new Set(['morning']));
+        expect(answer.slots).toHaveLength(40);
+        expect(new Set(answer.slots.map((s) => s.part))).toEqual(
+            new Set(['morning'])
+        );
     });
 
     it('drops a repeated slot id after the first', () => {
@@ -208,14 +211,12 @@ describe('validateWeekend', () => {
         expect(answer.slots[0].recommended).toBe(false);
     });
 
-    it('caps the days at 2, the slots at 16 and the places at 5', () => {
+    it('caps the days at 4, the slots at 40 and the places at 5', () => {
         const answer = answerOf({
-            days: [
-                day(),
-                day({ date: '2026-11-15' }),
-                day({ date: '2026-11-16' }),
-            ],
-            slots: Array.from({ length: 17 }, (_, n) => slot({ id: `s${n}` })),
+            days: [14, 15, 16, 17, 18].map((d) =>
+                day({ date: `2026-11-${d}` })
+            ),
+            slots: Array.from({ length: 41 }, (_, n) => slot({ id: `s${n}` })),
             elsewhere: [1, 2, 3, 4, 5, 6].map((n) => ({
                 place: `Lieu ${n}`,
                 date: '2026-11-14',
@@ -223,8 +224,8 @@ describe('validateWeekend', () => {
                 temp: 10,
             })),
         });
-        expect(answer.days).toHaveLength(2);
-        expect(answer.slots).toHaveLength(16);
+        expect(answer.days).toHaveLength(4);
+        expect(answer.slots).toHaveLength(40);
         expect(answer.elsewhere).toHaveLength(5);
     });
 
@@ -255,8 +256,8 @@ describe('validateWeekend', () => {
         expect(answer.slots[1].activity.image).toBeNull();
     });
 
-    it('keeps valid nearby events up to 12 and drops invalid dates or non-https links', () => {
-        const many = Array.from({ length: 14 }, (_, i) => ({
+    it('keeps valid nearby events up to 16 and drops invalid dates or non-https links', () => {
+        const many = Array.from({ length: 18 }, (_, i) => ({
             title: `Événement ${i + 1}`,
             date: i % 2 === 0 ? '2026-11-14' : '2026-11-15',
             start: '14:00',
@@ -281,7 +282,7 @@ describe('validateWeekend', () => {
                 ...many,
             ],
         });
-        expect(answer.nearby).toHaveLength(12);
+        expect(answer.nearby).toHaveLength(16);
         expect(answer.nearby[0]).toEqual({
             title: 'Concert',
             date: '2026-11-14',
@@ -623,5 +624,48 @@ describe('reportEvent', () => {
                 error: 'x',
             })
         ).toThrow(ConflictError);
+    });
+});
+
+describe('checkWeekendRequest', () => {
+    const today = '2026-11-22';
+
+    it('keeps 1 to 4 distinct days from today on, sorted', () => {
+        expect(
+            checkWeekendRequest(
+                ['2026-11-29', '2026-11-28', '2026-11-28', '2026-11-22'],
+                today
+            )
+        ).toEqual(['2026-11-22', '2026-11-28', '2026-11-29']);
+    });
+
+    it('refuses no day, a bad day, a past day or more than 4 days', () => {
+        for (const dates of [
+            [],
+            undefined,
+            'x',
+            ['2026-11-31'],
+            ['2026-11-21'],
+            [
+                '2026-11-23',
+                '2026-11-24',
+                '2026-11-25',
+                '2026-11-26',
+                '2026-11-27',
+            ],
+        ]) {
+            expect(() => checkWeekendRequest(dates, today)).toThrow(
+                ValidationError
+            );
+        }
+    });
+
+    it('refuses a day beyond the forecast, 14 days from today', () => {
+        expect(checkWeekendRequest(['2026-12-05'], today)).toEqual([
+            '2026-12-05',
+        ]);
+        expect(() => checkWeekendRequest(['2026-12-06'], today)).toThrow(
+            'within 14 days'
+        );
     });
 });

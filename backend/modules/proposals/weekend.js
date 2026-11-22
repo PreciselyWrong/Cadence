@@ -9,6 +9,7 @@ const dispatcher = require('../webhooks/dispatcher');
 const { logError } = require('../../services/logService');
 const repository = require('./repository');
 const {
+    checkWeekendRequest,
     validateWeekend,
     checkWeekendDecisions,
     recordDecisions,
@@ -18,8 +19,33 @@ const {
     reportEvent,
 } = require('./core/weekend');
 
-// A new weekend proposal replaces the ready one. Its final decisions carry over
-// to the slots of the same id, so an outing already decided is not asked again.
+const sameDays = (a = [], b = []) =>
+    a.length === b.length && a.every((day, i) => day === b[i]);
+
+// The user's request for chosen days: a pending proposal the agent fills with
+// propose_weekend. The same days asked again keep the pending request; other
+// days replace it. `requestAgent` tells the agent (proposal.requested).
+async function requestWeekend(user, rawDates, today, requestAgent) {
+    const dates = checkWeekendRequest(rawDates, today);
+    const pending = await repository.findPending(user.id, 'weekend');
+    if (pending && sameDays(pending.facts?.request?.dates, dates)) {
+        return { row: pending, created: false };
+    }
+    if (pending) await pending.update({ status: 'dismissed' });
+    const row = await repository.create({
+        user_id: user.id,
+        kind: 'weekend',
+        status: 'pending',
+        facts: { request: { dates } },
+    });
+    await requestAgent(row);
+    return { row, created: true };
+}
+
+// A new weekend proposal fills the pending request if there is one, else it is
+// a new row; either way it replaces the ready one. Its final decisions carry
+// over to the slots of the same id, so an outing already decided is not asked
+// again.
 async function proposeWeekend(user, input) {
     const answer = validateWeekend(input);
     const replaced = await repository.findReady(user.id, 'weekend');
@@ -27,13 +53,19 @@ async function proposeWeekend(user, input) {
         ? carryDecisions(replaced.facts?.decisions ?? [], answer)
         : [];
     await repository.dismissReady(user.id, 'weekend');
-    const row = await repository.create({
-        user_id: user.id,
-        kind: 'weekend',
-        status: 'ready',
-        facts: { ...answer, decisions },
-        answer,
-    });
+    const pending = await repository.findPending(user.id, 'weekend');
+    const fields = { status: 'ready', answer, error: null };
+    const row = pending
+        ? await pending.update({
+              ...fields,
+              facts: { ...answer, request: pending.facts?.request, decisions },
+          })
+        : await repository.create({
+              ...fields,
+              user_id: user.id,
+              kind: 'weekend',
+              facts: { ...answer, decisions },
+          });
     await repository.notify({
         userId: user.id,
         type: 'proposal',
@@ -96,4 +128,9 @@ async function reportWeekendEvent(row, body = {}) {
     await row.update({ facts: { ...row.facts, decisions } });
 }
 
-module.exports = { proposeWeekend, applyWeekend, reportWeekendEvent };
+module.exports = {
+    requestWeekend,
+    proposeWeekend,
+    applyWeekend,
+    reportWeekendEvent,
+};

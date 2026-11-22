@@ -42,12 +42,13 @@ const { withDecisions } = require('./core/career');
 const { withSlotDecisions } = require('./core/weekend');
 const { applyCareer } = require('./career');
 const {
+    requestWeekend,
     proposeWeekend,
     applyWeekend,
     reportWeekendEvent,
 } = require('./weekend');
 
-const KINDS = new Set(['week', 'review']);
+const KINDS = new Set(['week', 'review', 'weekend']);
 const LIST_KINDS = new Set(['week', 'review', 'career', 'weekend']);
 const STATUS_FILTERS = new Set([
     'pending',
@@ -59,7 +60,10 @@ const STATUS_FILTERS = new Set([
 const JUDGED_REVIEWS = 20;
 // A pending proposal the agent has not answered within this time is failed
 // with 'timeout', so the user can ask again instead of waiting forever.
+// A weekend is prepared by a Hermes job, then published by a sync that runs
+// every 10 minutes: it gets an hour.
 const PENDING_TIMEOUT_MINUTES = 10;
+const PENDING_TIMEOUT_BY_KIND = { weekend: 60 };
 // Task priority is stored as 0 (low), 1 (medium), 2 (high). The agent only
 // needs the ones that are not the default.
 const PRIORITY_SHOWN = { 1: 'medium', 2: 'high' };
@@ -73,6 +77,10 @@ const TITLES = {
     review: {
         ready: 'Ta revue est prête',
         failed: 'Ta revue n’a pas pu être préparée',
+    },
+    weekend: {
+        ready: 'Ton week-end est prêt',
+        failed: 'Le week-end n’a pas pu être préparé',
     },
 };
 
@@ -123,6 +131,8 @@ function serialize(row, { withFacts = false } = {}) {
         updated_at: row.updated_at,
     };
     if (row.kind === 'career') out.decisions = row.facts?.decisions ?? [];
+    // The days the user asked for, on a weekend prepared on demand.
+    if (row.kind === 'weekend') out.request = row.facts?.request ?? null;
     if (withFacts) out.facts = agentFacts(row.facts);
     return out;
 }
@@ -132,7 +142,9 @@ function serialize(row, { withFacts = false } = {}) {
 async function expireIfStale(row) {
     if (!row || row.status !== 'pending') return row;
     const age = Date.now() - new Date(row.updated_at).getTime();
-    if (age < PENDING_TIMEOUT_MINUTES * 60 * 1000) return row;
+    const minutes =
+        PENDING_TIMEOUT_BY_KIND[row.kind] ?? PENDING_TIMEOUT_MINUTES;
+    if (age < minutes * 60 * 1000) return row;
     await row.update({ status: 'failed', error: 'timeout' });
     await notifyOutcome(row);
     return row;
@@ -418,9 +430,15 @@ async function agentAvailable(user) {
     );
 }
 
-async function createProposal(user, { kind, start, end, trigger } = {}) {
+async function createProposal(user, { kind, start, end, trigger, dates } = {}) {
     if (!KINDS.has(kind)) {
-        throw new ValidationError('kind must be week or review');
+        throw new ValidationError('kind must be week, review or weekend');
+    }
+    if (kind === 'weekend') {
+        const today = todayIn(getSafeTimezone(user.timezone));
+        const stale = await repository.findPending(user.id, kind);
+        if (stale) await expireIfStale(stale);
+        return requestWeekend(user, dates, today, requestAgent);
     }
     const pending = await repository.findPending(user.id, kind);
     if (pending) {
@@ -518,6 +536,16 @@ async function listProposals(user, { status, kind } = {}) {
     }
     const rows = await repository.findLatestPerKind(user.id, status ?? null);
     const current = await Promise.all(rows.map(expireIfStale));
+    // While a weekend is being prepared, the last one stays readable: its
+    // outings are still decided and its events created (capgw).
+    const weekend = current.find((row) => row.kind === 'weekend');
+    if (!status && weekend?.status === 'pending') {
+        const shown = await repository.findLatestIn(user.id, 'weekend', [
+            'ready',
+            'applied',
+        ]);
+        if (shown) current.splice(current.indexOf(weekend) + 1, 0, shown);
+    }
     return current
         .filter((row) => !status || row.status === status)
         .filter((row) => !kind || row.kind === kind)
