@@ -494,6 +494,21 @@ describe('proposals › weekend', () => {
             );
         });
 
+        it('still lists the last weekend shown after a failed request', async () => {
+            const ready = JSON.parse((await propose()).content[0].text);
+            const pending = await ask([inDays(2)]);
+            await agent
+                .post(`/api/proposals/${pending.body.uid}/answer`)
+                .send({ error: 'paused' });
+
+            const list = await agent.get('/api/proposals?kind=weekend');
+
+            expect(list.body.proposals.map((p) => [p.uid, p.status])).toEqual([
+                [pending.body.uid, 'failed'],
+                [ready.uid, 'ready'],
+            ]);
+        });
+
         it('waits an hour for the agent before failing the request', async () => {
             const { body } = await ask([inDays(2)]);
             const backdate = (minutes) =>

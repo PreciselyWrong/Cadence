@@ -11,7 +11,7 @@ The user picks 1 to 4 days, one by one (not necessarily in a row), from today to
 - Stored `pending` with `facts.request = { dates }`, shown as `request` on the proposal; emits `proposal.requested` with `data: { uid, kind: "weekend", facts: { request: { dates } } }`. The Hermes plugin runs the weekend job right away.
 - The same days asked again return the pending request (200); other days dismiss it and create a new one (201).
 - The agent has an hour (the job, then the sync that publishes every 10 minutes): after that the request is `failed` with `timeout` and notifies « Le week-end n’a pas pu être préparé ».
-- `GET /api/proposals?kind=weekend` lists the pending request first, then the last weekend still shown (`ready` or `applied`), so its outings stay decidable and its events are created meanwhile.
+- `GET /api/proposals?kind=weekend` lists the pending request (or the request that failed) first, then the last weekend still shown (`ready` or `applied`), so its outings stay decidable and its events are created meanwhile.
 
 ## Input: MCP tool `propose_weekend`
 
@@ -55,7 +55,9 @@ Event body (built by capgw, Hermes side): calendar « Commun », title = activit
 
 ## Sheet (web and Android)
 
-From the notification, the bell (`proposal_uid`, `kind: "weekend"`) and a « Week-end » entry where Career lives. Whole sheet scrolls; only the footer is pinned.
+From the notification, the bell (`proposal_uid`, `kind: "weekend"`) and the « Week-end » entry (web: button « Week-end » in the Review page header, `?weekend=1` opens the sheet over any page; Android: panel of Bilan). The entry opens the latest weekend (`GET /api/proposals?kind=weekend`): the pending request on top, then the last weekend shown. Whole sheet scrolls; only the footer is pinned.
+
+Header actions: « Autres jours » (calendar icon) opens the day picker; « Partager » (share icon, when there is an answer) shares the image below.
 
 1. Headline (centered), subtitle.
 2. Two day tiles: day name, weather icon, `min° · max°`.
@@ -66,5 +68,22 @@ From the notification, the bell (`proposal_uid`, `kind: "weekend"`) and a « Wee
 4. « Près de chez nous » (only when `nearby` is not empty, grouped by day in received order): 40 px / 40 dp thumbnail if any, title (link when `url`), muted line « samedi 14:00 · La Sarraz · 5 min », `note` if any.
 5. « Plus beau ailleurs » (only when `elsewhere` is not empty): sun icon, « Pontarlier, samedi : dégagé, 10° · 1 h ».
 6. Footer: count line (« 1 sortie à l'agenda », « 1 autre idée demandée »), button « Valider » (one apply with every picked slot).
+
+### Day picker (« Autres jours », and the sheet when there is no weekend yet)
+
+- The 14 days from today, as toggles, 7 per row: short weekday and day number (« sam. 28 »), Saturday and Sunday tinted. Preselected: the Saturday on or after today and its Sunday; on a Sunday, today only.
+- 4 days at most: once 4 are picked the others are disabled. Hint: « L’IA prépare au moins 5 idées par jour. Une notification arrive quand c’est prêt. »
+- Button « Préparer » (disabled without a day) sends `POST /api/proposals { kind: "weekend", dates }`; offline or refused: error shown, nothing kept.
+- Pending: « En préparation pour sam. 28, dim. 29 » with a short spinner line, above the last weekend still shown; a `failed` request shows « Pas pu être préparé » and the picker again.
+- Pure rules and their shared cases: `fixtures/weekend/request-and-share.json` (`defaultDays`, `toggle`, `pickerDays`).
+
+### Share (« Partager »)
+
+An image made on the device, nothing sent to the server: PNG 1080 px wide, height by content, file `week-end-<first day>.png`, shared through the system sheet (web: Web Share with the file, else copied to the clipboard, else downloaded; Android: chooser with a `FileProvider` address).
+
+- Background: vertical gradient by the dominant weather of the days (`dominant` in the fixture): sun, partly `#FFB347` → `#FF5E62`; cloud, fog `#8E9EAB` → `#D7E1EC`; rain, storm `#2C5364` → `#0F2027`; snow `#E0EAFC` → `#B8CDEB`. White text on sun, partly, rain and storm; `#1B1B1F` on the others.
+- Top: « WEEK-END » in small spaced capitals, the headline (bold, 64 px), the subtitle (34 px).
+- One translucent rounded card per day (white at 18 % on dark backgrounds, 55 % on light ones, radius 36 px): « Samedi 28 novembre », weather glyph and `min° · max°` on the right, then its items (`share` in the fixture): part of the day in small capitals, title (36 px, semi-bold), muted line `place · start · travel`; a `calendar` item carries a pill « À l’agenda »; a `busy` item reads « Occupé : <busy> ». Skipped ideas are left out. A day without items shows only its weather.
+- Bottom: « Préparé avec Cadence » (24 px, muted).
 
 Weather words (FR): `sun` « ensoleillé », `partly` « éclaircies », `cloud` « nuageux », `rain` « pluie », `snow` « neige », `storm` « orage », `fog` « brouillard ».

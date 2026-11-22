@@ -536,10 +536,14 @@ async function listProposals(user, { status, kind } = {}) {
     }
     const rows = await repository.findLatestPerKind(user.id, status ?? null);
     const current = await Promise.all(rows.map(expireIfStale));
-    // While a weekend is being prepared, the last one stays readable: its
-    // outings are still decided and its events created (capgw).
+    // While a weekend is being prepared, or after its request failed, the
+    // last one stays readable: its outings are still decided and its events
+    // created (capgw).
     const weekend = current.find((row) => row.kind === 'weekend');
-    if (!status && weekend?.status === 'pending') {
+    const asking =
+        weekend?.status === 'pending' ||
+        (weekend?.status === 'failed' && !weekend.answer);
+    if (!status && asking) {
         const shown = await repository.findLatestIn(user.id, 'weekend', [
             'ready',
             'applied',
