@@ -97,10 +97,12 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 private val taskUidKey = ActionParameters.Key<String>("today_task_uid")
@@ -120,7 +122,8 @@ private data class FacetView(val habit: WidgetHabit, val bitmap: Bitmap)
  * Glance n'appelle [provideGlance] qu'une fois par session (45 s au moins) : un `update` reçu
  * pendant la session ne fait que recomposer. La vue est donc rechargée dans la composition, à
  * chaque écriture des sources qu'elle lit, sinon une tâche cochée resterait affichée jusqu'à la
- * session suivante.
+ * session suivante. Un rechargement dont l'état dessiné ([TodayDrawnState]) n'a pas changé n'est
+ * pas envoyé : chaque redessin fait sauter la liste d'une image sur certains lanceurs.
  */
 class TodayWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Exact
@@ -135,6 +138,8 @@ class TodayWidget : GlanceAppWidget() {
             .debounce(RELOAD_QUIET_MS)
             .conflate()
             .map { loadView(app, appWidgetId, marks) }
+            .onStart { emit(initial) }
+            .distinctUntilChangedBy { it.drawn }
             .flowOn(Dispatchers.IO)
         provideContent {
             val view by reloads.collectAsState(initial)
@@ -165,14 +170,16 @@ class TodayWidget : GlanceAppWidget() {
         } else {
             habitFacets(app, config, today, now, zone)
         }
+        val checkEvents = config.showEvents && CalendarGraph.repository(app).globalSettings.first().checkEvents
+        val calendarAccessMissing = config.showEvents && CalendarGraph.repository(app).permissionMissing.first()
         return TodayView(
             appWidgetId = appWidgetId,
             config = config,
             palette = TodayPalette.of(config),
             sheen = TodayPalette.sheenAlpha(config).takeIf { it > 0f }?.let(::renderGlassSheen),
             marks = marks,
-            checkEvents = config.showEvents && CalendarGraph.repository(app).globalSettings.first().checkEvents,
-            calendarAccessMissing = config.showEvents && CalendarGraph.repository(app).permissionMissing.first(),
+            checkEvents = checkEvents,
+            calendarAccessMissing = calendarAccessMissing,
             now = now,
             selection = selection,
             facets = facets,
@@ -181,6 +188,9 @@ class TodayWidget : GlanceAppWidget() {
             tagColors = tagColors,
             today = today,
             zone = zone,
+            drawn = TodayDrawnState.of(
+                config, checkEvents, calendarAccessMissing, now, selection, facets.map { it.habit }, projects, tagNames, tagColors, today, zone,
+            ),
         )
     }
 
@@ -367,6 +377,8 @@ private class TodayView(
     val tagColors: Map<String, TagColor>,
     val today: LocalDate,
     val zone: ZoneId,
+    /** Égal d'un chargement à l'autre tant que l'écran ne change pas : aucun redessin n'est alors envoyé. */
+    val drawn: TodayDrawnState,
 )
 
 private fun TodayPalettes.provider(alpha: Float = 1f, pick: (TodayPalette) -> Int): GlanceColor =
