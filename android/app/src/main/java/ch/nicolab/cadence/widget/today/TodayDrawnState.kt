@@ -29,6 +29,10 @@ internal data class TodayDrawnState(
     val zone: ZoneId,
 ) {
     companion object {
+        /** Coches maintenues qui portent sur une ligne affichée ; les autres ne changent rien à l'écran. */
+        fun visibleHeld(held: Set<String>, selection: TodaySelection): Set<String> =
+            if (held.isEmpty()) emptySet() else held.filterTo(mutableSetOf()) { uid -> (selection.overdue + selection.tasks).any { it.uid == uid } }
+
         fun of(
             config: TodayWidgetConfig,
             checkEvents: Boolean,

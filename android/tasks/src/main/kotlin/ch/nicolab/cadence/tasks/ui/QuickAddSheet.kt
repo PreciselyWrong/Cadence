@@ -153,6 +153,8 @@ fun QuickAddSheet(
      * rapide des widgets, au-dessus d'une activité vide.
      */
     slideIn: Boolean = false,
+    /** Vrai pour l'ajout rapide des widgets : la feuille se ferme une fois la tâche écrite, sans série. */
+    closeAfterSave: Boolean = false,
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -296,6 +298,7 @@ fun QuickAddSheet(
             areaUid = parsed.areaUid,
         )
         if (onSave != null) return launchSave { onSave(draft) }
+        if (closeAfterSave) return launchSave { viewModel.saveNewTask(draft) }
         // La tâche est écrite, la saisie reste ouverte et vide pour la suivante : seul le projet suit.
         launchSave(keepOpen = true) {
             val uid = viewModel.saveNewTask(draft)

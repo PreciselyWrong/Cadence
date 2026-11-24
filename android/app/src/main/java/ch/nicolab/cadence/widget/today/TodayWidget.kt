@@ -7,6 +7,8 @@ import android.graphics.Bitmap
 import android.graphics.Color as AndroidColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -143,7 +145,10 @@ class TodayWidget : GlanceAppWidget() {
             .flowOn(Dispatchers.IO)
         provideContent {
             val view by reloads.collectAsState(initial)
-            val held by WidgetCompletions.held.collectAsState()
+            val allHeld by WidgetCompletions.held.collectAsState()
+            // Chaque recomposition est envoyée au lanceur : une coche relâchée après le départ de sa
+            // ligne ne doit pas en produire une.
+            val held by remember { derivedStateOf { TodayDrawnState.visibleHeld(allHeld, view.selection) } }
             if (held.isNotEmpty()) SideEffect { WidgetTrace.log { "today frame held=$held" } }
             TodayContent(view, held)
         }
