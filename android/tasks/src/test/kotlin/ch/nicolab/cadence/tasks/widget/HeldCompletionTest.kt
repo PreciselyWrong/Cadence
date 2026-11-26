@@ -108,3 +108,38 @@ class HeldCompletionTest {
         const val GRACE = 1_000L
     }
 }
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class WidgetUndoWindowTest {
+    /** Sur un widget, le temps de voir la case cochée et de la toucher de nouveau pour annuler. */
+    @Test
+    fun `un second toucher une seconde et demie après la coche annule encore`() = runTest {
+        val completion = HeldCompletion(WidgetCompletions.HOLD_MILLIS)
+        var writes = 0
+        val first = async { completion.toggle("a", write = { writes++ }) }
+        advanceTimeBy(1_500)
+        runCurrent()
+        assertEquals(HeldCompletion.Outcome.CANCELLED, completion.toggle("a", write = { writes++ }))
+        assertEquals(HeldCompletion.Outcome.CANCELLED, first.await())
+        assertEquals(0, writes)
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class WidgetTapsTest {
+    /**
+     * Android livre les touchers d'un widget l'un après l'autre : le second n'arrive qu'une fois
+     * l'action du premier rendue. Elle doit donc rendre la main avant la fin du maintien.
+     */
+    @Test
+    fun `un second toucher livre apres le premier annule la coche`() = runTest {
+        val taps = WidgetTaps(backgroundScope, HeldCompletion(WidgetCompletions.HOLD_MILLIS))
+        var writes = 0
+        taps.tap("a", redraw = {}, write = { writes++ })
+        advanceTimeBy(1_000)
+        taps.tap("a", redraw = {}, write = { writes++ })
+        advanceTimeBy(WidgetCompletions.HOLD_MILLIS * 3)
+        runCurrent()
+        assertEquals(0, writes)
+    }
+}

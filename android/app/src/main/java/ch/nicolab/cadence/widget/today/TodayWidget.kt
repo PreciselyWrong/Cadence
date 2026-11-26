@@ -322,7 +322,7 @@ class CompleteTodayTaskAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val uid = parameters[taskUidKey] ?: return
         // Une session ouverte redessine la coche par [WidgetCompletions.held] ; un update() y renverrait une image.
-        WidgetCompletions.toggle(context, uid) { TodaySessions.wake(context, glanceId) }
+        WidgetCompletions.tap(context, uid) { TodaySessions.wake(context, glanceId) }
     }
 }
 

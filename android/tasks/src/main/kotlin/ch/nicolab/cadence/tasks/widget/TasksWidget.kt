@@ -98,7 +98,7 @@ class CompleteTaskAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val uid = parameters[taskUidKey] ?: return
         val widget = if (parameters[squareWidgetKey] == true) TasksSquareWidget() else TasksWidget()
-        WidgetCompletions.toggle(context, uid) { widget.update(context, glanceId) }
+        WidgetCompletions.tap(context, uid) { widget.update(context, glanceId) }
     }
 }
 
