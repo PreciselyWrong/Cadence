@@ -1872,7 +1872,27 @@ describe('UpcomingBoard', () => {
             expect(within(week).getByTestId('week-load')).toBeInTheDocument();
         });
 
+        afterEach(() => jest.useRealTimers());
+
         it('places next week and this month tasks on their first free day', async () => {
+            // Today counts only what is left of its working hours: pin the
+            // time of day (only Date, so waitFor keeps its real timers).
+            jest.useFakeTimers({
+                now: new Date(`${TODAY}T10:00:00`),
+                doNotFake: [
+                    'setTimeout',
+                    'clearTimeout',
+                    'setInterval',
+                    'clearInterval',
+                    'setImmediate',
+                    'clearImmediate',
+                    'nextTick',
+                    'queueMicrotask',
+                    'requestAnimationFrame',
+                    'cancelAnimationFrame',
+                    'performance',
+                ],
+            });
             const server = fakeServer({}, { '2099-01-01': horizonTasks() });
             renderBoard();
             const section = (key: string) =>

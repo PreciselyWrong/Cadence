@@ -119,7 +119,9 @@ export const placeGoals = (
     first: number,
     last: number
 ): { placed: PlacedGoal[]; lanes: number } => {
-    const laneEnds: number[] = [];
+    // What each line's labels cover, in percent of the chart: a label runs
+    // right of its diamond, or left of it near the right edge.
+    const lanes: [number, number][][] = [];
     const placed: PlacedGoal[] = [];
     [...goals]
         .sort((a, b) => a.target_date.localeCompare(b.target_date))
@@ -128,24 +130,21 @@ export const placeGoals = (
             if (day === null) return;
             const left = dayCenter(day, first, last);
             if (left === null) return;
-            let lane = laneEnds.findIndex(
-                (end) => left - end >= GOAL_LABEL_SPAN
+            const flip = left > GOAL_FLIP_AT;
+            const span: [number, number] = flip
+                ? [left - GOAL_LABEL_SPAN, left]
+                : [left, left + GOAL_LABEL_SPAN];
+            let lane = lanes.findIndex((spans) =>
+                spans.every(([from, to]) => span[0] >= to || span[1] <= from)
             );
             if (lane === -1) {
-                lane = laneEnds.length;
-                laneEnds.push(left);
-            } else {
-                laneEnds[lane] = left;
+                lane = lanes.length;
+                lanes.push([]);
             }
-            placed.push({
-                goal,
-                day,
-                left,
-                lane,
-                flip: left > GOAL_FLIP_AT,
-            });
+            lanes[lane].push(span);
+            placed.push({ goal, day, left, lane, flip });
         });
-    return { placed, lanes: Math.max(laneEnds.length, 1) };
+    return { placed, lanes: Math.max(lanes.length, 1) };
 };
 
 export const areaKey = (area: RoadmapArea): string =>

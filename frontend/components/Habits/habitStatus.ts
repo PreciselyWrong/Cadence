@@ -57,6 +57,33 @@ export function statusLine(t: TFunction, habit: CadenceHabit): string {
     if (!evaluation.is_planned && evaluation.progress_minor === 0) {
         return t('cadenceHabits.status.notPlanned', 'Not planned today');
     }
+    if (
+        goal.goal_type === 'BINARY' &&
+        (goal.frequency_target ?? 0) > 1 &&
+        !evaluation.is_completed
+    ) {
+        const counts = {
+            done: evaluation.session_count,
+            total: goal.frequency_target,
+        };
+        return {
+            DAY: t(
+                'cadenceHabits.status.sessionsDay',
+                '{{done}} of {{total}} today',
+                counts
+            ),
+            WEEK: t(
+                'cadenceHabits.status.sessionsWeek',
+                '{{done}} of {{total}} this week',
+                counts
+            ),
+            MONTH: t(
+                'cadenceHabits.status.sessionsMonth',
+                '{{done}} of {{total}} this month',
+                counts
+            ),
+        }[goal.period];
+    }
     if (goal.goal_type === 'BINARY') {
         return evaluation.is_completed
             ? t('cadenceHabits.status.done', 'Done')

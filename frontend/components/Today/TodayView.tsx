@@ -1334,12 +1334,18 @@ const NewToday: React.FC = () => {
                       }
                     : null
             }
+            loading={!day}
             emptyText={
                 isToday
-                    ? t(
-                          'today.empty',
-                          'Nothing planned. Add a task or pick one from the suggestions.'
-                      )
+                    ? dedupedSuggestions.length > 0
+                        ? t(
+                              'today.empty',
+                              'Nothing planned. Add a task or pick one from the suggestions.'
+                          )
+                        : t(
+                              'today.emptyNoSuggestions',
+                              'Nothing planned. Add a task.'
+                          )
                     : t('today.emptyDay', 'Nothing planned for this day.')
             }
         />

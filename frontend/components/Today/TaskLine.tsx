@@ -171,8 +171,10 @@ const TaskLine: React.FC<TaskLineProps> = ({
         dragKeyDown?.(event);
     };
 
+    // A missed slot says so in its own chip, which is then the row's only
+    // time: the length and the due time repeat it.
     const lengthChip =
-        line.start !== null ? (
+        missedAt !== null ? null : line.start !== null ? (
             <Chip>
                 {formatDuration(line.duration)} →{' '}
                 {formatMinute(line.start + line.duration)}
@@ -208,7 +210,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
         lengthChip ? (
             <React.Fragment key="len">{lengthChip}</React.Fragment>
         ) : null,
-        timedDue ? (
+        timedDue && line.dueMinute !== line.start && missedAt === null ? (
             <Chip key="due" title={t('today.dueAt', 'Due')}>
                 <FlagIcon aria-hidden="true" className="h-3 w-3" />
                 {formatMinute(line.dueMinute as number)}
@@ -226,7 +228,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
         ) : null,
         missedAt !== null ? (
             <Chip key="missed" tone="warning">
-                {t('today.missedAt', 'Scheduled {{time}}', {
+                {t('today.missedAt', 'Missed at {{time}}', {
                     time: formatMinute(missedAt),
                 })}
             </Chip>

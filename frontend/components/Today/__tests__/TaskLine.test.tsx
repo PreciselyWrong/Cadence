@@ -141,6 +141,43 @@ describe('TaskLine meta', () => {
         expect(screen.getByLabelText('15:30')).toBeInTheDocument();
     });
 
+    const renderTimed = (fields: Partial<DayLine>, missedAt?: number) =>
+        render(
+            <TaskLine
+                line={line(fields)}
+                dateOfDay={DATE}
+                onToggle={jest.fn()}
+                onOpen={jest.fn()}
+                menu={[]}
+                missedAt={missedAt}
+            />
+        );
+
+    it('a missed slot reads as missed and is the only time on the row', () => {
+        renderTimed(
+            { start: 9 * 60 + 30, duration: 60, dueMinute: 9 * 60 + 30 },
+            9 * 60 + 30
+        );
+        expect(screen.getByText('Missed at 09:30')).toBeInTheDocument();
+        expect(screen.queryByText(/Scheduled/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/10:30/)).not.toBeInTheDocument();
+        expect(screen.queryByTitle('Due')).not.toBeInTheDocument();
+    });
+
+    it('hides the due time that is the slot start', () => {
+        renderTimed({
+            start: 9 * 60 + 30,
+            duration: 60,
+            dueMinute: 9 * 60 + 30,
+        });
+        expect(screen.queryByTitle('Due')).not.toBeInTheDocument();
+    });
+
+    it('keeps a due time that differs from the slot', () => {
+        renderTimed({ start: 9 * 60 + 30, duration: 60, dueMinute: 11 * 60 });
+        expect(screen.getByTitle('Due')).toHaveTextContent('11:00');
+    });
+
     it('renders the note as Markdown in summary mode, never raw', async () => {
         const current = line({ task: task({ note: 'Une note **markdown**' }) });
         render(

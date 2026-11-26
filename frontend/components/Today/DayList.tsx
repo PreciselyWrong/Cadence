@@ -109,6 +109,8 @@ export interface DayListProps {
     onPlaceHere?(free: TimelineFree): void;
     onOpenEvent?(event: CalendarEvent): void;
     emptyText: string;
+    // The day has not answered yet: no summary and no empty state.
+    loading?: boolean;
 }
 
 interface SectionHeadProps {
@@ -192,6 +194,7 @@ const DayList: React.FC<DayListProps> = ({
     onPlaceHere,
     onOpenEvent,
     emptyText,
+    loading = false,
 }) => {
     const { t } = useTranslation();
     const lines = visibleLines(allLines, hideCompleted);
@@ -335,7 +338,7 @@ const DayList: React.FC<DayListProps> = ({
                         className={`truncate ${overloaded ? 'text-warning' : ''}`}
                         title={summaryTitle}
                     >
-                        {summaryText}
+                        {loading ? '\u00a0' : summaryText}
                     </span>
                 </div>
             </header>
@@ -530,7 +533,7 @@ const DayList: React.FC<DayListProps> = ({
                     </div>
                 )}
 
-                {!hasOpen && <EmptyState title={emptyText} />}
+                {!hasOpen && !loading && <EmptyState title={emptyText} />}
 
                 {habits && (
                     <div className="py-1">

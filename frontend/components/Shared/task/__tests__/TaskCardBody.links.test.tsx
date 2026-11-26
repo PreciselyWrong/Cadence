@@ -74,3 +74,32 @@ describe('TaskCardBody with an address in the note', () => {
         expect(screen.queryByTestId('task-card-note')).not.toBeInTheDocument();
     });
 });
+
+describe('TaskCardBody project and tag chips', () => {
+    const cardTask = (fields: Record<string, unknown>) =>
+        ({ uid: 't2', name: 'Carte', status: 'not_started', ...fields }) as any;
+
+    it('shows the project only when the task has both a project and a tag', () => {
+        render(
+            <TaskCardBody
+                task={cardTask({
+                    Project: { name: 'Lancement' },
+                    tags: [{ name: 'urgent' }],
+                })}
+                done={false}
+            />
+        );
+        expect(screen.getByText('Lancement')).toBeInTheDocument();
+        expect(screen.queryByText('#urgent')).not.toBeInTheDocument();
+    });
+
+    it('falls back to the first tag when there is no project', () => {
+        render(
+            <TaskCardBody
+                task={cardTask({ tags: [{ name: 'urgent' }] })}
+                done={false}
+            />
+        );
+        expect(screen.getByText('#urgent')).toBeInTheDocument();
+    });
+});

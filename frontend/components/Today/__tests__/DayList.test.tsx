@@ -132,6 +132,19 @@ describe('DayList body', () => {
         expect(screen.getByText('Nothing planned.')).toBeInTheDocument();
     });
 
+    it('shows neither the empty text nor the summary while the day loads', () => {
+        render(
+            <DayList
+                {...baseProps({
+                    loading: true,
+                    lines: { timed: [], anytime: [], done: [] },
+                })}
+            />
+        );
+        expect(screen.queryByText('Nothing planned.')).not.toBeInTheDocument();
+        expect(screen.queryByText('2 tâches · 1 h')).not.toBeInTheDocument();
+    });
+
     it('renders timed and anytime lines', () => {
         render(
             <DayList

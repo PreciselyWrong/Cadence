@@ -181,4 +181,28 @@ describe('HabitCard', () => {
         expect(screen.getByText('Paused')).toBeInTheDocument();
         expect(screen.queryByRole('button')).toBeNull();
     });
+
+    it('says how many sessions of the week are done, not "To do"', () => {
+        renderCard({
+            habit: habit({
+                goal: goal({ period: 'WEEK', frequency_target: 3 }),
+                status: {
+                    date: '2026-10-05',
+                    evaluation: evaluation({
+                        period_end_exclusive: '2026-10-12',
+                        progress_minor: 2,
+                        target_minor: 1,
+                        session_count: 2,
+                    }),
+                    streak: null,
+                },
+            }),
+        });
+        expect(screen.getByText('2 of 3 this week')).toBeInTheDocument();
+        expect(screen.queryByText('To do')).toBeNull();
+        // The card is filled by the sessions done, not almost full.
+        expect(
+            screen.getByTestId('habit-card').style.backgroundImage
+        ).toContain('66.6');
+    });
 });

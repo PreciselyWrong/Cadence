@@ -184,6 +184,17 @@ describe('habitFillRatio', () => {
         expect(habitFillRatio('goal', 4, 4, false, false)).toBe(0.95);
     });
 
+    it('follows the sessions done when the goal asks for several in a period', () => {
+        const binary = { done: 2, total: 3, binary: true };
+        expect(habitFillRatio('goal', 2, 1, false, false, binary)).toBeCloseTo(
+            2 / 3
+        );
+        // Both the amount and the sessions must be reached.
+        const amount = { done: 3, total: 3, binary: false };
+        expect(habitFillRatio('goal', 1, 4, false, false, amount)).toBe(0.25);
+        expect(habitFillRatio('goal', 3, 3, true, false, binary)).toBe(1);
+    });
+
     it('stays neutral without a goal to reach or when archived', () => {
         for (const kind of ['limit', 'abstinence', 'tracker']) {
             expect(habitFillRatio(kind, 1, 2, false, false)).toBe(0);

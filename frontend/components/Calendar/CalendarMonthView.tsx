@@ -25,6 +25,14 @@ import {
     isMovable,
 } from './taskEvents';
 import { blockTone } from './blockTone';
+import AllDayOverflow from './AllDayOverflow';
+
+const isHabitEvent = (event: CalendarEvent) =>
+    !!event.habitUid || /-habit-\d+$/.test(event.id);
+
+// A day cell has room for three lines. Beyond that it shows two entries
+// and a "+N" line, tasks before habits.
+const CELL_LINES = 3;
 
 interface CalendarMonthViewProps {
     currentDate: Date;
@@ -168,9 +176,22 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                             (event) => !event.allDay && coversDay(event, day)
                         ),
                     ];
-                    const hiddenCount = dayEvents
-                        .slice(3)
-                        .filter(Boolean).length;
+                    const real = dayEvents.filter(
+                        (event): event is CalendarEvent => event !== null
+                    );
+                    const overflowing = dayEvents.length > CELL_LINES;
+                    const ranked = overflowing
+                        ? [
+                              ...real.filter((event) => !isHabitEvent(event)),
+                              ...real.filter(isHabitEvent),
+                          ]
+                        : real;
+                    const shownEvents: (CalendarEvent | null)[] = overflowing
+                        ? ranked.slice(0, CELL_LINES - 1)
+                        : dayEvents;
+                    const hiddenEvents = overflowing
+                        ? ranked.slice(CELL_LINES - 1)
+                        : [];
                     const isCurrentMonth = isSameMonth(day, currentDate);
                     const isTodayDate = isToday(day);
 
@@ -250,8 +271,8 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                     ))}
                             </div>
 
-                            <div className="hidden space-y-0.5 overflow-hidden flex-1 sm:block">
-                                {dayEvents.slice(0, 3).map((event, slot) =>
+                            <div className="hidden space-y-0.5 flex-1 sm:block">
+                                {shownEvents.map((event, slot) =>
                                     event === null ? (
                                         <div
                                             key={`gap-${slot}`}
@@ -303,11 +324,15 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                         </div>
                                     )
                                 )}
-                                {hiddenCount > 0 && (
-                                    <div className="text-xs text-gray-500 dark:text-gray-400 px-1 font-medium">
-                                        +{hiddenCount}
-                                    </div>
-                                )}
+                                <AllDayOverflow
+                                    events={hiddenEvents}
+                                    onEventClick={onEventClick}
+                                    label={t('calendar.moreOnDay', {
+                                        count: hiddenEvents.length,
+                                        defaultValue:
+                                            '{{count}} more on this day',
+                                    })}
+                                />
                             </div>
                         </div>
                     );

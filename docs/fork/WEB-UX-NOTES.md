@@ -1209,3 +1209,12 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : le rail d'icônes garde le même ordre sur toutes les pages (Aujourd'hui et Zones restent sur le rail même quand le panneau les liste, la page courante est seulement surlignée).
 - **Décision** : sous 1280 px la barre latérale démarre en rail ; un choix explicite (ouvrir ou replier, sur une fenêtre d'au moins 640 px) l'emporte sur la largeur et est retenu (`localStorage` `sidebarOpen`). Sous 640 px, le tiroir qui se referme à la navigation n'est pas un choix.
 - **Android** : rien à reprendre (pas de rail ni de fiche flottante) ; garder un ordre fixe pour la barre de navigation basse.
+
+### 2026-11-26 : lots D et E de l'audit (Aujourd'hui, Planifier, calendrier, habitudes, feuille de route)
+
+- **Décision** : Aujourd'hui n'annonce plus « Rien de prévu » ni « 0 à faire » avant la première réponse du serveur, et l'état vide ne renvoie aux suggestions que s'il y en a. **Android** : à vérifier (`TodayTab.kt`, texte vide pendant le chargement).
+- **Décision** : une seule puce horaire par ligne d'Aujourd'hui : un créneau manqué dit « Manquée à 09:30 » (et remplace durée et échéance), l'échéance horaire n'apparaît que si elle diffère du début du créneau. **Android** : à vérifier sur les lignes de la journée.
+- **Décision** : une carte de Planifier montre une seule puce, le projet, sinon la première étiquette. **Android** : pas de cartes en colonnes, rien à reprendre.
+- **Décision** : dans la vue Mois, au-delà de trois entrées une case en montre deux et un « +N » cliquable qui liste les autres ; les tâches passent avant les habitudes. **Android** : à vérifier (`AgendaMonthAndList.kt`, vue mois).
+- **Décision** : une habitude qui demande plusieurs séances par période se remplit des séances faites et dit « 2 sur 3 cette semaine » (et non une carte presque pleine marquée « À faire »). **Android** : le libellé « séances restantes » existe (`HabitsTodayScreen.kt`), le remplissage des cartes est à vérifier.
+- **Décision** : sur la feuille de route, un libellé d'objectif retourné près du bord droit prend sa propre ligne s'il recouvre le précédent. **Android** : pas de feuille de route.

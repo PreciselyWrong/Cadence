@@ -70,23 +70,34 @@ const HabitCard: React.FC<HabitCardProps> = ({
     const tint = habitTint(habit);
     const ink = surfaceInkHex();
     const fill = useMemo(() => habitFillColor(tint, ink), [tint, ink]);
+    const sessions =
+        goal && (goal.frequency_target ?? 0) > 1 && evaluation
+            ? {
+                  done: evaluation.session_count,
+                  total: goal.frequency_target as number,
+                  binary: goal.goal_type === 'BINARY',
+              }
+            : null;
     const fillRatio = habitFillRatio(
         kind,
         evaluation?.progress_minor ?? 0,
         evaluation?.target_minor ?? 0,
         !!evaluation?.is_completed,
-        !!habit.archived
+        !!habit.archived,
+        sessions
     );
     const filled = fillRatio > 0;
 
     const ratio =
-        kind === 'goal' || kind === 'limit'
-            ? Math.min(
-                  1,
-                  (evaluation?.progress_minor ?? 0) /
-                      (evaluation?.target_minor || 1)
-              )
-            : 0;
+        sessions?.binary && kind === 'goal'
+            ? Math.min(1, sessions.done / sessions.total)
+            : kind === 'goal' || kind === 'limit'
+              ? Math.min(
+                    1,
+                    (evaluation?.progress_minor ?? 0) /
+                        (evaluation?.target_minor || 1)
+                )
+              : 0;
     const streak = habit.status.streak?.current ?? 0;
 
     const log = async (amountMinor: number, note?: string) => {

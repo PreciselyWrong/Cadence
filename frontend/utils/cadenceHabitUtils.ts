@@ -301,16 +301,33 @@ export function habitFillColor(tint: string, ink: string): string {
 
 // How much of the card is filled: 0 without a goal to reach (abstinence, limit,
 // tracker) or when archived, 1 only once the goal of the period is reached.
+// A goal asking for several sessions in the period is filled by the sessions
+// done (and by the amount too when it has one): "2 of 3" reads as two thirds.
+export interface PeriodSessions {
+    done: number;
+    total: number;
+    // A yes/no goal: the sessions are all there is to count.
+    binary: boolean;
+}
+
 export function habitFillRatio(
     kind: string,
     progressMinor: number,
     targetMinor: number,
     completed: boolean,
-    archived: boolean
+    archived: boolean,
+    sessions: PeriodSessions | null = null
 ): number {
     if (kind !== 'goal' || archived) return 0;
     if (completed) return 1;
-    return Math.min(0.95, progressMinor / (targetMinor || 1));
+    const amount = progressMinor / (targetMinor || 1);
+    const ratio = sessions
+        ? Math.min(
+              sessions.done / (sessions.total || 1),
+              sessions.binary ? 1 : amount
+          )
+        : amount;
+    return Math.min(0.95, ratio);
 }
 
 // The accent of the app (Réglages › Apparence), for a habit that has no colour

@@ -164,6 +164,17 @@ describe('placeGoals', () => {
         expect(placed.every((item) => item.flip)).toBe(true);
     });
 
+    it('gives a flipped label its own line when it reaches back over the previous one', () => {
+        const { placed, lanes } = placeGoals(
+            [goal('a', '2026-12-01'), goal('b', '2026-12-30')],
+            q4.first,
+            q4.last
+        );
+        expect(placed.map((item) => item.flip)).toEqual([false, true]);
+        expect(placed.map((item) => item.lane)).toEqual([0, 1]);
+        expect(lanes).toBe(2);
+    });
+
     it('still has one line with no goals', () => {
         expect(placeGoals([], q4.first, q4.last).lanes).toBe(1);
     });

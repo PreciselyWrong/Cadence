@@ -5,6 +5,8 @@ import type { CalendarEvent } from './taskEvents';
 interface AllDayOverflowProps {
     events: CalendarEvent[];
     onEventClick?: (event: CalendarEvent) => void;
+    // Accessible name of the chip; defaults to the all-day wording.
+    label?: string;
     className?: string;
     style?: React.CSSProperties;
 }
@@ -14,6 +16,7 @@ interface AllDayOverflowProps {
 const AllDayOverflow: React.FC<AllDayOverflowProps> = ({
     events,
     onEventClick,
+    label,
     className = '',
     style,
 }) => {
@@ -49,10 +52,13 @@ const AllDayOverflow: React.FC<AllDayOverflowProps> = ({
                 }}
                 aria-haspopup="menu"
                 aria-expanded={open}
-                aria-label={t('calendar.moreAllDay', {
-                    count: events.length,
-                    defaultValue: '{{count}} more all-day events',
-                })}
+                aria-label={
+                    label ??
+                    t('calendar.moreAllDay', {
+                        count: events.length,
+                        defaultValue: '{{count}} more all-day events',
+                    })
+                }
                 data-testid="calendar-all-day-more"
                 className="mx-1 rounded-full bg-primary-container px-2 py-0.5 text-label-m text-primary-on-container hover:opacity-90"
             >

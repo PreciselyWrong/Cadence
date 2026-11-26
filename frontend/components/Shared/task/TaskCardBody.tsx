@@ -34,7 +34,7 @@ export interface TaskCardBodyProps {
 /**
  * The content of a task card, Todoist-style: a round check and the title;
  * a subtask names its parent; the note's first line as plain text; then a
- * meta line with the project and the first tag on the right.
+ * meta line with one chip on the right: the project, else the first tag.
  */
 const TaskCardBody: React.FC<TaskCardBodyProps> = ({
     task,
@@ -168,7 +168,7 @@ const TaskCardBody: React.FC<TaskCardBodyProps> = ({
                                 <span className="truncate">{project.name}</span>
                             </TaskChip>
                         )}
-                        {tag && (
+                        {!project?.name && tag && (
                             <TaskChip>
                                 <span className="truncate">#{tag.name}</span>
                             </TaskChip>
