@@ -52,7 +52,11 @@ const {
 const { createSubtasks, updateSubtasks } = require('./operations/subtasks');
 const { requireQuota } = require('../../middleware/entitlements');
 const { handleCompletionStatus } = require('./operations/completion');
-const { captureOldValues, logTaskChanges } = require('./utils/logging');
+const {
+    captureOldValues,
+    logCreation,
+    logTaskChanges,
+} = require('./utils/logging');
 const { logOccurrenceMove } = require('./taskEventService');
 const decisionFields = require('../review/fields');
 const { notifyAssignee } = require('./operations/assignment');
@@ -610,6 +614,11 @@ router.post(
                 await updateTaskTags(task, tagsData, req.currentUser.id);
                 await createSubtasks(task.id, subtasks, req.currentUser.id);
             }
+            await logCreation(
+                task,
+                req.currentUser.id,
+                req.authToken ? 'api' : 'web'
+            );
             if (req.body.today === true) {
                 await dailyPlanService.setTaskOnToday(
                     req.currentUser,

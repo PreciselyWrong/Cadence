@@ -27,7 +27,14 @@ export interface TaskEvent {
     new_value?: any;
     field_name?: string;
     metadata?: {
-        source?: 'web' | 'api' | 'telegram';
+        source?:
+            | 'web'
+            | 'api'
+            | 'device'
+            | 'ai'
+            | 'suggestion'
+            | 'import'
+            | 'telegram';
         action?: string;
         [key: string]: any;
     };

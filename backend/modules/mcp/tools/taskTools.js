@@ -44,6 +44,11 @@ const {
 } = require('../../tasks/utils/validation');
 const { notifyAssignee } = require('../../tasks/operations/assignment');
 const {
+    captureOldValues,
+    logCreation,
+    logTaskChanges,
+} = require('../../tasks/utils/logging');
+const {
     processDueDateForStorage,
     processDeferUntilForStorage,
 } = require('../../../utils/timezone-utils');
@@ -189,6 +194,10 @@ async function scheduledTaskIds(type, userId, timezone) {
 }
 
 function registerTaskTools(server, context, tools) {
+    // Who the task history credits: the AI over MCP, or an AI suggestion the
+    // user accepted (context.source from triage and proposals).
+    const historySource = context.source || 'ai';
+
     // 1. list_tasks - List tasks with filtering
     tools.push({
         name: 'list_tasks',
@@ -646,6 +655,7 @@ function registerTaskTools(server, context, tools) {
             );
 
             await notifyAssignee(reloadedTask, null, context.userId);
+            await logCreation(task, context.userId, historySource);
 
             const serialized = await serializeTask(
                 reloadedTask,
@@ -849,6 +859,7 @@ function registerTaskTools(server, context, tools) {
             }
 
             const previousAssignedTo = task.assigned_to;
+            const oldValues = captureOldValues(task);
             const updates = {};
             if (params.name !== undefined) updates.name = params.name;
             const incomingNote = params.note ?? params.description;
@@ -1063,6 +1074,7 @@ function registerTaskTools(server, context, tools) {
                 Object.assign(updates, recurringOccurrence.reminderFields);
             }
 
+            let newTags;
             await sequelize.transaction(async (transaction) => {
                 await task.update(updates, { transaction });
 
@@ -1074,7 +1086,20 @@ function registerTaskTools(server, context, tools) {
                 if (tagInstances !== undefined) {
                     await task.setTags(tagInstances, { transaction });
                 }
+                newTags = tagInstances;
             });
+            await logTaskChanges(
+                task,
+                oldValues,
+                updates,
+                newTags,
+                context.userId,
+                {
+                    source: historySource,
+                    // An occurrence advance is logged with the occurrence.
+                    skipDueDate: Boolean(recurringOccurrence?.hasNext),
+                }
+            );
 
             if (recurringOccurrence) {
                 await recordOccurrence(

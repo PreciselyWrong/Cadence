@@ -936,6 +936,15 @@
       "recurrenceType": "Recurrence type",
       "recurrenceTypeChanged": "Recurrence type changed",
       "none": "None"
+    },
+    "history": "History",
+    "source": {
+      "web": "In the app",
+      "api": "Through an API key",
+      "device": "From a device",
+      "ai": "By the AI",
+      "suggestion": "AI suggestion you accepted",
+      "import": "Imported"
     }
   },
   "profile": {

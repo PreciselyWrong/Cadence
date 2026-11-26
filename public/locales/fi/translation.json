@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}d sitten",
     "loadingTimeline": "Ladataan aikajanaa...",
     "timelineWillAppear": "Aikajana tulee näkyviin tallentamisen jälkeen",
-    "noActivity": "Ei vielä aktiivisuutta"
+    "noActivity": "Ei vielä aktiivisuutta",
+    "history": "Historia",
+    "source": {
+      "web": "Sovelluksessa",
+      "api": "API-avaimella",
+      "device": "Laitteelta",
+      "ai": "Tekoälyn tekemä",
+      "suggestion": "Hyväksytty tekoälyn ehdotus",
+      "import": "Tuotu"
+    }
   },
   "profile": {
     "plugins": {

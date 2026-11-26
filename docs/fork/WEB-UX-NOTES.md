@@ -1155,3 +1155,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Décision** : une synchro Google en échec pose une alerte rouge dans la cloche, une seule tant que ça échoue, retirée par le serveur dès que ça remarche ; le clic ouvre Profil › Calendriers sans la marquer lue.
 - **Android** : rien à coder, l'alerte arrive par le flux (`sources` `mobile`), groupée sous « Agenda Google » ; la reconnexion reste sur le web.
+
+### 2026-11-26 : historique d'une tâche
+
+- **Décision** : bouton discret « Historique » en bas de la fiche, fermé par défaut ; chaque ligne dit quoi, l'heure exacte et qui (app, appareil, IA, suggestion IA acceptée), pour comprendre d'où vient une tâche inattendue.
+- **Android** : fait (`ui/TaskHistorySection.kt`), lecture en ligne de `GET /api/task/:uid/timeline`.

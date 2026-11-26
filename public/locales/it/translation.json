@@ -914,7 +914,16 @@
     "daysAgo": "{{days}}d fa",
     "loadingTimeline": "Caricamento della timeline...",
     "timelineWillAppear": "La timeline apparirà dopo il salvataggio",
-    "noActivity": "Nessuna attività ancora"
+    "noActivity": "Nessuna attività ancora",
+    "history": "Cronologia",
+    "source": {
+      "web": "Nell'app",
+      "api": "Tramite una chiave API",
+      "device": "Da un dispositivo",
+      "ai": "Dall'IA",
+      "suggestion": "Suggerimento IA accettato",
+      "import": "Importata"
+    }
   },
   "profile": {
     "plugins": {

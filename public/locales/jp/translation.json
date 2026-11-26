@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}日前",
     "loadingTimeline": "タイムラインを読み込み中...",
     "timelineWillAppear": "保存後にタイムラインが表示されます",
-    "noActivity": "まだアクティビティはありません"
+    "noActivity": "まだアクティビティはありません",
+    "history": "履歴",
+    "source": {
+      "web": "アプリで",
+      "api": "API キー経由",
+      "device": "デバイスから",
+      "ai": "AI による変更",
+      "suggestion": "承認した AI の提案",
+      "import": "インポート"
+    }
   },
   "profile": {
     "plugins": {

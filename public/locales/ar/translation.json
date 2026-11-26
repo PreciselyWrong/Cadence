@@ -937,7 +937,16 @@
     "daysAgo": "{{days}} يوم مضى",
     "loadingTimeline": "جارٍ تحميل الجدول الزمني...",
     "timelineWillAppear": "سيظهر الجدول الزمني بعد الحفظ",
-    "noActivity": "لا توجد أنشطة حتى الآن"
+    "noActivity": "لا توجد أنشطة حتى الآن",
+    "history": "السجل",
+    "source": {
+      "web": "في التطبيق",
+      "api": "عبر مفتاح API",
+      "device": "من جهاز",
+      "ai": "بواسطة الذكاء الاصطناعي",
+      "suggestion": "اقتراح ذكاء اصطناعي مقبول",
+      "import": "مستوردة"
+    }
   },
   "profile": {
     "plugins": {

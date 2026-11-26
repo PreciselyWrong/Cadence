@@ -913,7 +913,16 @@
     "daysAgo": "{{days}} ngày trước",
     "loadingTimeline": "Đang tải dòng thời gian...",
     "timelineWillAppear": "Dòng thời gian sẽ xuất hiện sau khi lưu",
-    "noActivity": "Chưa có hoạt động nào"
+    "noActivity": "Chưa có hoạt động nào",
+    "history": "Lịch sử",
+    "source": {
+      "web": "Trong ứng dụng",
+      "api": "Qua khóa API",
+      "device": "Từ một thiết bị",
+      "ai": "Bởi AI",
+      "suggestion": "Gợi ý AI đã chấp nhận",
+      "import": "Đã nhập"
+    }
   },
   "profile": {
     "plugins": {

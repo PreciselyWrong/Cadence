@@ -929,7 +929,16 @@
     "daysAgo": "{{days}}d temu",
     "loadingTimeline": "Ładowanie osi czasu...",
     "timelineWillAppear": "Oś czasu pojawi się po zapisaniu",
-    "noActivity": "Brak aktywności"
+    "noActivity": "Brak aktywności",
+    "history": "Historia",
+    "source": {
+      "web": "W aplikacji",
+      "api": "Kluczem API",
+      "device": "Z urządzenia",
+      "ai": "Przez AI",
+      "suggestion": "Zaakceptowana sugestia AI",
+      "import": "Zaimportowano"
+    }
   },
   "profile": {
     "plugins": {

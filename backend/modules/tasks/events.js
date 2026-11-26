@@ -41,7 +41,19 @@ router.get('/task/:uid/timeline', async (req, res) => {
             return res.status(404).json({ error: 'Task not found' });
         }
 
-        const timeline = await getTaskTimeline(task.id);
+        const timeline = (await getTaskTimeline(task.id)).map((event) =>
+            event.toJSON()
+        );
+        // Tasks made before creation was logged still open with their birth.
+        if (!timeline.some((event) => event.event_type === 'created')) {
+            timeline.unshift({
+                id: 0,
+                task_id: task.id,
+                event_type: 'created',
+                metadata: {},
+                created_at: task.created_at,
+            });
+        }
 
         res.json(timeline);
     } catch (error) {

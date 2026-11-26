@@ -65,7 +65,7 @@ Moving an occurrence of a recurring task (`POST /api/task/:uid/move-occurrence`,
 
 A due date received through offline sync (`/api/v1/sync`) from one of the user's own devices is logged with source `device`, dated when the device made the change (its clock, never later than now), and counts like a change made in the app. Nothing is logged for a new task, an unchanged date, a change that lost the merge, a done or cancelled task, or a recurring task (its date also moves when an occurrence is completed on the device).
 
-Writes that are never logged as due date changes: completing a recurring task (logged as an occurrence), skipping an occurrence, Google Calendar/Tasks and CalDAV sync, MCP, spreadsheet import (logged with source `import`). A save that sends the same due date again logs nothing.
+Writes that are never logged as due date changes: completing a recurring task (logged as an occurrence), skipping an occurrence, Google Calendar/Tasks and CalDAV sync. Spreadsheet import (source `import`), MCP (source `ai`) and AI suggestions the user accepted (week plan, triage: source `suggestion`) are logged for the task history but count as automatic. A save that sends the same due date again logs nothing.
 
 No wording in the app counts days of delay: an undated task is never late, and an overdue task in Today or in the planner shows its due date (*Due 20 Sep*), not a number of days.
 

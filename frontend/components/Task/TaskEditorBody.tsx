@@ -18,6 +18,7 @@ import TaskSubtasksCard from './TaskDetails/TaskSubtasksCard';
 import BreakdownSheet from '../Breakdown/BreakdownSheet';
 import TaskAttachmentsCard from './TaskDetails/TaskAttachmentsCard';
 import TaskComments from './TaskComments';
+import TaskHistory from './TaskHistory';
 import TaskContexts from './TaskContexts';
 import Backlinks from '../Shared/Backlinks';
 import LinkPreviews from '../Links/LinkPreviews';
@@ -411,6 +412,8 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                             onCommentCountChange={setCommentCount}
                         />
                     </SidePanelSection>
+
+                    <TaskHistory taskUid={task.uid} />
                 </>
             )}
 

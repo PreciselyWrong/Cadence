@@ -919,7 +919,16 @@
     "daysAgo": "{{days}}z în urmă",
     "loadingTimeline": "Se încarcă cronologia...",
     "timelineWillAppear": "Cronologia va apărea după salvare",
-    "noActivity": "Nicio activitate încă"
+    "noActivity": "Nicio activitate încă",
+    "history": "Istoric",
+    "source": {
+      "web": "În aplicație",
+      "api": "Printr-o cheie API",
+      "device": "De pe un dispozitiv",
+      "ai": "De către IA",
+      "suggestion": "Sugestie IA acceptată",
+      "import": "Importată"
+    }
   },
   "profile": {
     "plugins": {

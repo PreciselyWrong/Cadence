@@ -913,6 +913,15 @@
       "recurrence_weekday_changed": "Återkommande veckodag ändrad",
       "recurrence_month_day_changed": "Återkommande månad dag ändrad",
       "recurrence_week_of_month_changed": "Återkommande vecka i månaden ändrad"
+    },
+    "history": "Historik",
+    "source": {
+      "web": "I appen",
+      "api": "Via en API-nyckel",
+      "device": "Från en enhet",
+      "ai": "Av AI:n",
+      "suggestion": "Godkänt AI-förslag",
+      "import": "Importerad"
     }
   },
   "profile": {

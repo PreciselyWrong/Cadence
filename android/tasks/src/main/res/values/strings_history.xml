@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="task_history_title">Historique</string>
+    <string name="history_unavailable">Historique indisponible hors ligne</string>
+    <string name="history_created">Tâche créée</string>
+    <string name="history_due">Échéance : %1$s → %2$s</string>
+    <string name="history_due_none">aucune</string>
+    <string name="history_name">Nom modifié</string>
+    <string name="history_note">Description modifiée</string>
+    <string name="history_project">Projet modifié</string>
+    <string name="history_status">Statut modifié</string>
+    <string name="history_completed">Terminée</string>
+    <string name="history_archived">Archivée</string>
+    <string name="history_priority">Priorité modifiée</string>
+    <string name="history_tags">Étiquettes modifiées</string>
+    <string name="history_deferred">Reportée</string>
+    <string name="history_comment">Commentaire ajouté</string>
+    <string name="history_relation_added">Lien ajouté</string>
+    <string name="history_relation_removed">Lien retiré</string>
+    <string name="history_occurrence_done">Occurrence terminée</string>
+    <string name="history_occurrence_skipped">Occurrence sautée</string>
+    <string name="history_other">Modification</string>
+    <string name="history_source_web">Dans l\'app</string>
+    <string name="history_source_api">Par une clé d\'API</string>
+    <string name="history_source_device">Depuis un appareil</string>
+    <string name="history_source_ai">Par l\'IA</string>
+    <string name="history_source_suggestion">Suggestion IA acceptée</string>
+    <string name="history_source_import">Importée</string>
+    <string name="history_when">%1$s · %2$s</string>
+</resources>

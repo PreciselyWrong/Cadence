@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}일 전",
     "loadingTimeline": "타임라인 로딩 중...",
     "timelineWillAppear": "저장 후 타임라인이 나타납니다",
-    "noActivity": "아직 활동이 없습니다"
+    "noActivity": "아직 활동이 없습니다",
+    "history": "기록",
+    "source": {
+      "web": "앱에서",
+      "api": "API 키로",
+      "device": "기기에서",
+      "ai": "AI가 변경",
+      "suggestion": "수락한 AI 제안",
+      "import": "가져옴"
+    }
   },
   "profile": {
     "plugins": {

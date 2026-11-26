@@ -56,6 +56,8 @@ internal fun createAlignDue(context: Context): ch.nicolab.cadence.tasks.planning
 
 internal fun createBacklinks(context: Context): ch.nicolab.cadence.tasks.contentlinks.BacklinksClient = TasksRuntime.get(context).backlinks
 
+internal fun createHistory(context: Context): ch.nicolab.cadence.tasks.history.HistoryClient = TasksRuntime.get(context).history
+
 internal fun createPeople(context: Context): ch.nicolab.cadence.tasks.contentlinks.PeopleClient = TasksRuntime.get(context).people
 
 internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
@@ -163,6 +165,7 @@ internal class TasksRuntime private constructor(context: Context) {
             api.call(method, path, query = query, body = body)
         },
     )
+    val history = ch.nicolab.cadence.tasks.history.HistoryClient { method, path, query -> api.callJson(method, path, query) }
     val people = ch.nicolab.cadence.tasks.contentlinks.PeopleClient(
         { method, path, query -> api.callJson(method, path, query) },
         appContext.getSharedPreferences("cadence_people", Context.MODE_PRIVATE),

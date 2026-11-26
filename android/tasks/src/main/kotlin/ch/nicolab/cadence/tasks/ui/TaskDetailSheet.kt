@@ -376,6 +376,7 @@ internal fun TaskDetailSheet(
                 AttachmentsSection(
                     target = ch.nicolab.cadence.tasks.attachments.AttachmentTarget.Task(current.uid),
                 )
+                TaskHistorySection(taskUid = current.uid)
                 val keyedFields = detailFields(
                         task = current,
                         today = today,

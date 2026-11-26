@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}g önce",
     "loadingTimeline": "Zaman çizelgesi yükleniyor...",
     "timelineWillAppear": "Zaman çizelgesi kaydedildikten sonra görünecek",
-    "noActivity": "Henüz etkinlik yok"
+    "noActivity": "Henüz etkinlik yok",
+    "history": "Geçmiş",
+    "source": {
+      "web": "Uygulamada",
+      "api": "API anahtarıyla",
+      "device": "Bir cihazdan",
+      "ai": "Yapay zekâ tarafından",
+      "suggestion": "Kabul edilen YZ önerisi",
+      "import": "İçe aktarıldı"
+    }
   },
   "profile": {
     "plugins": {

@@ -12,7 +12,12 @@ const MAX_NAME = 255;
 
 function toolsFor(user) {
     const tools = [];
-    registerAllTools(null, { userId: user.id, user }, tools);
+    // The user accepted these writes: the task's history says so.
+    registerAllTools(
+        null,
+        { userId: user.id, user, source: 'suggestion' },
+        tools
+    );
     return async (name, params) => {
         const tool = tools.find((candidate) => candidate.name === name);
         try {

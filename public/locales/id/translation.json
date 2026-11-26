@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}h yang lalu",
     "loadingTimeline": "Memuat garis waktu...",
     "timelineWillAppear": "Garis waktu akan muncul setelah disimpan",
-    "noActivity": "Belum ada aktivitas"
+    "noActivity": "Belum ada aktivitas",
+    "history": "Riwayat",
+    "source": {
+      "web": "Di aplikasi",
+      "api": "Lewat kunci API",
+      "device": "Dari perangkat",
+      "ai": "Oleh AI",
+      "suggestion": "Saran AI yang diterima",
+      "import": "Diimpor"
+    }
   },
   "profile": {
     "plugins": {

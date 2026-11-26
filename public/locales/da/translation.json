@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}d siden",
     "loadingTimeline": "Indlæser tidslinje...",
     "timelineWillAppear": "Tidslinjen vises efter gemning",
-    "noActivity": "Ingen aktivitet endnu"
+    "noActivity": "Ingen aktivitet endnu",
+    "history": "Historik",
+    "source": {
+      "web": "I appen",
+      "api": "Via en API-nøgle",
+      "device": "Fra en enhed",
+      "ai": "Af AI'en",
+      "suggestion": "Accepteret AI-forslag",
+      "import": "Importeret"
+    }
   },
   "profile": {
     "plugins": {

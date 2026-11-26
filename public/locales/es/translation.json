@@ -1845,7 +1845,16 @@
     "daysAgo": "{{days}}d hace",
     "loadingTimeline": "Cargando línea de tiempo...",
     "timelineWillAppear": "La línea de tiempo aparecerá después de guardar",
-    "noActivity": "Sin actividad aún"
+    "noActivity": "Sin actividad aún",
+    "history": "Historial",
+    "source": {
+      "web": "En la app",
+      "api": "Con una clave de API",
+      "device": "Desde un dispositivo",
+      "ai": "Por la IA",
+      "suggestion": "Sugerencia de IA aceptada",
+      "import": "Importada"
+    }
   },
   "projects": {
     "parentProject": "Proyecto principal",

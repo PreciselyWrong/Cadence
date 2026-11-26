@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}d geleden",
     "loadingTimeline": "Tijdlijn laden...",
     "timelineWillAppear": "Tijdlijn verschijnt na opslaan",
-    "noActivity": "Nog geen activiteit"
+    "noActivity": "Nog geen activiteit",
+    "history": "Geschiedenis",
+    "source": {
+      "web": "In de app",
+      "api": "Via een API-sleutel",
+      "device": "Vanaf een apparaat",
+      "ai": "Door de AI",
+      "suggestion": "Geaccepteerde AI-suggestie",
+      "import": "Geïmporteerd"
+    }
   },
   "profile": {
     "plugins": {

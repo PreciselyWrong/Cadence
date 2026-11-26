@@ -936,7 +936,16 @@
     "daysAgo": "{{days}}j auparavant",
     "loadingTimeline": "Chargement de la chronologie...",
     "timelineWillAppear": "La chronologie apparaîtra après l'enregistrement",
-    "noActivity": "Aucune activité pour le moment"
+    "noActivity": "Aucune activité pour le moment",
+    "history": "Historique",
+    "source": {
+      "web": "Dans l'app",
+      "api": "Par une clé d'API",
+      "device": "Depuis un appareil",
+      "ai": "Par l'IA",
+      "suggestion": "Suggestion IA acceptée",
+      "import": "Importée"
+    }
   },
   "profile": {
     "plugins": {

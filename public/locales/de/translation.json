@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}d her",
     "loadingTimeline": "Zeitachse wird geladen...",
     "timelineWillAppear": "Die Zeitachse wird nach dem Speichern angezeigt",
-    "noActivity": "Noch keine Aktivität"
+    "noActivity": "Noch keine Aktivität",
+    "history": "Verlauf",
+    "source": {
+      "web": "In der App",
+      "api": "Über einen API-Schlüssel",
+      "device": "Von einem Gerät",
+      "ai": "Durch die KI",
+      "suggestion": "Angenommener KI-Vorschlag",
+      "import": "Importiert"
+    }
   },
   "forms": {
     "title": "Titel",

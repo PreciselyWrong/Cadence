@@ -914,7 +914,16 @@
     "daysAgo": "{{days}}d siden",
     "loadingTimeline": "Laster tidslinje...",
     "timelineWillAppear": "Tidslinjen vil vises etter lagring",
-    "noActivity": "Ingen aktivitet ennå"
+    "noActivity": "Ingen aktivitet ennå",
+    "history": "Historikk",
+    "source": {
+      "web": "I appen",
+      "api": "Via en API-nøkkel",
+      "device": "Fra en enhet",
+      "ai": "Av KI-en",
+      "suggestion": "Godtatt KI-forslag",
+      "import": "Importert"
+    }
   },
   "profile": {
     "plugins": {

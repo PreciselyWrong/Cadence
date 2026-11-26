@@ -913,7 +913,16 @@
     "daysAgo": "{{days}}天前",
     "loadingTimeline": "加载时间线...",
     "timelineWillAppear": "保存后时间线将出现",
-    "noActivity": "还没有活动"
+    "noActivity": "还没有活动",
+    "history": "历史",
+    "source": {
+      "web": "在应用中",
+      "api": "通过 API 密钥",
+      "device": "来自设备",
+      "ai": "由 AI 修改",
+      "suggestion": "已接受的 AI 建议",
+      "import": "已导入"
+    }
   },
   "profile": {
     "plugins": {

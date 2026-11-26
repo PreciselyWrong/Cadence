@@ -1207,6 +1207,15 @@
       "recurrenceType": "Typ opakovania",
       "recurrenceTypeChanged": "Typ opakovania zmenený",
       "none": "Žiadne"
+    },
+    "history": "História",
+    "source": {
+      "web": "V aplikácii",
+      "api": "Cez kľúč API",
+      "device": "Zo zariadenia",
+      "ai": "Od AI",
+      "suggestion": "Prijatý návrh AI",
+      "import": "Importované"
     }
   },
   "profile": {

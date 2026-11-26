@@ -165,10 +165,15 @@ const ENTITIES = {
                 : null;
             if (before !== after) values.reminder_sent_at = null;
         },
-        // A due date changed on the user's device counts for the review.
+        // The task's history shows what the device did; a due date changed
+        // on the device also counts for the review.
         afterApply: async ({ row, previous, values, clocks, userId }) => {
+            const {
+                logDeviceDueChange,
+                logDeviceChanges,
+            } = require('../tasks/utils/logging');
+            await logDeviceChanges(row, previous, userId, values, clocks);
             if (!previous || !('due_date' in values)) return;
-            const { logDeviceDueChange } = require('../tasks/utils/logging');
             await logDeviceDueChange(
                 row,
                 previous.due_date,

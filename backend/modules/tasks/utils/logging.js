@@ -1,7 +1,11 @@
 const { logError } = require('../../../services/logService');
 const { Task } = require('../../../models');
 const hlc = require('../../sync/hlc');
-const { logTaskUpdate, logEvent } = require('../taskEventService');
+const {
+    logTaskUpdate,
+    logEvent,
+    logTaskCreated,
+} = require('../taskEventService');
 
 function captureOldValues(task) {
     return {
@@ -169,8 +173,68 @@ async function logDeviceDueChange(task, previousDue, userId, hlcValue) {
     }
 }
 
+// A task's first history line says where it was born. A failure to log never
+// fails the creation itself.
+async function logCreation(task, userId, source) {
+    try {
+        await logTaskCreated(task.id, userId, null, { source });
+    } catch (error) {
+        logError('Error logging task creation:', error);
+    }
+}
+
+// Fields a device can change that the history shows, besides the due date
+// (logDeviceDueChange, which the review reads).
+const DEVICE_FIELDS = ['name', 'status', 'priority', 'project_id', 'note'];
+
+// A task pushed from one of the user's devices: its creation, or the fields it
+// changed, dated by the device's clock.
+async function logDeviceChanges(task, previous, userId, values, clocks) {
+    // Sync clocks are keyed by the pushed field: project_uid, not project_id.
+    const at = (field) => {
+        const key = field === 'project_id' ? 'project_uid' : field;
+        const parsed = hlc.parse(clocks?.[key]);
+        return parsed && parsed.ms <= Date.now() ? new Date(parsed.ms) : null;
+    };
+    try {
+        if (!previous) {
+            await logEvent({
+                taskId: task.id,
+                userId,
+                eventType: 'created',
+                metadata: { source: 'device', action: 'task_created' },
+                createdAt: at('name') ?? undefined,
+            });
+            return;
+        }
+        for (const field of DEVICE_FIELDS) {
+            if (!(field in values)) continue;
+            const before = previous[field] ?? null;
+            const after = task[field] ?? null;
+            if (before === after) continue;
+            await logEvent({
+                taskId: task.id,
+                userId,
+                eventType:
+                    field === 'status' && after === Task.STATUS.DONE
+                        ? 'completed'
+                        : `${field}_changed`,
+                fieldName: field,
+                oldValue: before,
+                newValue: after,
+                metadata: { source: 'device', action: 'device_update' },
+                createdAt: at(field) ?? undefined,
+            });
+        }
+    } catch (error) {
+        logError('Error logging device task changes:', error);
+    }
+}
+
 module.exports = {
     captureOldValues,
     logTaskChanges,
     logDeviceDueChange,
+    logCreation,
+    logDeviceChanges,
 };

@@ -22,6 +22,16 @@ interface TaskTimelineProps {
     refreshKey?: number;
 }
 
+// Who made a change, as the server records it in metadata.source.
+const SOURCE_LABELS: Record<string, [string, string]> = {
+    web: ['timeline.source.web', 'In the app'],
+    api: ['timeline.source.api', 'Through an API key'],
+    device: ['timeline.source.device', 'From a device'],
+    ai: ['timeline.source.ai', 'By the AI'],
+    suggestion: ['timeline.source.suggestion', 'AI suggestion you accepted'],
+    import: ['timeline.source.import', 'Imported'],
+};
+
 const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
     const { t } = useTranslation();
     const [events, setEvents] = useState<TaskEvent[]>([]);
@@ -47,7 +57,6 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
                         new Date(b.created_at).getTime() -
                         new Date(a.created_at).getTime()
                 );
-                // Show all events, scrolling will handle display
                 setEvents(sortedTimeline);
             } catch (err) {
                 console.error('Error fetching task timeline:', err);
@@ -200,20 +209,16 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
         });
     };
 
-    const formatTimeAgo = (dateString: string) => {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffMs = now.getTime() - date.getTime();
-        const diffMinutes = Math.floor(diffMs / (1000 * 60));
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    // The exact moment, so a change can be matched with what happened then.
+    const formatMoment = (dateString: string) =>
+        new Date(dateString).toLocaleString(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+        });
 
-        if (diffMinutes < 1) return 'Just now';
-        if (diffMinutes < 60) return `${diffMinutes}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays < 7) return `${diffDays}d ago`;
-
-        return date.toLocaleDateString();
+    const sourceLabel = (event: TaskEvent) => {
+        const label = SOURCE_LABELS[event.metadata?.source ?? ''];
+        return label ? t(label[0], label[1]) : null;
     };
 
     if (loading) {
@@ -272,7 +277,9 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
                                     {getEventDescription(event)}
                                 </div>
                                 <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                                    {formatTimeAgo(event.created_at)}
+                                    {formatMoment(event.created_at)}
+                                    {sourceLabel(event) &&
+                                        ` · ${sourceLabel(event)}`}
                                 </div>
 
                                 {/* Additional details for certain events */}

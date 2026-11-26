@@ -934,6 +934,15 @@
       "recurrence_weekday_changed": "Spremenjen dan ponavljanja",
       "recurrence_month_day_changed": "Spremenjen dan v mesecu ponavljanja",
       "recurrence_week_of_month_changed": "Spremenjena teden v mesecu ponavljanja"
+    },
+    "history": "Zgodovina",
+    "source": {
+      "web": "V aplikaciji",
+      "api": "Prek ključa API",
+      "device": "Iz naprave",
+      "ai": "Z UI",
+      "suggestion": "Sprejet predlog UI",
+      "import": "Uvoženo"
     }
   },
   "profile": {
