@@ -32,6 +32,8 @@ import ch.nicolab.cadence.tasks.quickadd.ShareCapture
 import ch.nicolab.cadence.tasks.quickadd.QuickAddSuggestions
 import ch.nicolab.cadence.tasks.quickadd.SuggestionKind
 import ch.nicolab.cadence.tasks.quickadd.TokenAtCursor
+import ch.nicolab.cadence.tasks.quickadd.quickAddDestinationLabel
+import ch.nicolab.cadence.tasks.quickadd.quickAddNeedsWhen
 import ch.nicolab.cadence.tasks.quickadd.singleLineCapture
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
@@ -271,7 +273,16 @@ fun QuickAddSheet(
         val title = parsed.title
         if (title.isEmpty() || saving) return
         when (target) {
-            CaptureTarget.INBOX -> return launchSave { viewModel.captureIdea(title) }
+            CaptureTarget.INBOX -> return launchSave {
+                viewModel.captureIdea(title)
+                if (closeAfterSave) {
+                    android.widget.Toast.makeText(
+                        context,
+                        quickAddDestinationLabel(isInbox = true, projectName = null, hasDate = false),
+                        android.widget.Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
             // La fiche se retire avant que l'éditeur s'ouvre : il reçoit alors la fenêtre et le clavier.
             CaptureTarget.NOTE -> return launchSave(keepOpen = true) {
                 val uid = viewModel.createNote(title)
@@ -282,11 +293,11 @@ fun QuickAddSheet(
             CaptureTarget.TASK -> Unit
         }
         // Un lien seul devient une tâche nommée par le genre de page (« Essayer : … »), l'adresse en note et en
-        // origine ; sans projet, elle attend « Quand ? » (`docs/37-links.md`).
+        // origine ; sans date, une tâche avec projet/domaine garde `needsWhen = true` pour rester visible dans « À classer ».
         val fromLink = linkOnly?.takeIf { initialNote == null }
         val draft = TaskDraft(
             name = fromLink?.let { IdeaTasks.taskName(it, pageTitle?.title, ShareCapture.verbs(context)) } ?: title,
-            needsWhen = fromLink != null && projectUid == null,
+            needsWhen = quickAddNeedsWhen(date, projectUid, parsed.areaUid, fromLink != null),
             note = fromLink ?: initialNote,
             source = fromLink?.let { "link" },
             sourceUrl = fromLink,
@@ -298,7 +309,15 @@ fun QuickAddSheet(
             areaUid = parsed.areaUid,
         )
         if (onSave != null) return launchSave { onSave(draft) }
-        if (closeAfterSave) return launchSave { viewModel.saveNewTask(draft) }
+        if (closeAfterSave) return launchSave {
+            viewModel.saveNewTask(draft)
+            val projectName = projects.firstOrNull { it.uid == projectUid }?.name
+            android.widget.Toast.makeText(
+                context,
+                quickAddDestinationLabel(isInbox = false, projectName = projectName, hasDate = date != null),
+                android.widget.Toast.LENGTH_SHORT,
+            ).show()
+        }
         // La tâche est écrite, la saisie reste ouverte et vide pour la suivante : seul le projet suit.
         launchSave(keepOpen = true) {
             val uid = viewModel.saveNewTask(draft)
