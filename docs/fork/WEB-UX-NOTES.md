@@ -1171,7 +1171,7 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : dans le tableau d'un projet parent, le texte passe à 14 px (tâches) et 12 px (étiquettes), les colonnes à 320 px ; chaque colonne défile seule sous son en-tête, pour que la barre de défilement horizontale reste à l'écran. L'« État actuel » montre la prochaine action sur trois lignes, puis la branche seule et l'état de l'arbre avec une pastille (verte si propre, ambre sinon). Bouton « Actualiser les TODO.md » dans la barre du tableau : relit les fichiers de tous les sous-projets, puis recharge les colonnes.
 - **Android** : à faire, pas de tableau des sous-projets ; au minimum l'action « Actualiser les TODO.md » et l'état de l'arbre sur un projet parent.
 - **Repris du marché** (Linear, GitHub Projects, guides de suivi multi-projets) : pastille de santé à côté du nom de chaque sous-projet (rouge bloqué, grise périmé, verte à jour), « Périmé · il y a … » quand l'État actuel n'a pas bougé depuis 14 jours (réglable dans Display, 0 pour couper) ; dans chaque colonne les tâches suivent les sections du fichier (Now, Next, Ideas, puis les autres), et une section se replie après 8 cartes (« Afficher les N autres »).
-- **Non repris** : couloirs horizontaux et couvertures de cartes (trop chargés pour un tableau personnel) ; l'ordre des tâches dans une section ne suit pas encore l'ordre du fichier (il faudrait le stocker).
+- **Non repris** : couloirs horizontaux et couvertures de cartes (trop chargés pour un tableau personnel) ; l'ordre des tâches dans une section suit l'ordre du fichier depuis le 2026-11-26 (`tasks.source_position`, relu à chaque import ; les tâches propres à Cadence viennent après). **Android** : à reprendre avec le tableau.
 
 ### 2026-11-26 : tableau des sous-projets allégé
 
@@ -1180,3 +1180,7 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : la bannière du projet se retire sur l'onglet Tableau, les colonnes font 250 px (cinq visibles au lieu de quatre) et changer de vue garde la position de défilement.
 - **Android** : rien à reporter tant qu'il n'y a pas de tableau des sous-projets (entrée dans `TODO.md`).
 
+
+### 2026-11-26 : projet et tags sur les tâches à choisir (Aujourd'hui)
+- **Décision** : les lignes « Demain » et « Suggestions » de la page Aujourd'hui montrent le projet et les deux premiers tags en puces (même puce que les lignes de la journée), avant la date et « Ajouter » : on sait d'où vient la suggestion sans l'ouvrir.
+- **Android** : déjà fait, « Demain » et « Suggérées » passent par `taskRows` sans ligne calme, qui montre projet et tags (`TodayTab.kt`).

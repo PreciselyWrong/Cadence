@@ -61,6 +61,8 @@ export interface Task {
     // Set on a task mirrored from a TODO.md file (the "## " section it sits
     // in, and its identity there). Such a task is read-only here.
     source_section?: string | null;
+    // Rank of the bullet in its TODO.md file (0 first); null for Cadence-only tasks.
+    source_position?: number | null;
     source_key?: string | null;
     // Where the task came from (gmail, telegram, mcp, ...) and the web page
     // it points to, shown as a badge that opens it.

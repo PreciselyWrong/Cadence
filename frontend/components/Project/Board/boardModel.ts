@@ -621,8 +621,11 @@ export interface TaskSectionGroup {
 }
 
 // The tasks of one project in the order of its TODO.md: Now, Next, Ideas,
-// then the file's other sections, then the tasks that only live in Cadence.
-export const groupTasksBySourceSection = (tasks: Task[]): TaskSectionGroup[] => {
+// then the file's other sections, then the tasks that only live in Cadence;
+// each section in the order of its bullets.
+export const groupTasksBySourceSection = (
+    tasks: Task[]
+): TaskSectionGroup[] => {
     const known = TODO_MD_SECTIONS.map((name) => name.toLowerCase());
     const groups = new Map<string, TaskSectionGroup>();
     for (const task of tasks) {
@@ -637,5 +640,12 @@ export const groupTasksBySourceSection = (tasks: Task[]): TaskSectionGroup[] => 
         const index = known.indexOf(group.key);
         return index === -1 ? known.length : index;
     };
+    // Inside a section, the bullets keep the file's order; tasks that only
+    // live in Cadence follow, in the order they came (stable sort).
+    const place = (task: Task) =>
+        task.source_position ?? Number.MAX_SAFE_INTEGER;
+    for (const group of groups.values()) {
+        group.tasks.sort((a, b) => place(a) - place(b));
+    }
     return [...groups.values()].sort((a, b) => rank(a) - rank(b));
 };

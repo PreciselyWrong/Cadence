@@ -226,4 +226,34 @@ describe('boardModel', () => {
             ]
         );
     });
+
+    it('keeps the order of the TODO.md file inside each section, file tasks before Cadence-only ones', () => {
+        const groups = groupTasksBySourceSection([
+            makeTask({
+                uid: 'third',
+                name: 'C',
+                source_section: 'Next',
+                source_position: 7,
+            }),
+            makeTask({ uid: 'cadence', name: 'D', source_section: 'Next' }),
+            makeTask({
+                uid: 'first',
+                name: 'A',
+                source_section: 'Next',
+                source_position: 2,
+            }),
+            makeTask({
+                uid: 'second',
+                name: 'B',
+                source_section: 'Next',
+                source_position: 5,
+            }),
+        ]);
+        expect(groups[0].tasks.map((t) => t.uid)).toEqual([
+            'first',
+            'second',
+            'third',
+            'cadence',
+        ]);
+    });
 });
