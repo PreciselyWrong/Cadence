@@ -52,6 +52,9 @@ data class TaskEntity(
     /** Colonne du tableau Kanban (`section_uid`, `section_position`). */
     val sectionUid: String? = null,
     val sectionPosition: Int? = null,
+    /** Section du fichier TODO.md dont vient la tâche (`source_section`) et place de sa puce (`source_position`), posées par le serveur. */
+    val sourceSection: String? = null,
+    val sourcePosition: Int? = null,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
 }
@@ -82,6 +85,8 @@ data class ProjectEntity(
     val description: String? = null,
     /** Dernière modification du projet (`updated_at`), utilisée pour trier les projets par activité. */
     val updatedAtRaw: String? = null,
+    /** « État actuel » du fichier TODO.md (`handoff_state`, objet JSON posé par le serveur), lu par `ProjectHandoff.parse`. */
+    val handoffJson: String? = null,
 )
 
 /** Objectif, résultat clé (un objectif parent) ou envie de la liste d'envies (`bucket`). */

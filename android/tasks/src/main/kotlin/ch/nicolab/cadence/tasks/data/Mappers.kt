@@ -9,6 +9,7 @@ import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.NoteItem
+import ch.nicolab.cadence.tasks.model.ProjectHandoff
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.ProjectSectionItem
 import ch.nicolab.cadence.tasks.model.Repetition
@@ -62,6 +63,8 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         assignedTo = assignedTo,
         sectionUid = sectionUid,
         sectionPosition = sectionPosition,
+        sourceSection = sourceSection,
+        sourcePosition = sourcePosition,
     )
 }
 
@@ -80,6 +83,7 @@ internal fun ProjectEntity.toItem() = ProjectItem(
     imageUrl = imageUrl,
     description = description,
     updatedAt = parseInstant(updatedAtRaw),
+    handoff = ProjectHandoff.parse(handoffJson),
 )
 
 internal fun GoalEntity.toItem() = GoalItem(

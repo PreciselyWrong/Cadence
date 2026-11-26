@@ -221,4 +221,15 @@
     <string name="project_board_move_to">Déplacer vers…</string>
     <string name="project_board_move_to_title">Déplacer vers une section</string>
     <string name="project_board_card_more">Actions de la carte</string>
+    <string name="project_board_next_action">→ %1$s</string>
+    <string name="project_board_blocked">Bloqué</string>
+    <string name="project_board_stale">Périmé · il y a %1$d j</string>
+    <string name="project_board_others">Autres</string>
+    <plurals name="project_board_show_more">
+        <item quantity="one">Afficher l\'autre</item>
+        <item quantity="other">Afficher les %1$d autres</item>
+    </plurals>
+    <string name="todo_md_rescan">Actualiser les TODO.md</string>
+    <string name="todo_md_rescanned">Fichiers TODO.md relus</string>
+    <string name="todo_md_rescan_failed">Impossible de relire les fichiers TODO.md</string>
 </resources>

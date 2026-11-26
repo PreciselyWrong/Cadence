@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyncConflictEntity::class,
         DeferredCallEntity::class,
     ],
-    version = 27,
+    version = 28,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -366,6 +366,19 @@ internal val MIGRATION_26_27 = object : Migration(26, 27) {
                 "`name` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`uid`))",
         )
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_project_sections_projectUid_position` ON `project_sections` (`projectUid`, `position`)")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Ajoute `sourceSection` et `sourcePosition` aux tâches et `handoffJson` aux projets pour le tableau des sous-projets.
+ * Le curseur est retiré : le prochain instantané apporte les sections de fichier et les états actuels.
+ */
+internal val MIGRATION_27_28 = object : Migration(27, 28) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tasks ADD COLUMN sourceSection TEXT")
+        db.execSQL("ALTER TABLE tasks ADD COLUMN sourcePosition INTEGER")
+        db.execSQL("ALTER TABLE projects ADD COLUMN handoffJson TEXT")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

@@ -44,6 +44,13 @@ class TodoMdClientTest {
     }
 
     @Test
+    fun `relire les fichiers passe par la route du serveur et échoue hors ligne`() = runTest {
+        assertTrue(client { """{"ok":true}""" }.rescan().isSuccess)
+        assertEquals(listOf("POST /api/v1/todo-md/rescan"), calls)
+        assertTrue(TodoMdClient { _, _, _, _ -> throw IOException("hors ligne") }.rescan().isFailure)
+    }
+
+    @Test
     fun `hors ligne, l'état est un échec et non un plantage`() = runTest {
         val offline = TodoMdClient { _, _, _, _ -> throw IOException("hors ligne") }
         assertTrue(offline.status().isFailure)

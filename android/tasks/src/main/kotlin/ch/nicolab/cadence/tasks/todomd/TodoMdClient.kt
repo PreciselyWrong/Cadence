@@ -43,6 +43,12 @@ class TodoMdClient internal constructor(
         Unit
     }
 
+    /** Fait relire les fichiers TODO.md au serveur (propriétaire seulement) : les tâches et états actuels se mettent à jour au prochain échange. */
+    suspend fun rescan(): Result<Unit> = runCatching {
+        call("POST", "/api/v1/todo-md/rescan", emptyMap(), null)
+        Unit
+    }
+
     private fun encoded(value: String) = URLEncoder.encode(value, "UTF-8").replace("+", "%20")
 
     private suspend fun act(slug: String, action: String): Result<TodoMdRepo?> = runCatching {

@@ -31,6 +31,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ChevronRight
@@ -49,6 +50,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -82,7 +84,9 @@ import ch.nicolab.cadence.tasks.model.ProjectPages
 import ch.nicolab.cadence.tasks.model.NoteItem
 import androidx.compose.foundation.lazy.items
 import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.AreaGroup
 import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.Outline
@@ -93,6 +97,7 @@ import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.SubProject
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskOverviews
+import kotlinx.coroutines.launch
 
 /** « N actifs · N dans le stash » : le stash n'apparaît que s'il n'est pas vide. */
 @Composable
@@ -386,6 +391,11 @@ internal fun ProjectTasksPane(
     var choosingTodoMd by remember { mutableStateOf(false) }
     var savingTemplate by remember { mutableStateOf(false) }
     val todoMdFiles = rememberTodoMdFiles(projectUid)
+    // Le propriétaire seul peut relire les fichiers (les fichiers ne se listent que pour lui) ; l'action n'a de sens que si le projet ou un sous-projet suit un fichier.
+    val canRescan = todoMdFiles.value != null && (project?.isFileBacked == true || subProjects.any { it.project.isFileBacked })
+    val snackbar = rememberAppSnackbarHostState()
+    val scope = rememberCoroutineScope()
+    var rescanning by remember { mutableStateOf(false) }
     if (choosingTodoMd) {
         TodoMdFileDialog(projectUid, todoMdFiles, onChanged = viewModel::requestSync, onDismiss = { choosingTodoMd = false })
     }
@@ -453,6 +463,23 @@ internal fun ProjectTasksPane(
                                 },
                             )
                         }
+                        if (canRescan) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.todo_md_rescan)) },
+                                leadingIcon = { Icon(Icons.Outlined.Refresh, contentDescription = null) },
+                                enabled = !rescanning,
+                                onClick = {
+                                    menuOpen = false
+                                    rescanning = true
+                                    scope.launch {
+                                        val reread = TasksGraph.todoMd(context).rescan().isSuccess
+                                        if (reread) viewModel.requestSync()
+                                        rescanning = false
+                                        snackbar.showSnackbar(context.getString(if (reread) R.string.todo_md_rescanned else R.string.todo_md_rescan_failed))
+                                    }
+                                },
+                            )
+                        }
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.tasks_note_new)) },
                             onClick = {
@@ -514,18 +541,32 @@ internal fun ProjectTasksPane(
         Column(modifier = modifier.fillMaxSize()) {
             renderHeader()
             renderViewSwitch()
-            ProjectBoardView(
-                projectUid = projectUid,
-                sections = sections,
-                tasks = tasks,
-                moment = moment,
-                viewModel = viewModel,
-                onOpen = onOpen,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(bottom = Size.navBar + Space.lg),
-            )
+            val boardModifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(bottom = Size.navBar + Space.lg)
+            if (project != null && subProjects.isNotEmpty()) {
+                SubProjectBoardView(
+                    parent = project,
+                    projects = projects,
+                    allTasks = allTasks,
+                    moment = moment,
+                    viewModel = viewModel,
+                    onOpen = onOpen,
+                    onOpenProject = onOpenProject,
+                    modifier = boardModifier,
+                )
+            } else {
+                ProjectBoardView(
+                    projectUid = projectUid,
+                    sections = sections,
+                    tasks = tasks,
+                    moment = moment,
+                    viewModel = viewModel,
+                    onOpen = onOpen,
+                    modifier = boardModifier,
+                )
+            }
         }
     } else {
         LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {

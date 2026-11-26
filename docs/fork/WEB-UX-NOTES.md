@@ -1169,16 +1169,16 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 ### 2026-11-26 : tableau des sous-projets plus lisible
 
 - **Décision** : dans le tableau d'un projet parent, le texte passe à 14 px (tâches) et 12 px (étiquettes), les colonnes à 320 px ; chaque colonne défile seule sous son en-tête, pour que la barre de défilement horizontale reste à l'écran. L'« État actuel » montre la prochaine action sur trois lignes, puis la branche seule et l'état de l'arbre avec une pastille (verte si propre, ambre sinon). Bouton « Actualiser les TODO.md » dans la barre du tableau : relit les fichiers de tous les sous-projets, puis recharge les colonnes.
-- **Android** : à faire, pas de tableau des sous-projets ; au minimum l'action « Actualiser les TODO.md » et l'état de l'arbre sur un projet parent.
+- **Android** : fait (`SubProjectBoardView`, règles pures `SubProjectBoard.kt`) : vue « Tableau » d'un projet parent, colonnes par sous-projet en cours, « → prochaine action » sur deux lignes, pastille de santé et « Bloqué » / « Périmé · il y a N j » seulement s'il y a lieu, sections du fichier avec repli après 8 cartes, case ronde et fiche de tâche ; « Actualiser les TODO.md » dans le menu de la page, pour le propriétaire seulement. Branche et arbre ne sont pas montrés (ils restent dans l'infobulle sur le web).
 - **Repris du marché** (Linear, GitHub Projects, guides de suivi multi-projets) : pastille de santé à côté du nom de chaque sous-projet (rouge bloqué, grise périmé, verte à jour), « Périmé · il y a … » quand l'État actuel n'a pas bougé depuis 14 jours (réglable dans Display, 0 pour couper) ; dans chaque colonne les tâches suivent les sections du fichier (Now, Next, Ideas, puis les autres), et une section se replie après 8 cartes (« Afficher les N autres »).
-- **Non repris** : couloirs horizontaux et couvertures de cartes (trop chargés pour un tableau personnel) ; l'ordre des tâches dans une section suit l'ordre du fichier depuis le 2026-11-26 (`tasks.source_position`, relu à chaque import ; les tâches propres à Cadence viennent après). **Android** : à reprendre avec le tableau.
+- **Non repris** : couloirs horizontaux et couvertures de cartes (trop chargés pour un tableau personnel) ; l'ordre des tâches dans une section suit l'ordre du fichier depuis le 2026-11-26 (`tasks.source_position`, relu à chaque import ; les tâches propres à Cadence viennent après). **Android** : repris, `tasks.sourcePosition` (Room v28) trie les cartes dans une section.
 
 ### 2026-11-26 : tableau des sous-projets allégé
 
 - **Décision** : deux vues au lieu de quatre, « Tâches par projet » (une colonne par sous-projet en cours, colonnes sans tâche masquées) et « Projets » (les sous-projets en cartes par statut, sans limite WIP, « En pause » visible) ; les tableaux déjà enregistrés passent aux deux vues et gardent les vues créées à la main. Le type de vue et « 7 derniers jours » descendent dans Affichage ; un filtre 7 j actif reste visible dans la barre, un clic l'enlève.
 - **Décision** : dans une colonne, l'État actuel se réduit à la prochaine action (deux lignes), avec « Bloqué » ou « Périmé » seulement s'il y a lieu ; branche, arbre et âge sont dans l'infobulle et le tiroir. La pastille de santé n'apparaît que pour un projet bloqué ou périmé. Les tâches ont le rond de coche de Cadence, tous les statuts sont traduits.
 - **Décision** : la bannière du projet se retire sur l'onglet Tableau, les colonnes font 250 px (cinq visibles au lieu de quatre) et changer de vue garde la position de défilement.
-- **Android** : rien à reporter tant qu'il n'y a pas de tableau des sous-projets (entrée dans `TODO.md`).
+- **Android** : repris dans le tableau des sous-projets (même état actuel court, même pastille de santé, mêmes sections) ; pas de colonnes sans tâche ni de couloirs.
 
 
 ### 2026-11-26 : projet et tags sur les tâches à choisir (Aujourd'hui)

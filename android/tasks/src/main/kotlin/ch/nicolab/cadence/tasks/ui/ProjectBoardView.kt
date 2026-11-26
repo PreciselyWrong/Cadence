@@ -438,10 +438,12 @@ private fun BoardColumnCard(
                             )
                         }
                         var cardTopLeft by remember { mutableStateOf(Offset.Zero) }
-                        Surface(
-                            shape = Radius.Control,
-                            color = cadence.surface,
-                            border = BorderStroke(Size.hairline, cadence.outlineVariant),
+                        BoardTaskCard(
+                            task = task,
+                            moment = moment,
+                            viewModel = viewModel,
+                            onOpen = { onOpen(task) },
+                            onMoveSection = { onRequestMove(task) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .alpha(if (draggingTaskUid == task.uid) 0.35f else 1f)
@@ -463,33 +465,7 @@ private fun BoardColumnCard(
                                         onDragCancel = onDragCancel,
                                     )
                                 },
-                        ) {
-                            TaskRow(
-                                task = task,
-                                projectName = null,
-                                projectColor = null,
-                                projectIcon = null,
-                                today = moment.today,
-                                zone = moment.zone,
-                                onToggle = { viewModel.toggle(task, hold = true) },
-                                onOpen = { onOpen(task) },
-                                onSwipeAction = { viewModel.swipe(task, it) },
-                                onMenu = { viewModel.openMenu(task, onMoveSection = { onRequestMove(task) }) },
-                                longPressMenu = false,
-                                trailing = {
-                                    IconButton(
-                                        onClick = { viewModel.openMenu(task, onMoveSection = { onRequestMove(task) }) },
-                                        modifier = Modifier.size(32.dp),
-                                    ) {
-                                        Icon(
-                                            Icons.Outlined.MoreHoriz,
-                                            contentDescription = stringResource(R.string.project_board_card_more),
-                                            tint = cadence.onSurfaceVariant,
-                                        )
-                                    }
-                                },
-                            )
-                        }
+                        )
                     }
                     if (highlighted && dropBeforeUid == null) {
                         item(key = "drop-end") {
@@ -503,6 +479,50 @@ private fun BoardColumnCard(
                 }
             }
         }
+    }
+}
+
+/** Carte d'une tâche dans une colonne de tableau : la ligne habituelle, un toucher ouvre la fiche, la case ronde termine. */
+@Composable
+internal fun BoardTaskCard(
+    task: TaskItem,
+    moment: Moment,
+    viewModel: TasksViewModel,
+    onOpen: () -> Unit,
+    onMoveSection: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        shape = Radius.Control,
+        color = cadence.surface,
+        border = BorderStroke(Size.hairline, cadence.outlineVariant),
+        modifier = modifier,
+    ) {
+        TaskRow(
+            task = task,
+            projectName = null,
+            projectColor = null,
+            projectIcon = null,
+            today = moment.today,
+            zone = moment.zone,
+            onToggle = { viewModel.toggle(task, hold = true) },
+            onOpen = onOpen,
+            onSwipeAction = { viewModel.swipe(task, it) },
+            onMenu = { viewModel.openMenu(task, onMoveSection = onMoveSection) },
+            longPressMenu = false,
+            trailing = {
+                IconButton(
+                    onClick = { viewModel.openMenu(task, onMoveSection = onMoveSection) },
+                    modifier = Modifier.size(32.dp),
+                ) {
+                    Icon(
+                        Icons.Outlined.MoreHoriz,
+                        contentDescription = stringResource(R.string.project_board_card_more),
+                        tint = cadence.onSurfaceVariant,
+                    )
+                }
+            },
+        )
     }
 }
 

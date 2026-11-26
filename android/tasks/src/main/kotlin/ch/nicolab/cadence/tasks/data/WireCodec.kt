@@ -24,7 +24,7 @@ internal object WireCodec {
         "uid", "name", "note", "status", "priority", "due_date", "due_has_time", "defer_until",
         "reminder_at", "recurrence_type", "project_uid", "area_uid", "parent_task_uid", "tag_uids",
         "completed_at", "pinned_at", "field_clocks", "in_view_at", "week_of", "month_of", "source", "source_url", "needs_when", "review_on", "reviewed_at", "source_key", "assigned_to",
-        "section_uid", "section_position",
+        "section_uid", "section_position", "source_section", "source_position",
     )
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -60,6 +60,8 @@ internal object WireCodec {
         assignedTo = wire.string("assigned_to"),
         sectionUid = wire.string("section_uid"),
         sectionPosition = wire.int("section_position"),
+        sourceSection = wire.string("source_section"),
+        sourcePosition = wire.int("source_position"),
     )
 
     fun taskToWire(task: TaskEntity): JsonObject {
@@ -114,6 +116,7 @@ internal object WireCodec {
         imageUrl = wire.string("image_url"),
         description = wire.string("description"),
         updatedAtRaw = wire.string("updated_at"),
+        handoffJson = (wire["handoff_state"] as? JsonObject)?.toString(),
     )
 
     fun goalFromWire(wire: JsonObject) = GoalEntity(

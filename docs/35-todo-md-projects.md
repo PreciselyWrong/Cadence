@@ -201,7 +201,7 @@ The file is re-read just before writing, the new content goes to a temp file in 
 
 ## Offline sync and Android
 
-These are ordinary projects and tasks, so they reach devices through `/api/v1/sync`. The project carries a server-written field `source_type` (listed under `server_fields` in `/sync/meta`; a push that names it is rejected as `unknown_field`).
+These are ordinary projects and tasks, so they reach devices through `/api/v1/sync`. The project carries a server-written field `source_type` (listed under `server_fields` in `/sync/meta`; a push that names it is rejected as `unknown_field`). The same holds for the project's `handoff_state` (its "État actuel", Room `projects.handoffJson`) and the task's `source_section` and `source_position` (Room `tasks.sourceSection`, `tasks.sourcePosition`, base v28): they feed the sub-project board of a parent project on Android (`model/SubProjectBoard.kt`, `ui/SubProjectBoardView.kt`), and the project's menu has **Actualiser les TODO.md** (`POST /api/v1/todo-md/rescan`, owner only, online only, then a sync).
 
 A task created on a device with the `code` tag inside a TODO.md project goes through the same server path: the bullet is written to the file and the row keeps the uid the device chose. Without the tag it is an ordinary task. An edit of a mirrored row's name, note or project (and deleting the project, or renaming a repository project) is rejected as `read_only`, and so is a delete. A change to the done box is written to the file, and the same push's other fields (priority, dates, tags...) are merged as usual. Android edits these other fields like any task's and keeps the file's ones out of reach (`swipe/FileBackedActions.kt`, `FileOwnedField`).
 

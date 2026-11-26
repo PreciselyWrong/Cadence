@@ -86,6 +86,9 @@ data class TaskItem(
     /** Colonne du tableau Kanban (`section_uid`, `section_position`). */
     val sectionUid: String? = null,
     val sectionPosition: Int? = null,
+    /** Section du fichier TODO.md (`source_section`) et place de la puce dans ce fichier (`source_position`) ; voir [SubProjectBoard]. */
+    val sourceSection: String? = null,
+    val sourcePosition: Int? = null,
 ) {
     /** Clé de liste : la tâche enregistrée et ses occurrences à venir partagent le même [uid]. */
     val rowKey: String get() = if (virtual) "$uid|$dueDay" else uid
@@ -138,6 +141,8 @@ data class ProjectItem(
     val description: String? = null,
     /** Dernière activité du projet (`updated_at`). */
     val updatedAt: Instant? = null,
+    /** « État actuel » du fichier TODO.md ; null hors fichier ou sans bloc. */
+    val handoff: ProjectHandoff? = null,
 ) {
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
     val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)
