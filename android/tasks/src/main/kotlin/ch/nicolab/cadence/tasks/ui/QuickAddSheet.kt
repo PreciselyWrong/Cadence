@@ -4,6 +4,9 @@ package ch.nicolab.cadence.tasks.ui
 
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,6 +14,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -42,6 +46,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
@@ -70,6 +76,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.graphics.Color
@@ -96,6 +109,7 @@ import ch.nicolab.cadence.designsystem.components.FieldGroup
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
+import ch.nicolab.cadence.designsystem.components.onColorOf
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
@@ -206,6 +220,7 @@ fun QuickAddSheet(
     var dismissedSuggestionAt by remember { mutableStateOf<Int?>(null) }
     var tagOverrides by remember { mutableStateOf(initialTagUids.toSet()) }
     var pickingDate by remember { mutableStateOf(false) }
+    var openMenu by remember { mutableStateOf<QuickMenu?>(null) }
     val focus = remember { FocusRequester() }
     val sheetState = if (slideIn) rememberModalBottomSheetState(skipPartiallyExpanded = true) else appearingSheetState()
     val scope = rememberCoroutineScope()
@@ -380,21 +395,11 @@ fun QuickAddSheet(
         }
     }
 
+    // Légère par défaut : ni titre ni aide, le champ et une rangée d'icônes. « Plus d'options » ramène l'en-tête.
+    val full = isTask && moreOptions
     CadenceSheet(
-        title = stringResource(
-            when (target) {
-                CaptureTarget.INBOX -> R.string.tasks_capture_inbox_title
-                CaptureTarget.TASK -> R.string.tasks_quick_title
-                CaptureTarget.NOTE -> R.string.tasks_note_new
-            },
-        ),
-        subtitle = stringResource(
-            when (target) {
-                CaptureTarget.INBOX -> R.string.tasks_capture_inbox_subtitle
-                CaptureTarget.TASK -> R.string.tasks_capture_subtitle
-                CaptureTarget.NOTE -> R.string.tasks_capture_note_subtitle
-            },
-        ),
+        title = if (full) stringResource(R.string.tasks_quick_title) else null,
+        subtitle = if (full) stringResource(R.string.tasks_capture_subtitle) else null,
         dismiss = { if (!saving) onDismiss() },
         modifier = modifier,
         sheetState = sheetState,
@@ -404,6 +409,15 @@ fun QuickAddSheet(
         val window = LocalWindowInfo.current
         val keyboard = LocalSoftwareKeyboardController.current
         var keyboardOpened by remember { mutableStateOf(false) }
+        // Le clavier reste levé tant que la feuille est ouverte : après chaque geste dans la feuille, le champ reprend le focus.
+        val keepKeyboard = {
+            runCatching { focus.requestFocus() }
+            keyboard?.show()
+        }
+        // Le sélecteur de date a sa propre fenêtre : le clavier revient à sa fermeture.
+        LaunchedEffect(pickingDate, window.isWindowFocused) {
+            if (!pickingDate && window.isWindowFocused && keyboardOpened) keepKeyboard()
+        }
         LaunchedEffect(window.isWindowFocused) {
             if (window.isWindowFocused && !keyboardOpened) {
                 keyboardOpened = true
@@ -412,18 +426,41 @@ fun QuickAddSheet(
             }
         }
         Column(
-            Modifier.fillMaxWidth().imePadding(),
-            verticalArrangement = Arrangement.spacedBy(Space.md),
+            Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent(PointerEventPass.Final)
+                            if (event.changes.none { it.pressed }) keepKeyboard()
+                        }
+                    }
+                },
+            verticalArrangement = Arrangement.spacedBy(Space.sm),
         ) {
             if (shownTargets.size > 1) {
-                SegmentedTabs(
-                    labels = shownTargets.map { stringResource(it.label) },
-                    selected = shownTargets.indexOf(target),
-                    onSelect = {
-                        target = shownTargets[it]
-                        targetChosen = true
-                    },
-                )
+                if (full) {
+                    SegmentedTabs(
+                        labels = shownTargets.map { stringResource(it.label) },
+                        selected = shownTargets.indexOf(target),
+                        onSelect = {
+                            target = shownTargets[it]
+                            targetChosen = true
+                        },
+                    )
+                } else {
+                    Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                        shownTargets.forEach { shown ->
+                            ChoiceChip(stringResource(shown.label), selected = shown == target) {
+                                target = shown
+                                targetChosen = true
+                            }
+                        }
+                    }
+                }
             }
             CaptureBox(
                 value = field,
@@ -436,6 +473,11 @@ fun QuickAddSheet(
                 enabled = !saving,
                 focus = focus,
                 onDone = ::save,
+                onEscape = {
+                    val open = suggestions.isNotEmpty() && token != null
+                    if (token != null && open) dismissedSuggestionAt = token.start
+                    open
+                },
                 placeholder = stringResource(
                     when (target) {
                         CaptureTarget.INBOX -> R.string.tasks_inbox_capture_hint
@@ -445,25 +487,22 @@ fun QuickAddSheet(
                 ),
             )
             if (suggestions.isNotEmpty() && token != null) {
-                SuggestionStrip(
+                SuggestionList(
                     suggestions = suggestions,
                     onPick = { picked ->
                         picked.createTag?.let(viewModel::createTag)
                         val edit = QuickAddSuggestions.insert(text, token, picked.token)
                         field = TextFieldValue(edit.text, TextRange(edit.cursor))
                     },
-                    onClose = { dismissedSuggestionAt = token.start },
                 )
             }
-            if (isTask) {
+            if (full) {
                 DateShortcuts(
                     today = today,
                     date = date,
                     onPick = { picked -> dateOverride = picked to time },
                     onMore = { pickingDate = true },
                 )
-            }
-            AnimatedVisibility(isTask && moreOptions) {
                 MoreOptions(
                     priority = priority,
                     onPriority = { picked ->
@@ -517,22 +556,58 @@ fun QuickAddSheet(
                         }
                         TertiaryAction(label = stringResource(R.string.tasks_capture_undo_last)) { undoLast() }
                     }
-                }
-            }
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                if (isTask) {
-                    TertiaryAction(
-                        label = stringResource(if (moreOptions) R.string.tasks_capture_less else R.string.tasks_capture_more),
-                    ) { moreOptions = !moreOptions }
-                }
-                Spacer(Modifier.weight(1f))
-                if (series.added > 0 && isTask) {
                     TertiaryAction(label = stringResource(R.string.tasks_capture_done)) { onDismiss() }
                 }
-                PrimaryAction(
-                    label = stringResource(R.string.tasks_add),
-                    enabled = parsed.title.isNotEmpty() && !saving,
-                ) { save() }
+            }
+            val canAdd = parsed.title.isNotEmpty() && !saving
+            if (full) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    TertiaryAction(label = stringResource(R.string.tasks_capture_less)) { moreOptions = false }
+                    Spacer(Modifier.weight(1f))
+                    PrimaryAction(label = stringResource(R.string.tasks_add), enabled = canAdd) { save() }
+                }
+            } else {
+                QuickAddMenus(
+                    isTask = isTask,
+                    trailing = { CompactAddButton(label = stringResource(R.string.tasks_add), enabled = canAdd) { save() } },
+                        menu = openMenu,
+                        onMenu = { openMenu = it },
+                        today = today,
+                        date = date,
+                        onDate = { picked -> dateOverride = picked to time },
+                        onClearDate = {
+                            dateOverride = null
+                            ignore(TokenKind.DATE, TokenKind.TIME)
+                        },
+                        onPickDate = { pickingDate = true },
+                        priority = priority,
+                        onPriority = { picked ->
+                            priorityOverride = picked
+                            if (picked == null) ignore(TokenKind.PRIORITY)
+                        },
+                        projects = projects,
+                        projectUid = projectUid,
+                        onProject = { picked ->
+                            projectOverride = picked
+                            if (picked == null) {
+                                carriedProject = null
+                                series = series.projectRemoved(System.currentTimeMillis())
+                                ignore(TokenKind.PROJECT)
+                            }
+                        },
+                        tags = tags,
+                        tagUids = tagUids,
+                        tagColors = tagColors,
+                        onTag = { uid ->
+                            if (uid in tagUids) {
+                                tagOverrides = tagOverrides - uid
+                                ignore(TokenKind.TAG, uid = uid)
+                            } else {
+                                tagOverrides = tagOverrides + uid
+                            }
+                        },
+                    onExpand = { moreOptions = true },
+                )
             }
         }
     }
@@ -566,6 +641,8 @@ private fun CaptureBox(
     enabled: Boolean,
     focus: FocusRequester,
     onDone: () -> Unit,
+    /** Échap : vrai si une liste de suggestions s'est fermée (la touche est alors consommée). */
+    onEscape: () -> Boolean,
     placeholder: String,
 ) {
     val palette = cadence
@@ -592,10 +669,10 @@ private fun CaptureBox(
             .clip(Radius.Control)
             .background(palette.containerHigh)
             .border(Size.stroke, if (focused) palette.primary else Color.Transparent, Radius.Control)
-            .padding(Space.lg),
+            .padding(horizontal = Space.lg, vertical = Space.sm),
         verticalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
-        Box(Modifier.fillMaxWidth().heightIn(min = Size.touch), contentAlignment = Alignment.CenterStart) {
+        Box(Modifier.fillMaxWidth().heightIn(min = Size.tab), contentAlignment = Alignment.CenterStart) {
             if (value.text.isEmpty()) {
                 Text(
                     placeholder,
@@ -629,7 +706,8 @@ private fun CaptureBox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focus)
-                    .onFocusChanged { focused = it.isFocused },
+                    .onFocusChanged { focused = it.isFocused }
+                    .onPreviewKeyEvent { it.key == Key.Escape && it.type == KeyEventType.KeyUp && onEscape() },
             )
         }
         if (chips.isNotEmpty()) {
@@ -837,32 +915,230 @@ private fun quickAddSuggestions(
     }
 }
 
-/** Liste compacte juste sous le champ, au-dessus du clavier : un appui insère le jeton. */
+/**
+ * Liste verticale juste sous le champ, comme les corrections d'un traitement de texte : la meilleure
+ * proposition d'abord, [QuickAddSuggestions.VISIBLE_ROWS] lignes visibles, le reste défile. Un appui insère le jeton.
+ */
 @Composable
-private fun SuggestionStrip(suggestions: List<Suggestion>, onPick: (Suggestion) -> Unit, onClose: () -> Unit) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Row(
-            Modifier.weight(1f).horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(Space.sm),
-        ) {
-            suggestions.forEach { suggestion ->
-                ChoiceChip(suggestion.label, selected = false, leadingIcon = suggestion.icon, dotColor = suggestion.dot) {
-                    onPick(suggestion)
+private fun SuggestionList(suggestions: List<Suggestion>, onPick: (Suggestion) -> Unit) {
+    val palette = cadence
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(Radius.Control)
+            .background(palette.containerHigh)
+            .heightIn(max = Size.touch * QuickAddSuggestions.visibleRows(suggestions.size))
+            .verticalScroll(rememberScrollState()),
+    ) {
+        suggestions.forEach { suggestion ->
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = Size.touch)
+                    .clickable(role = Role.Button) { onPick(suggestion) }
+                    .padding(horizontal = Space.lg),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.md),
+            ) {
+                Box(Modifier.size(Size.icon), contentAlignment = Alignment.Center) {
+                    when {
+                        suggestion.icon != null ->
+                            Icon(suggestion.icon, null, tint = suggestion.dot ?: palette.onSurfaceVariant, modifier = Modifier.size(Size.icon))
+                        suggestion.dot != null ->
+                            Box(Modifier.size(Size.iconSm - Space.xs).background(suggestion.dot, CircleShape))
+                    }
+                }
+                Text(
+                    suggestion.label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = palette.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+/** Les quatre choix de la rangée d'icônes : un seul menu ouvert à la fois. */
+private enum class QuickMenu { DATE, PROJECT, TAG, PRIORITY }
+
+/**
+ * Sous le champ : le choix de l'icône touchée en liste (comme les suggestions, dans la feuille : une fenêtre de menu
+ * volerait le focus et fermerait le clavier), puis la rangée d'icônes et [trailing]. La dernière icône ouvre toute la saisie.
+ */
+@Composable
+private fun QuickAddMenus(
+    isTask: Boolean,
+    trailing: @Composable () -> Unit,
+    menu: QuickMenu?,
+    onMenu: (QuickMenu?) -> Unit,
+    today: LocalDate,
+    date: LocalDate?,
+    onDate: (LocalDate) -> Unit,
+    onClearDate: () -> Unit,
+    onPickDate: () -> Unit,
+    priority: Int?,
+    onPriority: (Int?) -> Unit,
+    projects: List<ProjectItem>,
+    projectUid: String?,
+    onProject: (String?) -> Unit,
+    tags: List<TagItem>,
+    tagUids: List<String>,
+    tagColors: Map<String, Color>,
+    onTag: (String) -> Unit,
+    onExpand: () -> Unit,
+) {
+    val palette = cadence
+    val close = { onMenu(null) }
+    val tomorrow = QuickDates.tomorrow(today)
+    val weekend = QuickDates.weekend(today)
+    val levels = listOf<Int?>(null, TaskPriority.LOW, TaskPriority.MEDIUM, TaskPriority.HIGH)
+    val levelLabels = listOf(
+        stringResource(R.string.tasks_priority_none),
+        stringResource(R.string.tasks_priority_low),
+        stringResource(R.string.tasks_priority_medium),
+        stringResource(R.string.tasks_priority_high),
+    )
+    fun toggle(target: QuickMenu) = onMenu(if (menu == target) null else target)
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+        if (isTask && menu != null) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(Radius.Control)
+                    .background(palette.containerHigh)
+                    .heightIn(max = Size.touch * QuickAddSuggestions.visibleRows(Int.MAX_VALUE))
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                when (menu) {
+                    QuickMenu.DATE -> {
+                        listOf(
+                            stringResource(R.string.tasks_day_today) to today,
+                            stringResource(R.string.tasks_day_tomorrow) to tomorrow,
+                            stringResource(R.string.tasks_date_weekend) to weekend,
+                        ).forEach { (label, day) ->
+                            MenuRow(label, selected = date == day) {
+                                onDate(day)
+                                close()
+                            }
+                        }
+                        MenuRow(stringResource(R.string.tasks_capture_pick_date), selected = date != null && date !in listOf(today, tomorrow, weekend)) {
+                            close()
+                            onPickDate()
+                        }
+                        if (date != null) {
+                            MenuRow(stringResource(R.string.tasks_no_due_date), selected = false) {
+                                onClearDate()
+                                close()
+                            }
+                        }
+                    }
+                    QuickMenu.PROJECT -> {
+                        MenuRow(stringResource(R.string.tasks_no_project), selected = projectUid == null) {
+                            onProject(null)
+                            close()
+                        }
+                        projects.forEach { project ->
+                            MenuRow(project.name, selected = projectUid == project.uid, icon = entityIcon(project.icon)) {
+                                onProject(project.uid)
+                                close()
+                            }
+                        }
+                    }
+                    QuickMenu.TAG -> tags.forEach { tag ->
+                        MenuRow("#" + tag.name, selected = tag.uid in tagUids, icon = entityIcon(tag.icon), tint = tagColors[tag.uid]) { onTag(tag.uid) }
+                    }
+                    QuickMenu.PRIORITY -> levels.forEachIndexed { index, level ->
+                        MenuRow(levelLabels[index], selected = priority == level) {
+                            onPriority(level)
+                            close()
+                        }
+                    }
                 }
             }
         }
-        val close = stringResource(R.string.tasks_suggest_close)
-        Icon(
-            Icons.Outlined.Close,
-            contentDescription = close,
-            tint = cadence.onSurfaceVariant,
-            modifier = Modifier
-                .padding(start = Space.sm)
-                .size(Size.touch)
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            if (isTask) {
+                IconButton(Icons.Outlined.Today, stringResource(R.string.tasks_field_due), if (date != null || menu == QuickMenu.DATE) palette.primary else palette.onSurfaceVariant) { toggle(QuickMenu.DATE) }
+                IconButton(Icons.Outlined.Folder, stringResource(R.string.tasks_field_project), if (projectUid != null || menu == QuickMenu.PROJECT) palette.primary else palette.onSurfaceVariant) { toggle(QuickMenu.PROJECT) }
+                if (tags.isNotEmpty()) {
+                    IconButton(Icons.Outlined.Sell, stringResource(R.string.tasks_field_tags), if (tagUids.isNotEmpty() || menu == QuickMenu.TAG) palette.primary else palette.onSurfaceVariant) { toggle(QuickMenu.TAG) }
+                }
+                IconButton(Icons.Outlined.Flag, stringResource(R.string.tasks_field_priority), if (priority != null || menu == QuickMenu.PRIORITY) palette.primary else palette.onSurfaceVariant) { toggle(QuickMenu.PRIORITY) }
+                IconButton(Icons.Outlined.ExpandMore, stringResource(R.string.tasks_capture_more), palette.onSurfaceVariant, onClick = onExpand)
+            }
+            Spacer(Modifier.weight(1f))
+            trailing()
+        }
+    }
+}
+
+@Composable
+private fun MenuRow(label: String, selected: Boolean, icon: ImageVector? = null, tint: Color? = null, onClick: () -> Unit) {
+    val palette = cadence
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = Size.touch)
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = Space.lg),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Space.md),
+    ) {
+        Box(Modifier.size(Size.icon), contentAlignment = Alignment.Center) {
+            if (icon != null) Icon(icon, null, tint = tint ?: palette.onSurfaceVariant, modifier = Modifier.size(Size.icon))
+        }
+        Text(label, style = MaterialTheme.typography.bodyLarge, color = palette.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+        if (selected) Icon(Icons.Outlined.Check, null, tint = palette.primary, modifier = Modifier.size(Size.icon))
+    }
+}
+
+/** Icône nue sur une cible de 48 dp, au toucher décrit par [description]. */
+@Composable
+private fun IconButton(icon: ImageVector, description: String, tint: Color, onClick: () -> Unit) {
+    Box(
+        Modifier
+            .size(Size.touch)
+            .clip(CircleShape)
+            .clickable(role = Role.Button, onClickLabel = description, onClick = onClick)
+            .semantics { contentDescription = description },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(icon, null, tint = tint, modifier = Modifier.size(Size.iconLarge))
+    }
+}
+
+/** « Ajouter » en pastille basse : l'action principale de la rangée légère, sur une cible de 48 dp. */
+@Composable
+private fun CompactAddButton(label: String, enabled: Boolean, onClick: () -> Unit) {
+    val palette = cadence
+    val haptic = rememberCadenceHaptic()
+    val fill = if (enabled) palette.primary else palette.containerHigh
+    Box(
+        Modifier
+            .heightIn(min = Size.touch)
+            .clickable(enabled = enabled, role = Role.Button) {
+                haptic.confirm()
+                onClick()
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(
+            Modifier
+                .heightIn(min = Size.tab)
                 .clip(Radius.Pill)
-                .clickable(role = Role.Button, onClick = onClose)
-                .padding(Space.md),
-        )
+                .background(fill)
+                .padding(horizontal = Space.lg),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                label,
+                style = MaterialTheme.typography.labelLarge,
+                color = if (enabled) onColorOf(fill) else palette.onSurfaceVariant,
+                maxLines = 1,
+            )
+        }
     }
 }
 

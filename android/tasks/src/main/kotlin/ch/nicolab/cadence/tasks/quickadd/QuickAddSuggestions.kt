@@ -22,6 +22,9 @@ data class TokenEdit(val text: String, val cursor: Int)
  */
 object QuickAddSuggestions {
     private const val MAX_SUGGESTIONS = 8
+
+    /** Lignes montrées d'un coup dans la liste sous le champ ; au-delà, elle défile. */
+    const val VISIBLE_ROWS = 5
     private const val WORD = "[\\p{L}\\p{N}_/-]*"
 
     private val quoted = Regex("(?:^|\\s)([#+^])\"([^\"]*)$")
@@ -95,6 +98,13 @@ object QuickAddSuggestions {
             )
             .take(MAX_SUGGESTIONS)
     }
+
+    /**
+     * Hauteur de la liste, en lignes : toutes tant qu'il y en a [VISIBLE_ROWS] au plus, sinon une demi-ligne de
+     * plus pour montrer qu'elle défile.
+     */
+    fun visibleRows(count: Int): Float =
+        if (count <= VISIBLE_ROWS) count.coerceAtLeast(0).toFloat() else VISIBLE_ROWS + 0.5f
 
     private fun rankOf(name: String, wanted: String): Int = when {
         wanted.isEmpty() || name.startsWith(wanted) -> 0

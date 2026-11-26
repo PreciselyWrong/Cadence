@@ -124,4 +124,12 @@ class QuickAddSuggestionsTest {
         assertNull(QuickAddSuggestions.newTagName("   "))
         assertNull(QuickAddSuggestions.newTagName("perso/sport"))
     }
+
+    @Test
+    fun `la liste montre toutes ses lignes jusqu'a cinq, puis laisse deviner la suite`() {
+        assertEquals(0f, QuickAddSuggestions.visibleRows(0))
+        assertEquals(3f, QuickAddSuggestions.visibleRows(3))
+        assertEquals(5f, QuickAddSuggestions.visibleRows(5))
+        assertEquals(5.5f, QuickAddSuggestions.visibleRows(8))
+    }
 }

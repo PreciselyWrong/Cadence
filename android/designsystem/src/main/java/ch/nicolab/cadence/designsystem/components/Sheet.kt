@@ -44,7 +44,8 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CadenceSheet(
-    title: String,
+    /** Null : pas d'en-tête (une feuille légère comme la saisie rapide) ; seule la marge du haut reste. */
+    title: String?,
     subtitle: String?,
     dismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -61,7 +62,7 @@ fun CadenceSheet(
                 .padding(horizontal = Space.xl),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            SheetHeader(title, subtitle, leading)
+            if (title != null) SheetHeader(title, subtitle, leading) else Spacer(Modifier.height(Space.xs))
             content()
             Spacer(Modifier.height(Space.sm))
         }
