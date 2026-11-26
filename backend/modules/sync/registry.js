@@ -128,7 +128,12 @@ const ENTITIES = {
         // reminder; a device must not ring one that was sent after it.
         // The key of a task mirrored from a TODO.md bullet and its place in
         // the file: only its check box can change on a device.
-        serverFields: ['reminder_sent_at', 'source_key', 'source_position'],
+        serverFields: [
+            'reminder_sent_at',
+            'source_key',
+            'source_section',
+            'source_position',
+        ],
         refs: {
             project_uid: { column: 'project_id', entity: 'project' },
             area_uid: { column: 'area_id', entity: 'area' },
@@ -230,7 +235,7 @@ const ENTITIES = {
         ],
         // 'todo_md' for a project that follows a TODO.md file; the banner is
         // uploaded on the web, devices only show it.
-        serverFields: ['source_type', 'image_url'],
+        serverFields: ['source_type', 'image_url', 'handoff_state'],
         refs: {
             area_uid: { column: 'area_id', entity: 'area' },
             goal_uid: { column: 'goal_id', entity: 'goal' },

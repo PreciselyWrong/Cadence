@@ -726,6 +726,71 @@ describe('Offline sync API', () => {
         });
     });
 
+    describe('file-backed board fields', () => {
+        it('sends the task section and the project handoff state, and ignores client values', async () => {
+            const handoff = {
+                next_action: 'Ship it',
+                blockers: ['CI'],
+                updated_at: '2026-11-20T10:00:00.000Z',
+            };
+            await push(agent, [
+                upsert(
+                    'op-bd1',
+                    'project',
+                    'clientproj0bd01',
+                    { name: 'Board' },
+                    hlc(1)
+                ),
+                upsert(
+                    'op-bd2',
+                    'task',
+                    'clienttask0bd01',
+                    { name: 'Bullet' },
+                    hlc(1)
+                ),
+            ]);
+            await Project.update(
+                { handoff_state: handoff },
+                { where: { uid: 'clientproj0bd01' }, individualHooks: true }
+            );
+            await Task.update(
+                { source_section: 'Now' },
+                { where: { uid: 'clienttask0bd01' }, individualHooks: true }
+            );
+
+            const pulled = await agent.get('/api/v1/sync/pull?cursor=0');
+            const last = (uid) =>
+                pulled.body.changes.filter((c) => c.uid === uid).pop();
+            expect(last('clientproj0bd01').data.handoff_state).toEqual(handoff);
+            expect(last('clienttask0bd01').data.source_section).toBe('Now');
+
+            await push(agent, [
+                upsert(
+                    'op-bd3',
+                    'project',
+                    'clientproj0bd01',
+                    { handoff_state: { next_action: 'Mine' } },
+                    hlc(2)
+                ),
+                upsert(
+                    'op-bd4',
+                    'task',
+                    'clienttask0bd01',
+                    { source_section: 'Ideas' },
+                    hlc(2)
+                ),
+            ]);
+            const project = await Project.findOne({
+                where: { uid: 'clientproj0bd01' },
+            });
+            const task = await Task.findOne({
+                where: { uid: 'clienttask0bd01' },
+            });
+            expect(project.handoff_state).toEqual(handoff);
+            expect(task.source_section).toBe('Now');
+        });
+    });
+
     describe('icons', () => {
         it('syncs a project and a tag icon both ways', async () => {
             const res = await push(agent, [
