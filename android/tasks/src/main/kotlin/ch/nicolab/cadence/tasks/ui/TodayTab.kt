@@ -142,12 +142,6 @@ internal fun TodayTab(
     val unfinished = remember(state.today) { PlanningChanges.movable(state.today) }
     val localNow = remember(moment.now, zone) { LocalTime.ofSecondOfDay(moment.now.atZone(zone).toLocalTime().toSecondOfDay().toLong()) }
     val closed = closedDay == today
-    val morningVisible = proposals == null && DayRhythm.morningCardVisible(
-        settings, today, localNow, dismissedDay, triageable.size, plan.toPlace.size, suggestions.size,
-    )
-    val eveningVisible = DayRhythm.eveningCardVisible(
-        settings, today, localNow, closedDay, state.completed.size, unfinished.size,
-    )
     val tomorrowTasks = upcoming[today.plusDays(1)].orEmpty()
     // Toutes les échues, planifiées un autre jour comprises (avec ce jour) : rien de passé ne disparaît d'Aujourd'hui.
     val late = remember(state.overdue, state.overduePlanned) {
@@ -160,6 +154,12 @@ internal fun TodayTab(
     val later = remember(suggestions, tomorrowTasks, planBoard.horizons, today, shownUids) {
         PlanBoard.todayLater(tomorrowTasks, planBoard.horizons, today, suggestions, shownUids)
     }
+    val morningVisible = proposals == null && DayRhythm.morningCardVisible(
+        settings, today, localNow, dismissedDay, triageable.size, plan.toPlace.size, later.suggested.size,
+    )
+    val eveningVisible = DayRhythm.eveningCardVisible(
+        settings, today, localNow, closedDay, state.completed.size, unfinished.size,
+    )
     var openFolds by rememberSaveable { mutableStateOf(emptyList<String>()) }
     var replanOpen by rememberSaveable { mutableStateOf(false) }
 
@@ -378,7 +378,7 @@ internal fun TodayTab(
                 CardSlot {
                     MorningCard(
                         toPlaceCount = plan.toPlace.size,
-                        suggestionCount = suggestions.size,
+                        suggestionCount = later.suggested.size,
                         onOpen = onOpenPlan,
                         onDismiss = { planning.dismissMorning(today) },
                     )
