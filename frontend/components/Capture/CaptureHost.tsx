@@ -120,8 +120,8 @@ const CaptureHost: React.FC<CaptureHostProps> = ({ sidebarOpen = false }) => {
 
     return (
         <>
-            {/* Always on top: task rows lift themselves to z-[10000] on
-                hover or tap, and pickers open at z-[10050]. */}
+            {/* Always on top: a task row lifts itself to z-[10001] while a menu is open
+                 (hover only reaches z-30, under the task sheet), and pickers open at z-[10050]. */}
             {phoneButtonVisible && (
                 <button
                     type="button"
@@ -136,7 +136,7 @@ const CaptureHost: React.FC<CaptureHostProps> = ({ sidebarOpen = false }) => {
             {open && (
                 // Dims the page so the box reads as the one thing in front,
                 // and catches taps so they never reach the page. It sits
-                // above task rows (z-[10000]) and below pickers (z-[10050]).
+                // above task rows (z-[10001]) and below pickers (z-[10050]).
                 <div
                     aria-hidden="true"
                     data-testid="capture-scrim"

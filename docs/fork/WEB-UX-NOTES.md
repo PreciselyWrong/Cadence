@@ -1202,3 +1202,10 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Décision** : la vue « Tâches par projet » montre aussi les sous-projets « Prévu » et « Non commencé » (colonnes sans tâche toujours masquées). Avant, seul « En cours » y figurait et un sous-projet prévu avec des tâches ouvertes disparaissait sans un mot. Les vues par défaut sont nommées depuis les traductions, les vues créées gardent leur nom.
 - **Android** : pas de tableau pour l'instant ; si une vue par sous-projet y est ajoutée, ne pas masquer en silence les projets prévus.
+
+### 2026-11-26 : fiche, rail et barre latérale sous 1280 px
+
+- **Décision** : fermer la fiche rend le focus à la ligne de la tâche qui l'a ouverte, même quand un clic souris ou j/k a laissé le focus sur la page (sinon on repart du haut de la tabulation). Le titre de la fiche passe à la ligne et la boîte grandit, Entrée valide toujours, Maj+Entrée n'ajoute pas de saut de ligne. Une ligne survolée reste sous la fiche.
+- **Décision** : le rail d'icônes garde le même ordre sur toutes les pages (Aujourd'hui et Zones restent sur le rail même quand le panneau les liste, la page courante est seulement surlignée).
+- **Décision** : sous 1280 px la barre latérale démarre en rail ; un choix explicite (ouvrir ou replier, sur une fenêtre d'au moins 640 px) l'emporte sur la largeur et est retenu (`localStorage` `sidebarOpen`). Sous 640 px, le tiroir qui se referme à la navigation n'est pas un choix.
+- **Android** : rien à reprendre (pas de rail ni de fiche flottante) ; garder un ordre fixe pour la barre de navigation basse.

@@ -662,6 +662,38 @@ describe('TaskPane as a floating sheet', () => {
         expect(opener).toHaveFocus();
     });
 
+    it('returns focus to the row the sheet was opened from after a mouse click', async () => {
+        const MouseRow = () => {
+            const { openTask } = useTaskPane();
+            return (
+                <div data-task-uid="uid-1" data-task-row="">
+                    <span onClick={() => openTask('uid-1')}>Row title</span>
+                </div>
+            );
+        };
+        render(
+            <MemoryRouter initialEntries={['/today']}>
+                <TaskPaneProvider>
+                    <MouseRow />
+                    <TaskPane />
+                </TaskPaneProvider>
+            </MemoryRouter>
+        );
+        // A click on a non-focusable row leaves the focus on the body.
+        fireEvent.click(screen.getByText('Row title'));
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+        await waitFor(() => expect(dialog).toHaveFocus());
+
+        fireEvent.keyDown(document, { key: 'Escape' });
+
+        await waitFor(() =>
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+        );
+        expect(document.querySelector('[data-task-uid="uid-1"]')).toHaveFocus();
+    });
+
     it('shows the planned day and time from the calendar that opened it', async () => {
         renderSheet('/today?task=uid-1&on=2026-11-12&at=600');
 

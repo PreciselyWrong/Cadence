@@ -215,8 +215,6 @@ interface SidebarRailMinimalProps {
     onExpand?: () => void;
     // Opens the Profile sidebar tab where the layout is edited.
     onCustomize?: () => void;
-    // Items the expanded panel already lists; the rail leaves them out.
-    hiddenIds?: readonly RailId[];
 }
 
 const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
@@ -225,7 +223,6 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
     canOpenAccess,
     onExpand,
     onCustomize,
-    hiddenIds = [],
 }) => {
     const { t } = useTranslation();
     const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -328,12 +325,7 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
 
     const placed = (place: RailPlace) =>
         railSettings
-            .filter(
-                (item) =>
-                    item.place === place &&
-                    isVisible(item.key) &&
-                    !hiddenIds.includes(item.key)
-            )
+            .filter((item) => item.place === place && isVisible(item.key))
             .map((item) => RAIL_ITEMS[item.key]);
     const primary = placed('rail');
     const overflow = placed('more');

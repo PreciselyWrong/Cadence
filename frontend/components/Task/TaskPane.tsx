@@ -255,18 +255,39 @@ const TaskPane: React.FC = () => {
         return () => document.removeEventListener('keydown', onKeyDown);
     }, [openTaskUid, closeTask, openTask]);
 
-    // The floating sheet takes focus when it opens and gives it back to the
-    // element that opened it when it closes.
+    // The floating sheet takes focus when it opens and gives it back when it
+    // closes: to the row of the task it showed (a mouse click or j/k leaves
+    // the focus on the body or on another row), else to the opener.
     const sheetRef = useRef<HTMLElement | null>(null);
+    const openUidRef = useRef(openTaskUid);
+    // Cleanup runs after the URL has lost ?task=, so keep the last uid.
+    if (openTaskUid) openUidRef.current = openTaskUid;
     useEffect(() => {
         if (!shown) return;
         const opener =
-            document.activeElement instanceof HTMLElement
+            document.activeElement instanceof HTMLElement &&
+            document.activeElement !== document.body
                 ? document.activeElement
                 : null;
         sheetRef.current?.focus();
         return () => {
-            if (opener?.isConnected) opener.focus();
+            const row = Array.from(
+                document.querySelectorAll<HTMLElement>('[data-task-uid]')
+            ).find(
+                (el) =>
+                    el.dataset.taskUid === openUidRef.current &&
+                    !sheetRef.current?.contains(el)
+            );
+            if (opener?.isConnected && (!row || row.contains(opener))) {
+                opener.focus();
+            } else if (row) {
+                if (row.tabIndex < 0 && !row.hasAttribute('tabindex')) {
+                    row.tabIndex = -1;
+                }
+                row.focus();
+            } else if (opener?.isConnected) {
+                opener.focus();
+            }
         };
     }, [shown]);
 

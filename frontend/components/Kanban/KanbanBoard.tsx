@@ -13,12 +13,12 @@ import { TASK_SHEET_CLASS } from '../Task/taskSheet';
 
 const COLUMN_STATUS: Record<string, number> = {
     not_started: 0,
-    planned:     6,
+    planned: 6,
     in_progress: 1,
-    waiting:     4,
-    cancelled:   5,
-    done:        2,
-    archived:    3,
+    waiting: 4,
+    cancelled: 5,
+    done: 2,
+    archived: 3,
 };
 
 const ALL_COLS = [
@@ -32,7 +32,12 @@ const ALL_COLS = [
 ] as const;
 type ColKey = (typeof ALL_COLS)[number];
 
-const DEFAULT_VISIBLE: ColKey[] = ['not_started', 'in_progress', 'waiting', 'done'];
+const DEFAULT_VISIBLE: ColKey[] = [
+    'not_started',
+    'in_progress',
+    'waiting',
+    'done',
+];
 const STORAGE_KEY = 'kanban_visible_columns';
 
 function loadVisibleCols(): ColKey[] {
@@ -67,7 +72,14 @@ const getTaskColumn = (task: Task): ColKey | null => {
 
 const COL_CONFIG: Record<
     ColKey,
-    { labelKey: string; labelDefault: string; bg: string; dragOverBg: string; headerBg: string; headerColor: string }
+    {
+        labelKey: string;
+        labelDefault: string;
+        bg: string;
+        dragOverBg: string;
+        headerBg: string;
+        headerColor: string;
+    }
 > = {
     not_started: {
         labelKey: 'tasks.kanban.todo',
@@ -129,7 +141,9 @@ const COL_CONFIG: Record<
 
 const KanbanBoard: React.FC = () => {
     const { t } = useTranslation();
-    const projects: Project[] = useStore((state: any) => state.projectsStore.projects);
+    const projects: Project[] = useStore(
+        (state: any) => state.projectsStore.projects
+    );
 
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
@@ -149,7 +163,9 @@ const KanbanBoard: React.FC = () => {
             setError(null);
             try {
                 const res = await fetch(
-                    getApiPath('tasks?client_side_filtering=true&limit=10000&offset=0')
+                    getApiPath(
+                        'tasks?client_side_filtering=true&limit=10000&offset=0'
+                    )
                 );
                 if (!res.ok) throw new Error('Failed to fetch tasks');
                 const data = await res.json();
@@ -166,12 +182,16 @@ const KanbanBoard: React.FC = () => {
     useEffect(() => {
         if (!settingsOpen) return;
         const handleClickOutside = (e: MouseEvent) => {
-            if (settingsRef.current && !settingsRef.current.contains(e.target as Node)) {
+            if (
+                settingsRef.current &&
+                !settingsRef.current.contains(e.target as Node)
+            ) {
                 setSettingsOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
     }, [settingsOpen]);
 
     const toggleCol = (col: ColKey) => {
@@ -219,7 +239,9 @@ const KanbanBoard: React.FC = () => {
             if (res.ok) {
                 const saved = await res.json();
                 setTasks((prev) =>
-                    prev.map((t) => (t.id === updatedTask.id ? { ...t, ...saved } : t))
+                    prev.map((t) =>
+                        t.id === updatedTask.id ? { ...t, ...saved } : t
+                    )
                 );
             }
         } catch (e) {
@@ -235,10 +257,13 @@ const KanbanBoard: React.FC = () => {
 
     const handleTaskDelete = async (taskUid: string) => {
         try {
-            const res = await fetch(getApiPath(`task/${encodeURIComponent(taskUid)}`), {
-                method: 'DELETE',
-                headers: { 'x-csrf-token': await getCsrfToken() },
-            });
+            const res = await fetch(
+                getApiPath(`task/${encodeURIComponent(taskUid)}`),
+                {
+                    method: 'DELETE',
+                    headers: { 'x-csrf-token': await getCsrfToken() },
+                }
+            );
             if (res.ok) {
                 setTasks((prev) => prev.filter((t) => t.uid !== taskUid));
             }
@@ -251,8 +276,14 @@ const KanbanBoard: React.FC = () => {
         const newStatus = COLUMN_STATUS[targetCol];
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { subtasks: _subtasks, ...taskWithoutSubtasks } = task;
-        const updatedTask: Task = { ...taskWithoutSubtasks, name: task.original_name || task.name, status: newStatus };
-        setTasks((prev) => prev.map((t) => (t.id === task.id ? updatedTask : t)));
+        const updatedTask: Task = {
+            ...taskWithoutSubtasks,
+            name: task.original_name || task.name,
+            status: newStatus,
+        };
+        setTasks((prev) =>
+            prev.map((t) => (t.id === task.id ? updatedTask : t))
+        );
         await handleTaskUpdate(updatedTask);
     };
 
@@ -270,7 +301,8 @@ const KanbanBoard: React.FC = () => {
 
     const onColDragEnter = (e: React.DragEvent, col: ColKey) => {
         e.preventDefault();
-        dragEnterCounters.current[col] = (dragEnterCounters.current[col] ?? 0) + 1;
+        dragEnterCounters.current[col] =
+            (dragEnterCounters.current[col] ?? 0) + 1;
         setDragOverCol(col);
     };
 
@@ -280,7 +312,8 @@ const KanbanBoard: React.FC = () => {
     };
 
     const onColDragLeave = (e: React.DragEvent, col: ColKey) => {
-        dragEnterCounters.current[col] = (dragEnterCounters.current[col] ?? 1) - 1;
+        dragEnterCounters.current[col] =
+            (dragEnterCounters.current[col] ?? 1) - 1;
         if (dragEnterCounters.current[col] <= 0) {
             dragEnterCounters.current[col] = 0;
             setDragOverCol((prev) => (prev === col ? null : prev));
@@ -315,7 +348,10 @@ const KanbanBoard: React.FC = () => {
                     <button
                         onClick={() => setSettingsOpen((o) => !o)}
                         className="p-1.5 rounded-lg text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                        title={t('tasks.kanban.customizeColumns', 'Customize columns')}
+                        title={t(
+                            'tasks.kanban.customizeColumns',
+                            'Customize columns'
+                        )}
                     >
                         <Cog6ToothIcon className="w-5 h-5" />
                     </button>
@@ -339,7 +375,9 @@ const KanbanBoard: React.FC = () => {
                                             onChange={() => toggleCol(col)}
                                             className="w-3.5 h-3.5 rounded accent-gray-600"
                                         />
-                                        <span className={`text-sm font-medium ${cfg.headerColor}`}>
+                                        <span
+                                            className={`text-sm font-medium ${cfg.headerColor}`}
+                                        >
                                             {t(cfg.labelKey, cfg.labelDefault)}
                                         </span>
                                     </label>
@@ -351,11 +389,11 @@ const KanbanBoard: React.FC = () => {
             </div>
 
             {loading && (
-                <p className="text-sm text-gray-600 dark:text-gray-300">{t('common.loading', 'Loading...')}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {t('common.loading', 'Loading...')}
+                </p>
             )}
-            {error && (
-                <p className="text-sm text-red-500">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
 
             {!loading && !error && (
                 <div className="flex-1 flex min-h-0 overflow-auto px-4 sm:px-6 gap-3">
@@ -378,45 +416,66 @@ const KanbanBoard: React.FC = () => {
                                     <div className="absolute inset-0 border-2 border-dashed border-gray-400 dark:border-gray-500 pointer-events-none z-10 rounded-xl" />
                                 )}
 
-                                <div className={`px-3 py-2 flex items-center justify-between flex-shrink-0 ${cfg.headerBg}`}>
-                                    <span className={`text-xs font-semibold tracking-wide uppercase ${cfg.headerColor}`}>
+                                <div
+                                    className={`px-3 py-2 flex items-center justify-between flex-shrink-0 ${cfg.headerBg}`}
+                                >
+                                    <span
+                                        className={`text-xs font-semibold tracking-wide uppercase ${cfg.headerColor}`}
+                                    >
                                         {t(cfg.labelKey, cfg.labelDefault)}
                                     </span>
-                                    <span className={`text-xs font-medium ${cfg.headerColor} opacity-70`}>
+                                    <span
+                                        className={`text-xs font-medium ${cfg.headerColor} opacity-70`}
+                                    >
                                         {colTasks.length}
                                     </span>
                                 </div>
 
                                 <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
                                     {colTasks.length === 0 ? (
-                                        <p className={`text-xs py-3 text-center ${isDraggingActive ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'}`}>
+                                        <p
+                                            className={`text-xs py-3 text-center ${isDraggingActive ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'}`}
+                                        >
                                             {isDraggingActive
-                                                ? t('tasks.kanban.dropHere', 'Drop here')
+                                                ? t(
+                                                      'tasks.kanban.dropHere',
+                                                      'Drop here'
+                                                  )
                                                 : '-'}
                                         </p>
                                     ) : (
                                         <div className={TASK_SHEET_CLASS}>
-                                        {colTasks.map((task) => (
-                                            <div
-                                                key={task.id}
-                                                draggable
-                                                onDragStart={(e) => onDragStart(e, task)}
-                                                onDragEnd={onDragEnd}
-                                                className={`relative hover:z-[10000] focus-within:z-[10000] cursor-grab active:cursor-grabbing transition-opacity duration-150 ${draggingTaskId === task.id ? 'opacity-40' : 'opacity-100'}`}
-                                            >
-                                                <TaskItem
-                                                    task={task}
-                                                    onTaskUpdate={handleTaskUpdate}
-                                                    onTaskCompletionToggle={handleTaskCompletionToggle}
-                                                    onTaskDelete={handleTaskDelete}
-                                                    projects={projects}
-                                                    hideProjectName={false}
-                                                    onToggleToday={undefined}
-                                                    hideStatusControl={true}
-                                                    isKanbanView={true}
-                                                />
-                                            </div>
-                                        ))}
+                                            {colTasks.map((task) => (
+                                                <div
+                                                    key={task.id}
+                                                    draggable
+                                                    onDragStart={(e) =>
+                                                        onDragStart(e, task)
+                                                    }
+                                                    onDragEnd={onDragEnd}
+                                                    className={`relative hover:z-30 focus-within:z-30 cursor-grab active:cursor-grabbing transition-opacity duration-150 ${draggingTaskId === task.id ? 'opacity-40' : 'opacity-100'}`}
+                                                >
+                                                    <TaskItem
+                                                        task={task}
+                                                        onTaskUpdate={
+                                                            handleTaskUpdate
+                                                        }
+                                                        onTaskCompletionToggle={
+                                                            handleTaskCompletionToggle
+                                                        }
+                                                        onTaskDelete={
+                                                            handleTaskDelete
+                                                        }
+                                                        projects={projects}
+                                                        hideProjectName={false}
+                                                        onToggleToday={
+                                                            undefined
+                                                        }
+                                                        hideStatusControl={true}
+                                                        isKanbanView={true}
+                                                    />
+                                                </div>
+                                            ))}
                                         </div>
                                     )}
                                 </div>

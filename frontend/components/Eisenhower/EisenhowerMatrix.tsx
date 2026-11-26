@@ -532,7 +532,7 @@ const EisenhowerMatrix: React.FC = () => {
                                             onDragStart(e, task)
                                         }
                                         onDragEnd={onDragEnd}
-                                        className={`relative hover:z-[10000] focus-within:z-[10000] cursor-grab active:cursor-grabbing transition-opacity duration-150 ${draggingTaskId === task.id ? 'opacity-40' : 'opacity-100'}`}
+                                        className={`relative hover:z-30 focus-within:z-30 cursor-grab active:cursor-grabbing transition-opacity duration-150 ${draggingTaskId === task.id ? 'opacity-40' : 'opacity-100'}`}
                                     >
                                         <TaskItem
                                             task={task}

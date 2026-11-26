@@ -235,16 +235,16 @@ describe('Sidebar in minimal mode', () => {
         expect(screen.getByTestId('sidebar-rail-goals')).toBeInTheDocument();
     });
 
-    it('leaves out of the rail the entries the open panel already lists', () => {
+    it('keeps the rail icons in place while the open panel lists the same entries', () => {
         renderSidebar(true);
 
         expect(screen.getByTestId('sidebar-smart-today')).toBeInTheDocument();
         expect(screen.queryByTestId('sidebar-smart-inbox')).toBeNull();
         expect(screen.getByTestId('areas')).toBeInTheDocument();
-        expect(screen.queryByTestId('sidebar-rail-today')).toBeNull();
+        // One fixed rail on every page: the panel never removes an icon.
+        expect(screen.getByTestId('sidebar-rail-today')).toBeInTheDocument();
         expect(screen.queryByTestId('sidebar-rail-inbox')).toBeNull();
-        expect(screen.queryByTestId('sidebar-rail-areas')).toBeNull();
-        // Items the panel does not list stay on the rail.
+        expect(screen.getByTestId('sidebar-rail-areas')).toBeInTheDocument();
         expect(screen.getByTestId('sidebar-rail-notes')).toBeInTheDocument();
         expect(screen.getByTestId('sidebar-rail-goals')).toBeInTheDocument();
         expect(screen.getByTestId('sidebar-rail-more')).toBeInTheDocument();

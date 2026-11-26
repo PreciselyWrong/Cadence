@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import UpgradeModal from './components/Billing/UpgradeModal';
 import TrialBanner from './components/Billing/TrialBanner';
@@ -43,7 +43,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { TaskRowExpansionProvider } from './components/Task/TaskRow/TaskRowExpansionContext';
 import { getApiPath } from './config/paths';
 import { KeyboardShortcutsConfig } from './utils/keyboardShortcutsService';
-import { isSidebarDrawer } from './utils/sidebarWidth';
+import {
+    isSidebarDrawer,
+    readSidebarChoice,
+    saveSidebarChoice,
+    SIDEBAR_OPEN_MIN_WIDTH,
+} from './utils/sidebarWidth';
 
 interface LayoutProps {
     currentUser: User;
@@ -73,9 +78,22 @@ const Layout: React.FC<LayoutProps> = ({
     // over. Notes stays mounted from one note to the next, so a pending
     // autosave and the editor focus survive the switch (#2072).
     const pageKey = isNotesView ? '/notes' : location.pathname;
-    const [isSidebarOpen, setIsSidebarOpen] = useState(
-        window.innerWidth >= 1024
+    // Open by default from 1280 px, the rail alone below; a choice made on a
+    // window wide enough to push the page wins over the width, and is kept.
+    const [isSidebarOpen, setIsSidebarOpenState] = useState(
+        () => readSidebarChoice() ?? window.innerWidth >= SIDEBAR_OPEN_MIN_WIDTH
     );
+    const setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> =
+        useCallback((value) => {
+            setIsSidebarOpenState((current) => {
+                const next =
+                    typeof value === 'function' ? value(current) : value;
+                // Below `sm` the sidebar is a drawer that closes itself on
+                // navigation: that is not a choice.
+                if (!isSidebarDrawer()) saveSidebarChoice(next);
+                return next;
+            });
+        }, []);
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
     const [isAreaModalOpen, setIsAreaModalOpen] = useState(false);
     const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
@@ -162,7 +180,10 @@ const Layout: React.FC<LayoutProps> = ({
 
     useEffect(() => {
         const handleResize = () => {
-            setIsSidebarOpen(window.innerWidth >= 1024);
+            setIsSidebarOpenState(
+                readSidebarChoice() ??
+                    window.innerWidth >= SIDEBAR_OPEN_MIN_WIDTH
+            );
         };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);

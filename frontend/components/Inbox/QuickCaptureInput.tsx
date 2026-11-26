@@ -3341,25 +3341,56 @@ const QuickCaptureInput = React.forwardRef<
             return (
                 <div className="relative w-full">
                     <div {...fileDropHandlers} data-testid="capture-field">
-                        <input
-                            ref={(el) => {
-                                inputRef.current = el;
-                            }}
-                            type="text"
-                            data-testid="quick-capture-input"
-                            value={inputText}
-                            onChange={handleChange}
-                            onSelect={handleCaretEvent}
-                            onKeyUp={handleCaretEvent}
-                            onClick={handleCaretEvent}
-                            style={{
-                                font: 'inherit',
-                                letterSpacing: 'inherit',
-                            }}
-                            className="w-full bg-transparent text-gray-900 dark:text-gray-100 border-0 focus:outline-none focus:ring-0 p-0"
-                            placeholder=""
-                            onKeyDown={handleKeyDown}
-                        />
+                        {multiline ? (
+                            // A long title wraps and the box grows with it
+                            // (the resize effect above); Enter still saves
+                            // and Shift+Enter adds no line break to a title.
+                            <textarea
+                                ref={(el) => {
+                                    inputRef.current = el;
+                                }}
+                                rows={1}
+                                data-testid="quick-capture-input"
+                                value={inputText}
+                                onChange={handleChange}
+                                onSelect={handleCaretEvent}
+                                onKeyUp={handleCaretEvent}
+                                onClick={handleCaretEvent}
+                                style={{
+                                    font: 'inherit',
+                                    letterSpacing: 'inherit',
+                                }}
+                                className="block w-full bg-transparent text-gray-900 dark:text-gray-100 border-0 focus:outline-none focus:ring-0 p-0 resize-none overflow-hidden"
+                                placeholder=""
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && e.shiftKey) {
+                                        e.preventDefault();
+                                        return;
+                                    }
+                                    handleKeyDown(e);
+                                }}
+                            />
+                        ) : (
+                            <input
+                                ref={(el) => {
+                                    inputRef.current = el;
+                                }}
+                                type="text"
+                                data-testid="quick-capture-input"
+                                value={inputText}
+                                onChange={handleChange}
+                                onSelect={handleCaretEvent}
+                                onKeyUp={handleCaretEvent}
+                                onClick={handleCaretEvent}
+                                style={{
+                                    font: 'inherit',
+                                    letterSpacing: 'inherit',
+                                }}
+                                className="w-full bg-transparent text-gray-900 dark:text-gray-100 border-0 focus:outline-none focus:ring-0 p-0"
+                                placeholder=""
+                                onKeyDown={handleKeyDown}
+                            />
+                        )}
                     </div>
                     <SuggestionsDropdown
                         isVisible={

@@ -178,7 +178,6 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                         <QuickCaptureInput
                             mode="edit"
                             bare
-                            multiline={false}
                             hidePrimaryButton
                             initialValue={nameSeed}
                             projects={projects}

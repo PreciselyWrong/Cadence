@@ -40,11 +40,7 @@ import { useStore } from '../store/useStore';
 import type { SidebarVisibleSections } from './Profile/types';
 import { isSidebarDrawer, sidebarPercentToRem } from '../utils/sidebarWidth';
 import type { SidebarSectionId } from '../utils/sidebarLayout';
-import {
-    RAIL_PANEL_KIND,
-    type PanelId,
-    type RailId,
-} from '../utils/minimalSidebar';
+import { RAIL_PANEL_KIND, type PanelId } from '../utils/minimalSidebar';
 
 interface SidebarProps {
     isSidebarOpen: boolean;
@@ -119,17 +115,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         (state) => state.userSettingsStore.sidebarSectionOrder
     );
     const isMinimal = useIsMinimal();
-    const smartLists = useStore(
-        (state) => state.userSettingsStore.sidebarMinimal.smartLists
-    );
     const isSectionVisible = (key: keyof SidebarVisibleSections) =>
         visibleSections[key] !== false;
     // Minimal: which blocks the open panel shows, in which order.
     const panel = useStore(
         (state) => state.userSettingsStore.sidebarMinimal.panel
     );
-    const panelShows = (key: PanelId) =>
-        panel.some((block) => block.key === key && block.visible);
     // The panel follows the route: Notes, Goals and Habits show their own
     // blocks (Profile > Sidebar); every other route shows the tasks panel.
     const panelsSettings = useStore(
@@ -139,21 +130,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     const sectionPanelKind = railPanelId
         ? RAIL_PANEL_KIND[railPanelId]
         : undefined;
-
-    // With the tasks panel open, the minimal rail skips the entries the panel
-    // already lists (smart lists at the top, Areas among the sections).
-    const railIdsListedInPanel = (): RailId[] => {
-        if (sectionPanelKind) return [];
-        const ids: RailId[] = [];
-        if (panelShows('smartLists')) {
-            for (const item of smartLists) {
-                if (!item.visible) continue;
-                if (item.key === 'today') ids.push(item.key);
-            }
-        }
-        if (panelShows('areas')) ids.push('areas');
-        return ids;
-    };
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -382,7 +358,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     location={location}
                                     canOpenAccess={canOpenAccess(currentUser)}
                                     onCustomize={openSidebarSettings}
-                                    hiddenIds={railIdsListedInPanel()}
                                 />
                             )}
                             <div

@@ -25,3 +25,27 @@ export const SIDEBAR_DRAWER_MAX_WIDTH = 640;
 
 export const isSidebarDrawer = (): boolean =>
     window.innerWidth < SIDEBAR_DRAWER_MAX_WIDTH;
+
+// Below this width the sidebar starts as the icon rail: open, it takes a
+// third of a 1024 px window.
+export const SIDEBAR_OPEN_MIN_WIDTH = 1280;
+
+const SIDEBAR_CHOICE_KEY = 'sidebarOpen';
+
+// The user's own choice to expand or collapse, null while there is none.
+export const readSidebarChoice = (): boolean | null => {
+    try {
+        const stored = localStorage.getItem(SIDEBAR_CHOICE_KEY);
+        return stored === 'true' ? true : stored === 'false' ? false : null;
+    } catch {
+        return null;
+    }
+};
+
+export const saveSidebarChoice = (open: boolean): void => {
+    try {
+        localStorage.setItem(SIDEBAR_CHOICE_KEY, String(open));
+    } catch {
+        // Private mode: the choice lasts until the next reload.
+    }
+};

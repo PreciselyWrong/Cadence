@@ -107,7 +107,7 @@ const SortableTaskGroup: React.FC<{
                     {tasks.map((task) => (
                         <div
                             key={task.id}
-                            className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-[10000] focus-within:z-[10000]"
+                            className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-30 focus-within:z-30"
                         >
                             <SortableItem
                                 id={task.uid as string}
@@ -526,7 +526,7 @@ const GroupedTaskListBody: React.FC<GroupedTaskListProps> = ({
                                                                 task.virtual_id ??
                                                                 task.id
                                                             }
-                                                            className="relative hover:z-[10000] focus-within:z-[10000]"
+                                                            className="relative hover:z-30 focus-within:z-30"
                                                         >
                                                             <TaskItem
                                                                 task={task}
@@ -700,7 +700,7 @@ const GroupedTaskListBody: React.FC<GroupedTaskListProps> = ({
                                               {projectTasks.map((task) => (
                                                   <div
                                                       key={task.id}
-                                                      className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-[10000] focus-within:z-[10000]"
+                                                      className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-30 focus-within:z-30"
                                                   >
                                                       <TaskItem
                                                           task={task}
@@ -732,7 +732,7 @@ const GroupedTaskListBody: React.FC<GroupedTaskListProps> = ({
                 : standaloneTask.map((task) => (
                       <div
                           key={task.id}
-                          className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-[10000] focus-within:z-[10000]"
+                          className="task-item-wrapper transition-all duration-200 ease-in-out relative hover:z-30 focus-within:z-30"
                       >
                           <TaskItem
                               task={task}
@@ -761,7 +761,7 @@ const GroupedTaskListBody: React.FC<GroupedTaskListProps> = ({
                     >
                         {/* Show template only if it's not virtual */}
                         {!isVirtualTemplate && (
-                            <div className="relative hover:z-[10000] focus-within:z-[10000]">
+                            <div className="relative hover:z-30 focus-within:z-30">
                                 <div className="flex items-center">
                                     <div className="flex-1">
                                         <TaskItem
@@ -845,7 +845,7 @@ const GroupedTaskListBody: React.FC<GroupedTaskListProps> = ({
                                         .map((instance) => (
                                             <div
                                                 key={instance.id}
-                                                className="opacity-75 hover:opacity-100 focus-within:opacity-100 transition-opacity relative hover:z-[10000] focus-within:z-[10000]"
+                                                className="opacity-75 hover:opacity-100 focus-within:opacity-100 transition-opacity relative hover:z-30 focus-within:z-30"
                                             >
                                                 <TaskItem
                                                     task={instance}

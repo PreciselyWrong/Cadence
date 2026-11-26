@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Layout from '../Layout';
 
@@ -35,7 +35,12 @@ jest.mock('../components/Navbar', () => ({
 
 jest.mock('../components/Sidebar', () => ({
     __esModule: true,
-    default: () => <div data-testid="sidebar" />,
+    default: ({ isSidebarOpen, setIsSidebarOpen }: any) => (
+        <div data-testid="sidebar" data-open={String(isSidebarOpen)}>
+            <button onClick={() => setIsSidebarOpen(true)}>expand</button>
+            <button onClick={() => setIsSidebarOpen(false)}>collapse</button>
+        </div>
+    ),
 }));
 
 jest.mock('../components/Capture/CaptureHost', () => ({
@@ -266,5 +271,75 @@ describe('Layout loading gate', () => {
         expect(screen.getByTestId('routed-page')).toBeInTheDocument();
         fireEvent.click(screen.getByText('common.retry'));
         expect(loadAreas).toHaveBeenCalledWith(true);
+    });
+});
+
+describe('Layout sidebar default and remembered choice', () => {
+    const setWidth = (width: number) => {
+        Object.defineProperty(window, 'innerWidth', {
+            configurable: true,
+            writable: true,
+            value: width,
+        });
+    };
+    const isOpen = () =>
+        screen.getByTestId('sidebar').getAttribute('data-open');
+
+    beforeEach(() => {
+        storeState = baseStoreState;
+        localStorage.clear();
+    });
+
+    it('collapses to the rail below 1280 px and opens from 1280 px', () => {
+        setWidth(1100);
+        const small = renderLayout();
+        expect(isOpen()).toBe('false');
+        small.unmount();
+
+        setWidth(1400);
+        renderLayout();
+        expect(isOpen()).toBe('true');
+    });
+
+    it('follows the window width on resize while no choice was made', () => {
+        setWidth(1400);
+        renderLayout();
+        setWidth(1100);
+        act(() => {
+            window.dispatchEvent(new Event('resize'));
+        });
+        expect(isOpen()).toBe('false');
+    });
+
+    it('lets an explicit expand win below 1280 px, now and on the next visit', () => {
+        setWidth(1100);
+        const first = renderLayout();
+        fireEvent.click(screen.getByText('expand'));
+        expect(isOpen()).toBe('true');
+        act(() => {
+            window.dispatchEvent(new Event('resize'));
+        });
+        expect(isOpen()).toBe('true');
+        first.unmount();
+
+        renderLayout();
+        expect(isOpen()).toBe('true');
+    });
+
+    it('lets an explicit collapse win on a wide window', () => {
+        setWidth(1400);
+        const first = renderLayout();
+        fireEvent.click(screen.getByText('collapse'));
+        first.unmount();
+
+        renderLayout();
+        expect(isOpen()).toBe('false');
+    });
+
+    it('does not remember the drawer closing itself on a phone', () => {
+        setWidth(400);
+        renderLayout();
+        fireEvent.click(screen.getByText('collapse'));
+        expect(localStorage.getItem('sidebarOpen')).toBeNull();
     });
 });
