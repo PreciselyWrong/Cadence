@@ -83,6 +83,28 @@ const projectsController = {
     },
 
     /**
+     * GET /api/project/:uid/board-tree
+     * Load visible descendant sub-projects and their tasks for the project board.
+     */
+    async boardTree(req, res, next) {
+        try {
+            const userId = requireUserId(req);
+            const includeCompleted =
+                req.query?.include_completed === '1' ||
+                req.query?.include_completed === 'true';
+            const tree = await projectsService.getBoardTree(
+                req.params.uid,
+                req.currentUser?.timezone,
+                userId,
+                { includeCompleted }
+            );
+            res.json(tree);
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    /**
      * POST /api/project
      * Create a new project.
      */

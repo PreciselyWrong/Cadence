@@ -206,6 +206,13 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING(512),
                 allowNull: true,
             },
+            // Structured handoff block extracted from `## État actuel` in a
+            // linked TODO.md (branch, tests, blockers, next_action, raw).
+            handoff_state: {
+                type: DataTypes.JSON,
+                allowNull: true,
+                defaultValue: null,
+            },
         },
         {
             tableName: 'projects',

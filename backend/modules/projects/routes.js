@@ -73,6 +73,18 @@ router.get(
     projectsController.getOne
 );
 
+// Get descendant sub-projects and their tasks for the multi-project board
+router.get(
+    '/project/:uid/board-tree',
+    hasAccess(
+        'ro',
+        'project',
+        (req) => projectsController.getProjectUidForAuth(req),
+        { notFoundMessage: 'Project not found' }
+    ),
+    projectsController.boardTree
+);
+
 // Create a new project
 router.post(
     '/project',

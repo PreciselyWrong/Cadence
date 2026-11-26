@@ -244,6 +244,30 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
         await ENTITIES.task.destroy(task);
         stats.removed += 1;
     }
+
+    const nextHandoff = parsed.handoff
+        ? {
+              ...parsed.handoff,
+              updated_at: modifiedAt ? new Date(modifiedAt).toISOString() : null,
+          }
+        : null;
+    const prevHandoff = project.handoff_state || null;
+    const handoffKey = (h) =>
+        h
+            ? JSON.stringify([
+                  h.section,
+                  h.branch,
+                  h.tests,
+                  h.blockers,
+                  h.next_action,
+                  h.raw,
+              ])
+            : null;
+    if (handoffKey(prevHandoff) !== handoffKey(nextHandoff)) {
+        project.handoff_state = nextHandoff;
+        await project.save();
+    }
+
     return stats;
 }
 

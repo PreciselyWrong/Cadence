@@ -216,6 +216,8 @@ describe('Sub-projects (projects.parent_project_id)', () => {
                     name: 'Child',
                     status: 'in_progress',
                     icon: 'home',
+                    color: null,
+                    handoff_state: null,
                     open_tasks_count: 1,
                 },
             ]);
@@ -223,6 +225,106 @@ describe('Sub-projects (projects.parent_project_id)', () => {
             const list = await agent.get('/api/projects');
             const listed = list.body.projects.find((p) => p.uid === child.uid);
             expect(listed.parent_project_uid).toBe(parent.uid);
+        });
+    });
+
+    describe('board-tree', () => {
+        it('returns recursive descendants with handoff_state, counts and open tasks', async () => {
+            const dev = await createProject({
+                name: 'Dev',
+                status: 'in_progress',
+            });
+            const child = await createProject({
+                name: 'Alpha',
+                parent_project_id: dev.id,
+                status: 'in_progress',
+                handoff_state: {
+                    section: 'État actuel',
+                    branch: 'main',
+                    tests: 'ok',
+                    blockers: null,
+                    next_action: 'ship phase 1',
+                    raw: '- Branche : main',
+                },
+            });
+            const grandchild = await createProject({
+                name: 'Alpha Sub',
+                parent_project_id: child.id,
+                status: 'paused',
+            });
+            const foreign = await Project.create({
+                name: 'Foreign',
+                user_id: otherUser.id,
+                parent_project_id: dev.id,
+            });
+
+            await Task.bulkCreate([
+                {
+                    name: 'Open task',
+                    user_id: user.id,
+                    project_id: child.id,
+                    status: Task.STATUS.NOT_STARTED,
+                },
+                {
+                    name: 'Done task',
+                    user_id: user.id,
+                    project_id: child.id,
+                    status: Task.STATUS.DONE,
+                },
+                {
+                    name: 'Grandchild task',
+                    user_id: user.id,
+                    project_id: grandchild.id,
+                    status: Task.STATUS.IN_PROGRESS,
+                },
+                {
+                    name: 'Foreign task',
+                    user_id: otherUser.id,
+                    project_id: foreign.id,
+                    status: Task.STATUS.NOT_STARTED,
+                },
+            ]);
+
+            const res = await agent.get(`/api/project/${dev.uid}/board-tree`);
+            expect(res.status).toBe(200);
+            expect(res.body.sub_projects.map((p) => p.name)).toEqual([
+                'Alpha',
+                'Alpha Sub',
+            ]);
+            const alpha = res.body.sub_projects.find((p) => p.name === 'Alpha');
+            expect(alpha.open_tasks_count).toBe(1);
+            expect(alpha.done_tasks_count).toBe(1);
+            expect(alpha.total_tasks_count).toBe(2);
+            expect(alpha.completion_percentage).toBe(50);
+            expect(alpha.handoff_state.next_action).toBe('ship phase 1');
+
+            expect(res.body.tasks.map((t) => t.name)).toEqual([
+                'Open task',
+                'Grandchild task',
+            ]);
+            expect(res.body.tasks[0].project_uid).toBe(child.uid);
+
+            const withDone = await agent.get(
+                `/api/project/${dev.uid}/board-tree?include_completed=1`
+            );
+            expect(withDone.status).toBe(200);
+            expect(withDone.body.tasks.map((t) => t.name)).toContain(
+                'Done task'
+            );
+        });
+
+        it('refuses board-tree access to another user without permission', async () => {
+            const dev = await createProject({ name: 'Private Dev' });
+            const otherAgent = request.agent(app);
+            await otherAgent.post('/api/login').send({
+                email: 'hierarchy-other@example.com',
+                password: 'password123',
+            });
+
+            const res = await otherAgent.get(
+                `/api/project/${dev.uid}/board-tree`
+            );
+            expect(res.status).toBe(403);
         });
     });
 });

@@ -9,6 +9,68 @@ const crypto = require('crypto');
 
 const DONE_SECTIONS = new Set(['done']);
 const DROPPED_SECTIONS = new Set(['dropped']);
+// Handoff sections written by session-closing tools (e.g. `## État actuel`)
+// describe the project's live state rather than tasks.
+const HANDOFF_SECTIONS = new Set(['etat actuel', 'current state', 'handoff']);
+const EMPTY_BLOCKER = /^(aucun[e]?|none|rien|ras|n\/a|-|null)$/i;
+
+const normalizeHeading = (name) =>
+    String(name || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toLowerCase();
+
+const isHandoffSection = (name) => HANDOFF_SECTIONS.has(normalizeHeading(name));
+
+function extractHandoff(section, lines) {
+    if (!section) return null;
+    const bodyLines = lines
+        .slice(section.headingLine + 1, section.endLine)
+        .map((l) => l.text);
+    let start = 0;
+    let end = bodyLines.length;
+    while (start < end && bodyLines[start].trim() === '') start += 1;
+    while (end > start && bodyLines[end - 1].trim() === '') end -= 1;
+    const trimmed = bodyLines.slice(start, end);
+    if (trimmed.length === 0) return null;
+
+    const result = {
+        section: section.name,
+        branch: null,
+        tests: null,
+        blockers: null,
+        next_action: null,
+        raw: trimmed.join('\n'),
+    };
+
+    for (const rawLine of trimmed) {
+        const cleaned = stripMarkdown(
+            rawLine.replace(/^\s*[-*+]\s+(?:\[[ xX]\]\s+)?/, '')
+        );
+        const sep = cleaned.indexOf(':');
+        if (sep === -1) continue;
+        const key = normalizeHeading(cleaned.slice(0, sep));
+        const value = cleaned.slice(sep + 1).trim();
+        if (!value) continue;
+
+        if (key.includes('branche') || key.includes('branch')) {
+            result.branch = value;
+        } else if (key.includes('test') || key.includes('verif')) {
+            result.tests = value;
+        } else if (key.includes('bloqueur') || key.includes('blocker')) {
+            result.blockers = EMPTY_BLOCKER.test(value) ? null : value;
+        } else if (
+            key.includes('prochaine action') ||
+            key.includes('next action') ||
+            key.includes('next step')
+        ) {
+            result.next_action = value;
+        }
+    }
+
+    return result;
+}
 
 const HEADING = /^##[ \t]+(.*?)[ \t#]*$/;
 const FENCE = /^(```|~~~)/;
@@ -119,7 +181,10 @@ function parseTodoMd(text) {
             return;
         }
 
-        const bullet = section && !indented ? BULLET.exec(raw) : null;
+        const bullet =
+            section && !indented && !isHandoffSection(section.name)
+                ? BULLET.exec(raw)
+                : null;
         if (bullet && bullet[4].trim() !== '') {
             closeItem();
             item = {
@@ -172,12 +237,16 @@ function parseTodoMd(text) {
         it.key = sha(`${slot}\n${it.occurrence}`);
     }
 
+    const handoffSection = sections.find((s) => isHandoffSection(s.name));
+    const handoff = extractHandoff(handoffSection, lines);
+
     return {
         eol,
         endsWithNewline: text.endsWith('\n'),
         lines,
         sections,
         items,
+        handoff,
     };
 }
 
@@ -186,4 +255,6 @@ module.exports = {
     stripMarkdown,
     DONE_SECTIONS,
     DROPPED_SECTIONS,
+    HANDOFF_SECTIONS,
+    isHandoffSection,
 };

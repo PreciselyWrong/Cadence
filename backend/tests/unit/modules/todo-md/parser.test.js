@@ -122,3 +122,51 @@ describe('todo-md identity', () => {
         expect(next.key).not.toBe(now.key);
     });
 });
+
+describe('todo-md handoff section', () => {
+    it('extracts ## État actuel into handoff and excludes its bullets from items', () => {
+        const parsed = parseTodoMd(
+            [
+                '# Demo',
+                '',
+                '## État actuel',
+                '- Branche active : `feat/kanban` (propre)',
+                '- Tests : 12 passés, 0 échoué',
+                '- Bloqueurs : attente validation API',
+                '- **Prochaine action** : brancher le endpoint board-tree',
+                '',
+                '## Next',
+                '- Real task',
+                '',
+            ].join('\n')
+        );
+        expect(names(parsed)).toEqual(['Next:Real task']);
+        expect(parsed.handoff).toEqual({
+            section: 'État actuel',
+            branch: 'feat/kanban (propre)',
+            tests: '12 passés, 0 échoué',
+            blockers: 'attente validation API',
+            next_action: 'brancher le endpoint board-tree',
+            raw: [
+                '- Branche active : `feat/kanban` (propre)',
+                '- Tests : 12 passés, 0 échoué',
+                '- Bloqueurs : attente validation API',
+                '- **Prochaine action** : brancher le endpoint board-tree',
+            ].join('\n'),
+        });
+    });
+
+    it('normalizes empty blockers like "aucun" or "none" to null', () => {
+        const parsed = parseTodoMd(
+            '## État actuel\n- Branche : main\n- Bloqueurs : aucun\n- Prochaine action atomique : lancer le build\n'
+        );
+        expect(parsed.items).toEqual([]);
+        expect(parsed.handoff.blockers).toBeNull();
+        expect(parsed.handoff.next_action).toBe('lancer le build');
+    });
+
+    it('returns null handoff when no handoff section exists', () => {
+        const parsed = parseTodoMd('## Next\n- Only task\n');
+        expect(parsed.handoff).toBeNull();
+    });
+});

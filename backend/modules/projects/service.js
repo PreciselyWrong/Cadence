@@ -36,9 +36,10 @@ const {
     syncProjectSharesFromContainer,
     dropProjectSharesFromContainer,
 } = require('../../services/containerShareSync');
-const { Project, Area, Task, Goal } = require('../../models');
+const { Project, Area, Task, Goal, Tag, ProjectSection } = require('../../models');
 const nextAction = require('./nextAction');
 const {
+    descendantIds,
     resolveParent,
     resolveParentChange,
     areaFollowingParent,
@@ -520,6 +521,223 @@ class ProjectsService {
     }
 
     /**
+     * Load all visible descendant sub-projects and their tasks for the
+     * multi-project Kanban board on a parent project page.
+     */
+    async getBoardTree(
+        uid,
+        userTimezone,
+        userId,
+        { includeCompleted = false } = {}
+    ) {
+        const validatedUid = validateUid(uid);
+        const root = await Project.findOne({
+            where: { uid: validatedUid },
+            attributes: ['id', 'uid'],
+        });
+        if (!root) {
+            throw new NotFoundError('Project not found');
+        }
+
+        const childIds = await descendantIds(root.id);
+        if (childIds.length === 0) {
+            return { sub_projects: [], tasks: [] };
+        }
+
+        const safeTimezone = getSafeTimezone(userTimezone);
+        const visibleWhere =
+            await permissionsService.ownershipOrPermissionWhere(
+                'project',
+                userId
+            );
+
+        const descendants = await Project.findAll({
+            where: { ...visibleWhere, id: { [Op.in]: childIds } },
+            include: [
+                {
+                    model: Tag,
+                    attributes: ['id', 'uid', 'name'],
+                    through: { attributes: [] },
+                },
+                {
+                    model: Area,
+                    attributes: ['id', 'uid', 'name'],
+                },
+                {
+                    model: Project,
+                    as: 'ParentProject',
+                    attributes: ['uid'],
+                },
+            ],
+            order: [['name', 'ASC']],
+        });
+
+        if (descendants.length === 0) {
+            return { sub_projects: [], tasks: [] };
+        }
+
+        const visibleIds = descendants.map((p) => p.id);
+        const uidById = new Map(descendants.map((p) => [p.id, p.uid]));
+
+        // Task counts per sub-project (open vs done) for progress & cards.
+        const countRows = await Task.findAll({
+            where: {
+                project_id: { [Op.in]: visibleIds },
+                parent_task_id: null,
+                recurring_parent_id: null,
+                status: {
+                    [Op.notIn]: [Task.STATUS.ARCHIVED, Task.STATUS.CANCELLED],
+                },
+            },
+            attributes: ['project_id', 'status'],
+            raw: true,
+        });
+        const countsByProject = new Map();
+        for (const row of countRows) {
+            let entry = countsByProject.get(row.project_id);
+            if (!entry) {
+                entry = { total: 0, done: 0, open: 0 };
+                countsByProject.set(row.project_id, entry);
+            }
+            entry.total += 1;
+            if (row.status === Task.STATUS.DONE) entry.done += 1;
+            else entry.open += 1;
+        }
+
+        const nextByUid = await nextTasksByProject(descendants);
+
+        const taskStatuses = includeCompleted
+            ? [
+                  Task.STATUS.NOT_STARTED,
+                  Task.STATUS.IN_PROGRESS,
+                  Task.STATUS.WAITING,
+                  Task.STATUS.PLANNED,
+                  Task.STATUS.DONE,
+              ]
+            : [
+                  Task.STATUS.NOT_STARTED,
+                  Task.STATUS.IN_PROGRESS,
+                  Task.STATUS.WAITING,
+                  Task.STATUS.PLANNED,
+              ];
+
+        const rawTasks = await Task.findAll({
+            where: {
+                project_id: { [Op.in]: visibleIds },
+                parent_task_id: null,
+                recurring_parent_id: null,
+                status: { [Op.in]: taskStatuses },
+            },
+            include: [
+                {
+                    model: Tag,
+                    attributes: ['id', 'uid', 'name'],
+                    through: { attributes: [] },
+                },
+                {
+                    model: ProjectSection,
+                    as: 'Section',
+                    attributes: ['uid', 'name'],
+                    required: false,
+                },
+                {
+                    model: Task,
+                    as: 'Subtasks',
+                    required: false,
+                    include: [
+                        {
+                            model: Tag,
+                            attributes: ['id', 'uid', 'name'],
+                            through: { attributes: [] },
+                        },
+                    ],
+                },
+            ],
+            order: [
+                ['order', 'ASC'],
+                ['created_at', 'DESC'],
+            ],
+        });
+
+        const blockedCountMap = await getBlockedCountMap(
+            rawTasks.map((t) => t.id)
+        );
+
+        const tasks = rawTasks.map((taskInstance) => {
+            const task = taskInstance.toJSON();
+            const blockedByCount = blockedCountMap[task.id] || 0;
+            const start = startForResponse(
+                task.start_date,
+                task.start_has_time,
+                safeTimezone
+            );
+            const normalized = {
+                ...task,
+                project_uid: uidById.get(task.project_id) || null,
+                blocked_by_count: blockedByCount,
+                is_blocked: blockedByCount > 0,
+                tags: sortTags(task.Tags),
+                section_uid: task.Section?.uid || null,
+                subtasks: (task.Subtasks || []).map((st) => ({
+                    ...st,
+                    tags: sortTags(st.Tags),
+                })),
+                due_date: processDueDateForResponse(
+                    task.due_date,
+                    safeTimezone
+                ),
+                start_date: start.date,
+                start_time: start.time,
+                due_time: task.due_has_time
+                    ? utcToUserTimeString(task.due_date, safeTimezone)
+                    : null,
+            };
+            delete normalized.Tags;
+            delete normalized.Subtasks;
+            delete normalized.Section;
+            return normalized;
+        });
+
+        const subProjects = descendants.map((p) => {
+            const json = withParentUid(p.toJSON());
+            const counts = countsByProject.get(p.id) || {
+                total: 0,
+                done: 0,
+                open: 0,
+            };
+            return {
+                id: json.id,
+                uid: json.uid,
+                name: json.name,
+                description: json.description,
+                status: json.status,
+                priority: json.priority,
+                color: json.color,
+                icon: json.icon,
+                due_date_at: formatDate(p.due_date_at),
+                source_type: json.source_type,
+                source_path: json.source_path,
+                handoff_state: json.handoff_state || null,
+                parent_project_uid: json.parent_project_uid || null,
+                area: json.Area || null,
+                tags: sortTags(json.Tags),
+                next_task_uid: json.next_task_uid || null,
+                next_task: nextByUid.get(p.uid) ?? null,
+                open_tasks_count: counts.open,
+                done_tasks_count: counts.done,
+                total_tasks_count: counts.total,
+                completion_percentage:
+                    counts.total > 0
+                        ? Math.round((counts.done / counts.total) * 100)
+                        : 0,
+                updated_at: json.updated_at,
+            };
+        });
+
+        return { sub_projects: subProjects, tasks };
+    }
+
+    /**
      * Get project by UID.
      */
     async getByUid(uid, userTimezone, userId) {
@@ -598,7 +816,15 @@ class ProjectsService {
             );
         const subProjectRows = await Project.findAll({
             where: { ...visibleWhere, parent_project_id: project.id },
-            attributes: ['id', 'uid', 'name', 'status', 'icon'],
+            attributes: [
+                'id',
+                'uid',
+                'name',
+                'status',
+                'icon',
+                'color',
+                'handoff_state',
+            ],
             order: [['name', 'ASC']],
             raw: true,
         });

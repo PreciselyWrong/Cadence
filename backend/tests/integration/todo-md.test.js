@@ -973,4 +973,45 @@ describe('TODO.md projects', () => {
         const res = await other.agent.post('/api/todo-md/rescan');
         expect(res.status).toBe(403);
     });
+
+    it('syncs ## État actuel into project.handoff_state without creating tasks', async () => {
+        fs.writeFileSync(
+            alpha(),
+            [
+                '# Alpha',
+                '',
+                '## État actuel',
+                '- Branche active : `feat/board` (propre)',
+                '- Tests : 10 passés',
+                '- Bloqueurs : aucun',
+                '- **Prochaine action** : brancher le tiroir projet',
+                '',
+                '## Next',
+                '- Real task',
+                '',
+            ].join('\n')
+        );
+
+        const res = await agent.post('/api/todo-md/rescan');
+        expect(res.status).toBe(200);
+
+        const project = await Project.findOne({ where: { name: 'alpha' } });
+        expect(project.handoff_state).toMatchObject({
+            section: 'État actuel',
+            branch: 'feat/board (propre)',
+            tests: '10 passés',
+            blockers: null,
+            next_action: 'brancher le tiroir projet',
+        });
+        expect(project.handoff_state.updated_at).toBeTruthy();
+
+        const tasks = await tasksOf('alpha');
+        expect(tasks.map((t) => t.name)).toEqual(['Real task']);
+
+        // Removing ## État actuel clears handoff_state on the next scan.
+        fs.writeFileSync(alpha(), '## Next\n- Real task\n');
+        await agent.post('/api/todo-md/rescan');
+        const reloaded = await Project.findByPk(project.id);
+        expect(reloaded.handoff_state).toBeNull();
+    });
 });
