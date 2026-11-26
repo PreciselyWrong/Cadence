@@ -582,7 +582,9 @@
     "copyCode": "Копировать код",
     "copy": "Копировать",
     "copied": "Скопировано",
-    "previewUnavailable": "Предпросмотр недоступен"
+    "previewUnavailable": "Предпросмотр недоступен",
+    "add": "Добавить",
+    "filter": "Фильтр (/)"
   },
   "sidebar": {
     "links": "Ссылки",
@@ -5601,7 +5603,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Разделы",
+      "byStatus": "Статус",
+      "byProject": "Задачи по проектам",
+      "portfolio": "Проекты"
+    }
   },
   "taskPane": {
     "chat": "Обсудить с ИИ",
@@ -6740,7 +6748,6 @@
     "reordered": "Порядок изменён",
     "resized": "Длительность изменена",
     "unslotted": "Время убрано",
-    "completed": "«{{name}}» выполнено",
     "saveFailed": "Не удалось сохранить. Ничего не изменилось.",
     "planChanged": "План изменён на другом устройстве. Он перезагружен.",
     "loadFailed": "Не удалось загрузить дни.",

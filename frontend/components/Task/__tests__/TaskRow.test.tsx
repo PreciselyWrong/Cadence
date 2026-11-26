@@ -33,7 +33,14 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (_key: string, fallback?: string) => fallback ?? _key,
+        t: (
+            _key: string,
+            fallback?: string,
+            options?: Record<string, unknown>
+        ) =>
+            (fallback ?? _key).replace(/\{\{(\w+)\}\}/g, (m, k) =>
+                options && k in options ? String(options[k]) : m
+            ),
     }),
     initReactI18next: { type: '3rdParty', init: () => {} },
 }));
@@ -374,14 +381,12 @@ describe('TaskRow', () => {
         });
         renderRow(task);
 
-        expect(screen.getByTitle('{{count}} comments')).toBeInTheDocument();
+        expect(screen.getByTitle('3 comments')).toBeInTheDocument();
         expect(screen.getByTitle('Show subtasks')).toBeInTheDocument();
 
         fireEvent.click(screen.getByText('Buy tickets'));
 
-        expect(
-            screen.queryByTitle('{{count}} comments')
-        ).not.toBeInTheDocument();
+        expect(screen.queryByTitle('3 comments')).not.toBeInTheDocument();
         expect(screen.queryByTitle('Show subtasks')).not.toBeInTheDocument();
     });
 
@@ -459,6 +464,23 @@ describe('TaskRow', () => {
                 expect.objectContaining({ uid: 'task-1' })
             );
             expect(tasksService.updateTask).not.toHaveBeenCalled();
+        });
+
+        it('says the task is done with the same sentence as Today', async () => {
+            mockShowUndoToast.mockClear();
+            toggleMock.mockResolvedValue({ ...fileTask, status: 'done' });
+            renderRow(fileTask);
+
+            fireEvent.click(
+                screen.getByRole('checkbox', { name: 'Mark as done' })
+            );
+
+            await waitFor(() =>
+                expect(mockShowUndoToast).toHaveBeenCalledWith(
+                    '“Buy tickets” done',
+                    expect.any(Function)
+                )
+            );
         });
 
         it('shows its title as text when expanded, not as an input', () => {

@@ -567,7 +567,9 @@
     "copyCode": "Copiar código",
     "copy": "Copiar",
     "copied": "Copiado",
-    "previewUnavailable": "Pré-visualização indisponível"
+    "previewUnavailable": "Pré-visualização indisponível",
+    "add": "Adicionar",
+    "filter": "Filtrar (/)"
   },
   "sidebar": {
     "links": "Links",
@@ -5518,7 +5520,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Seções",
+      "byStatus": "Status",
+      "byProject": "Tarefas por projeto",
+      "portfolio": "Projetos"
+    }
   },
   "taskPane": {
     "chat": "Conversar com a IA",
@@ -6639,7 +6647,6 @@
     "reordered": "Ordem alterada",
     "resized": "Duração alterada",
     "unslotted": "Horário removido",
-    "completed": "“{{name}}” concluída",
     "saveFailed": "Não foi possível salvar. Nada mudou.",
     "planChanged": "O plano mudou em outro dispositivo. Ele foi recarregado.",
     "loadFailed": "Não foi possível carregar os dias.",

@@ -566,7 +566,9 @@
     "copyCode": "Code kopiëren",
     "copy": "Kopiëren",
     "copied": "Gekopieerd",
-    "previewUnavailable": "Voorbeeld niet beschikbaar"
+    "previewUnavailable": "Voorbeeld niet beschikbaar",
+    "add": "Toevoegen",
+    "filter": "Filteren (/)"
   },
   "sidebar": {
     "links": "Links",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Secties",
+      "byStatus": "Status",
+      "byProject": "Taken per project",
+      "portfolio": "Projecten"
+    }
   },
   "taskPane": {
     "chat": "Bespreken met de AI",
@@ -6624,7 +6632,6 @@
     "reordered": "Volgorde gewijzigd",
     "resized": "Duur gewijzigd",
     "unslotted": "Tijd verwijderd",
-    "completed": "“{{name}}” klaar",
     "saveFailed": "Opslaan mislukt. Er is niets veranderd.",
     "planChanged": "Het plan is op een ander apparaat gewijzigd. Het is opnieuw geladen.",
     "loadFailed": "De dagen konden niet worden geladen.",

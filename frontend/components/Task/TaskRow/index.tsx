@@ -507,13 +507,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
             if (isCompletingTask) {
                 showUndoToast(
-                    <>
-                        Task{' '}
-                        <span className="font-semibold">
-                            &apos;{task.name}&apos;
-                        </span>{' '}
-                        completed.
-                    </>,
+                    t('today.completed', '“{{name}}” done', {
+                        name: task.name,
+                    }),
                     async () => {
                         try {
                             // eslint-disable-next-line @typescript-eslint/no-unused-vars

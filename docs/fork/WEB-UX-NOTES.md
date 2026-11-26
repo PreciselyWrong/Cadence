@@ -1197,3 +1197,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Correctif** : le glisser des cartes renseigne `dataTransfer`, sans quoi Firefox ne démarre aucun glissement.
 - **Android** : la vue « Projets » n'existe pas encore sur Android (entrée dans `TODO.md`) ; à sa création, carte entière cliquable et compteur libellé.
 
+
+### 2026-11-26 : le tableau n'oublie plus les sous-projets prévus
+
+- **Décision** : la vue « Tâches par projet » montre aussi les sous-projets « Prévu » et « Non commencé » (colonnes sans tâche toujours masquées). Avant, seul « En cours » y figurait et un sous-projet prévu avec des tâches ouvertes disparaissait sans un mot. Les vues par défaut sont nommées depuis les traductions, les vues créées gardent leur nom.
+- **Android** : pas de tableau pour l'instant ; si une vue par sous-projet y est ajoutée, ne pas masquer en silence les projets prévus.

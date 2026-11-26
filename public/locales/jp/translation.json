@@ -566,7 +566,9 @@
     "copyCode": "コードをコピー",
     "copy": "コピー",
     "copied": "コピーしました",
-    "previewUnavailable": "プレビューできません"
+    "previewUnavailable": "プレビューできません",
+    "add": "追加",
+    "filter": "フィルター (/)"
   },
   "sidebar": {
     "links": "リンク",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "セクション",
+      "byStatus": "ステータス",
+      "byProject": "プロジェクト別タスク",
+      "portfolio": "プロジェクト"
+    }
   },
   "taskPane": {
     "chat": "AIと話し合う",
@@ -6625,7 +6633,6 @@
     "reordered": "順序を変更しました",
     "resized": "所要時間を変更しました",
     "unslotted": "時間を外しました",
-    "completed": "「{{name}}」完了",
     "saveFailed": "保存できませんでした。変更はありません。",
     "planChanged": "別の端末で予定が変更されたため、再読み込みしました。",
     "loadFailed": "日を読み込めませんでした。",

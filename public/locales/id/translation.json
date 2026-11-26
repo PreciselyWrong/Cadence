@@ -566,7 +566,9 @@
     "copyCode": "Salin kode",
     "copy": "Salin",
     "copied": "Disalin",
-    "previewUnavailable": "Pratinjau tidak tersedia"
+    "previewUnavailable": "Pratinjau tidak tersedia",
+    "add": "Tambah",
+    "filter": "Filter (/)"
   },
   "sidebar": {
     "links": "Tautan",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Bagian",
+      "byStatus": "Status",
+      "byProject": "Tugas per proyek",
+      "portfolio": "Proyek"
+    }
   },
   "taskPane": {
     "chat": "Diskusikan dengan AI",
@@ -6625,7 +6633,6 @@
     "reordered": "Urutan diubah",
     "resized": "Durasi diubah",
     "unslotted": "Waktu dihapus",
-    "completed": "“{{name}}” selesai",
     "saveFailed": "Gagal menyimpan. Tidak ada yang berubah.",
     "planChanged": "Rencana berubah di perangkat lain. Rencana dimuat ulang.",
     "loadFailed": "Gagal memuat hari.",

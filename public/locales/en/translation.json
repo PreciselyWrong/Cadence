@@ -566,7 +566,9 @@
     "copyCode": "Copy code",
     "copy": "Copy",
     "copied": "Copied",
-    "previewUnavailable": "Preview not available"
+    "previewUnavailable": "Preview not available",
+    "add": "Add",
+    "filter": "Filter (/)"
   },
   "sidebar": {
     "links": "Links",
@@ -5591,7 +5593,13 @@
     "fieldNextAction": "Next task",
     "fieldProgress": "Progress",
     "fieldTags": "Tags",
-    "fieldDueDate": "Due date"
+    "fieldDueDate": "Due date",
+    "presets": {
+      "sections": "Sections",
+      "byStatus": "Status",
+      "byProject": "Tasks by project",
+      "portfolio": "Projects"
+    }
   },
   "taskPane": {
     "chat": "Discuss with the AI",
@@ -6610,7 +6618,6 @@
     "reordered": "Order changed",
     "resized": "Duration changed",
     "unslotted": "Time removed",
-    "completed": "“{{name}}” done",
     "saveFailed": "Could not save. Nothing changed.",
     "planChanged": "The plan changed on another device. It has been reloaded.",
     "loadFailed": "Could not load the days.",

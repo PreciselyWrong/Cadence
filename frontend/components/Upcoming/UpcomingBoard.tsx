@@ -1200,7 +1200,7 @@ const UpcomingBoard: React.FC = () => {
                 await reload(dates);
                 if (!wasDone) {
                     showUndoToast(
-                        t('upcoming.completed', '“{{name}}” done', {
+                        t('today.completed', '“{{name}}” done', {
                             name: line.task.name,
                         }),
                         () => {

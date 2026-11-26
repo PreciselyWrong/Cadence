@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
-import { format } from 'date-fns';
+import { formatLocalizedDate } from '../../utils/dateUtils';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import { isTaskDone } from '../../constants/taskStatus';
@@ -153,7 +153,8 @@ const RoadmapChart: React.FC<RoadmapChartProps> = ({ areaUid }) => {
         }
     }, []);
 
-    const formatDay = (day: number) => format(dateOf(day), 'MMM d');
+    const formatDay = (day: number) =>
+        formatLocalizedDate(dateOf(day), 'MMM d');
 
     const formatRange = (
         start: string | null,
@@ -528,7 +529,10 @@ const RoadmapChart: React.FC<RoadmapChartProps> = ({ areaUid }) => {
                                         className="absolute top-1 whitespace-nowrap pl-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300"
                                         style={{ left: `${month.left}%` }}
                                     >
-                                        {format(dateOf(month.day), 'MMM')}
+                                        {formatLocalizedDate(
+                                            dateOf(month.day),
+                                            'MMM'
+                                        )}
                                     </span>
                                 ))}
                                 {weeks.map((week) => (
@@ -537,7 +541,10 @@ const RoadmapChart: React.FC<RoadmapChartProps> = ({ areaUid }) => {
                                         className="absolute bottom-2 whitespace-nowrap pl-1 text-[11px] text-gray-500 dark:text-gray-400"
                                         style={{ left: `${week.left}%` }}
                                     >
-                                        {format(dateOf(week.day), 'd')}
+                                        {formatLocalizedDate(
+                                            dateOf(week.day),
+                                            'd'
+                                        )}
                                     </span>
                                 ))}
                             </div>

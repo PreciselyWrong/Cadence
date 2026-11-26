@@ -567,7 +567,9 @@
     "copyCode": "Copia codice",
     "copy": "Copia",
     "copied": "Copiato",
-    "previewUnavailable": "Anteprima non disponibile"
+    "previewUnavailable": "Anteprima non disponibile",
+    "add": "Aggiungi",
+    "filter": "Filtra (/)"
   },
   "sidebar": {
     "links": "Link",
@@ -5518,7 +5520,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Sezioni",
+      "byStatus": "Stato",
+      "byProject": "Attività per progetto",
+      "portfolio": "Progetti"
+    }
   },
   "taskPane": {
     "chat": "Parlane con l'IA",
@@ -6639,7 +6647,6 @@
     "reordered": "Ordine modificato",
     "resized": "Durata modificata",
     "unslotted": "Orario rimosso",
-    "completed": "«{{name}}» fatta",
     "saveFailed": "Salvataggio non riuscito. Nulla è cambiato.",
     "planChanged": "Il piano è cambiato su un altro dispositivo. È stato ricaricato.",
     "loadFailed": "Impossibile caricare i giorni.",

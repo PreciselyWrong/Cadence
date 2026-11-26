@@ -566,7 +566,9 @@
     "copyCode": "Sao chép mã",
     "copy": "Sao chép",
     "copied": "Đã sao chép",
-    "previewUnavailable": "Không có bản xem trước"
+    "previewUnavailable": "Không có bản xem trước",
+    "add": "Thêm",
+    "filter": "Lọc (/)"
   },
   "sidebar": {
     "links": "Liên kết",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Mục",
+      "byStatus": "Trạng thái",
+      "byProject": "Công việc theo dự án",
+      "portfolio": "Dự án"
+    }
   },
   "taskPane": {
     "chat": "Thảo luận với AI",
@@ -6625,7 +6633,6 @@
     "reordered": "Đã đổi thứ tự",
     "resized": "Đã đổi thời lượng",
     "unslotted": "Đã bỏ giờ",
-    "completed": "Đã xong “{{name}}”",
     "saveFailed": "Không lưu được. Không có gì thay đổi.",
     "planChanged": "Kế hoạch đã đổi trên thiết bị khác. Đã tải lại.",
     "loadFailed": "Không tải được các ngày.",

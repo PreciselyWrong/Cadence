@@ -566,7 +566,9 @@
     "copyCode": "Kopiera kod",
     "copy": "Kopiera",
     "copied": "Kopierad",
-    "previewUnavailable": "Förhandsvisning inte tillgänglig"
+    "previewUnavailable": "Förhandsvisning inte tillgänglig",
+    "add": "Lägg till",
+    "filter": "Filtrera (/)"
   },
   "sidebar": {
     "links": "Länkar",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Avsnitt",
+      "byStatus": "Status",
+      "byProject": "Uppgifter per projekt",
+      "portfolio": "Projekt"
+    }
   },
   "taskPane": {
     "chat": "Diskutera med AI:n",
@@ -6624,7 +6632,6 @@
     "reordered": "Ordningen ändrad",
     "resized": "Varaktighet ändrad",
     "unslotted": "Tid borttagen",
-    "completed": "“{{name}}” klar",
     "saveFailed": "Kunde inte spara. Inget ändrades.",
     "planChanged": "Planen ändrades på en annan enhet. Den har laddats om.",
     "loadFailed": "Kunde inte läsa in dagarna.",

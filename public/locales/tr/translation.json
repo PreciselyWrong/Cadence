@@ -566,7 +566,9 @@
     "copyCode": "Kodu kopyala",
     "copy": "Kopyala",
     "copied": "Kopyalandı",
-    "previewUnavailable": "Önizleme kullanılamıyor"
+    "previewUnavailable": "Önizleme kullanılamıyor",
+    "add": "Ekle",
+    "filter": "Filtrele (/)"
   },
   "sidebar": {
     "links": "Bağlantılar",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Bölümler",
+      "byStatus": "Durum",
+      "byProject": "Projeye göre görevler",
+      "portfolio": "Projeler"
+    }
   },
   "taskPane": {
     "chat": "Yapay zekâyla konuş",
@@ -6624,7 +6632,6 @@
     "reordered": "Sıra değiştirildi",
     "resized": "Süre değiştirildi",
     "unslotted": "Saat kaldırıldı",
-    "completed": "“{{name}}” tamamlandı",
     "saveFailed": "Kaydedilemedi. Hiçbir şey değişmedi.",
     "planChanged": "Plan başka bir cihazda değişti. Yeniden yüklendi.",
     "loadFailed": "Günler yüklenemedi.",

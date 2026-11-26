@@ -566,7 +566,9 @@
     "copyCode": "코드 복사",
     "copy": "복사",
     "copied": "복사됨",
-    "previewUnavailable": "미리 보기를 사용할 수 없습니다"
+    "previewUnavailable": "미리 보기를 사용할 수 없습니다",
+    "add": "추가",
+    "filter": "필터 (/)"
   },
   "sidebar": {
     "links": "링크",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "섹션",
+      "byStatus": "상태",
+      "byProject": "프로젝트별 작업",
+      "portfolio": "프로젝트"
+    }
   },
   "taskPane": {
     "chat": "AI와 상의하기",
@@ -6625,7 +6633,6 @@
     "reordered": "순서를 바꿨습니다",
     "resized": "길이를 바꿨습니다",
     "unslotted": "시간을 지웠습니다",
-    "completed": "“{{name}}” 완료",
     "saveFailed": "저장하지 못했습니다. 아무것도 바뀌지 않았습니다.",
     "planChanged": "다른 기기에서 계획이 바뀌어 다시 불러왔습니다.",
     "loadFailed": "날짜를 불러오지 못했습니다.",

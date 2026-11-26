@@ -59,7 +59,25 @@ export interface BoardPreset {
 
 // Bumped when the built-in views change, so saved boards pick them up.
 // 2: two views (tasks by project, projects) instead of four.
-export const BOARD_CONFIG_VERSION = 2;
+// Bumped when the built-in views change: older boards take the new ones.
+export const BOARD_CONFIG_VERSION = 3;
+
+// Built-in views are named from the translations, whatever name a saved
+// board holds; only views the user created keep their own name.
+export const BUILTIN_PRESET_NAMES: Record<string, [string, string]> = {
+    sections: ['projectBoard.presets.sections', 'Sections'],
+    'by-status': ['projectBoard.presets.byStatus', 'Status'],
+    'active-projects': ['projectBoard.presets.byProject', 'Tasks by project'],
+    portfolio: ['projectBoard.presets.portfolio', 'Projects'],
+};
+
+export const presetDisplayName = (
+    preset: Pick<BoardPreset, 'id' | 'name'>,
+    t: (key: string, fallback: string) => string
+): string => {
+    const builtin = BUILTIN_PRESET_NAMES[preset.id];
+    return builtin ? t(builtin[0], builtin[1]) : preset.name;
+};
 
 export interface ProjectBoardConfig {
     version: number;
@@ -184,13 +202,15 @@ export const defaultPresetsForProject = (
     return [
         {
             id: 'active-projects',
-            name: 'Tâches par projet',
+            name: 'Tasks by project',
             mode: 'by_subproject',
             portfolioGroupBy: 'status',
             taskGroupBy: 'status',
             swimlaneBy: 'none',
             includeSubProjects: true,
-            projectStatuses: ['in_progress'],
+            // A planned or not started sub-project must not vanish from the
+            // default view; columns without tasks stay hidden.
+            projectStatuses: ['in_progress', 'planned', 'not_started'],
             onlyTodoMd: false,
             recentDays: null,
             selectedTags: [],
@@ -204,7 +224,7 @@ export const defaultPresetsForProject = (
         },
         {
             id: 'portfolio',
-            name: 'Projets',
+            name: 'Projects',
             mode: 'portfolio',
             portfolioGroupBy: 'status',
             taskGroupBy: 'status',

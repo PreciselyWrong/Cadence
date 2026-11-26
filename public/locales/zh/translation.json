@@ -566,7 +566,9 @@
     "copyCode": "复制代码",
     "copy": "复制",
     "copied": "已复制",
-    "previewUnavailable": "无法预览"
+    "previewUnavailable": "无法预览",
+    "add": "添加",
+    "filter": "筛选 (/)"
   },
   "sidebar": {
     "links": "链接",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "分区",
+      "byStatus": "状态",
+      "byProject": "按项目分组的任务",
+      "portfolio": "项目"
+    }
   },
   "taskPane": {
     "chat": "与 AI 讨论",
@@ -6625,7 +6633,6 @@
     "reordered": "顺序已更改",
     "resized": "时长已更改",
     "unslotted": "已移除时间",
-    "completed": "“{{name}}”已完成",
     "saveFailed": "保存失败，未做任何更改。",
     "planChanged": "计划已在其他设备上更改，已重新加载。",
     "loadFailed": "无法加载日期。",

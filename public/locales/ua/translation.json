@@ -582,7 +582,9 @@
     "copyCode": "Копіювати код",
     "copy": "Копіювати",
     "copied": "Скопійовано",
-    "previewUnavailable": "Попередній перегляд недоступний"
+    "previewUnavailable": "Попередній перегляд недоступний",
+    "add": "Додати",
+    "filter": "Фільтр (/)"
   },
   "sidebar": {
     "links": "Посилання",
@@ -5601,7 +5603,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Розділи",
+      "byStatus": "Статус",
+      "byProject": "Завдання за проєктами",
+      "portfolio": "Проєкти"
+    }
   },
   "taskPane": {
     "chat": "Обговорити з ШІ",
@@ -6740,7 +6748,6 @@
     "reordered": "Порядок змінено",
     "resized": "Тривалість змінено",
     "unslotted": "Час прибрано",
-    "completed": "«{{name}}» виконано",
     "saveFailed": "Не вдалося зберегти. Нічого не змінилося.",
     "planChanged": "План змінився на іншому пристрої. Його перезавантажено.",
     "loadFailed": "Не вдалося завантажити дні.",

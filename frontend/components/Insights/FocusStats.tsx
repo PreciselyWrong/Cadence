@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { format, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
+import { formatLocalizedDate } from '../../utils/dateUtils';
 import {
     FocusStats as Stats,
     fetchFocusStats,
@@ -171,13 +172,19 @@ const FocusStats: React.FC = () => {
                             label={t('focusStats.perDay', 'Minutes per day')}
                             values={stats.by_day.map((d, i) => ({
                                 key: d.date,
-                                label: format(parseISO(d.date), 'PP'),
+                                label: formatLocalizedDate(
+                                    parseISO(d.date),
+                                    'PP'
+                                ),
                                 value: d.minutes,
                                 tick:
                                     (stats.by_day.length - 1 - i) %
                                         tickEvery ===
                                     0
-                                        ? format(parseISO(d.date), 'd/M')
+                                        ? formatLocalizedDate(
+                                              parseISO(d.date),
+                                              'd/M'
+                                          )
                                         : undefined,
                             }))}
                         />

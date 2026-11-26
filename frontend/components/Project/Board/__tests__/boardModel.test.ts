@@ -40,7 +40,12 @@ describe('boardModel', () => {
             ['active-projects', 'by_subproject'],
             ['portfolio', 'portfolio'],
         ]);
-        expect(cfg.presets[0].projectStatuses).toEqual(['in_progress']);
+        // A planned or not started sub-project must not vanish from the view.
+        expect(cfg.presets[0].projectStatuses).toEqual([
+            'in_progress',
+            'planned',
+            'not_started',
+        ]);
         expect(cfg.presets[0].hideEmptyColumns).toBe(true);
         // No WIP alarm on the number of projects in progress.
         expect(cfg.presets[1].wipLimits).toEqual({});

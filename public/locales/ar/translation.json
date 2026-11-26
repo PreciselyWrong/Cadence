@@ -590,7 +590,9 @@
     "copyCode": "نسخ الشيفرة",
     "copy": "نسخ",
     "copied": "تم النسخ",
-    "previewUnavailable": "المعاينة غير متاحة"
+    "previewUnavailable": "المعاينة غير متاحة",
+    "add": "إضافة",
+    "filter": "تصفية (/)"
   },
   "sidebar": {
     "links": "الروابط",
@@ -5567,7 +5569,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "الأقسام",
+      "byStatus": "الحالة",
+      "byProject": "المهام حسب المشروع",
+      "portfolio": "المشاريع"
+    }
   },
   "taskPane": {
     "chat": "ناقش مع الذكاء الاصطناعي",
@@ -6722,7 +6730,6 @@
     "reordered": "تم تغيير الترتيب",
     "resized": "تم تغيير المدة",
     "unslotted": "أُزيل الوقت",
-    "completed": "تم إنجاز «{{name}}»",
     "saveFailed": "تعذّر الحفظ. لم يتغيّر شيء.",
     "planChanged": "تغيّرت الخطة على جهاز آخر. أُعيد تحميلها.",
     "loadFailed": "تعذّر تحميل الأيام.",

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { TFunction } from 'i18next';
-import { format } from 'date-fns';
+import { formatLocalizedDate } from '../../utils/dateUtils';
 import {
     ChevronDownIcon,
     EllipsisHorizontalIcon,
@@ -135,7 +135,7 @@ const GoalHero: React.FC<GoalHeroProps> = ({
                     <span aria-hidden="true">·</span>
                     <span>
                         {t('goals.targetDate', 'Target')}{' '}
-                        {format(targetDate, 'MMM d, yyyy')}
+                        {formatLocalizedDate(targetDate, 'PP')}
                     </span>
                 </>
             )}

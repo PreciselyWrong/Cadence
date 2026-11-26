@@ -587,7 +587,9 @@
     "copyCode": "Copier le code",
     "copy": "Copier",
     "copied": "Copié",
-    "previewUnavailable": "Aperçu indisponible"
+    "previewUnavailable": "Aperçu indisponible",
+    "add": "Ajouter",
+    "filter": "Filtrer (/)"
   },
   "sidebar": {
     "roadmap": "Feuille de route",
@@ -1234,10 +1236,10 @@
     "slovak": "Slovaque",
     "swedish": "Suédois",
     "firstDayOfWeek": "Premier jour de la semaine",
-    "name": "Nom",
-    "surname": "Prénom",
-    "enterName": "Entrez votre nom",
-    "enterSurname": "Entrez votre prénom",
+    "name": "Prénom",
+    "surname": "Nom",
+    "enterName": "Entrez votre prénom",
+    "enterSurname": "Entrez votre nom",
     "avatar": "Photo de profil",
     "uploadAvatar": "Téléverser une photo",
     "removeAvatar": "Supprimer la photo",
@@ -5557,7 +5559,13 @@
     "fieldNextAction": "Prochaine tâche",
     "fieldProgress": "Progression",
     "fieldTags": "Étiquettes",
-    "fieldDueDate": "Échéance"
+    "fieldDueDate": "Échéance",
+    "presets": {
+      "sections": "Sections",
+      "byStatus": "Statut",
+      "byProject": "Tâches par projet",
+      "portfolio": "Projets"
+    }
   },
   "taskPane": {
     "chat": "Discuter avec l'IA",
@@ -6676,7 +6684,6 @@
     "reordered": "Ordre modifié",
     "resized": "Durée modifiée",
     "unslotted": "Heure retirée",
-    "completed": "« {{name}} » faite",
     "saveFailed": "Échec de l’enregistrement. Rien n’a changé.",
     "planChanged": "Le plan a changé sur un autre appareil. Il a été rechargé.",
     "loadFailed": "Impossible de charger les jours.",

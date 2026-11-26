@@ -11,6 +11,7 @@ import ProjectControlBoard from '../ProjectControlBoard';
 import { defaultBoardConfig } from '../boardModel';
 import { Project } from '../../../../entities/Project';
 import { Task } from '../../../../entities/Task';
+import i18n from '../../../../i18n';
 
 // The task check circle reads its labels through the hook.
 jest.mock('react-i18next', () => ({
@@ -437,6 +438,64 @@ describe('ProjectControlBoard', () => {
         );
         await screen.findByTestId('subproject-col-p1');
         expect(screen.queryByTestId('health-p1')).not.toBeInTheDocument();
+    });
+
+    it('writes a due date in the app language and names the built-in views from the translations', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const en = require('../../../../../public/locales/en/translation.json');
+        const lookup = (key: string) =>
+            key
+                .split('.')
+                .reduce(
+                    (node: any, part) =>
+                        node && typeof node === 'object'
+                            ? node[part]
+                            : undefined,
+                    en
+                );
+        const tEn = ((key: string, def?: string) => {
+            const value = lookup(key);
+            return typeof value === 'string' ? value : def || key;
+        }) as any;
+        (fetchProjectBoardTree as jest.Mock).mockResolvedValue({
+            ...mockTree,
+            tasks: [
+                {
+                    uid: 'due1',
+                    name: 'Dated task',
+                    status: 0,
+                    project_uid: 'p1',
+                    due_date: '2030-03-05',
+                } as Task,
+            ],
+        });
+        const previousLanguage = i18n.language;
+        (i18n as any).language = 'fr';
+        try {
+            render(
+                <MemoryRouter>
+                    <ProjectControlBoard
+                        project={devProject}
+                        tasks={[]}
+                        config={defaultBoardConfig(true)}
+                        onChangeConfig={jest.fn()}
+                        onMoveTaskSection={jest.fn()}
+                        onOpenTask={jest.fn()}
+                        t={tEn}
+                    />
+                </MemoryRouter>
+            );
+            await screen.findByTestId('subproject-col-p1');
+            expect(screen.getByText(/mars/)).toBeInTheDocument();
+            expect(
+                screen.getByTestId('board-preset-portfolio')
+            ).toHaveTextContent('Projects');
+            expect(
+                screen.getByTestId('board-preset-active-projects')
+            ).toHaveTextContent('Tasks by project');
+        } finally {
+            (i18n as any).language = previousLanguage;
+        }
     });
 
     it('labels statuses and card fields from the translations, not in English', async () => {

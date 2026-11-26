@@ -566,7 +566,9 @@
     "copyCode": "Αντιγραφή κώδικα",
     "copy": "Αντιγραφή",
     "copied": "Αντιγράφηκε",
-    "previewUnavailable": "Η προεπισκόπηση δεν είναι διαθέσιμη"
+    "previewUnavailable": "Η προεπισκόπηση δεν είναι διαθέσιμη",
+    "add": "Προσθήκη",
+    "filter": "Φίλτρο (/)"
   },
   "sidebar": {
     "links": "Σύνδεσμοι",
@@ -5512,7 +5514,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Ενότητες",
+      "byStatus": "Κατάσταση",
+      "byProject": "Εργασίες ανά έργο",
+      "portfolio": "Έργα"
+    }
   },
   "taskPane": {
     "chat": "Συζήτηση με την ΤΝ",
@@ -6625,7 +6633,6 @@
     "reordered": "Η σειρά άλλαξε",
     "resized": "Η διάρκεια άλλαξε",
     "unslotted": "Η ώρα αφαιρέθηκε",
-    "completed": "«{{name}}» ολοκληρώθηκε",
     "saveFailed": "Δεν ήταν δυνατή η αποθήκευση. Τίποτα δεν άλλαξε.",
     "planChanged": "Το πλάνο άλλαξε σε άλλη συσκευή. Φορτώθηκε ξανά.",
     "loadFailed": "Δεν ήταν δυνατή η φόρτωση των ημερών.",

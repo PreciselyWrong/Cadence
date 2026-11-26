@@ -837,7 +837,9 @@
     "copyCode": "Kopírovať kód",
     "copy": "Kopírovať",
     "copied": "Skopírované",
-    "previewUnavailable": "Náhľad nie je k dispozícii"
+    "previewUnavailable": "Náhľad nie je k dispozícii",
+    "add": "Pridať",
+    "filter": "Filtrovať (/)"
   },
   "sidebar": {
     "links": "Odkazy",
@@ -5722,7 +5724,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Sekcie",
+      "byStatus": "Stav",
+      "byProject": "Úlohy podľa projektu",
+      "portfolio": "Projekty"
+    }
   },
   "taskPane": {
     "chat": "Prebrať s AI",
@@ -6695,7 +6703,6 @@
     "reordered": "Poradie zmenené",
     "resized": "Trvanie zmenené",
     "unslotted": "Čas odstránený",
-    "completed": "„{{name}}“ hotová",
     "saveFailed": "Nepodarilo sa uložiť. Nič sa nezmenilo.",
     "planChanged": "Plán sa zmenil na inom zariadení. Bol znova načítaný.",
     "loadFailed": "Dni sa nepodarilo načítať.",

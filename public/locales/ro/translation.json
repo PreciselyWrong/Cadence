@@ -572,7 +572,9 @@
     "copyCode": "Copiază codul",
     "copy": "Copiază",
     "copied": "Copiat",
-    "previewUnavailable": "Previzualizare indisponibilă"
+    "previewUnavailable": "Previzualizare indisponibilă",
+    "add": "Adaugă",
+    "filter": "Filtrează (/)"
   },
   "sidebar": {
     "links": "Linkuri",
@@ -5527,7 +5529,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Secțiuni",
+      "byStatus": "Stare",
+      "byProject": "Sarcini pe proiect",
+      "portfolio": "Proiecte"
+    }
   },
   "taskPane": {
     "chat": "Discută cu IA",
@@ -6651,7 +6659,6 @@
     "reordered": "Ordine schimbată",
     "resized": "Durată schimbată",
     "unslotted": "Oră eliminată",
-    "completed": "„{{name}}” făcută",
     "saveFailed": "Nu s-a putut salva. Nu s-a schimbat nimic.",
     "planChanged": "Planul s-a schimbat pe alt dispozitiv. A fost reîncărcat.",
     "loadFailed": "Zilele nu au putut fi încărcate.",

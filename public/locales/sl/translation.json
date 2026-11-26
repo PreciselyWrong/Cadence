@@ -587,7 +587,9 @@
     "copyCode": "Kopiraj kodo",
     "copy": "Kopiraj",
     "copied": "Kopirano",
-    "previewUnavailable": "Predogled ni na voljo"
+    "previewUnavailable": "Predogled ni na voljo",
+    "add": "Dodaj",
+    "filter": "Filtriraj (/)"
   },
   "sidebar": {
     "links": "Povezave",
@@ -5606,7 +5608,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Razdelki",
+      "byStatus": "Stanje",
+      "byProject": "Naloge po projektih",
+      "portfolio": "Projekti"
+    }
   },
   "taskPane": {
     "chat": "Pogovori se z UI",
@@ -6745,7 +6753,6 @@
     "reordered": "Vrstni red spremenjen",
     "resized": "Trajanje spremenjeno",
     "unslotted": "Čas odstranjen",
-    "completed": "„{{name}}“ opravljeno",
     "saveFailed": "Shranjevanje ni uspelo. Nič se ni spremenilo.",
     "planChanged": "Načrt se je spremenil na drugi napravi. Ponovno je naložen.",
     "loadFailed": "Dni ni bilo mogoče naložiti.",

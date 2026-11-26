@@ -566,7 +566,9 @@
     "copyCode": "Kopier kode",
     "copy": "Kopier",
     "copied": "Kopiert",
-    "previewUnavailable": "Forhåndsvisning er ikke tilgjengelig"
+    "previewUnavailable": "Forhåndsvisning er ikke tilgjengelig",
+    "add": "Legg til",
+    "filter": "Filtrer (/)"
   },
   "sidebar": {
     "links": "Lenker",
@@ -5516,7 +5518,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Seksjoner",
+      "byStatus": "Status",
+      "byProject": "Oppgaver per prosjekt",
+      "portfolio": "Prosjekter"
+    }
   },
   "taskPane": {
     "chat": "Diskuter med KI-en",
@@ -6629,7 +6637,6 @@
     "reordered": "Rekkefølge endret",
     "resized": "Varighet endret",
     "unslotted": "Tid fjernet",
-    "completed": "“{{name}}” gjort",
     "saveFailed": "Kunne ikke lagre. Ingenting ble endret.",
     "planChanged": "Planen ble endret på en annen enhet. Den er lastet på nytt.",
     "loadFailed": "Kunne ikke laste dagene.",

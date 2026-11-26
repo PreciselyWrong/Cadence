@@ -566,7 +566,9 @@
     "copyCode": "Kopiér kode",
     "copy": "Kopiér",
     "copied": "Kopieret",
-    "previewUnavailable": "Forhåndsvisning ikke tilgængelig"
+    "previewUnavailable": "Forhåndsvisning ikke tilgængelig",
+    "add": "Tilføj",
+    "filter": "Filtrer (/)"
   },
   "sidebar": {
     "links": "Links",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Sektioner",
+      "byStatus": "Status",
+      "byProject": "Opgaver pr. projekt",
+      "portfolio": "Projekter"
+    }
   },
   "taskPane": {
     "chat": "Drøft med AI",
@@ -6624,7 +6632,6 @@
     "reordered": "Rækkefølge ændret",
     "resized": "Varighed ændret",
     "unslotted": "Tid fjernet",
-    "completed": "“{{name}}” udført",
     "saveFailed": "Kunne ikke gemme. Intet blev ændret.",
     "planChanged": "Planen blev ændret på en anden enhed. Den er blevet genindlæst.",
     "loadFailed": "Kunne ikke indlæse dagene.",

@@ -566,7 +566,9 @@
     "copyCode": "Копирай кода",
     "copy": "Копиране",
     "copied": "Копирано",
-    "previewUnavailable": "Няма наличен преглед"
+    "previewUnavailable": "Няма наличен преглед",
+    "add": "Добавяне",
+    "filter": "Филтър (/)"
   },
   "sidebar": {
     "links": "Връзки",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Секции",
+      "byStatus": "Статус",
+      "byProject": "Задачи по проект",
+      "portfolio": "Проекти"
+    }
   },
   "taskPane": {
     "chat": "Обсъди с ИИ",
@@ -6624,7 +6632,6 @@
     "reordered": "Редът е променен",
     "resized": "Продължителността е променена",
     "unslotted": "Часът е премахнат",
-    "completed": "„{{name}}“ е готова",
     "saveFailed": "Не можа да се запази. Нищо не се промени.",
     "planChanged": "Планът е променен на друго устройство. Презареден е.",
     "loadFailed": "Дните не можаха да се заредят.",

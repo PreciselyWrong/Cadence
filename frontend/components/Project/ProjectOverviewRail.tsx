@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TFunction } from 'i18next';
-import { format } from 'date-fns';
+import { formatLocalizedDate } from '../../utils/dateUtils';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { Project } from '../../entities/Project';
 import { Area } from '../../entities/Area';
@@ -488,9 +488,9 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                         }
                     >
                         {project.start_date &&
-                            `${format(
+                            `${formatLocalizedDate(
                                 new Date(`${project.start_date}T00:00:00`),
-                                'MMM d, yyyy'
+                                'PP'
                             )}${project.start_time ? ` ${project.start_time}` : ''}`}
                     </EditableRow>
                     <EditableRow
@@ -514,9 +514,9 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                         }
                     >
                         {project.due_date_at &&
-                            format(
+                            formatLocalizedDate(
                                 new Date(project.due_date_at),
-                                'MMM d, yyyy'
+                                'PP'
                             )}
                     </EditableRow>
                     <EditableRow
@@ -637,7 +637,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                                     </span>
                                     {note.updated_at && (
                                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                                            {format(
+                                            {formatLocalizedDate(
                                                 new Date(note.updated_at),
                                                 'MMM d'
                                             )}

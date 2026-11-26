@@ -6,7 +6,7 @@ import React, {
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
+import { formatLocalizedDate } from '../../utils/dateUtils';
 import {
     ChevronLeftIcon,
     ChevronRightIcon,
@@ -306,8 +306,8 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                         <ChevronRightIcon className="h-4 w-4" />
                     </button>
                     <span className="ml-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {format(dateOf(first), 'MMM d')} –{' '}
-                        {format(dateOf(last), 'MMM d')}
+                        {formatLocalizedDate(dateOf(first), 'MMM d')} –{' '}
+                        {formatLocalizedDate(dateOf(last), 'MMM d')}
                     </span>
                 </div>
                 <div
@@ -386,7 +386,10 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                                                 ) * dayW,
                                         }}
                                     >
-                                        {format(dateOf(day), 'MMM d')}
+                                        {formatLocalizedDate(
+                                            dateOf(day),
+                                            'MMM d'
+                                        )}
                                     </div>
                                 ) : null
                             )}
@@ -405,7 +408,7 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                                     >
                                         {dayW >= 36 && (
                                             <span>
-                                                {format(
+                                                {formatLocalizedDate(
                                                     dateOf(day),
                                                     dayW >= 56 ? 'EEE' : 'EEEEE'
                                                 )}
@@ -415,7 +418,10 @@ const EveryoneTimeline: React.FC<{ header: React.ReactNode }> = ({
                                             weekday === 1 ||
                                             day === today) && (
                                             <span>
-                                                {format(dateOf(day), 'd')}
+                                                {formatLocalizedDate(
+                                                    dateOf(day),
+                                                    'd'
+                                                )}
                                             </span>
                                         )}
                                     </div>

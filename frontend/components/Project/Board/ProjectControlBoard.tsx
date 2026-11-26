@@ -46,6 +46,7 @@ import { useToast } from '../../Shared/ToastContext';
 import EntityIcon from '../../Shared/EntityIcon';
 import TaskCheckCircle from '../../Task/TaskCheckCircle';
 import { getProjectStatusTint } from '../projectStatusStyles';
+import { getIntlLocale } from '../../../utils/dateUtils';
 import { dueDayLabel, isDueLate, localToday } from '../../Shared/task/dueLabel';
 import {
     BoardPreset,
@@ -61,6 +62,7 @@ import {
     buildSubProjectColumns,
     buildTaskGroupColumns,
     canMoveTaskBetweenProjects,
+    presetDisplayName,
     priorityKeyToValue,
     projectHealth,
     taskStatusToCode,
@@ -276,7 +278,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 case 'cancelled':
                     return t('projectStatus.cancelled', 'Cancelled');
                 case 'archived':
-                    return t('projects.status.archived', 'Archived');
+                    return t('projectStatus.archived', 'Archived');
             }
         },
         [t]
@@ -766,7 +768,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 ? dueDayLabel(
                       task.due_date,
                       today,
-                      'en',
+                      getIntlLocale(),
                       t as unknown as (key: string, fallback: string) => string
                   )
                 : null;
@@ -1072,7 +1074,10 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     data-testid={`board-preset-${preset.id}`}
                                     className="px-2.5 py-1.5"
                                 >
-                                    {preset.name}
+                                    {presetDisplayName(
+                                        preset,
+                                        (k, f) => t(k, f) as string
+                                    )}
                                 </button>
                                 {preset.id.startsWith('custom-') && (
                                     <button

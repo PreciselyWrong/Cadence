@@ -566,7 +566,9 @@
     "copyCode": "Kopioi koodi",
     "copy": "Kopioi",
     "copied": "Kopioitu",
-    "previewUnavailable": "Esikatselu ei ole saatavilla"
+    "previewUnavailable": "Esikatselu ei ole saatavilla",
+    "add": "Lisää",
+    "filter": "Suodata (/)"
   },
   "sidebar": {
     "links": "Linkit",
@@ -5511,7 +5513,13 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "presets": {
+      "sections": "Osiot",
+      "byStatus": "Tila",
+      "byProject": "Tehtävät projektin mukaan",
+      "portfolio": "Projektit"
+    }
   },
   "taskPane": {
     "chat": "Keskustele tekoälyn kanssa",
@@ -6624,7 +6632,6 @@
     "reordered": "Järjestys muutettu",
     "resized": "Kesto muutettu",
     "unslotted": "Aika poistettu",
-    "completed": "“{{name}}” tehty",
     "saveFailed": "Tallennus epäonnistui. Mitään ei muuttunut.",
     "planChanged": "Suunnitelma muuttui toisella laitteella. Se on ladattu uudelleen.",
     "loadFailed": "Päiviä ei voitu ladata.",
