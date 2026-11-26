@@ -12,6 +12,14 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-26 : « Découper en étapes » dans la fiche de tâche
+
+- **Problème** : une grosse tâche reste sans premier geste à faire ; ajouter à la main cinq sous-tâches minutées est long.
+- **Décision** : sous les sous-tâches de la fiche, un lien discret « Découper en étapes » (étincelle), seulement pour une tâche de premier niveau (ni sous-tâche, ni tâche d'un fichier `TODO.md`). Il ouvre une feuille (bas d'écran sur téléphone, centrée au-dessus) qui appelle l'IA (`POST /api/task/:uid/breakdown`, rien n'est écrit) : état « L'IA découpe la tâche… », puis la liste éditable. Chaque étape a un nom, des minutes (5 à 720, vide permis), monter, descendre, retirer ; « Ajouter une étape » ajoute une ligne à 5 min (50 au plus) et Entrée dans le dernier nom en ajoute une aussi. Un nom vide est une ligne ignorée ; une durée hors bornes ou un nom de plus de 200 caractères bloque le bouton et affiche une ligne d'erreur. En pied : « Total : 1h 20m » (étapes nommées avec une durée) et « Ajouter N étapes » qui crée les sous-tâches d'un coup (`/breakdown/apply`) puis recharge la liste ; échec : la feuille reste ouverte avec une alerte. Échap ferme la feuille seule, pas la fiche.
+- **Sans IA** (désactivée, non configurée, en panne, ou réponse vide, ou requête en échec) : la feuille demande « Première étape de 2 min ? » avec une seule ligne vide à taper (5 min par défaut, la plus petite durée stockée), une ligne de raison discrète (« IA désactivée. », « IA non configurée. » avec lien vers Profil › Assistant IA, « IA indisponible. », « L'IA n'a proposé aucune étape. ») et « Ajouter une étape ».
+- **Réglages** : carte « Découper en étapes » en bas de Profil › Assistant IA, enregistrée à part (activé, modèle, étapes au plus, durées minimale et maximale d'une étape, caractères de la note, jetons de réponse), avec la valeur par défaut du serveur sous chaque champ.
+- **Android à reprendre** : le même parcours dans la fiche de tâche (action sous les sous-tâches, feuille avec chargement, liste éditable, total, un seul appel d'ajout) et la même invite sans IA ; pas d'entrée dans le menu de tâche (le lien de la fiche suffit) ; réglages dans l'écran de l'Assistant IA.
+
 ### 2026-11-22 : Week-end à la demande, jours choisis et image partagée
 
 - **Problème** : la fiche Week-end n'arrivait que le jeudi pour samedi-dimanche, sans entrée sur le web, 2 à 4 idées par demi-journée, et rien pour la montrer à la famille.

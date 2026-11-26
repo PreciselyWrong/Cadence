@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "설정을 불러오지 못했습니다",
+      "saveError": "저장하지 못했습니다",
+      "saved": "설정을 저장했습니다",
+      "default": "기본값: {{value}}",
+      "maxTokens": "최대 응답 토큰 수",
+      "noteChars": "AI로 보내는 메모 글자 수",
+      "maxMinutes": "가장 긴 단계(분)",
+      "minMinutes": "가장 짧은 단계(분)",
+      "maxSteps": "최대 단계 수",
+      "model": "모델(비워 두면 AI 어시스턴트의 모델)",
+      "enabled": "사용",
+      "noAi": "AI 제공자가 없습니다. 제안을 받으려면 위에 키를 설정하세요.",
+      "description": "AI가 작업에 대해 짧고 시간이 정해진 단계를 제안하며, 하위 작업으로 추가하기 전에 수정할 수 있습니다."
+    },
+    "problem": {
+      "minutes": "시간은 {{min}}분에서 {{max}}분 사이입니다.",
+      "name": "단계 이름은 최대 {{max}}자입니다."
+    },
+    "applyError": "단계를 추가하지 못했습니다.",
+    "applyNone": "단계 추가",
+    "apply_other": "단계 {{count}}개 추가",
+    "apply_one": "단계 {{count}}개 추가",
+    "total": "합계: {{duration}}",
+    "addStep": "단계 추가",
+    "remove": "{{n}}단계 삭제",
+    "moveDown": "{{n}}단계 아래로 이동",
+    "moveUp": "{{n}}단계 위로 이동",
+    "unit": "분",
+    "minutes": "{{n}}단계 시간(분)",
+    "stepPlaceholder": "단계",
+    "stepName": "{{n}}단계 이름",
+    "settingsLink": "프로필 › AI 어시스턴트",
+    "reason": {
+      "empty": "AI가 단계를 제안하지 않았습니다.",
+      "failed": "AI를 사용할 수 없습니다.",
+      "notConfigured": "AI가 설정되지 않았습니다.",
+      "disabled": "AI가 꺼져 있습니다."
+    },
+    "fallbackPrompt": "2분짜리 첫 단계는 어떨까요?",
+    "loading": "AI가 작업을 나누는 중…",
+    "title": "단계로 나누기"
+  },
   "desktopWindow": {
     "minimize": "최소화",
     "maximize": "최대화",

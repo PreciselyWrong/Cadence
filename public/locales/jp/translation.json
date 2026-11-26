@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "設定を読み込めませんでした",
+      "saveError": "保存できませんでした",
+      "saved": "設定を保存しました",
+      "default": "既定：{{value}}",
+      "maxTokens": "応答トークン数の上限",
+      "noteChars": "AI に送るメモの文字数",
+      "maxMinutes": "最長のステップ（分）",
+      "minMinutes": "最短のステップ（分）",
+      "maxSteps": "ステップ数の上限",
+      "model": "モデル（空欄：AIアシスタントのモデル）",
+      "enabled": "有効",
+      "noAi": "AI プロバイダーがありません。提案を受けるには上のキーを設定してください。",
+      "description": "AI がタスクに短く時間付きのステップを提案します。サブタスクとして追加する前に編集できます。"
+    },
+    "problem": {
+      "minutes": "所要時間は {{min}} 分から {{max}} 分までです。",
+      "name": "ステップ名は {{max}} 文字までです。"
+    },
+    "applyError": "ステップを追加できませんでした。",
+    "applyNone": "ステップを追加",
+    "apply_other": "{{count}} 件のステップを追加",
+    "apply_one": "{{count}} 件のステップを追加",
+    "total": "合計：{{duration}}",
+    "addStep": "ステップを追加",
+    "remove": "ステップ {{n}} を削除",
+    "moveDown": "ステップ {{n}} を下へ",
+    "moveUp": "ステップ {{n}} を上へ",
+    "unit": "分",
+    "minutes": "ステップ {{n}} の分数",
+    "stepPlaceholder": "ステップ",
+    "stepName": "ステップ {{n}} の名前",
+    "settingsLink": "プロフィール › AIアシスタント",
+    "reason": {
+      "empty": "AI はステップを提案しませんでした。",
+      "failed": "AI を利用できません。",
+      "notConfigured": "AI が設定されていません。",
+      "disabled": "AI はオフです。"
+    },
+    "fallbackPrompt": "最初の 2 分のステップは？",
+    "loading": "AI がタスクを分割しています…",
+    "title": "ステップに分ける"
+  },
   "desktopWindow": {
     "minimize": "最小化",
     "maximize": "最大化",

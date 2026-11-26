@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Ayarlar yüklenemedi",
+      "saveError": "Kaydedilemedi",
+      "saved": "Ayarlar kaydedildi",
+      "default": "Varsayılan: {{value}}",
+      "maxTokens": "En çok yanıt jetonu",
+      "noteChars": "Yapay zekaya gönderilen not karakteri",
+      "maxMinutes": "En uzun adım (dakika)",
+      "minMinutes": "En kısa adım (dakika)",
+      "maxSteps": "En çok adım",
+      "model": "Model (boş: Yapay zeka asistanının modeli)",
+      "enabled": "Etkin",
+      "noAi": "Yapay zeka sağlayıcısı yok: öneri almak için yukarıdaki anahtarı girin.",
+      "description": "Yapay zeka bir görev için kısa, süreli adımlar önerir; alt görev olarak eklemeden önce düzenlersiniz."
+    },
+    "problem": {
+      "minutes": "Bir süre {{min}} ile {{max}} dakika arasındadır.",
+      "name": "Bir adım adı en fazla {{max}} karakter olabilir."
+    },
+    "applyError": "Adımlar eklenemedi.",
+    "applyNone": "Adımları ekle",
+    "apply_other": "{{count}} adım ekle",
+    "apply_one": "{{count}} adım ekle",
+    "total": "Toplam: {{duration}}",
+    "addStep": "Adım ekle",
+    "remove": "{{n}}. adımı kaldır",
+    "moveDown": "{{n}}. adımı aşağı taşı",
+    "moveUp": "{{n}}. adımı yukarı taşı",
+    "unit": "dk",
+    "minutes": "{{n}}. adımın dakikası",
+    "stepPlaceholder": "Adım",
+    "stepName": "{{n}}. adımın adı",
+    "settingsLink": "Profil › Yapay zeka asistanı",
+    "reason": {
+      "empty": "Yapay zeka hiç adım önermedi.",
+      "failed": "Yapay zeka kullanılamıyor.",
+      "notConfigured": "Yapay zeka yapılandırılmamış.",
+      "disabled": "Yapay zeka kapalı."
+    },
+    "fallbackPrompt": "2 dakikalık ilk adım?",
+    "loading": "Yapay zeka görevi bölüyor…",
+    "title": "Adımlara böl"
+  },
   "desktopWindow": {
     "minimize": "Simge durumuna küçült",
     "maximize": "Ekranı kapla",

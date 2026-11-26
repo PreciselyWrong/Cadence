@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Innstillingene kunne ikke lastes",
+      "saveError": "Kunne ikke lagre",
+      "saved": "Innstillinger lagret",
+      "default": "Standard: {{value}}",
+      "maxTokens": "Høyst så mange svar-tokens",
+      "noteChars": "Tegn fra notatet sendt til AI-en",
+      "maxMinutes": "Lengste trinn (minutter)",
+      "minMinutes": "Korteste trinn (minutter)",
+      "maxSteps": "Høyst så mange trinn",
+      "model": "Modell (tom: den fra AI-assistenten)",
+      "enabled": "Aktivert",
+      "noAi": "Ingen AI-leverandør: angi nøkkelen ovenfor for å få forslag.",
+      "description": "AI-en foreslår korte trinn med tidsanslag for en oppgave; du retter dem før de legges til som deloppgaver."
+    },
+    "problem": {
+      "minutes": "En varighet går fra {{min}} til {{max}} minutter.",
+      "name": "Et trinnnavn er høyst {{max}} tegn."
+    },
+    "applyError": "Kunne ikke legge til trinnene.",
+    "applyNone": "Legg til trinnene",
+    "apply_other": "Legg til {{count}} trinn",
+    "apply_one": "Legg til {{count}} trinn",
+    "total": "Totalt: {{duration}}",
+    "addStep": "Legg til et trinn",
+    "remove": "Fjern trinn {{n}}",
+    "moveDown": "Flytt trinn {{n}} ned",
+    "moveUp": "Flytt trinn {{n}} opp",
+    "unit": "min",
+    "minutes": "Minutter for trinn {{n}}",
+    "stepPlaceholder": "Trinn",
+    "stepName": "Navn på trinn {{n}}",
+    "settingsLink": "Profil › AI-assistent",
+    "reason": {
+      "empty": "AI-en foreslo ingen trinn.",
+      "failed": "AI er ikke tilgjengelig.",
+      "notConfigured": "AI er ikke satt opp.",
+      "disabled": "AI er slått av."
+    },
+    "fallbackPrompt": "Et første trinn på 2 min?",
+    "loading": "AI-en deler opp oppgaven …",
+    "title": "Del opp i trinn"
+  },
   "desktopWindow": {
     "minimize": "Minimer",
     "maximize": "Maksimer",

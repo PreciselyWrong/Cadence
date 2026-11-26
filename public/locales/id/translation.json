@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Pengaturan tidak dapat dimuat",
+      "saveError": "Gagal menyimpan",
+      "saved": "Pengaturan disimpan",
+      "default": "Bawaan: {{value}}",
+      "maxTokens": "Maksimal token jawaban",
+      "noteChars": "Karakter catatan yang dikirim ke AI",
+      "maxMinutes": "Langkah terpanjang (menit)",
+      "minMinutes": "Langkah terpendek (menit)",
+      "maxSteps": "Maksimal langkah",
+      "model": "Model (kosong: milik Asisten AI)",
+      "enabled": "Aktif",
+      "noAi": "Tidak ada penyedia AI: isi kunci di atas untuk mendapat usulan.",
+      "description": "AI mengusulkan langkah singkat berdurasi untuk sebuah tugas; Anda mengeditnya sebelum menambahkannya sebagai subtugas."
+    },
+    "problem": {
+      "minutes": "Durasi berkisar dari {{min}} sampai {{max}} menit.",
+      "name": "Nama langkah maksimal {{max}} karakter."
+    },
+    "applyError": "Langkah tidak dapat ditambahkan.",
+    "applyNone": "Tambah langkah",
+    "apply_other": "Tambah {{count}} langkah",
+    "apply_one": "Tambah {{count}} langkah",
+    "total": "Total: {{duration}}",
+    "addStep": "Tambah langkah",
+    "remove": "Hapus langkah {{n}}",
+    "moveDown": "Turunkan langkah {{n}}",
+    "moveUp": "Naikkan langkah {{n}}",
+    "unit": "mnt",
+    "minutes": "Menit langkah {{n}}",
+    "stepPlaceholder": "Langkah",
+    "stepName": "Nama langkah {{n}}",
+    "settingsLink": "Profil › Asisten AI",
+    "reason": {
+      "empty": "AI tidak mengusulkan langkah apa pun.",
+      "failed": "AI tidak tersedia.",
+      "notConfigured": "AI belum dikonfigurasi.",
+      "disabled": "AI dinonaktifkan."
+    },
+    "fallbackPrompt": "Langkah pertama 2 menit?",
+    "loading": "AI sedang memecah tugas…",
+    "title": "Pecah menjadi langkah"
+  },
   "desktopWindow": {
     "minimize": "Perkecil",
     "maximize": "Perbesar",

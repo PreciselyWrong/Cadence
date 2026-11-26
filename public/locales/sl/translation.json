@@ -1,4 +1,51 @@
 {
+  "breakdown": {
+    "apply_many": "Dodaj {{count}} korakov",
+    "apply_few": "Dodaj {{count}} korake",
+    "apply_two": "Dodaj {{count}} koraka",
+    "settings": {
+      "loadError": "Nastavitev ni bilo mogoče naložiti",
+      "saveError": "Shranjevanje ni uspelo",
+      "saved": "Nastavitve shranjene",
+      "default": "Privzeto: {{value}}",
+      "maxTokens": "Največ toliko žetonov odgovora",
+      "noteChars": "Znaki opombe, poslani AI",
+      "maxMinutes": "Najdaljši korak (minute)",
+      "minMinutes": "Najkrajši korak (minute)",
+      "maxSteps": "Največ toliko korakov",
+      "model": "Model (prazno: model AI pomočnika)",
+      "enabled": "Vklopljeno",
+      "noAi": "Ni ponudnika AI: zgoraj nastavite ključ za prejemanje predlogov.",
+      "description": "AI predlaga kratke korake z ocenjenim časom za nalogo; popravite jih, preden se dodajo kot podnaloge."
+    },
+    "problem": {
+      "minutes": "Trajanje je od {{min}} do {{max}} minut.",
+      "name": "Ime koraka ima največ {{max}} znakov."
+    },
+    "applyError": "Korakov ni bilo mogoče dodati.",
+    "applyNone": "Dodaj korake",
+    "apply_other": "Dodaj {{count}} korakov",
+    "apply_one": "Dodaj {{count}} korak",
+    "total": "Skupaj: {{duration}}",
+    "addStep": "Dodaj korak",
+    "remove": "Odstrani korak {{n}}",
+    "moveDown": "Premakni korak {{n}} dol",
+    "moveUp": "Premakni korak {{n}} gor",
+    "unit": "min",
+    "minutes": "Minute koraka {{n}}",
+    "stepPlaceholder": "Korak",
+    "stepName": "Ime koraka {{n}}",
+    "settingsLink": "Profil › AI pomočnik",
+    "reason": {
+      "empty": "AI ni predlagal nobenega koraka.",
+      "failed": "AI ni na voljo.",
+      "notConfigured": "AI ni nastavljen.",
+      "disabled": "AI je izklopljen."
+    },
+    "fallbackPrompt": "Prvi korak v 2 minutah?",
+    "loading": "AI razdeljuje nalogo …",
+    "title": "Razdeli na korake"
+  },
   "desktopWindow": {
     "minimize": "Pomanjšaj",
     "maximize": "Povečaj",

@@ -1,4 +1,50 @@
 {
+  "breakdown": {
+    "apply_many": "Pridať {{count}} kroka",
+    "apply_few": "Pridať {{count}} kroky",
+    "settings": {
+      "loadError": "Nastavenia sa nepodarilo načítať",
+      "saveError": "Uloženie sa nepodarilo",
+      "saved": "Nastavenia uložené",
+      "default": "Predvolené: {{value}}",
+      "maxTokens": "Najviac toľko tokenov odpovede",
+      "noteChars": "Znaky poznámky odoslané AI",
+      "maxMinutes": "Najdlhší krok (minúty)",
+      "minMinutes": "Najkratší krok (minúty)",
+      "maxSteps": "Najviac toľko krokov",
+      "model": "Model (prázdne: model AI asistenta)",
+      "enabled": "Zapnuté",
+      "noAi": "Žiadny poskytovateľ AI: nastavte kľúč vyššie, aby ste dostávali návrhy.",
+      "description": "AI navrhuje pre úlohu krátke kroky s odhadom času; pred pridaním ako podúlohy ich upravíte."
+    },
+    "problem": {
+      "minutes": "Trvanie je od {{min}} do {{max}} minút.",
+      "name": "Názov kroku má najviac {{max}} znakov."
+    },
+    "applyError": "Kroky sa nepodarilo pridať.",
+    "applyNone": "Pridať kroky",
+    "apply_other": "Pridať {{count}} krokov",
+    "apply_one": "Pridať {{count}} krok",
+    "total": "Spolu: {{duration}}",
+    "addStep": "Pridať krok",
+    "remove": "Odstrániť krok {{n}}",
+    "moveDown": "Posunúť krok {{n}} nižšie",
+    "moveUp": "Posunúť krok {{n}} vyššie",
+    "unit": "min",
+    "minutes": "Minúty kroku {{n}}",
+    "stepPlaceholder": "Krok",
+    "stepName": "Názov kroku {{n}}",
+    "settingsLink": "Profil › AI asistent",
+    "reason": {
+      "empty": "AI nenavrhla žiadne kroky.",
+      "failed": "AI nie je dostupná.",
+      "notConfigured": "AI nie je nastavená.",
+      "disabled": "AI je vypnutá."
+    },
+    "fallbackPrompt": "Prvý krok na 2 min?",
+    "loading": "AI rozdeľuje úlohu…",
+    "title": "Rozdeliť na kroky"
+  },
   "desktopWindow": {
     "minimize": "Minimalizovať",
     "maximize": "Maximalizovať",

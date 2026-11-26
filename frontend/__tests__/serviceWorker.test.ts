@@ -509,6 +509,8 @@ describe('service worker offline writes', () => {
         '/api/ai-assistant/project-insights',
         '/api/proposals/p1/apply',
         '/api/proposals/p1/send',
+        '/api/task/t1/breakdown',
+        '/api/task/t1/breakdown/apply',
     ])(
         'never queues %s: replayed later, it would act on stale facts',
         async (url) => {

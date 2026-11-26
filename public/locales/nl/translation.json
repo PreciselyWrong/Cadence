@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Instellingen konden niet worden geladen",
+      "saveError": "Opslaan mislukt",
+      "saved": "Instellingen opgeslagen",
+      "default": "Standaard: {{value}}",
+      "maxTokens": "Maximaal aantal antwoordtokens",
+      "noteChars": "Tekens van de notitie die naar de AI gaan",
+      "maxMinutes": "Langste stap (minuten)",
+      "minMinutes": "Kortste stap (minuten)",
+      "maxSteps": "Maximaal aantal stappen",
+      "model": "Model (leeg: dat van de AI-assistent)",
+      "enabled": "Ingeschakeld",
+      "noAi": "Geen AI-provider: stel hierboven de sleutel in om voorstellen te krijgen.",
+      "description": "De AI stelt korte stappen met een tijdsschatting voor een taak voor; je past ze aan voordat ze als subtaken worden toegevoegd."
+    },
+    "problem": {
+      "minutes": "Een duur loopt van {{min}} tot {{max}} minuten.",
+      "name": "Een staptnaam heeft hoogstens {{max}} tekens."
+    },
+    "applyError": "De stappen konden niet worden toegevoegd.",
+    "applyNone": "De stappen toevoegen",
+    "apply_other": "{{count}} stappen toevoegen",
+    "apply_one": "{{count}} stap toevoegen",
+    "total": "Totaal: {{duration}}",
+    "addStep": "Een stap toevoegen",
+    "remove": "Stap {{n}} verwijderen",
+    "moveDown": "Stap {{n}} omlaag",
+    "moveUp": "Stap {{n}} omhoog",
+    "unit": "min",
+    "minutes": "Minuten van stap {{n}}",
+    "stepPlaceholder": "Stap",
+    "stepName": "Naam van stap {{n}}",
+    "settingsLink": "Profiel › AI-assistent",
+    "reason": {
+      "empty": "De AI stelde geen stappen voor.",
+      "failed": "AI is niet beschikbaar.",
+      "notConfigured": "AI is niet ingesteld.",
+      "disabled": "AI is uitgeschakeld."
+    },
+    "fallbackPrompt": "Een eerste stap van 2 min?",
+    "loading": "De AI verdeelt de taak…",
+    "title": "Opdelen in stappen"
+  },
   "desktopWindow": {
     "minimize": "Minimaliseren",
     "maximize": "Maximaliseren",

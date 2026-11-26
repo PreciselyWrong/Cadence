@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Não foi possível carregar as configurações",
+      "saveError": "Não foi possível salvar",
+      "saved": "Configurações salvas",
+      "default": "Padrão: {{value}}",
+      "maxTokens": "Máximo de tokens de resposta",
+      "noteChars": "Caracteres da nota enviados à IA",
+      "maxMinutes": "Etapa mais longa (minutos)",
+      "minMinutes": "Etapa mais curta (minutos)",
+      "maxSteps": "Máximo de etapas",
+      "model": "Modelo (vazio: o do Assistente de IA)",
+      "enabled": "Ativado",
+      "noAi": "Sem provedor de IA: informe a chave acima para receber propostas.",
+      "description": "A IA propõe etapas curtas e com tempo estimado para uma tarefa; você as corrige antes de adicioná-las como subtarefas."
+    },
+    "problem": {
+      "minutes": "Uma duração vai de {{min}} a {{max}} minutos.",
+      "name": "O nome de uma etapa tem no máximo {{max}} caracteres."
+    },
+    "applyError": "Não foi possível adicionar as etapas.",
+    "applyNone": "Adicionar as etapas",
+    "apply_other": "Adicionar {{count}} etapas",
+    "apply_one": "Adicionar {{count}} etapa",
+    "total": "Total: {{duration}}",
+    "addStep": "Adicionar uma etapa",
+    "remove": "Remover a etapa {{n}}",
+    "moveDown": "Descer a etapa {{n}}",
+    "moveUp": "Subir a etapa {{n}}",
+    "unit": "min",
+    "minutes": "Minutos da etapa {{n}}",
+    "stepPlaceholder": "Etapa",
+    "stepName": "Nome da etapa {{n}}",
+    "settingsLink": "Perfil › Assistente de IA",
+    "reason": {
+      "empty": "A IA não propôs nenhuma etapa.",
+      "failed": "IA indisponível.",
+      "notConfigured": "IA não configurada.",
+      "disabled": "IA desativada."
+    },
+    "fallbackPrompt": "Uma primeira etapa de 2 min?",
+    "loading": "A IA está dividindo a tarefa…",
+    "title": "Dividir em etapas"
+  },
   "desktopWindow": {
     "minimize": "Minimizar",
     "maximize": "Maximizar",

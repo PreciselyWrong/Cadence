@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusCircleIcon } from '@heroicons/react/24/outline';
+import { PlusCircleIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { Project } from '../../../entities/Project';
 import { Task } from '../../../entities/Task';
@@ -12,6 +12,8 @@ interface TaskSubtasksCardProps {
     onSubtaskUpdate: (updatedSubtask: Task) => Promise<void>;
     onSubtaskDelete: (taskUid: string) => void;
     onQuickAdd: (name: string) => void;
+    // « Découper en étapes »: only offered to a top-level task.
+    onBreakdown?: () => void;
     // The side panel names the section itself.
     showTitle?: boolean;
 }
@@ -22,6 +24,7 @@ const TaskSubtasksCard: React.FC<TaskSubtasksCardProps> = ({
     onSubtaskUpdate,
     onSubtaskDelete,
     onQuickAdd,
+    onBreakdown,
     showTitle = true,
 }) => {
     const [newSubtaskName, setNewSubtaskName] = useState('');
@@ -75,6 +78,16 @@ const TaskSubtasksCard: React.FC<TaskSubtasksCardProps> = ({
                     className="text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 bg-transparent focus:outline-none focus:ring-0 w-full cursor-text"
                 />
             </div>
+            {onBreakdown && (
+                <button
+                    type="button"
+                    onClick={onBreakdown}
+                    className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                >
+                    <SparklesIcon className="h-4 w-4" aria-hidden="true" />
+                    {t('breakdown.title', 'Découper en étapes')}
+                </button>
+            )}
         </div>
     );
 };

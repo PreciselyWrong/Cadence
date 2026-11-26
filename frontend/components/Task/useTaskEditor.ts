@@ -380,6 +380,13 @@ export const useTaskEditor = (
         }
     };
 
+    // Steps added by « Découper en étapes »: read them back.
+    const reloadSubtasks = async () => {
+        if (!task.uid) return;
+        setSubtasks(await fetchSubtasks(task.uid));
+        void refreshParent();
+    };
+
     return {
         t,
         task,
@@ -416,6 +423,7 @@ export const useTaskEditor = (
         handleSubtaskUpdate,
         handleSubtaskDelete,
         handleQuickAddSubtask,
+        reloadSubtasks,
         run,
         runFields,
     };

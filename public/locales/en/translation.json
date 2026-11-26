@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Could not load the settings",
+      "saveError": "Could not save",
+      "saved": "Settings saved",
+      "default": "Default: {{value}}",
+      "maxTokens": "Response tokens at most",
+      "noteChars": "Note characters sent to the AI",
+      "maxMinutes": "Longest step (minutes)",
+      "minMinutes": "Shortest step (minutes)",
+      "maxSteps": "Steps at most",
+      "model": "Model (empty: the AI Assistant’s)",
+      "enabled": "Enabled",
+      "noAi": "No AI provider: set the key above to get proposals.",
+      "description": "The AI proposes short, timed steps for a task; you edit them before adding them as subtasks."
+    },
+    "problem": {
+      "minutes": "A duration runs from {{min}} to {{max}} minutes.",
+      "name": "A step name has {{max}} characters at most."
+    },
+    "applyError": "Could not add the steps.",
+    "applyNone": "Add the steps",
+    "apply_other": "Add {{count}} steps",
+    "apply_one": "Add {{count}} step",
+    "total": "Total: {{duration}}",
+    "addStep": "Add a step",
+    "remove": "Remove step {{n}}",
+    "moveDown": "Move step {{n}} down",
+    "moveUp": "Move step {{n}} up",
+    "unit": "min",
+    "minutes": "Minutes of step {{n}}",
+    "stepPlaceholder": "Step",
+    "stepName": "Name of step {{n}}",
+    "settingsLink": "Profile › AI Assistant",
+    "reason": {
+      "empty": "The AI proposed no steps.",
+      "failed": "AI is unavailable.",
+      "notConfigured": "AI is not set up.",
+      "disabled": "AI is turned off."
+    },
+    "fallbackPrompt": "A first step of 2 min?",
+    "loading": "The AI is splitting the task…",
+    "title": "Break down into steps"
+  },
   "desktopWindow": {
     "minimize": "Minimize",
     "maximize": "Maximize",

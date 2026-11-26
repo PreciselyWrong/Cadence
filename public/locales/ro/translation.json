@@ -1,4 +1,49 @@
 {
+  "breakdown": {
+    "apply_few": "Adaugă {{count}} pași",
+    "settings": {
+      "loadError": "Setările nu au putut fi încărcate",
+      "saveError": "Salvarea a eșuat",
+      "saved": "Setări salvate",
+      "default": "Implicit: {{value}}",
+      "maxTokens": "Cel mult atâția tokeni de răspuns",
+      "noteChars": "Caracterele notei trimise către AI",
+      "maxMinutes": "Cel mai lung pas (minute)",
+      "minMinutes": "Cel mai scurt pas (minute)",
+      "maxSteps": "Cel mult atâția pași",
+      "model": "Model (gol: cel al Asistentului AI)",
+      "enabled": "Activat",
+      "noAi": "Niciun furnizor AI: setează cheia de mai sus pentru a primi propuneri.",
+      "description": "AI propune pași scurți, cu durată estimată, pentru o sarcină; îi corectezi înainte de a-i adăuga ca subsarcini."
+    },
+    "problem": {
+      "minutes": "O durată merge de la {{min}} la {{max}} de minute.",
+      "name": "Numele unui pas are cel mult {{max}} de caractere."
+    },
+    "applyError": "Pașii nu au putut fi adăugați.",
+    "applyNone": "Adaugă pașii",
+    "apply_other": "Adaugă {{count}} pași",
+    "apply_one": "Adaugă {{count}} pas",
+    "total": "Total: {{duration}}",
+    "addStep": "Adaugă un pas",
+    "remove": "Elimină pasul {{n}}",
+    "moveDown": "Mută pasul {{n}} în jos",
+    "moveUp": "Mută pasul {{n}} în sus",
+    "unit": "min",
+    "minutes": "Minutele pasului {{n}}",
+    "stepPlaceholder": "Pas",
+    "stepName": "Numele pasului {{n}}",
+    "settingsLink": "Profil › Asistent AI",
+    "reason": {
+      "empty": "AI nu a propus niciun pas.",
+      "failed": "AI nu este disponibil.",
+      "notConfigured": "AI nu este configurat.",
+      "disabled": "AI este dezactivat."
+    },
+    "fallbackPrompt": "Un prim pas de 2 min?",
+    "loading": "AI împarte sarcina…",
+    "title": "Împarte în pași"
+  },
   "desktopWindow": {
     "minimize": "Minimizează",
     "maximize": "Maximizează",

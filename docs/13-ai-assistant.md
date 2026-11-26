@@ -177,6 +177,28 @@ Appears in the project detail panel. Generated on demand and cached per project.
 
 Help in the planner and on Today (see [Daily Plan](20-daily-plan.md#ai-help)): **Draft with AI**, length guesses for tasks without an estimate, and an end-of-day wrap-up. It follows the same per-user **AI assistant** switch as everything above; with it off, the UI hides these and the endpoints return `403`. Each draft, estimate batch or wrap-up costs one AI credit in hosted mode. The planning tips ("30m free at 09:30 fits …") are worked out locally and never call the model.
 
+### Split into steps (« Découper en étapes », fork)
+
+From a task's detail (web task pane, Android task sheet), **Découper en étapes** asks the model for small, concrete steps in order, each with a duration in minutes. Nothing is written until the user keeps them: the sheet lets them rename, change the minutes, reorder, remove or add steps, shows the total, and **Ajouter N étapes** creates them as subtasks with their estimate (`estimated_minutes`), after the existing subtasks.
+
+- Only for a top-level task with write access; a subtask is refused (`400`), and a task from a `TODO.md` file is refused (`403`, its subtasks live in the file).
+- **Context sent to the model:** the task's name, its note shortened to `note_chars`, and the names of its existing subtasks (so no step repeats one). Nothing else.
+- The model answers a strict JSON Schema (`{ steps: [{ name, minutes }] }`); the server then trims and dedupes names (case-insensitive, also against existing subtasks), cuts them to 200 characters, rounds the minutes into `min_step_minutes`..`max_step_minutes` and keeps at most `max_steps` (`backend/modules/breakdown/core/steps.js`). The client's edited list is checked again on apply (1 to 50 steps, minutes 5 to 720 or none).
+- **Without AI** (Profile switch off, the feature turned off, no provider, a provider error, or no usable step) the answer is `source: "fallback"` with a `reason` (`disabled`, `not_configured`, `failed`, `empty`), and the sheet asks « Première étape de 2 min ? » with one empty step to type. Durations start at 5 minutes, the smallest estimate a task stores.
+- One call per click, one AI credit in hosted mode; nothing is cached.
+
+**Settings** (Profile on the web, Réglages on Android; `ui_settings.breakdown`, then `CADENCE_BREAKDOWN_*` in the server's environment, then these defaults):
+
+| Setting | Default | Range |
+|---|---|---|
+| `enabled` | `true` | |
+| `model` | `''` (the AI Assistant's model) | ≤ 200 chars |
+| `max_steps` | 6 | 2–15 |
+| `min_step_minutes` | 5 | 5–60 |
+| `max_step_minutes` | 25 | 5–240 |
+| `note_chars` | 1500 | 0–10000 |
+| `max_tokens` | 800 | 200–8000 |
+
 ---
 
 ## API Endpoints
@@ -192,6 +214,9 @@ Help in the planner and on Today (see [Daily Plan](20-daily-plan.md#ai-help)): *
 | `POST` | `/api/daily-plan/ai/draft` | Draft the day (body: `{ date, mode: "fill" \| "replace" }`); returned, not saved |
 | `POST` | `/api/daily-plan/ai/estimates` | Guess lengths for up to 40 tasks (body: `{ task_uids }`) |
 | `POST` | `/api/daily-plan/:date/ai/wrap-up` | Generate and store the day's wrap-up |
+| `POST` | `/api/task/:uid/breakdown` | Propose timed steps for a task; returned, not saved |
+| `POST` | `/api/task/:uid/breakdown/apply` | Create the kept steps as subtasks (body: `{ steps: [{ name, minutes }] }`) |
+| `GET` / `PUT` | `/api/breakdown/settings` | Read or store the « Découper en étapes » settings |
 | `GET` | `/api/profile/ai-settings` | Return the caller's AI provider settings (API key masked) |
 | `PUT` | `/api/profile/ai-settings` | Set/clear the caller's `ai_api_key`/`ai_base_url`/`ai_model` |
 

@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "No se pudieron cargar los ajustes",
+      "saveError": "No se pudo guardar",
+      "saved": "Ajustes guardados",
+      "default": "Por defecto: {{value}}",
+      "maxTokens": "Máximo de tokens de respuesta",
+      "noteChars": "Caracteres de la nota enviados a la IA",
+      "maxMinutes": "Paso más largo (minutos)",
+      "minMinutes": "Paso más corto (minutos)",
+      "maxSteps": "Máximo de pasos",
+      "model": "Modelo (vacío: el del Asistente de IA)",
+      "enabled": "Activado",
+      "noAi": "Sin proveedor de IA: indica la clave de arriba para recibir propuestas.",
+      "description": "La IA propone pasos cortos y con tiempo estimado para una tarea; los corriges antes de añadirlos como subtareas."
+    },
+    "problem": {
+      "minutes": "Una duración va de {{min}} a {{max}} minutos.",
+      "name": "El nombre de un paso tiene como máximo {{max}} caracteres."
+    },
+    "applyError": "No se pudieron añadir los pasos.",
+    "applyNone": "Añadir los pasos",
+    "apply_other": "Añadir {{count}} pasos",
+    "apply_one": "Añadir {{count}} paso",
+    "total": "Total: {{duration}}",
+    "addStep": "Añadir un paso",
+    "remove": "Quitar el paso {{n}}",
+    "moveDown": "Bajar el paso {{n}}",
+    "moveUp": "Subir el paso {{n}}",
+    "unit": "min",
+    "minutes": "Minutos del paso {{n}}",
+    "stepPlaceholder": "Paso",
+    "stepName": "Nombre del paso {{n}}",
+    "settingsLink": "Perfil › Asistente de IA",
+    "reason": {
+      "empty": "La IA no propuso ningún paso.",
+      "failed": "IA no disponible.",
+      "notConfigured": "IA no configurada.",
+      "disabled": "IA desactivada."
+    },
+    "fallbackPrompt": "¿Un primer paso de 2 min?",
+    "loading": "La IA está dividiendo la tarea…",
+    "title": "Dividir en pasos"
+  },
   "desktopWindow": {
     "minimize": "Minimizar",
     "maximize": "Maximizar",

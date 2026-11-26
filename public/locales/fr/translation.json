@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Réglages illisibles",
+      "saveError": "Enregistrement impossible",
+      "saved": "Réglages enregistrés",
+      "default": "Par défaut : {{value}}",
+      "maxTokens": "Jetons de réponse au plus",
+      "noteChars": "Caractères de la note envoyés à l’IA",
+      "maxMinutes": "Durée maximale d’une étape (minutes)",
+      "minMinutes": "Durée minimale d’une étape (minutes)",
+      "maxSteps": "Étapes au plus",
+      "model": "Modèle (vide : celui de l’Assistant IA)",
+      "enabled": "Activé",
+      "noAi": "Aucun fournisseur d’IA : renseignez la clé ci-dessus pour obtenir des propositions.",
+      "description": "L’IA propose des étapes courtes et minutées pour une tâche ; vous les corrigez avant de les ajouter en sous-tâches."
+    },
+    "problem": {
+      "minutes": "Une durée va de {{min}} à {{max}} minutes.",
+      "name": "Un nom d’étape fait {{max}} caractères au plus."
+    },
+    "applyError": "Impossible d’ajouter les étapes.",
+    "applyNone": "Ajouter les étapes",
+    "apply_other": "Ajouter {{count}} étapes",
+    "apply_one": "Ajouter {{count}} étape",
+    "total": "Total : {{duration}}",
+    "addStep": "Ajouter une étape",
+    "remove": "Retirer l’étape {{n}}",
+    "moveDown": "Descendre l’étape {{n}}",
+    "moveUp": "Monter l’étape {{n}}",
+    "unit": "min",
+    "minutes": "Minutes de l’étape {{n}}",
+    "stepPlaceholder": "Étape",
+    "stepName": "Nom de l’étape {{n}}",
+    "settingsLink": "Profil › Assistant IA",
+    "reason": {
+      "empty": "L’IA n’a proposé aucune étape.",
+      "failed": "IA indisponible.",
+      "notConfigured": "IA non configurée.",
+      "disabled": "IA désactivée."
+    },
+    "fallbackPrompt": "Première étape de 2 min ?",
+    "loading": "L’IA découpe la tâche…",
+    "title": "Découper en étapes"
+  },
   "desktopWindow": {
     "minimize": "Réduire",
     "maximize": "Agrandir",

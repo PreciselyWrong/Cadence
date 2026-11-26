@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Asetuksia ei voitu ladata",
+      "saveError": "Tallennus epäonnistui",
+      "saved": "Asetukset tallennettu",
+      "default": "Oletus: {{value}}",
+      "maxTokens": "Vastauksen tokeneita enintään",
+      "noteChars": "AI:lle lähetettävät muistiinpanon merkit",
+      "maxMinutes": "Pisin vaihe (minuuttia)",
+      "minMinutes": "Lyhin vaihe (minuuttia)",
+      "maxSteps": "Vaiheita enintään",
+      "model": "Malli (tyhjä: AI-avustajan malli)",
+      "enabled": "Käytössä",
+      "noAi": "Ei AI-palvelua: lisää avain yllä saadaksesi ehdotuksia.",
+      "description": "AI ehdottaa tehtävälle lyhyitä, ajoitettuja vaiheita; muokkaat niitä ennen kuin ne lisätään alitehtäviksi."
+    },
+    "problem": {
+      "minutes": "Kesto on {{min}}–{{max}} minuuttia.",
+      "name": "Vaiheen nimi on enintään {{max}} merkkiä."
+    },
+    "applyError": "Vaiheita ei voitu lisätä.",
+    "applyNone": "Lisää vaiheet",
+    "apply_other": "Lisää {{count}} vaihetta",
+    "apply_one": "Lisää {{count}} vaihe",
+    "total": "Yhteensä: {{duration}}",
+    "addStep": "Lisää vaihe",
+    "remove": "Poista vaihe {{n}}",
+    "moveDown": "Siirrä vaihe {{n}} alas",
+    "moveUp": "Siirrä vaihe {{n}} ylös",
+    "unit": "min",
+    "minutes": "Vaiheen {{n}} minuutit",
+    "stepPlaceholder": "Vaihe",
+    "stepName": "Vaiheen {{n}} nimi",
+    "settingsLink": "Profiili › AI-avustaja",
+    "reason": {
+      "empty": "AI ei ehdottanut vaiheita.",
+      "failed": "AI ei ole käytettävissä.",
+      "notConfigured": "AI:ta ei ole määritetty.",
+      "disabled": "AI on poistettu käytöstä."
+    },
+    "fallbackPrompt": "2 minuutin ensimmäinen vaihe?",
+    "loading": "Tekoäly jakaa tehtävää…",
+    "title": "Jaa vaiheisiin"
+  },
   "desktopWindow": {
     "minimize": "Pienennä",
     "maximize": "Suurenna",

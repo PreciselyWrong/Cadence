@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Indstillingerne kunne ikke indlæses",
+      "saveError": "Kunne ikke gemme",
+      "saved": "Indstillinger gemt",
+      "default": "Standard: {{value}}",
+      "maxTokens": "Højst så mange svar-tokens",
+      "noteChars": "Tegn fra noten sendt til AI’en",
+      "maxMinutes": "Længste trin (minutter)",
+      "minMinutes": "Korteste trin (minutter)",
+      "maxSteps": "Højst så mange trin",
+      "model": "Model (tom: den fra AI-assistenten)",
+      "enabled": "Aktiveret",
+      "noAi": "Ingen AI-udbyder: angiv nøglen ovenfor for at få forslag.",
+      "description": "AI’en foreslår korte trin med tidsestimat til en opgave; du retter dem, før de tilføjes som delopgaver."
+    },
+    "problem": {
+      "minutes": "En varighed går fra {{min}} til {{max}} minutter.",
+      "name": "Et trinnavn er højst {{max}} tegn."
+    },
+    "applyError": "Trinnene kunne ikke tilføjes.",
+    "applyNone": "Tilføj trinnene",
+    "apply_other": "Tilføj {{count}} trin",
+    "apply_one": "Tilføj {{count}} trin",
+    "total": "I alt: {{duration}}",
+    "addStep": "Tilføj et trin",
+    "remove": "Fjern trin {{n}}",
+    "moveDown": "Flyt trin {{n}} ned",
+    "moveUp": "Flyt trin {{n}} op",
+    "unit": "min",
+    "minutes": "Minutter for trin {{n}}",
+    "stepPlaceholder": "Trin",
+    "stepName": "Navn på trin {{n}}",
+    "settingsLink": "Profil › AI-assistent",
+    "reason": {
+      "empty": "AI’en foreslog ingen trin.",
+      "failed": "AI er ikke tilgængelig.",
+      "notConfigured": "AI er ikke sat op.",
+      "disabled": "AI er slået fra."
+    },
+    "fallbackPrompt": "Et første trin på 2 min?",
+    "loading": "AI’en deler opgaven op …",
+    "title": "Del op i trin"
+  },
   "desktopWindow": {
     "minimize": "Minimer",
     "maximize": "Maksimer",

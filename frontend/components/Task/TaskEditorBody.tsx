@@ -15,6 +15,7 @@ import MarkdownRenderer from '../Shared/MarkdownRenderer';
 import MarkdownEditor from '../Note/MarkdownEditor';
 import { SidePanelSection } from '../SidePanel/SidePanelParts';
 import TaskSubtasksCard from './TaskDetails/TaskSubtasksCard';
+import BreakdownSheet from '../Breakdown/BreakdownSheet';
 import TaskAttachmentsCard from './TaskDetails/TaskAttachmentsCard';
 import TaskComments from './TaskComments';
 import TaskContexts from './TaskContexts';
@@ -93,6 +94,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
         handleSubtaskUpdate,
         handleSubtaskDelete,
         handleQuickAddSubtask,
+        reloadSubtasks,
         setError,
         run,
         runFields,
@@ -104,6 +106,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
     // day the sheet was opened from no longer holds it.
     const [leftPlan, setLeftPlan] = useState(false);
     const [attachOpen, setAttachOpen] = useState(false);
+    const [breakdownOpen, setBreakdownOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0);
     const showAttachments = attachOpen || attachmentsCount > 0;
 
@@ -349,7 +352,20 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                                 onQuickAdd={(name) =>
                                     void handleQuickAddSubtask(name)
                                 }
+                                onBreakdown={
+                                    task.parent_task_id
+                                        ? undefined
+                                        : () => setBreakdownOpen(true)
+                                }
                             />
+                            {breakdownOpen && (
+                                <BreakdownSheet
+                                    taskUid={task.uid}
+                                    taskName={task.name ?? ''}
+                                    onClose={() => setBreakdownOpen(false)}
+                                    onApplied={reloadSubtasks}
+                                />
+                            )}
                         </SidePanelSection>
                     )}
 

@@ -9,6 +9,7 @@ import { fetchBillingStatus } from '../../../utils/billingService';
 import UsageBar from '../../Shared/UsageBar';
 import TrialLockNotice from '../../Billing/TrialLockNotice';
 import { useTrialLock } from '../../../hooks/useTrialStatus';
+import BreakdownSettingsCard from './BreakdownSettingsCard';
 import type { ProfileFormData, Features } from '../types';
 
 type AiProviderField = 'ai_api_key' | 'ai_base_url' | 'ai_model';
@@ -313,6 +314,8 @@ const AIAssistantTab: React.FC<AIAssistantTabProps> = ({
                     {(formData.ai_profile || '').length} / 500
                 </p>
             </div>
+
+            <BreakdownSettingsCard isActive={isActive} />
         </div>
     );
 };

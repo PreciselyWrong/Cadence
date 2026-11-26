@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Det gick inte att läsa in inställningarna",
+      "saveError": "Det gick inte att spara",
+      "saved": "Inställningarna sparades",
+      "default": "Standard: {{value}}",
+      "maxTokens": "Högst så många svarstokens",
+      "noteChars": "Tecken från anteckningen som skickas till AI:n",
+      "maxMinutes": "Längsta steg (minuter)",
+      "minMinutes": "Kortaste steg (minuter)",
+      "maxSteps": "Högst så många steg",
+      "model": "Modell (tom: den från AI-assistenten)",
+      "enabled": "Aktiverad",
+      "noAi": "Ingen AI-leverantör: ange nyckeln ovan för att få förslag.",
+      "description": "AI:n föreslår korta steg med tidsuppskattning för en uppgift; du justerar dem innan de läggs till som deluppgifter."
+    },
+    "problem": {
+      "minutes": "En längd går från {{min}} till {{max}} minuter.",
+      "name": "Ett stegnamn är högst {{max}} tecken."
+    },
+    "applyError": "Det gick inte att lägga till stegen.",
+    "applyNone": "Lägg till stegen",
+    "apply_other": "Lägg till {{count}} steg",
+    "apply_one": "Lägg till {{count}} steg",
+    "total": "Totalt: {{duration}}",
+    "addStep": "Lägg till ett steg",
+    "remove": "Ta bort steg {{n}}",
+    "moveDown": "Flytta ned steg {{n}}",
+    "moveUp": "Flytta upp steg {{n}}",
+    "unit": "min",
+    "minutes": "Minuter för steg {{n}}",
+    "stepPlaceholder": "Steg",
+    "stepName": "Namn på steg {{n}}",
+    "settingsLink": "Profil › AI-assistent",
+    "reason": {
+      "empty": "AI:n föreslog inga steg.",
+      "failed": "AI är inte tillgänglig.",
+      "notConfigured": "AI är inte konfigurerad.",
+      "disabled": "AI är avstängd."
+    },
+    "fallbackPrompt": "Ett första steg på 2 min?",
+    "loading": "AI:n delar upp uppgiften …",
+    "title": "Dela upp i steg"
+  },
   "desktopWindow": {
     "minimize": "Minimera",
     "maximize": "Maximera",

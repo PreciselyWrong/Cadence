@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Impossibile caricare le impostazioni",
+      "saveError": "Impossibile salvare",
+      "saved": "Impostazioni salvate",
+      "default": "Predefinito: {{value}}",
+      "maxTokens": "Token di risposta al massimo",
+      "noteChars": "Caratteri della nota inviati all’IA",
+      "maxMinutes": "Passaggio più lungo (minuti)",
+      "minMinutes": "Passaggio più breve (minuti)",
+      "maxSteps": "Passaggi al massimo",
+      "model": "Modello (vuoto: quello dell’Assistente IA)",
+      "enabled": "Attivato",
+      "noAi": "Nessun provider IA: imposta la chiave qui sopra per ricevere proposte.",
+      "description": "L’IA propone passaggi brevi e con durata stimata per un’attività; li modifichi prima di aggiungerli come sottoattività."
+    },
+    "problem": {
+      "minutes": "Una durata va da {{min}} a {{max}} minuti.",
+      "name": "Il nome di un passaggio ha al massimo {{max}} caratteri."
+    },
+    "applyError": "Impossibile aggiungere i passaggi.",
+    "applyNone": "Aggiungi i passaggi",
+    "apply_other": "Aggiungi {{count}} passaggi",
+    "apply_one": "Aggiungi {{count}} passaggio",
+    "total": "Totale: {{duration}}",
+    "addStep": "Aggiungi un passaggio",
+    "remove": "Rimuovi il passaggio {{n}}",
+    "moveDown": "Sposta giù il passaggio {{n}}",
+    "moveUp": "Sposta su il passaggio {{n}}",
+    "unit": "min",
+    "minutes": "Minuti del passaggio {{n}}",
+    "stepPlaceholder": "Passaggio",
+    "stepName": "Nome del passaggio {{n}}",
+    "settingsLink": "Profilo › Assistente IA",
+    "reason": {
+      "empty": "L’IA non ha proposto alcun passaggio.",
+      "failed": "IA non disponibile.",
+      "notConfigured": "IA non configurata.",
+      "disabled": "IA disattivata."
+    },
+    "fallbackPrompt": "Un primo passaggio da 2 min?",
+    "loading": "L’IA sta dividendo l’attività…",
+    "title": "Dividi in passaggi"
+  },
   "desktopWindow": {
     "minimize": "Riduci a icona",
     "maximize": "Ingrandisci",

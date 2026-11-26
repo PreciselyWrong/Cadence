@@ -1,4 +1,50 @@
 {
+  "breakdown": {
+    "apply_many": "Dodaj {{count}} kroków",
+    "apply_few": "Dodaj {{count}} kroki",
+    "settings": {
+      "loadError": "Nie udało się wczytać ustawień",
+      "saveError": "Nie udało się zapisać",
+      "saved": "Ustawienia zapisane",
+      "default": "Domyślnie: {{value}}",
+      "maxTokens": "Najwyżej tyle tokenów odpowiedzi",
+      "noteChars": "Znaki notatki wysyłane do AI",
+      "maxMinutes": "Najdłuższy krok (minuty)",
+      "minMinutes": "Najkrótszy krok (minuty)",
+      "maxSteps": "Najwyżej tyle kroków",
+      "model": "Model (puste: model Asystenta AI)",
+      "enabled": "Włączone",
+      "noAi": "Brak dostawcy AI: ustaw powyżej klucz, aby dostawać propozycje.",
+      "description": "AI proponuje krótkie kroki z szacowanym czasem dla zadania; poprawiasz je, zanim zostaną dodane jako podzadania."
+    },
+    "problem": {
+      "minutes": "Czas trwa od {{min}} do {{max}} minut.",
+      "name": "Nazwa kroku ma najwyżej {{max}} znaków."
+    },
+    "applyError": "Nie udało się dodać kroków.",
+    "applyNone": "Dodaj kroki",
+    "apply_other": "Dodaj {{count}} kroków",
+    "apply_one": "Dodaj {{count}} krok",
+    "total": "Razem: {{duration}}",
+    "addStep": "Dodaj krok",
+    "remove": "Usuń krok {{n}}",
+    "moveDown": "Przesuń krok {{n}} w dół",
+    "moveUp": "Przesuń krok {{n}} w górę",
+    "unit": "min",
+    "minutes": "Minuty kroku {{n}}",
+    "stepPlaceholder": "Krok",
+    "stepName": "Nazwa kroku {{n}}",
+    "settingsLink": "Profil › Asystent AI",
+    "reason": {
+      "empty": "AI nie zaproponowało żadnych kroków.",
+      "failed": "AI jest niedostępne.",
+      "notConfigured": "AI nie jest skonfigurowane.",
+      "disabled": "AI jest wyłączone."
+    },
+    "fallbackPrompt": "Pierwszy krok na 2 min?",
+    "loading": "AI dzieli zadanie…",
+    "title": "Podziel na kroki"
+  },
   "desktopWindow": {
     "minimize": "Minimalizuj",
     "maximize": "Maksymalizuj",

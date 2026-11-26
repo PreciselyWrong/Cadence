@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Einstellungen konnten nicht geladen werden",
+      "saveError": "Speichern nicht möglich",
+      "saved": "Einstellungen gespeichert",
+      "default": "Standard: {{value}}",
+      "maxTokens": "Höchstens so viele Antwort-Token",
+      "noteChars": "An die KI gesendete Zeichen der Notiz",
+      "maxMinutes": "Längster Schritt (Minuten)",
+      "minMinutes": "Kürzester Schritt (Minuten)",
+      "maxSteps": "Höchstens so viele Schritte",
+      "model": "Modell (leer: das des KI-Assistenten)",
+      "enabled": "Aktiviert",
+      "noAi": "Kein KI-Anbieter: Hinterlege oben den Schlüssel, um Vorschläge zu erhalten.",
+      "description": "Die KI schlägt kurze, zeitlich geschätzte Schritte für eine Aufgabe vor; du bearbeitest sie, bevor sie als Teilaufgaben hinzugefügt werden."
+    },
+    "problem": {
+      "minutes": "Eine Dauer reicht von {{min}} bis {{max}} Minuten.",
+      "name": "Ein Schrittname hat höchstens {{max}} Zeichen."
+    },
+    "applyError": "Die Schritte konnten nicht hinzugefügt werden.",
+    "applyNone": "Schritte hinzufügen",
+    "apply_other": "{{count}} Schritte hinzufügen",
+    "apply_one": "{{count}} Schritt hinzufügen",
+    "total": "Gesamt: {{duration}}",
+    "addStep": "Schritt hinzufügen",
+    "remove": "Schritt {{n}} entfernen",
+    "moveDown": "Schritt {{n}} nach unten",
+    "moveUp": "Schritt {{n}} nach oben",
+    "unit": "Min.",
+    "minutes": "Minuten von Schritt {{n}}",
+    "stepPlaceholder": "Schritt",
+    "stepName": "Name von Schritt {{n}}",
+    "settingsLink": "Profil › KI-Assistent",
+    "reason": {
+      "empty": "Die KI hat keine Schritte vorgeschlagen.",
+      "failed": "KI ist nicht verfügbar.",
+      "notConfigured": "KI ist nicht eingerichtet.",
+      "disabled": "KI ist deaktiviert."
+    },
+    "fallbackPrompt": "Ein erster Schritt von 2 Min.?",
+    "loading": "Die KI teilt die Aufgabe auf …",
+    "title": "In Schritte aufteilen"
+  },
   "desktopWindow": {
     "minimize": "Minimieren",
     "maximize": "Maximieren",

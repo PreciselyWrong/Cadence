@@ -53,7 +53,11 @@ const NO_QUEUE_PATHS = [
 ];
 // A plugin's run button (a Hermes job started now): replayed later, it would
 // start the job at a time nobody asked for.
-const NO_QUEUE_PATTERNS = [/\/api\/plugins\/[^/]+\/actions\/[^/]+\/run$/];
+const NO_QUEUE_PATTERNS = [
+    /\/api\/plugins\/[^/]+\/actions\/[^/]+\/run$/,
+    // « Découper en étapes »: an AI call, and steps chosen on its answer.
+    /\/api(\/v1)?\/task\/[^/]+\/breakdown(\/apply)?$/,
+];
 
 const neverQueued = (pathname) =>
     NO_QUEUE_PATHS.some((p) => pathname.includes(p)) ||

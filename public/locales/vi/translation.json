@@ -1,4 +1,48 @@
 {
+  "breakdown": {
+    "settings": {
+      "loadError": "Không thể tải cài đặt",
+      "saveError": "Không thể lưu",
+      "saved": "Đã lưu cài đặt",
+      "default": "Mặc định: {{value}}",
+      "maxTokens": "Số token phản hồi tối đa",
+      "noteChars": "Số ký tự của ghi chú gửi cho AI",
+      "maxMinutes": "Bước dài nhất (phút)",
+      "minMinutes": "Bước ngắn nhất (phút)",
+      "maxSteps": "Số bước tối đa",
+      "model": "Mô hình (để trống: của Trợ lý AI)",
+      "enabled": "Bật",
+      "noAi": "Chưa có nhà cung cấp AI: nhập khóa ở trên để nhận đề xuất.",
+      "description": "AI đề xuất các bước ngắn có ước lượng thời gian cho một công việc; bạn chỉnh sửa trước khi thêm chúng làm việc con."
+    },
+    "problem": {
+      "minutes": "Thời lượng từ {{min}} đến {{max}} phút.",
+      "name": "Tên bước tối đa {{max}} ký tự."
+    },
+    "applyError": "Không thể thêm các bước.",
+    "applyNone": "Thêm các bước",
+    "apply_other": "Thêm {{count}} bước",
+    "apply_one": "Thêm {{count}} bước",
+    "total": "Tổng: {{duration}}",
+    "addStep": "Thêm một bước",
+    "remove": "Xóa bước {{n}}",
+    "moveDown": "Đưa bước {{n}} xuống",
+    "moveUp": "Đưa bước {{n}} lên",
+    "unit": "phút",
+    "minutes": "Số phút của bước {{n}}",
+    "stepPlaceholder": "Bước",
+    "stepName": "Tên bước {{n}}",
+    "settingsLink": "Hồ sơ › Trợ lý AI",
+    "reason": {
+      "empty": "AI không đề xuất bước nào.",
+      "failed": "AI không khả dụng.",
+      "notConfigured": "AI chưa được cấu hình.",
+      "disabled": "AI đã bị tắt."
+    },
+    "fallbackPrompt": "Bước đầu tiên 2 phút?",
+    "loading": "AI đang chia nhỏ công việc…",
+    "title": "Chia thành các bước"
+  },
   "desktopWindow": {
     "minimize": "Thu nhỏ",
     "maximize": "Phóng to",
