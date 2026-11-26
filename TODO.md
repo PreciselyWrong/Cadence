@@ -4,6 +4,7 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- [ ] Android : fiche de tâche dans le même ordre que le web (planification sous les chips, barre Joindre · Commenter · Historique), `docs/fork/WEB-UX-NOTES.md` 2026-11-26 #ux
 - Hermes : mesurer les tokens de « Discuter avec l'IA » et du passage du matin (2026-11-19)
   Raison : budgets de `.agents/skills/hermes-calls/SKILL.md` (≲ 20 k par run interactif). « Discuter avec l'IA » n'a pas encore servi ; le passage du matin part demain à 6 h 30 s'il y a des retards. Vérif : tokens du premier échange et du premier passage du matin notés dans `docs/47-proposals.md`.
 
