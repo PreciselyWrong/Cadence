@@ -1,7 +1,7 @@
 {
   "name": "tududi",
   "version": "v1.14.0",
-  "cadenceVersion": "2026.11.26.2",
+  "cadenceVersion": "2026.11.26.3",
   "description": "Self-hosted task management with hierarchical organization, multi-language support, and Telegram integration.",
   "directories": {
     "test": "test"

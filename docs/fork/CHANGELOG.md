@@ -4,6 +4,14 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.3
+
+- Projets › Tableau : texte et colonnes agrandis, chaque colonne défile sous son en-tête, bouton « Actualiser les TODO.md » qui relit les fichiers de tous les sous-projets.
+- Projets › Tableau : pastille de santé par sous-projet (bloqué, périmé, à jour) avec un seuil réglable (14 jours), tâches regroupées par section du fichier (Now, Next, Ideas), sections repliées après 8 cartes.
+- Projets `TODO.md` : la ligne compacte « Branche: x | Arbre: y » donne la branche et l'état de l'arbre séparément.
+- Corrigé : « + View » fonctionne dans le client Linux (le nom se saisit dans la barre), le chevron des menus du tableau ne recouvre plus le texte.
+- Fiche de tâche remise en ordre (web) : planification sous les chips, « Découper en étapes » sur la ligne d'ajout de sous-tâche, une seule barre « Joindre · Commenter · Historique » ; les traductions sont à jour dès un déploiement.
+
 ## 2026.11.26.2
 
 - Projets `TODO.md` : `#bug` (étiquette), `!high` / `!med` / `!low` et `@AAAA-MM-JJ` dans une puce ajoutent les étiquettes et fixent la priorité et l'échéance ; ils disparaissent du titre et changer l'un d'eux garde la même tâche.
