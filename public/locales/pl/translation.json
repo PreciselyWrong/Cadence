@@ -944,7 +944,7 @@
     "plugins": {
       "title": "Wtyczki",
       "description": "Wtyczki dodają do serwera własne integracje. Widzi je tylko administrator. Wtyczka pozostaje wyłączona, dopóki jej nie włączysz.",
-      "notConfigured": "Wtyczki są wyłączone. Ustaw TUDUDI_PLUGINS_DIR na folder zawierający foldery wtyczek i uruchom ponownie serwer.",
+      "notConfigured": "Wtyczki są wyłączone. Ustaw CADENCE_PLUGINS_DIR na folder zawierający foldery wtyczek i uruchom ponownie serwer.",
       "reloadAll": "Przeładuj wszystkie",
       "reload": "Przeładuj",
       "reloadPending": "Przeładuj, aby wczytać {{version}}",
@@ -5448,7 +5448,7 @@
     "title": "Weryfikacja dwuetapowa",
     "on": "Włączona",
     "description": "Prosi o kod z aplikacji uwierzytelniającej, oprócz hasła lub logowania jednokrotnego, za każdym razem, gdy to konto loguje się na nowym urządzeniu.",
-    "unavailable": "Weryfikacja dwuetapowa wymaga ustawienia TUDUDI_SESSION_SECRET na serwerze. Zapytaj administratora.",
+    "unavailable": "Weryfikacja dwuetapowa wymaga ustawienia CADENCE_SESSION_SECRET na serwerze. Zapytaj administratora.",
     "turnOn": "Włącz",
     "turnOff": "Wyłącz",
     "setupScan": "Zeskanuj ten kod QR aplikacją uwierzytelniającą, na przykład Google Authenticator, 1Password lub Aegis.",

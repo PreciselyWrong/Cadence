@@ -81,7 +81,7 @@ function apiKeyUpdate(apiKey) {
     }
     if (!secretCipher.hasKeyMaterial()) {
         throw new ValidationError(
-            'Cannot save the agent API key: set TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
+            'Cannot save the agent API key: set CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
         );
     }
     return { agent_api_key: secretCipher.encrypt(key) };

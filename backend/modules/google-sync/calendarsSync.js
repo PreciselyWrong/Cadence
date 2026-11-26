@@ -18,7 +18,7 @@ const { guard } = require('./guard');
 
 // A first sync (or one after Google drops the sync token) starts here.
 const FULL_SYNC_PAST_DAYS = 90;
-const TUDUDI_CALENDAR_NAME = 'Cadence';
+const CADENCE_CALENDAR_NAME = 'Cadence';
 
 const fullSyncFrom = () =>
     new Date(Date.now() - FULL_SYNC_PAST_DAYS * 86400000).toISOString();
@@ -56,7 +56,10 @@ async function ensureTududiCalendar(ctx, account) {
             });
         }
     }
-    const created = await client.createCalendar(TUDUDI_CALENDAR_NAME, timezone);
+    const created = await client.createCalendar(
+        CADENCE_CALENDAR_NAME,
+        timezone
+    );
     await account.update({ tududi_calendar_id: created.id });
     return created.id;
 }
@@ -403,5 +406,5 @@ async function syncCalendars(ctx, account) {
 module.exports = {
     syncCalendars,
     storeEvent,
-    TUDUDI_CALENDAR_NAME,
+    CADENCE_CALENDAR_NAME,
 };

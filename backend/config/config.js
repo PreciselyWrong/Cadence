@@ -1,3 +1,4 @@
+require('./env-compat');
 const path = require('path');
 
 if (
@@ -45,18 +46,18 @@ const displayPricing = () => ({
     // `from`, and subscribing before then keeps today's price.
     next: { monthly: 7, annual: 70, from: '2027-01-01' },
     ...parseJsonEnv(
-        process.env.TUDUDI_PRICING_JSON ||
-            process.env.TUDUDI_LANDING_PRICING_JSON
+        process.env.CADENCE_PRICING_JSON ||
+            process.env.CADENCE_LANDING_PRICING_JSON
     ),
 });
 
 // Where the blog lives, for links from the marketing pages and the sitemap:
-// TUDUDI_BLOG_URL, else the first blog host, else null (no blog host).
+// CADENCE_BLOG_URL, else the first blog host, else null (no blog host).
 function blogSiteUrl() {
-    if (process.env.TUDUDI_BLOG_URL) {
-        return process.env.TUDUDI_BLOG_URL.replace(/\/$/, '');
+    if (process.env.CADENCE_BLOG_URL) {
+        return process.env.CADENCE_BLOG_URL.replace(/\/$/, '');
     }
-    const host = (process.env.TUDUDI_BLOG_HOSTS || '').split(',')[0].trim();
+    const host = (process.env.CADENCE_BLOG_HOSTS || '').split(',')[0].trim();
     return host ? `https://${host.toLowerCase()}` : null;
 }
 
@@ -122,14 +123,16 @@ const memberSignInLinkExpiryHours = process.env.MEMBER_SIGN_IN_LINK_EXPIRY_HOURS
     : 24;
 
 const config = {
-    allowedOrigins: process.env.TUDUDI_ALLOWED_ORIGINS
-        ? process.env.TUDUDI_ALLOWED_ORIGINS.split(',').map((origin) =>
+    allowedOrigins: process.env.CADENCE_ALLOWED_ORIGINS
+        ? process.env.CADENCE_ALLOWED_ORIGINS.split(',').map((origin) =>
               origin.trim()
           )
         : [
               'http://localhost:8080',
+              'http://localhost:3002',
               'http://localhost:9292',
               'http://127.0.0.1:8080',
+              'http://127.0.0.1:3002',
               'http://127.0.0.1:9292',
           ],
 
@@ -151,26 +154,27 @@ const config = {
     // bootstrap role assignment, SSO auto-provisioning past a closed
     // registration) are switched off. Off by default for self-hosters.
     hosted: {
-        enabled: process.env.TUDUDI_HOSTED_MODE === 'true',
-        trialDays: process.env.TUDUDI_TRIAL_DAYS
-            ? parseInt(process.env.TUDUDI_TRIAL_DAYS, 10)
+        enabled: process.env.CADENCE_HOSTED_MODE === 'true',
+        trialDays: process.env.CADENCE_TRIAL_DAYS
+            ? parseInt(process.env.CADENCE_TRIAL_DAYS, 10)
             : 7,
         // After a trial ends without a subscription the account can still
         // read (and export) its data for this many days, then it is deleted.
-        trialReadOnlyDays: process.env.TUDUDI_TRIAL_READ_ONLY_DAYS
-            ? parseInt(process.env.TUDUDI_TRIAL_READ_ONLY_DAYS, 10)
+        trialReadOnlyDays: process.env.CADENCE_TRIAL_READ_ONLY_DAYS
+            ? parseInt(process.env.CADENCE_TRIAL_READ_ONLY_DAYS, 10)
             : 30,
         deleteExpiredTrials:
-            process.env.TUDUDI_DELETE_EXPIRED_TRIALS !== 'false',
-        graceDays: process.env.TUDUDI_PAST_DUE_GRACE_DAYS
-            ? parseInt(process.env.TUDUDI_PAST_DUE_GRACE_DAYS, 10)
+            process.env.CADENCE_DELETE_EXPIRED_TRIALS !== 'false',
+        graceDays: process.env.CADENCE_PAST_DUE_GRACE_DAYS
+            ? parseInt(process.env.CADENCE_PAST_DUE_GRACE_DAYS, 10)
             : 14,
-        exemptAdmins: process.env.TUDUDI_HOSTED_EXEMPT_ADMINS !== 'false',
+        exemptAdmins: process.env.CADENCE_HOSTED_EXEMPT_ADMINS !== 'false',
         // Sell access rather than upgrades: without an active subscription
         // the app is closed, and only billing, the profile and data export
         // stay reachable. Off by default, and meaningless when hosted mode
         // is off, so a self-hosted instance is never gated.
-        requireSubscription: process.env.TUDUDI_REQUIRE_SUBSCRIPTION === 'true',
+        requireSubscription:
+            process.env.CADENCE_REQUIRE_SUBSCRIPTION === 'true',
         stripe: {
             secretKey: process.env.STRIPE_SECRET_KEY,
             webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
@@ -232,14 +236,14 @@ const config = {
     },
 
     // Public demo sandbox: one shared account, seeded and wiped on a timer.
-    // Off unless TUDUDI_DEMO_ENABLED is set, so a self-hosted instance never
+    // Off unless CADENCE_DEMO_ENABLED is set, so a self-hosted instance never
     // grows a public login.
     demo: {
-        enabled: process.env.TUDUDI_DEMO_ENABLED === 'true',
-        email: process.env.TUDUDI_DEMO_EMAIL || 'demo@tududi.com',
-        password: process.env.TUDUDI_DEMO_PASSWORD || 'demodemo',
-        resetMinutes: process.env.TUDUDI_DEMO_RESET_MINUTES
-            ? parseInt(process.env.TUDUDI_DEMO_RESET_MINUTES, 10)
+        enabled: process.env.CADENCE_DEMO_ENABLED === 'true',
+        email: process.env.CADENCE_DEMO_EMAIL || 'demo@tududi.com',
+        password: process.env.CADENCE_DEMO_PASSWORD || 'demodemo',
+        resetMinutes: process.env.CADENCE_DEMO_RESET_MINUTES
+            ? parseInt(process.env.CADENCE_DEMO_RESET_MINUTES, 10)
             : 60,
     },
 
@@ -251,19 +255,19 @@ const config = {
         verifyUrl: process.env.TURNSTILE_VERIFY_URL || undefined,
     },
 
-    // Marketing page. When TUDUDI_LANDING_HOSTS names one or more hostnames,
+    // Marketing page. When CADENCE_LANDING_HOSTS names one or more hostnames,
     // requests for those hosts get the marketing page instead of the app,
     // and product paths on them redirect to FRONTEND_URL. Empty (the
     // default) means the page is never served.
     landing: {
-        hosts: (process.env.TUDUDI_LANDING_HOSTS || '')
+        hosts: (process.env.CADENCE_LANDING_HOSTS || '')
             .split(',')
             .map((h) => h.trim().toLowerCase())
             .filter(Boolean),
         siteUrl:
-            process.env.TUDUDI_LANDING_URL ||
-            (process.env.TUDUDI_LANDING_HOSTS
-                ? `https://${process.env.TUDUDI_LANDING_HOSTS.split(',')[0].trim()}`
+            process.env.CADENCE_LANDING_URL ||
+            (process.env.CADENCE_LANDING_HOSTS
+                ? `https://${process.env.CADENCE_LANDING_HOSTS.split(',')[0].trim()}`
                 : 'https://tududi.com'),
         appUrl: process.env.FRONTEND_URL || 'http://localhost:8080',
         pricing: displayPricing(),
@@ -272,10 +276,10 @@ const config = {
 
     // Blog. The superadmin picks a publicly shared note of theirs as the
     // front page in the admin area; the public notes it links with [[Title]]
-    // are the posts. TUDUDI_BLOG_HOSTS serves the blog at the root of those
+    // are the posts. CADENCE_BLOG_HOSTS serves the blog at the root of those
     // hostnames; without it the blog is still readable at /blog.
     blog: {
-        hosts: (process.env.TUDUDI_BLOG_HOSTS || '')
+        hosts: (process.env.CADENCE_BLOG_HOSTS || '')
             .split(',')
             .map((h) => h.trim().toLowerCase())
             .filter(Boolean),
@@ -283,17 +287,17 @@ const config = {
     },
 
     // Page views for the admin dashboard: marketing, blog and app loads. No
-    // address is stored (see models/site_visit.js). TUDUDI_VISIT_TRACKING=false
+    // address is stored (see models/site_visit.js). CADENCE_VISIT_TRACKING=false
     // turns it off, and the dashboard then shows no visit numbers.
     visits: {
-        enabled: process.env.TUDUDI_VISIT_TRACKING !== 'false',
+        enabled: process.env.CADENCE_VISIT_TRACKING !== 'false',
     },
 
     // Same object the marketing page uses, so /api/billing can quote the
     // price without the frontend hardcoding numbers of its own.
     pricing: displayPricing(),
 
-    email: process.env.TUDUDI_USER_EMAIL,
+    email: process.env.CADENCE_USER_EMAIL,
 
     environment,
 
@@ -320,12 +324,12 @@ const config = {
 
     port: process.env.PORT || 3002,
 
-    password: process.env.TUDUDI_USER_PASSWORD,
+    password: process.env.CADENCE_USER_PASSWORD,
 
     production,
 
     secret:
-        process.env.TUDUDI_SESSION_SECRET ||
+        process.env.CADENCE_SESSION_SECRET ||
         require('crypto').randomBytes(64).toString('hex'),
 
     credentials,
@@ -341,12 +345,14 @@ const config = {
     memberSignInLinkExpiryHours,
 
     uploadPath:
-        process.env.TUDUDI_UPLOAD_PATH || path.join(projectRootPath, 'uploads'),
+        process.env.CADENCE_UPLOAD_PATH ||
+        path.join(projectRootPath, 'uploads'),
 
     // Per-user backup exports (Profile > Backup). A separate volume in Docker
     // so they survive a container recreate like uploads do.
     backupPath:
-        process.env.TUDUDI_BACKUP_PATH || path.join(projectRootPath, 'backups'),
+        process.env.CADENCE_BACKUP_PATH ||
+        path.join(projectRootPath, 'backups'),
 
     // File upload limit in MB (default 10MB)
     fileUploadLimitMB: process.env.FILE_UPLOAD_LIMIT_MB
@@ -359,33 +365,33 @@ const config = {
     },
 
     trustProxy: (() => {
-        const val = process.env.TUDUDI_TRUST_PROXY;
+        const val = process.env.CADENCE_TRUST_PROXY;
         if (val === undefined || val === '') {
-            console.log('[Config] TUDUDI_TRUST_PROXY not set, using false');
+            console.log('[Config] CADENCE_TRUST_PROXY not set, using false');
             return false;
         }
         if (val === 'true') {
             console.warn(
-                '[Config] TUDUDI_TRUST_PROXY=true is permissive — converting to 1 (single hop). ' +
-                    'Set TUDUDI_TRUST_PROXY=1 explicitly to silence this warning, ' +
+                '[Config] CADENCE_TRUST_PROXY=true is permissive — converting to 1 (single hop). ' +
+                    'Set CADENCE_TRUST_PROXY=1 explicitly to silence this warning, ' +
                     'or use a higher number if you have multiple proxy hops.'
             );
             return 1;
         }
         if (val === 'false') {
             console.log(
-                '[Config] TUDUDI_TRUST_PROXY=false parsed as boolean false'
+                '[Config] CADENCE_TRUST_PROXY=false parsed as boolean false'
             );
             return false;
         }
         const num = Number(val);
         if (!isNaN(num) && val.trim() !== '') {
             console.log(
-                `[Config] TUDUDI_TRUST_PROXY=${val} parsed as number ${num}`
+                `[Config] CADENCE_TRUST_PROXY=${val} parsed as number ${num}`
             );
             return num;
         }
-        console.log(`[Config] TUDUDI_TRUST_PROXY=${val} parsed as string`);
+        console.log(`[Config] CADENCE_TRUST_PROXY=${val} parsed as string`);
         return val;
     })(),
 

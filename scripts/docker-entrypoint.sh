@@ -8,6 +8,11 @@ set -eu
 PUID=${PUID:-${APP_UID:-1001}}
 PGID=${PGID:-${APP_GID:-1001}}
 
+# Image defaults for the data volumes. Set here rather than in the Dockerfile
+# ENV block, which would shadow a legacy TUDUDI_* value (backend/config/env-compat.js).
+export CADENCE_UPLOAD_PATH="${CADENCE_UPLOAD_PATH:-${TUDUDI_UPLOAD_PATH:-/app/uploads}}"
+export CADENCE_BACKUP_PATH="${CADENCE_BACKUP_PATH:-${TUDUDI_BACKUP_PATH:-/app/backups}}"
+
 # Get current app user/group info.
 # Assuming the current user/group is app:app
 # as created in our Dockerfile.

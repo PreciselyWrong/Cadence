@@ -41,7 +41,7 @@ When deploying Cadence, we recommend:
 
 ### Production Deployment
 
-- **Use strong passwords:** Set secure `TUDUDI_USER_PASSWORD` and `TUDUDI_SESSION_SECRET`
+- **Use strong passwords:** Set secure `CADENCE_USER_PASSWORD` and `CADENCE_SESSION_SECRET`
 - **HTTPS only:** Always use HTTPS in production (reverse proxy with Let's Encrypt)
 - **Keep updated:** Regularly update to the latest version
 - **Secure database:** Protect database files with proper permissions
@@ -52,7 +52,7 @@ When deploying Cadence, we recommend:
 
 ```bash
 # Generate strong session secret
-TUDUDI_SESSION_SECRET=$(openssl rand -hex 64)
+CADENCE_SESSION_SECRET=$(openssl rand -hex 64)
 
 # Use secure volumes with proper permissions
 chmod 700 ~/tududi_db

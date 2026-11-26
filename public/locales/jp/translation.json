@@ -928,7 +928,7 @@
     "plugins": {
       "title": "プラグイン",
       "description": "プラグインは独自の連携をサーバーに追加します。管理者だけが見ることができます。有効にするまでプラグインはオフのままです。",
-      "notConfigured": "プラグインはオフです。TUDUDI_PLUGINS_DIR にプラグインフォルダーを含むフォルダーを設定し、サーバーを再起動してください。",
+      "notConfigured": "プラグインはオフです。CADENCE_PLUGINS_DIR にプラグインフォルダーを含むフォルダーを設定し、サーバーを再起動してください。",
       "reloadAll": "すべて再読み込み",
       "reload": "再読み込み",
       "reloadPending": "{{version}} を読み込むには再読み込みしてください",
@@ -5360,7 +5360,7 @@
     "title": "2段階認証",
     "on": "オン",
     "description": "このアカウントが新しいデバイスでサインインするたびに、パスワードまたはシングルサインオンに加えて、認証アプリのコードを求めます。",
-    "unavailable": "2段階認証を使うには、サーバーで TUDUDI_SESSION_SECRET を設定する必要があります。管理者にお問い合わせください。",
+    "unavailable": "2段階認証を使うには、サーバーで CADENCE_SESSION_SECRET を設定する必要があります。管理者にお問い合わせください。",
     "turnOn": "オンにする",
     "turnOff": "オフにする",
     "setupScan": "Google Authenticator、1Password、Aegis などの認証アプリでこの QR コードをスキャンしてください。",

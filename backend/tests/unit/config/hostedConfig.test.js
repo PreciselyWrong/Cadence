@@ -1,8 +1,8 @@
 const { hostedConfigProblems } = require('../../../config/hostedConfig');
 
 const fullEnv = {
-    TUDUDI_SESSION_SECRET: 'x'.repeat(64),
-    TUDUDI_ALLOWED_ORIGINS: 'https://app.example.com',
+    CADENCE_SESSION_SECRET: 'x'.repeat(64),
+    CADENCE_ALLOWED_ORIGINS: 'https://app.example.com',
     FRONTEND_URL: 'https://app.example.com',
     BACKEND_URL: 'https://app.example.com',
 };
@@ -44,9 +44,9 @@ describe('hostedConfigProblems', () => {
         );
 
         const text = problems.join('\n');
-        expect(text).toMatch(/TUDUDI_SESSION_SECRET/);
-        expect(text).toMatch(/TUDUDI_TRUST_PROXY/);
-        expect(text).toMatch(/TUDUDI_ALLOWED_ORIGINS/);
+        expect(text).toMatch(/CADENCE_SESSION_SECRET/);
+        expect(text).toMatch(/CADENCE_TRUST_PROXY/);
+        expect(text).toMatch(/CADENCE_ALLOWED_ORIGINS/);
         expect(text).toMatch(/FRONTEND_URL/);
         expect(text).toMatch(/BACKEND_URL/);
         expect(text).toMatch(/ENABLE_EMAIL/);

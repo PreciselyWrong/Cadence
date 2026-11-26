@@ -951,7 +951,7 @@
     "plugins": {
       "title": "Plugins",
       "description": "Plugins add your own integrations to the server. Only an admin sees them. A plugin stays off until you turn it on.",
-      "notConfigured": "Plugins are off. Set TUDUDI_PLUGINS_DIR to a folder that holds plugin folders, then restart the server.",
+      "notConfigured": "Plugins are off. Set CADENCE_PLUGINS_DIR to a folder that holds plugin folders, then restart the server.",
       "reloadAll": "Reload all",
       "reload": "Reload",
       "reloadPending": "Reload to load {{version}}",
@@ -5426,7 +5426,7 @@
     "title": "Two-factor sign-in",
     "on": "On",
     "description": "Ask for a code from an authenticator app, as well as your password or single sign-on, whenever this account signs in on a new device.",
-    "unavailable": "Two-factor sign-in needs TUDUDI_SESSION_SECRET to be set on the server. Ask your administrator.",
+    "unavailable": "Two-factor sign-in needs CADENCE_SESSION_SECRET to be set on the server. Ask your administrator.",
     "turnOn": "Turn on",
     "turnOff": "Turn off",
     "setupScan": "Scan this QR code with an authenticator app, such as Google Authenticator, 1Password or Aegis.",

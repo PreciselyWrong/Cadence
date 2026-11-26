@@ -20,16 +20,16 @@ A public note that the blog does not link never appears on it, and neither does 
 ## Where it is served
 
 - In the app at `/blog`, signed in or out.
-- At the root of every hostname in `TUDUDI_BLOG_HOSTS`. There the server returns the app shell marked with `<meta name="tududi-site" content="blog">`, adds `<html lang="en">`, the page title, description, Open Graph tags and (on posts) Article JSON-LD, and serves `/sitemap.xml`, `/rss.xml` and `/robots.txt`.
+- At the root of every hostname in `CADENCE_BLOG_HOSTS`. There the server returns the app shell marked with `<meta name="tududi-site" content="blog">`, adds `<html lang="en">`, the page title, description, Open Graph tags and (on posts) Article JSON-LD, and serves `/sitemap.xml`, `/rss.xml` and `/robots.txt`.
 - The server also renders the page text into the root element so crawlers see it: a post's H1 and Markdown body in `<article>` (`backend/modules/blog/render.js`, using `marked`; raw HTML shows as text, unsafe link schemes are dropped, `[[links]]` point at posts), and the front page's H1 with a list of post links. React replaces it on mount. An unknown address gets a 404 with `noindex`. `frontend/index.tsx` renders the blog instead of the app and skips the service worker.
-- The landing page links the blog from its nav and footer when `TUDUDI_BLOG_URL` (or the first `TUDUDI_BLOG_HOSTS` entry) gives it an address.
+- The landing page links the blog from its nav and footer when `CADENCE_BLOG_URL` (or the first `CADENCE_BLOG_HOSTS` entry) gives it an address.
 
 | Variable | Purpose |
 |----------|---------|
-| `TUDUDI_BLOG_HOSTS` | Hostnames that serve the blog at their root, e.g. `blog.tududi.com` |
-| `TUDUDI_BLOG_URL` | The blog's public address for links; defaults to `https://<first blog host>` |
+| `CADENCE_BLOG_HOSTS` | Hostnames that serve the blog at their root, e.g. `blog.tududi.com` |
+| `CADENCE_BLOG_URL` | The blog's public address for links; defaults to `https://<first blog host>` |
 
-The webpack dev server never sends the blog marker, so check blog-host behaviour against the backend: build the frontend, copy `dist/` to `backend/dist/`, start the backend with `TUDUDI_BLOG_HOSTS=blog.localhost` and open `http://blog.localhost:3002`.
+The webpack dev server never sends the blog marker, so check blog-host behaviour against the backend: build the frontend, copy `dist/` to `backend/dist/`, start the backend with `CADENCE_BLOG_HOSTS=blog.localhost` and open `http://blog.localhost:3002`.
 
 ## Code
 

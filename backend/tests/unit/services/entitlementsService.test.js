@@ -11,7 +11,7 @@ const inDays = (d) => new Date(now.getTime() + d * DAY);
 
 describe('plans catalog', () => {
     afterEach(() => {
-        delete process.env.TUDUDI_PLANS_JSON;
+        delete process.env.CADENCE_PLANS_JSON;
         plans._resetCache();
     });
 
@@ -45,8 +45,8 @@ describe('plans catalog', () => {
         expect(all.team_5.limits.storage_mb).toBe(all.pro.limits.storage_mb);
     });
 
-    it('deep-merges TUDUDI_PLANS_JSON over the defaults', () => {
-        process.env.TUDUDI_PLANS_JSON = JSON.stringify({
+    it('deep-merges CADENCE_PLANS_JSON over the defaults', () => {
+        process.env.CADENCE_PLANS_JSON = JSON.stringify({
             free: { limits: { max_tasks: 5 }, features: { ai: true } },
             team: { name: 'Team', limits: { max_tasks: 9000 } },
         });
@@ -62,7 +62,7 @@ describe('plans catalog', () => {
     });
 
     it('falls back to the defaults on invalid JSON', () => {
-        process.env.TUDUDI_PLANS_JSON = '{not json';
+        process.env.CADENCE_PLANS_JSON = '{not json';
         plans._resetCache();
         expect(plans.getPlans().free.limits.max_tasks).toBe(200);
     });
@@ -186,7 +186,7 @@ describe('consumeMonthlyUsage', () => {
         // ensureAccount/resolvePlan), not 'free' - pin it to 0 so these
         // tests exercise the plan/limit they actually set below.
         config.hosted.trialDays = 0;
-        process.env.TUDUDI_PLANS_JSON = JSON.stringify({
+        process.env.CADENCE_PLANS_JSON = JSON.stringify({
             free: { limits: { ai_credits_per_month: 2 } },
         });
         plans._resetCache();
@@ -196,7 +196,7 @@ describe('consumeMonthlyUsage', () => {
     afterEach(() => {
         config.hosted.enabled = false;
         config.hosted.trialDays = 7;
-        delete process.env.TUDUDI_PLANS_JSON;
+        delete process.env.CADENCE_PLANS_JSON;
         plans._resetCache();
         entitlements.invalidate();
     });

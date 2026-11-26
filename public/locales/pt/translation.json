@@ -929,7 +929,7 @@
     "plugins": {
       "title": "Plugins",
       "description": "Os plugins adicionam integrações próprias ao servidor. Só um administrador os vê. Um plugin fica desligado até você o ativar.",
-      "notConfigured": "Os plugins estão desligados. Defina TUDUDI_PLUGINS_DIR com uma pasta que contenha as pastas dos plugins e reinicie o servidor.",
+      "notConfigured": "Os plugins estão desligados. Defina CADENCE_PLUGINS_DIR com uma pasta que contenha as pastas dos plugins e reinicie o servidor.",
       "reloadAll": "Recarregar tudo",
       "reload": "Recarregar",
       "reloadPending": "Recarregue para carregar {{version}}",
@@ -5366,7 +5366,7 @@
     "title": "Verificação em duas etapas",
     "on": "Ativada",
     "description": "Pede um código de um app autenticador, além da sua senha ou do login único, sempre que esta conta entrar em um novo dispositivo.",
-    "unavailable": "A verificação em duas etapas precisa que TUDUDI_SESSION_SECRET esteja definido no servidor. Fale com o seu administrador.",
+    "unavailable": "A verificação em duas etapas precisa que CADENCE_SESSION_SECRET esteja definido no servidor. Fale com o seu administrador.",
     "turnOn": "Ativar",
     "turnOff": "Desativar",
     "setupScan": "Escaneie este código QR com um app autenticador, como Google Authenticator, 1Password ou Aegis.",

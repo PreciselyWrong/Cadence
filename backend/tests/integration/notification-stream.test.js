@@ -1,5 +1,5 @@
-process.env.TUDUDI_SESSION_SECRET =
-    process.env.TUDUDI_SESSION_SECRET || 'stream-test-session-secret';
+process.env.CADENCE_SESSION_SECRET =
+    process.env.CADENCE_SESSION_SECRET || 'stream-test-session-secret';
 
 const http = require('http');
 const request = require('supertest');

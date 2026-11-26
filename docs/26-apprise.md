@@ -22,7 +22,7 @@ Apprise is opt-in per notification type, like Telegram and push. It covers due a
 
 ## Storage and security
 
-- The server address and config key are encrypted at rest with the same key as the calendar feed addresses. Set `TUDUDI_SESSION_SECRET` (or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) before saving.
+- The server address and config key are encrypted at rest with the same key as the calendar feed addresses. Set `CADENCE_SESSION_SECRET` (or `CADENCE_OIDC_SECRET_ENCRYPTION_KEY`) before saving.
 - Only the host name is shown back in the settings. The config key is never returned to the browser.
 - Addresses go through the same outbound checks as CalDAV and calendar feeds. Private network addresses are refused unless the server sets `CALDAV_ALLOW_PRIVATE_HOSTS=true`, which you need for an apprise-api on your LAN. Link-local and cloud metadata addresses are always refused.
 

@@ -1,5 +1,5 @@
-process.env.TUDUDI_SESSION_SECRET =
-    process.env.TUDUDI_SESSION_SECRET || 'plugins-test-session-secret';
+process.env.CADENCE_SESSION_SECRET =
+    process.env.CADENCE_SESSION_SECRET || 'plugins-test-session-secret';
 
 jest.mock('../../modules/caldav/services/safe-request', () => {
     const actual = jest.requireActual(
@@ -106,7 +106,7 @@ describe('Plugins', () => {
         adminAgent = await login(admin);
         otherAgent = await login(other);
         dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cadence-plugins-'));
-        process.env.TUDUDI_PLUGINS_DIR = dir;
+        process.env.CADENCE_PLUGINS_DIR = dir;
         globalThis.__pluginEvents = [];
         safeRequest.mockReset();
         await registry.unloadAll();
@@ -116,13 +116,13 @@ describe('Plugins', () => {
 
     afterEach(async () => {
         await registry.unloadAll();
-        delete process.env.TUDUDI_PLUGINS_DIR;
+        delete process.env.CADENCE_PLUGINS_DIR;
         if (dir) fs.rmSync(dir, { recursive: true, force: true });
     });
 
     describe('access', () => {
         it('does nothing without a plugins folder', async () => {
-            delete process.env.TUDUDI_PLUGINS_DIR;
+            delete process.env.CADENCE_PLUGINS_DIR;
             const body = await list();
             expect(body).toEqual({ configured: false, plugins: [] });
         });

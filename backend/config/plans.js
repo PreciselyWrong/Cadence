@@ -1,7 +1,9 @@
 'use strict';
 
+require('./env-compat');
+
 // Plan catalog for hosted mode. Limits are per user; null means unlimited.
-// Feature keys gate whole capabilities. TUDUDI_PLANS_JSON (a JSON object
+// Feature keys gate whole capabilities. CADENCE_PLANS_JSON (a JSON object
 // with the same shape) is deep-merged over these defaults, so an operator
 // can change a number without a code change.
 
@@ -135,12 +137,12 @@ function parseOverrides(json) {
     try {
         const parsed = JSON.parse(json);
         if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-            throw new Error('TUDUDI_PLANS_JSON must be a JSON object');
+            throw new Error('CADENCE_PLANS_JSON must be a JSON object');
         }
         return parsed;
     } catch (error) {
         console.error(
-            `Ignoring TUDUDI_PLANS_JSON: ${error.message}. Using default plans.`
+            `Ignoring CADENCE_PLANS_JSON: ${error.message}. Using default plans.`
         );
         return null;
     }
@@ -150,7 +152,7 @@ let cache = null;
 let cachedFrom;
 
 function getPlans(env = process.env) {
-    const json = env.TUDUDI_PLANS_JSON || '';
+    const json = env.CADENCE_PLANS_JSON || '';
     if (cache && cachedFrom === json) return cache;
 
     const merged = deepMerge(DEFAULT_PLANS, parseOverrides(json));

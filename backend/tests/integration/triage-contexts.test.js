@@ -75,16 +75,16 @@ describe('triage questions and linked contexts', () => {
     let savedSecret;
 
     beforeAll(() => {
-        savedSecret = process.env.TUDUDI_SESSION_SECRET;
-        process.env.TUDUDI_SESSION_SECRET =
+        savedSecret = process.env.CADENCE_SESSION_SECRET;
+        process.env.CADENCE_SESSION_SECRET =
             'triage-contexts-test-session-secret';
     });
 
     afterAll(() => {
         if (savedSecret === undefined) {
-            delete process.env.TUDUDI_SESSION_SECRET;
+            delete process.env.CADENCE_SESSION_SECRET;
         } else {
-            process.env.TUDUDI_SESSION_SECRET = savedSecret;
+            process.env.CADENCE_SESSION_SECRET = savedSecret;
         }
     });
 

@@ -104,8 +104,8 @@ start_container() {
     docker run -d --name "$name" \
         -v "$VOL:/app/db" \
         -e PUID="$(id -u)" -e PGID="$(id -g)" \
-        -e TUDUDI_USER_EMAIL="$admin" -e TUDUDI_USER_PASSWORD="$PASSWORD" \
-        -e TUDUDI_SESSION_SECRET=upgrade-test-secret \
+        -e CADENCE_USER_EMAIL="$admin" -e CADENCE_USER_PASSWORD="$PASSWORD" \
+        -e CADENCE_SESSION_SECRET=upgrade-test-secret \
         -e DISABLE_SCHEDULER=true -e DISABLE_TELEGRAM=true \
         -p 127.0.0.1::3002 "$@" "$image" >/dev/null
 }
@@ -255,7 +255,7 @@ fi
 
 NEW_JAR="$WORK/new.jar"
 check "$([ "$(api_login "$NEW_PORT" "$BOB_EMAIL" "$NEW_JAR")" = "200" ]; echo $?)" "new image: login as $BOB_EMAIL"
-# TUDUDI_USER_EMAIL names the legacy admin in its lowercase form. The
+# CADENCE_USER_EMAIL names the legacy admin in its lowercase form. The
 # lowercase-emails migration must have normalised the stored row so
 # user-create.js updates it instead of creating a second, empty admin.
 USERS_AFTER="$(count_users)"

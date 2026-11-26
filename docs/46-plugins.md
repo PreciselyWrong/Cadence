@@ -12,8 +12,8 @@ Feasible and small, because Cadence already has the two things a plugin needs: a
 
 ## Trust model
 
-- Off by default. Nothing loads unless `TUDUDI_PLUGINS_DIR` points to a folder.
-- Never on a hosted instance (`TUDUDI_HOSTED_MODE`): arbitrary code on a shared server is not acceptable.
+- Off by default. Nothing loads unless `CADENCE_PLUGINS_DIR` points to a folder.
+- Never on a hosted instance (`CADENCE_HOSTED_MODE`): arbitrary code on a shared server is not acceptable.
 - Only an admin sees or changes plugins. A plugin found on disk stays **off** until an admin turns it on.
 - Turning a plugin on (web and Android) first shows what it asks for (`permissions` and `events`) and needs an explicit **Approve and enable**. That approval records what it asks for (`permissions` and `events`). If an update asks for more, the plugin stays off (`needs_approval`) until an admin turns it on again.
 - Permissions gate the `ctx` Cadence hands the plugin. They are **not a sandbox**: plugin code can still `require('fs')`. Read a plugin before enabling it.
@@ -23,7 +23,7 @@ Feasible and small, because Cadence already has the two things a plugin needs: a
 ## Folder layout
 
 ```
-$TUDUDI_PLUGINS_DIR/
+$CADENCE_PLUGINS_DIR/
   hermes/                     one folder per plugin, any name
     cadence-plugin.json       manifest
     index.js                  entry point (`main`)
@@ -187,7 +187,7 @@ Each plugin owns its release cycle. Cadence shows the version loaded, the one be
 
 ## Checks once built
 
-- With `TUDUDI_PLUGINS_DIR` unset, `GET /api/plugins` says `configured: false` and nothing loads.
+- With `CADENCE_PLUGINS_DIR` unset, `GET /api/plugins` says `configured: false` and nothing loads.
 - A folder with a valid manifest shows as `disabled`; turning it on makes it `active` and its `ctx.on` handler receives the next `task.created`.
 - Raising `version` and adding an event in the manifest, then **Reload**, leaves the plugin `needs_approval`.
 - A plugin whose `activate` throws shows `error` and the server keeps answering.

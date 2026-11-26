@@ -15,7 +15,7 @@ const login = async (user) => {
     return agent;
 };
 
-// TUDUDI_REQUIRE_SUBSCRIPTION turns the instance into one that sells access
+// CADENCE_REQUIRE_SUBSCRIPTION turns the instance into one that sells access
 // rather than upgrades: without a subscription the app is closed, and only
 // billing, the profile and data export answer.
 describe('Instances that require a subscription', () => {

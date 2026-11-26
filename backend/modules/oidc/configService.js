@@ -142,7 +142,7 @@ async function saveConfig({ enabled, providers }) {
     const encryptOrThrow = (plaintext) => {
         if (!secretCipher.hasKeyMaterial()) {
             throw new ValidationError(
-                'Cannot save an OIDC client secret: set TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
+                'Cannot save an OIDC client secret: set CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
             );
         }
         return secretCipher.encrypt(plaintext);

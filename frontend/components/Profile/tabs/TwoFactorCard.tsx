@@ -175,7 +175,7 @@ const TwoFactorCard: React.FC = () => {
                         <p className="mb-3 text-sm text-amber-700 dark:text-amber-300">
                             {t(
                                 'mfa.unavailable',
-                                'Two-factor sign-in needs TUDUDI_SESSION_SECRET to be set on the server. Ask your administrator.'
+                                'Two-factor sign-in needs CADENCE_SESSION_SECRET to be set on the server. Ask your administrator.'
                             )}
                         </p>
                     )}

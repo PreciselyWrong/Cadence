@@ -42,7 +42,7 @@ describe('entitlementsService with hosted mode on', () => {
     beforeEach(async () => {
         config.hosted.enabled = true;
         config.hosted.trialDays = 0;
-        process.env.TUDUDI_PLANS_JSON = JSON.stringify({
+        process.env.CADENCE_PLANS_JSON = JSON.stringify({
             free: {
                 limits: {
                     max_tasks: 2,
@@ -70,7 +70,7 @@ describe('entitlementsService with hosted mode on', () => {
     afterEach(() => {
         config.hosted.enabled = false;
         config.hosted.trialDays = 7;
-        delete process.env.TUDUDI_PLANS_JSON;
+        delete process.env.CADENCE_PLANS_JSON;
         plans._resetCache();
         entitlements.invalidate();
     });

@@ -928,7 +928,7 @@
     "plugins": {
       "title": "Tillägg",
       "description": "Tillägg lägger till egna integrationer på servern. Bara en administratör ser dem. Ett tillägg är av tills du slår på det.",
-      "notConfigured": "Tillägg är av. Ange TUDUDI_PLUGINS_DIR till en mapp med tilläggsmappar och starta om servern.",
+      "notConfigured": "Tillägg är av. Ange CADENCE_PLUGINS_DIR till en mapp med tilläggsmappar och starta om servern.",
       "reloadAll": "Läs in alla igen",
       "reload": "Läs in igen",
       "reloadPending": "Läs in igen för att läsa in {{version}}",
@@ -5360,7 +5360,7 @@
     "title": "Tvåfaktorsautentisering",
     "on": "På",
     "description": "Ber om en kod från en autentiseringsapp, utöver ditt lösenord eller enkel inloggning, varje gång det här kontot loggar in på en ny enhet.",
-    "unavailable": "Tvåfaktorsautentisering kräver att TUDUDI_SESSION_SECRET är satt på servern. Fråga din administratör.",
+    "unavailable": "Tvåfaktorsautentisering kräver att CADENCE_SESSION_SECRET är satt på servern. Fråga din administratör.",
     "turnOn": "Slå på",
     "turnOff": "Stäng av",
     "setupScan": "Skanna den här QR-koden med en autentiseringsapp, till exempel Google Authenticator, 1Password eller Aegis.",

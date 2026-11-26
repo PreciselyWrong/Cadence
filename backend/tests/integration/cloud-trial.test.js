@@ -182,7 +182,7 @@ describe('Cloud trials', () => {
         });
 
         it('leaves out members when the trial plan allows none', async () => {
-            process.env.TUDUDI_PLANS_JSON = JSON.stringify({
+            process.env.CADENCE_PLANS_JSON = JSON.stringify({
                 trial: { limits: { max_members: 0 } },
             });
             plans._resetCache();
@@ -198,7 +198,7 @@ describe('Cloud trials', () => {
                     plan: 'trial',
                 });
             } finally {
-                delete process.env.TUDUDI_PLANS_JSON;
+                delete process.env.CADENCE_PLANS_JSON;
                 plans._resetCache();
                 entitlements.invalidate();
             }

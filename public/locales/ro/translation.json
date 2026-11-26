@@ -934,7 +934,7 @@
     "plugins": {
       "title": "Pluginuri",
       "description": "Pluginurile adaugă integrări proprii la server. Doar un administrator le vede. Un plugin rămâne oprit până îl activezi.",
-      "notConfigured": "Pluginurile sunt oprite. Setează TUDUDI_PLUGINS_DIR la un dosar care conține dosarele pluginurilor și repornește serverul.",
+      "notConfigured": "Pluginurile sunt oprite. Setează CADENCE_PLUGINS_DIR la un dosar care conține dosarele pluginurilor și repornește serverul.",
       "reloadAll": "Reîncarcă tot",
       "reload": "Reîncarcă",
       "reloadPending": "Reîncarcă pentru a încărca {{version}}",
@@ -5375,7 +5375,7 @@
     "title": "Autentificare în doi pași",
     "on": "Activată",
     "description": "Cere un cod dintr-o aplicație de autentificare, pe lângă parolă sau autentificarea unică, de fiecare dată când acest cont se conectează pe un dispozitiv nou.",
-    "unavailable": "Autentificarea în doi pași are nevoie ca TUDUDI_SESSION_SECRET să fie setat pe server. Întreabă-l pe administrator.",
+    "unavailable": "Autentificarea în doi pași are nevoie ca CADENCE_SESSION_SECRET să fie setat pe server. Întreabă-l pe administrator.",
     "turnOn": "Activează",
     "turnOff": "Dezactivează",
     "setupScan": "Scanează acest cod QR cu o aplicație de autentificare, cum ar fi Google Authenticator, 1Password sau Aegis.",

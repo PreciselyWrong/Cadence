@@ -19,7 +19,7 @@ Both features call an OpenAI-compatible API and cache results in the database. R
 
 ## Setup
 
-Setup differs by mode. **Self-hosted** installs let each user bring their own provider. **Hosted** (`TUDUDI_HOSTED_MODE=true`) installs use one operator-configured provider shared by every subscriber, who instead gets a monthly AI Credits allowance.
+Setup differs by mode. **Self-hosted** installs let each user bring their own provider. **Hosted** (`CADENCE_HOSTED_MODE=true`) installs use one operator-configured provider shared by every subscriber, who instead gets a monthly AI Credits allowance.
 
 ### Self-hosted: per-user provider (Profile → AI Assistant)
 
@@ -33,7 +33,7 @@ A per-user base URL must resolve to a public address (the same guard `modules/ur
 
 ### Hosted mode: shared provider + AI Credits
 
-When `TUDUDI_HOSTED_MODE=true`, `resolveAIConfig()` (`backend/modules/ai-assistant/service.js`) never applies a per-user override — every subscriber uses the operator's own `.env` provider (below), and **`LLM_API_KEY` is required** for AI features to work at all. Profile → AI Assistant shows no provider fields for a hosted account; instead it shows an **AI Credits** balance for the current calendar month.
+When `CADENCE_HOSTED_MODE=true`, `resolveAIConfig()` (`backend/modules/ai-assistant/service.js`) never applies a per-user override — every subscriber uses the operator's own `.env` provider (below), and **`LLM_API_KEY` is required** for AI features to work at all. Profile → AI Assistant shows no provider fields for a hosted account; instead it shows an **AI Credits** balance for the current calendar month.
 
 One credit is consumed per task insight or project insight generated — enforced pre-flight via `entitlements.consumeMonthlyUsage(userId, 'ai_credits')` (`backend/services/entitlementsService.js`), which throws the same `PlanLimitError` (`402`, `PLAN_LIMIT_REACHED`) used by every other plan limit once a plan's `ai_credits_per_month` (`backend/config/plans.js`) is exhausted. The balance resets on the 1st of each month (calendar-month, not anchored to the subscription's billing cycle).
 
@@ -56,7 +56,7 @@ LLM_BASE_URL=http://localhost:11434/v1  # e.g. local Ollama
 
 # Model name the provider expects (defaults to gpt-4o-mini)
 LLM_MODEL=llama3.2
-# TUDUDI_AI_MODEL is still accepted as a fallback
+# CADENCE_AI_MODEL is still accepted as a fallback
 ```
 
 Without a key (from either the DB or `.env`), the generation endpoints return HTTP `503` with `{ "error": "AI assistant is not configured...", "code": "AI_NOT_CONFIGURED" }`. `GET /api/ai-assistant/config` still responds with `api_key_set: false`, and the frontend uses it to skip auto-generation and show a calm "AI is not configured" state instead of an error.
@@ -232,7 +232,7 @@ Resolution order for every setting below is: the user's own Profile → AI Assis
 |---------|-----------------|-------------------|---------|
 | API key | `LLM_API_KEY` | `OPENAI_API_KEY` | (required) |
 | Base URL | `LLM_BASE_URL` | `OPENAI_BASE_URL` | OpenAI (`https://api.openai.com/v1`) |
-| Model | `LLM_MODEL` | `TUDUDI_AI_MODEL` | `gpt-4o-mini` |
+| Model | `LLM_MODEL` | `CADENCE_AI_MODEL` | `gpt-4o-mini` |
 | Task Insights max tokens | `LLM_MAX_TOKENS_TASK_INSIGHTS` | — | `1000` |
 | Project Insights max tokens | `LLM_MAX_TOKENS_PROJECT_INSIGHTS` | — | `600` |
 

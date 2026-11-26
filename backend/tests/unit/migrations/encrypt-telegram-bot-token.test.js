@@ -8,8 +8,8 @@ const TOKEN = '123456789:ABCdefGHIjklMNOPQRSTUVwxyz-12345678';
 describe('migration 20261107100000-encrypt-telegram-bot-token', () => {
     const qi = () => sequelize.getQueryInterface();
     const run = () => migration.up(qi(), Sequelize);
-    const savedSessionSecret = process.env.TUDUDI_SESSION_SECRET;
-    const savedExplicitKey = process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY;
+    const savedSessionSecret = process.env.CADENCE_SESSION_SECRET;
+    const savedExplicitKey = process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY;
 
     const setRaw = (id, value) =>
         sequelize.query(
@@ -27,8 +27,8 @@ describe('migration 20261107100000-encrypt-telegram-bot-token', () => {
     let withToken, without;
 
     beforeEach(async () => {
-        process.env.TUDUDI_SESSION_SECRET = 'x'.repeat(64);
-        delete process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY;
+        process.env.CADENCE_SESSION_SECRET = 'x'.repeat(64);
+        delete process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY;
         withToken = await User.create({ email: 'tg@example.com', name: 'tg' });
         without = await User.create({ email: 'no@example.com', name: 'no' });
         await setRaw(withToken.id, TOKEN);
@@ -36,12 +36,12 @@ describe('migration 20261107100000-encrypt-telegram-bot-token', () => {
 
     afterEach(() => {
         if (savedSessionSecret === undefined) {
-            delete process.env.TUDUDI_SESSION_SECRET;
+            delete process.env.CADENCE_SESSION_SECRET;
         } else {
-            process.env.TUDUDI_SESSION_SECRET = savedSessionSecret;
+            process.env.CADENCE_SESSION_SECRET = savedSessionSecret;
         }
         if (savedExplicitKey !== undefined) {
-            process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY = savedExplicitKey;
+            process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY = savedExplicitKey;
         }
     });
 
@@ -73,7 +73,7 @@ describe('migration 20261107100000-encrypt-telegram-bot-token', () => {
     });
 
     it('keeps plaintext tokens when the server has no key material', async () => {
-        delete process.env.TUDUDI_SESSION_SECRET;
+        delete process.env.CADENCE_SESSION_SECRET;
 
         await run();
 

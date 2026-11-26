@@ -22,7 +22,7 @@ async function mayGrant(user) {
 // two-factor code: a grant is never given on the strength of an edge login
 // alone, and an account without two-factor sign-in cannot grant one.
 // Recovery codes are not accepted here. Only the accounts in
-// TUDUDI_MCP_OAUTH_ALLOWED_EMAILS, or admins when it is unset, may consent.
+// CADENCE_MCP_OAUTH_ALLOWED_EMAILS, or admins when it is unset, may consent.
 async function verifyOwner({ email, password, mfaCode }, req) {
     if (!isPasswordAuthEnabled()) {
         return { ok: false, reason: 'password_auth_disabled' };

@@ -103,7 +103,7 @@ function verify(req, rawBody, secret) {
 
 ## Security
 
-- The address and secret are encrypted at rest with the same key as calendar feeds and Apprise. Set `TUDUDI_SESSION_SECRET` (or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) before saving. Only the host is shown back.
+- The address and secret are encrypted at rest with the same key as calendar feeds and Apprise. Set `CADENCE_SESSION_SECRET` (or `CADENCE_OIDC_SECRET_ENCRYPTION_KEY`) before saving. Only the host is shown back.
 - Addresses go through the same outbound checks as CalDAV, calendar feeds and Apprise. Private network addresses (an n8n on your LAN) need `CALDAV_ALLOW_PRIVATE_HOSTS=true`. Link-local and cloud metadata addresses are always refused, including after redirects.
 
 ## API

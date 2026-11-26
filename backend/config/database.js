@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./env-compat');
 const { buildSequelizeOptions } = require('./db');
 
 // Consumed by sequelize-cli (see .sequelizerc). The application itself builds

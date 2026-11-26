@@ -928,7 +928,7 @@
     "plugins": {
       "title": "插件",
       "description": "插件会为服务器添加你自己的集成。只有管理员能看到。插件在你开启之前保持关闭。",
-      "notConfigured": "插件已关闭。请将 TUDUDI_PLUGINS_DIR 设为包含插件文件夹的目录，然后重启服务器。",
+      "notConfigured": "插件已关闭。请将 CADENCE_PLUGINS_DIR 设为包含插件文件夹的目录，然后重启服务器。",
       "reloadAll": "全部重新加载",
       "reload": "重新加载",
       "reloadPending": "重新加载以载入 {{version}}",
@@ -5360,7 +5360,7 @@
     "title": "两步验证",
     "on": "已开启",
     "description": "每当此账户在新设备上登录时，除了密码或单点登录外，还需要输入身份验证器应用中的验证码。",
-    "unavailable": "两步验证需要在服务器上设置 TUDUDI_SESSION_SECRET。请联系管理员。",
+    "unavailable": "两步验证需要在服务器上设置 CADENCE_SESSION_SECRET。请联系管理员。",
     "turnOn": "开启",
     "turnOff": "关闭",
     "setupScan": "使用身份验证器应用扫描此二维码，例如 Google Authenticator、1Password 或 Aegis。",

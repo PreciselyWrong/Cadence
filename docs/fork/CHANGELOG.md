@@ -4,6 +4,12 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.8
+
+- **Variables d'environnement renommées** : toutes les `TUDUDI_*` deviennent `CADENCE_*` (`CADENCE_SESSION_SECRET`, `CADENCE_USER_EMAIL`, `CADENCE_ALLOWED_ORIGINS`, etc.). Les anciens noms sont encore lus pour cette version, avec un avertissement au démarrage, puis retirés à la suivante : renomme-les dans ton conteneur ou ton `.env`. Bases, cookies et préfixe `tt_` des jetons ne changent pas.
+- Docker : l'image ne fixe plus de valeurs par défaut pour ces variables ; les chemins `/app/uploads` et `/app/backups` restent les défauts du conteneur.
+- Projets › Tableau : dans la vue « Projets », un clic sur une carte ouvre le tiroir de ses tâches (celles en cours d'abord), le compteur dit « N ouvertes », le glisser des cartes marche sous Firefox et la barre de défilement horizontale reste à l'écran.
+
 ## 2026.11.26.7
 
 - Aujourd'hui : le bouton « Aujourd'hui » reste dans la barre du jour, grisé quand on y est déjà, et les flèches de jour ne bougent plus avec la longueur du titre.

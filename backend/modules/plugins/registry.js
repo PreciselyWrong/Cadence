@@ -29,7 +29,7 @@ let unsubscribe = null;
 
 function pluginsDir() {
     if (getConfig().hosted?.enabled) return null;
-    const dir = (process.env.TUDUDI_PLUGINS_DIR || '').trim();
+    const dir = (process.env.CADENCE_PLUGINS_DIR || '').trim();
     return dir ? path.resolve(dir) : null;
 }
 

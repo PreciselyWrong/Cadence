@@ -1214,7 +1214,7 @@ class UsersService {
             if (ai_api_key) {
                 if (!secretCipher.hasKeyMaterial()) {
                     throw new ValidationError(
-                        'Cannot save an AI API key: set TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) on the server first',
+                        'Cannot save an AI API key: set CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) on the server first',
                         'ai_api_key'
                     );
                 }

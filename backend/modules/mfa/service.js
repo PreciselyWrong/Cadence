@@ -215,7 +215,7 @@ function assertMayUse(user) {
     }
     if (!secretCipher.hasKeyMaterial()) {
         throw new ValidationError(
-            'Two-factor sign-in needs TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) to be set on the server.'
+            'Two-factor sign-in needs CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) to be set on the server.'
         );
     }
 }

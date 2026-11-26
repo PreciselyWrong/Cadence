@@ -24,14 +24,14 @@ describe('Google sync', () => {
 
     beforeAll(() => {
         previous = { ...process.env };
-        process.env.TUDUDI_SESSION_SECRET = 'google-sync-test-secret';
+        process.env.CADENCE_SESSION_SECRET = 'google-sync-test-secret';
         process.env.GOOGLE_CLIENT_ID = 'client-id';
         process.env.GOOGLE_CLIENT_SECRET = 'client-secret';
     });
 
     afterAll(() => {
         for (const key of [
-            'TUDUDI_SESSION_SECRET',
+            'CADENCE_SESSION_SECRET',
             'GOOGLE_CLIENT_ID',
             'GOOGLE_CLIENT_SECRET',
         ]) {

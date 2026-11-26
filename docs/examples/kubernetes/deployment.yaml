@@ -31,10 +31,10 @@ spec:
             - name: http
               containerPort: 3002
           env:
-            - name: TUDUDI_ALLOWED_ORIGINS
+            - name: CADENCE_ALLOWED_ORIGINS
               value: https://tududi.example.com
             # Behind an ingress controller there is one proxy hop.
-            - name: TUDUDI_TRUST_PROXY
+            - name: CADENCE_TRUST_PROXY
               value: "1"
           envFrom:
             - secretRef:

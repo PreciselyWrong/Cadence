@@ -1,7 +1,7 @@
 'use strict';
 
 // Sent by the daily account lifecycle job a week before an unpaid, ended
-// trial is deleted. Only where deletion is on (TUDUDI_DELETE_EXPIRED_TRIALS).
+// trial is deleted. Only where deletion is on (CADENCE_DELETE_EXPIRED_TRIALS).
 module.exports = ({ t, formatDate }, { deleteOn, subscribeUrl, exportUrl }) => {
     const date = formatDate(deleteOn);
     return {

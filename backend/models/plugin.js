@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-// What the instance remembers about a plugin found in TUDUDI_PLUGINS_DIR
+// What the instance remembers about a plugin found in CADENCE_PLUGINS_DIR
 // (docs/46-plugins.md). The code and manifest stay on disk; this row holds
 // the admin's choices. `settings` keeps secret fields encrypted with
 // secretCipher ("enc:v1:..."); `grant` is the permissions and events the

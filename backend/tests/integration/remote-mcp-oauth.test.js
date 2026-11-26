@@ -82,7 +82,7 @@ describe('Remote MCP OAuth authorization server', () => {
     let user;
 
     beforeEach(async () => {
-        withEnv({ TUDUDI_PUBLIC_MCP_URL: BASE });
+        withEnv({ CADENCE_PUBLIC_MCP_URL: BASE });
         user = await createTestUser({
             email: `remote-mcp-${Date.now()}@example.com`,
             email_verified: true,
@@ -191,8 +191,8 @@ describe('Remote MCP OAuth authorization server', () => {
             ).toBeUndefined();
         });
 
-        it('serves nothing when TUDUDI_PUBLIC_MCP_URL is unset', async () => {
-            withEnv({ TUDUDI_PUBLIC_MCP_URL: undefined });
+        it('serves nothing when CADENCE_PUBLIC_MCP_URL is unset', async () => {
+            withEnv({ CADENCE_PUBLIC_MCP_URL: undefined });
             for (const path of [
                 '/.well-known/oauth-authorization-server',
                 '/.well-known/oauth-protected-resource/mcp',
@@ -273,9 +273,9 @@ describe('Remote MCP OAuth authorization server', () => {
             expect(res.body.error).toBe('invalid_redirect_uri');
         });
 
-        it('takes the allowlist from TUDUDI_MCP_OAUTH_REDIRECT_URIS', async () => {
+        it('takes the allowlist from CADENCE_MCP_OAUTH_REDIRECT_URIS', async () => {
             withEnv({
-                TUDUDI_MCP_OAUTH_REDIRECT_URIS:
+                CADENCE_MCP_OAUTH_REDIRECT_URIS:
                     'https://other.example/cb, https://second.example/cb',
             });
             expect((await registerClient()).status).toBe(400);
@@ -294,8 +294,8 @@ describe('Remote MCP OAuth authorization server', () => {
     });
 
     describe('hardening', () => {
-        it('serves no /mcp at the root when TUDUDI_PUBLIC_MCP_URL is unset', async () => {
-            withEnv({ TUDUDI_PUBLIC_MCP_URL: undefined });
+        it('serves no /mcp at the root when CADENCE_PUBLIC_MCP_URL is unset', async () => {
+            withEnv({ CADENCE_PUBLIC_MCP_URL: undefined });
             const { rawToken } = await createApiToken({
                 userId: user.id,
                 name: 'Connector',
@@ -321,7 +321,7 @@ describe('Remote MCP OAuth authorization server', () => {
                 expect(res.status).toBe(405);
                 expect(res.headers.allow).toBe(allow);
             }
-            withEnv({ TUDUDI_PUBLIC_MCP_URL: undefined });
+            withEnv({ CADENCE_PUBLIC_MCP_URL: undefined });
             expect((await request(app).get('/oauth/token')).status).toBe(404);
         });
 
@@ -558,7 +558,7 @@ describe('Remote MCP OAuth authorization server', () => {
         it('rejects a client whose redirect URI was removed from the allowlist', async () => {
             const client = (await registerClient()).body.client_id;
             withEnv({
-                TUDUDI_MCP_OAUTH_REDIRECT_URIS: 'https://other.example/cb',
+                CADENCE_MCP_OAUTH_REDIRECT_URIS: 'https://other.example/cb',
             });
             const res = await request(app)
                 .get('/oauth/authorize')
@@ -665,7 +665,7 @@ describe('Remote MCP OAuth authorization server', () => {
             expect(refusalReason(warnSpy)).toBe('not_allowed');
         });
 
-        it('lets only the emails in TUDUDI_MCP_OAUTH_ALLOWED_EMAILS consent', async () => {
+        it('lets only the emails in CADENCE_MCP_OAUTH_ALLOWED_EMAILS consent', async () => {
             const member = await createTestUser({
                 email: `Member-${Date.now()}@example.com`,
                 email_verified: true,
@@ -677,7 +677,7 @@ describe('Remote MCP OAuth authorization server', () => {
             const memberCookie = await authenticateUser(request(app), member);
             await enrollMfa(member);
             withEnv({
-                TUDUDI_MCP_OAUTH_ALLOWED_EMAILS: ` other@example.com, ${member.email.toUpperCase()} `,
+                CADENCE_MCP_OAUTH_ALLOWED_EMAILS: ` other@example.com, ${member.email.toUpperCase()} `,
             });
 
             const client = (await registerClient({}, { cookie: memberCookie }))

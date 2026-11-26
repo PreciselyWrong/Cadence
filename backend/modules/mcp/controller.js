@@ -101,10 +101,10 @@ async function getMcpConfig(req, res) {
                         'mcp-remote',
                         `${baseUrl}/api/mcp`,
                         '--header',
-                        'Authorization:Bearer ${TUDUDI_API_TOKEN}',
+                        'Authorization:Bearer ${CADENCE_API_TOKEN}',
                     ],
                     env: {
-                        TUDUDI_API_TOKEN: 'YOUR_API_TOKEN_HERE',
+                        CADENCE_API_TOKEN: 'YOUR_API_TOKEN_HERE',
                     },
                 },
             },

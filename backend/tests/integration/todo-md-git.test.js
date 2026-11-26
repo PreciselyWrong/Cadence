@@ -120,17 +120,17 @@ describe('TODO.md projects from a git repository', () => {
         git(dev, 'commit', '--quiet', '-m', 'init');
         git(dev, 'push', '--quiet', 'origin', 'HEAD:main');
 
-        process.env.TUDUDI_TODO_REPOS = 'demo';
-        process.env.TUDUDI_TODO_REPO_DEMO_URL = bare;
-        process.env.TUDUDI_TODO_REPO_DEMO_BRANCH = 'main';
-        process.env.TUDUDI_TODO_REPO_DEMO_WEBHOOK_SECRET = SECRET;
-        process.env.TUDUDI_TODO_GIT_DIR = path.join(tmp, 'clones');
+        process.env.CADENCE_TODO_REPOS = 'demo';
+        process.env.CADENCE_TODO_REPO_DEMO_URL = bare;
+        process.env.CADENCE_TODO_REPO_DEMO_BRANCH = 'main';
+        process.env.CADENCE_TODO_REPO_DEMO_WEBHOOK_SECRET = SECRET;
+        process.env.CADENCE_TODO_GIT_DIR = path.join(tmp, 'clones');
         ({ agent } = await signIn('git-todo@example.com'));
     });
 
     afterEach(() => {
         for (const key of Object.keys(process.env)) {
-            if (key.startsWith('TUDUDI_TODO_')) delete process.env[key];
+            if (key.startsWith('CADENCE_TODO_')) delete process.env[key];
         }
         fs.rmSync(tmp, { recursive: true, force: true });
     });
@@ -297,7 +297,7 @@ describe('TODO.md projects from a git repository', () => {
     it('keeps an edit pending while the repository is unreachable, then retries it', async () => {
         await agent.post('/api/todo-md/rescan');
         const docs = await taskNamed('Write docs');
-        process.env.TUDUDI_TODO_REPO_DEMO_URL = path.join(tmp, 'gone.git');
+        process.env.CADENCE_TODO_REPO_DEMO_URL = path.join(tmp, 'gone.git');
 
         const res = await agent.patch(`/api/task/${docs.uid}`).send({
             status: 2,
@@ -312,7 +312,7 @@ describe('TODO.md projects from a git repository', () => {
         ]);
         expect(waiting.last_error).toMatch(/git/);
 
-        process.env.TUDUDI_TODO_REPO_DEMO_URL = bare;
+        process.env.CADENCE_TODO_REPO_DEMO_URL = bare;
         const retried = await agent.post('/api/todo-md/repos/demo/retry');
 
         expect(retried.status).toBe(200);
@@ -325,7 +325,7 @@ describe('TODO.md projects from a git repository', () => {
     it('keeps an added task pending while unreachable, then adds it on retry', async () => {
         await agent.post('/api/todo-md/rescan');
         const { uid } = await project();
-        process.env.TUDUDI_TODO_REPO_DEMO_URL = path.join(tmp, 'gone.git');
+        process.env.CADENCE_TODO_REPO_DEMO_URL = path.join(tmp, 'gone.git');
 
         const res = await agent
             .post('/api/task')
@@ -333,7 +333,7 @@ describe('TODO.md projects from a git repository', () => {
         expect(res.status).toBe(503);
         expect(await taskNamed('Later')).toBeNull();
 
-        process.env.TUDUDI_TODO_REPO_DEMO_URL = bare;
+        process.env.CADENCE_TODO_REPO_DEMO_URL = bare;
         await agent.post('/api/todo-md/repos/demo/retry');
         expect(remoteText()).toContain('- Fix bug\n- Later\n');
         expect(await taskNamed('Later')).not.toBeNull();

@@ -186,7 +186,7 @@ Devices the push service reports as gone (404/410) are deleted; other errors are
 
 ### Keys and configuration
 
-No configuration is needed. On first use the server generates a VAPID key pair and stores it in the `settings` table (the private key is encrypted when `TUDUDI_SESSION_SECRET` or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY` is set). Optional variables:
+No configuration is needed. On first use the server generates a VAPID key pair and stores it in the `settings` table (the private key is encrypted when `CADENCE_SESSION_SECRET` or `CADENCE_OIDC_SECRET_ENCRYPTION_KEY` is set). Optional variables:
 
 | Variable | Purpose |
 |----------|---------|

@@ -20,7 +20,7 @@ describe('AI Assistant - SSRF guard on user-configured base URL', () => {
         'OPENAI_API_KEY',
         'LLM_BASE_URL',
         'OPENAI_BASE_URL',
-        'TUDUDI_SESSION_SECRET',
+        'CADENCE_SESSION_SECRET',
     ];
 
     beforeEach(() => {
@@ -28,7 +28,7 @@ describe('AI Assistant - SSRF guard on user-configured base URL', () => {
             savedEnv[key] = process.env[key];
             delete process.env[key];
         });
-        process.env.TUDUDI_SESSION_SECRET = 'x'.repeat(64);
+        process.env.CADENCE_SESSION_SECRET = 'x'.repeat(64);
 
         mockCreate.mockReset();
         OpenAI.mockReset();

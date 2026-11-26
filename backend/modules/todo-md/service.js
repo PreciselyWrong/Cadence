@@ -37,8 +37,8 @@ class TodoMdError extends Error {
 const models = () => require('../../models');
 
 const settings = () => ({
-    root: process.env.TUDUDI_TODO_ROOT || '',
-    userEmail: (process.env.TUDUDI_TODO_USER_EMAIL || '').trim().toLowerCase(),
+    root: process.env.CADENCE_TODO_ROOT || '',
+    userEmail: (process.env.CADENCE_TODO_USER_EMAIL || '').trim().toLowerCase(),
 });
 
 const hasRoot = () => settings().root.trim() !== '';
@@ -71,7 +71,7 @@ function exclusive(name, fn) {
     return run;
 }
 
-// The account the mirrored projects belong to: TUDUDI_TODO_USER_EMAIL, else
+// The account the mirrored projects belong to: CADENCE_TODO_USER_EMAIL, else
 // the first administrator, else the first account.
 async function ownerUser() {
     const { User } = models();
@@ -669,7 +669,7 @@ async function unlinkProject(uid) {
     if (isGitProject(project)) {
         throw new TodoMdError(
             'repo_project',
-            'A repository project follows TUDUDI_TODO_REPOS',
+            'A repository project follows CADENCE_TODO_REPOS',
             409
         );
     }

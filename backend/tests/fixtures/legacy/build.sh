@@ -113,8 +113,8 @@ build_tag() {
         DISABLE_SCHEDULER=true \
         DISABLE_TELEGRAM=true \
         SEQUELIZE_LOGGING=false \
-        TUDUDI_USER_EMAIL=alice.legacy@example.com \
-        TUDUDI_USER_PASSWORD=password123 \
+        CADENCE_USER_EMAIL=alice.legacy@example.com \
+        CADENCE_USER_PASSWORD=password123 \
         DATABASE_URL= \
         DB_DIALECT= \
         ./cmd/start.sh >"$bootlog" 2>&1 || true

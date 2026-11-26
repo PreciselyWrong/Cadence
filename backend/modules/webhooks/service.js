@@ -69,7 +69,7 @@ function normalizeHour(raw) {
 function encrypt(value) {
     if (!secretCipher.hasKeyMaterial()) {
         throw new ValidationError(
-            'Cannot save webhooks: set TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
+            'Cannot save webhooks: set CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
         );
     }
     return secretCipher.encrypt(value);

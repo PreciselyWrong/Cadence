@@ -77,7 +77,7 @@ data class Plugin(
     }
 }
 
-/** Réponse de `GET /api/plugins` ; `configured` faux quand `TUDUDI_PLUGINS_DIR` n'est pas renseigné. */
+/** Réponse de `GET /api/plugins` ; `configured` faux quand `CADENCE_PLUGINS_DIR` n'est pas renseigné. */
 data class PluginList(val configured: Boolean, val plugins: List<Plugin>)
 
 /** Entrée de menu d'un plugin actif (`GET /api/plugins/menu`) ; sa page est servie à `/api/plugins/<id>/ui/<file>`. */

@@ -13,17 +13,17 @@ const VERSION = 'v1';
 const HKDF_INFO = Buffer.from('tududi-secret-cipher');
 
 // Prefers a dedicated key so it can be rotated independently of the session
-// secret; falls back to deriving one from TUDUDI_SESSION_SECRET (already
+// secret; falls back to deriving one from CADENCE_SESSION_SECRET (already
 // required in hosted mode, see hostedConfig.js) so self-hosters who set that
 // get encryption without adding a new required env var. Returns null when
 // neither is set, which callers treat as "cannot encrypt".
 function deriveKey() {
-    const explicit = process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY;
+    const explicit = process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY;
     if (explicit) {
         return crypto.createHash('sha256').update(explicit, 'utf8').digest();
     }
 
-    const sessionSecret = process.env.TUDUDI_SESSION_SECRET;
+    const sessionSecret = process.env.CADENCE_SESSION_SECRET;
     if (sessionSecret) {
         const derived = crypto.hkdfSync(
             'sha256',
@@ -46,7 +46,7 @@ function encrypt(plaintext) {
     const key = deriveKey();
     if (!key) {
         throw new Error(
-            'No key material available: set TUDUDI_OIDC_SECRET_ENCRYPTION_KEY or TUDUDI_SESSION_SECRET'
+            'No key material available: set CADENCE_OIDC_SECRET_ENCRYPTION_KEY or CADENCE_SESSION_SECRET'
         );
     }
 
@@ -81,7 +81,7 @@ function decrypt(value) {
     const key = deriveKey();
     if (!key) {
         throw new Error(
-            'No key material available to decrypt stored secret: set TUDUDI_OIDC_SECRET_ENCRYPTION_KEY or TUDUDI_SESSION_SECRET'
+            'No key material available to decrypt stored secret: set CADENCE_OIDC_SECRET_ENCRYPTION_KEY or CADENCE_SESSION_SECRET'
         );
     }
 

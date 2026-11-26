@@ -929,7 +929,7 @@
     "plugins": {
       "title": "Plugin",
       "description": "I plugin aggiungono al server le tue integrazioni. Li vede solo un amministratore. Un plugin resta disattivato finché non lo attivi.",
-      "notConfigured": "I plugin sono disattivati. Imposta TUDUDI_PLUGINS_DIR su una cartella che contiene le cartelle dei plugin, poi riavvia il server.",
+      "notConfigured": "I plugin sono disattivati. Imposta CADENCE_PLUGINS_DIR su una cartella che contiene le cartelle dei plugin, poi riavvia il server.",
       "reloadAll": "Ricarica tutti",
       "reload": "Ricarica",
       "reloadPending": "Ricarica per caricare {{version}}",
@@ -5366,7 +5366,7 @@
     "title": "Autenticazione a due fattori",
     "on": "Attiva",
     "description": "Chiede un codice da un'app di autenticazione, oltre alla password o al single sign-on, ogni volta che questo account accede da un nuovo dispositivo.",
-    "unavailable": "L'autenticazione a due fattori richiede che TUDUDI_SESSION_SECRET sia impostato sul server. Chiedi al tuo amministratore.",
+    "unavailable": "L'autenticazione a due fattori richiede che CADENCE_SESSION_SECRET sia impostato sul server. Chiedi al tuo amministratore.",
     "turnOn": "Attiva",
     "turnOff": "Disattiva",
     "setupScan": "Scansiona questo codice QR con un'app di autenticazione, come Google Authenticator, 1Password o Aegis.",

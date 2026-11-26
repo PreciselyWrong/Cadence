@@ -2,6 +2,8 @@
 
 > Moved verbatim from `CLAUDE.md`, which became the one-line adapter `@AGENTS.md` when the fork was renamed Cadence. This is the upstream tududi guide: its doc index, architecture summary and commands stay valid for the server and web front.
 
+> Environment variables: upstream code reads `TUDUDI_*`; when merging, rename them to `CADENCE_*` (the fork's `backend/config/env-compat.js` only keeps the old names working for one release).
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -329,7 +331,7 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
 33. **[Blog](docs/23-blog.md)**
     - A front page note and the public notes it links become the blog
     - Superadmin picks the front page in Admin → Blog
-    - `/blog` in the app, or the root of `TUDUDI_BLOG_HOSTS` (blog.tududi.com)
+    - `/blog` in the app, or the root of `CADENCE_BLOG_HOSTS` (blog.tududi.com)
 
 34. **[Focus](docs/25-focus.md)**
     - The Focus chip in the top bar: one area, optionally a project and tags, saved in `ui_settings.focus`

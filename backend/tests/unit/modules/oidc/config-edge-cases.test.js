@@ -21,7 +21,7 @@ describe('OIDC config edge cases', () => {
         providerConfig.reloadProviders();
         jest.replaceProperty(process, 'env', {
             ...process.env,
-            TUDUDI_SESSION_SECRET: 'a-session-secret-for-tests-only',
+            CADENCE_SESSION_SECRET: 'a-session-secret-for-tests-only',
         });
     });
 

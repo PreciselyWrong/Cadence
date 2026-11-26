@@ -145,10 +145,12 @@ if ! node scripts/with-db-lock.js npx sequelize-cli db:migrate --config config/d
 fi
 echo "Migrations completed successfully"
 
-if [ -n "${TUDUDI_USER_EMAIL:-}" ] && [ -n "${TUDUDI_USER_PASSWORD:-}" ]; then
+admin_email="${CADENCE_USER_EMAIL:-${TUDUDI_USER_EMAIL:-}}"
+admin_password="${CADENCE_USER_PASSWORD:-${TUDUDI_USER_PASSWORD:-}}"
+if [ -n "$admin_email" ] && [ -n "$admin_password" ]; then
   # Trim whitespace/carriage returns that may come from docker-compose env vars
-  TUDUDI_USER_EMAIL=$(printf '%s' "$TUDUDI_USER_EMAIL" | tr -d '[:space:]')
-  if ! node scripts/user-create.js "$TUDUDI_USER_EMAIL" "$TUDUDI_USER_PASSWORD" true; then
+  admin_email=$(printf '%s' "$admin_email" | tr -d '[:space:]')
+  if ! node scripts/user-create.js "$admin_email" "$admin_password" true; then
     echo "❌ Failed to create/update user. Check migration errors above."
     exit 1
   fi

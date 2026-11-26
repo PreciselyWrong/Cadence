@@ -14,16 +14,16 @@ const oauthConfig = require('./config');
 
 // Misconfigurations that would otherwise only show up as a connector that
 // cannot connect.
-if (process.env.TUDUDI_PUBLIC_MCP_URL && !oauthConfig.isEnabled()) {
+if (process.env.CADENCE_PUBLIC_MCP_URL && !oauthConfig.isEnabled()) {
     logger.error(
         { event: 'oauth.config_invalid' },
-        'TUDUDI_PUBLIC_MCP_URL is not an https origin; remote MCP OAuth is off'
+        'CADENCE_PUBLIC_MCP_URL is not an https origin; remote MCP OAuth is off'
     );
 }
-if (oauthConfig.isEnabled() && !process.env.TUDUDI_SESSION_SECRET) {
+if (oauthConfig.isEnabled() && !process.env.CADENCE_SESSION_SECRET) {
     logger.error(
         { event: 'oauth.config_invalid' },
-        'TUDUDI_SESSION_SECRET is unset; remote MCP clients break on every restart'
+        'CADENCE_SESSION_SECRET is unset; remote MCP clients break on every restart'
     );
 }
 
@@ -31,7 +31,7 @@ const router = express.Router();
 
 const notFound = (req, res) => res.status(404).end();
 
-// The remote connector paths exist only with TUDUDI_PUBLIC_MCP_URL set.
+// The remote connector paths exist only with CADENCE_PUBLIC_MCP_URL set.
 const onlyWhenEnabled = (req, res, next) =>
     oauthConfig.isEnabled() ? next() : notFound(req, res);
 

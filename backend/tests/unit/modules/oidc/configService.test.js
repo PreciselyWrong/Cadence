@@ -19,8 +19,8 @@ describe('OIDC configService', () => {
 
     beforeEach(async () => {
         originalEnv = { ...process.env };
-        process.env.TUDUDI_SESSION_SECRET = 'x'.repeat(64);
-        delete process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY;
+        process.env.CADENCE_SESSION_SECRET = 'x'.repeat(64);
+        delete process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY;
         await Setting.destroy({ where: { key: 'oidc_config' } });
         providerConfig.reloadProviders();
     });
@@ -141,8 +141,8 @@ describe('OIDC configService', () => {
         });
 
         it('refuses to save a secret with no encryption key material available', async () => {
-            delete process.env.TUDUDI_SESSION_SECRET;
-            delete process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY;
+            delete process.env.CADENCE_SESSION_SECRET;
+            delete process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY;
 
             await expect(
                 configService.saveConfig({

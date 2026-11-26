@@ -39,7 +39,7 @@ describe('Plan enforcement over HTTP (hosted mode on)', () => {
     beforeEach(async () => {
         config.hosted.enabled = true;
         config.hosted.trialDays = 0;
-        process.env.TUDUDI_PLANS_JSON = tinyPlans();
+        process.env.CADENCE_PLANS_JSON = tinyPlans();
         plans._resetCache();
         entitlements.invalidate();
         user = await createTestUser({
@@ -51,7 +51,7 @@ describe('Plan enforcement over HTTP (hosted mode on)', () => {
     afterEach(() => {
         config.hosted.enabled = false;
         config.hosted.trialDays = 7;
-        delete process.env.TUDUDI_PLANS_JSON;
+        delete process.env.CADENCE_PLANS_JSON;
         plans._resetCache();
         entitlements.invalidate();
     });

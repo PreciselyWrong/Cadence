@@ -60,7 +60,7 @@ describe('TODO.md projects', () => {
         fs.mkdirSync(path.join(root, 'empty'));
         fs.writeFileSync(alpha(), ALPHA);
         fs.writeFileSync(path.join(root, 'beta', 'TODO.md'), BETA);
-        process.env.TUDUDI_TODO_ROOT = root;
+        process.env.CADENCE_TODO_ROOT = root;
         ({ user, agent } = await signIn('todo@example.com'));
         for (const name of ['alpha', 'beta']) {
             await Project.create({
@@ -73,7 +73,7 @@ describe('TODO.md projects', () => {
     });
 
     afterEach(() => {
-        delete process.env.TUDUDI_TODO_ROOT;
+        delete process.env.CADENCE_TODO_ROOT;
         fs.rmSync(root, { recursive: true, force: true });
     });
 
@@ -285,7 +285,7 @@ describe('TODO.md projects', () => {
     it('keeps everything when the root cannot be read', async () => {
         await agent.post('/api/todo-md/rescan');
         const before = await Task.count();
-        process.env.TUDUDI_TODO_ROOT = path.join(root, 'gone');
+        process.env.CADENCE_TODO_ROOT = path.join(root, 'gone');
 
         const res = await agent.post('/api/todo-md/rescan');
 
@@ -992,7 +992,7 @@ describe('TODO.md projects', () => {
     });
 
     it('is off without a root', async () => {
-        delete process.env.TUDUDI_TODO_ROOT;
+        delete process.env.CADENCE_TODO_ROOT;
         expect(service.isEnabled()).toBe(false);
         const res = await agent.post('/api/todo-md/rescan');
         expect(res.status).toBe(404);

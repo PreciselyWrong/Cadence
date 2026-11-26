@@ -17,7 +17,7 @@ const MAX_TOKEN_DAYS = 365;
 // never from Host or X-Forwarded-Host, which a client can set. Unset (or
 // not an https origin, except localhost) means the server is off.
 function publicBase() {
-    const raw = (process.env.TUDUDI_PUBLIC_MCP_URL || '').trim();
+    const raw = (process.env.CADENCE_PUBLIC_MCP_URL || '').trim();
     if (!raw) return null;
     let url;
     try {
@@ -37,7 +37,7 @@ const isEnabled = () => publicBase() !== null;
 const resourceUrl = () => `${publicBase()}/mcp`;
 
 function allowedRedirectUris() {
-    const raw = process.env.TUDUDI_MCP_OAUTH_REDIRECT_URIS;
+    const raw = process.env.CADENCE_MCP_OAUTH_REDIRECT_URIS;
     if (raw === undefined || raw.trim() === '') return DEFAULT_REDIRECT_URIS;
     return raw
         .split(',')
@@ -46,9 +46,9 @@ function allowedRedirectUris() {
 }
 
 // The accounts allowed to grant a connector, as lowercase emails, or null
-// when TUDUDI_MCP_OAUTH_ALLOWED_EMAILS is unset: then only admins may.
+// when CADENCE_MCP_OAUTH_ALLOWED_EMAILS is unset: then only admins may.
 function allowedConsentEmails() {
-    const raw = process.env.TUDUDI_MCP_OAUTH_ALLOWED_EMAILS;
+    const raw = process.env.CADENCE_MCP_OAUTH_ALLOWED_EMAILS;
     if (raw === undefined || raw.trim() === '') return null;
     return raw
         .split(',')
@@ -57,7 +57,7 @@ function allowedConsentEmails() {
 }
 
 function tokenLifetimeSeconds() {
-    const days = parseInt(process.env.TUDUDI_MCP_OAUTH_TOKEN_DAYS, 10);
+    const days = parseInt(process.env.CADENCE_MCP_OAUTH_TOKEN_DAYS, 10);
     const valid = Number.isInteger(days) && days >= 1 && days <= MAX_TOKEN_DAYS;
     return (valid ? days : DEFAULT_TOKEN_DAYS) * 24 * 3600;
 }

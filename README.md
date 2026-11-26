@@ -205,7 +205,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 | --------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Decision funnel | Someday tag and defer-until only    | **In view** (possibilities), **This week** (commitments) and **Later** (parked, with an optional **review date**) from the task pane or the row menu; none of them is a due date, none reaches Google. On Today, this week's tasks and tasks in view lead the suggestions. [Docs](docs/34-review.md)                                                          |
 | Postponements   | Due date changes logged, never read | Due date changes are classified (pushed back, rescheduled, time changed, automatic) and unfinished plan days counted; a task pushed back 3 times in 30 days is listed, and the task pane shows its history. No badges, no score. [Docs](docs/34-review.md)                                                                                                    |
-| TODO.md projects | —                                  | **Projects follow `TODO.md` files** (`TUDUDI_TODO_ROOT`, or git repositories), chosen per project: tasks tagged `code` go to and come from the file, the others stay in Cadence ([docs](docs/35-todo-md-projects.md)). |
+| TODO.md projects | —                                  | **Projects follow `TODO.md` files** (`CADENCE_TODO_ROOT`, or git repositories), chosen per project: tasks tagged `code` go to and come from the file, the others stay in Cadence ([docs](docs/35-todo-md-projects.md)). |
 | Review          | —                                   | One page, `/review` (More menu): **To decide**, **Pushed back**, **Stalled projects**, **Later**, **Old**, **This week** with planned time against available time; **Quick review** shows one thing at a time (at most 10, about 5 minutes, keyboard on the web); one-tap choices per row; decisions saved one by one, so a review can stop and resume. **Help me choose** compares two tasks at a time, on Today and in the week. [Docs](docs/34-review.md) |
 | Weekly routine  | —                                   | **Plan a Friday review** from Review creates a recurring task without a reminder (once). Wording stays neutral: no days-late counter, an undated task is never overdue. On Android too |
 
@@ -280,15 +280,15 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 
 ## Getting started
 
-Cadence keeps tududi's technical names so that existing installs keep working: the `TUDUDI_*` variables, the database files and the `tt_` API key prefix are unchanged. Only the displayed name and the image name (`ghcr.io/preciselywrong/cadence`) changed.
+Environment variables are `CADENCE_*`. The former `TUDUDI_*` names are still read, with a startup warning, until the next release; rename them in your `.env` or compose file. Cadence keeps the other technical names of tududi so that existing installs keep working: the database files, the cookies and the `tt_` API key prefix are unchanged. Only the displayed name and the image name (`ghcr.io/preciselywrong/cadence`) changed.
 
 ### Quick start
 
 ```bash
 docker run \
-  -e TUDUDI_USER_EMAIL=admin@example.com \
-  -e TUDUDI_USER_PASSWORD=your-secure-password \
-  -e TUDUDI_SESSION_SECRET=$(openssl rand -hex 64) \
+  -e CADENCE_USER_EMAIL=admin@example.com \
+  -e CADENCE_USER_PASSWORD=your-secure-password \
+  -e CADENCE_SESSION_SECRET=$(openssl rand -hex 64) \
   -v ~/cadence/db:/app/db \
   -v ~/cadence/uploads:/app/uploads \
   -v ~/cadence/backups:/app/backups \
@@ -328,12 +328,12 @@ See [TODO.md projects](docs/35-todo-md-projects.md) for the Cadence side and the
 
 ### Reverse Proxy Setup
 
-When running behind a reverse proxy (Caddy, Nginx, Traefik, etc.), set `TUDUDI_TRUST_PROXY` so that Express correctly reads client IPs from `X-Forwarded-For` headers. Without this, `express-rate-limit` will log a validation error.
+When running behind a reverse proxy (Caddy, Nginx, Traefik, etc.), set `CADENCE_TRUST_PROXY` so that Express correctly reads client IPs from `X-Forwarded-For` headers. Without this, `express-rate-limit` will log a validation error.
 
 ```bash
 docker run \
-  -e TUDUDI_TRUST_PROXY=true \
-  -e TUDUDI_ALLOWED_ORIGINS=https://your-domain.com \
+  -e CADENCE_TRUST_PROXY=true \
+  -e CADENCE_ALLOWED_ORIGINS=https://your-domain.com \
   ...
 ```
 
@@ -438,7 +438,7 @@ Every start backs up the SQLite file next to it (`db-backup-<timestamp>.sqlite3`
 
 #### Upgrading to a release with PostgreSQL support
 
-SQLite stays the default and existing databases are used as they are. Make sure your `.env` does **not** contain a `DATABASE_URL` or `DB_DIALECT` left over from another application: either one switches Cadence to PostgreSQL. As a safety net, the container refuses to start when PostgreSQL is selected but a populated SQLite database is present at `DB_FILE`; unset the variable to keep your data, or set `TUDUDI_ALLOW_DIALECT_SWITCH=true` if you really want an empty PostgreSQL database.
+SQLite stays the default and existing databases are used as they are. Make sure your `.env` does **not** contain a `DATABASE_URL` or `DB_DIALECT` left over from another application: either one switches Cadence to PostgreSQL. As a safety net, the container refuses to start when PostgreSQL is selected but a populated SQLite database is present at `DB_FILE`; unset the variable to keep your data, or set `CADENCE_ALLOW_DIALECT_SWITCH=true` if you really want an empty PostgreSQL database.
 
 #### v1.1.x to v1.2.x: Volume path change
 

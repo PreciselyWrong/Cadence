@@ -159,7 +159,7 @@ cd /chemin/vers/Cadence/backend && node -e "console.log(require('./modules/plugi
 4. Revenir en arrière : `git checkout <tag>` dans le dossier du plugin, puis **Recharger**.
 5. **Supprimer** arrête le plugin et efface son dossier, ses réglages et son stockage.
 
-Dev en local : place le dossier directement dans `TUDUDI_PLUGINS_DIR`, modifie, **Recharger**.
+Dev en local : place le dossier directement dans `CADENCE_PLUGINS_DIR`, modifie, **Recharger**.
 
 ## 8. Pièges
 
@@ -168,7 +168,7 @@ Dev en local : place le dossier directement dans `TUDUDI_PLUGINS_DIR`, modifie, 
 - Deux dossiers avec le même `id` : le second est `invalid`.
 - Un timer non nettoyé survit au rechargement : passe par `ctx.onDispose`.
 - Ne dépends pas de l'ordre de livraison des événements ni de leur exactitude absolue (pas de file durable côté plugin).
-- Hébergé (`TUDUDI_HOSTED_MODE`) : les plugins sont désactivés.
+- Hébergé (`CADENCE_HOSTED_MODE`) : les plugins sont désactivés.
 
 ## Checklist avant de publier
 

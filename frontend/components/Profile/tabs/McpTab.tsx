@@ -18,7 +18,7 @@ interface McpConfig {
             command: string;
             args: string[];
             env: {
-                TUDUDI_API_TOKEN: string;
+                CADENCE_API_TOKEN: string;
             };
         };
     };

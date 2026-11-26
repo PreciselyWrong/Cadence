@@ -51,7 +51,7 @@ function errorHandler(err, req, res, next) {
             error: 'Trust proxy configuration error',
             message:
                 'X-Forwarded-For header detected but trust proxy is not configured. ' +
-                'Please set TUDUDI_TRUST_PROXY=true in your environment variables. ' +
+                'Please set CADENCE_TRUST_PROXY=true in your environment variables. ' +
                 'See documentation: https://github.com/chrisvel/tududi#reverse-proxy-setup',
             code: 'TRUST_PROXY_ERROR',
         });
@@ -61,7 +61,7 @@ function errorHandler(err, req, res, next) {
             error: 'Trust proxy configuration error',
             message:
                 'Express trust proxy is set to true, which is permissive. ' +
-                'Consider setting TUDUDI_TRUST_PROXY to a specific hop count (e.g. 1) instead of true.',
+                'Consider setting CADENCE_TRUST_PROXY to a specific hop count (e.g. 1) instead of true.',
             code: 'TRUST_PROXY_ERROR',
         });
     }

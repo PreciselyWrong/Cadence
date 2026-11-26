@@ -132,21 +132,17 @@ VOLUME ["/app/backups"]
 
 EXPOSE 3002
 
+# CADENCE_* defaults are not set here: an image-level value would shadow a
+# legacy TUDUDI_* one (see backend/config/env-compat.js). The code carries the
+# defaults; scripts/docker-entrypoint.sh sets the upload and backup paths.
 # The commit the image is built from, shown beside the version.
 ARG CADENCE_BUILD=
 ENV CADENCE_BUILD=${CADENCE_BUILD}
 ENV NODE_ENV=production \
     DB_FILE="/app/db/production.sqlite3" \
     PORT=3002 \
-    TUDUDI_ALLOWED_ORIGINS="http://localhost:8080,http://localhost:3002,http://127.0.0.1:8080,http://127.0.0.1:3002" \
-    TUDUDI_SESSION_SECRET="" \
-    TUDUDI_USER_EMAIL="" \
-    TUDUDI_USER_PASSWORD="" \
-    TUDUDI_TRUST_PROXY=false \
     DISABLE_TELEGRAM=false \
     DISABLE_SCHEDULER=false \
-    TUDUDI_UPLOAD_PATH="/app/uploads" \
-    TUDUDI_BACKUP_PATH="/app/backups" \
     SWAGGER_ENABLED=false
 
 HEALTHCHECK --interval=60s --timeout=3s --start-period=10s --retries=2 \

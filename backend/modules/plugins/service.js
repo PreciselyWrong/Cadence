@@ -125,7 +125,7 @@ function encryptNewSecrets(manifest, current, values) {
         }
         if (!secretCipher.hasKeyMaterial()) {
             throw new ValidationError(
-                'Set TUDUDI_SESSION_SECRET before saving a secret'
+                'Set CADENCE_SESSION_SECRET before saving a secret'
             );
         }
         result[field.key] = secretCipher.encrypt(value);
@@ -269,7 +269,7 @@ async function checkUpdate(userId, id) {
 async function install(userId, rawUrl) {
     await assertAdmin(userId);
     const dir = registry.pluginsDir();
-    if (!dir) throw new ValidationError('Set TUDUDI_PLUGINS_DIR first');
+    if (!dir) throw new ValidationError('Set CADENCE_PLUGINS_DIR first');
     const parsed = parseGitUrl(rawUrl);
     if (!parsed.ok) throw new ValidationError(parsed.error);
 

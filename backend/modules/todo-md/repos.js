@@ -11,7 +11,7 @@ const { editTodoFile, readTodoText } = require('./safeFile');
 const { logInfo, logError } = require('../../services/logService');
 
 // TODO.md files that live in git repositories (Gitea, GitHub). Each repo is
-// cloned under TUDUDI_TODO_GIT_DIR; reading is fetch + reset to the remote
+// cloned under CADENCE_TODO_GIT_DIR; reading is fetch + reset to the remote
 // branch, writing is fetch + reset + one keyed edit + commit + push. The
 // remote branch is the source of truth: a Cadence edit that no longer
 // applies to it (the line changed there) is not written and stays pending,

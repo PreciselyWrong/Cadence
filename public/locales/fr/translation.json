@@ -951,7 +951,7 @@
     "plugins": {
       "title": "Plugins",
       "description": "Les plugins ajoutent vos propres intégrations au serveur. Seul un administrateur les voit. Un plugin reste désactivé tant que vous ne l'activez pas.",
-      "notConfigured": "Les plugins sont désactivés. Renseignez TUDUDI_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.",
+      "notConfigured": "Les plugins sont désactivés. Renseignez CADENCE_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.",
       "reloadAll": "Tout recharger",
       "reload": "Recharger",
       "reloadPending": "Recharger pour charger {{version}}",
@@ -5391,7 +5391,7 @@
     "title": "Authentification à deux facteurs",
     "on": "Activée",
     "description": "Demande un code d'une application d'authentification, en plus de votre mot de passe ou de l'authentification unique, chaque fois que ce compte se connecte sur un nouvel appareil.",
-    "unavailable": "L'authentification à deux facteurs nécessite que TUDUDI_SESSION_SECRET soit défini sur le serveur. Contactez votre administrateur.",
+    "unavailable": "L'authentification à deux facteurs nécessite que CADENCE_SESSION_SECRET soit défini sur le serveur. Contactez votre administrateur.",
     "turnOn": "Activer",
     "turnOff": "Désactiver",
     "setupScan": "Scannez ce code QR avec une application d'authentification, comme Google Authenticator, 1Password ou Aegis.",

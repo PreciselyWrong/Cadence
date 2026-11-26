@@ -250,11 +250,11 @@ function createLandingRouter(landing) {
     const secureCookie = /^https:/.test(siteOrigin);
 
     // Whole-unit price with the right symbol for the configured currency,
-    // so changing TUDUDI_PRICING_JSON's currency changes every price on the
+    // so changing CADENCE_PRICING_JSON's currency changes every price on the
     // page rather than leaving a dollar sign in front of euros.
     // Days of free trial a new Cloud account gets, or 0. The pages only
     // mention a trial when this instance actually starts one, so the copy can
-    // never run ahead of the TUDUDI_TRIAL_DAYS switch.
+    // never run ahead of the CADENCE_TRIAL_DAYS switch.
     const cloudTrialDays = () => {
         const hosted = getConfig().hosted || {};
         return hosted.enabled === true && hosted.trialDays > 0

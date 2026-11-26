@@ -1,5 +1,5 @@
 # Change the host and the TLS secret, and set ingressClassName if your cluster
-# has more than one controller. The host must also be in TUDUDI_ALLOWED_ORIGINS.
+# has more than one controller. The host must also be in CADENCE_ALLOWED_ORIGINS.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

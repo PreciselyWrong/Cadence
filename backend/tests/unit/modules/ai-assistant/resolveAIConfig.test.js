@@ -11,9 +11,9 @@ describe('AI Assistant - resolveAIConfig precedence', () => {
         'LLM_BASE_URL',
         'OPENAI_BASE_URL',
         'LLM_MODEL',
-        'TUDUDI_AI_MODEL',
-        'TUDUDI_SESSION_SECRET',
-        'TUDUDI_OIDC_SECRET_ENCRYPTION_KEY',
+        'CADENCE_AI_MODEL',
+        'CADENCE_SESSION_SECRET',
+        'CADENCE_OIDC_SECRET_ENCRYPTION_KEY',
     ];
 
     beforeEach(() => {
@@ -26,7 +26,7 @@ describe('AI Assistant - resolveAIConfig precedence', () => {
         process.env.LLM_MODEL = 'env-model';
         // Needed to encrypt a fake stored key below, independent of whatever
         // (or nothing) this machine's real .env happens to have.
-        process.env.TUDUDI_SESSION_SECRET = 'x'.repeat(64);
+        process.env.CADENCE_SESSION_SECRET = 'x'.repeat(64);
     });
 
     afterEach(() => {

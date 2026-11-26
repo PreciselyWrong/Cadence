@@ -3,7 +3,7 @@
 <resources>
     <string name="plugins_title">Plugins</string>
     <string name="plugins_description">Les plugins ajoutent vos propres intégrations au serveur. Seul un administrateur les voit. Un plugin reste désactivé tant que vous ne l\'activez pas.</string>
-    <string name="plugins_not_configured">Les plugins sont désactivés. Renseignez TUDUDI_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.</string>
+    <string name="plugins_not_configured">Les plugins sont désactivés. Renseignez CADENCE_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.</string>
     <string name="plugins_none">Aucun plugin trouvé dans le dossier des plugins.</string>
     <string name="plugins_load_error">Impossible de charger les plugins</string>
     <string name="plugins_offline">Plugins indisponibles hors ligne</string>

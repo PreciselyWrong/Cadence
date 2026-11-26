@@ -1760,8 +1760,8 @@ describe('MCP Tools Integration', () => {
                 fs.mkdirSync(path.join(root, 'demo'));
                 file = path.join(root, 'demo', 'TODO.md');
                 fs.writeFileSync(file, '## Next\n- Ship it\n');
-                process.env.TUDUDI_TODO_ROOT = root;
-                process.env.TUDUDI_TODO_USER_EMAIL = user.email;
+                process.env.CADENCE_TODO_ROOT = root;
+                process.env.CADENCE_TODO_USER_EMAIL = user.email;
                 await Project.create({
                     name: 'Demo',
                     user_id: user.id,
@@ -1773,8 +1773,8 @@ describe('MCP Tools Integration', () => {
             });
 
             afterEach(() => {
-                delete process.env.TUDUDI_TODO_ROOT;
-                delete process.env.TUDUDI_TODO_USER_EMAIL;
+                delete process.env.CADENCE_TODO_ROOT;
+                delete process.env.CADENCE_TODO_USER_EMAIL;
                 fs.rmSync(root, { recursive: true, force: true });
             });
 

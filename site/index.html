@@ -300,9 +300,9 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
           <h3>Server</h3>
           <p>Docker image built from <code>main</code>. Open port 3002 and sign in.</p>
 <pre><button class="copy" type="button">Copy</button><code>docker run -d -p 3002:3002 \
-  -e TUDUDI_USER_EMAIL=you@example.com \
-  -e TUDUDI_USER_PASSWORD=change-me \
-  -e TUDUDI_SESSION_SECRET=$(openssl rand -hex 64) \
+  -e CADENCE_USER_EMAIL=you@example.com \
+  -e CADENCE_USER_PASSWORD=change-me \
+  -e CADENCE_SESSION_SECRET=$(openssl rand -hex 64) \
   -v ~/cadence/db:/app/db \
   ghcr.io/preciselywrong/cadence:latest</code></pre>
         </div>

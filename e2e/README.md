@@ -10,7 +10,7 @@ The suite uses Playwright and assumes the app is running locally.
 1) Backend (with a test user):
 
 ```bash
-TUDUDI_USER_EMAIL=test@tududi.com TUDUDI_USER_PASSWORD=password123 npm run backend:start
+CADENCE_USER_EMAIL=test@tududi.com CADENCE_USER_PASSWORD=password123 npm run backend:start
 ```
 
 2) Frontend dev server:

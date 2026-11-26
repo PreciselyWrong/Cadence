@@ -151,7 +151,7 @@ npm start
 ## Per-User Backup Exports
 
 The in-app export (Profile > Backup) writes each
-user's `.json.gz` under `TUDUDI_BACKUP_PATH` (default `backend/backups`,
+user's `.json.gz` under `CADENCE_BACKUP_PATH` (default `backend/backups`,
 `/app/backups` in the Docker image, declared as a volume). Mount it like
 `uploads`, or those exports disappear when the container is recreated.
 

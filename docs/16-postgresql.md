@@ -38,7 +38,7 @@ Passwords with special characters must be URL-encoded inside `DATABASE_URL` (`@`
 1. Connects and authenticates.
 2. If the `users` table is missing, the database is treated as new: `sequelize.sync()` creates every table, index and foreign key from the models, and all existing migration files are recorded in `SequelizeMeta` as already applied (the *baseline*). The default `registration_enabled=false` setting is seeded.
 3. `sequelize-cli db:migrate` then runs whatever migrations were added after the baseline. On a brand-new install this prints "No migrations were executed".
-4. If `TUDUDI_USER_EMAIL` and `TUDUDI_USER_PASSWORD` are set, that user is created (if missing) and made admin. An existing user's password is left unchanged.
+4. If `CADENCE_USER_EMAIL` and `CADENCE_USER_PASSWORD` are set, that user is created (if missing) and made admin. An existing user's password is left unchanged.
 
 The historical migrations contain SQLite-only SQL and are never replayed on PostgreSQL; the models are the source of truth for a fresh PostgreSQL schema. On an existing database, step 2 is skipped and only pending migrations run, so restarts and upgrades behave exactly as with SQLite.
 
@@ -53,7 +53,7 @@ A complete stack lives in [examples/docker-compose.postgres.yml](examples/docker
 ```bash
 mkdir Cadence && cd Cadence
 cp /path/to/tududi/docs/examples/docker-compose.postgres.yml docker-compose.yml
-cp /path/to/tududi/.env.example .env      # set TUDUDI_* values and DB_PASSWORD
+cp /path/to/tududi/.env.example .env      # set CADENCE_* values and DB_PASSWORD
 docker compose up -d
 docker compose logs -f Cadence             # watch the first boot
 ```
@@ -103,7 +103,7 @@ docker compose exec db pg_dump -U Cadence Cadence | gzip > tududi-$(date +%F).sq
 gunzip -c tududi-2026-09-05.sql.gz | psql "$DATABASE_URL"
 ```
 
-Uploads live on disk (`TUDUDI_UPLOAD_PATH`) and need their own backup.
+Uploads live on disk (`CADENCE_UPLOAD_PATH`) and need their own backup.
 
 ---
 
@@ -143,8 +143,8 @@ PostgreSQL. You can still pin the background work to one container with
 `DISABLE_SCHEDULER=true` and `DISABLE_TELEGRAM=true` on the others, which
 keeps a scheduler crash from ever affecting HTTP traffic.
 
-With `TUDUDI_HOSTED_MODE=true` the server refuses to start unless
-`TUDUDI_SESSION_SECRET`, `TUDUDI_TRUST_PROXY`, `TUDUDI_ALLOWED_ORIGINS`,
+With `CADENCE_HOSTED_MODE=true` the server refuses to start unless
+`CADENCE_SESSION_SECRET`, `CADENCE_TRUST_PROXY`, `CADENCE_ALLOWED_ORIGINS`,
 public `FRONTEND_URL`/`BACKEND_URL`, `ENABLE_EMAIL` with an SMTP host, and a
 PostgreSQL `DATABASE_URL` are all set, and prints exactly what is missing.
 
@@ -180,7 +180,7 @@ configure; `pg_trgm` ships with PostgreSQL.
 | `Existing database detected` but the app reports missing tables | The database has a `users` table from another application. Point Cadence at its own database. |
 | Migration failed on start | The container exits with the failing migration in the log. Restore the last dump, keep the previous image, report the migration. |
 | Container starts but `/api/health` never responds | Check `docker compose logs Cadence`; a database that is not reachable shows a connection error from `db-prepare.js` before anything else. |
-| `PostgreSQL is selected ... but an existing SQLite database was found` | `DATABASE_URL` or `DB_DIALECT` is set while the SQLite file at `DB_FILE` (in Docker `/app/db/production.sqlite3`) still holds data, usually a variable left over in `.env`. Unset it to stay on SQLite, or set `TUDUDI_ALLOW_DIALECT_SWITCH=true` to start on PostgreSQL anyway (the SQLite data is not transferred). |
+| `PostgreSQL is selected ... but an existing SQLite database was found` | `DATABASE_URL` or `DB_DIALECT` is set while the SQLite file at `DB_FILE` (in Docker `/app/db/production.sqlite3`) still holds data, usually a variable left over in `.env`. Unset it to stay on SQLite, or set `CADENCE_ALLOW_DIALECT_SWITCH=true` to start on PostgreSQL anyway (the SQLite data is not transferred). |
 
 ---
 

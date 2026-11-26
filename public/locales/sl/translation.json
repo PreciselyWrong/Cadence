@@ -949,7 +949,7 @@
     "plugins": {
       "title": "Vtičniki",
       "description": "Vtičniki v strežnik dodajajo lastne integracije. Vidi jih le skrbnik. Vtičnik ostane izklopljen, dokler ga ne vklopite.",
-      "notConfigured": "Vtičniki so izklopljeni. Nastavite TUDUDI_PLUGINS_DIR na mapo, ki vsebuje mape vtičnikov, in znova zaženite strežnik.",
+      "notConfigured": "Vtičniki so izklopljeni. Nastavite CADENCE_PLUGINS_DIR na mapo, ki vsebuje mape vtičnikov, in znova zaženite strežnik.",
       "reloadAll": "Znova naloži vse",
       "reload": "Znova naloži",
       "reloadPending": "Znova naložite, da se naloži {{version}}",
@@ -5453,7 +5453,7 @@
     "title": "Dvostopenjsko preverjanje",
     "on": "Vklopljeno",
     "description": "Ob vsaki prijavi tega računa v novi napravi poleg gesla ali enotne prijave zahteva kodo iz aplikacije za preverjanje pristnosti.",
-    "unavailable": "Za dvostopenjsko preverjanje mora biti na strežniku nastavljen TUDUDI_SESSION_SECRET. Obrnite se na skrbnika.",
+    "unavailable": "Za dvostopenjsko preverjanje mora biti na strežniku nastavljen CADENCE_SESSION_SECRET. Obrnite se na skrbnika.",
     "turnOn": "Vklopi",
     "turnOff": "Izklopi",
     "setupScan": "To kodo QR skenirajte z aplikacijo za preverjanje pristnosti, na primer Google Authenticator, 1Password ali Aegis.",

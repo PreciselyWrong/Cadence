@@ -3,13 +3,13 @@
 Hosted mode is how Cadence runs as a public, multi-user service (a single
 shared instance where unrelated people sign up). It is off by default and a
 self-hosted install never needs it. Everything in this document is a no-op
-until `TUDUDI_HOSTED_MODE=true`.
+until `CADENCE_HOSTED_MODE=true`.
 
 ## What the flag changes
 
 | Area | Self-hosted (default) | Hosted mode |
 |---|---|---|
-| First registered user | becomes admin | regular user; admin comes from `TUDUDI_USER_EMAIL` |
+| First registered user | becomes admin | regular user; admin comes from `CADENCE_USER_EMAIL` |
 | `POST /api/admin/set-admin-role` with no roles | any user may bootstrap | refused |
 | OIDC auto-provisioning | always creates accounts | only while registration is enabled |
 | Boot | starts with whatever is set | refuses to start until session secret, trust proxy, allowed origins, public URLs, email and PostgreSQL are configured (`config/hostedConfig.js`) |
@@ -36,24 +36,24 @@ monday.com: `team_3`, `team_5`, `team_10`, `team_15`, `team_20`, `team_25`,
 in it, and the owner holds one of the seats, so `team_5` adds 4 members.
 Larger teams are sold by hand with an override (below).
 
-`null` means unlimited. Override any number with `TUDUDI_PLANS_JSON`, a JSON
+`null` means unlimited. Override any number with `CADENCE_PLANS_JSON`, a JSON
 object deep-merged over the defaults:
 
 ```bash
-TUDUDI_PLANS_JSON='{"free":{"limits":{"max_tasks":100}},"pro":{"limits":{"storage_mb":10000}}}'
+CADENCE_PLANS_JSON='{"free":{"limits":{"max_tasks":100}},"pro":{"limits":{"storage_mb":10000}}}'
 ```
 
 Other knobs:
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `TUDUDI_TRIAL_DAYS` | `7` | a self-registered account gets the trial plan for this long, counted from when it verifies its email (SSO sign-ups: from creation). `0` turns trials off |
-| `TUDUDI_TRIAL_READ_ONLY_DAYS` | `30` | with `TUDUDI_REQUIRE_SUBSCRIPTION`, how long an unpaid ended trial stays readable before the account is deleted |
-| `TUDUDI_DELETE_EXPIRED_TRIALS` | `true` | set `false` to keep ended trials read-only instead of deleting them; past the window they get the usual 402 wall |
+| `CADENCE_TRIAL_DAYS` | `7` | a self-registered account gets the trial plan for this long, counted from when it verifies its email (SSO sign-ups: from creation). `0` turns trials off |
+| `CADENCE_TRIAL_READ_ONLY_DAYS` | `30` | with `CADENCE_REQUIRE_SUBSCRIPTION`, how long an unpaid ended trial stays readable before the account is deleted |
+| `CADENCE_DELETE_EXPIRED_TRIALS` | `true` | set `false` to keep ended trials read-only instead of deleting them; past the window they get the usual 402 wall |
 | `RATE_LIMIT_SIGNUP_MAX` / `RATE_LIMIT_SIGNUP_WINDOW_MS` | `3` / 24 h | password sign-ups per IP on a hosted instance; only created accounts count |
-| `TUDUDI_PAST_DUE_GRACE_DAYS` | `14` | after a failed payment, Pro continues this long past the period end |
-| `TUDUDI_HOSTED_EXEMPT_ADMINS` | `true` | admins are treated as Pro |
-| `TUDUDI_REQUIRE_SUBSCRIPTION` | `false` | sell access rather than upgrades: see below |
+| `CADENCE_PAST_DUE_GRACE_DAYS` | `14` | after a failed payment, Pro continues this long past the period end |
+| `CADENCE_HOSTED_EXEMPT_ADMINS` | `true` | admins are treated as Pro |
+| `CADENCE_REQUIRE_SUBSCRIPTION` | `false` | sell access rather than upgrades: see below |
 
 ## Trials
 
@@ -76,7 +76,7 @@ someone who signed up only to misuse them.
   if the owner subscribes to a Team plan. A feature the trial leaves out answers
   `402 FEATURE_NOT_IN_PLAN` with `details.plan: "trial"`, and the app sends
   the browser to `/subscription/new?feature=<name>`. Set any of these to `0`
-  or `false` with `TUDUDI_PLANS_JSON` to take them out again.
+  or `false` with `CADENCE_PLANS_JSON` to take them out again.
 - **One trial per mailbox.** `users.email_canonical` folds `+tags`, Gmail dots
   and googlemail.com, and a hosted sign-up (password or SSO) whose mailbox
   already has an account is refused. Self-hosted instances skip this check.
@@ -85,10 +85,10 @@ someone who signed up only to misuse them.
 - **Reminded before it ends.** The daily `account_lifecycle` job emails a
   running, never-paid trial owner when 3 days are left and again on the last
   day (`billing_accounts.trial_reminder_days`), with or without
-  `TUDUDI_REQUIRE_SUBSCRIPTION`.
-- **Then read-only.** With `TUDUDI_REQUIRE_SUBSCRIPTION`, an ended, never-paid
+  `CADENCE_REQUIRE_SUBSCRIPTION`.
+- **Then read-only.** With `CADENCE_REQUIRE_SUBSCRIPTION`, an ended, never-paid
   trial can still `GET` everything (and export) for
-  `TUDUDI_TRIAL_READ_ONLY_DAYS`; writes answer `402 TRIAL_ENDED`.
+  `CADENCE_TRIAL_READ_ONLY_DAYS`; writes answer `402 TRIAL_ENDED`.
 - **Warned, then deleted.** The daily `account_lifecycle` job (03:00 UTC)
   emails a deletion warning when deletion is a week or less away, and deletes
   only accounts warned at least 7 days earlier; a late warning pushes the date
@@ -106,7 +106,7 @@ someone who signed up only to misuse them.
 
 ## Selling access rather than upgrades
 
-With `TUDUDI_REQUIRE_SUBSCRIPTION=true` the Free plan stops being a place to
+With `CADENCE_REQUIRE_SUBSCRIPTION=true` the Free plan stops being a place to
 live. An account with no subscription, no trial, no admin override and no
 admin exemption cannot use the app at all: every API route answers `402`
 with `code: SUBSCRIPTION_REQUIRED`, and the browser is sent to
@@ -334,7 +334,7 @@ Endpoints (all 404 on a self-hosted instance):
 | `POST /api/admin/billing/:userId/sync` | force a re-read from the provider (admin) |
 
 After a failed payment the account is `past_due`: Pro continues for
-`TUDUDI_PAST_DUE_GRACE_DAYS` past the period end while the provider
+`CADENCE_PAST_DUE_GRACE_DAYS` past the period end while the provider
 retries, and the user gets an in-app warning. Nothing is deleted or hidden
 on a downgrade. Deleting an account cancels its subscription.
 
@@ -373,16 +373,16 @@ page's `/privacy` and `/terms`.
 
 ## Public demo
 
-`TUDUDI_DEMO_ENABLED=true` stands up a sandbox anyone can open without
+`CADENCE_DEMO_ENABLED=true` stands up a sandbox anyone can open without
 signing up: one shared account, seeded with plausible content, wiped and
 seeded again on a timer.
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `TUDUDI_DEMO_ENABLED` | `false` | off unless set, so a self-hosted instance never grows a public login |
-| `TUDUDI_DEMO_EMAIL` | `demo@tududi.com` | the shared account |
-| `TUDUDI_DEMO_PASSWORD` | `demodemo` | only used to create the account; visitors never type it |
-| `TUDUDI_DEMO_RESET_MINUTES` | `60` | how often everything in it is thrown away |
+| `CADENCE_DEMO_ENABLED` | `false` | off unless set, so a self-hosted instance never grows a public login |
+| `CADENCE_DEMO_EMAIL` | `demo@tududi.com` | the shared account |
+| `CADENCE_DEMO_PASSWORD` | `demodemo` | only used to create the account; visitors never type it |
+| `CADENCE_DEMO_RESET_MINUTES` | `60` | how often everything in it is thrown away |
 
 `POST /api/demo/login` signs the caller into the shared account, so the
 marketing site links straight to `/demo` on the app and nobody has to be
@@ -405,16 +405,16 @@ and is switched on per hostname:
 
 | Variable | Meaning |
 |---|---|
-| `TUDUDI_LANDING_HOSTS` | comma-separated hostnames that get the marketing page, e.g. `tududi.com,www.tududi.com`. Empty (default) means it is never served |
-| `TUDUDI_LANDING_URL` | canonical origin used in `hreflang` and canonical tags; defaults to `https://` plus the first host |
-| `TUDUDI_LANDING_PRICING_JSON` | overrides for the prices printed on the page: `{"monthly":5,"annual":49,"standard":99,"business":499,"launchActive":true}` |
+| `CADENCE_LANDING_HOSTS` | comma-separated hostnames that get the marketing page, e.g. `tududi.com,www.tududi.com`. Empty (default) means it is never served |
+| `CADENCE_LANDING_URL` | canonical origin used in `hreflang` and canonical tags; defaults to `https://` plus the first host |
+| `CADENCE_LANDING_PRICING_JSON` | overrides for the prices printed on the page: `{"monthly":5,"annual":49,"standard":99,"business":499,"launchActive":true}` |
 
 On a landing host, `/` and `/<locale>` render the page, `/landing-assets/*`
 serves its images, `/api/*` still works (so health checks do), and every
 other path answers `301` to the same path on `FRONTEND_URL`, so product
 pages exist on exactly one hostname. On any other host the middleware is a
 no-op. The Free plan limits printed on the page come from the plan catalog,
-so `TUDUDI_PLANS_JSON` changes the copy too.
+so `CADENCE_PLANS_JSON` changes the copy too.
 
 The page carries its own `Content-Security-Policy` (Google Fonts, Font
 Awesome from cdnjs, Google Analytics, the GitHub API for the star count).
@@ -478,13 +478,13 @@ user agent salted with the UTC day and the session secret, so it separates
 two people within one day and cannot follow anyone to the next. Visitors are
 therefore counted per day (back on another day counts again), the marketing
 site and the blog are added together, and a restart without a fixed
-`TUDUDI_SESSION_SECRET` can count a returning visitor twice that day.
+`CADENCE_SESSION_SECRET` can count a returning visitor twice that day.
 Rows older than 90 days are deleted by the nightly token cleanup, and an
 account's rows go with it when it is erased.
 
 | Variable | Meaning |
 |---|---|
-| `TUDUDI_VISIT_TRACKING` | `false` stops recording visits and hides the Visits panel. Default on |
+| `CADENCE_VISIT_TRACKING` | `false` stops recording visits and hides the Visits panel. Default on |
 
 ## Deploying on one machine
 
@@ -499,6 +499,6 @@ refuses to start until they are set.
 
 Point uptime monitoring at `/api/health/ready`, run `scripts/pg-backup.sh`
 from cron and copy its output off the machine, and deploy by pinning
-`TUDUDI_VERSION` to a release tag and running `docker compose pull && docker
+`CADENCE_VERSION` to a release tag and running `docker compose pull && docker
 compose up -d`. Migrations run in the container entrypoint under a database
 lock, so `web` and `worker` can start together.

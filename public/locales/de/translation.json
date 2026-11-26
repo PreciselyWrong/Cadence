@@ -1471,7 +1471,7 @@
     "plugins": {
       "title": "Plugins",
       "description": "Plugins fügen eigene Integrationen zum Server hinzu. Nur ein Administrator sieht sie. Ein Plugin bleibt aus, bis du es einschaltest.",
-      "notConfigured": "Plugins sind aus. Setze TUDUDI_PLUGINS_DIR auf einen Ordner mit Plugin-Ordnern und starte den Server neu.",
+      "notConfigured": "Plugins sind aus. Setze CADENCE_PLUGINS_DIR auf einen Ordner mit Plugin-Ordnern und starte den Server neu.",
       "reloadAll": "Alle neu laden",
       "reload": "Neu laden",
       "reloadPending": "Zum Laden von {{version}} neu laden",
@@ -5369,7 +5369,7 @@
     "title": "Zwei-Faktor-Anmeldung",
     "on": "An",
     "description": "Fragt bei jeder Anmeldung auf einem neuen Gerät zusätzlich zu Ihrem Passwort oder Single Sign-On nach einem Code aus einer Authenticator-App.",
-    "unavailable": "Die Zwei-Faktor-Anmeldung erfordert, dass TUDUDI_SESSION_SECRET auf dem Server gesetzt ist. Wenden Sie sich an Ihren Administrator.",
+    "unavailable": "Die Zwei-Faktor-Anmeldung erfordert, dass CADENCE_SESSION_SECRET auf dem Server gesetzt ist. Wenden Sie sich an Ihren Administrator.",
     "turnOn": "Einschalten",
     "turnOff": "Ausschalten",
     "setupScan": "Scannen Sie diesen QR-Code mit einer Authenticator-App, zum Beispiel Google Authenticator, 1Password oder Aegis.",

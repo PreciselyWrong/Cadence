@@ -37,15 +37,15 @@ describe('Calendar feed routes', () => {
     let agent, today, previousSecret;
 
     beforeAll(() => {
-        previousSecret = process.env.TUDUDI_SESSION_SECRET;
-        process.env.TUDUDI_SESSION_SECRET = 'calendar-feed-test-secret';
+        previousSecret = process.env.CADENCE_SESSION_SECRET;
+        process.env.CADENCE_SESSION_SECRET = 'calendar-feed-test-secret';
     });
 
     afterAll(() => {
         if (previousSecret === undefined) {
-            delete process.env.TUDUDI_SESSION_SECRET;
+            delete process.env.CADENCE_SESSION_SECRET;
         } else {
-            process.env.TUDUDI_SESSION_SECRET = previousSecret;
+            process.env.CADENCE_SESSION_SECRET = previousSecret;
         }
     });
 

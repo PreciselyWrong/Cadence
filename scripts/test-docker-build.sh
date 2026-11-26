@@ -23,8 +23,8 @@ echo "🚀 Starting container..."
 docker run -d \
   --name "$CONTAINER_NAME" \
   -p "$TEST_PORT:3002" \
-  -e TUDUDI_USER_EMAIL=test@example.com \
-  -e TUDUDI_USER_PASSWORD=testpass123 \
+  -e CADENCE_USER_EMAIL=test@example.com \
+  -e CADENCE_USER_PASSWORD=testpass123 \
   -e NODE_ENV=production \
   "$IMAGE_NAME"
 

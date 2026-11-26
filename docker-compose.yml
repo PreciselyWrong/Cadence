@@ -11,7 +11,7 @@ services:
       - ./backups:/app/backups
       # Projects can follow TODO.md files (docs/35-todo-md-projects.md): one
       # sub-folder per file, chosen project by project in the app. Mount a
-      # DEDICATED folder, read-write, and set TUDUDI_TODO_ROOT in .env.
+      # DEDICATED folder, read-write, and set CADENCE_TODO_ROOT in .env.
       # NEVER mount ~/Dev or any folder that holds secrets (.env files,
       # keys): the container could read all of it. A folder of git clones
       # refreshed by a sidecar or a cron job is the recommended source.

@@ -118,7 +118,7 @@ Cadence supports two transport modes for different deployment scenarios:
 
 **Use case:** Claude Desktop or Cursor running on the same machine as Cadence.
 
-- **Authentication:** Via `TUDUDI_API_TOKEN` environment variable
+- **Authentication:** Via `CADENCE_API_TOKEN` environment variable
 - **Communication:** Direct process communication (stdio)
 - **Performance:** Lowest latency
 - **Setup:** Configure in your client's JSON config
@@ -137,7 +137,7 @@ Cadence supports two transport modes for different deployment scenarios:
 - **Communication:** HTTP POST to `/api/mcp`
 - **Protocol:** Streamable HTTP (stateless mode)
 - **Setup:** Requires `mcp-remote` npm package
-- **claude.ai custom connector:** with `TUDUDI_PUBLIC_MCP_URL` set, the same endpoint is also served at `/mcp`, for connector tokens only, with a built-in OAuth authorization server (DCR during a pairing window opened from Profile › MCP, PKCE, two-factor consent, MCP-only tokens). See [Remote MCP connector (claude.ai)](38-remote-mcp.md)
+- **claude.ai custom connector:** with `CADENCE_PUBLIC_MCP_URL` set, the same endpoint is also served at `/mcp`, for connector tokens only, with a built-in OAuth authorization server (DCR during a pairing window opened from Profile › MCP, PKCE, two-factor consent, MCP-only tokens). See [Remote MCP connector (claude.ai)](38-remote-mcp.md)
 
 **Best for:**
 
@@ -156,13 +156,13 @@ Cadence supports two transport modes for different deployment scenarios:
             "args": [
                 "-y",
                 "mcp-remote",
-                "https://${TUDUDI_HOST}/api/mcp",
+                "https://${CADENCE_HOST}/api/mcp",
                 "--header",
-                "Authorization:Bearer ${TUDUDI_API_TOKEN}"
+                "Authorization:Bearer ${CADENCE_API_TOKEN}"
             ],
             "env": {
-                "TUDUDI_API_TOKEN": "your-token-here",
-                "TUDUDI_HOST": "tududi.yourdomain.tld"
+                "CADENCE_API_TOKEN": "your-token-here",
+                "CADENCE_HOST": "tududi.yourdomain.tld"
             }
         }
     }
@@ -1290,7 +1290,7 @@ Universal search across tasks, projects, and notes.
 1. Set your environment variable:
 
     ```bash
-    export TUDUDI_API_TOKEN="your-token-here"
+    export CADENCE_API_TOKEN="your-token-here"
     ```
 
 2. Edit your Claude Desktop config file:
@@ -1305,7 +1305,7 @@ Universal search across tasks, projects, and notes.
                 "command": "node",
                 "args": ["/path/to/tududi/backend/modules/mcp/server.js"],
                 "env": {
-                    "TUDUDI_API_TOKEN": "your-token-here"
+                    "CADENCE_API_TOKEN": "your-token-here"
                 }
             }
         }
@@ -1333,7 +1333,7 @@ Use `mcp-remote` to proxy HTTP requests — see the [HTTP Mode config above](#ht
                 "command": "node",
                 "args": ["/path/to/tududi/backend/modules/mcp/server.js"],
                 "env": {
-                    "TUDUDI_API_TOKEN": "your-token-here"
+                    "CADENCE_API_TOKEN": "your-token-here"
                 }
             }
         }
@@ -1362,7 +1362,7 @@ The [Continue](https://www.continue.dev/) extension adds MCP support to VS Code.
                 "command": "node",
                 "args": ["/path/to/tududi/backend/modules/mcp/server.js"],
                 "env": {
-                    "TUDUDI_API_TOKEN": "your-token-here"
+                    "CADENCE_API_TOKEN": "your-token-here"
                 }
             }
         ]

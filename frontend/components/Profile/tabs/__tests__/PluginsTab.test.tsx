@@ -94,7 +94,7 @@ describe('PluginsTab', () => {
         });
         render(<PluginsTab isActive />);
         expect(
-            await screen.findByText(/TUDUDI_PLUGINS_DIR/)
+            await screen.findByText(/CADENCE_PLUGINS_DIR/)
         ).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Reload all' })).toBeNull();
         expect(screen.queryByRole('switch')).toBeNull();

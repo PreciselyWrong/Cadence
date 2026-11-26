@@ -25,10 +25,10 @@ const storedToken = async (userId) => {
 
 describe('Telegram bot token at rest and in the profile', () => {
     let user, agent;
-    const savedSessionSecret = process.env.TUDUDI_SESSION_SECRET;
+    const savedSessionSecret = process.env.CADENCE_SESSION_SECRET;
 
     beforeEach(async () => {
-        process.env.TUDUDI_SESSION_SECRET = 'x'.repeat(64);
+        process.env.CADENCE_SESSION_SECRET = 'x'.repeat(64);
         user = await createTestUser({ email: 'tg-secret@example.com' });
         agent = request.agent(app);
         await agent.post('/api/login').send({
@@ -39,9 +39,9 @@ describe('Telegram bot token at rest and in the profile', () => {
 
     afterEach(() => {
         if (savedSessionSecret === undefined) {
-            delete process.env.TUDUDI_SESSION_SECRET;
+            delete process.env.CADENCE_SESSION_SECRET;
         } else {
-            process.env.TUDUDI_SESSION_SECRET = savedSessionSecret;
+            process.env.CADENCE_SESSION_SECRET = savedSessionSecret;
         }
     });
 

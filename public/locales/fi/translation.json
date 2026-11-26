@@ -928,7 +928,7 @@
     "plugins": {
       "title": "Liitännäiset",
       "description": "Liitännäiset lisäävät palvelimeen omia integraatioitasi. Vain ylläpitäjä näkee ne. Liitännäinen pysyy pois päältä, kunnes käynnistät sen.",
-      "notConfigured": "Liitännäiset ovat pois käytöstä. Aseta TUDUDI_PLUGINS_DIR kansioon, jossa on liitännäiskansiot, ja käynnistä palvelin uudelleen.",
+      "notConfigured": "Liitännäiset ovat pois käytöstä. Aseta CADENCE_PLUGINS_DIR kansioon, jossa on liitännäiskansiot, ja käynnistä palvelin uudelleen.",
       "reloadAll": "Lataa kaikki uudelleen",
       "reload": "Lataa uudelleen",
       "reloadPending": "Lataa uudelleen, jotta {{version}} latautuu",
@@ -5360,7 +5360,7 @@
     "title": "Kaksivaiheinen tunnistautuminen",
     "on": "Käytössä",
     "description": "Pyytää koodin todennussovelluksesta salasanan tai kertakirjautumisen lisäksi aina, kun tällä tilillä kirjaudutaan uudella laitteella.",
-    "unavailable": "Kaksivaiheinen tunnistautuminen vaatii, että TUDUDI_SESSION_SECRET on asetettu palvelimelle. Kysy ylläpitäjältäsi.",
+    "unavailable": "Kaksivaiheinen tunnistautuminen vaatii, että CADENCE_SESSION_SECRET on asetettu palvelimelle. Kysy ylläpitäjältäsi.",
     "turnOn": "Ota käyttöön",
     "turnOff": "Poista käytöstä",
     "setupScan": "Skannaa tämä QR-koodi todennussovelluksella, kuten Google Authenticator, 1Password tai Aegis.",

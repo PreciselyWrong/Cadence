@@ -265,7 +265,7 @@ Located in `/backend/modules/`, each follows consistent architecture:
 | **notifications** | In-app notifications | Medium |
 | **backup** | Backup/restore functionality | High |
 | **billing** | Subscriptions and plan limits (hosted mode) | Medium |
-| **landing** | Marketing pages served for `TUDUDI_LANDING_HOSTS` | Low |
+| **landing** | Marketing pages served for `CADENCE_LANDING_HOSTS` | Low |
 | **demo** | Public demo sandbox | Low |
 | **feature-flags** | Feature flag management | Low |
 | **quotes** | Daily quotes | Low |

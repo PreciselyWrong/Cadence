@@ -55,7 +55,7 @@ function validateColor(color) {
 function encryptUrl(url) {
     if (!secretCipher.hasKeyMaterial()) {
         throw new ValidationError(
-            'Cannot save a calendar address: set TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
+            'Cannot save a calendar address: set CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
         );
     }
     return secretCipher.encrypt(url);

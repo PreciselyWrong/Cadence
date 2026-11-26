@@ -50,7 +50,7 @@ function normalizeBaseUrl(raw) {
 function encryptSecret(value) {
     if (!secretCipher.hasKeyMaterial()) {
         throw new ValidationError(
-            'Cannot save the Apprise settings: set TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
+            'Cannot save the Apprise settings: set CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
         );
     }
     return secretCipher.encrypt(value);

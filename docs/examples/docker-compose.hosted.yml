@@ -50,14 +50,14 @@ services:
         restart: unless-stopped
 
     web:
-        image: chrisvel/tududi:${TUDUDI_VERSION:-latest}
+        image: chrisvel/tududi:${CADENCE_VERSION:-latest}
         container_name: tududi-web
         env_file: .env
         environment:
             DATABASE_URL: postgres://${DB_USER:-tududi}:${DB_PASSWORD}@db:5432/${DB_NAME:-tududi}
             DB_POOL_MAX: ${DB_POOL_MAX:-10}
-            TUDUDI_HOSTED_MODE: 'true'
-            TUDUDI_TRUST_PROXY: '1'
+            CADENCE_HOSTED_MODE: 'true'
+            CADENCE_TRUST_PROXY: '1'
             # Background work belongs to the worker container
             DISABLE_SCHEDULER: 'true'
             DISABLE_TELEGRAM: 'true'
@@ -72,14 +72,14 @@ services:
         restart: unless-stopped
 
     worker:
-        image: chrisvel/tududi:${TUDUDI_VERSION:-latest}
+        image: chrisvel/tududi:${CADENCE_VERSION:-latest}
         container_name: tududi-worker
         env_file: .env
         environment:
             DATABASE_URL: postgres://${DB_USER:-tududi}:${DB_PASSWORD}@db:5432/${DB_NAME:-tududi}
             DB_POOL_MAX: ${DB_POOL_MAX:-5}
-            TUDUDI_HOSTED_MODE: 'true'
-            TUDUDI_TRUST_PROXY: '1'
+            CADENCE_HOSTED_MODE: 'true'
+            CADENCE_TRUST_PROXY: '1'
             DISABLE_SCHEDULER: 'false'
             DISABLE_TELEGRAM: 'false'
         volumes:
@@ -100,13 +100,13 @@ volumes:
 # .env must set at least:
 #   APP_DOMAIN=app.example.com
 #   DB_PASSWORD=...                         (long random)
-#   TUDUDI_SESSION_SECRET=...               (openssl rand -hex 64)
-#   TUDUDI_ALLOWED_ORIGINS=https://app.example.com
+#   CADENCE_SESSION_SECRET=...               (openssl rand -hex 64)
+#   CADENCE_ALLOWED_ORIGINS=https://app.example.com
 #   FRONTEND_URL=https://app.example.com
 #   BACKEND_URL=https://app.example.com
-#   TUDUDI_USER_EMAIL=... TUDUDI_USER_PASSWORD=...   (the admin account)
+#   CADENCE_USER_EMAIL=... CADENCE_USER_PASSWORD=...   (the admin account)
 #   ENABLE_EMAIL=true EMAIL_SMTP_HOST=... EMAIL_SMTP_PORT=587 EMAIL_FROM_ADDRESS=... (EMAIL_SMTP_USERNAME/EMAIL_SMTP_PASSWORD optional, omit both for a passwordless relay)
 #   LEMONSQUEEZY_API_KEY=... LEMONSQUEEZY_STORE_ID=... LEMONSQUEEZY_WEBHOOK_SECRET=... LEMONSQUEEZY_VARIANT_PRO_MONTHLY=... LEMONSQUEEZY_VARIANT_PRO_ANNUAL=...
 #   (or the STRIPE_* set, see docs/17-hosted-mode.md)
-# Optional: LLM_API_KEY, TUDUDI_PLANS_JSON, TUDUDI_TRIAL_DAYS, LOG_LEVEL.
+# Optional: LLM_API_KEY, CADENCE_PLANS_JSON, CADENCE_TRIAL_DAYS, LOG_LEVEL.
 # The server refuses to start in hosted mode until the required ones are set.

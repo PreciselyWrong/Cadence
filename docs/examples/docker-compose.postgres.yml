@@ -6,7 +6,7 @@
 #
 #   mkdir tududi && cd tududi
 #   cp /path/to/tududi/docs/examples/docker-compose.postgres.yml docker-compose.yml
-#   cp /path/to/tududi/.env.example .env   # fill in TUDUDI_* values and DB_PASSWORD
+#   cp /path/to/tududi/.env.example .env   # fill in CADENCE_* values and DB_PASSWORD
 #   docker compose up -d
 #
 # The database starts empty; tududi creates the schema on first boot.

@@ -1,5 +1,5 @@
-process.env.TUDUDI_SESSION_SECRET =
-    process.env.TUDUDI_SESSION_SECRET || 'spreadsheets-formats-session-secret';
+process.env.CADENCE_SESSION_SECRET =
+    process.env.CADENCE_SESSION_SECRET || 'spreadsheets-formats-session-secret';
 
 const zlib = require('zlib');
 const ExcelJS = require('exceljs');

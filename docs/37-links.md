@@ -70,7 +70,7 @@ Web: Projects › ⋯ › « Import bookmarks » reads a Firefox export (`bookma
 ## Addresses
 
 - `http`/`https` with a dotted host. Normalized (`core/urls.normalizeUrl`): lowercase host, no default port, no fragment, no tracking parameters (`utm_*`, `fbclid`, `gclid`, …), no trailing slash except the root one. `addressKey` also drops `www.`: two spellings of one page are one.
-- Context addresses (`core/urls.isContextUrl`: IP addresses, `.lan`, `.local`, `.ts.net`, …, mail, chats, searches, CI runs, the hosts of `TUDUDI_LINKS_IGNORE_HOSTS`) are never read for a preview nor made pages from a task's note.
+- Context addresses (`core/urls.isContextUrl`: IP addresses, `.lan`, `.local`, `.ts.net`, …, mail, chats, searches, CI runs, the hosts of `CADENCE_LINKS_IGNORE_HOSTS`) are never read for a preview nor made pages from a task's note.
 - **Reading a page** (`modules/links/jobs.js`, `fetcher.js`): one at a time, one second apart, through the SSRF guard of `modules/url` (`http`/`https` on ports 80/443, private addresses refused at DNS time and when the socket opens, 5 redirects, 4 s per request, 6 s in all, 40 KB, HTML only), never through a reading proxy. Reads title, description, picture, site name and `og:type`; for a GitHub repository the public API gives stars, language, last push and the README start (60 requests an hour; on the limit, GitHub lookups wait). A title given at saving stays. A page is read again 30 days later (02:00 UTC, 25 per run), a failed one 7 days later; a reading never erases what an earlier one found.
 - **Kind** (`core/urls.classifyKind`): `repo`, `video`, `article`, `tool` (a site's home), else `other`.
 

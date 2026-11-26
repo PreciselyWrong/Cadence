@@ -12,7 +12,7 @@ const { getConfig } = require('../../config/config');
 // thing an operator sees, rather than a bare connection-refused error.
 function guardAgainstAccidentalDialectSwitch(dialect) {
     if (dialect !== 'postgres') return;
-    if (process.env.TUDUDI_ALLOW_DIALECT_SWITCH === 'true') return;
+    if (process.env.CADENCE_ALLOW_DIALECT_SWITCH === 'true') return;
 
     const sqliteFile = getConfig().dbFile;
     if (!sqliteFile) return;
@@ -40,7 +40,7 @@ function guardAgainstAccidentalDialectSwitch(dialect) {
         '   To keep using SQLite: unset DATABASE_URL and DB_DIALECT.'
     );
     console.error(
-        '   To start on PostgreSQL anyway (fresh data, or data already imported): set TUDUDI_ALLOW_DIALECT_SWITCH=true.'
+        '   To start on PostgreSQL anyway (fresh data, or data already imported): set CADENCE_ALLOW_DIALECT_SWITCH=true.'
     );
     console.error('');
     process.exit(1);

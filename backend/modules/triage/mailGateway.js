@@ -9,8 +9,8 @@ const { logError } = require('../../services/logService');
 const TIMEOUT_MS = 10000;
 
 function endpoint() {
-    const url = (process.env.TUDUDI_GMAIL_MCP_URL || '').trim();
-    const token = (process.env.TUDUDI_GMAIL_MCP_TOKEN || '').trim();
+    const url = (process.env.CADENCE_GMAIL_MCP_URL || '').trim();
+    const token = (process.env.CADENCE_GMAIL_MCP_TOKEN || '').trim();
     if (!url || !token) return null;
     try {
         const parsed = new URL(url);

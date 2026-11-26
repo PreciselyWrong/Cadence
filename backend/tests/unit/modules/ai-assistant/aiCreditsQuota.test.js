@@ -25,7 +25,7 @@ describe('AI Assistant - AI Credits monthly quota', () => {
 
     beforeEach(() => {
         process.env.LLM_API_KEY = 'test-key';
-        process.env.TUDUDI_PLANS_JSON = JSON.stringify({
+        process.env.CADENCE_PLANS_JSON = JSON.stringify({
             free: {
                 limits: { ai_credits_per_month: 2, ai_requests_per_month: 999 },
             },
@@ -45,7 +45,7 @@ describe('AI Assistant - AI Credits monthly quota', () => {
 
     afterEach(() => {
         delete process.env.LLM_API_KEY;
-        delete process.env.TUDUDI_PLANS_JSON;
+        delete process.env.CADENCE_PLANS_JSON;
         plans._resetCache();
         config.hosted.enabled = false;
         config.hosted.trialDays = 7;

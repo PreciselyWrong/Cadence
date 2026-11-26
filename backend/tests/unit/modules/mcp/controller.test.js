@@ -85,7 +85,7 @@ describe('MCP Controller', () => {
             );
         });
 
-        it('should include TUDUDI_API_TOKEN placeholder in env', async () => {
+        it('should include CADENCE_API_TOKEN placeholder in env', async () => {
             const req = {
                 protocol: 'https',
                 get: jest.fn().mockReturnValue('app.example.com'),
@@ -95,7 +95,7 @@ describe('MCP Controller', () => {
             await controller.getMcpConfig(req, res);
 
             const config = res.json.mock.calls[0][0];
-            expect(config.mcpServers.cadence.env.TUDUDI_API_TOKEN).toBe(
+            expect(config.mcpServers.cadence.env.CADENCE_API_TOKEN).toBe(
                 'YOUR_API_TOKEN_HERE'
             );
         });

@@ -56,7 +56,7 @@ async function resolveAIConfig(userId) {
 
     const envApiKey = process.env.LLM_API_KEY || process.env.OPENAI_API_KEY;
     const envBaseUrl = process.env.LLM_BASE_URL || process.env.OPENAI_BASE_URL;
-    const envModel = process.env.LLM_MODEL || process.env.TUDUDI_AI_MODEL;
+    const envModel = process.env.LLM_MODEL || process.env.CADENCE_AI_MODEL;
 
     return {
         apiKey: dbApiKey || envApiKey || null,

@@ -928,7 +928,7 @@
     "plugins": {
       "title": "Plug-ins",
       "description": "Plug-ins voegen je eigen integraties toe aan de server. Alleen een beheerder ziet ze. Een plug-in blijft uit tot je hem aanzet.",
-      "notConfigured": "Plug-ins staan uit. Zet TUDUDI_PLUGINS_DIR op een map met plug-inmappen en start de server opnieuw.",
+      "notConfigured": "Plug-ins staan uit. Zet CADENCE_PLUGINS_DIR op een map met plug-inmappen en start de server opnieuw.",
       "reloadAll": "Alles opnieuw laden",
       "reload": "Opnieuw laden",
       "reloadPending": "Opnieuw laden om {{version}} te laden",
@@ -5360,7 +5360,7 @@
     "title": "Tweestapsverificatie",
     "on": "Aan",
     "description": "Vraagt om een code uit een authenticator-app, naast je wachtwoord of single sign-on, telkens wanneer dit account inlogt op een nieuw apparaat.",
-    "unavailable": "Tweestapsverificatie werkt alleen als TUDUDI_SESSION_SECRET op de server is ingesteld. Vraag het je beheerder.",
+    "unavailable": "Tweestapsverificatie werkt alleen als CADENCE_SESSION_SECRET op de server is ingesteld. Vraag het je beheerder.",
     "turnOn": "Inschakelen",
     "turnOff": "Uitschakelen",
     "setupScan": "Scan deze QR-code met een authenticator-app, zoals Google Authenticator, 1Password of Aegis.",

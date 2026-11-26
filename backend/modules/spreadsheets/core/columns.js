@@ -204,14 +204,14 @@ const EXPORT_ONLY_LABELS = ['spreadsheet.columns.createdAt'];
 
 // Other tools export their own ids under the same headers ("Task ID"), and
 // those must not be read as tududi task UIDs.
-const TUDUDI_UID = /^[0-9a-km-z]{15}$/;
+const CADENCE_UID = /^[0-9a-km-z]{15}$/;
 
 function looksLikeUids(rows, column) {
     const values = rows
         .map((row) => String(row[column] ?? '').trim())
         .filter(Boolean);
     if (values.length === 0) return false;
-    const matching = values.filter((v) => TUDUDI_UID.test(v)).length;
+    const matching = values.filter((v) => CADENCE_UID.test(v)).length;
     return matching * 2 >= values.length;
 }
 

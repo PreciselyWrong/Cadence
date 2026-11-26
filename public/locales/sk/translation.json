@@ -1222,7 +1222,7 @@
     "plugins": {
       "title": "Doplnky",
       "description": "Doplnky pridávajú na server vlastné integrácie. Vidí ich iba správca. Doplnok zostáva vypnutý, kým ho nezapnete.",
-      "notConfigured": "Doplnky sú vypnuté. Nastavte TUDUDI_PLUGINS_DIR na priečinok, ktorý obsahuje priečinky doplnkov, a reštartujte server.",
+      "notConfigured": "Doplnky sú vypnuté. Nastavte CADENCE_PLUGINS_DIR na priečinok, ktorý obsahuje priečinky doplnkov, a reštartujte server.",
       "reloadAll": "Znova načítať všetko",
       "reload": "Znova načítať",
       "reloadPending": "Znova načítajte, aby sa načítala verzia {{version}}",
@@ -5569,7 +5569,7 @@
     "title": "Dvojfaktorové overenie",
     "on": "Zapnuté",
     "description": "Pri každom prihlásení tohto účtu na novom zariadení si okrem hesla alebo jednotného prihlásenia vyžiada kód z overovacej aplikácie.",
-    "unavailable": "Dvojfaktorové overenie vyžaduje, aby bol na serveri nastavený TUDUDI_SESSION_SECRET. Obráťte sa na správcu.",
+    "unavailable": "Dvojfaktorové overenie vyžaduje, aby bol na serveri nastavený CADENCE_SESSION_SECRET. Obráťte sa na správcu.",
     "turnOn": "Zapnúť",
     "turnOff": "Vypnúť",
     "setupScan": "Naskenujte tento QR kód overovacou aplikáciou, napríklad Google Authenticator, 1Password alebo Aegis.",

@@ -1,5 +1,7 @@
 'use strict';
 
+require('../../config/env-compat');
+
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
 const {
     StdioServerTransport,
@@ -19,10 +21,10 @@ const { registerAllTools } = require('./toolRegistry');
 async function startMcpServer() {
     try {
         // Validate environment
-        const apiToken = process.env.TUDUDI_API_TOKEN;
+        const apiToken = process.env.CADENCE_API_TOKEN;
         if (!apiToken) {
             throw new Error(
-                'TUDUDI_API_TOKEN environment variable is required. ' +
+                'CADENCE_API_TOKEN environment variable is required. ' +
                     'Generate a token in Profile → API Keys and add it to your Claude Desktop config.'
             );
         }
@@ -33,7 +35,7 @@ async function startMcpServer() {
         });
         if (!tokenRecord) {
             throw new Error(
-                'Invalid or expired TUDUDI_API_TOKEN. ' +
+                'Invalid or expired CADENCE_API_TOKEN. ' +
                     'Please generate a new token in Profile → API Keys.'
             );
         }
@@ -130,6 +132,7 @@ async function startMcpServer() {
 if (require.main === module) {
     // Load environment variables
     require('dotenv').config();
+    require('../../config/env-compat').applyLegacyEnv();
 
     // Initialize database connection
     const { sequelize } = require('../../models');

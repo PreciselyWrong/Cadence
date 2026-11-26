@@ -6,12 +6,12 @@ A folder on the server holds `TODO.md` files, one per sub-folder, and you choose
 
 ## Setup
 
-Off unless `TUDUDI_TODO_ROOT` is set to a directory the server can read and write.
+Off unless `CADENCE_TODO_ROOT` is set to a directory the server can read and write.
 
 | Variable                 | Meaning                                                                                              |
 | ------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `TUDUDI_TODO_ROOT`       | Root folder, for example `/app/todo-projects`. Each direct sub-folder with a `TODO.md` can be linked. |
-| `TUDUDI_TODO_USER_EMAIL` | Account the projects belong to. Default: the first administrator, else the first account.            |
+| `CADENCE_TODO_ROOT`       | Root folder, for example `/app/todo-projects`. Each direct sub-folder with a `TODO.md` can be linked. |
+| `CADENCE_TODO_USER_EMAIL` | Account the projects belong to. Default: the first administrator, else the first account.            |
 
 In Docker, bind-mount a **dedicated** folder read-write (see the commented example in `docker-compose.yml`):
 
@@ -19,7 +19,7 @@ In Docker, bind-mount a **dedicated** folder read-write (see the commented examp
 volumes:
     - /mnt/user/appdata/cadence-todos:/app/todo-projects
 environment:
-    - TUDUDI_TODO_ROOT=/app/todo-projects
+    - CADENCE_TODO_ROOT=/app/todo-projects
 ```
 
 **Never mount `~/Dev` or any folder that holds secrets** (`.env` files, keys, credentials). The server only ever reads and writes files named `TODO.md`, but a mount exposes everything in it to the container. Two ways to fill the dedicated folder:
@@ -50,21 +50,21 @@ A file feeds nothing until a project follows it: Cadence creates no project by i
 
 ## Git repositories
 
-Each repository listed in `TUDUDI_TODO_REPOS` creates and follows one project, named after its slug and keeping that name (`source_path = 'git:<slug>'`). The server clones it, reads its `TODO.md` like a folder's, and turns a task added or checked off in Cadence (web, Android) into a commit **by `Cadence <cadence@localhost>`** pushed to the branch. A push to the repository is read back through a webhook, and every **5 minutes** in any case. Module: `backend/modules/todo-md/repos.js`, `git.js`, `webhook.js`.
+Each repository listed in `CADENCE_TODO_REPOS` creates and follows one project, named after its slug and keeping that name (`source_path = 'git:<slug>'`). The server clones it, reads its `TODO.md` like a folder's, and turns a task added or checked off in Cadence (web, Android) into a commit **by `Cadence <cadence@localhost>`** pushed to the branch. A push to the repository is read back through a webhook, and every **5 minutes** in any case. Module: `backend/modules/todo-md/repos.js`, `git.js`, `webhook.js`.
 
 | Variable                                 | Meaning                                                                                                                       |
 | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `TUDUDI_TODO_REPOS`                      | Slugs, comma-separated: `cadence,notes`. Letters, digits, `-`, `_`.                                                           |
-| `TUDUDI_TODO_REPO_<SLUG>_URL`            | Clone URL, `https://...` or `git@host:owner/repo.git`. No credentials in it. `<SLUG>`: the slug in capitals, `-` becomes `_`. |
-| `TUDUDI_TODO_REPO_<SLUG>_BRANCH`         | Branch to read and push. Default `main`.                                                                                      |
-| `TUDUDI_TODO_REPO_<SLUG>_PATH`           | File in the repository. Default `TODO.md`.                                                                                    |
-| `TUDUDI_TODO_REPO_<SLUG>_TOKEN`          | HTTPS: access token with write access to the repository. Given to git through `GIT_ASKPASS`, never in a URL or argument.      |
-| `TUDUDI_TODO_REPO_<SLUG>_USERNAME`       | HTTPS user name sent with the token. Default `x-access-token` (accepted by GitHub and Gitea).                                 |
-| `TUDUDI_TODO_REPO_<SLUG>_SSH_KEY`        | SSH: the private key itself (`\n` for line breaks is accepted) or the path of a key file. Written `0600` in the clone folder. |
-| `TUDUDI_TODO_REPO_<SLUG>_WEBHOOK_SECRET` | Secret of the push webhook. Without it the webhook answers `404` and only the 5-minute pass reads pushes.                     |
-| `TUDUDI_TODO_GIT_DIR`                    | Where the clones go. Default `<database folder>/todo-repos` (`/app/db/todo-repos` in Docker, inside the database volume).     |
+| `CADENCE_TODO_REPOS`                      | Slugs, comma-separated: `cadence,notes`. Letters, digits, `-`, `_`.                                                           |
+| `CADENCE_TODO_REPO_<SLUG>_URL`            | Clone URL, `https://...` or `git@host:owner/repo.git`. No credentials in it. `<SLUG>`: the slug in capitals, `-` becomes `_`. |
+| `CADENCE_TODO_REPO_<SLUG>_BRANCH`         | Branch to read and push. Default `main`.                                                                                      |
+| `CADENCE_TODO_REPO_<SLUG>_PATH`           | File in the repository. Default `TODO.md`.                                                                                    |
+| `CADENCE_TODO_REPO_<SLUG>_TOKEN`          | HTTPS: access token with write access to the repository. Given to git through `GIT_ASKPASS`, never in a URL or argument.      |
+| `CADENCE_TODO_REPO_<SLUG>_USERNAME`       | HTTPS user name sent with the token. Default `x-access-token` (accepted by GitHub and Gitea).                                 |
+| `CADENCE_TODO_REPO_<SLUG>_SSH_KEY`        | SSH: the private key itself (`\n` for line breaks is accepted) or the path of a key file. Written `0600` in the clone folder. |
+| `CADENCE_TODO_REPO_<SLUG>_WEBHOOK_SECRET` | Secret of the push webhook. Without it the webhook answers `404` and only the 5-minute pass reads pushes.                     |
+| `CADENCE_TODO_GIT_DIR`                    | Where the clones go. Default `<database folder>/todo-repos` (`/app/db/todo-repos` in Docker, inside the database volume).     |
 
-A slug with a missing URL, a branch or path that is not valid (`..`, absolute, `.git/...`, leading `-`) or a command transport (`ext::`) is left out and logged at start-up. `TUDUDI_TODO_ROOT` is not needed for repositories; both can be used together.
+A slug with a missing URL, a branch or path that is not valid (`..`, absolute, `.git/...`, leading `-`) or a command transport (`ext::`) is left out and logged at start-up. `CADENCE_TODO_ROOT` is not needed for repositories; both can be used together.
 
 ### Setting up a repository
 
@@ -216,4 +216,4 @@ On a sync push, a check or an added task that cannot reach a git repository is a
 - A TODO.md that is mounted as a single file (not a folder) cannot be replaced atomically; mount the folder.
 - Repositories: only adding a task and checking / unchecking one are written. Editing a task's text or moving it to another section from Cadence is not offered: the bullet's text is its identity key, so a rename would replace the task (and lose its Cadence-side data); edit those in the repository.
 - Repository writes are serialised per server process; a second process pushing at the same time is handled by the rejected-push retry.
-- A repository removed from `TUDUDI_TODO_REPOS` leaves its project in place; remove it by hand.
+- A repository removed from `CADENCE_TODO_REPOS` leaves its project in place; remove it by hand.

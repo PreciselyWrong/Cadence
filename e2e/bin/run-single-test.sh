@@ -59,8 +59,8 @@ NODE_ENV=test \
 PORT=$BACKEND_PORT \
 HOST=$BACKEND_HOST \
 DB_FILE=db/test.sqlite3 \
-TUDUDI_USER_EMAIL="${E2E_EMAIL:-test@tududi.com}" \
-TUDUDI_USER_PASSWORD="${E2E_PASSWORD:-password123}" \
+CADENCE_USER_EMAIL="${E2E_EMAIL:-test@tududi.com}" \
+CADENCE_USER_PASSWORD="${E2E_PASSWORD:-password123}" \
 SEQUELIZE_LOGGING=false \
 ./cmd/start.sh) >/dev/null 2>&1 &
 BACKEND_PID=$!

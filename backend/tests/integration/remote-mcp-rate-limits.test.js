@@ -55,7 +55,7 @@ describe('Remote MCP rate limits on a shared egress range', () => {
     let user;
 
     beforeEach(async () => {
-        withEnv({ TUDUDI_PUBLIC_MCP_URL: BASE });
+        withEnv({ CADENCE_PUBLIC_MCP_URL: BASE });
         pairing.close();
         user = await createTestUser({
             email: `limits-${Date.now()}-${counter}@example.com`,

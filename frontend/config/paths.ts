@@ -10,7 +10,7 @@ declare global {
     }
 }
 
-const envBasePath = process.env.TUDUDI_BASE_PATH || '';
+const envBasePath = process.env.CADENCE_BASE_PATH || '';
 
 const sanitizeBasePath = (value: string): string => {
     if (!value) {

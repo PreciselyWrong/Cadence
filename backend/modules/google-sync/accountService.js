@@ -102,7 +102,7 @@ function startConnect(session, { origin, basePath, app = false, userId }) {
     }
     if (!secretCipher.hasKeyMaterial()) {
         throw new ValidationError(
-            'Cannot store Google access: set TUDUDI_SESSION_SECRET (or TUDUDI_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
+            'Cannot store Google access: set CADENCE_SESSION_SECRET (or CADENCE_OIDC_SECRET_ENCRYPTION_KEY) on the server first'
         );
     }
     const redirectUri = redirectUriFor(origin, basePath);

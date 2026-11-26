@@ -79,7 +79,7 @@ docker exec -i -u <utilisateur-hermes> -e HERMES_HOME=<home-du-profil> \
 #   --token-file /secrets/mcp_token --archive-token-file /secrets/archive_token
 ```
 
-Côté Cadence : `TUDUDI_GMAIL_MCP_URL=http://gmail-restricted:8700/mcp` et `TUDUDI_GMAIL_MCP_TOKEN` = ce jeton d'archivage (jamais le jeton complet), Cadence étant sur le même réseau Docker.
+Côté Cadence : `CADENCE_GMAIL_MCP_URL=http://gmail-restricted:8700/mcp` et `CADENCE_GMAIL_MCP_TOKEN` = ce jeton d'archivage (jamais le jeton complet), Cadence étant sur le même réseau Docker.
 
 Chemins dans le conteneur : `A` = `/state/accounts.json` (non secret), `S` = `/state` (secret, 700).
 

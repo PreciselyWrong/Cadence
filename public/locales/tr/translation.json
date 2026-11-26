@@ -928,7 +928,7 @@
     "plugins": {
       "title": "Eklentiler",
       "description": "Eklentiler sunucuya kendi entegrasyonlarınızı ekler. Yalnızca yönetici bunları görür. Bir eklenti, siz açana kadar kapalı kalır.",
-      "notConfigured": "Eklentiler kapalı. TUDUDI_PLUGINS_DIR değişkenini eklenti klasörlerini içeren bir klasöre ayarlayın ve sunucuyu yeniden başlatın.",
+      "notConfigured": "Eklentiler kapalı. CADENCE_PLUGINS_DIR değişkenini eklenti klasörlerini içeren bir klasöre ayarlayın ve sunucuyu yeniden başlatın.",
       "reloadAll": "Tümünü yeniden yükle",
       "reload": "Yeniden yükle",
       "reloadPending": "{{version}} sürümünü yüklemek için yeniden yükleyin",
@@ -5360,7 +5360,7 @@
     "title": "İki adımlı doğrulama",
     "on": "Açık",
     "description": "Bu hesap yeni bir cihazda her giriş yaptığında, şifrenize veya tek oturum açmaya ek olarak bir doğrulama uygulamasından kod ister.",
-    "unavailable": "İki adımlı doğrulama için sunucuda TUDUDI_SESSION_SECRET ayarlanmış olmalıdır. Yöneticinize sorun.",
+    "unavailable": "İki adımlı doğrulama için sunucuda CADENCE_SESSION_SECRET ayarlanmış olmalıdır. Yöneticinize sorun.",
     "turnOn": "Aç",
     "turnOff": "Kapat",
     "setupScan": "Bu QR kodunu Google Authenticator, 1Password veya Aegis gibi bir doğrulama uygulamasıyla tarayın.",

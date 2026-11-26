@@ -129,10 +129,10 @@ describe('Hermes agent connector', () => {
     const saved = {};
 
     beforeAll(async () => {
-        saved.sessionSecret = process.env.TUDUDI_SESSION_SECRET;
-        saved.explicitKey = process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY;
-        process.env.TUDUDI_SESSION_SECRET = SESSION_SECRET;
-        delete process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY;
+        saved.sessionSecret = process.env.CADENCE_SESSION_SECRET;
+        saved.explicitKey = process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY;
+        process.env.CADENCE_SESSION_SECRET = SESSION_SECRET;
+        delete process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY;
 
         hermes = await startFakeHermes();
     });
@@ -140,12 +140,12 @@ describe('Hermes agent connector', () => {
     afterAll(async () => {
         await hermes.close();
         if (saved.sessionSecret === undefined) {
-            delete process.env.TUDUDI_SESSION_SECRET;
+            delete process.env.CADENCE_SESSION_SECRET;
         } else {
-            process.env.TUDUDI_SESSION_SECRET = saved.sessionSecret;
+            process.env.CADENCE_SESSION_SECRET = saved.sessionSecret;
         }
         if (saved.explicitKey !== undefined) {
-            process.env.TUDUDI_OIDC_SECRET_ENCRYPTION_KEY = saved.explicitKey;
+            process.env.CADENCE_OIDC_SECRET_ENCRYPTION_KEY = saved.explicitKey;
         }
     });
 

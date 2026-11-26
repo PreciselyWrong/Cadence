@@ -38,7 +38,7 @@ describe('Admin OIDC Config API', () => {
 
     beforeEach(async () => {
         originalEnv = { ...process.env };
-        process.env.TUDUDI_SESSION_SECRET = 'x'.repeat(64);
+        process.env.CADENCE_SESSION_SECRET = 'x'.repeat(64);
 
         await Role.destroy({ where: {} });
         await Setting.destroy({ where: { key: 'oidc_config' } });

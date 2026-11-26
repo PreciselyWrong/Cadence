@@ -5,6 +5,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+// CADENCE_BASE_PATH, with the legacy TUDUDI_BASE_PATH accepted for one release.
+const basePath =
+    process.env.CADENCE_BASE_PATH || process.env.TUDUDI_BASE_PATH || '';
 // Identifies one build in cache names: the git commit when available,
 // otherwise the build time.
 const buildId = (() => {
@@ -169,7 +172,7 @@ module.exports = {
         new webpack.DefinePlugin(
             Object.fromEntries(
                 Object.entries({
-                    TUDUDI_BASE_PATH: process.env.TUDUDI_BASE_PATH || '',
+                    CADENCE_BASE_PATH: basePath,
                 }).map(([key, value]) => [
                     `process.env.${key}`,
                     JSON.stringify(value),
@@ -181,7 +184,7 @@ module.exports = {
             filename: 'index.html',
             template: 'public/index.html',
             templateParameters: {
-                BASE_PATH: process.env.TUDUDI_BASE_PATH || '',
+                BASE_PATH: basePath,
             },
         }),
         new CopyWebpackPlugin({

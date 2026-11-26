@@ -7,7 +7,7 @@ const { allowedRedirectUris } = require('./config');
 // Dynamic Client Registration (RFC 7591) without a table: the client_id
 // carries the registered metadata, signed with a key derived from the
 // session secret, so a client survives restarts as long as
-// TUDUDI_SESSION_SECRET does and cannot be forged or altered. Clients are
+// CADENCE_SESSION_SECRET does and cannot be forged or altered. Clients are
 // public (PKCE, no secret), as the MCP authorization spec expects.
 
 const CLIENT_PREFIX = 'mcp_';

@@ -164,7 +164,7 @@ function underHost(domain, host) {
 }
 
 // True when `url` is context, not a link worth keeping. `extraHosts` are the
-// server's own (TUDUDI_LINKS_IGNORE_HOSTS): its domains are private.
+// server's own (CADENCE_LINKS_IGNORE_HOSTS): its domains are private.
 function isContextUrl(url, extraHosts = []) {
     const parsed = parse(url);
     if (!parsed) return false;

@@ -1,5 +1,5 @@
-process.env.TUDUDI_SESSION_SECRET =
-    process.env.TUDUDI_SESSION_SECRET || 'mfa-test-session-secret';
+process.env.CADENCE_SESSION_SECRET =
+    process.env.CADENCE_SESSION_SECRET || 'mfa-test-session-secret';
 
 const request = require('supertest');
 
@@ -133,14 +133,14 @@ describe('Two-factor sign-in', () => {
             const { agent } = await signIn(user);
             jest.replaceProperty(process, 'env', {
                 ...process.env,
-                TUDUDI_SESSION_SECRET: '',
-                TUDUDI_OIDC_SECRET_ENCRYPTION_KEY: '',
+                CADENCE_SESSION_SECRET: '',
+                CADENCE_OIDC_SECRET_ENCRYPTION_KEY: '',
             });
 
             const res = await agent.post('/api/profile/mfa/setup');
 
             expect(res.status).toBe(400);
-            expect(res.body.error).toMatch(/TUDUDI_SESSION_SECRET/);
+            expect(res.body.error).toMatch(/CADENCE_SESSION_SECRET/);
         });
     });
 

@@ -84,7 +84,7 @@ Entries are written at the end of each run (`google_sync_logs`); older ones are 
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`                       | The OAuth client. Without them the section says it is not set up.                                                          |
 | `GOOGLE_REDIRECT_URI`                                            | Optional. Defaults to `<origin of the browser>/api/google/oauth/callback`. Set it behind a proxy that changes the address. |
 | `GOOGLE_SYNC_INTERVAL_MINUTES`                                   | Optional, 1–60, default 2.                                                                                                 |
-| `TUDUDI_SESSION_SECRET` (or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) | Required: tokens are encrypted with it.                                                                                    |
+| `CADENCE_SESSION_SECRET` (or `CADENCE_OIDC_SECRET_ENCRYPTION_KEY`) | Required: tokens are encrypted with it.                                                                                    |
 
 The Cadence server must reach `oauth2.googleapis.com`, `www.googleapis.com`, `tasks.googleapis.com` and `openidconnect.googleapis.com`. It does not have to be reachable from the internet (no push notifications are used).
 

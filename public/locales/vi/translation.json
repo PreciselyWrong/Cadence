@@ -928,7 +928,7 @@
     "plugins": {
       "title": "Tiện ích mở rộng",
       "description": "Tiện ích mở rộng thêm các tích hợp riêng vào máy chủ. Chỉ quản trị viên mới thấy. Tiện ích vẫn tắt cho đến khi bạn bật.",
-      "notConfigured": "Tiện ích mở rộng đang tắt. Đặt TUDUDI_PLUGINS_DIR thành thư mục chứa các thư mục tiện ích, rồi khởi động lại máy chủ.",
+      "notConfigured": "Tiện ích mở rộng đang tắt. Đặt CADENCE_PLUGINS_DIR thành thư mục chứa các thư mục tiện ích, rồi khởi động lại máy chủ.",
       "reloadAll": "Tải lại tất cả",
       "reload": "Tải lại",
       "reloadPending": "Tải lại để nạp {{version}}",
@@ -5360,7 +5360,7 @@
     "title": "Xác minh hai bước",
     "on": "Đang bật",
     "description": "Yêu cầu mã từ ứng dụng xác thực, ngoài mật khẩu hoặc đăng nhập một lần, mỗi khi tài khoản này đăng nhập trên thiết bị mới.",
-    "unavailable": "Xác minh hai bước cần đặt TUDUDI_SESSION_SECRET trên máy chủ. Hãy hỏi quản trị viên của bạn.",
+    "unavailable": "Xác minh hai bước cần đặt CADENCE_SESSION_SECRET trên máy chủ. Hãy hỏi quản trị viên của bạn.",
     "turnOn": "Bật",
     "turnOff": "Tắt",
     "setupScan": "Quét mã QR này bằng ứng dụng xác thực, chẳng hạn Google Authenticator, 1Password hoặc Aegis.",

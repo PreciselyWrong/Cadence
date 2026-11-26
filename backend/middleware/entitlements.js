@@ -45,7 +45,7 @@ const requireStorage = (bytesFromReq) => async (req, res, next) => {
 };
 
 // What an account with no subscription may still reach. Everything else
-// answers 402 SUBSCRIPTION_REQUIRED when TUDUDI_REQUIRE_SUBSCRIPTION is on.
+// answers 402 SUBSCRIPTION_REQUIRED when CADENCE_REQUIRE_SUBSCRIPTION is on.
 //
 // Buying access has to work, obviously; so does leaving. Reading the
 // profile, exporting the data and deleting the account stay open, because

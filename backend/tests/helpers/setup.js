@@ -6,6 +6,7 @@
 // PostgreSQL (DATABASE_URL or DB_DIALECT=postgres set): one database per
 // Jest worker, created by globalSetup.js, with tables recreated per file.
 
+require('../../config/env-compat');
 const { testDatabaseName } = require('./test-db');
 
 // Telegram is off by default; the suite covers it switched on.

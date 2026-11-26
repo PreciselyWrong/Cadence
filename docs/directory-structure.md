@@ -147,7 +147,7 @@ tududi/                      # Repository root
 │   ├── admin/            # Admin functions
 │   ├── admin-ai-usage/   # Admin AI usage (hosted mode)
 │   ├── billing/          # Subscriptions and plan limits (hosted mode)
-│   ├── landing/          # Marketing pages (TUDUDI_LANDING_HOSTS)
+│   ├── landing/          # Marketing pages (CADENCE_LANDING_HOSTS)
 │   ├── demo/             # Public demo sandbox
 │   ├── backup/           # Backup/restore (complex)
 │   ├── feature-flags/    # Feature flag management

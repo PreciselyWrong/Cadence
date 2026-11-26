@@ -62,7 +62,7 @@ describe('db-prepare dialect switch guard', () => {
         expect(result.code).toBe(1);
         expect(result.stderr).toContain('existing SQLite database was found');
         expect(result.stderr).toContain(populated);
-        expect(result.stderr).toContain('TUDUDI_ALLOW_DIALECT_SWITCH=true');
+        expect(result.stderr).toContain('CADENCE_ALLOW_DIALECT_SWITCH=true');
         expect(result.stderr).not.toContain('Database preparation failed');
     }, 30000);
 
@@ -70,7 +70,7 @@ describe('db-prepare dialect switch guard', () => {
         const result = await runPrepare({
             DATABASE_URL: UNREACHABLE_PG,
             DB_FILE: populated,
-            TUDUDI_ALLOW_DIALECT_SWITCH: 'true',
+            CADENCE_ALLOW_DIALECT_SWITCH: 'true',
         });
         expect(result.code).toBe(1);
         expect(result.stderr).not.toContain(

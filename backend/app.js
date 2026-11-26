@@ -1,4 +1,6 @@
 require('dotenv').config();
+// After dotenv so legacy TUDUDI_* names from a .env file are mapped too.
+require('./config/env-compat');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -302,7 +304,7 @@ app.use((req, res, next) => {
 // response, so it cannot change what is served.
 app.use(require('./services/visitService').track());
 
-// Marketing page for the hostnames in TUDUDI_LANDING_HOSTS. A no-op unless
+// Marketing page for the hostnames in CADENCE_LANDING_HOSTS. A no-op unless
 // that variable is set, so a self-hosted instance never sees it. It sits
 // before the static handlers because the landing hosts must not serve the
 // app shell at '/'.
@@ -313,7 +315,7 @@ app.use(landingModule.hostSwitch(config.landing));
 // robots.txt and a noindex header on everything but sign-in and sign-up.
 app.use(landingModule.appHostRobots(config.landing));
 
-// The blog at the root of the hostnames in TUDUDI_BLOG_HOSTS. Also a no-op
+// The blog at the root of the hostnames in CADENCE_BLOG_HOSTS. Also a no-op
 // unless set; it serves the app shell marked as the blog, so it sits before
 // the static handlers for the same reason.
 const blogModule = require('./modules/blog');
@@ -582,7 +584,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, idempotency.forWrites);
     // Instances that sell access close everything past this point until the
     // account has a subscription; billing, the profile and data export stay
-    // open. A no-op unless TUDUDI_REQUIRE_SUBSCRIPTION is set.
+    // open. A no-op unless CADENCE_REQUIRE_SUBSCRIPTION is set.
     app.use(basePath, requireSubscription);
     app.use(basePath, tasksModule.routes);
     app.use(basePath, commentsModule.routes);
@@ -717,7 +719,7 @@ async function startServer() {
         autoClassifyModule.worker.install(require('./models'));
         autoClassifyModule.worker.initialize();
 
-        // Plugins left on at the last shutdown (off without TUDUDI_PLUGINS_DIR).
+        // Plugins left on at the last shutdown (off without CADENCE_PLUGINS_DIR).
         // A broken plugin never stops the server.
         await pluginsModule.registry.start().catch((error) => {
             logError('Failed to start plugins:', error);
@@ -730,7 +732,7 @@ async function startServer() {
         // Google Calendar / Google Tasks two-way sync (fork)
         if (!config.disableScheduler) googleSyncModule.scheduler.initialize();
 
-        // Projects mirrored from TODO.md files (off without TUDUDI_TODO_ROOT)
+        // Projects mirrored from TODO.md files (off without CADENCE_TODO_ROOT)
         if (!config.disableScheduler) todoMdModule.watcher.start();
 
         // Public demo sandbox: make sure it exists, then wipe it on a timer.

@@ -34,11 +34,11 @@ Every reset signs the user out everywhere, is logged in `auth_audit_logs` (`mfa_
 
 ## Hosted superadmin
 
-With `TUDUDI_HOSTED_MODE=true`, the superadmin (`is_admin`) gets `403 mfa_setup_required` from every `/api/admin/*` route, and the app shows a setup prompt, until two-factor sign-in is on. The rest of the app works as usual. Self-hosted admins stay opt-in.
+With `CADENCE_HOSTED_MODE=true`, the superadmin (`is_admin`) gets `403 mfa_setup_required` from every `/api/admin/*` route, and the app shows a setup prompt, until two-factor sign-in is on. The rest of the app works as usual. Self-hosted admins stay opt-in.
 
 ## Server setup
 
-The authenticator secret is encrypted at rest with `shared/crypto/secretCipher.js`, so `TUDUDI_SESSION_SECRET` (or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) must be set. Without it the card says so and setup is refused.
+The authenticator secret is encrypted at rest with `shared/crypto/secretCipher.js`, so `CADENCE_SESSION_SECRET` (or `CADENCE_OIDC_SECRET_ENCRYPTION_KEY`) must be set. Without it the card says so and setup is refused.
 
 ## Security emails and audit
 

@@ -19,7 +19,7 @@ const mfaService = require('../mfa/service');
 // OAuth 2.1 authorization server for remote MCP connectors such as
 // claude.ai custom connectors: RFC 8414 metadata, RFC 7591 registration
 // restricted to an allowlist of redirect URIs, authorization code with
-// S256 PKCE, and MCP-only access tokens. Off unless TUDUDI_PUBLIC_MCP_URL is
+// S256 PKCE, and MCP-only access tokens. Off unless CADENCE_PUBLIC_MCP_URL is
 // set. See docs/38-remote-mcp.md.
 
 const SCOPE = 'mcp';

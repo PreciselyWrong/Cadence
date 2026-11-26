@@ -23,7 +23,7 @@ The first start creates the database and runs the migrations, so give it a minut
 
 **Keep the database on block storage.** local-path, Longhorn or a cloud disk are fine. SQLite on NFS or SMB can corrupt the file. Uploads are plain files, so they can live anywhere. With PostgreSQL (`DATABASE_URL` in the Secret) you don't need the `tududi-db` volume at all.
 
-**Behind an ingress.** Set `TUDUDI_TRUST_PROXY` to the number of proxies in front of the pod (`1` for a plain ingress controller) so rate limiting and logs see real client IPs. Put your public URL in `TUDUDI_ALLOWED_ORIGINS`. ingress-nginx limits request bodies to 1 MB by default, which is why `ingress.yaml` raises it for attachments.
+**Behind an ingress.** Set `CADENCE_TRUST_PROXY` to the number of proxies in front of the pod (`1` for a plain ingress controller) so rate limiting and logs see real client IPs. Put your public URL in `CADENCE_ALLOWED_ORIGINS`. ingress-nginx limits request bodies to 1 MB by default, which is why `ingress.yaml` raises it for attachments.
 
 **Volume permissions.** The image starts as root, fixes the ownership of `/app/db` and `/app/uploads`, then drops to uid 1001. On NFS exports with `root_squash` that ownership change fails and the pod crashes on start. In that case run as 1001 from the start with `securityContext.runAsUser: 1001` and skip the entrypoint with `command: ["dumb-init", "--", "/app/backend/cmd/start.sh"]`. The volume has to be writable by uid 1001 for this.
 

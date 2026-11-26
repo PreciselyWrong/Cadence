@@ -929,7 +929,7 @@
     "plugins": {
       "title": "Tillegg",
       "description": "Tillegg legger til egne integrasjoner på serveren. Bare en administrator ser dem. Et tillegg er av til du slår det på.",
-      "notConfigured": "Tillegg er av. Sett TUDUDI_PLUGINS_DIR til en mappe med tilleggsmapper, og start serveren på nytt.",
+      "notConfigured": "Tillegg er av. Sett CADENCE_PLUGINS_DIR til en mappe med tilleggsmapper, og start serveren på nytt.",
       "reloadAll": "Last alle på nytt",
       "reload": "Last på nytt",
       "reloadPending": "Last på nytt for å laste {{version}}",
@@ -5365,7 +5365,7 @@
     "title": "Tofaktorautentisering",
     "on": "På",
     "description": "Ber om en kode fra en autentiseringsapp, i tillegg til passordet ditt eller enkel pålogging, hver gang denne kontoen logger inn på en ny enhet.",
-    "unavailable": "Tofaktorautentisering krever at TUDUDI_SESSION_SECRET er satt på serveren. Spør administratoren din.",
+    "unavailable": "Tofaktorautentisering krever at CADENCE_SESSION_SECRET er satt på serveren. Spør administratoren din.",
     "turnOn": "Slå på",
     "turnOff": "Slå av",
     "setupScan": "Skann denne QR-koden med en autentiseringsapp, for eksempel Google Authenticator, 1Password eller Aegis.",

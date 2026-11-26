@@ -6,7 +6,7 @@ const oauthConfig = require('./config');
  * Serves the OAuth 2.0 Protected Resource Metadata document (RFC 9728).
  *
  * Registered at /.well-known/oauth-protected-resource (and its /mcp
- * suffixed form) before requireAuth. With TUDUDI_PUBLIC_MCP_URL set, the
+ * suffixed form) before requireAuth. With CADENCE_PUBLIC_MCP_URL set, the
  * resource is the public MCP endpoint and Cadence's own authorization server
  * issues its tokens (docs/38-remote-mcp.md). Otherwise it is only active
  * when OIDC_ENABLED=true, OIDC_ISSUER_URL and BASE_URL are set.

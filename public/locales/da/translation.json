@@ -928,7 +928,7 @@
     "plugins": {
       "title": "Plugins",
       "description": "Plugins tilføjer dine egne integrationer til serveren. Kun en administrator ser dem. Et plugin er slået fra, indtil du slår det til.",
-      "notConfigured": "Plugins er slået fra. Sæt TUDUDI_PLUGINS_DIR til en mappe med plugin-mapper, og genstart serveren.",
+      "notConfigured": "Plugins er slået fra. Sæt CADENCE_PLUGINS_DIR til en mappe med plugin-mapper, og genstart serveren.",
       "reloadAll": "Genindlæs alle",
       "reload": "Genindlæs",
       "reloadPending": "Genindlæs for at indlæse {{version}}",
@@ -5360,7 +5360,7 @@
     "title": "Totrinsbekræftelse",
     "on": "Til",
     "description": "Beder om en kode fra en godkendelsesapp, ud over din adgangskode eller single sign-on, hver gang denne konto logger ind på en ny enhed.",
-    "unavailable": "Totrinsbekræftelse kræver, at TUDUDI_SESSION_SECRET er sat på serveren. Spørg din administrator.",
+    "unavailable": "Totrinsbekræftelse kræver, at CADENCE_SESSION_SECRET er sat på serveren. Spørg din administrator.",
     "turnOn": "Slå til",
     "turnOff": "Slå fra",
     "setupScan": "Scan denne QR-kode med en godkendelsesapp, for eksempel Google Authenticator, 1Password eller Aegis.",

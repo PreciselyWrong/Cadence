@@ -1,5 +1,5 @@
-process.env.TUDUDI_SESSION_SECRET =
-    process.env.TUDUDI_SESSION_SECRET || 'spreadsheets-test-session-secret';
+process.env.CADENCE_SESSION_SECRET =
+    process.env.CADENCE_SESSION_SECRET || 'spreadsheets-test-session-secret';
 
 const ExcelJS = require('exceljs');
 const request = require('supertest');

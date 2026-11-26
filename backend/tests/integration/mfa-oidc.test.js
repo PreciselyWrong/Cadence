@@ -1,7 +1,7 @@
 'use strict';
 
-process.env.TUDUDI_SESSION_SECRET =
-    process.env.TUDUDI_SESSION_SECRET || 'mfa-oidc-test-session-secret';
+process.env.CADENCE_SESSION_SECRET =
+    process.env.CADENCE_SESSION_SECRET || 'mfa-oidc-test-session-secret';
 
 const request = require('supertest');
 const { OIDCIdentity, User, UserMfa } = require('../../models');

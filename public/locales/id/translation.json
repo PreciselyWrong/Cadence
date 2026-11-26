@@ -928,7 +928,7 @@
     "plugins": {
       "title": "Plugin",
       "description": "Plugin menambahkan integrasi buatan Anda ke server. Hanya admin yang melihatnya. Plugin tetap mati sampai Anda mengaktifkannya.",
-      "notConfigured": "Plugin dinonaktifkan. Atur TUDUDI_PLUGINS_DIR ke folder yang berisi folder plugin, lalu mulai ulang server.",
+      "notConfigured": "Plugin dinonaktifkan. Atur CADENCE_PLUGINS_DIR ke folder yang berisi folder plugin, lalu mulai ulang server.",
       "reloadAll": "Muat ulang semua",
       "reload": "Muat ulang",
       "reloadPending": "Muat ulang untuk memuat {{version}}",
@@ -5360,7 +5360,7 @@
     "title": "Verifikasi dua langkah",
     "on": "Aktif",
     "description": "Meminta kode dari aplikasi autentikator, selain kata sandi atau sistem masuk tunggal, setiap kali akun ini masuk di perangkat baru.",
-    "unavailable": "Verifikasi dua langkah memerlukan TUDUDI_SESSION_SECRET diatur di server. Tanyakan kepada administrator Anda.",
+    "unavailable": "Verifikasi dua langkah memerlukan CADENCE_SESSION_SECRET diatur di server. Tanyakan kepada administrator Anda.",
     "turnOn": "Aktifkan",
     "turnOff": "Nonaktifkan",
     "setupScan": "Pindai kode QR ini dengan aplikasi autentikator, seperti Google Authenticator, 1Password, atau Aegis.",

@@ -744,7 +744,7 @@ const PluginsTab: React.FC<PluginsTabProps> = ({ isActive }) => {
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'profile.plugins.notConfigured',
-                        'Plugins are off. Set TUDUDI_PLUGINS_DIR to a folder that holds plugin folders, then restart the server.'
+                        'Plugins are off. Set CADENCE_PLUGINS_DIR to a folder that holds plugin folders, then restart the server.'
                     )}
                 </p>
             </div>

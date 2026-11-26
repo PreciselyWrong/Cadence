@@ -104,9 +104,9 @@ Create `/backend/.env` file (not tracked in git):
 
 ```bash
 # Required
-TUDUDI_SESSION_SECRET=your-random-secret-here-use-openssl-rand-hex-64
-TUDUDI_USER_EMAIL=admin@example.com
-TUDUDI_USER_PASSWORD=your-secure-password
+CADENCE_SESSION_SECRET=your-random-secret-here-use-openssl-rand-hex-64
+CADENCE_USER_EMAIL=admin@example.com
+CADENCE_USER_PASSWORD=your-secure-password
 # The admin user is created on startup if missing. An existing user's
 # password is not overwritten (see scripts/user-create.js --update-password).
 
@@ -157,8 +157,8 @@ SWAGGER_ENABLED=true
 RATE_LIMITING_ENABLED=true
 
 # Optional - Proxy (if behind reverse proxy)
-TUDUDI_TRUST_PROXY=false
-TUDUDI_ALLOWED_ORIGINS=http://localhost:8080
+CADENCE_TRUST_PROXY=false
+CADENCE_ALLOWED_ORIGINS=http://localhost:8080
 
 # Optional - Registration
 REGISTRATION_TOKEN_EXPIRY_HOURS=24
@@ -549,9 +549,9 @@ docker build -t tududi:latest .
 
 # Run container
 docker run \
-  -e TUDUDI_USER_EMAIL=admin@example.com \
-  -e TUDUDI_USER_PASSWORD=secure-password \
-  -e TUDUDI_SESSION_SECRET=$(openssl rand -hex 64) \
+  -e CADENCE_USER_EMAIL=admin@example.com \
+  -e CADENCE_USER_PASSWORD=secure-password \
+  -e CADENCE_SESSION_SECRET=$(openssl rand -hex 64) \
   -v ~/tududi_db:/app/db \
   -v ~/tududi_uploads:/app/uploads \
   -v ~/tududi_backups:/app/backups \

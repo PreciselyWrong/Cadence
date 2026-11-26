@@ -53,8 +53,8 @@ describe('triage › mail cards', () => {
     });
 
     afterEach(() => {
-        delete process.env.TUDUDI_GMAIL_MCP_URL;
-        delete process.env.TUDUDI_GMAIL_MCP_TOKEN;
+        delete process.env.CADENCE_GMAIL_MCP_URL;
+        delete process.env.CADENCE_GMAIL_MCP_TOKEN;
         jest.restoreAllMocks();
     });
 
@@ -1072,9 +1072,9 @@ describe('triage › mail cards', () => {
         });
 
         it('archives the thread through archive_thread only', async () => {
-            process.env.TUDUDI_GMAIL_MCP_URL =
+            process.env.CADENCE_GMAIL_MCP_URL =
                 'http://gmail-restricted:8700/mcp';
-            process.env.TUDUDI_GMAIL_MCP_TOKEN = 'secret-token';
+            process.env.CADENCE_GMAIL_MCP_TOKEN = 'secret-token';
             const fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
                 ok: true,
                 json: async () => ({
@@ -1111,9 +1111,9 @@ describe('triage › mail cards', () => {
         });
 
         it('keeps the decision when the archive fails', async () => {
-            process.env.TUDUDI_GMAIL_MCP_URL =
+            process.env.CADENCE_GMAIL_MCP_URL =
                 'http://gmail-restricted:8700/mcp';
-            process.env.TUDUDI_GMAIL_MCP_TOKEN = 'secret-token';
+            process.env.CADENCE_GMAIL_MCP_TOKEN = 'secret-token';
             jest.spyOn(global, 'fetch').mockRejectedValue(new Error('down'));
             const { mail_uid: uid } = await propose();
             const response = await decide(uid, {
@@ -1129,9 +1129,9 @@ describe('triage › mail cards', () => {
         });
 
         it('treats a tool error from the gateway as not archived', async () => {
-            process.env.TUDUDI_GMAIL_MCP_URL =
+            process.env.CADENCE_GMAIL_MCP_URL =
                 'http://gmail-restricted:8700/mcp';
-            process.env.TUDUDI_GMAIL_MCP_TOKEN = 'secret-token';
+            process.env.CADENCE_GMAIL_MCP_TOKEN = 'secret-token';
             jest.spyOn(global, 'fetch').mockResolvedValue({
                 ok: true,
                 json: async () => ({

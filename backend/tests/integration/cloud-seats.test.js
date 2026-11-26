@@ -103,7 +103,7 @@ describe('Cloud seats', () => {
         config.hosted.lemonsqueezy.storeId = undefined;
         config.hosted.lemonsqueezy.webhookSecret = undefined;
         config.hosted.lemonsqueezy.variants.proMonthly = undefined;
-        delete process.env.TUDUDI_PLANS_JSON;
+        delete process.env.CADENCE_PLANS_JSON;
         plans._resetCache();
         entitlements.invalidate();
     });

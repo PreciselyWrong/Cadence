@@ -118,7 +118,7 @@ OIDC_ADMIN_EMAIL_DOMAINS=example.com,mycompany.com
 Auto-provisioning creates an account for anyone the provider authenticates,
 regardless of the admin "registration enabled" toggle. That is the intent on
 a self-hosted instance where the IdP is the company directory. On a hosted
-instance (`TUDUDI_HOSTED_MODE=true`) the provider may be a public one such as
+instance (`CADENCE_HOSTED_MODE=true`) the provider may be a public one such as
 Google, so new accounts are only provisioned while registration is enabled;
 existing users keep signing in either way.
 
@@ -214,7 +214,7 @@ BASE_URL=https://tududi.example.com  # Production
 If Cadence is deployed behind a reverse proxy (nginx, Traefik, Apache, etc.), you **must** configure Express to trust the proxy:
 
 ```bash
-TUDUDI_TRUST_PROXY=true
+CADENCE_TRUST_PROXY=true
 ```
 
 This is required for:
@@ -234,7 +234,7 @@ Everything above can also be configured from **Profile Settings → OIDC/SSO**, 
 
 Opening the panel for the first time shows whatever is currently loaded from `.env` as a starting point; nothing is written to the database until you click **Save changes**. Once saved, that configuration **fully replaces** the `OIDC_*` / `OIDC_PROVIDER_N_*` environment variables — it is an override, not a merge, so editing `.env` afterwards has no effect until you either update the same panel or delete the saved configuration. Changes made in the panel take effect within about 30 seconds, with no restart required.
 
-A provider's client secret is never shown back in full — only whether one is set and its last four characters. Leaving the secret field blank when editing a provider keeps the secret that's already stored; type a new value only to replace it. Client secrets saved this way are encrypted at rest, using `TUDUDI_SESSION_SECRET` (or a dedicated `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`, see `.env.example`) as key material — at least one of those must be set before a secret can be saved from the panel.
+A provider's client secret is never shown back in full — only whether one is set and its last four characters. Leaving the secret field blank when editing a provider keeps the secret that's already stored; type a new value only to replace it. Client secrets saved this way are encrypted at rest, using `CADENCE_SESSION_SECRET` (or a dedicated `CADENCE_OIDC_SECRET_ENCRYPTION_KEY`, see `.env.example`) as key material — at least one of those must be set before a secret can be saved from the panel.
 
 `PASSWORD_AUTH_ENABLED` is not part of this panel and remains `.env`-only.
 
@@ -704,7 +704,7 @@ Restart the server. Password login will immediately become available again.
 
 Add to your `.env` file:
 ```bash
-TUDUDI_TRUST_PROXY=true
+CADENCE_TRUST_PROXY=true
 ```
 
 Then restart the Cadence server:

@@ -10,19 +10,19 @@ function hostedConfigProblems(env = process.env, config = getConfig()) {
 
     const problems = [];
 
-    if (!env.TUDUDI_SESSION_SECRET) {
+    if (!env.CADENCE_SESSION_SECRET) {
         problems.push(
-            'TUDUDI_SESSION_SECRET is not set: every restart would sign everyone out and a second process could not share sessions'
+            'CADENCE_SESSION_SECRET is not set: every restart would sign everyone out and a second process could not share sessions'
         );
     }
     if (!config.trustProxy) {
         problems.push(
-            'TUDUDI_TRUST_PROXY is off: behind a reverse proxy the session cookie loses its Secure flag and every user shares one rate-limit bucket'
+            'CADENCE_TRUST_PROXY is off: behind a reverse proxy the session cookie loses its Secure flag and every user shares one rate-limit bucket'
         );
     }
-    if (!env.TUDUDI_ALLOWED_ORIGINS) {
+    if (!env.CADENCE_ALLOWED_ORIGINS) {
         problems.push(
-            'TUDUDI_ALLOWED_ORIGINS is not set: CORS would only allow localhost'
+            'CADENCE_ALLOWED_ORIGINS is not set: CORS would only allow localhost'
         );
     }
     if (isLocal(env.FRONTEND_URL)) {
@@ -54,12 +54,12 @@ function assertHostedConfig(env = process.env, config = getConfig()) {
     if (problems.length === 0) return;
 
     console.error(
-        'TUDUDI_HOSTED_MODE=true but the instance is not configured for it:'
+        'CADENCE_HOSTED_MODE=true but the instance is not configured for it:'
     );
     for (const problem of problems) {
         console.error(`  - ${problem}`);
     }
-    console.error('Fix the settings above or unset TUDUDI_HOSTED_MODE.');
+    console.error('Fix the settings above or unset CADENCE_HOSTED_MODE.');
     process.exit(1);
 }
 
