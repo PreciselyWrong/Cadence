@@ -248,7 +248,9 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
     const nextHandoff = parsed.handoff
         ? {
               ...parsed.handoff,
-              updated_at: modifiedAt ? new Date(modifiedAt).toISOString() : null,
+              updated_at: modifiedAt
+                  ? new Date(modifiedAt).toISOString()
+                  : null,
           }
         : null;
     const prevHandoff = project.handoff_state || null;

@@ -36,7 +36,14 @@ const {
     syncProjectSharesFromContainer,
     dropProjectSharesFromContainer,
 } = require('../../services/containerShareSync');
-const { Project, Area, Task, Goal, Tag, ProjectSection } = require('../../models');
+const {
+    Project,
+    Area,
+    Task,
+    Goal,
+    Tag,
+    ProjectSection,
+} = require('../../models');
 const nextAction = require('./nextAction');
 const {
     descendantIds,
