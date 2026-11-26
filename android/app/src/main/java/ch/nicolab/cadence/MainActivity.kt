@@ -12,7 +12,6 @@ import ch.nicolab.cadence.tasks.google.GoogleOAuthRoute
 import ch.nicolab.cadence.tasks.links.ProvideCadenceUriHandler
 import ch.nicolab.cadence.tasks.live.NotificationRoute
 import ch.nicolab.cadence.tasks.proposals.ProposalRepository
-import ch.nicolab.cadence.tasks.widget.EXTRA_OPEN_TASK_UID
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -55,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     CadenceAppScreen(
                         viewModel,
                         intent.getStringExtra(EXTRA_EDIT_HABIT_ID),
-                        intent.getStringExtra(EXTRA_OPEN_TASK_UID),
                         intent.getStringExtra(EXTRA_OPEN_QUESTION_HABIT_ID),
                         intent.getBooleanExtra(EXTRA_OPEN_QUESTION_AMOUNT, false),
                         intent.getBooleanExtra(EXTRA_OPEN_AGENDA, false),

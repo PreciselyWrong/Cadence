@@ -144,7 +144,6 @@ private val tabSaver = androidx.compose.runtime.saveable.Saver<Tab, String>(
 internal fun CadenceAppScreen(
     viewModel: MainViewModel,
     editHabitId: String? = null,
-    openTaskUid: String? = null,
     openQuestionHabitId: String? = null,
     openQuestionForAmount: Boolean = false,
     openAgenda: Boolean = false,
@@ -181,18 +180,9 @@ internal fun CadenceAppScreen(
     val agentMessages by AgentInbox.messages.collectAsStateWithLifecycle()
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
-    // Tâche à ouvrir (widget ou rappel) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
-    var opening by rememberSaveable(stateSaver = taskOpeningSaver) { mutableStateOf(TaskOpening()) }
+    // Tâche à ouvrir (widget, rappel ou notification) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
+    var openingTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
     BackHandler(enabled = settingsOpen) { settingsOpen = false }
-    // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
-    androidx.compose.runtime.LaunchedEffect(openTaskUid) {
-        val next = opening.fromLaunch(openTaskUid)
-        if (next != opening) {
-            opening = next
-            tab = Tab.TASKS
-            settingsOpen = false
-        }
-    }
     // Une notification d'événement ouvre l'Agenda, quel que soit l'onglet restauré.
     androidx.compose.runtime.LaunchedEffect(openAgenda) {
         if (openAgenda) {
@@ -327,7 +317,7 @@ internal fun CadenceAppScreen(
             is NotificationTarget.Plugin -> scope.launch { pluginPageIntent(context, target.page)?.let(context::startActivity) }
             is NotificationTarget.Task -> {
                 tab = Tab.TASKS
-                opening = TaskOpening(pending = target.uid)
+                openingTaskUid = target.uid
             }
             is NotificationTarget.Project -> {
                 tab = Tab.TASKS
@@ -406,8 +396,8 @@ internal fun CadenceAppScreen(
                     when (current) {
                         null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false }, initialPage = settingsPage)
                         Tab.TASKS -> TasksScreen(
-                            openTaskUid = opening.pending,
-                            onTaskOpened = { opening = opening.consumed() },
+                            openTaskUid = openingTaskUid,
+                            onTaskOpened = { openingTaskUid = null },
                             showPlan = proposalTab == ProposalTab.PLAN,
                             onPlanShown = proposals::consumeTab,
                             showProjectUid = projectToShow,
@@ -530,7 +520,7 @@ internal fun CadenceAppScreen(
             val fullOverlay = settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen || notificationsOpen || proposalRitual != null || morningMails
             if (!fullOverlay) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action ?: defaultAdd) { index ->
                 tab = Tab.entries[index]
-                opening = opening.consumed()
+                openingTaskUid = null
             }
             CadenceSnackbarHost(
                 snackbar,
@@ -716,7 +706,3 @@ private fun DeleteDialog(dismiss: () -> Unit, confirm: () -> Unit) {
     )
 }
 
-private val taskOpeningSaver = androidx.compose.runtime.saveable.listSaver<TaskOpening, Any?>(
-    save = { it.save() },
-    restore = { TaskOpening.restore(it) },
-)
