@@ -16,7 +16,7 @@ A habit used to be a task marked "habit". That is no longer the case:
 
 ## The Habits page
 
-Habits are **grouped by time of day** (morning, afternoon, evening, anytime; empty groups are hidden). Each card looks the same as on Android: a tinted gradient, a **hexagonal facet** filled according to the period's progress, the status line, the streak, and the quick action.
+Habits are **grouped by time of day** (morning, afternoon, evening, anytime; empty groups are hidden). Each card looks the same as on Android: a tinted gradient, a **hexagonal facet** filled according to the period's progress, the status line, the streak, and the quick action. A yes/no habit with several sessions per period says how far it is ("2 of 3 this week") and its card fills in proportion, instead of reading "To do" until the last session.
 
 **The status line** says where you stand: "2 / 30 min", "1 of 2 max", "12 days clear", "Paused", "Not planned today", "Done", "Limit reached", "Limit exceeded".
 

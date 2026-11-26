@@ -61,7 +61,7 @@ On the right, a calendar shows **1, 3 or 7 days** from the open day ("Days shown
 
 ### Times and order
 
-The list first sorts the tasks **with a time** (slot or timed due date) in time order, then the others in plan order. "To place · N" groups those without a time, with first those whose time has **passed without being done** ("Scheduled 10:30": nothing disappears). "My day" alternates tasks and appointments in time order, with:
+The list first sorts the tasks **with a time** (slot or timed due date) in time order, then the others in plan order. "To place · N" groups those without a time, with first those whose time has **passed without being done** ("Missed at 10:30": nothing disappears). "My day" alternates tasks and appointments in time order, with: A row shows its time once: a slot whose time has passed reads "Missed at 09:30" and replaces the length and due-time chips. While the day is loading the list shows no "nothing planned" message.
 
 - a "Now" line at the current time;
 - the past dimmed and the next thing highlighted;

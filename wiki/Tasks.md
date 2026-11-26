@@ -84,7 +84,7 @@ At the bottom of Today, Tasks, a project and a tag, a collapsed "Done (N)" secti
 
 Clicking a task, wherever it is (lists, Today, search, notifications, calendar, parent link), opens it in **the same floating panel**, wide, placed at the bottom of the page. The address keeps `?task=<id>`, so a reload reopens it; the `/task/<id>` link opens All tasks with this panel.
 
-- On a screen of 1280 px or more, the panel is a column one third of the width, placed on the side opposite the clicked row: the row stays visible.
+- On a screen of 1280 px or more, the panel is a column one third of the width, placed on the side opposite the clicked row: the row stays visible. A long title wraps onto several lines in the panel, and closing the panel puts the keyboard focus back on the row it was opened from.
 - **Expand** (icon) makes it fill the whole page; "Shrink" brings it back. Under 768 px, it takes the whole screen with a "Close" button.
 - Close it with Esc, a click outside, a second click on the same row, or by completing the task with its checkbox. Reopening a completed task leaves it open.
 - `J` and `K` go to the next or previous task of the page, except while typing or when a menu is open.

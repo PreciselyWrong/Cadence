@@ -112,7 +112,7 @@ Saved views are read in the list selector: pinned ones under « Épinglés » (P
 
 The sidebar has two looks, according to Profile › Interface › Appearance › Interface: **Minimal** (default) and **Dense** (the original bar, all links in one list). This section describes Minimal.
 
-- **The icon rail**, always visible on the left (it is the whole bar when collapsed). By default: Today, Calendar, Notes, Habits, Views, Areas, Goals, People, Insights, Review, Career; the rest sleeps in the **"More"** menu: All Tasks, Assigned to me, Everyone, Boards, Templates, Access.
+- **The icon rail**, always visible on the left (it is the whole bar when collapsed). By default: Today, Calendar, Notes, Habits, Views, Areas, Goals, People, Insights, Review, Career; the rest sleeps in the **"More"** menu: All Tasks, Assigned to me, Everyone, Boards, Templates, Access. The rail keeps the same icons in the same order on every page. Under 1280 px wide the bar starts collapsed to the rail; expanding or collapsing it yourself is remembered on this device and wins over the width.
 - **The panel**, beside it: its blocks from top to bottom are **Pinned**, **Month calendar**, **Smart lists**, **Projects**, **Areas** and **Tags**, in the order chosen in the settings.
 - **The footer** (+, apps, theme) runs under the rail and the panel.
 - You **widen or narrow** the bar by dragging its right edge (from 90 to 110% of the default width; double-click to return; arrows, Home and End on the keyboard). The panel scrolls on its own; its sections collapse by their header.

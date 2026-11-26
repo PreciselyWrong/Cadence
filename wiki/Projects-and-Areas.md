@@ -98,7 +98,7 @@ This is the control tower of a parent project (for example a "Dev" project with 
 
 | View | A column or card is... | Useful for |
 |---|---|---|
-| **Tasks by project** | One column per in-progress sub-project (columns without tasks are hidden) | Seeing and handling each project's work |
+| **Tasks by project** | One column per sub-project that is in progress, planned or not started (columns without tasks are hidden) | Seeing and handling each project's work |
 | **Projects** | One card per sub-project, sorted by project status ("Paused" is visible), with no work-in-progress limit | Steering the portfolio |
 
 One more tab, **All tasks**, groups the tasks of all sub-projects by status, tag, priority, or section.

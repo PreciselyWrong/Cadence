@@ -23,9 +23,43 @@ const AllDayOverflow: React.FC<AllDayOverflowProps> = ({
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
+
+    // The chip sits in cells that clip (the month grid, the all-day strip), so
+    // the list is placed against the window: under the chip, or above it when
+    // there is more room there, and it scrolls instead of leaving the screen.
+    const toggle = () => {
+        if (open) {
+            setOpen(false);
+            return;
+        }
+        const rect = buttonRef.current?.getBoundingClientRect();
+        if (rect) {
+            const gap = 4;
+            const edge = 8;
+            const below = window.innerHeight - rect.bottom - gap - edge;
+            const above = rect.top - gap - edge;
+            const left = Math.max(
+                edge,
+                Math.min(rect.left, window.innerWidth - 224 - edge)
+            );
+            setMenuStyle(
+                below >= 160 || below >= above
+                    ? { left, top: rect.bottom + gap, maxHeight: below }
+                    : {
+                          left,
+                          bottom: window.innerHeight - rect.top + gap,
+                          maxHeight: above,
+                      }
+            );
+        }
+        setOpen(true);
+    };
 
     useEffect(() => {
         if (!open) return;
+        const close = () => setOpen(false);
         const onPointerDown = (e: MouseEvent) => {
             if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
         };
@@ -34,9 +68,14 @@ const AllDayOverflow: React.FC<AllDayOverflowProps> = ({
         };
         document.addEventListener('mousedown', onPointerDown);
         document.addEventListener('keydown', onKeyDown);
+        // The list is fixed to the window: it would drift off its chip.
+        window.addEventListener('resize', close);
+        window.addEventListener('wheel', close, { passive: true });
         return () => {
             document.removeEventListener('mousedown', onPointerDown);
             document.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('resize', close);
+            window.removeEventListener('wheel', close);
         };
     }, [open]);
 
@@ -45,10 +84,11 @@ const AllDayOverflow: React.FC<AllDayOverflowProps> = ({
     return (
         <div ref={rootRef} className={`relative ${className}`} style={style}>
             <button
+                ref={buttonRef}
                 type="button"
                 onClick={(e) => {
                     e.stopPropagation();
-                    setOpen((v) => !v);
+                    toggle();
                 }}
                 aria-haspopup="menu"
                 aria-expanded={open}
@@ -67,7 +107,9 @@ const AllDayOverflow: React.FC<AllDayOverflowProps> = ({
             {open && (
                 <div
                     role="menu"
-                    className="absolute left-0 top-full z-30 mt-1 w-56 rounded-card bg-white p-1 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-white/10"
+                    style={menuStyle}
+                    onWheel={(e) => e.stopPropagation()}
+                    className="fixed z-50 w-56 overflow-y-auto rounded-card bg-white p-1 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-white/10"
                 >
                     {events.map((event) => (
                         <button

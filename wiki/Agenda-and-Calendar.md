@@ -11,7 +11,7 @@ The page header shows "Calendar" with the month as a subtitle, a view selector, 
 | View | What it shows |
 |---|---|
 | **Year** | The twelve months as small grids; each day is tinted according to the number of items it carries (an all-day bar counts on each day it covers). A click on a day opens it in Day view; the arrows advance by one year |
-| **Month** | A month grid; multi-day tasks are bars that keep the same row all week |
+| **Month** | A month grid; multi-day tasks are bars that keep the same row all week. A day with more than three entries shows two and a **+N** button that lists the others (tasks before habits) |
 | **Week** | The seven-day hourly grid, with an "All day" row at the top |
 | **N days** | The grid of 2 to 7 days from the current date (3 by default); the arrows advance by N days; without weekends, N counts working days |
 | **Day** | The grid of a single day |
