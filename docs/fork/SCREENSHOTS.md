@@ -4,17 +4,17 @@ The README screenshots (`screenshots/web/`, `screenshots/android/`) and the proj
 
 ## Demo data
 
-`npm run db:seed:screenshots` (or `cd backend && DB_FILE=db/shots.sqlite3 node seeders/screenshots-seeder.js`) creates or resets the account `demo@cadence.test` / `demodemo` (Camille Martin, French, Europe/Paris) and prints an API key. Dates are relative to the run, so run it the same day as the captures. It fills areas, projects with a timeline and blocks, tasks, today's plan, Cadence habits with 45 days of entries, outline notes with links, goals, people, focus sessions, mail and decision cards. Everything is invented; keep it that way (no real names, addresses or domains other than `example.com`).
+`npm run db:seed:screenshots` (or `cd backend && DB_FILE=db/shots.sqlite3 node seeders/screenshots-seeder.js`) creates or resets the account `demo@cadence.test` / `demodemo` (Sam Carter, English, Europe/Paris) and prints an API key. Dates are relative to the run, so run it the same day as the captures. It fills areas, projects with a timeline and blocks, tasks, today's plan, Cadence habits with 45 days of entries, outline notes with links, goals, people, focus sessions, mail and decision cards. Public screenshots and demo data are always in English, a single language (no bilingual dataset). Everything is invented; keep it that way (no real names, addresses or domains other than `example.com`).
 
 ## Web
 
 1. Start a throwaway pair: `shots-backend` (port 3312, `db/shots.sqlite3`) and `shots-web` (port 4180) from `.claude/launch.json`, or the same commands by hand.
-2. `node scripts/screenshots/web.js` writes `screenshots/web/*.png` (1440 × 900 at 2×, French, light; `today-dark` in dark). Name shots to redo only those: `node scripts/screenshots/web.js today plan`. The page clock is frozen at 10:20 so the calendars show the working day.
+2. `node scripts/screenshots/web.js` writes `screenshots/web/*.png` (1440 × 900 at 2×, English `en-US`, light; `today-dark` in dark). Name shots to redo only those: `node scripts/screenshots/web.js today plan`. The page clock is frozen at 10:20 so the calendars show the working day.
 3. `optipng -o2 screenshots/web/*.png`.
 
 ## Wiki
 
-`node scripts/screenshots/web.js --wiki` takes the wiki set (`WIKI_SHOTS`) into `wiki/images/`, on the same demo account and server pair; name shots to redo only those. For `todo-md-link`, start the backend with `CADENCE_TODO_ROOT` pointing at a throwaway folder of two or three sub-folders holding a sample `TODO.md` (for example under `~/.cache/cadence-shots-todos/`). A full run sends more than the default 100 API requests per 15 minutes: start the backend with `RATE_LIMIT_API_MAX=10000`. `scripts/publish-wiki.sh` publishes the pages and the images (wiki/README.md).
+`node scripts/screenshots/web.js --wiki` takes the wiki set (`WIKI_SHOTS`) into `wiki/images/`, on the same demo account and server pair; name shots to redo only those. For `todo-md-link`, start the backend with `CADENCE_TODO_ROOT` pointing at a throwaway folder of two or three sub-folders holding a sample `TODO.md` (for example `spring-marathon`, `site-redesign` and `brittany-trip` under `~/.cache/cadence-shots-todos/`, set with `CADENCE_TODO_ROOT`). A full run sends more than the default 100 API requests per 15 minutes and signs in more than the 5 allowed per window: start the backend with `RATE_LIMIT_API_MAX=10000 RATE_LIMIT_AUTH_MAX=10000`. `scripts/publish-wiki.sh` publishes the pages and the images (wiki/README.md).
 
 ## Android
 

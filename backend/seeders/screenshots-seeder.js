@@ -37,7 +37,7 @@ const { proposeCareer } = require('../modules/proposals/career');
 
 const DEMO_EMAIL = 'demo@cadence.test';
 const DEMO_PASSWORD = 'demodemo';
-const DEMO_NAME = 'Camille Martin';
+const DEMO_NAME = 'Sam Carter';
 const TIMEZONE = 'Europe/Paris';
 
 const {
@@ -231,7 +231,7 @@ async function ensureDemoUser() {
             email: DEMO_EMAIL,
             password_digest: passwordHash,
             name: DEMO_NAME,
-            language: 'fr',
+            language: 'en',
             timezone: TIMEZONE,
             appearance: 'light',
             email_verified: true,
@@ -243,7 +243,7 @@ async function ensureDemoUser() {
         await user.update({
             password_digest: passwordHash,
             name: DEMO_NAME,
-            language: 'fr',
+            language: 'en',
             timezone: TIMEZONE,
             appearance: 'light',
             email_verified: true,
@@ -272,20 +272,20 @@ async function ensureDemoUser() {
 async function seedAreas(userId) {
     const defs = [
         {
-            name: 'Travail',
-            description: 'Projets produit, design et livrables clients',
+            name: 'Work',
+            description: 'Product, design and client deliverables',
         },
         {
-            name: 'Maison',
-            description: 'Travaux, intendance et escapades',
+            name: 'Home',
+            description: 'Renovations, chores and getaways',
         },
         {
-            name: 'Santé',
-            description: 'Sport, sommeil et équilibre',
+            name: 'Health',
+            description: 'Sport, sleep and balance',
         },
         {
-            name: 'Apprendre',
-            description: 'Langues, lectures et veille design',
+            name: 'Learning',
+            description: 'Languages, reading and design watch',
         },
     ];
 
@@ -298,11 +298,11 @@ async function seedAreas(userId) {
 
 async function seedTags(userId) {
     const names = [
-        'appel',
-        'courses',
-        'en-attente',
-        'rapide',
-        'lecture',
+        'call',
+        'errands',
+        'waiting',
+        'quick',
+        'reading',
         'code',
         'code/frontend',
     ];
@@ -316,22 +316,22 @@ async function seedTags(userId) {
 async function seedPeople(userId) {
     const defs = [
         {
-            name: 'Lucas Bernard',
+            name: 'Luke Bennett',
             relationship_type: 'work',
-            email: 'lucas.bernard@example.com',
-            notes: 'Lead développeur front sur le projet app v2',
+            email: 'luke.bennett@example.com',
+            notes: 'Lead front-end developer on the app v2 project',
         },
         {
-            name: 'Sophie Laurent',
+            name: 'Sophie Lawrence',
             relationship_type: 'friend',
-            email: 'sophie.laurent@example.com',
-            notes: 'Partenaire de course du dimanche matin',
+            email: 'sophie.lawrence@example.com',
+            notes: 'Sunday morning running partner',
         },
         {
-            name: 'Marc Moreau',
+            name: 'Mark Morgan',
             relationship_type: 'family',
-            email: 'marc.moreau@example.com',
-            notes: 'Organisation du week-end en Bretagne',
+            email: 'mark.morgan@example.com',
+            notes: 'Planning the weekend in Brittany',
         },
     ];
 
@@ -347,57 +347,57 @@ async function seedGoals(userId, areas) {
     const quarterEnd = parisNow().endOf('quarter').format('YYYY-MM-DD');
 
     const objLaunch = await goalsService.create(userId, {
-        title: 'Livrer la v2 client dans les temps',
-        why: 'Stabiliser le socle produit avant la fin du trimestre',
-        area_id: areas.Travail.id,
+        title: 'Ship the client v2 on time',
+        why: 'Stabilize the product foundation before quarter end',
+        area_id: areas.Work.id,
         horizon: 'quarter',
         target_date: quarterEnd,
         status: 'active',
     });
 
     const krTimeline = await goalsService.create(userId, {
-        title: 'Finaliser les maquettes et specs Tarifs',
-        area_id: areas.Travail.id,
+        title: 'Finish the Pricing mockups and specs',
+        area_id: areas.Work.id,
         horizon: 'month',
         target_date: thisMonthEnd,
         parent_goal_uid: objLaunch.uid,
     });
 
     const objRun = await goalsService.create(userId, {
-        title: 'Courir le semi-marathon en moins de 1 h 50',
-        why: 'Retrouver une bonne régularité de fond',
-        area_id: areas['Santé'].id,
+        title: 'Run the half marathon in under 1:50',
+        why: 'Rebuild a steady endurance base',
+        area_id: areas.Health.id,
         horizon: 'quarter',
         target_date: quarterEnd,
         status: 'active',
     });
 
     const krVolume = await goalsService.create(userId, {
-        title: 'Tenir 3 séances par semaine pendant 6 semaines',
-        area_id: areas['Santé'].id,
+        title: 'Keep up 3 sessions a week for 6 weeks',
+        area_id: areas.Health.id,
         horizon: 'month',
         target_date: thisMonthEnd,
         parent_goal_uid: objRun.uid,
     });
 
     const objPt = await goalsService.create(userId, {
-        title: 'Tenir une conversation de 15 min en portugais',
-        why: 'Préparer le séjour à Porto',
-        area_id: areas.Apprendre.id,
+        title: 'Hold a 15-minute conversation in Portuguese',
+        why: 'Get ready for the trip to Porto',
+        area_id: areas.Learning.id,
         horizon: 'month',
         target_date: thisMonthEnd,
         status: 'active',
     });
 
     const bucket1 = await goalsService.create(userId, {
-        title: 'Traverser la Bretagne à vélo sur la Vélodyssée',
-        area_id: areas.Maison.id,
+        title: 'Cycle across Brittany on the Vélodyssée',
+        area_id: areas.Home.id,
         bucket: 'do',
     });
 
     const bucket2 = await goalsService.create(userId, {
-        title: 'Être à l’aise à l’oral en portugais',
-        area_id: areas.Apprendre.id,
+        title: 'Be at ease speaking Portuguese',
+        area_id: areas.Learning.id,
         bucket: 'be',
     });
 
@@ -410,9 +410,9 @@ async function seedGoals(userId, areas) {
 
 async function seedProjects(userId, areas, goals) {
     const refonte = await Project.create({
-        name: 'Refonte du site client',
-        description: 'Nouvelle identité visuelle, pages clés et performances',
-        area_id: areas.Travail.id,
+        name: 'Client website redesign',
+        description: 'New visual identity, key pages and performance',
+        area_id: areas.Work.id,
         user_id: userId,
         status: 'in_progress',
         due_date_at: atLocal(25, 18),
@@ -420,9 +420,9 @@ async function seedProjects(userId, areas, goals) {
     });
 
     const tarifs = await Project.create({
-        name: 'Nouvelle page Tarifs',
-        description: 'Grille claire, FAQ et comparatif annuel/mensuel',
-        area_id: areas.Travail.id,
+        name: 'New Pricing page',
+        description: 'Clear grid, FAQ and annual vs monthly comparison',
+        area_id: areas.Work.id,
         parent_project_id: refonte.id,
         user_id: userId,
         status: 'in_progress',
@@ -431,9 +431,9 @@ async function seedProjects(userId, areas, goals) {
     });
 
     const accueil = await Project.create({
-        name: 'Page d’accueil',
-        description: 'Nouveau bandeau, preuves sociales et appel à l’action',
-        area_id: areas.Travail.id,
+        name: 'Home page',
+        description: 'New hero banner, social proof and call to action',
+        area_id: areas.Work.id,
         parent_project_id: refonte.id,
         user_id: userId,
         status: 'in_progress',
@@ -441,10 +441,9 @@ async function seedProjects(userId, areas, goals) {
     });
 
     const blog = await Project.create({
-        name: 'Blog et actualités',
-        description:
-            'Gabarit d’article, flux RSS et migration des anciens billets',
-        area_id: areas.Travail.id,
+        name: 'Blog and news',
+        description: 'Article template, RSS feed and migration of old posts',
+        area_id: areas.Work.id,
         parent_project_id: refonte.id,
         user_id: userId,
         status: 'planned',
@@ -452,9 +451,9 @@ async function seedProjects(userId, areas, goals) {
     });
 
     const appV2 = await Project.create({
-        name: "Lancement de l'app v2",
-        description: 'Coordination design, QA mobile et mise en production',
-        area_id: areas.Travail.id,
+        name: 'Launch of app v2',
+        description: 'Design coordination, mobile QA and release',
+        area_id: areas.Work.id,
         user_id: userId,
         status: 'in_progress',
         start_date_at: startOfDayLocal(-3),
@@ -463,27 +462,27 @@ async function seedProjects(userId, areas, goals) {
     });
 
     const cuisine = await Project.create({
-        name: 'Rénovation de la cuisine',
-        description: 'Devis plan de travail, plomberie et pose des meubles',
-        area_id: areas.Maison.id,
+        name: 'Kitchen renovation',
+        description: 'Countertop quote, plumbing and cabinet installation',
+        area_id: areas.Home.id,
         user_id: userId,
         status: 'in_progress',
         due_date_at: atLocal(40, 18),
     });
 
     const bretagne = await Project.create({
-        name: 'Vacances en Bretagne',
-        description: 'Hébergement, itinéraire côtier et logistique',
-        area_id: areas.Maison.id,
+        name: 'Brittany trip',
+        description: 'Lodging, coastal route and logistics',
+        area_id: areas.Home.id,
         user_id: userId,
         status: 'planned',
         due_date_at: atLocal(55, 18),
     });
 
     const marathon = await Project.create({
-        name: 'Marathon de printemps',
-        description: 'Plan de préparation sur 12 semaines',
-        area_id: areas['Santé'].id,
+        name: 'Spring marathon',
+        description: '12-week training plan',
+        area_id: areas.Health.id,
         user_id: userId,
         status: 'in_progress',
         due_date_at: atLocal(60, 18),
@@ -491,18 +490,18 @@ async function seedProjects(userId, areas, goals) {
     });
 
     const portugais = await Project.create({
-        name: 'Apprendre le portugais',
-        description: 'Cours hebdomadaires et vocabulaire quotidien',
-        area_id: areas.Apprendre.id,
+        name: 'Learn Portuguese',
+        description: 'Weekly lessons and daily vocabulary',
+        area_id: areas.Learning.id,
         user_id: userId,
         status: 'in_progress',
         goal_id: goals.objectives[2].id,
     });
 
     const podcast = await Project.create({
-        name: 'Podcast design produit',
-        description: 'Série de notes audio en pause pour le trimestre',
-        area_id: areas.Apprendre.id,
+        name: 'Product design podcast',
+        description: 'Audio note series on hold for the quarter',
+        area_id: areas.Learning.id,
         user_id: userId,
         status: 'paused',
     });
@@ -525,32 +524,32 @@ async function seedProjectPages(userId, projects) {
     const pages = [
         {
             url: 'https://github.com/tailwindlabs/tailwindcss',
-            title: 'Tailwind CSS : utilitaires et tokens de design',
+            title: 'Tailwind CSS: utilities and design tokens',
             description:
-                'Framework CSS utilitaire utilisé pour les nouveaux composants du site client.',
+                'Utility-first CSS framework used for the new client site components.',
             site_name: 'GitHub',
             kind: 'repo',
             github_stars: 85400,
             github_language: 'TypeScript',
-            note: 'Référence pour la grille de la page Tarifs',
+            note: 'Reference for the Pricing page grid',
         },
         {
-            url: 'https://fr.wikipedia.org/wiki/Syst%C3%A8me_de_design',
-            title: 'Système de design · Wikipédia',
+            url: 'https://en.wikipedia.org/wiki/Design_system',
+            title: 'Design system · Wikipedia',
             description:
-                'Principes de cohérence, composants réutilisables et documentation vivante.',
-            site_name: 'Wikipédia',
+                'Principles of consistency, reusable components and living documentation.',
+            site_name: 'Wikipedia',
             kind: 'article',
-            note: 'À relire avant la revue de composants',
+            note: 'Reread before the component review',
         },
         {
-            url: 'https://example.com/guide-accessibilite-contrastes',
-            title: 'Guide pratique des contrastes WCAG AA',
+            url: 'https://example.com/accessibility-contrast-guide',
+            title: 'Practical guide to WCAG AA contrast',
             description:
-                'Checklist rapide pour valider la lisibilité des boutons et badges.',
+                'Quick checklist to check the legibility of buttons and badges.',
             site_name: 'Example Design',
             kind: 'article',
-            note: 'Vérifier le contraste du mode clair',
+            note: 'Check contrast in light mode',
         },
     ];
 
@@ -631,56 +630,56 @@ async function seedTasksAndRelations(
     // --- Overdue (3) ---
     await add(
         {
-            name: 'Relancer le plombier pour la date d’intervention',
+            name: 'Follow up with the plumber about the visit date',
             project_id: projects.cuisine.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             due_date: endOfDayLocal(-3),
             priority: 2,
             estimated_minutes: 15,
         },
-        ['appel', 'en-attente']
+        ['call', 'waiting']
     );
     await add(
         {
-            name: 'Valider les textes de la page d’accueil',
+            name: 'Approve the home page copy',
             project_id: projects.refonte.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(-2),
             priority: 2,
             estimated_minutes: 45,
         },
-        ['rapide']
+        ['quick']
     );
     await add(
         {
-            name: 'Envoyer la facture d’acompte au client',
+            name: 'Send the deposit invoice to the client',
             project_id: projects.refonte.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(-1),
             priority: 1,
             estimated_minutes: 20,
         },
-        ['rapide']
+        ['quick']
     );
 
     // --- Due today (8, with 3 timed) ---
     const todayTimed1 = await add(
         {
-            name: 'Point design hebdomadaire avec Lucas',
+            name: 'Weekly design sync with Luke',
             project_id: projects.appV2.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: atLocal(0, 9, 30),
             due_has_time: true,
             priority: 2,
             estimated_minutes: 60,
         },
-        ['appel']
+        ['call']
     );
     const todayTimed2 = await add(
         {
-            name: 'Finaliser la grille des tarifs annuels',
+            name: 'Finalize the annual pricing grid',
             project_id: projects.tarifs.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: atLocal(0, 14, 0),
             due_has_time: true,
             priority: 2,
@@ -691,33 +690,33 @@ async function seedTasksAndRelations(
     );
     const todayTimed3 = await add(
         {
-            name: 'Appeler l’artisan pour les façades de cuisine',
+            name: 'Call the carpenter about the kitchen fronts',
             project_id: projects.cuisine.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             due_date: atLocal(0, 16, 30),
             due_has_time: true,
             priority: 1,
             estimated_minutes: 20,
         },
-        ['appel']
+        ['call']
     );
 
     const todayUntimed1 = await add(
         {
-            name: 'Compresser les visuels hero du site',
+            name: 'Compress the site hero images',
             project_id: projects.refonte.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(0),
             priority: 1,
             estimated_minutes: 30,
         },
-        ['rapide']
+        ['quick']
     );
     const todayUntimed2 = await add(
         {
-            name: 'Préparer les 3 questions du test utilisateur',
+            name: 'Prepare the 3 user test questions',
             project_id: projects.appV2.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(0),
             priority: 1,
             estimated_minutes: 45,
@@ -726,31 +725,31 @@ async function seedTasksAndRelations(
     );
     const todayUntimed3 = await add(
         {
-            name: 'Acheter des ampoules LED chaudes et du café',
-            area_id: areas.Maison.id,
+            name: 'Buy warm LED bulbs and coffee',
+            area_id: areas.Home.id,
             due_date: endOfDayLocal(0),
             priority: 0,
             estimated_minutes: 25,
         },
-        ['courses']
+        ['errands']
     );
     const todayUntimed4 = await add(
         {
-            name: 'Réviser les verbes irréguliers au présent',
+            name: 'Review irregular present-tense verbs',
             project_id: projects.portugais.id,
-            area_id: areas.Apprendre.id,
+            area_id: areas.Learning.id,
             due_date: endOfDayLocal(0),
             priority: 0,
             estimated_minutes: 20,
             goal_id: goals.objectives[2].id,
         },
-        ['lecture']
+        ['reading']
     );
     await add(
         {
-            name: 'Sortie fractionnée 8 × 400 m avec Sophie',
+            name: 'Interval run 8 × 400 m with Sophie',
             project_id: projects.marathon.id,
-            area_id: areas['Santé'].id,
+            area_id: areas.Health.id,
             due_date: endOfDayLocal(0),
             priority: 1,
             estimated_minutes: 60,
@@ -762,20 +761,20 @@ async function seedTasksAndRelations(
     // --- Tomorrow & this week (5) ---
     await add(
         {
-            name: 'Confirmer le devis du plan de travail en quartz',
+            name: 'Confirm the quartz countertop quote',
             project_id: projects.cuisine.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             due_date: endOfDayLocal(1),
             priority: 2,
             estimated_minutes: 30,
         },
-        ['en-attente']
+        ['waiting']
     );
     await add(
         {
-            name: 'Revue des contrastes sur le thème clair',
+            name: 'Contrast review on the light theme',
             project_id: projects.refonte.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(1),
             priority: 1,
             estimated_minutes: 45,
@@ -784,20 +783,20 @@ async function seedTasksAndRelations(
     );
     await add(
         {
-            name: 'Réserver deux leçons de portugais pour la semaine prochaine',
+            name: 'Book two Portuguese lessons for next week',
             project_id: projects.portugais.id,
-            area_id: areas.Apprendre.id,
+            area_id: areas.Learning.id,
             due_date: endOfDayLocal(2),
             priority: 0,
             estimated_minutes: 15,
         },
-        ['rapide']
+        ['quick']
     );
     await add(
         {
-            name: 'Comparer les gîtes près de Crozon',
+            name: 'Compare cottages near Crozon',
             project_id: projects.bretagne.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             due_date: endOfDayLocal(3),
             priority: 1,
             estimated_minutes: 60,
@@ -806,9 +805,9 @@ async function seedTasksAndRelations(
     );
     await add(
         {
-            name: 'Sortie longue 16 km endurance fondamentale',
+            name: 'Long run 16 km at easy pace',
             project_id: projects.marathon.id,
-            area_id: areas['Santé'].id,
+            area_id: areas.Health.id,
             due_date: endOfDayLocal(4),
             priority: 1,
             estimated_minutes: 105,
@@ -817,12 +816,12 @@ async function seedTasksAndRelations(
         []
     );
 
-    // --- Lancement de l'app v2 timeline tasks (5 tasks spread over 4 weeks + 3 blocks) ---
+    // --- Launch of app v2 timeline tasks (5 tasks spread over 4 weeks + 3 blocks) ---
     const tlAudit = await add(
         {
-            name: 'Audit des écrans iOS et Android',
+            name: 'Audit the iOS and Android screens',
             project_id: projects.appV2.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             start_date: startOfDayLocal(-2),
             due_date: endOfDayLocal(3),
             priority: 2,
@@ -832,9 +831,9 @@ async function seedTasksAndRelations(
     );
     const tlProto = await add(
         {
-            name: 'Prototype interactif du nouveau onboarding',
+            name: 'Interactive prototype of the new onboarding',
             project_id: projects.appV2.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             start_date: startOfDayLocal(4),
             due_date: endOfDayLocal(10),
             priority: 2,
@@ -844,9 +843,9 @@ async function seedTasksAndRelations(
     );
     const tlQa = await add(
         {
-            name: 'Recette complète hors ligne avec Lucas',
+            name: 'Full offline acceptance test with Luke',
             project_id: projects.appV2.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             start_date: startOfDayLocal(11),
             due_date: endOfDayLocal(17),
             priority: 1,
@@ -856,9 +855,9 @@ async function seedTasksAndRelations(
     );
     const tlStore = await add(
         {
-            name: 'Préparer les captures Play Store et notes de version',
+            name: 'Prepare Play Store screenshots and release notes',
             project_id: projects.appV2.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             start_date: startOfDayLocal(18),
             due_date: endOfDayLocal(22),
             priority: 1,
@@ -868,9 +867,9 @@ async function seedTasksAndRelations(
     );
     await add(
         {
-            name: 'Déploiement progressif v2.0 (10 % puis 100 %)',
+            name: 'Staged rollout of v2.0 (10% then 100%)',
             project_id: projects.appV2.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             start_date: startOfDayLocal(23),
             due_date: endOfDayLocal(27),
             priority: 2,
@@ -901,20 +900,20 @@ async function seedTasksAndRelations(
     // --- Horizons: week_of, in_view_at, month_of, undated (6) ---
     await add(
         {
-            name: 'Mettre à jour la fiche matériel de course',
+            name: 'Update the running gear sheet',
             project_id: projects.marathon.id,
-            area_id: areas['Santé'].id,
+            area_id: areas.Health.id,
             week_of: thisWeekStart,
             priority: 0,
             estimated_minutes: 20,
         },
-        ['rapide']
+        ['quick']
     );
     await add(
         {
-            name: 'Préparer la liste des prises électriques de la cuisine',
+            name: 'Prepare the kitchen electrical outlet list',
             project_id: projects.cuisine.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             week_of: nextWeekStart,
             priority: 1,
             estimated_minutes: 30,
@@ -923,20 +922,20 @@ async function seedTasksAndRelations(
     );
     await add(
         {
-            name: 'Écrire l’étude de cas de la refonte client',
+            name: 'Write the case study for the client redesign',
             project_id: projects.refonte.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             in_view_at: new Date(),
             priority: 0,
             estimated_minutes: 90,
         },
-        ['lecture']
+        ['reading']
     );
     await add(
         {
-            name: 'Réserver les billets de train pour Quimper',
+            name: 'Book train tickets to Quimper',
             project_id: projects.bretagne.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             month_of: thisMonthStart,
             priority: 1,
             estimated_minutes: 30,
@@ -945,18 +944,18 @@ async function seedTasksAndRelations(
     );
     await add(
         {
-            name: 'Renouveler la carte de bibliothèque municipale',
-            area_id: areas.Apprendre.id,
+            name: 'Renew the public library card',
+            area_id: areas.Learning.id,
             month_of: nextMonthStart,
             priority: 0,
             estimated_minutes: 15,
         },
-        ['rapide']
+        ['quick']
     );
     await add(
         {
-            name: 'Trier les photos de l’année dernière',
-            area_id: areas.Maison.id,
+            name: 'Sort last year’s photos',
+            area_id: areas.Home.id,
             priority: 0,
             estimated_minutes: 60,
         },
@@ -966,20 +965,20 @@ async function seedTasksAndRelations(
     // --- Recurring tasks (2) ---
     await add(
         {
-            name: 'Vider la boîte de réception et trier les captures',
-            area_id: areas.Travail.id,
+            name: 'Clear the inbox and sort the captures',
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(0),
             recurrence_type: 'daily',
             recurrence_interval: 1,
             priority: 0,
             estimated_minutes: 15,
         },
-        ['rapide']
+        ['quick']
     );
     await add(
         {
-            name: 'Revue hebdomadaire et plan de la semaine',
-            area_id: areas.Travail.id,
+            name: 'Weekly review and plan for the week',
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(3),
             recurrence_type: 'weekly',
             recurrence_interval: 1,
@@ -993,18 +992,18 @@ async function seedTasksAndRelations(
     // --- Tasks with subtasks (3 parents + 7 subtasks) ---
     const parent1 = await add(
         {
-            name: 'Préparer la présentation client du mardi',
+            name: 'Prepare the Tuesday client presentation',
             project_id: projects.refonte.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(2),
             priority: 2,
             estimated_minutes: 90,
-            note: 'Cible : le comité de direction du client, 20 minutes dont 5 de questions.\n\n- Partir du bilan de la refonte, pas du détail technique\n- Montrer les trois écrans avant/après\n- Finir sur le calendrier de livraison',
+            note: 'Audience: the client’s steering committee, a short slot with time for questions.\n\n- Start from the redesign results, not the technical detail\n- Show the three before/after screens\n- End on the delivery schedule',
         },
-        ['rapide', 'en-attente']
+        ['quick', 'waiting']
     );
     await add({
-        name: 'Exporter les écrans Figma en haute définition',
+        name: 'Export the Figma screens in high resolution',
         parent_task_id: parent1.id,
         project_id: projects.refonte.id,
         order: 1,
@@ -1012,13 +1011,13 @@ async function seedTasksAndRelations(
         completed_at: atLocal(-1, 16),
     });
     await add({
-        name: 'Rédiger le déroulé des 5 diapositives clés',
+        name: 'Write the outline of the 5 key slides',
         parent_task_id: parent1.id,
         project_id: projects.refonte.id,
         order: 2,
     });
     await add({
-        name: 'Vérifier les chiffres de conversion avant envoi',
+        name: 'Check the conversion figures before sending',
         parent_task_id: parent1.id,
         project_id: projects.refonte.id,
         order: 3,
@@ -1026,9 +1025,9 @@ async function seedTasksAndRelations(
 
     const parent2 = await add(
         {
-            name: 'Organiser le week-end en Bretagne avec Marc',
+            name: 'Plan the Brittany weekend with Mark',
             project_id: projects.bretagne.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             due_date: endOfDayLocal(5),
             priority: 1,
             estimated_minutes: 45,
@@ -1036,7 +1035,7 @@ async function seedTasksAndRelations(
         []
     );
     await add({
-        name: 'Lister 3 randonnées côtières accessibles',
+        name: 'List 3 accessible coastal walks',
         parent_task_id: parent2.id,
         project_id: projects.bretagne.id,
         order: 1,
@@ -1044,7 +1043,7 @@ async function seedTasksAndRelations(
         completed_at: atLocal(0, 8, 30),
     });
     await add({
-        name: 'Vérifier les horaires des marées',
+        name: 'Check the tide times',
         parent_task_id: parent2.id,
         project_id: projects.bretagne.id,
         order: 2,
@@ -1052,8 +1051,8 @@ async function seedTasksAndRelations(
 
     const parent3 = await add(
         {
-            name: 'Mettre en place le suivi des allergies et ordonnances',
-            area_id: areas['Santé'].id,
+            name: 'Set up allergy and prescription tracking',
+            area_id: areas.Health.id,
             due_date: endOfDayLocal(6),
             priority: 0,
             estimated_minutes: 30,
@@ -1061,29 +1060,29 @@ async function seedTasksAndRelations(
         []
     );
     await add({
-        name: 'Prendre rendez-vous chez le médecin traitant',
+        name: 'Book an appointment with the family doctor',
         parent_task_id: parent3.id,
         order: 1,
     });
     await add({
-        name: 'Scanner la carte de mutuelle',
+        name: 'Scan the health insurance card',
         parent_task_id: parent3.id,
         order: 2,
     });
 
-    // --- Sub-project board of « Refonte du site client » ---
+    // --- Sub-project board of "Client website redesign" ---
     const boardTasks = [
-        ['accueil', 'Maquetter le nouveau bandeau', 2],
-        ['accueil', 'Rédiger les trois témoignages clients', 1],
-        ['accueil', 'Brancher le bouton d’appel à l’action', 1],
-        ['blog', 'Dessiner le gabarit d’article', 1],
-        ['blog', 'Migrer les dix anciens billets', 0],
+        ['accueil', 'Mock up the new hero banner', 2],
+        ['accueil', 'Write the three customer testimonials', 1],
+        ['accueil', 'Wire up the call-to-action button', 1],
+        ['blog', 'Design the article template', 1],
+        ['blog', 'Migrate the ten old posts', 0],
     ];
     for (const [key, name, priority] of boardTasks) {
         await add({
             name,
             project_id: projects[key].id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             priority,
         });
     }
@@ -1091,45 +1090,37 @@ async function seedTasksAndRelations(
     // --- Link tasks (2) ---
     await add(
         {
-            name: 'Lire : Architecture des systèmes de design modernes',
+            name: 'Read: Architecture of modern design systems',
             project_id: projects.refonte.id,
-            area_id: areas.Apprendre.id,
+            area_id: areas.Learning.id,
             source: 'web',
             source_url: 'https://example.com/architecture-design-systems',
             priority: 0,
             estimated_minutes: 25,
         },
-        ['lecture']
+        ['reading']
     );
     await add(
         {
-            name: 'Regarder : Typographie fluide et lisibilité sur mobile',
+            name: 'Watch: Fluid typography and legibility on mobile',
             project_id: projects.tarifs.id,
-            area_id: areas.Apprendre.id,
+            area_id: areas.Learning.id,
             source: 'web',
-            source_url: 'https://example.com/typographie-fluide-mobile',
+            source_url: 'https://example.com/fluid-typography-mobile',
             priority: 0,
             estimated_minutes: 35,
         },
-        ['lecture']
+        ['reading']
     );
 
     // --- Completed yesterday / today (6 more, plus 2 subtasks above = 8) ---
     const completedSpecs = [
-        ['Envoyer les mesures exactes de la cuisine', projects.cuisine.id, -1],
-        [
-            'Mettre à jour les icônes de la barre latérale',
-            projects.appV2.id,
-            -1,
-        ],
-        ['Corriger l’alignement des cartes sur mobile', projects.tarifs.id, -1],
-        [
-            'Faire le plein d’eau et préparer la tenue de course',
-            projects.marathon.id,
-            -1,
-        ],
-        ['Relire la leçon 3 de grammaire portugaise', projects.portugais.id, 0],
-        ['Répondre au message du syndic sur le badge parking', null, 0],
+        ['Send the exact kitchen measurements', projects.cuisine.id, -1],
+        ['Update the sidebar icons', projects.appV2.id, -1],
+        ['Fix card alignment on mobile', projects.tarifs.id, -1],
+        ['Refill water and prepare the running kit', projects.marathon.id, -1],
+        ['Reread Portuguese grammar lesson 3', projects.portugais.id, 0],
+        ['Reply to the building manager about the parking badge', null, 0],
     ];
     for (const [name, projectId, offset] of completedSpecs) {
         await add({
@@ -1142,12 +1133,12 @@ async function seedTasksAndRelations(
         });
     }
 
-    // --- Task with needs_when: true (shown in Inbox > Taches a classer) ---
+    // --- Task with needs_when: true (shown in Inbox > Tasks to sort) ---
     await add(
         {
-            name: 'Installer la nouvelle étagère murale du salon',
+            name: 'Install the new wall shelf in the living room',
             project_id: projects.cuisine.id,
-            area_id: areas.Maison.id,
+            area_id: areas.Home.id,
             needs_when: true,
             estimated_minutes: 45,
         },
@@ -1157,14 +1148,14 @@ async function seedTasksAndRelations(
     // --- Task pushed back 3 times in last 30 days (for Review) ---
     const pushedTask = await add(
         {
-            name: 'Rédiger la note de rétrospective design Q4',
+            name: 'Write the Q4 design retrospective note',
             project_id: projects.refonte.id,
-            area_id: areas.Travail.id,
+            area_id: areas.Work.id,
             due_date: endOfDayLocal(2),
             priority: 1,
             estimated_minutes: 45,
         },
-        ['en-attente']
+        ['waiting']
     );
 
     const pushHistory = [
@@ -1188,11 +1179,11 @@ async function seedTasksAndRelations(
 
     // --- Comments on one task ---
     await commentsService.addComment(userId, todayTimed1.uid, {
-        body: `J’ai préparé les trois variantes du parcours d’inscription avec @[${people['Lucas Bernard'].name}](person:${people['Lucas Bernard'].uid}).`,
-        mentionedPersonUids: [people['Lucas Bernard'].uid],
+        body: `I’ve prepared the three variants of the sign-up flow with @[${people['Luke Bennett'].name}](person:${people['Luke Bennett'].uid}).`,
+        mentionedPersonUids: [people['Luke Bennett'].uid],
     });
     await commentsService.addComment(userId, todayTimed1.uid, {
-        body: 'Pensez à vérifier la taille des cibles tactiles (48 dp minimum) sur Android.',
+        body: 'Remember to check the touch target size (48 dp minimum) on Android.',
     });
 
     // --- Next action on 3 projects ---
@@ -1218,10 +1209,10 @@ async function seedTasksAndRelations(
 
 async function seedInbox(userId) {
     const items = [
-        'Vérifier les horaires de la déchèterie samedi matin',
-        'Demander à Sophie le nom de son podcast sur la course à pied',
-        'Comparer les tarifs des billets de train pour Porto en mai',
-        'Rassembler les justificatifs pour la mutuelle avant fin du mois',
+        'Check the recycling centre opening hours on Saturday morning',
+        'Ask Sophie for the name of her running podcast',
+        'Compare flight prices to Porto in May',
+        'Gather the receipts for health insurance before month end',
     ];
     for (const content of items) {
         await InboxItem.create({
@@ -1262,7 +1253,7 @@ async function seedDailyPlan(user, plannedTasks) {
                 days: [1, 2, 3, 4, 5],
                 start: 9 * 60,
                 end: 11 * 60 + 30,
-                label: 'Travail profond',
+                label: 'Deep work',
             },
         ],
     });
@@ -1272,8 +1263,8 @@ async function seedCadenceHabits(userId) {
     const startsOn = dayStr(-45);
 
     const { habit: water } = await cadenceHabitsWrite.createHabit(userId, {
-        name: "Boire 2 L d'eau",
-        description: 'Hydratation régulière tout au long de la journée',
+        name: 'Drink 2 L of water',
+        description: 'Steady hydration throughout the day',
         starts_on: startsOn,
         sort_order: 1,
         color_argb: -14782503,
@@ -1294,8 +1285,8 @@ async function seedCadenceHabits(userId) {
     });
 
     const { habit: run } = await cadenceHabitsWrite.createHabit(userId, {
-        name: 'Courir',
-        description: '3 sorties hebdomadaires (endurance ou fractionné)',
+        name: 'Run',
+        description: '3 runs a week (easy pace or intervals)',
         starts_on: startsOn,
         sort_order: 2,
         color_argb: -2078661,
@@ -1314,8 +1305,8 @@ async function seedCadenceHabits(userId) {
     });
 
     const { habit: meditate } = await cadenceHabitsWrite.createHabit(userId, {
-        name: 'Méditer 10 min',
-        description: 'Respiration calme le matin avant d’ouvrir les écrans',
+        name: 'Meditate 10 min',
+        description: 'Calm breathing in the morning before opening any screens',
         starts_on: startsOn,
         sort_order: 3,
         color_argb: -16742021,
@@ -1336,8 +1327,8 @@ async function seedCadenceHabits(userId) {
     });
 
     const { habit: read } = await cadenceHabitsWrite.createHabit(userId, {
-        name: 'Lire 20 pages',
-        description: 'Lecture papier le soir avant de dormir',
+        name: 'Read 20 pages',
+        description: 'Paper reading in the evening before sleep',
         starts_on: startsOn,
         sort_order: 4,
         color_argb: -3705088,
@@ -1358,8 +1349,8 @@ async function seedCadenceHabits(userId) {
     });
 
     const { habit: screens } = await cadenceHabitsWrite.createHabit(userId, {
-        name: "Pas d'écran après 22 h",
-        description: 'Poser le téléphone en dehors de la chambre',
+        name: 'No screens after 10 pm',
+        description: 'Keep the phone out of the bedroom',
         starts_on: startsOn,
         sort_order: 5,
         color_argb: -10593050,
@@ -1416,6 +1407,26 @@ async function seedCadenceHabits(userId) {
         }
     }
 
+    // The server creates the habit groups with French names; the demo is English.
+    const clock = `${String(Date.now()).padStart(13, '0')}-0000-server`;
+    const groupNames = {
+        'group-day': 'Daytime',
+        'group-morning': 'Morning',
+        'group-afternoon': 'Afternoon',
+        'group-evening': 'Evening',
+    };
+    for (const [uid, name] of Object.entries(groupNames)) {
+        const group = await HabitGroup.findOne({
+            where: { user_id: userId, uid },
+        });
+        if (group) {
+            await group.update({
+                name,
+                field_clocks: { ...group.field_clocks, name: clock },
+            });
+        }
+    }
+
     return {
         habits: [water, run, meditate, read, screens],
         entryCount,
@@ -1425,76 +1436,76 @@ async function seedCadenceHabits(userId) {
 async function seedNotes(userId, projects, tags, people, refTask) {
     const notesData = [
         {
-            title: 'Architecture du site client',
+            title: 'Client site architecture',
             project_id: projects.refonte.id,
             content: [
-                '- Objectif principal : clarifier la proposition de valeur dès le premier écran',
-                '  - Accroche en une phrase simple',
-                '  - Preuve sociale avant la grille tarifaire',
-                '  - Voir aussi [[Nouvelle page Tarifs : notes]]',
+                '- Main goal: make the value proposition clear from the first screen',
+                '  - Tagline in one simple sentence',
+                '  - Social proof before the pricing grid',
+                '  - See also [[New Pricing page: notes]]',
                 '- Pages',
-                '  - Accueil',
-                '    - Hero, trois bénéfices, témoignages',
-                '    - Un seul appel à l’action par écran',
-                '  - Tarifs',
-                '    - Comparatif en trois colonnes, FAQ en dessous',
-                '  - Ressources',
-                '    - Guides, études de cas, page presse',
-                '- Points techniques',
-                '  - [x] Choisir le générateur statique',
-                '  - [ ] Chargement rapide des visuels hero',
-                '  - [ ] Mode sombre respecté sur toutes les pages',
-                `  - Revoir avec @[${people['Lucas Bernard'].name}](person:${people['Lucas Bernard'].uid})`,
-                `  - Tâche liée : [[task:${refTask.name}]]`,
-                '- Questions ouvertes',
-                '  - Faut-il un blog dès la mise en ligne ?',
-                '  - Qui valide les textes juridiques ?',
+                '  - Home',
+                '    - Hero, three benefits, testimonials',
+                '    - One call to action per screen',
+                '  - Pricing',
+                '    - Three-column comparison, FAQ below',
+                '  - Resources',
+                '    - Guides, case studies, press page',
+                '- Technical points',
+                '  - [x] Pick the static site generator',
+                '  - [ ] Fast loading of the hero images',
+                '  - [ ] Dark mode respected on every page',
+                `  - Review with @[${people['Luke Bennett'].name}](person:${people['Luke Bennett'].uid})`,
+                `  - Related task: [[task:${refTask.name}]]`,
+                '- Open questions',
+                '  - Do we need a blog at launch?',
+                '  - Who signs off the legal copy?',
             ].join('\n'),
         },
         {
-            title: 'Nouvelle page Tarifs : notes',
+            title: 'New Pricing page: notes',
             project_id: projects.tarifs.id,
             content: [
-                '- Structure en 3 colonnes',
-                '  - Essentiel : usage individuel',
-                '  - Équipe : partage et rôles',
-                '  - Sur-mesure : auto-hébergement',
-                '- Références : [[Architecture du site client]]',
+                '- Three-column layout',
+                '  - Essential: individual use',
+                '  - Team: sharing and roles',
+                '  - Custom: self-hosting',
+                '- References: [[Client site architecture]]',
             ].join('\n'),
         },
         {
-            title: 'Plan cuisine : comparatif des devis',
+            title: 'Kitchen plan: quote comparison',
             project_id: projects.cuisine.id,
             content: [
-                '- Menuisier A',
-                '  - Pose comprise, délai 5 semaines',
-                '  - Plan de travail en quartz en option',
-                '- Menuisier B',
-                '  - Meubles sur mesure, hors raccordement plomberie',
-                '- Prochaine étape : valider les cotes après visite',
+                '- Carpenter A',
+                '  - Installation included, 5-week lead time',
+                '  - Quartz countertop optional',
+                '- Carpenter B',
+                '  - Custom cabinets, plumbing hookup not included',
+                '- Next step: confirm the dimensions after the visit',
             ].join('\n'),
         },
         {
-            title: 'Portugais : verbes et tournures utiles',
+            title: 'Portuguese: useful verbs and phrases',
             project_id: projects.portugais.id,
-            tag: 'lecture',
+            tag: 'reading',
             content: [
-                '- Différence ser / estar',
-                '  - ser : caractéristique durable',
-                '  - estar : état passager ou localisation',
-                '- Futur proche : ir + infinitif',
+                '- Difference between ser and estar',
+                '  - ser: lasting characteristic',
+                '  - estar: temporary state or location',
+                '- Near future: ir + infinitive',
                 '  - Vou viajar em maio',
             ].join('\n'),
         },
         {
-            title: 'Idées d’itinéraire en Bretagne',
+            title: 'Brittany route ideas',
             project_id: projects.bretagne.id,
             content: [
-                '- Presqu’île de Crozon',
-                '  - Pointe de Pen-Hir et sentier côtier',
-                '  - Marché de Morgat le samedi matin',
-                '- Logistique',
-                '  - Coordonner les dates avec Marc',
+                '- Crozon Peninsula',
+                '  - Pen-Hir Point and the coastal path',
+                '  - Morgat market on Saturday morning',
+                '- Logistics',
+                '  - Coordinate dates with Mark',
             ].join('\n'),
         },
     ];
@@ -1547,61 +1558,60 @@ async function seedFocusSessions(user, focusTasks) {
 async function seedTriageMailAndDecisions(user) {
     const mailCards = [
         {
-            account: 'perso',
+            account: 'personal',
             thread_id: 'thr_newsletter_design_01',
-            from_name: 'Revue Design Hebdo',
-            from_address: 'bonjour@example.com',
-            subject: 'Numéro 142 : systèmes de grille et typographie',
+            from_name: 'Weekly Design Review',
+            from_address: 'hello@example.com',
+            subject: 'Issue 142: grid systems and typography',
             received_at: atLocal(0, 7, 45).toISOString(),
-            summary:
-                'Newsletter hebdomadaire sur les grilles responsives, sans action attendue.',
+            summary: 'Weekly newsletter on responsive grids, no action needed.',
             gmail_url:
                 'https://mail.google.com/mail/u/0/#inbox/thr_newsletter_design_01',
             options: ['archive', 'task', 'later', 'dismiss'],
             recommended: 'archive',
             excerpt:
-                'Cette semaine : retours d’expérience sur les grilles fluides et la hiérarchie visuelle sur mobile.',
+                'This week: lessons learned on fluid grids and visual hierarchy on mobile.',
         },
         {
-            account: 'perso',
+            account: 'personal',
             thread_id: 'thr_facture_internet_02',
             from_name: 'Fibre & Co',
-            from_address: 'facturation@example.com',
-            subject: 'Votre facture mensuelle est disponible (39,90 EUR)',
+            from_address: 'billing@example.com',
+            subject: 'Your monthly bill is available (39.90 EUR)',
             received_at: atLocal(-1, 18, 10).toISOString(),
             summary:
-                'Facture de connexion internet à régler avant la fin de la semaine.',
+                'Internet connection bill to pay before the end of the week.',
             gmail_url:
                 'https://mail.google.com/mail/u/0/#inbox/thr_facture_internet_02',
             options: ['task', 'later', 'archive', 'dismiss'],
             recommended: 'task',
             suggestion: {
                 kind: 'task',
-                task_name: 'Payer la facture Fibre & Co (39,90 EUR)',
+                task_name: 'Pay the Fibre & Co bill (39.90 EUR)',
                 due_date: dayStr(3),
             },
             excerpt:
-                'Bonjour Camille, votre facture de 39,90 EUR est disponible dans votre espace client.',
+                'Hi Sam, your 39.90 EUR bill is available in your customer area.',
         },
         {
-            account: 'pro',
+            account: 'work',
             thread_id: 'thr_rdv_client_03',
-            from_name: 'Claire Dubois',
-            from_address: 'claire.dubois@example.com',
-            subject: 'Invitation : Point maquettes page Tarifs',
+            from_name: 'Claire Dawson',
+            from_address: 'claire.dawson@example.com',
+            subject: 'Invitation: Pricing page mockups review',
             received_at: atLocal(0, 8, 20).toISOString(),
             summary:
-                'Proposition de créneau jeudi à 10 h 30 pour valider la page Tarifs.',
+                'Proposed slot on Thursday at 10:30 am to approve the Pricing page.',
             gmail_url:
                 'https://mail.google.com/mail/u/0/#inbox/thr_rdv_client_03',
             options: ['event', 'task', 'later', 'dismiss'],
             recommended: 'event',
             suggestion: {
                 kind: 'event',
-                task_name: 'Point maquettes page Tarifs avec Claire',
+                task_name: 'Pricing page mockups review with Claire',
                 due_date: dayStr(2),
                 event: {
-                    title: 'Point maquettes page Tarifs',
+                    title: 'Pricing page mockups review',
                     start: parisNow()
                         .add(2, 'days')
                         .hour(10)
@@ -1614,32 +1624,31 @@ async function seedTriageMailAndDecisions(user) {
                         .minute(15)
                         .second(0)
                         .format('YYYY-MM-DDTHH:mm:ssZ'),
-                    location: 'Visio',
+                    location: 'Video call',
                 },
             },
             excerpt:
-                'Est-ce que jeudi à 10 h 30 te convient pour passer en revue les dernières maquettes ?',
+                'Does Thursday at 10:30 am work for you to go over the latest mockups?',
         },
         {
-            account: 'pro',
+            account: 'work',
             thread_id: 'thr_reponse_devis_04',
-            from_name: 'Atelier Bois & Quartz',
+            from_name: 'Oak & Quartz Workshop',
             from_address: 'contact@example.com',
-            subject: 'Re : Disponibilité pour la prise de cotes cuisine',
+            subject: 'Re: Availability to measure the kitchen',
             received_at: atLocal(-1, 15, 5).toISOString(),
-            summary:
-                'Le menuisier propose deux créneaux la semaine prochaine pour passer.',
+            summary: 'The carpenter offers two slots next week to come by.',
             gmail_url:
                 'https://mail.google.com/mail/u/0/#inbox/thr_reponse_devis_04',
             options: ['draft', 'task', 'later', 'dismiss'],
             recommended: 'draft',
             draft_excerpt:
-                'Bonjour, mardi à 14 h me convient parfaitement. Voici le code d’accès…',
+                'Hello, Tuesday at 2 pm works perfectly. Here is the access code…',
             draft: {
-                body: 'Bonjour,\n\nMardi prochain à 14 h me convient parfaitement pour la prise de cotes.\nMerci et à mardi,\nCamille',
+                body: 'Hello,\n\nNext Tuesday at 2 pm works perfectly for measuring.\nThanks, see you Tuesday,\nSam',
             },
             excerpt:
-                'Nous pouvons passer mardi à 14 h ou mercredi à 9 h 30 selon vos disponibilités.',
+                'We can come by Tuesday at 2 pm or Wednesday at 9:30 am, depending on your availability.',
         },
     ];
 
@@ -1649,43 +1658,43 @@ async function seedTriageMailAndDecisions(user) {
 
     const decisionRes = await decisionsService.proposeDecisions(user, {
         kind: 'assistant_ops',
-        kind_label: 'Décisions assistant',
+        kind_label: 'Assistant decisions',
         items: [
             {
                 key: 'renew_cloud_sub_2026',
-                title: 'Renouveler l’abonnement stockage photo annuel ?',
-                context: 'Échéance dans 5 jours · 29,99 EUR/an',
-                body: 'L’espace utilisé est de 68 Go sur 100 Go. Le renouvellement automatique est actif.',
+                title: 'Renew the annual photo storage plan?',
+                context: 'Due in 5 days · 29.99 EUR/year',
+                body: 'Storage used is 68 GB of 100 GB. Automatic renewal is on.',
                 choices: [
-                    { id: 'keep', label: 'Garder', tone: 'primary' },
-                    { id: 'cancel', label: 'Résilier', tone: 'danger' },
+                    { id: 'keep', label: 'Keep', tone: 'primary' },
+                    { id: 'cancel', label: 'Cancel plan', tone: 'danger' },
                 ],
                 recommended: 'keep',
-                reason: 'Espace utilisé régulièrement pour les sauvegardes.',
+                reason: 'Space used regularly for backups.',
             },
             {
                 key: 'docker_postgres_minor_update',
-                title: 'Appliquer la mise à jour mineure du serveur Postgres',
-                context: 'Maintenance serveur · redémarrage de 20 s',
-                body: 'Correctif de sécurité mineur disponible pour le conteneur de base de données.',
+                title: 'Apply the minor Postgres server update',
+                context: 'Server maintenance · 20 s restart',
+                body: 'Minor security fix available for the database container.',
                 choices: [
-                    { id: 'update_tonight', label: 'Ce soir', tone: 'primary' },
-                    { id: 'skip', label: 'Reporter' },
+                    { id: 'update_tonight', label: 'Tonight', tone: 'primary' },
+                    { id: 'skip', label: 'Postpone' },
                 ],
                 recommended: 'update_tonight',
-                reason: 'Correctif mineur sans changement de schéma.',
+                reason: 'Minor fix with no schema change.',
             },
             {
                 key: 'family_bretagne_dates',
-                title: 'Bloquer le week-end du 22 mai pour la Bretagne ?',
-                context: 'Question de Marc · hébergement disponible',
-                body: 'Le gîte près de Morgat reste libre sur ce créneau jusqu’à demain soir.',
+                title: 'Block the weekend of May 22 for Brittany?',
+                context: 'Question from Mark · lodging available',
+                body: 'The cottage near Morgat stays free for that slot until tomorrow evening.',
                 choices: [
-                    { id: 'confirm_may', label: 'Confirmer', tone: 'primary' },
-                    { id: 'propose_june', label: 'Proposer juin' },
+                    { id: 'confirm_may', label: 'Confirm', tone: 'primary' },
+                    { id: 'propose_june', label: 'Suggest June' },
                 ],
                 recommended: 'confirm_may',
-                reason: 'Créneau compatible avec le plan d’entraînement.',
+                reason: 'Slot fits the training plan.',
             },
         ],
     });
@@ -1700,22 +1709,22 @@ async function seedTriageMailAndDecisions(user) {
 async function seedViews(userId) {
     const views = [
         {
-            name: 'Priorités de la semaine',
+            name: 'This week’s priorities',
             filters: ['Task'],
             priority: 'high',
             due: 'next_week',
             is_pinned: true,
         },
         {
-            name: 'À lire et à regarder',
+            name: 'To read and watch',
             filters: ['Task', 'Note'],
-            tags: ['lecture'],
+            tags: ['reading'],
         },
-        { name: 'Appels à passer', filters: ['Task'], tags: ['appel'] },
+        { name: 'Calls to make', filters: ['Task'], tags: ['call'] },
         {
-            name: 'Quick wins du jour',
+            name: 'Quick wins today',
             filters: ['Task'],
-            tags: ['rapide'],
+            tags: ['quick'],
             due: 'today',
         },
     ];
@@ -1749,11 +1758,11 @@ async function seedProposals(user) {
         return day.format('YYYY-MM-DD');
     };
     const plans = [
-        ['plan_day', 1, 'Mardi est le jour le plus calme'],
-        ['plan_day', 2, 'À faire avant le point de jeudi'],
-        ['this_week', null, 'Peut attendre la fin de semaine'],
-        ['next_week', null, 'Pas urgent, à revoir lundi prochain'],
-        ['plan_day', 3, 'Un créneau libre l’après-midi'],
+        ['plan_day', 1, 'Tuesday is the quietest day'],
+        ['plan_day', 2, 'Do before Thursday’s sync'],
+        ['this_week', null, 'Can wait until the end of the week'],
+        ['next_week', null, 'Not urgent, review next Monday'],
+        ['plan_day', 3, 'A free slot in the afternoon'],
     ];
     const changes = open.slice(0, plans.length).map((task, index) => {
         const [op, offset, reason] = plans[index];
@@ -1766,16 +1775,16 @@ async function seedProposals(user) {
     });
     await proposalsService.answerProposal(user, week.uid, {
         answer: {
-            headline: 'Mardi est libre, deux retards replacés',
+            headline: 'Tuesday is free, two late tasks rescheduled',
             subtitle:
-                'Je garde la présentation client pour mardi : elle bloque la suite.',
+                'I’m keeping the client presentation for Tuesday: it blocks what follows.',
             changes,
             focus: open.slice(0, 3).map((task) => task.uid),
             questions: [
                 {
                     id: 'q1',
-                    text: 'Travailles-tu vendredi après-midi ?',
-                    choices: ['Oui', 'Non'],
+                    text: 'Are you working on Friday afternoon?',
+                    choices: ['Yes', 'No'],
                 },
             ],
         },
@@ -1793,8 +1802,8 @@ async function seedProposals(user) {
         ...extra,
     });
     await proposalsService.proposeWeekend(user, {
-        headline: 'Un samedi lumineux, un dimanche à l’abri',
-        subtitle: 'Sortie en forêt le matin, musée si la pluie arrive.',
+        headline: 'A bright Saturday, a sheltered Sunday',
+        subtitle: 'Forest walk in the morning, museum if the rain arrives.',
         days: [
             { date: saturday, weather: 'sun', min: 4, max: 12 },
             { date: sunday, weather: 'rain', min: 6, max: 9 },
@@ -1807,23 +1816,23 @@ async function seedProposals(user) {
                 'sun',
                 9,
                 {
-                    title: 'Randonnée dans la forêt de la Roche',
-                    url: 'https://example.com/foret-de-la-roche',
-                    place: 'Forêt de la Roche',
-                    note: 'Boucle de 9 km, boue possible, bonnes chaussures.',
-                    travel: '35 min en voiture',
+                    title: 'Hike in Roche Forest',
+                    url: 'https://example.com/roche-forest',
+                    place: 'Roche Forest',
+                    note: '9 km loop, mud possible, wear good shoes.',
+                    travel: '35 min by car',
                     start: '09:30',
                     end: '12:30',
-                    after: 'Déjeuner à la crêperie du village',
+                    after: 'Lunch at the village crêperie',
                 },
                 { recommended: true }
             ),
             slot('sat-pm', saturday, 'afternoon', 'sun', 12, {
-                title: 'Marché de producteurs et café',
-                url: 'https://example.com/marche-producteurs',
-                place: 'Place du Marché',
-                note: 'Fromages, pain au levain et légumes de saison.',
-                travel: '10 min à vélo',
+                title: 'Farmers market and coffee',
+                url: 'https://example.com/farmers-market',
+                place: 'Market Square',
+                note: 'Cheese, sourdough bread and seasonal vegetables.',
+                travel: '10 min by bike',
                 start: '14:00',
                 end: '16:30',
             }),
@@ -1834,29 +1843,29 @@ async function seedProposals(user) {
                 'rain',
                 7,
                 {
-                    title: 'Exposition de photographie au musée',
-                    url: 'https://example.com/musee-photo',
-                    place: 'Musée de la Photographie',
-                    note: 'Dernier week-end de l’exposition sur la lumière.',
-                    travel: '20 min en tramway',
+                    title: 'Photography exhibition at the museum',
+                    url: 'https://example.com/photo-museum',
+                    place: 'Museum of Photography',
+                    note: 'Last weekend of the exhibition on light.',
+                    travel: '20 min by tram',
                     start: '10:30',
                     end: '12:30',
                 },
                 { recommended: true }
             ),
             slot('sun-pm', sunday, 'afternoon', 'rain', 8, null, {
-                busy: 'Déjeuner chez Marc',
+                busy: 'Lunch at Mark’s',
             }),
         ],
         nearby: [
             {
-                title: 'Concert de jazz au Petit Théâtre',
+                title: 'Jazz concert at the Little Theatre',
                 date: saturday,
                 start: '20:30',
-                place: 'Petit Théâtre',
+                place: 'Little Theatre',
                 travel: '15 min',
-                url: 'https://example.com/jazz-petit-theatre',
-                note: 'Quartet local, entrée libre.',
+                url: 'https://example.com/jazz-little-theatre',
+                note: 'Local quartet, free entry.',
             },
         ],
         elsewhere: [
@@ -1865,39 +1874,39 @@ async function seedProposals(user) {
                 date: sunday,
                 weather: 'partly',
                 temp: 11,
-                travel: '1 h 10 en train',
+                travel: '1 h 10 by train',
             },
         ],
     });
 
     await proposeCareer(user, {
-        headline: 'Deux offres à regarder, une relance à faire',
-        subtitle: 'Passage de ce matin sur tes recherches en cours.',
+        headline: 'Two offers to look at, one follow-up to send',
+        subtitle: 'This morning’s pass over your ongoing searches.',
         stats: [
-            { label: 'Candidatures', value: '6' },
-            { label: 'Entretiens', value: '2' },
-            { label: 'Relances', value: '1' },
+            { label: 'Applications', value: '6' },
+            { label: 'Interviews', value: '2' },
+            { label: 'Follow-ups', value: '1' },
         ],
         offers: [
             {
                 id: 'offer-1',
-                title: 'Designer produit senior',
-                company: 'Atelier Lumière',
-                url: 'https://example.com/offres/designer-produit',
-                fit: 'Proche de ton expérience sur les systèmes de design.',
-                location: 'Lyon, télétravail partiel',
-                rate: '55 à 65 k€',
+                title: 'Senior product designer',
+                company: 'Lumen Workshop',
+                url: 'https://example.com/jobs/product-designer',
+                fit: 'Close to your experience with design systems.',
+                location: 'Lyon, partly remote',
+                rate: '€55k to €65k',
                 expires: dayStr(6),
                 source: 'agent',
             },
             {
                 id: 'offer-2',
-                title: 'Responsable UX freelance',
-                company: 'Studio Marée',
-                url: 'https://example.com/offres/responsable-ux',
-                fit: 'Mission de trois mois, compatible avec ton projet de printemps.',
-                location: 'À distance',
-                rate: '450 € par jour',
+                title: 'Freelance UX lead',
+                company: 'Tide Studio',
+                url: 'https://example.com/jobs/ux-lead',
+                fit: 'Three-month assignment, compatible with your spring project.',
+                location: 'Remote',
+                rate: '€450 per day',
                 expires: dayStr(10),
                 source: 'agent',
             },
@@ -1905,17 +1914,17 @@ async function seedProposals(user) {
         followups: [
             {
                 id: 'follow-1',
-                title: 'Designer produit',
-                company: 'Coopérative Nova',
+                title: 'Product designer',
+                company: 'Nova Cooperative',
                 applied_at: dayStr(-9),
-                note: 'Aucune réponse depuis neuf jours.',
+                note: 'No reply for nine days.',
             },
         ],
         tasks: [
             {
                 id: 'task-1',
-                name: 'Mettre à jour le portfolio avec le projet de refonte',
-                note: 'Ajouter deux études de cas et les chiffres clés.',
+                name: 'Update the portfolio with the redesign project',
+                note: 'Add two case studies and the key figures.',
                 due_date: dayStr(4),
             },
         ],

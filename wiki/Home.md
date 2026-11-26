@@ -20,4 +20,4 @@ Cadence brings tasks, projects, habits, notes and capture together in one person
 | Devices | [Android](Android), [Linux client and Firefox](Linux-Client-and-Firefox), [Offline and sync](Offline-and-Sync) |
 | Server | [Integrations, MCP and plugins](Integrations-MCP-and-Plugins), [Self-hosting](Self-Hosting), [Maintaining the wiki](Maintaining-the-Wiki) |
 
-The screenshots come from a demo account: all data is made up. They show the French interface.
+The screenshots come from a demo account: all data is made up.

@@ -148,6 +148,8 @@ The **tomato timer** in the top bar (25 minutes) keeps track of the time you con
 
 ### The focus chip (concentrate on one part of your life)
 
+![The Focus picker](images/focus.png)
+
 A **Focus chip** on the left of the top bar limits the app to **one area**, optionally **one project** of that area, and optionally **tags** (ten at most). The choice is saved with the account and follows it on all devices. The chip shows "Focus" when nothing is chosen, otherwise the scope in the form `Area › Project · #tag`; on a phone, only the icon appears, with a dot when a focus is active. **Apply** saves, **Clear** removes; a cross next to the chip clears it with a click on a wide screen.
 
 **While a focus is active**

@@ -139,6 +139,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - ⛔ Lancer `npm`, ou `git` hors clone/pull demandé par un admin, pour un plugin ; activer un plugin cloné sans qu'un admin l'ait allumé ; ou activer les plugins en mode hébergé — du code exécuté dans le serveur.
 - ⛔ Éditer `dist/` — généré par `npm run build`.
 - ⛔ Livrer ou changer une fonctionnalité visible (comportement, libellé, délai, limite, cas particulier) sans mettre à jour sa page `wiki/` dans le même commit (publié par `scripts/publish-prod.sh`, ou seul par `scripts/publish-wiki.sh`) : le wiki est le guide utilisateur, il ne doit jamais décrire une version périmée. Ne jamais éditer le wiki sur GitHub (écrasé à la publication).
+- ⛔ Écrire en français un texte public nouveau ou modifié (README, wiki, site, pages `docs/NN-*.md`), les captures d'écran ou les données de démo : toujours en anglais (demande de Nicolas). Le français reste pour les échanges, `TODO.md`, `docs/fork/` et les messages de commit.
 - ⛔ Corriger un bug sans test qui l'aurait détecté — exigence de `docs/testing.md`.
 - ⛔ Lancer toute la suite Jest d'un coup — elle a saturé la mémoire de la machine ; cibler les fichiers avec `-w 2`.
 - ⛔ Basculer la prod vers Postgres par-dessus une base SQLite remplie — le serveur refuse ; passer par export puis import.

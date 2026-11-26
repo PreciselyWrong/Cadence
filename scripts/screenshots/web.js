@@ -48,12 +48,12 @@ const SHOTS = [
     {
         name: 'project',
         url: (ids) => `/project/${ids.launch}`,
-        before: (page) => clickText(page, 'Chronologie'),
+        before: (page) => clickText(page, 'Timeline'),
     },
     {
         name: 'calendar',
         url: () => '/calendar',
-        before: (page) => clickText(page, 'Semaine'),
+        before: (page) => clickText(page, 'Week'),
     },
     { name: 'habits', url: (ids) => `/habit/${ids.habit}` },
     { name: 'notes', url: (ids) => `/notes/${ids.note}` },
@@ -67,9 +67,9 @@ const pause = (page, ms = 800) => page.waitForTimeout(ms);
 
 // Opens the capture sheet and types a sample entry, left unsent.
 const quickAdd = async (page) => {
-    await page.getByText('Capturer', { exact: true }).first().click();
+    await page.getByText('Capture', { exact: true }).first().click();
     await pause(page);
-    await page.keyboard.type('Appeler le plombier pour la date d’intervention');
+    await page.keyboard.type('Call the plumber to confirm the visit date');
     await pause(page, 500);
 };
 
@@ -77,7 +77,7 @@ const quickAdd = async (page) => {
 // day beside it, where its items are dropped.
 const inboxColumn = async (page) => {
     const box = await page
-        .getByText('Boîte de réception', { exact: true })
+        .getByText('Inbox', { exact: true })
         .first()
         .boundingBox();
     if (!box) throw new Error('No inbox column on Plan');
@@ -116,12 +116,12 @@ const WIKI_SHOTS = [
     {
         name: 'project-board',
         url: (ids) => `/project/${ids.refonte}`,
-        before: (page) => clickText(page, 'Tableau'),
+        before: (page) => clickText(page, 'Board'),
     },
     {
         name: 'project-timeline',
         url: (ids) => `/project/${ids.launch}`,
-        before: (page) => clickText(page, 'Chronologie'),
+        before: (page) => clickText(page, 'Timeline'),
     },
     {
         name: 'project-pages',
@@ -129,7 +129,7 @@ const WIKI_SHOTS = [
         before: async (page) => {
             // The tab last used is kept for the project: back to the tasks.
             await page
-                .getByText(/^Tâches\s*\d+$/)
+                .getByText(/^Tasks\s*\d+$/)
                 .first()
                 .click();
             await pause(page, 1200);
@@ -149,6 +149,21 @@ const WIKI_SHOTS = [
         before: async (page) => {
             await page.keyboard.press('Control+k');
             await pause(page);
+        },
+    },
+    {
+        name: 'focus',
+        url: () => '/today',
+        before: async (page) => {
+            await page.getByTestId('focus-chip').click();
+            await pause(page, 600);
+            await page.getByTestId('focus-area').getByRole('button').click();
+            await pause(page, 400);
+            await page
+                .getByTestId('focus-area')
+                .getByRole('button', { name: 'Work', exact: true })
+                .click();
+            await pause(page, 600);
         },
     },
     { name: 'weekend', url: () => '/upcoming?weekend=1' },
@@ -179,7 +194,7 @@ async function main() {
             const context = await browser.newContext({
                 viewport: { width: 1440, height: 900 },
                 deviceScaleFactor: 2,
-                locale: 'fr-FR',
+                locale: 'en-US',
                 timezoneId: 'Europe/Paris',
                 colorScheme: dark ? 'dark' : 'light',
             });
@@ -205,7 +220,7 @@ async function main() {
                 await page.goto(`${APP_URL}${shot.url(ids)}`, {
                     waitUntil: 'networkidle',
                 });
-                await page.waitForTimeout(shot.wait || (WIKI ? 3000 : 1200));
+                await page.waitForTimeout(shot.wait || 3000);
                 if (shot.before) await shot.before(page);
                 const file = path.join(OUT, `${shot.name}.png`);
                 const clip = shot.clip ? await shot.clip(page) : undefined;
@@ -234,16 +249,16 @@ async function readIds(context) {
     const habitList = habits.habits || habits;
     const taskList = tasks.tasks || tasks;
     return {
-        refonte: byName(projectList, 'Refonte du site client').uid,
-        bretagne: byName(projectList, 'Vacances en Bretagne').uid,
-        richTask: byName(taskList, 'Préparer la présentation client du mardi')
+        refonte: byName(projectList, 'Client website redesign').uid,
+        bretagne: byName(projectList, 'Brittany trip').uid,
+        richTask: byName(taskList, 'Prepare the Tuesday client presentation')
             .uid,
-        launch: byName(projectList, "Lancement de l'app v2").uid,
+        launch: byName(projectList, 'Launch of app v2').uid,
         note: byName(
             noteList.map((n) => ({ ...n, name: n.title })),
-            'Architecture du site client'
+            'Client site architecture'
         ).uid,
-        habit: (habitList.find((h) => /Courir/.test(h.name)) || habitList[0])
+        habit: (habitList.find((h) => /^Run$/.test(h.name)) || habitList[0])
             .uid,
     };
 }
