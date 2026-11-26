@@ -4,6 +4,11 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.10
+
+- **À trier dans la langue du compte** : les cartes des règles (reports, doublons, conflits d'agenda, échéance lue dans une note) et la notification « N mails à trier » étaient toujours en français ; elles sont maintenant en anglais pour un compte qui n'est pas en français.
+- **Wiki utilisateur** (en anglais) : une page par fonctionnalité, publiée sur le wiki GitHub à chaque mise en production.
+
 ## 2026.11.26.9
 
 Corrections issues de l'audit UX du client web sur ordinateur (`docs/fork/UX-AUDIT-WEB.md`).
