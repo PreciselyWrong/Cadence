@@ -132,6 +132,8 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
     const [quickTaskName, setQuickTaskName] = useState('');
     const [dragOverCol, setDragOverCol] = useState<string | null>(null);
     const [refreshing, setRefreshing] = useState(false);
+    // null while no new view is being named.
+    const [newViewName, setNewViewName] = useState<string | null>(null);
     const draggingRef = useRef<DragPayload | null>(null);
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -412,21 +414,17 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
         updateActivePreset({ projectStatuses: Array.from(set) });
     };
 
-    const handleSaveNewPreset = () => {
-        const name = window.prompt(
-            t('projectBoard.newViewName', 'New view name')
-        );
-        if (!name || !name.trim()) return;
+    // Named in the toolbar itself: the Linux client has no window.prompt.
+    const handleSaveNewPreset = (e: React.FormEvent) => {
+        e.preventDefault();
+        const name = (newViewName || '').trim();
+        setNewViewName(null);
+        if (!name) return;
         const id = `custom-${Date.now()}`;
-        const copy: BoardPreset = {
-            ...activePreset,
-            id,
-            name: name.trim(),
-        };
         onChangeConfig({
             ...config,
             activePresetId: id,
-            presets: [...config.presets, copy],
+            presets: [...config.presets, { ...activePreset, id, name }],
         });
     };
 
@@ -900,7 +898,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     e.target.value as ProjectStatus
                                 )
                             }
-                            className="md:hidden rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-xs text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="md:hidden rounded border border-gray-200 bg-gray-50 py-0.5 pl-1.5 pr-7 text-xs text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             {PORTFOLIO_STATUS_ORDER.map((st) => (
                                 <option key={st} value={st}>
@@ -995,17 +993,47 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                             </div>
                         );
                     })}
-                    <button
-                        type="button"
-                        onClick={handleSaveNewPreset}
-                        title={t('projectBoard.saveView', 'Save as new view')}
-                        className="inline-flex items-center gap-0.5 rounded-lg border border-dashed border-gray-300 px-2.5 py-1.5 text-[13px] text-gray-500 hover:border-gray-400 hover:text-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                    >
-                        <PlusIcon className="h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">
-                            {t('projectBoard.newView', 'View')}
-                        </span>
-                    </button>
+                    {newViewName === null ? (
+                        <button
+                            type="button"
+                            onClick={() => setNewViewName('')}
+                            title={t(
+                                'projectBoard.saveView',
+                                'Save as new view'
+                            )}
+                            data-testid="board-new-view"
+                            className="inline-flex items-center gap-0.5 rounded-lg border border-dashed border-gray-300 px-2.5 py-1.5 text-[13px] text-gray-500 hover:border-gray-400 hover:text-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            <PlusIcon className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">
+                                {t('projectBoard.newView', 'View')}
+                            </span>
+                        </button>
+                    ) : (
+                        <form onSubmit={handleSaveNewPreset}>
+                            <input
+                                type="text"
+                                autoFocus
+                                value={newViewName}
+                                onChange={(e) => setNewViewName(e.target.value)}
+                                onBlur={() => setNewViewName(null)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Escape') setNewViewName(null);
+                                }}
+                                maxLength={40}
+                                placeholder={t(
+                                    'projectBoard.newViewName',
+                                    'New view name'
+                                )}
+                                aria-label={t(
+                                    'projectBoard.newViewName',
+                                    'New view name'
+                                )}
+                                data-testid="board-new-view-name"
+                                className="w-40 rounded-lg border border-blue-400 bg-white px-2.5 py-1.5 text-[13px] text-gray-900 focus:outline-none dark:bg-gray-900 dark:text-gray-100"
+                            />
+                        </form>
+                    )}
                 </div>
 
                 {/* Mode, Group-by, Captures, Search, Display */}
@@ -1020,7 +1048,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 })
                             }
                             data-testid="board-mode-select"
-                            className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-[13px] font-medium text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-2.5 pr-8 text-[13px] font-medium text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             <option value="by_subproject">
                                 {t(
@@ -1048,7 +1076,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 })
                             }
                             data-testid="board-portfolio-groupby"
-                            className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-[13px] text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-2.5 pr-8 text-[13px] text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             <option value="status">
                                 {t('projectBoard.byStatus', 'By status')}
@@ -1072,7 +1100,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 })
                             }
                             data-testid="board-task-groupby"
-                            className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-[13px] text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-2.5 pr-8 text-[13px] text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             <option value="status">
                                 {t('projectBoard.byStatus', 'By status')}
@@ -1383,7 +1411,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                         .value as CardDensity,
                                                 })
                                             }
-                                            className="rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 dark:border-gray-700 dark:bg-gray-800"
+                                            className="rounded border border-gray-200 bg-gray-50 py-0.5 pl-1.5 pr-7 dark:border-gray-700 dark:bg-gray-800"
                                         >
                                             <option value="compact">
                                                 {t(

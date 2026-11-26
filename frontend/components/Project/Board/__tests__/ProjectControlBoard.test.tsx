@@ -280,4 +280,41 @@ describe('ProjectControlBoard', () => {
             screen.queryByTestId('board-refresh-todo-md')
         ).not.toBeInTheDocument();
     });
+
+    it('names a new view inline, without a browser prompt', async () => {
+        const prompt = jest.spyOn(window, 'prompt');
+        const Wrapper: React.FC = () => {
+            const [config, setConfig] = React.useState(() =>
+                defaultBoardConfig(true)
+            );
+            return (
+                <MemoryRouter>
+                    <ProjectControlBoard
+                        project={devProject}
+                        tasks={[]}
+                        config={config}
+                        onChangeConfig={setConfig}
+                        onMoveTaskSection={jest.fn()}
+                        onOpenTask={jest.fn()}
+                        t={t}
+                    />
+                </MemoryRouter>
+            );
+        };
+        render(<Wrapper />);
+
+        fireEvent.click(screen.getByTestId('board-new-view'));
+        const input = screen.getByTestId('board-new-view-name');
+        fireEvent.change(input, { target: { value: 'Urgent' } });
+        fireEvent.submit(input.closest('form') as HTMLFormElement);
+
+        expect(prompt).not.toHaveBeenCalled();
+        expect(
+            await screen.findByRole('button', { name: 'Urgent' })
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByTestId('board-new-view-name')
+        ).not.toBeInTheDocument();
+        prompt.mockRestore();
+    });
 });
