@@ -1014,4 +1014,125 @@ describe('TODO.md projects', () => {
         const reloaded = await Project.findByPk(project.id);
         expect(reloaded.handoff_state).toBeNull();
     });
+
+    describe('inline metadata in bullets', () => {
+        const write = (lines) =>
+            fs.writeFileSync(alpha(), ['## Next', ...lines, ''].join('\n'));
+        const tagNames = async (id) =>
+            (await Task.findByPk(id, { include: [Tag] })).Tags.map(
+                (t) => t.name
+            ).sort();
+        const dueOf = (task) =>
+            task.due_date ? task.due_date.toISOString().slice(0, 10) : null;
+
+        it('creates the task with a clean name, its tags, priority and due date', async () => {
+            write(['- Fix login #bug #ux !high @2026-12-05']);
+            await agent.post('/api/todo-md/rescan');
+
+            const [task] = await tasksOf('alpha');
+            expect(task.name).toBe('Fix login');
+            expect(task.priority).toBe(2);
+            expect(task.due_has_time).toBe(false);
+            const res = await agent.get(`/api/task/${task.uid}`);
+            expect(res.body.due_date).toBe('2026-12-05');
+            expect(await tagNames(task.id)).toEqual(['bug', 'code', 'ux']);
+        });
+
+        it('updates the same task when tokens are added or changed in the file', async () => {
+            write(['- Fix login']);
+            await agent.post('/api/todo-md/rescan');
+            const [first] = await tasksOf('alpha');
+            const firstDue = first.due_date;
+
+            write(['- Fix login #bug !low @2026-12-05']);
+            await agent.post('/api/todo-md/rescan');
+            write(['- Fix login #perf !med @2026-12-09']);
+            await agent.post('/api/todo-md/rescan');
+
+            const tasks = await tasksOf('alpha');
+            expect(tasks.map((t) => [t.id, t.uid, t.name])).toEqual([
+                [first.id, first.uid, 'Fix login'],
+            ]);
+            expect(firstDue).toBeNull();
+            expect(tasks[0].priority).toBe(1);
+            const res = await agent.get(`/api/task/${first.uid}`);
+            expect(res.body.due_date).toBe('2026-12-09');
+            // Tags only ever get added: a tag gone from the bullet stays.
+            expect(await tagNames(first.id)).toEqual(['bug', 'code', 'perf']);
+        });
+
+        it('keeps Cadence priority, due date and manual tags when the bullet has none', async () => {
+            write(['- Write docs']);
+            await agent.post('/api/todo-md/rescan');
+            const [docs] = await tasksOf('alpha');
+            const res = await agent.patch(`/api/task/${docs.uid}`).send({
+                priority: 2,
+                due_date: '2026-11-30',
+                tags: ['perso', 'code'],
+            });
+            expect(res.status).toBe(200);
+
+            await agent.post('/api/todo-md/rescan');
+            write(['- Write docs #doc']);
+            await agent.post('/api/todo-md/rescan');
+
+            await docs.reload();
+            expect(docs.priority).toBe(2);
+            const read = await agent.get(`/api/task/${docs.uid}`);
+            expect(read.body.due_date).toBe('2026-11-30');
+            expect(await tagNames(docs.id)).toEqual(['code', 'doc', 'perso']);
+        });
+
+        it('ignores impossible dates and tokens in code spans or URLs', async () => {
+            write([
+                '- Pay rent @2026-02-30',
+                '- Run `npm test #perf !high` on https://x.dev/a#bug',
+            ]);
+            await agent.post('/api/todo-md/rescan');
+
+            const [rent, run] = await tasksOf('alpha');
+            expect(rent.name).toBe('Pay rent @2026-02-30');
+            expect(dueOf(rent)).toBeNull();
+            expect(run.name).toBe(
+                'Run npm test #perf !high on https://x.dev/a#bug'
+            );
+            expect(run.priority).toBe(0);
+            expect(await tagNames(run.id)).toEqual(['code']);
+            expect(await Tag.count({ where: { name: 'perf' } })).toBe(0);
+        });
+
+        it('keeps the row of a bullet that already had tokens in its name', async () => {
+            write(['- Fix login']);
+            await agent.post('/api/todo-md/rescan');
+            const [task] = await tasksOf('alpha');
+            // A row imported before tokens were read kept them in its name.
+            await task.update({
+                name: 'Fix login #bug',
+                source_key: 'legacy-key',
+            });
+            write(['- Fix login #bug']);
+
+            await agent.post('/api/todo-md/rescan');
+
+            const tasks = await tasksOf('alpha');
+            expect(tasks.map((t) => [t.id, t.name])).toEqual([
+                [task.id, 'Fix login'],
+            ]);
+            expect(await tagNames(task.id)).toEqual(['bug', 'code']);
+        });
+
+        it('leaves the file untouched when it reads tokens', async () => {
+            write(['- Fix login #bug !high @2026-12-05']);
+            const before = fs.readFileSync(alpha(), 'utf8');
+            await agent.post('/api/todo-md/rescan');
+            const [task] = await tasksOf('alpha');
+            const res = await agent
+                .patch(`/api/task/${task.uid}`)
+                .send({ status: 2 });
+            expect(res.status).toBe(200);
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(
+                before.replace('- Fix login', '- [x] Fix login')
+            );
+        });
+    });
 });

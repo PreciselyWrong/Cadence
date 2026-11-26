@@ -44,7 +44,7 @@ A file feeds nothing until a project follows it: Cadence creates no project by i
 - Tasks read from the file carry the tag **`code`**, added to their other tags and put back if removed. The section (`Now`, `Next`, ...) is kept on the task (`source_section`), not as a tag.
 - A task without `code` stays in Cadence: nothing reaches the file and it is edited as usual.
 - A task that gets `code`, by any route (web, device, MCP), is written to `## Next` by the next pass, at most 30 seconds later, and then follows the file. Closed and recurring tasks are not written. Its note moves to the file with it.
-- The file owns four things of a task from it: its **name**, its **note** (the indented lines), its **check box** (done / not done) and its **project**. Everything else on the task is Cadence-side and editable on the web, Android, the API, MCP and sync: priority, due date and time, start, defer, reminder, tags, area, goal, estimate, pin and today order, the plan of the day, assignee, review and later fields. The policy is one list, `FILE_OWNED_TASK_FIELDS` in `backend/modules/todo-md/policy.js`; the same rule guards PATCH, MCP `update_task` and sync pushes. A field sent with the value it already has is not a change.
+- The file owns four things of a task from it: its **name**, its **note** (the indented lines), its **check box** (done / not done) and its **project**. A bullet's [inline metadata](#inline-metadata) feeds the tags, priority and due date without owning them. Everything else on the task is Cadence-side and editable on the web, Android, the API, MCP and sync: priority, due date and time, start, defer, reminder, tags, area, goal, estimate, pin and today order, the plan of the day, assignee, review and later fields. The policy is one list, `FILE_OWNED_TASK_FIELDS` in `backend/modules/todo-md/policy.js`; the same rule guards PATCH, MCP `update_task` and sync pushes. A field sent with the value it already has is not a change.
 - A linked project can be renamed. It cannot be deleted or completed with its tasks: unlink it first.
 - The outline view of a linked project stays read-only for all its tasks; the list view edits Cadence tasks normally.
 
@@ -120,24 +120,50 @@ Git runs with no machine or user configuration (`GIT_CONFIG_GLOBAL=/dev/null`, `
 
 - A `## ` heading starts a section (`Now`, `Next`, `Ideas`, `Done`, `Dropped`, or any other). Text before the first one is ignored. `###` and deeper headings, paragraphs and fenced code blocks are ignored.
 - Each **top-level** bullet (`-`, `*` or `+` at column 0) is a task. Indented lines, nested bullets and blank lines between them belong to the bullet above and become the task's **note**. A bullet with no text is not a task.
-- The **name** is the first line with its Markdown stripped (emphasis, code, links, strikethrough). `- [ ]` / `- [x]` checkboxes are read.
+- The **name** is the first line with its Markdown stripped (emphasis, code, links, strikethrough) and its [inline metadata](#inline-metadata) removed. `- [ ]` / `- [x]` checkboxes are read.
 - **Done** = a checked box, or a bullet in a `## Done` section. A bullet in `## Dropped` becomes archived. A bullet first read closed has no completion date (it is unknown), so it stays out of "done today" and the statistics; a bullet closed later takes the file's date.
 - Each task carries the `code` tag ([Mixed projects](#mixed-projects)); its section is kept in `source_section`.
 - CRLF files, a missing final newline and a UTF-8 BOM are handled. Files in another encoding are left untouched (Cadence refuses to write them).
+
+### Inline metadata
+
+The first line of a top-level bullet may carry tags, a priority and a due date, anywhere in the line (the note's indented lines are not read for them):
+
+```markdown
+## Next
+
+- Fix the login redirect #bug #secu !high @2026-12-05
+- !low Tidy the README #doc
+- Move backups to the NAS #infra @2026-12-31
+```
+
+| Token | Effect |
+|---|---|
+| `#name` (lowercase, `[a-z0-9][a-z0-9_-]*`) | adds tag `name` (created for the account when missing) |
+| `!high`, `!med`, `!low` (any case) | priority high (2), medium (1), low (0) |
+| `@YYYY-MM-DD` | due date, on that whole day (no time); only a real calendar date |
+
+- Each token is a whole word: preceded by the start of the line or a space, followed by a space or the end. `mail@2026-01-01`, `a!low` or `#bug,` are text.
+- Text in code spans (`` `#perf` ``), links (`[docs](https://x.dev/#doc)`), `<…>` autolinks and bare URLs is never read as a token.
+- `#123` (digits only, an issue number), `#UX` (uppercase) and an impossible date (`@2026-02-30`) are not tokens and stay in the name.
+- Tokens are removed from the name (`Fix the login redirect`); a bullet made only of tokens keeps them as its name. The file itself is never rewritten.
+- With several priorities or dates on one line, the last one wins; a repeated tag counts once.
+- Without a priority or date token, Cadence keeps the task's own value; with one, each read applies it (an edit made in Cadence lasts until the next read of a bullet that still holds the token). Tags only ever get added: the `code` tag and tags added in Cadence stay, and a tag removed from the bullet stays on the task.
 
 A project following a file is marked `source_type = 'todo_md'` with `source_path = '<folder>/TODO.md'`. Folders whose name starts with `.`, folders without a `TODO.md`, and sub-folders deeper than one level are ignored.
 
 ## How tasks keep their identity
 
-A task is matched to its bullet by section + normalised first line + occurrence index (the second identical bullet in a section is occurrence 1). The key is stored on the task (`tasks.source_key`, with `source_section`), so re-reading updates rows in place and never duplicates:
+A task is matched to its bullet by section + normalised first line (without its [inline metadata](#inline-metadata)) + occurrence index (the second identical bullet in a section is occurrence 1). The key is stored on the task (`tasks.source_key`, with `source_section`), so re-reading updates rows in place and never duplicates:
 
 - reordering, editing the note, checking a box or adding unrelated lines keeps every task;
+- adding, changing or removing a `#tag`, `!priority` or `@date` keeps the task (a row imported before tokens were read, whose name still holds them, is adopted under that former name);
 - a bullet **moved to another section** keeps its row when its text is unique among the unmatched bullets (the section tag follows);
 - a bullet whose **text is edited** is a new task and the old one is removed;
 - a task whose bullet is gone from the file is **removed** from Cadence (with its Cadence-side links);
 - a bullet with the same name as an open or closed task tagged `code` and not yet in the file adopts that task.
 
-A read overwrites only the name, the note and the done box of a task from the file; its Cadence-side fields are kept.
+A read overwrites only the name, the note and the done box of a task from the file, plus the priority and due date its bullet states; its other Cadence-side fields are kept.
 
 Nothing is deleted because a file is unreachable: if the root is missing or a file cannot be read, that pass is skipped and reported.
 
