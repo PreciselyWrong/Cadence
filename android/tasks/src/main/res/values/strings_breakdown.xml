@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="breakdown_action">Découper en étapes</string>
+    <string name="breakdown_action_short">Découper</string>
     <string name="breakdown_title">Découper en étapes</string>
     <string name="breakdown_loading">L\'IA découpe la tâche…</string>
     <string name="breakdown_offline">Découper en étapes demande une connexion au serveur.</string>

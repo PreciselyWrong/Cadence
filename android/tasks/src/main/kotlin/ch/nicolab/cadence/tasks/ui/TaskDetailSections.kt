@@ -34,6 +34,7 @@ import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -298,10 +299,15 @@ internal fun SubtaskAddRow(
             onDone = onSubmit,
         )
         if (onBreakDown != null) {
-            TextButton(onClick = onBreakDown, modifier = Modifier.heightIn(min = Size.touch)) {
+            // Libellé court : avec « Découper en étapes », le champ passait sur deux lignes sur un téléphone.
+            val fullLabel = stringResource(R.string.breakdown_action)
+            TextButton(
+                onClick = onBreakDown,
+                modifier = Modifier.heightIn(min = Size.touch).semantics { contentDescription = fullLabel },
+            ) {
                 Icon(Icons.Outlined.AutoAwesome, null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(Space.xs))
-                Text(stringResource(R.string.breakdown_action), style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(R.string.breakdown_action_short), style = MaterialTheme.typography.labelLarge, maxLines = 1)
             }
         }
     }

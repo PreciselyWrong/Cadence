@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
@@ -70,10 +71,13 @@ class TaskDetailFooterTest {
             }
         }
         val field = compose.onNodeWithText("Ajouter une sous-tâche").getUnclippedBoundsInRoot()
-        val breakDown = compose.onNodeWithText("Découper en étapes").getUnclippedBoundsInRoot()
+        val breakDown = compose.onNodeWithContentDescription("Découper en étapes").getUnclippedBoundsInRoot()
         assertTrue("même ligne : $field / $breakDown", breakDown.top < field.bottom && field.top < breakDown.bottom)
+        // Sur 360 dp, l'invite du champ tient sur une ligne à côté du lien.
+        val oneLine = compose.onNodeWithText("Découper").getUnclippedBoundsInRoot()
+        assertTrue("invite sur une ligne : $field", field.bottom - field.top < (oneLine.bottom - oneLine.top) * 1.6f)
 
-        compose.onNodeWithText("Découper en étapes").performClick()
+        compose.onNodeWithContentDescription("Découper en étapes").performClick()
         assertEquals(1, asked)
     }
 
@@ -82,6 +86,6 @@ class TaskDetailFooterTest {
         compose.setContent {
             SubtaskAddRow(draft = "", onDraftChange = {}, onSubmit = {}, onBreakDown = null)
         }
-        compose.onNodeWithText("Découper en étapes").assertDoesNotExist()
+        compose.onNodeWithContentDescription("Découper en étapes").assertDoesNotExist()
     }
 }
