@@ -26,7 +26,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Tâche | Lire |
 |---|---|
 | Objectif, décisions, pièges, références | `docs/fork/DECISIONS.md` |
-| Wiki utilisateur (pages, captures, publication) | `wiki/README.md`, `wiki/Maintenir-le-wiki.md` |
+| Wiki utilisateur en anglais (pages, captures, publication) | `wiki/README.md`, `wiki/Maintaining-the-Wiki.md` |
 | Feuille de route | `TODO.md` (`Now`, `Next`, `Ideas`) |
 | Guide de l'amont, index des docs | `docs/fork/UPSTREAM-GUIDE.md` |
 | Fonctionnalités du fork, synchro amont | `docs/fork/FORK.md` |

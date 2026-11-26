@@ -1,32 +1,32 @@
-**[Accueil](Home)** · [Prise en main](Prise-en-main)
+**[Home](Home)** · [Getting started](Getting-Started)
 
-**Au quotidien**
-- [Tâches](Taches)
-- [Aujourd'hui et plan du jour](Aujourd-hui-et-plan-du-jour)
-- [Agenda et calendrier](Agenda-et-calendrier)
-- [Boîte de réception et capture](Boite-de-reception-et-capture)
-- [Tags, vues et navigation](Tags-vues-et-navigation)
-- [Notifications et rappels](Notifications-et-rappels)
+**Day to day**
+- [Tasks](Tasks)
+- [Today and daily plan](Today-and-Daily-Plan)
+- [Agenda and calendar](Agenda-and-Calendar)
+- [Inbox and capture](Inbox-and-Capture)
+- [Tags, views and navigation](Tags-Views-and-Navigation)
+- [Notifications and reminders](Notifications-and-Reminders)
 
-**Structurer**
-- [Projets et domaines](Projets-et-domaines)
-- [Projets TODO.md](Projets-TODO-md)
-- [Objectifs](Objectifs)
-- [Habitudes](Habitudes)
-- [Notes et outliner](Notes-et-outliner)
-- [Personnes et proches](Personnes-et-proches)
+**Structure**
+- [Projects and areas](Projects-and-Areas)
+- [TODO.md projects](TODO-md-Projects)
+- [Goals](Goals)
+- [Habits](Habits)
+- [Notes and outliner](Notes-and-Outliner)
+- [People and close ones](People-and-Close-Ones)
 
-**Prendre du recul**
-- [Revue, bilan et focus](Revue-bilan-et-focus)
-- [IA et propositions](IA-et-propositions)
-- [Tri des mails](Tri-des-mails)
+**Step back**
+- [Review, insights and focus](Review-Insights-and-Focus)
+- [AI and proposals](AI-and-Proposals)
+- [Mail triage](Mail-Triage)
 
-**Appareils**
+**Devices**
 - [Android](Android)
-- [Client Linux et Firefox](Client-Linux-et-Firefox)
-- [Hors ligne et synchronisation](Hors-ligne-et-synchronisation)
+- [Linux client and Firefox](Linux-Client-and-Firefox)
+- [Offline and sync](Offline-and-Sync)
 
-**Serveur**
-- [Intégrations, MCP et plugins](Integrations-MCP-et-plugins)
-- [Auto-hébergement](Auto-hebergement)
-- [Maintenir le wiki](Maintenir-le-wiki)
+**Server**
+- [Integrations, MCP and plugins](Integrations-MCP-and-Plugins)
+- [Self-hosting](Self-Hosting)
+- [Maintaining the wiki](Maintaining-the-Wiki)

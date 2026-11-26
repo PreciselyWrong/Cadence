@@ -1,179 +1,181 @@
 # Android
 
-L'application Android de Cadence est le compagnon de poche du serveur : capture en un geste, journée en un coup d'œil, widgets, rappels, agenda du téléphone et habitudes, le tout utilisable sans réseau puis synchronisé avec votre serveur. Le PC sert surtout à planifier la semaine ; le téléphone sert à vivre la journée.
+The Cadence Android app is the server's pocket companion: one-gesture capture, your day at a glance, widgets, reminders, the phone's calendar and habits, all usable without a network and then synced with your server. The PC is mostly for planning the week; the phone is for living the day.
 
-## Installer et connecter
+The Android app is available in French only. This page quotes its labels in French, with the English meaning in parentheses the first time each one appears.
 
-**Prérequis** : Android 8.0 ou plus récent. L'application est un paquet APK installé « à la main » (hors boutique) : autorisez l'installation depuis la source qui vous l'a fourni (navigateur, gestionnaire de fichiers, catalogue privé), puis ouvrez-le. Pour la compiler vous-même : `android/dev.sh` (Linux) ou `android/dev.ps1` (Windows) construit le paquet de debug, l'installe sur le premier appareil détecté par ADB et l'ouvre (JDK 21 et SDK Android requis ; `--dummy` charge des données de démonstration).
+## Install and connect
 
-**Se connecter à votre serveur**
+**Requirements**: Android 8.0 or newer. The app is an APK package installed "by hand" (outside any store): allow installation from the source that gave it to you (browser, file manager, private catalog), then open it. To build it yourself: `android/dev.sh` (Linux) or `android/dev.ps1` (Windows) builds the debug package, installs it on the first device detected by ADB and opens it (JDK 21 and the Android SDK required; `--dummy` loads demo data).
 
-1. Sur le web : Profil › **Clés API**, créez une clé (le nom est libre, par exemple « Téléphone »). L'écran peut afficher un **code QR « pour connecter un appareil »**.
-2. Sur le téléphone : Réglages › Données › **Compte Cadence** › « Scanner le code QR » (un code qui ne vient pas de Cadence est refusé : « Ce code QR ne vient pas de Cadence. »), ou saisissez l'**adresse du serveur** (celle que vous ouvrez dans le navigateur) et la clé, puis « Se connecter ».
-3. Le téléphone télécharge une copie complète de vos données (voir [Hors-ligne-et-synchronisation](Hors-ligne-et-synchronisation)), puis reste à jour tout seul.
+**Connect to your server**
 
-**Se déconnecter** (même écran) efface les données synchronisées de l'appareil : l'application le dit avant de le faire. Les habitudes d'un autre compte ne sont jamais envoyées au nouveau : l'app propose de les garder sur le téléphone seulement, ou de les supprimer.
+1. On the web: Profile › **API Keys**, create a key (the name is free, for example "Phone"). The screen can show a **QR code "to connect a device"**.
+2. On the phone: Réglages › Données › **Compte Cadence** (Settings › Data › Cadence account) › « Scanner le code QR » (Scan the QR code) (a code that does not come from Cadence is refused: « Ce code QR ne vient pas de Cadence. » (This QR code does not come from Cadence.)), or enter the **server address** (the one you open in the browser) and the key, then « Se connecter » (Sign in).
+3. The phone downloads a full copy of your data (see [Offline-and-Sync](Offline-and-Sync)), then stays up to date by itself.
 
-## Naviguer
+**Signing out** (same screen) erases the synced data from the device: the app says so before doing it. Habits of another account are never sent to the new one: the app offers to keep them on the phone only, or to delete them.
 
-Une **barre flottante translucide** à cinq cibles : **Inbox · Tâches · Agenda · Habitudes · Bilan**. « Tâches » est l'écran d'ouverture. Un engrenage en haut à droite de chaque onglet ouvre les **Réglages**. L'ajout se fait toujours par le bouton rond « + » en bas à droite, jamais par un bouton d'en-tête.
+## Navigate
 
-L'apparence (Réglages › Personnalisation › **Apparence**) : thème Système, Clair ou Sombre (avec « Noir pur en sombre » pour les écrans OLED), couleur d'accent parmi Violet (défaut), Indigo, Bleu, Sarcelle, Vert, Ambre, Corail, Rose, une couleur libre, ou **Material You** (Android 12 et plus, tiré du fond d'écran).
+A **translucent floating bar** with five targets: **Inbox · Tâches · Agenda · Habitudes · Bilan** (Inbox, Tasks, Agenda, Habits, Insights). "Tâches" is the opening screen. A gear at the top right of each tab opens the **Réglages** (Settings). Adding is always done with the round "+" button at the bottom right, never with a header button.
 
-## Tâches
+Appearance (Réglages › Personnalisation › **Apparence** (Settings › Personalization › Appearance)): System, Light or Dark theme (with « Noir pur en sombre » (Pure black in dark) for OLED screens), accent color among Violet (default), Indigo, Blue, Teal, Green, Amber, Coral, Pink, a free color, or **Material You** (Android 12 and later, taken from the wallpaper).
 
-L'onglet **Tâches** n'a ni onglets ni rangées de filtres : le **titre est le sélecteur de liste** (« Aujourd'hui ▾ »). Toucher le titre ouvre une feuille avec vos projets et notes épinglés, puis Aujourd'hui, Planifier, Projets, Étiquettes, Notes, Terminées, le filtre de **zone**, et Réglages. Le sous-titre rappelle la date et la zone choisie.
+## Tasks
 
-### Aujourd'hui
+The **Tâches** tab has no tabs or filter rows: the **title is the list selector** (« Aujourd'hui ▾ » (Today ▾)). Tapping the title opens a sheet with your pinned projects and notes, then Aujourd'hui (Today), Planifier (Plan), Projets (Projects), Étiquettes (Tags), Notes, Terminées (Completed), the **area** filter, and Réglages (Settings). The subtitle recalls the date and the chosen area.
 
-- **Échues** en tête (en-tête d'erreur, « Voir les n »), puis la journée, puis la bande « Routine » des habitudes du moment (jusqu'à 5 habitudes à toucher pour saisir).
-- Les **événements de votre agenda** sont mêlés aux tâches, par heure.
-- **Journée vide** : « Journée bouclée » et un lien vers Demain. « Demain » et « Suggérées » restent repliables sous la liste ; une tâche sans date se retrouve.
-- **Ma journée** : le matin, une carte propose de **planifier** (placement automatique dans vos heures libres, « Tout accepter » ou retirer une proposition ; rien n'est enregistré avant d'accepter). Le soir, une ligne propose de « Clore la journée » (« Reporter 3 à demain » ou « Laisser tel quel »).
-- **Ranger au doigt** : une **poignée** à droite des tâches sans heure se tire verticalement pour les ordonner (l'ordre est celui du plan du jour, le même qu'au web). Un appui long puis glisser déplace n'importe quelle tâche d'Aujourd'hui : un trait et une étiquette disent où elle tombe (une heure, ou « À caser »). Une échue glissée dans la journée passe à aujourd'hui. Les événements de l'agenda du téléphone ne se déplacent pas.
-- **Ma matinée** : quand l'IA a préparé la journée, une carte reste en haut d'Aujourd'hui (voir plus bas, « Le rituel du matin »).
+### Aujourd'hui (Today)
 
-### Planifier
+- **Échues** (Overdue) at the top (error header, « Voir les n » (See the n)), then the day, then the "Routine" strip of the current habits (up to 5 habits to tap to log).
+- Your **calendar events** are mixed in with the tasks, by time.
+- **Empty day**: « Journée bouclée » (Day wrapped up) and a link to Demain (Tomorrow). "Demain" and « Suggérées » (Suggested) stay collapsible under the list; a task without a date can be found again.
+- **Ma journée** (My day): in the morning, a card offers to **plan** (automatic placement in your free hours, « Tout accepter » (Accept all) or remove a proposal; nothing is saved before you accept). In the evening, a line offers to « Clore la journée » (Close the day) (« Reporter 3 à demain » (Carry 3 over to tomorrow) or « Laisser tel quel » (Leave as is)).
+- **Arranging by finger**: a **handle** to the right of tasks without a time can be dragged vertically to order them (the order is that of the daily plan, the same as on the web). A long press then drag moves any task of Today: a line and a label tell where it lands (a time, or « À caser » (To fit in)). An overdue task dragged into the day becomes today's. Events from the phone's calendar cannot be moved.
+- **Ma matinée** (My morning): when the AI has prepared the day, a card stays at the top of Today (see below, "The morning ritual").
 
-Menu du titre › **Planifier**. La même page que le web, en une colonne :
+### Planifier (Plan)
 
-- **Inbox** : « Tâches à classer » puis les idées ; « Ajouter » crée une tâche (une date nommée, ou une heure seule, la planifie ce jour-là).
-- **Échues** avec « **Replanifier ▾** » : Aujourd'hui, Demain, **Étaler sur 7 jours**, Choisir une date. Ces gestes n'écrivent que le plan, jamais l'échéance.
-- **14 jours** avec leur charge, ou les **horizons** (Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour), et une bande « Plus tard » sous les 14 jours.
-- Un **appui long** sur une tâche ouvre « Planifier » : un jour, un horizon, « Retirer de ce jour », ou le menu habituel. Une idée planifiée ainsi devient d'abord une tâche.
-- Le plan des 14 jours est lu après chaque synchronisation et gardé sur l'appareil : la page marche hors ligne, chaque écriture part en file.
+Title menu › **Planifier**. The same page as the web, in one column:
 
-### Projets, étiquettes, notes, terminées
+- **Inbox**: « Tâches à classer » (Tasks to sort) then the ideas; « Ajouter » (Add) creates a task (a named date, or a time alone, plans it on that day).
+- **Échues** with « **Replanifier ▾** » (Replan): Aujourd'hui (Today), Demain (Tomorrow), **Étaler sur 7 jours** (Spread over 7 days), Choisir une date (Choose a date). These gestures only write the plan, never the due date.
+- **14 days** with their load, or the **horizons** (Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour: This week, Next week, This month, Next month, Someday), and a "Plus tard" (Later) strip under the 14 days.
+- A **long press** on a task opens « Planifier » (Plan): a day, a horizon, « Retirer de ce jour » (Remove from this day), or the usual menu. An idea planned this way first becomes a task.
+- The 14-day plan is read after each sync and kept on the device: the page works offline, each write goes into a queue.
 
-- **Projets** regroupés par zone, sans cartes ni barre de progression : pastille ou icône, nom, prochaine tâche, nombre d'ouvertes. « Pas touché depuis 30 jours » liste les projets dormants. Le statut d'un projet se change par son menu (Non commencé, Prévu, En cours, En attente, En pause, Terminé, Abandonné, Archivé) ; « En pause » les range dans le **Stash**. Les **sous-projets** s'affichent sur la page du parent ; un projet parent a une vue **Tableau** (une colonne par sous-projet en cours). Voir [Projets-et-domaines](Projets-et-domaines).
-- **Étiquettes** en arbre repliable (filtrer par un parent inclut ses enfants), avec leurs icônes.
-- **Notes** en grille de cartes, éditeur plein écran en plan (voir [Notes-et-outliner](Notes-et-outliner)) : une barre unique au-dessus du clavier propose décaler, monter, descendre, replier, zoomer, case à cocher, puis la mise en forme (gras, italique, titre, listes, lien, `[[`, `@`, tableau).
-- **Terminées** : l'historique, avec « Rouvrir ».
+### Projects, tags, notes, completed
 
-### La ligne de tâche
+- **Projets** (Projects) grouped by area, with no cards or progress bar: dot or icon, name, next task, number of open ones. « Pas touché depuis 30 jours » (Untouched for 30 days) lists dormant projects. A project's status is changed through its menu (Non commencé, Prévu, En cours, En attente, En pause, Terminé, Abandonné, Archivé: Not started, Planned, In progress, Waiting, Paused, Done, Abandoned, Archived); "En pause" files them in the **Stash**. **Subprojects** show on the parent's page; a parent project has a **Tableau** (Board) view (one column per ongoing subproject). See [Projects-and-Areas](Projects-and-Areas).
+- **Étiquettes** (Tags) in a collapsible tree (filtering by a parent includes its children), with their icons.
+- **Notes** in a grid of cards, full-screen editor in outline form (see [Notes-and-Outliner](Notes-and-Outliner)): a single bar above the keyboard offers indent, move up, move down, collapse, zoom, checkbox, then formatting (bold, italic, heading, lists, link, `[[`, `@`, table).
+- **Terminées** (Completed): the history, with « Rouvrir » (Reopen).
 
-Titre sur deux lignes, puis une ligne de méta (date et heure, projet dans sa couleur, tags). Une seule couleur compte : la couleur du projet ; une priorité haute se voit au contour rouge de la case carrée. Les événements d'agenda ont une case **ronde**, de la couleur de leur agenda.
+### The task row
 
-**Appui long** : un menu unique, partout : Ouvrir, Terminer, Date, Priorité, Projet, Épingler, Dupliquer, Transformer en projet, Copier le lien ou le titre, Supprimer (avec « Annuler »), avec en tête les gestes propres à l'écran.
+Title on two lines, then a meta line (date and time, project in its color, tags). Only one color counts: the project's color; a high priority shows as a red outline on the square checkbox. Calendar events have a **round** checkbox, in their calendar's color.
 
-**Balayages configurables.** Réglages › Organisation › **Gestes** : quatre emplacements (glisser à droite court, à droite long, à gauche court, à gauche long). Chacun prend une action : Terminer, Rouvrir, Planifier, Aujourd'hui, Demain, Reporter d'une semaine, Déplacer vers un projet, Priorité, Supprimer, ou Aucune. Le fond change de couleur et le téléphone vibre à chaque seuil. « Rétablir les gestes par défaut » remet tout. Une suppression ou un déplacement affiche « Annuler » pendant quelques secondes.
+**Long press**: a single menu, everywhere: Ouvrir, Terminer, Date, Priorité, Projet, Épingler, Dupliquer, Transformer en projet, Copier le lien ou le titre, Supprimer (Open, Complete, Date, Priority, Project, Pin, Duplicate, Turn into a project, Copy the link or the title, Delete) (with « Annuler » (Undo)), with the gestures specific to the screen at the top.
 
-### La fiche d'une tâche
+**Configurable swipes.** Réglages › Organisation › **Gestes** (Settings › Organization › Gestures): four slots (swipe right short, right long, left short, left long). Each takes an action: Terminer, Rouvrir, Planifier, Aujourd'hui, Demain, Reporter d'une semaine, Déplacer vers un projet, Priorité, Supprimer, or Aucune (Complete, Reopen, Plan, Today, Tomorrow, Postpone by a week, Move to a project, Priority, Delete, or None). The background changes color and the phone vibrates at each threshold. « Rétablir les gestes par défaut » (Restore default gestures) resets everything. A deletion or a move shows "Annuler" (Undo) for a few seconds.
 
-Une feuille plein écran. En haut : retour, titre modifiable sur place, minuteur de concentration, menu d'actions (dont **Découper en étapes** et, si un agent est branché, **Discuter avec l'IA**). Puis des pastilles (date, priorité, projet, statut, tags), chacune affichée seulement si elle a une valeur ; les sous-tâches ; Début → échéance, Répétition, Estimation, Priorité, Statut, Étiquettes, Projet, chacun ouvrant sa feuille ; la description rendue (touchez le crayon pour éditer le texte brut) ; une seule barre **Joindre · Commenter · Historique**.
+### A task's detail
 
-**Il n'y a pas de bouton « Enregistrer »** : chaque sélecteur écrit sa valeur dès qu'on le choisit ; le titre et la note s'écrivent après 700 ms de pause et à la fermeture. Terminer se fait par la case à côté du titre.
+A full-screen sheet. At the top: back, title editable in place, focus timer, actions menu (including **Découper en étapes** (Break down into steps) and, if an agent is connected, **Discuter avec l'IA** (Discuss with the AI)). Then chips (date, priority, project, status, tags), each shown only if it has a value; the subtasks; Début → échéance (Start → due), Répétition (Repeat), Estimation, Priorité, Statut, Étiquettes, Projet, each opening its sheet; the rendered description (tap the pencil to edit the raw text); a single **Joindre · Commenter · Historique** (Attach · Comment · History) bar.
 
-Autres éléments : liens « **Bloque** » et « **Bloquée par** » (ajout, retrait, mention « Bloquée »), **Prochaine tâche** d'un projet, **Historique** (chaque changement avec date, heure et origine : l'app, un appareil, l'IA, une suggestion acceptée), commentaires et personne assignée (synchronisés hors ligne), pièces jointes (en ligne). Un lien dans le nom d'une tâche affiche le titre de la page, son icône et son image ; « Ouvrir le lien » est dans la fiche. Pour une tâche récurrente, modifier ou supprimer demande « Seulement celle-ci », « Celle-ci et les suivantes » ou « Toutes » ; « Retirer aussi de ma journée » est proposé.
+**There is no "Save" button**: each picker writes its value as soon as you choose it; the title and the note are written after a 700 ms pause and on closing. Completing is done with the checkbox next to the title.
 
-## Capturer
+Other elements: "**Bloque**" and "**Bloquée par**" (Blocks, Blocked by) links (add, remove, "Bloquée" mention), a project's **Prochaine tâche** (Next task), **Historique** (every change with date, time and origin: the app, a device, the AI, an accepted suggestion), comments and assignee (synced offline), attachments (online). A link in a task's name shows the page's title, icon and image; « Ouvrir le lien » (Open the link) is in the detail. For a recurring task, editing or deleting asks « Seulement celle-ci » (Only this one), « Celle-ci et les suivantes » (This one and the following ones) or « Toutes » (All); « Retirer aussi de ma journée » (Also remove from my day) is offered.
 
-### Ajout rapide
+## Capture
 
-Le bouton « + » ouvre une feuille avec **un seul champ**. Tapez comme vous parlez : l'analyse transforme les mots en pastilles sous le champ ; toucher une pastille la retire et rend le mot au titre.
+### Quick add
 
-| Vous tapez | Résultat |
+The "+" button opens a sheet with **a single field**. Type as you speak: the parser turns words into chips under the field; tapping a chip removes it and gives the word back to the title.
+
+| You type | Result |
 |---|---|
-| aujourd'hui, demain, après-demain, un jour de la semaine | la date (le prochain jour nommé ; « lundi prochain » = ce jour de la semaine suivante) |
-| dans 3 jours, dans 2 semaines, dans 1 mois | la date relative |
-| ce soir | aujourd'hui à 19:00 |
-| ce week-end, semaine prochaine | samedi, lundi |
-| à 14h, 14h30, 14:30, midi | l'heure |
-| `!1` à `!3` | la priorité |
-| `+projet` ou `^projet` | le projet |
-| `#nom` | une étiquette, sinon un projet |
-| `@étiquette` | une étiquette |
+| aujourd'hui, demain, après-demain, a weekday name (today, tomorrow, the day after tomorrow) | the date (the next named day; "lundi prochain" (next Monday) = that weekday of the following week) |
+| dans 3 jours, dans 2 semaines, dans 1 mois (in 3 days, in 2 weeks, in 1 month) | the relative date |
+| ce soir (this evening) | today at 19:00 |
+| ce week-end, semaine prochaine (this weekend, next week) | Saturday, Monday |
+| à 14h, 14h30, 14:30, midi (at 2 pm, 2:30 pm, noon) | the time |
+| `!1` to `!3` | the priority |
+| `+projet` or `^projet` (`+project` or `^project`) | the project |
+| `#nom` (`#name`) | a tag, otherwise a project |
+| `@étiquette` (`@tag`) | a tag |
 
-Un mot qui ne désigne rien d'existant reste dans le titre. « Plus d'options » ouvre priorité, projet, tags. Après chaque ajout, **le clavier reste levé** pour saisir en série ; « Annuler la dernière » rattrape une erreur ; « Terminé » ferme. Une **adresse web seule** propose Inbox · Tâche · Liens · Note (« Dans les liens » d'emblée si elle est déjà gardée).
+A word that designates nothing existing stays in the title. « Plus d'options » (More options) opens priority, project, tags. After each add, **the keyboard stays up** to type in series; « Annuler la dernière » (Undo the last one) catches a mistake; « Terminé » (Done) closes. A **lone web address** offers Inbox · Tâche · Liens · Note (Inbox, Task, Links, Note) (« Dans les liens » (In links) straight away if it is already kept).
 
 ### Inbox
 
-L'onglet **Inbox** : un champ « Capturer une idée... », les idées en liste avec les actions « Aujourd'hui » et « ... » (Planifier, Projet, Note, Modifier). Le « + » y ouvre une capture avec une cible **Inbox / Tâche / Note**, comme sur le web. Voir [Boite-de-reception-et-capture](Boite-de-reception-et-capture).
+The **Inbox** tab: a « Capturer une idée... » (Capture an idea...) field, the ideas in a list with the actions « Aujourd'hui » (Today) and "..." (Planifier, Projet, Note, Modifier: Plan, Project, Note, Edit). The "+" there opens a capture with an **Inbox / Tâche / Note** (Inbox / Task / Note) target, as on the web. See [Inbox-and-Capture](Inbox-and-Capture).
 
-### Depuis une autre application
+### From another app
 
-- **Partager** un lien ou un texte vers Cadence : la feuille « Ajouter à Cadence » offre Inbox, Tâche, Projet... ou Note, et une ligne **Échéance** (Aujourd'hui, Demain, Ce week-end, Choisir ; toucher la date choisie la retire). Avec une échéance, la tâche ne passe plus par « Tâches à classer ». Si l'adresse est déjà dans une tâche ou un projet, la feuille dit « Déjà dans « ... » » avec Ouvrir ou « Ajouter quand même ».
-- **Sélectionner du texte** puis l'action « Cadence » du menu de sélection.
-- La **tuile « Capturer »** des réglages rapides du téléphone.
-- L'application **Proches** (application compagnon, Android seulement) peut remettre une proposition acceptée comme tâche : seule l'application dont la signature est celle attendue est acceptée, la tâche est créée une seule fois même si la remise est rejouée, et elle se synchronise comme une tâche tapée.
+- **Share** a link or a text to Cadence: the « Ajouter à Cadence » (Add to Cadence) sheet offers Inbox, Tâche, Projet... or Note (Task, Project, Note), and a **Échéance** (Due date) row (Aujourd'hui, Demain, Ce week-end, Choisir: Today, Tomorrow, This weekend, Choose; tapping the chosen date removes it). With a due date, the task no longer goes through "Tâches à classer" (Tasks to sort). If the address is already in a task or a project, the sheet says « Déjà dans « ... » » (Already in "...") with Ouvrir (Open) or « Ajouter quand même » (Add anyway).
+- **Select text** then the "Cadence" action of the selection menu.
+- The **"Capturer" (Capture) tile** of the phone's quick settings.
+- The **Proches** app (companion app, Android only) can hand over an accepted proposal as a task: only the app whose signature is the expected one is accepted, the task is created only once even if the handover is replayed, and it syncs like a typed task.
 
 ## Widgets
 
-Appui long sur l'écran d'accueil › Widgets › Cadence. Ils se configurent par un appui long puis « Configurer », ou dans Réglages › Personnalisation › **Widgets**.
+Long press on the home screen › Widgets › Cadence. They are configured with a long press then "Configurer" (Configure), or in Réglages › Personnalisation › **Widgets**.
 
-| Widget | Contenu |
+| Widget | Content |
 |---|---|
-| **Aujourd'hui** (celui à privilégier) | En-tête (titre de la portée, compteur, « + » et « ... »), tâches, événements d'agenda et habitudes du jour |
-| **Cadence – Barre de capture** (4×1) | « Nouvelle tâche... », « Idée », « Dicter » |
-| **Cadence – Ajouter** (1×1) | Un bouton d'ajout rapide |
-| **Cadence – Tâches 2×2** | Les tâches du jour en petit format, à cocher depuis l'accueil |
-| **Cadence – Liste (ancien)** | L'ancienne liste, gardée pour les installations existantes |
-| Widget d'habitudes | Les habitudes à saisir en un geste |
+| **Aujourd'hui** (Today) (the one to prefer) | Header (scope title, counter, "+" and "..."), tasks, calendar events and the day's habits |
+| **Cadence – Barre de capture** (Capture bar) (4×1) | « Nouvelle tâche... » (New task...), « Idée » (Idea), « Dicter » (Dictate) |
+| **Cadence – Ajouter** (Add) (1×1) | A quick add button |
+| **Cadence – Tâches 2×2** (Tasks 2×2) | The day's tasks in small format, tickable from the home screen |
+| **Cadence – Liste (ancien)** (List (old)) | The old list, kept for existing installations |
+| Habits widget | The habits to log in one gesture |
 
-Le widget **Aujourd'hui** se règle finement : **fond** Verre (par défaut, opacité réglable), Automatique, Clair, Sombre ou Aucun ; couleur des cases (Priorité par défaut, Blanc, Projet, Indigo, Corail, Menthe, Ambre ou libre) ; modules Tâches et Habitudes, leur ordre ; **portée** (En retard + aujourd'hui, Aujourd'hui, Demain, 3 ou 7 prochains jours, Sans date, Inbox, un projet), filtres (projets, tags, priorité haute, masquer les récurrentes), tri, regroupement par jour (Hier, Aujourd'hui, Demain, dates), cocher depuis le widget, taille du texte, rayon des coins. Sous 180 dp sur un axe (2×1, 2×2), il passe en mode compact : le compteur et la prochaine chose à faire, tapée pour ouvrir.
+The **Aujourd'hui** widget can be tuned finely: **background** Verre (Glass) (default, adjustable opacity), Automatique (Automatic), Clair (Light), Sombre (Dark) or Aucun (None); checkbox color (Priorité (Priority) by default, Blanc (White), Projet (Project), Indigo, Corail (Coral), Menthe (Mint), Ambre (Amber) or free); Tasks and Habits modules, their order; **scope** (En retard + aujourd'hui (Overdue + today), Aujourd'hui, Demain, next 3 or 7 days, Sans date (No date), Inbox, a project), filters (projects, tags, high priority, hide recurring), sort, grouping by day (Hier, Aujourd'hui, Demain, dates: Yesterday, Today, Tomorrow), ticking from the widget, text size, corner radius. Under 180 dp on an axis (2×1, 2×2), it switches to compact mode: the counter and the next thing to do, tapped to open.
 
-Cas particuliers : une coche de widget rend la main aussitôt ; décocher annule vraiment ; un toucher sur une tâche l'ouvre même si l'application est déjà ouverte ; le widget ne « saute » plus après une coche ou un ajout.
+Special cases: a widget tick returns control immediately; unticking really undoes; a tap on a task opens it even if the app is already open; the widget no longer "jumps" after a tick or an add.
 
 ## Agenda
 
-Un sélecteur **Jour · 3 jours · Mois · Liste**. Glissez horizontalement pour changer de période (jour ±1, 3 jours ±3, mois ±1, liste ±30 jours).
+A **Jour · 3 jours · Mois · Liste** (Day · 3 days · Month · List) selector. Swipe horizontally to change period (day ±1, 3 days ±3, month ±1, list ±30 days).
 
-- **Jour** : bande de la semaine, tiroir « **À planifier** » (glisser une tâche sur la grille lui donne sa date et son heure), ligne « journée entière », grille horaire, trait « maintenant ». L'Agenda suit les heures visibles réglées sur le web et grise ce qui sort des heures de travail. Une tâche planifiée se redimensionne par sa poignée.
-- **Événements de l'appareil** (calendriers du téléphone, comptes Google compris) : un toucher ouvre une feuille de détail (heure, agenda, lieu, description). **Masquer ici** retire l'occurrence de Cadence seulement (Agenda, Tâches, widget), jamais chez le fournisseur ; « Annuler » est proposé, et Réglages › Organisation › **Agendas** les liste pour les rétablir. Cocher un événement le marque fait dans Cadence seulement. **Cocher une fois passé** (par agenda) affiche comme faits les événements terminés. Ces coches et masquages restent locaux : ils ne se synchronisent pas.
-- **Affichage** : interrupteurs (tâches avec heure, habitudes, terminées, week-ends, n° de semaine) et la liste des agendas, la même qu'en Réglages › Agendas (par compte : utiliser, Agenda, Tâches, Notifications, Cocher une fois passé) ; le pied de la feuille mène à « Tous les réglages des agendas ».
-- Les **agendas ICS abonnés** sur le serveur s'affichent dans l'Agenda (en ligne). **Google Agenda et Tâches** se connectent dans Réglages › Agendas (« Connecter Google » ouvre la connexion dans le navigateur et revient dans l'app). Voir [Agenda-et-calendrier](Agenda-et-calendrier).
+- **Jour** (Day): week strip, "**À planifier**" (To plan) drawer (dragging a task onto the grid gives it its date and time), "all-day" row, hour grid, "now" line. The Agenda follows the visible hours set on the web and greys out what falls outside working hours. A planned task is resized by its handle.
+- **Device events** (the phone's calendars, Google accounts included): a tap opens a detail sheet (time, calendar, place, description). **Masquer ici** (Hide here) removes the occurrence from Cadence only (Agenda, Tasks, widget), never at the provider; "Annuler" (Undo) is offered, and Réglages › Organisation › **Agendas** (Settings › Organization › Calendars) lists them so you can restore them. Ticking an event marks it done in Cadence only. **Cocher une fois passé** (Tick once past) (per calendar) displays finished events as done. These ticks and hides stay local: they do not sync.
+- **Affichage** (Display): switches (tasks with a time, habits, completed, weekends, week number) and the list of calendars, the same as in Réglages › Agendas (per account: use, Agenda, Tâches, Notifications, Cocher une fois passé); the sheet's footer leads to « Tous les réglages des agendas » (All calendar settings).
+- The **subscribed ICS calendars** on the server show in the Agenda (online). **Google Calendar and Tasks** connect in Réglages › Agendas (« Connecter Google » (Connect Google) opens the connection in the browser and returns to the app). See [Agenda-and-Calendar](Agenda-and-Calendar).
 
-Dans la liste Tâches, un événement d'agenda est une ligne comme une tâche : le balayage « Terminer » le coche, « Supprimer » le masque.
+In the Tasks list, a calendar event is a row like a task: the "Terminer" (Complete) swipe ticks it, "Supprimer" (Delete) hides it.
 
-## Habitudes
+## Habits
 
-Deux segments : **Aujourd'hui** et **Toutes** (abstinences, habitudes, activités libres, groupes). Saisie rapide par un « +1 » ou un minuteur ; la fiche d'une habitude donne son objectif, sa série et sa période ; les **questions apprises** vous demandent le lendemain, à l'heure choisie, ce qui manque un jour habituel (Non, Oui, Oui + quantité). Réglages dédiés : « Moments de la journée » (groupes), « Mode voyage », **Health Connect**. Tout est détaillé dans [Habitudes](Habitudes).
+Two segments: **Aujourd'hui** (Today) and **Toutes** (All) (abstinences, habits, free activities, groups). Quick logging with a "+1" or a timer; a habit's detail gives its goal, streak and period; **learned questions** ask you the next day, at the chosen time, what is missing on a usual day (Non, Oui, Oui + quantité: No, Yes, Yes + amount). Dedicated settings: « Moments de la journée » (Times of day) (groups), « Mode voyage » (Travel mode), **Health Connect**. Everything is detailed in [Habits](Habits).
 
-## Bilan
+## Bilan (Insights)
 
-L'onglet **Bilan** : « Semaine du ... », trois indicateurs (terminées cette semaine avec la semaine dernière en comparaison, échues, régularité des habitudes sur 30 jours), les tâches de la semaine par projet, une carte Objectifs, la **Revue** (À décider, Repoussées, Projets, Plus tard, Anciennes, Semaine, avec capacité hebdomadaire, « Aide-moi à choisir », revue rapide d'environ 5 minutes, jamais plus de 10 éléments), et les panneaux **Week-end** et **Carrière** de l'IA. La revue est calculée par le serveur : hors ligne, la dernière lecture reste visible. Voir [Revue-bilan-et-focus](Revue-bilan-et-focus), [Objectifs](Objectifs) et [IA-et-propositions](IA-et-propositions).
+The **Bilan** tab: « Semaine du ... » (Week of ...), three indicators (completed this week with last week for comparison, overdue, habit regularity over 30 days), the week's tasks by project, a Goals card, the **Revue** (Review) (À décider, Repoussées, Projets, Plus tard, Anciennes, Semaine: To decide, Postponed, Projects, Later, Old, Week, with weekly capacity, « Aide-moi à choisir » (Help me choose), a quick review of about 5 minutes, never more than 10 items), and the AI's **Week-end** and **Carrière** (Career) panels. The review is computed by the server: offline, the last reading stays visible. See [Review-Insights-and-Focus](Review-Insights-and-Focus), [Goals](Goals) and [AI-and-Proposals](AI-and-Proposals).
 
-## L'IA sur Android
+## AI on Android
 
-Aucun bouton d'IA n'apparaît quand aucun agent n'écoute le serveur. Sinon :
+No AI button appears when no agent is listening to the server. Otherwise:
 
-- **Planifier ma semaine** et **Préparer ma revue** (une feuille en bas, regroupée par jour, « Appliquer (N) »), **Carrière**, **Week-end**, **Décider**, **Trier mes mails** : tous décrits dans [IA-et-propositions](IA-et-propositions) et [Tri-des-mails](Tri-des-mails). Ils demandent une connexion : hors ligne, les actions disent « Hors ligne » et ne gardent rien.
-- **Le rituel du matin** : le matin, quand l'IA a replacé vos retards, la notification « N retards replacés, à valider » ouvre trois étapes de grandes cartes. (0) « Mails » : le deck des mails à trier, s'il y en a. (1) « Hier et retards » : une carte par tâche en retard, avec l'avis de l'IA mis en valeur ; glisser à droite suit le conseil, à gauche = Demain, vers le haut = Plus tard ; ou gros boutons (Aujourd'hui, Demain, Plus..., Faite, Abandonner), avec « Annuler » pour revenir d'une carte. (2) « Ta journée » : « Ce qui compte » (jusqu'à 3 tâches à étoile), les événements, les tâches du jour, la charge (« 3 h prévues · 4 h libres »), « Pas aujourd'hui » pour renvoyer à demain. « C'est parti » applique tout d'un appel et ouvre Aujourd'hui ; « Plus tard » ferme sans appliquer. Rien n'est écrit avant la dernière étape.
-- **Classement automatique** : notifications avec « Tout accepter » / « Ignorer » / « Ouvrir ».
-- **Discuter avec l'IA** et **Découper en étapes** dans la fiche de tâche.
-- **Réglages** : Organisation › Classement automatique et À trier.
+- **Planifier ma semaine** (Plan my week) and **Préparer ma revue** (Prepare my review) (a bottom sheet, grouped by day, « Appliquer (N) » (Apply (N))), **Carrière** (Career), **Week-end**, **Décider** (Decide), **Trier mes mails** (Sort my mail): all described in [AI-and-Proposals](AI-and-Proposals) and [Mail-Triage](Mail-Triage). They need a connection: offline, the actions say "Hors ligne" (Offline) and keep nothing.
+- **The morning ritual**: in the morning, when the AI has replanned your overdue tasks, the notification « N retards replacés, à valider » (N overdue tasks replanned, to confirm) opens three steps of big cards. (0) « Mails » (Mails): the deck of mails to sort, if there are any. (1) « Hier et retards » (Yesterday and overdue): one card per overdue task, with the AI's advice highlighted; swipe right follows the advice, left = Demain (Tomorrow), up = Plus tard (Later); or big buttons (Aujourd'hui, Demain, Plus..., Faite, Abandonner: Today, Tomorrow, Later..., Done, Abandon), with "Annuler" (Undo) to go back one card. (2) « Ta journée » (Your day): « Ce qui compte » (What matters) (up to 3 starred tasks), the events, the day's tasks, the load (« 3 h prévues · 4 h libres » (3 h planned · 4 h free)), « Pas aujourd'hui » (Not today) to send back to tomorrow. « C'est parti » (Let's go) applies everything in one call and opens Today; « Plus tard » (Later) closes without applying. Nothing is written before the last step.
+- **Automatic filing** (Classement automatique): notifications with « Tout accepter » (Accept all) / « Ignorer » (Ignore) / « Ouvrir » (Open).
+- **Discuter avec l'IA** (Discuss with the AI) and **Découper en étapes** (Break down into steps) in the task detail.
+- **Settings**: Organisation › Classement automatique and À trier (Organization › Automatic filing and To sort).
 
-## Notifications et rappels
+## Notifications and reminders
 
-Réglages › Organisation › **Notifications** : « Une seule voix : le téléphone sonne, calmement. »
+Réglages › Organisation › **Notifications**: « Une seule voix : le téléphone sonne, calmement. » (One voice: the phone rings, calmly.)
 
-- **Tâches à heure fixe** : une tâche qui a une heure sonne à cette heure, sans rappel à poser ; un rappel choisi passe avant. Android ne laisse sonner à la minute près que si vous accordez « Alarmes et rappels » (« Heure exacte ») ; sinon à environ une minute près.
-- **Boutons du rappel** : Terminer, Plus tard · 10 min, À la fin, Demain.
-- **Événements d'agenda** : un rappel avant le début (à l'heure ou N minutes avant, réglable par agenda), « Dans N min · titre », boutons Fait, À la fin, 10 min. Option « Résumé des journées entières à 8 h ». Un même événement présent sur plusieurs agendas ne sonne qu'une fois.
-- **Habitudes** : rappel à l'heure de la fiche, tant que l'habitude reste à faire.
-- **Heures calmes** : réglées dans votre profil, sur le web ; tout ce qui y tombe sonne à leur fin.
-- **Agents** : « Notifications instantanées des agents » garde une notification permanente (masquable) pour recevoir tout de suite les messages de l'agent, dans « Agents · à décider » ou « Agents · infos » ; « Ne pas optimiser la batterie » évite que le téléphone coupe la connexion en veille. Une bannière d'une ligne en haut des écrans montre le dernier message non lu (« Ouvrir », « Marquer comme lu », « +N »). « Répondre » sur une notification d'agent envoie une réponse libre, gardée sur le téléphone jusqu'à son envoi. Une notification lue ailleurs disparaît.
-- La liste des **Notifications** (cloche) ne montre que ce qui attend encore de vous : propositions, mails à trier, décisions, messages des agents.
-- Les rappels sont reprogrammés après un redémarrage, une mise à jour ou une synchronisation.
+- **Fixed-time tasks**: a task that has a time rings at that time, with no reminder to set; a chosen reminder takes precedence. Android only lets it ring to the minute if you grant "Alarmes et rappels" (Alarms and reminders) (« Heure exacte » (Exact time)); otherwise to within about a minute.
+- **Reminder buttons**: Terminer, Plus tard · 10 min, À la fin, Demain (Complete, Later · 10 min, At the end, Tomorrow).
+- **Calendar events**: a reminder before the start (on time or N minutes before, adjustable per calendar), « Dans N min · titre » (In N min · title), buttons Fait, À la fin, 10 min (Done, At the end, 10 min). Option « Résumé des journées entières à 8 h » (All-day summary at 8 am). The same event present on several calendars only rings once.
+- **Habits**: reminder at the time set on the habit, as long as the habit remains to be done.
+- **Quiet hours**: set in your profile, on the web; everything that falls in them rings at their end.
+- **Agents**: « Notifications instantanées des agents » (Instant agent notifications) keeps a permanent (hideable) notification to receive the agent's messages right away, in « Agents · à décider » (Agents · to decide) or « Agents · infos » (Agents · info); « Ne pas optimiser la batterie » (Do not optimize battery) prevents the phone from cutting the connection in standby. A one-line banner at the top of screens shows the last unread message (« Ouvrir » (Open), « Marquer comme lu » (Mark as read), "+N"). « Répondre » (Reply) on an agent notification sends a free answer, kept on the phone until it is sent. A notification read elsewhere disappears.
+- The **Notifications** list (bell) only shows what still waits for you: proposals, mails to sort, decisions, agent messages.
+- Reminders are rescheduled after a restart, an update or a sync.
 
-Voir [Notifications-et-rappels](Notifications-et-rappels).
+See [Notifications-and-Reminders](Notifications-and-Reminders).
 
-## Carte des Réglages
+## Settings map
 
 | Section | Pages |
 |---|---|
-| **Personnalisation** | Apparence, Widgets |
-| **Organisation** | Agendas, Notifications, Planification (heures de travail, jours travaillés, fin de journée, plages protégées, exceptions, « Planifier change l'échéance »), Classement automatique, À trier, Gestes, Moments de la journée, Mode voyage, Health Connect |
-| **Données** | Sauvegarde (Exporter / Importer), Compte Cadence, Synchronisation, Plugins (administrateur seulement) |
+| **Personnalisation** (Personalization) | Apparence (Appearance), Widgets |
+| **Organisation** (Organization) | Agendas (Calendars), Notifications, Planification (Planning) (work hours, worked days, end of day, protected slots, exceptions, « Planifier change l'échéance » (Planning sets the due date)), Classement automatique (Automatic filing), À trier (To sort), Gestes (Gestures), Moments de la journée (Times of day), Mode voyage (Travel mode), Health Connect |
+| **Données** (Data) | Sauvegarde (Backup) (Exporter / Importer: Export / Import), Compte Cadence (Cadence account), Synchronisation (Sync), Plugins (administrator only) |
 
-La page **Plugins** de l'administrateur montre l'état de chaque plugin, ses permissions, un bouton d'approbation, « Mettre à jour », « Recharger », « Supprimer » (voir [Integrations-MCP-et-plugins](Integrations-MCP-et-plugins)).
+The administrator's **Plugins** page shows each plugin's state, its permissions, an approval button, « Mettre à jour » (Update), « Recharger » (Reload), « Supprimer » (Delete) (see [Integrations-MCP-and-Plugins](Integrations-MCP-and-Plugins)).
 
-## Ce qui n'est pas sur Android
+## What is not on Android
 
-Les vues pensées pour un grand écran restent au web : l'aperçu de la semaine de l'IA posé sur le tableau du Plan, le calendrier fusionné du Plan, la feuille de route trimestrielle, la chronologie (Gantt) d'un projet, les panneaux Notes/Objectifs/Habitudes de la barre latérale. Les **données** restent les mêmes : seul l'écran diffère. Le web de son côté n'a pas les calendriers de l'appareil ni les widgets. Pas de réglages de clés d'API ni de connecteur MCP sur le téléphone (le serveur s'en occupe).
+Views designed for a large screen stay on the web: the AI's week preview laid over the Plan board, the Plan's merged calendar, the quarterly roadmap, a project's timeline (Gantt), the Notes/Goals/Habits panels of the sidebar. The **data** stays the same: only the screen differs. The web, for its part, does not have the device calendars or the widgets. No API key settings or MCP connector on the phone (the server takes care of that).
 
-## Pour aller plus loin
+## Going further
 
-- [Notes de conception Android](https://github.com/PreciselyWrong/cadence/blob/main/android/docs/REDESIGN.md) (navigation, widgets, ligne de tâche)
-- [Notes UX Android vers web](https://github.com/PreciselyWrong/cadence/blob/main/docs/fork/ANDROID-UX-NOTES.md)
-- [Synchronisation hors ligne](https://github.com/PreciselyWrong/cadence/blob/main/docs/30-offline-sync.md), [Notifications](https://github.com/PreciselyWrong/cadence/blob/main/docs/36-notifications.md), [Rituel du matin](https://github.com/PreciselyWrong/cadence/blob/main/docs/50-morning-ritual.md), [Remise depuis Proches](https://github.com/PreciselyWrong/cadence/blob/main/docs/42-proches-handoff.md)
+- [Android design notes](https://github.com/PreciselyWrong/cadence/blob/main/android/docs/REDESIGN.md) (navigation, widgets, task row)
+- [Android to web UX notes](https://github.com/PreciselyWrong/cadence/blob/main/docs/fork/ANDROID-UX-NOTES.md)
+- [Offline sync](https://github.com/PreciselyWrong/cadence/blob/main/docs/30-offline-sync.md), [Notifications](https://github.com/PreciselyWrong/cadence/blob/main/docs/36-notifications.md), [Morning ritual](https://github.com/PreciselyWrong/cadence/blob/main/docs/50-morning-ritual.md), [Handover from Proches](https://github.com/PreciselyWrong/cadence/blob/main/docs/42-proches-handoff.md)
