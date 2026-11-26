@@ -50,6 +50,8 @@ const NO_QUEUE_PATHS = [
     '/api/mcp',
     '/api/admin',
     '/api/billing',
+    // « Actualiser les TODO.md »: a read of the files now, worthless later.
+    '/api/todo-md/rescan',
 ];
 // A plugin's run button (a Hermes job started now): replayed later, it would
 // start the job at a time nobody asked for.

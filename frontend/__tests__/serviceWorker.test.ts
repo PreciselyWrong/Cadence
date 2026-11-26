@@ -534,6 +534,23 @@ describe('service worker offline writes', () => {
         expect(sw.outbox()).toHaveLength(0);
     });
 
+    it('sends « Actualiser les TODO.md » now even behind queued writes', async () => {
+        const sw = loadWorker(down);
+        await sw.request('/api/task/t1', patch({ name: 'queued' }));
+        const reached: string[] = [];
+        sw.setServer(async (req) => {
+            if (req.url.endsWith('/api/health')) return json({});
+            reached.push(new URL(req.url).pathname);
+            return json({ projects: 1 });
+        });
+        const response = await sw.request('/api/todo-md/rescan', post({}));
+        expect(response.status).toBe(200);
+        expect(reached).toContain('/api/todo-md/rescan');
+        expect(sw.outbox().some((e: any) => e.url.includes('todo-md'))).toBe(
+            false
+        );
+    });
+
     it.each([
         '/api/ai-assistant/project-insights',
         '/api/proposals/p1/apply',
