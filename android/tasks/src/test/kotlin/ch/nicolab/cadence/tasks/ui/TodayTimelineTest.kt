@@ -155,12 +155,6 @@ class TodayTimelineTest {
     }
 
     @Test
-    fun `demain et les suggestions n'apparaissent qu'une fois la journée vide`() {
-        assertTrue(TodayTimeline.showsWhatsNext(openToday = 0))
-        assertFalse(TodayTimeline.showsWhatsNext(openToday = 2))
-    }
-
-    @Test
     fun `la journée montre tout ce qui vient, seul le passé attend replié`() {
         val timeline = build(
             (10..17).map { timed("t$it", it) },

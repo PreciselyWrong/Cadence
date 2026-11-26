@@ -37,7 +37,7 @@ class QuickAddTargetTest {
             quickAddDestinationLabel(isInbox = true, projectName = null, hasDate = false),
         )
         assertEquals(
-            "Ajoutée dans Cadence · À classer",
+            "Ajoutée dans Cadence · Planifier › À placer",
             quickAddDestinationLabel(isInbox = false, projectName = "Cadence", hasDate = false),
         )
         assertEquals(
@@ -45,8 +45,15 @@ class QuickAddTargetTest {
             quickAddDestinationLabel(isInbox = false, projectName = "Cadence", hasDate = true),
         )
         assertEquals(
-            "Ajoutée dans À classer",
+            "Ajoutée dans Planifier · À placer",
             quickAddDestinationLabel(isInbox = false, projectName = null, hasDate = false),
         )
+    }
+
+    @Test
+    fun `seule une tache sans date atterrit dans A placer`() {
+        assertTrue(quickAddLandsInToPlace(isInbox = false, hasDate = false))
+        assertFalse(quickAddLandsInToPlace(isInbox = false, hasDate = true))
+        assertFalse(quickAddLandsInToPlace(isInbox = true, hasDate = false))
     }
 }

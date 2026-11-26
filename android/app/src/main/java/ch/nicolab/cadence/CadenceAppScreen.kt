@@ -108,6 +108,7 @@ import ch.nicolab.cadence.tasks.google.GoogleOAuthRoute
 import ch.nicolab.cadence.tasks.live.NotificationRoute
 import ch.nicolab.cadence.tasks.live.NotificationTarget
 import ch.nicolab.cadence.tasks.live.pluginPageIntent
+import ch.nicolab.cadence.tasks.planning.PlanTrayRequest
 import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.ui.notifications.NotificationsScreen
 import ch.nicolab.cadence.tasks.proposals.ProposalTab
@@ -515,7 +516,13 @@ internal fun CadenceAppScreen(
                 )
             }
             if (weekendOpen) WeekendSheet(weekendUid, onClose = { weekendOpen = false })
-            if (addTaskOpen) QuickAddSheet(onDismiss = { addTaskOpen = false })
+            if (addTaskOpen) QuickAddSheet(
+                onDismiss = { addTaskOpen = false },
+                onShowToPlace = {
+                    PlanTrayRequest.request()
+                    tab = Tab.TASKS
+                },
+            )
             NavigationBarScrim()
             val fullOverlay = settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen || notificationsOpen || proposalRitual != null || morningMails
             if (!fullOverlay) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop, action = navActionHost.action ?: defaultAdd) { index ->

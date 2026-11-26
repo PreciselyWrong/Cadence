@@ -33,6 +33,7 @@ import ch.nicolab.cadence.tasks.quickadd.QuickAddSuggestions
 import ch.nicolab.cadence.tasks.quickadd.SuggestionKind
 import ch.nicolab.cadence.tasks.quickadd.TokenAtCursor
 import ch.nicolab.cadence.tasks.quickadd.quickAddDestinationLabel
+import ch.nicolab.cadence.tasks.quickadd.quickAddLandsInToPlace
 import ch.nicolab.cadence.tasks.quickadd.quickAddNeedsWhen
 import ch.nicolab.cadence.tasks.quickadd.singleLineCapture
 import androidx.compose.foundation.rememberScrollState
@@ -157,6 +158,8 @@ fun QuickAddSheet(
     slideIn: Boolean = false,
     /** Vrai pour l'ajout rapide des widgets : la feuille se ferme une fois la tâche écrite, sans série. */
     closeAfterSave: Boolean = false,
+    /** Dans l'app : « Voir » après une tâche sans date ouvre Planifier › À placer (la feuille se ferme avant). */
+    onShowToPlace: (() -> Unit)? = null,
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -199,6 +202,7 @@ fun QuickAddSheet(
     var carriedProject by remember { mutableStateOf(initialProjectUid) }
     var series by remember { mutableStateOf(QuickAddSeries()) }
     var lastCreatedUid by remember { mutableStateOf<String?>(null) }
+    var lastInToPlace by remember { mutableStateOf(false) }
     var dismissedSuggestionAt by remember { mutableStateOf<Int?>(null) }
     var tagOverrides by remember { mutableStateOf(initialTagUids.toSet()) }
     var pickingDate by remember { mutableStateOf(false) }
@@ -324,6 +328,7 @@ fun QuickAddSheet(
             val now = System.currentTimeMillis()
             series = series.saved(projectUid, now)
             lastCreatedUid = uid
+            lastInToPlace = quickAddLandsInToPlace(isInbox = false, hasDate = date != null)
             carriedProject = series.carriedProject(now)
             field = TextFieldValue("")
             ignored = emptyList()
@@ -504,6 +509,12 @@ fun QuickAddSheet(
                         overflow = TextOverflow.Ellipsis,
                     )
                     if (lastCreatedUid != null) {
+                        if (lastInToPlace && onShowToPlace != null) {
+                            TertiaryAction(label = stringResource(R.string.tasks_capture_see_to_place)) {
+                                onDismiss()
+                                onShowToPlace()
+                            }
+                        }
                         TertiaryAction(label = stringResource(R.string.tasks_capture_undo_last)) { undoLast() }
                     }
                 }

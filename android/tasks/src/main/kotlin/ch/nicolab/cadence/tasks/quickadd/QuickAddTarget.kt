@@ -14,6 +14,9 @@ fun quickAddNeedsWhen(
     fromLink: Boolean,
 ): Boolean = dueDate == null && (projectUid != null || areaUid != null || fromLink)
 
+/** Vrai quand la tâche créée se retrouve dans Planifier › À placer (« À classer » : sans date, hors Inbox). */
+fun quickAddLandsInToPlace(isInbox: Boolean, hasDate: Boolean): Boolean = !isInbox && !hasDate
+
 /** Libellé court confirmant où une capture rapide a atterri. */
 fun quickAddDestinationLabel(
     isInbox: Boolean,
@@ -21,9 +24,9 @@ fun quickAddDestinationLabel(
     hasDate: Boolean,
 ): String = when {
     isInbox -> "Capturée dans Boîte de réception"
-    projectName != null && !hasDate -> "Ajoutée dans $projectName · À classer"
+    projectName != null && !hasDate -> "Ajoutée dans $projectName · Planifier › À placer"
     projectName != null -> "Ajoutée dans $projectName"
-    !hasDate -> "Ajoutée dans À classer"
+    !hasDate -> "Ajoutée dans Planifier · À placer"
     else -> "Tâche ajoutée"
 }
 

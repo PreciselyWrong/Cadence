@@ -97,6 +97,7 @@ import ch.nicolab.cadence.tasks.planning.PlanChoice
 import ch.nicolab.cadence.tasks.planning.PlanChoices
 import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.PlanDayItem
+import ch.nicolab.cadence.tasks.planning.PlanTrayRequest
 import ch.nicolab.cadence.tasks.planning.PlanWeek
 import ch.nicolab.cadence.tasks.planning.Tray
 import ch.nicolab.cadence.tasks.planning.TrayFilter
@@ -196,6 +197,14 @@ internal fun PlanTab(
     var trayOpen by rememberSaveable { mutableStateOf(false) }
     var trayHeight by remember { mutableIntStateOf(0) }
     BackHandler(enabled = trayOpen) { trayOpen = false }
+    // « Voir » après une capture sans date : le tiroir s'ouvre sur « À placer » (son filtre par défaut).
+    val trayRequested by PlanTrayRequest.pending.collectAsStateWithLifecycle()
+    LaunchedEffect(trayRequested) {
+        if (trayRequested) {
+            trayOpen = true
+            PlanTrayRequest.consume()
+        }
+    }
 
     // « À trier (N) » en tête du tiroir : seulement en ligne, comme l'ancien écran Inbox.
     val triage: TriageViewModel = viewModel()

@@ -71,9 +71,6 @@ data class TodayTimeline(val toPlace: List<ToPlace>, val entries: List<TimelineE
             return TimelineSplit(entries.filterNot { it in hidden }, past)
         }
 
-        /** Demain et les suggestions ne s'affichent qu'une fois la journée vide : Aujourd'hui ne parle que d'aujourd'hui. */
-        fun showsWhatsNext(openToday: Int): Boolean = openToday == 0
-
         fun of(
             tasks: List<TaskItem>,
             events: List<EventWithDone>,

@@ -27,6 +27,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import ch.nicolab.cadence.tasks.planning.PlanTrayRequest
 import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.proposals.ProposalKind
 import ch.nicolab.cadence.tasks.ui.proposals.rememberProposalAction
@@ -132,6 +133,16 @@ fun TasksScreen(
         if (showPlan) {
             tab = TasksTab.UPCOMING
             onPlanShown()
+        }
+    }
+    // « Voir » après une capture sans date : Planifier, tiroir « À placer » ouvert par PlanTab.
+    val trayRequested by PlanTrayRequest.pending.collectAsStateWithLifecycle()
+    LaunchedEffect(trayRequested) {
+        if (trayRequested) {
+            openProjectUid = null
+            openTagUid = null
+            openViewUid = null
+            tab = TasksTab.UPCOMING
         }
     }
     LaunchedEffect(showProjectUid) {

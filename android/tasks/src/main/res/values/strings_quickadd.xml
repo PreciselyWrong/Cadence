@@ -5,6 +5,7 @@
     <string name="tasks_suggest_create_tag">Créer #%1$s</string>
     <string name="tasks_capture_done">Terminé</string>
     <string name="tasks_capture_undo_last">Annuler la dernière</string>
+    <string name="tasks_capture_see_to_place">Voir</string>
     <plurals name="tasks_capture_series_project">
         <item quantity="one">%1$d tâche ajoutée à %2$s</item>
         <item quantity="other">%1$d tâches ajoutées à %2$s</item>

@@ -520,12 +520,12 @@ internal fun TodayTab(
             }
         }
         item(key = "routine") { routineStrip() }
-        // Aujourd'hui sert à faire : seuls demain et les suggestions attendent repliés ; la semaine et au-delà vivent dans
-        // Planifier, pour ne pas peser sur la journée.
+        // Aujourd'hui sert à faire : demain et les suggestions attendent toujours repliés (comme le web), pour qu'une
+        // tâche à choisir reste à portée ; la semaine et au-delà vivent dans Planifier.
         listOf(
             Triple("tomorrow", R.string.planning_closed_tomorrow, later.tomorrow),
             Triple("suggested", R.string.today_fold_suggested, later.suggested),
-        ).filter { (_, _, tasks) -> tasks.isNotEmpty() && TodayTimeline.showsWhatsNext(state.today.size) }.forEach { (key, label, tasks) ->
+        ).filter { (_, _, tasks) -> tasks.isNotEmpty() }.forEach { (key, label, tasks) ->
             val open = key in openFolds
             item(key = "fold-$key") {
                 FoldHeader(stringResource(label), tasks.size, open) {
