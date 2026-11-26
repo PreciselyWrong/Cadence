@@ -1,154 +1,154 @@
 {
-    "desktopWindow": {
-        "minimize": "Minimizează",
-        "maximize": "Maximizează",
-        "close": "Închide"
+  "desktopWindow": {
+    "minimize": "Minimizează",
+    "maximize": "Maximizează",
+    "close": "Închide"
+  },
+  "weekend": {
+    "share": {
+      "error": "Imaginea nu a putut fi creată.",
+      "downloaded": "Imagine descărcată",
+      "copied": "Imagine copiată",
+      "footer": "Pregătit cu Cadence",
+      "kicker": "WEEKEND",
+      "action": "Distribuie"
     },
-    "weekend": {
-        "share": {
-            "error": "Imaginea nu a putut fi creată.",
-            "downloaded": "Imagine descărcată",
-            "copied": "Imagine copiată",
-            "footer": "Pregătit cu Cadence",
-            "kicker": "WEEKEND",
-            "action": "Distribuie"
-        },
-        "request": {
-            "error": "Cererea nu a putut fi trimisă.",
-            "failed": "Nu a putut fi pregătit ({{days}})",
-            "pending": "În pregătire pentru {{days}}",
-            "submit": "Pregătește",
-            "hint": "IA pregătește cel puțin 5 idei pe zi. Primești o notificare când e gata.",
-            "title": "Pregătește zile",
-            "open": "Alte zile"
-        },
-        "dayList": "Zilele",
-        "title": "Week-end",
-        "loadError": "Week-endul nu a putut fi deschis.",
-        "empty": "Nimic de propus în acest week-end.",
-        "applied": "Decizii aplicate: {{count}}",
-        "applyError": "Decizia nu a fost salvată.",
-        "validate": "Confirmă",
-        "calendar": "Adaugă în calendar",
-        "other": "Altă idee",
-        "skip": "Ignoră",
-        "note": "Notă",
-        "noteLabel": "Notă pentru agent",
-        "notePlaceholder": "Ce ar trebui să știe agentul",
-        "busy": "Ocupat: {{busy}}",
-        "feels": "se simte ca {{temp}}°",
-        "otherAsked": "Altă idee cerută",
-        "decided": {
-            "calendar": "În calendar",
-            "skip": "Ignorată"
-        },
-        "event": {
-            "requested": "Se adaugă",
-            "created": "Adăugată în calendar",
-            "failed": "Neadăugată",
-            "open": "Deschide în calendar"
-        },
-        "countCalendar": "În calendar: {{count}}",
-        "countOther": "Altă idee cerută: {{count}}",
-        "countNone": "Nimic ales",
-        "part": {
-            "morning": "dimineață",
-            "afternoon": "după-amiază",
-            "day": "zi"
-        },
-        "weather": {
-            "sun": "însorit",
-            "partly": "parțial noros",
-            "cloud": "noros",
-            "rain": "ploaie",
-            "snow": "ninsoare",
-            "storm": "furtună",
-            "fog": "ceață"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Mai frumos în altă parte",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Cererea nu a putut fi trimisă.",
+      "failed": "Nu a putut fi pregătit ({{days}})",
+      "pending": "În pregătire pentru {{days}}",
+      "submit": "Pregătește",
+      "hint": "IA pregătește cel puțin 5 idei pe zi. Primești o notificare când e gata.",
+      "title": "Pregătește zile",
+      "open": "Alte zile"
     },
-    "career": {
-        "choice": "ales: {{label}}",
-        "validate": "Validează ({{count}})",
-        "clear": "Șterge",
-        "applied": "{{count}} decizii aplicate",
-        "appliedOne": "1 decizie aplicată",
-        "title": "Carieră",
-        "updatedAt": "actualizat la {{time}}",
-        "empty": "Nimic nou azi",
-        "emptyHint": "Agentul trece în fiecare dimineață: revenirile, ofertele și sarcinile vor apărea aici.",
-        "allDecided": "Totul e decis pentru azi",
-        "loadError": "Pagina Carieră nu a putut fi încărcată.",
-        "retry": "Reîncearcă",
-        "applyError": "Decizia nu a fost salvată.",
-        "later": "Mai târziu",
-        "skip": "Omite",
-        "followups": {
-            "title": "Reveniri",
-            "appliedAgo": "aplicat {{when}}",
-            "openDraft": "Deschide ciorna",
-            "createTask": "Creează sarcina",
-            "done": "Gata"
-        },
-        "offers": {
-            "title": "Oferte de decis",
-            "apply": "Aplică",
-            "note": "Notă",
-            "notePlaceholder": "O notă pentru agent…",
-            "open": "Vezi oferta",
-            "expires": "expiră {{when}}",
-            "expired": "expirată"
-        },
-        "tasks": {
-            "title": "Sarcini propuse",
-            "add": "Adaugă"
-        },
-        "decided": "Decis ({{count}})",
-        "state": {
-            "applied": "Aplicat",
-            "skipped": "Omisă",
-            "later": "Mai târziu",
-            "done": "Gata",
-            "taskCreated": "Sarcină creată",
-            "added": "Adăugată",
-            "dismissed": "Respinsă"
-        }
+    "dayList": "Zilele",
+    "title": "Week-end",
+    "loadError": "Week-endul nu a putut fi deschis.",
+    "empty": "Nimic de propus în acest week-end.",
+    "applied": "Decizii aplicate: {{count}}",
+    "applyError": "Decizia nu a fost salvată.",
+    "validate": "Confirmă",
+    "calendar": "Adaugă în calendar",
+    "other": "Altă idee",
+    "skip": "Ignoră",
+    "note": "Notă",
+    "noteLabel": "Notă pentru agent",
+    "notePlaceholder": "Ce ar trebui să știe agentul",
+    "busy": "Ocupat: {{busy}}",
+    "feels": "se simte ca {{temp}}°",
+    "otherAsked": "Altă idee cerută",
+    "decided": {
+      "calendar": "În calendar",
+      "skip": "Ignorată"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Marchează ca citit",
-        "open": "Deschide"
+    "event": {
+      "requested": "Se adaugă",
+      "created": "Adăugată în calendar",
+      "failed": "Neadăugată",
+      "open": "Deschide în calendar"
     },
-    "counts": {
-        "notes_few": "{{count}} note",
-        "tasks_few": "{{count}} sarcini",
-        "goals_few": "{{count}} obiective",
-        "projects_few": "{{count}} proiecte",
-        "notes_other": "{{count}} de note",
-        "notes_one": "{{count}} notă",
-        "tasks_other": "{{count}} de sarcini",
-        "tasks_one": "{{count}} sarcină",
-        "goals_other": "{{count}} obiective",
-        "goals_one": "{{count}} obiectiv",
-        "projects_other": "{{count}} proiecte",
-        "projects_one": "{{count}} proiect"
+    "countCalendar": "În calendar: {{count}}",
+    "countOther": "Altă idee cerută: {{count}}",
+    "countNone": "Nimic ales",
+    "part": {
+      "morning": "dimineață",
+      "afternoon": "după-amiază",
+      "day": "zi"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Desktop",
-        "link": "Link",
-        "openSource": "Deschide sursa",
-        "fromSource": "Provine din {{source}}"
+    "weather": {
+      "sun": "însorit",
+      "partly": "parțial noros",
+      "cloud": "noros",
+      "rain": "ploaie",
+      "snow": "ninsoare",
+      "storm": "furtună",
+      "fog": "ceață"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Mai frumos în altă parte",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "ales: {{label}}",
+    "validate": "Validează ({{count}})",
+    "clear": "Șterge",
+    "applied": "{{count}} decizii aplicate",
+    "appliedOne": "1 decizie aplicată",
+    "title": "Carieră",
+    "updatedAt": "actualizat la {{time}}",
+    "empty": "Nimic nou azi",
+    "emptyHint": "Agentul trece în fiecare dimineață: revenirile, ofertele și sarcinile vor apărea aici.",
+    "allDecided": "Totul e decis pentru azi",
+    "loadError": "Pagina Carieră nu a putut fi încărcată.",
+    "retry": "Reîncearcă",
+    "applyError": "Decizia nu a fost salvată.",
+    "later": "Mai târziu",
+    "skip": "Omite",
+    "followups": {
+      "title": "Reveniri",
+      "appliedAgo": "aplicat {{when}}",
+      "openDraft": "Deschide ciorna",
+      "createTask": "Creează sarcina",
+      "done": "Gata"
+    },
+    "offers": {
+      "title": "Oferte de decis",
+      "apply": "Aplică",
+      "note": "Notă",
+      "notePlaceholder": "O notă pentru agent…",
+      "open": "Vezi oferta",
+      "expires": "expiră {{when}}",
+      "expired": "expirată"
+    },
+    "tasks": {
+      "title": "Sarcini propuse",
+      "add": "Adaugă"
+    },
+    "decided": "Decis ({{count}})",
+    "state": {
+      "applied": "Aplicat",
+      "skipped": "Omisă",
+      "later": "Mai târziu",
+      "done": "Gata",
+      "taskCreated": "Sarcină creată",
+      "added": "Adăugată",
+      "dismissed": "Respinsă"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Marchează ca citit",
+    "open": "Deschide"
+  },
+  "counts": {
+    "notes_few": "{{count}} note",
+    "tasks_few": "{{count}} sarcini",
+    "goals_few": "{{count}} obiective",
+    "projects_few": "{{count}} proiecte",
+    "notes_other": "{{count}} de note",
+    "notes_one": "{{count}} notă",
+    "tasks_other": "{{count}} de sarcini",
+    "tasks_one": "{{count}} sarcină",
+    "goals_other": "{{count}} obiective",
+    "goals_one": "{{count}} obiectiv",
+    "projects_other": "{{count}} proiecte",
+    "projects_one": "{{count}} proiect"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Desktop",
+    "link": "Link",
+    "openSource": "Deschide sursa",
+    "fromSource": "Provine din {{source}}"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "Din nou în coadă: {{count}}",
-            "failed_one": "Element eșuat: {{count}}",
+      "requeued_one": "Din nou în coadă: {{count}}",
+      "failed_one": "Element eșuat: {{count}}",
       "retryError": "Reîncercarea a eșuat",
       "requeued": "Din nou în coadă: {{count}}",
       "retry": "Reîncearcă",
@@ -336,15 +336,15 @@
     },
     "mail": {
       "alwaysArchive": "Arhivează mereu acest expeditor",
-            "horizon": {
-                "someday": "Cândva",
-                "nextMonth": "Luna viitoare",
-                "thisMonth": "Luna aceasta",
-                "nextWeek": "Săptămâna viitoare",
-                "week": "Săptămâna aceasta",
-                "label": "Sau mai târziu"
-            },
-            "trashRequested": "Ștergere solicitată",
+      "horizon": {
+        "someday": "Cândva",
+        "nextMonth": "Luna viitoare",
+        "thisMonth": "Luna aceasta",
+        "nextWeek": "Săptămâna viitoare",
+        "week": "Săptămâna aceasta",
+        "label": "Sau mai târziu"
+      },
+      "trashRequested": "Ștergere solicitată",
       "draftRequested": "Ciornă în pregătire în Gmail",
       "archiveRequested": "Arhivare solicitată",
       "noteSent": "Trimis înapoi la Trieur",
@@ -406,10 +406,10 @@
     "entry": "De sortat ({{count}})",
     "title": "De sortat",
     "deck": {
-            "actionFailedTrash": "Ștergerea nu a reușit",
+      "actionFailedTrash": "Ștergerea nu a reușit",
       "progressLabel": "E-mail {{position}} din {{total}}",
       "option": {
-                "trash": "Șterge",
+        "trash": "Șterge",
         "draft": "Ciornă",
         "read": "Citește",
         "event": "Calendar",
@@ -651,18 +651,18 @@
     "hideCompleted": "Ascunde Sarcini Finalizate"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Sarcinile recurente au fost păstrate, șterge-le pe rând: {{count}}",
-            "someFailed": "Neschimbate: {{count}}",
-            "deleted": "Șterse: {{count}}",
-            "moved": "Mutate: {{count}}",
-            "prioritized": "Prioritate schimbată: {{count}}",
-            "dated": "Dată schimbată: {{count}}",
-            "completed": "Finalizate: {{count}}",
-            "clear": "Golește selecția",
-            "count": "Selectate: {{count}}",
-            "label": "Sarcini selectate"
-        },
+    "selection": {
+      "recurringKept": "Sarcinile recurente au fost păstrate, șterge-le pe rând: {{count}}",
+      "someFailed": "Neschimbate: {{count}}",
+      "deleted": "Șterse: {{count}}",
+      "moved": "Mutate: {{count}}",
+      "prioritized": "Prioritate schimbată: {{count}}",
+      "dated": "Dată schimbată: {{count}}",
+      "completed": "Finalizate: {{count}}",
+      "clear": "Golește selecția",
+      "count": "Selectate: {{count}}",
+      "label": "Sarcini selectate"
+    },
     "deletedToast": "\"{{name}}\" a fost șters",
     "title": "Sarcini",
     "today": "Astăzi",
@@ -795,17 +795,17 @@
       "setDueDate": "Setează data scadentă"
     },
     "contextMenu": {
-            "review": "Revizuire",
-            "copyError": "Copierea a eșuat",
-            "titleCopied": "Titlu copiat",
-            "linkCopied": "Link copiat",
-            "deleteKey": "Del",
-            "copyTitle": "Copiază titlul",
-            "copyLink": "Copiază linkul",
-            "pickDate": "Alege o dată…",
-            "reopen": "Redeschide",
-            "complete": "Finalizează",
-            "open": "Deschide",
+      "review": "Revizuire",
+      "copyError": "Copierea a eșuat",
+      "titleCopied": "Titlu copiat",
+      "linkCopied": "Link copiat",
+      "deleteKey": "Del",
+      "copyTitle": "Copiază titlul",
+      "copyLink": "Copiază linkul",
+      "pickDate": "Alege o dată…",
+      "reopen": "Redeschide",
+      "complete": "Finalizează",
+      "open": "Deschide",
       "projectChanged": "Proiect schimbat",
       "dateChanged": "Data schimbată",
       "label": "Acțiuni pentru sarcină",
@@ -877,66 +877,66 @@
     "noActivity": "Nicio activitate încă"
   },
   "profile": {
-        "plugins": {
-            "title": "Pluginuri",
-            "description": "Pluginurile adaugă integrări proprii la server. Doar un administrator le vede. Un plugin rămâne oprit până îl activezi.",
-            "notConfigured": "Pluginurile sunt oprite. Setează TUDUDI_PLUGINS_DIR la un dosar care conține dosarele pluginurilor și repornește serverul.",
-            "reloadAll": "Reîncarcă tot",
-            "reload": "Reîncarcă",
-            "reloadPending": "Reîncarcă pentru a încărca {{version}}",
-            "updatedFrom": "actualizat din {{version}}",
-            "version": "Versiunea {{version}}",
-            "state": {
-                "disabled": "Oprit",
-                "active": "Activ",
-                "error": "Eroare",
-                "invalid": "Nevalid",
-                "incompatible": "Incompatibil",
-                "needs_approval": "Necesită aprobare",
-                "missing": "Lipsă"
-            },
-            "permissions": "Permisiuni",
-            "events": "Evenimente",
-            "permission": {
-                "events": "Ascultă evenimente",
-                "routes": "Oferă propriile rute"
-            },
-            "enabled": "Activat",
-            "needsApproval": "Această versiune cere mai mult decât înainte. Activează-l din nou pentru a aproba permisiunile și evenimentele.",
-            "checkUpdate": "Verifică actualizările",
-            "updateAvailable": "Actualizare disponibilă: {{version}}",
-            "upToDate": "La zi",
-            "updateError": "Nu s-a putut citi adresa de actualizare",
-            "settings": "Setări",
-            "saveSettings": "Salvează setările",
-            "saved": "Setări salvate",
-            "secretSaved": "Salvat",
-            "clearSecret": "Șterge",
-            "required": "obligatoriu",
-            "reloaded": "Pluginurile au fost reîncărcate",
-            "loadError": "Pluginurile nu au putut fi încărcate",
-            "none": "Niciun plugin găsit în dosarul pluginurilor.",
-            "errorLabel": "Eroare",
-            "saveError": "Pluginul nu a putut fi salvat",
-            "installLabel": "Adresa Git a pluginului",
-            "install": "Adaugă",
-            "installing": "Se adaugă...",
-            "installHint": "Aceasta descarcă cod care rulează pe server. Citește ce cere înainte să îl activezi.",
-            "installed": "Pluginul a fost adăugat. Citește ce cere, apoi activează-l.",
-            "installError": "Pluginul nu a putut fi adăugat",
-            "pull": "Actualizează",
-            "pulled": "Plugin actualizat",
-            "remove": "Șterge",
-            "removeTitle": "Ștergi acest plugin?",
-            "removeMessage": "Dosarul și setările lui sunt șterse de pe server. Nu se poate anula.",
-            "page": {
-                "notFound": "Pluginul nu a fost găsit sau este oprit"
-            },
-            "approveIntro": "Acest plugin rulează în server și cere:",
-            "approveOutro": "Permisiunile limitează ce oferă Cadence pluginului; ele nu sunt un mediu izolat. Aprobă doar cod pe care l-ai citit.",
-            "approveTitle": "Aprobi permisiunile?",
-            "approve": "Aprobă și activează"
-        },
+    "plugins": {
+      "title": "Pluginuri",
+      "description": "Pluginurile adaugă integrări proprii la server. Doar un administrator le vede. Un plugin rămâne oprit până îl activezi.",
+      "notConfigured": "Pluginurile sunt oprite. Setează TUDUDI_PLUGINS_DIR la un dosar care conține dosarele pluginurilor și repornește serverul.",
+      "reloadAll": "Reîncarcă tot",
+      "reload": "Reîncarcă",
+      "reloadPending": "Reîncarcă pentru a încărca {{version}}",
+      "updatedFrom": "actualizat din {{version}}",
+      "version": "Versiunea {{version}}",
+      "state": {
+        "disabled": "Oprit",
+        "active": "Activ",
+        "error": "Eroare",
+        "invalid": "Nevalid",
+        "incompatible": "Incompatibil",
+        "needs_approval": "Necesită aprobare",
+        "missing": "Lipsă"
+      },
+      "permissions": "Permisiuni",
+      "events": "Evenimente",
+      "permission": {
+        "events": "Ascultă evenimente",
+        "routes": "Oferă propriile rute"
+      },
+      "enabled": "Activat",
+      "needsApproval": "Această versiune cere mai mult decât înainte. Activează-l din nou pentru a aproba permisiunile și evenimentele.",
+      "checkUpdate": "Verifică actualizările",
+      "updateAvailable": "Actualizare disponibilă: {{version}}",
+      "upToDate": "La zi",
+      "updateError": "Nu s-a putut citi adresa de actualizare",
+      "settings": "Setări",
+      "saveSettings": "Salvează setările",
+      "saved": "Setări salvate",
+      "secretSaved": "Salvat",
+      "clearSecret": "Șterge",
+      "required": "obligatoriu",
+      "reloaded": "Pluginurile au fost reîncărcate",
+      "loadError": "Pluginurile nu au putut fi încărcate",
+      "none": "Niciun plugin găsit în dosarul pluginurilor.",
+      "errorLabel": "Eroare",
+      "saveError": "Pluginul nu a putut fi salvat",
+      "installLabel": "Adresa Git a pluginului",
+      "install": "Adaugă",
+      "installing": "Se adaugă...",
+      "installHint": "Aceasta descarcă cod care rulează pe server. Citește ce cere înainte să îl activezi.",
+      "installed": "Pluginul a fost adăugat. Citește ce cere, apoi activează-l.",
+      "installError": "Pluginul nu a putut fi adăugat",
+      "pull": "Actualizează",
+      "pulled": "Plugin actualizat",
+      "remove": "Șterge",
+      "removeTitle": "Ștergi acest plugin?",
+      "removeMessage": "Dosarul și setările lui sunt șterse de pe server. Nu se poate anula.",
+      "page": {
+        "notFound": "Pluginul nu a fost găsit sau este oprit"
+      },
+      "approveIntro": "Acest plugin rulează în server și cere:",
+      "approveOutro": "Permisiunile limitează ce oferă Cadence pluginului; ele nu sunt un mediu izolat. Aprobă doar cod pe care l-ai citit.",
+      "approveTitle": "Aprobi permisiunile?",
+      "approve": "Aprobă și activează"
+    },
     "showTaskDescription": "Afișează descrierea sub titlu",
     "sync": {
       "field": {
@@ -1107,8 +1107,8 @@
     "nextTaskSuggestion": "Sugestie pentru Următoarea Sarcină",
     "enableNextTaskSuggestion": "Activează Sugestiile pentru Următoarea Sarcină",
     "tabs": {
-            "agents": "Agenți",
-            "plugins": "Pluginuri",
+      "agents": "Agenți",
+      "plugins": "Pluginuri",
       "classify": "Clasificare",
       "sync": "Sincronizare",
       "general": "General",
@@ -1676,20 +1676,20 @@
     "photoOn": "pe",
     "groups": {
       "account": "Cont",
-            "appearance": "Interfață",
-            "planning": "Organizare",
+      "appearance": "Interfață",
+      "planning": "Organizare",
       "integrations": "Integrări",
-            "security": "Acces",
+      "security": "Acces",
       "advanced": "Avansat"
     },
     "optional": "Opțional",
     "accent": "Culoare de accent",
     "accentCustom": "Culoare personalizată (hex)",
-        "pureBlack": "Negru pur în modul întunecat",
-        "sidebarPanelTitle": "Panou",
-        "sidebarPanelHint": "Blocurile bării laterale deschise, de sus în jos.",
-        "sidebarPanelPinned": "Fixate",
-        "sidebarPanelMonth": "Calendar lunar"
+    "pureBlack": "Negru pur în modul întunecat",
+    "sidebarPanelTitle": "Panou",
+    "sidebarPanelHint": "Blocurile bării laterale deschise, de sus în jos.",
+    "sidebarPanelPinned": "Fixate",
+    "sidebarPanelMonth": "Calendar lunar"
   },
   "productivity": {
     "stalledProjects": "Proiecte Blocate",
@@ -2986,7 +2986,7 @@
     "time": "Timp",
     "allDay": "Toată ziua",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Sfârșitul este înaintea începutului",
       "editEvent": "Editează evenimentul",
       "newEvent": "Eveniment nou",
@@ -4033,10 +4033,10 @@
       "lead": "Când",
       "atTime": "La oră",
       "minutesBefore": "Cu {{count}} min înainte"
-        },
-        "desktopApp": {
-            "title": "Notificările acestei aplicații",
-            "body": "Cadence pentru Linux afișează notificări de sistem, chiar și cu fereastra închisă, atâta timp cât pictograma sa este în tava de sistem. Alege care în coloana Computer de mai jos. Are nevoie de o cheie API, setată în setările aplicației (meniul din tavă)."
+    },
+    "desktopApp": {
+      "title": "Notificările acestei aplicații",
+      "body": "Cadence pentru Linux afișează notificări de sistem, chiar și cu fereastra închisă, atâta timp cât pictograma sa este în tava de sistem. Alege care în coloana Computer de mai jos. Are nevoie de o cheie API, setată în setările aplicației (meniul din tavă)."
     }
   },
   "projectStatus": {
@@ -4518,7 +4518,7 @@
     "invalidHint": "Poate a fost deja folosit sau a expirat. Cere unul nou persoanei care ți l-a trimis."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} sarcină va ocupa următorul interval liber.",
+    "placeAllHint_one": "{{count}} sarcină va ocupa următorul interval liber.",
     "inProgress": "În lucru",
     "overdue": "Întârziate",
     "dueToday": "Scadente azi",
@@ -5197,7 +5197,7 @@
       "instructionsOther": "Orice altă coloană poate fi păstrată în nota sarcinii, ca să nu se piardă nimic din foaie."
     },
     "import": {
-            "undoneKept_one": "Importul a fost anulat. {{count}} sarcină modificată de atunci a fost păstrată.",
+      "undoneKept_one": "Importul a fost anulat. {{count}} sarcină modificată de atunci a fost păstrată.",
       "fieldParent": "Sarcină părinte",
       "fieldWbs": "WBS / număr de structură",
       "fieldEstimate": "Estimare",
@@ -5429,7 +5429,49 @@
     "columnActions": "Acțiuni coloană",
     "newColumn": "Coloană nouă",
     "loadError": "Coloanele nu au putut fi încărcate",
-    "saveError": "Panoul nu a putut fi salvat"
+    "saveError": "Panoul nu a putut fi salvat",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Discută cu IA",
@@ -5843,8 +5885,8 @@
       "plan": "Pe pagina Planifică"
     },
     "shortcuts": {
-            "panePrevious": "Sarcina anterioară din panou",
-            "paneNext": "Sarcina următoare din panou",
+      "panePrevious": "Sarcina anterioară din panou",
+      "paneNext": "Sarcina următoare din panou",
       "palette": "Deschide paleta de comenzi",
       "capture": "Captură rapidă",
       "search": "Caută",

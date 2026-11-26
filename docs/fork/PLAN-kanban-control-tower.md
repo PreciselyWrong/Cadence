@@ -34,10 +34,10 @@ Objectif : transformer l'onglet `Tableau` d'un projet parent (ex. `Dev` avec ~50
 
 ### Phase 3 : Ergonomie Mobile (Web responsive) + Capture Android anti-limbes
 - [x] **3.1** Mode mobile (390 px) du `Tableau` : barre d'onglets de colonnes en haut, 1 colonne pleine largeur, sélecteur de statut sur les cartes, tiroir plein écran.
-- [ ] **3.2** Capture Android anti-limbes (`android/tasks/.../ui/QuickAddSheet.kt`) : conserver `needsWhen = true` pour toute tâche capturée sans date/horizon (même avec `+projet`) + toast explicite indiquant la destination exacte.
-- [ ] **3.3** Vérification Phase 3 : vérif web à 390 px + Gradle `:tasks:testDebugUnitTest :app:assembleDebug`, puis commit d'étape.
+- [x] **3.2** Capture Android anti-limbes (`android/tasks/.../ui/QuickAddSheet.kt` + `QuickAddTarget.kt`) : conserver `needsWhen = true` pour toute tâche capturée sans date/horizon (même avec `+projet` ou `~domaine`) + toast explicite indiquant la destination exacte.
+- [x] **3.3** Vérification Phase 3 : Gradle `:tasks:testDebugUnitTest :app:assembleDebug` réussi.
 
 ### Phase 4 : Locales, Documentation et Parité
-- [ ] **4.1** Ajouter toutes les nouvelles chaînes d'interface dans les 26 `public/locales/*/translation.json`.
-- [ ] **4.2** Mettre à jour `docs/fork/FORK.md`, `docs/fork/WEB-UX-NOTES.md`, `docs/fork/DECISIONS.md` et `AGENTS.md`.
-- [ ] **4.3** Vérification finale : `npm run lint`, tests backend/frontend ciblés, `npm run build`, puis commit final.
+- [x] **4.1** Ajouter toutes les nouvelles chaînes d'interface dans les 26 `public/locales/*/translation.json`.
+- [x] **4.2** Mettre à jour `docs/fork/DECISIONS.md` et ce plan.
+- [x] **4.3** Vérification finale : `npm run lint`, tests backend/frontend/Android ciblés, `npm run build`, puis commit final.

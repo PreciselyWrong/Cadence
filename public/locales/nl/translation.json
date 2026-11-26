@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Minimaliseren",
-        "maximize": "Maximaliseren",
-        "close": "Sluiten"
+  "desktopWindow": {
+    "minimize": "Minimaliseren",
+    "maximize": "Maximaliseren",
+    "close": "Sluiten"
+  },
+  "weekend": {
+    "share": {
+      "error": "De afbeelding kon niet worden gemaakt.",
+      "downloaded": "Afbeelding gedownload",
+      "copied": "Afbeelding gekopieerd",
+      "footer": "Voorbereid met Cadence",
+      "kicker": "WEEKEND",
+      "action": "Delen"
     },
-    "weekend": {
-        "share": {
-            "error": "De afbeelding kon niet worden gemaakt.",
-            "downloaded": "Afbeelding gedownload",
-            "copied": "Afbeelding gekopieerd",
-            "footer": "Voorbereid met Cadence",
-            "kicker": "WEEKEND",
-            "action": "Delen"
-        },
-        "request": {
-            "error": "Het verzoek kon niet worden verzonden.",
-            "failed": "Kon niet worden voorbereid ({{days}})",
-            "pending": "Wordt voorbereid voor {{days}}",
-            "submit": "Voorbereiden",
-            "hint": "AI bereidt minstens 5 ideeën per dag voor. Je krijgt een melding als het klaar is.",
-            "title": "Dagen voorbereiden",
-            "open": "Andere dagen"
-        },
-        "dayList": "De dagen",
-        "title": "Weekend",
-        "loadError": "Het weekend kon niet worden geopend.",
-        "empty": "Niets voor te stellen dit weekend.",
-        "applied": "Beslissingen toegepast: {{count}}",
-        "applyError": "De beslissing is niet opgeslagen.",
-        "validate": "Bevestigen",
-        "calendar": "In agenda zetten",
-        "other": "Ander idee",
-        "skip": "Overslaan",
-        "note": "Notitie",
-        "noteLabel": "Notitie voor de agent",
-        "notePlaceholder": "Wat de agent moet weten",
-        "busy": "Bezet: {{busy}}",
-        "feels": "voelt als {{temp}}°",
-        "otherAsked": "Ander idee gevraagd",
-        "decided": {
-            "calendar": "In de agenda",
-            "skip": "Overgeslagen"
-        },
-        "event": {
-            "requested": "Wordt toegevoegd",
-            "created": "Toegevoegd aan agenda",
-            "failed": "Niet toegevoegd",
-            "open": "Openen in agenda"
-        },
-        "countCalendar": "In de agenda: {{count}}",
-        "countOther": "Ander idee gevraagd: {{count}}",
-        "countNone": "Niets gekozen",
-        "part": {
-            "morning": "ochtend",
-            "afternoon": "middag",
-            "day": "dag"
-        },
-        "weather": {
-            "sun": "zonnig",
-            "partly": "wisselend zonnig",
-            "cloud": "bewolkt",
-            "rain": "regen",
-            "snow": "sneeuw",
-            "storm": "onweer",
-            "fog": "mist"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Elders mooier",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Het verzoek kon niet worden verzonden.",
+      "failed": "Kon niet worden voorbereid ({{days}})",
+      "pending": "Wordt voorbereid voor {{days}}",
+      "submit": "Voorbereiden",
+      "hint": "AI bereidt minstens 5 ideeën per dag voor. Je krijgt een melding als het klaar is.",
+      "title": "Dagen voorbereiden",
+      "open": "Andere dagen"
     },
-    "career": {
-        "choice": "gekozen: {{label}}",
-        "validate": "Bevestigen ({{count}})",
-        "clear": "Wissen",
-        "applied": "{{count}} beslissingen toegepast",
-        "appliedOne": "1 beslissing toegepast",
-        "title": "Carrière",
-        "updatedAt": "bijgewerkt om {{time}}",
-        "empty": "Vandaag niets nieuws",
-        "emptyHint": "De agent kijkt elke ochtend: opvolgingen, vacatures en taken verschijnen hier.",
-        "allDecided": "Alles is beslist voor vandaag",
-        "loadError": "De Carrière-pagina kon niet worden geladen.",
-        "retry": "Opnieuw proberen",
-        "applyError": "De beslissing is niet opgeslagen.",
-        "later": "Later",
-        "skip": "Overslaan",
-        "followups": {
-            "title": "Opvolgen",
-            "appliedAgo": "gesolliciteerd {{when}}",
-            "openDraft": "Concept openen",
-            "createTask": "Taak maken",
-            "done": "Gedaan"
-        },
-        "offers": {
-            "title": "Vacatures om te beslissen",
-            "apply": "Solliciteren",
-            "note": "Opmerking",
-            "notePlaceholder": "Een opmerking voor de agent…",
-            "open": "Vacature bekijken",
-            "expires": "verloopt {{when}}",
-            "expired": "verlopen"
-        },
-        "tasks": {
-            "title": "Voorgestelde taken",
-            "add": "Toevoegen"
-        },
-        "decided": "Beslist ({{count}})",
-        "state": {
-            "applied": "Gesolliciteerd",
-            "skipped": "Overgeslagen",
-            "later": "Later",
-            "done": "Gedaan",
-            "taskCreated": "Taak gemaakt",
-            "added": "Toegevoegd",
-            "dismissed": "Afgewezen"
-        }
+    "dayList": "De dagen",
+    "title": "Weekend",
+    "loadError": "Het weekend kon niet worden geopend.",
+    "empty": "Niets voor te stellen dit weekend.",
+    "applied": "Beslissingen toegepast: {{count}}",
+    "applyError": "De beslissing is niet opgeslagen.",
+    "validate": "Bevestigen",
+    "calendar": "In agenda zetten",
+    "other": "Ander idee",
+    "skip": "Overslaan",
+    "note": "Notitie",
+    "noteLabel": "Notitie voor de agent",
+    "notePlaceholder": "Wat de agent moet weten",
+    "busy": "Bezet: {{busy}}",
+    "feels": "voelt als {{temp}}°",
+    "otherAsked": "Ander idee gevraagd",
+    "decided": {
+      "calendar": "In de agenda",
+      "skip": "Overgeslagen"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Markeren als gelezen",
-        "open": "Openen"
+    "event": {
+      "requested": "Wordt toegevoegd",
+      "created": "Toegevoegd aan agenda",
+      "failed": "Niet toegevoegd",
+      "open": "Openen in agenda"
     },
-    "counts": {
-        "notes_other": "{{count}} notities",
-        "notes_one": "{{count}} notitie",
-        "tasks_other": "{{count}} taken",
-        "tasks_one": "{{count}} taak",
-        "goals_other": "{{count}} doelen",
-        "goals_one": "{{count}} doel",
-        "projects_other": "{{count}} projecten",
-        "projects_one": "{{count}} project"
+    "countCalendar": "In de agenda: {{count}}",
+    "countOther": "Ander idee gevraagd: {{count}}",
+    "countNone": "Niets gekozen",
+    "part": {
+      "morning": "ochtend",
+      "afternoon": "middag",
+      "day": "dag"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Bureaublad",
-        "link": "Link",
-        "openSource": "Bron openen",
-        "fromSource": "Komt van {{source}}"
+    "weather": {
+      "sun": "zonnig",
+      "partly": "wisselend zonnig",
+      "cloud": "bewolkt",
+      "rain": "regen",
+      "snow": "sneeuw",
+      "storm": "onweer",
+      "fog": "mist"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Elders mooier",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "gekozen: {{label}}",
+    "validate": "Bevestigen ({{count}})",
+    "clear": "Wissen",
+    "applied": "{{count}} beslissingen toegepast",
+    "appliedOne": "1 beslissing toegepast",
+    "title": "Carrière",
+    "updatedAt": "bijgewerkt om {{time}}",
+    "empty": "Vandaag niets nieuws",
+    "emptyHint": "De agent kijkt elke ochtend: opvolgingen, vacatures en taken verschijnen hier.",
+    "allDecided": "Alles is beslist voor vandaag",
+    "loadError": "De Carrière-pagina kon niet worden geladen.",
+    "retry": "Opnieuw proberen",
+    "applyError": "De beslissing is niet opgeslagen.",
+    "later": "Later",
+    "skip": "Overslaan",
+    "followups": {
+      "title": "Opvolgen",
+      "appliedAgo": "gesolliciteerd {{when}}",
+      "openDraft": "Concept openen",
+      "createTask": "Taak maken",
+      "done": "Gedaan"
+    },
+    "offers": {
+      "title": "Vacatures om te beslissen",
+      "apply": "Solliciteren",
+      "note": "Opmerking",
+      "notePlaceholder": "Een opmerking voor de agent…",
+      "open": "Vacature bekijken",
+      "expires": "verloopt {{when}}",
+      "expired": "verlopen"
+    },
+    "tasks": {
+      "title": "Voorgestelde taken",
+      "add": "Toevoegen"
+    },
+    "decided": "Beslist ({{count}})",
+    "state": {
+      "applied": "Gesolliciteerd",
+      "skipped": "Overgeslagen",
+      "later": "Later",
+      "done": "Gedaan",
+      "taskCreated": "Taak gemaakt",
+      "added": "Toegevoegd",
+      "dismissed": "Afgewezen"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Markeren als gelezen",
+    "open": "Openen"
+  },
+  "counts": {
+    "notes_other": "{{count}} notities",
+    "notes_one": "{{count}} notitie",
+    "tasks_other": "{{count}} taken",
+    "tasks_one": "{{count}} taak",
+    "goals_other": "{{count}} doelen",
+    "goals_one": "{{count}} doel",
+    "projects_other": "{{count}} projecten",
+    "projects_one": "{{count}} project"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Bureaublad",
+    "link": "Link",
+    "openSource": "Bron openen",
+    "fromSource": "Komt van {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "Opnieuw proberen mislukt",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Deze afzender altijd archiveren",
-            "horizon": {
-                "someday": "Ooit",
-                "nextMonth": "Volgende maand",
-                "thisMonth": "Deze maand",
-                "nextWeek": "Volgende week",
-                "week": "Deze week",
-                "label": "Of later"
-            },
-            "trashRequested": "Verwijdering gevraagd",
+      "horizon": {
+        "someday": "Ooit",
+        "nextMonth": "Volgende maand",
+        "thisMonth": "Deze maand",
+        "nextWeek": "Volgende week",
+        "week": "Deze week",
+        "label": "Of later"
+      },
+      "trashRequested": "Verwijdering gevraagd",
       "draftRequested": "Concept wordt voorbereid in Gmail",
       "archiveRequested": "Archiveren aangevraagd",
       "noteSent": "Teruggestuurd naar de Trieur",
@@ -402,10 +402,10 @@
     "entry": "Te sorteren ({{count}})",
     "title": "Te sorteren",
     "deck": {
-            "actionFailedTrash": "Verwijderen is niet gelukt",
+      "actionFailedTrash": "Verwijderen is niet gelukt",
       "progressLabel": "Mail {{position}} van {{total}}",
       "option": {
-                "trash": "Verwijderen",
+        "trash": "Verwijderen",
         "draft": "Concept",
         "read": "Lezen",
         "event": "Agenda",
@@ -646,18 +646,18 @@
     "hideCompleted": "Verberg Voltooide Taken"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Terugkerende taken behouden, verwijder ze één voor één: {{count}}",
-            "someFailed": "Niet gewijzigd: {{count}}",
-            "deleted": "Verwijderd: {{count}}",
-            "moved": "Verplaatst: {{count}}",
-            "prioritized": "Prioriteit gewijzigd: {{count}}",
-            "dated": "Datum gewijzigd: {{count}}",
-            "completed": "Voltooid: {{count}}",
-            "clear": "Selectie wissen",
-            "count": "Geselecteerd: {{count}}",
-            "label": "Geselecteerde taken"
-        },
+    "selection": {
+      "recurringKept": "Terugkerende taken behouden, verwijder ze één voor één: {{count}}",
+      "someFailed": "Niet gewijzigd: {{count}}",
+      "deleted": "Verwijderd: {{count}}",
+      "moved": "Verplaatst: {{count}}",
+      "prioritized": "Prioriteit gewijzigd: {{count}}",
+      "dated": "Datum gewijzigd: {{count}}",
+      "completed": "Voltooid: {{count}}",
+      "clear": "Selectie wissen",
+      "count": "Geselecteerd: {{count}}",
+      "label": "Geselecteerde taken"
+    },
     "deletedToast": "\"{{name}}\" verwijderd",
     "title": "Taken",
     "today": "Vandaag",
@@ -790,17 +790,17 @@
       "setDueDate": "Vervaldatum instellen"
     },
     "contextMenu": {
-            "review": "Review",
-            "copyError": "Kopiëren mislukt",
-            "titleCopied": "Titel gekopieerd",
-            "linkCopied": "Link gekopieerd",
-            "deleteKey": "Del",
-            "copyTitle": "Titel kopiëren",
-            "copyLink": "Link kopiëren",
-            "pickDate": "Kies een datum…",
-            "reopen": "Heropenen",
-            "complete": "Voltooien",
-            "open": "Openen",
+      "review": "Review",
+      "copyError": "Kopiëren mislukt",
+      "titleCopied": "Titel gekopieerd",
+      "linkCopied": "Link gekopieerd",
+      "deleteKey": "Del",
+      "copyTitle": "Titel kopiëren",
+      "copyLink": "Link kopiëren",
+      "pickDate": "Kies een datum…",
+      "reopen": "Heropenen",
+      "complete": "Voltooien",
+      "open": "Openen",
       "projectChanged": "Project gewijzigd",
       "dateChanged": "Datum gewijzigd",
       "label": "Taakacties",
@@ -872,66 +872,66 @@
     "noActivity": "Nog geen activiteit"
   },
   "profile": {
-        "plugins": {
-            "title": "Plug-ins",
-            "description": "Plug-ins voegen je eigen integraties toe aan de server. Alleen een beheerder ziet ze. Een plug-in blijft uit tot je hem aanzet.",
-            "notConfigured": "Plug-ins staan uit. Zet TUDUDI_PLUGINS_DIR op een map met plug-inmappen en start de server opnieuw.",
-            "reloadAll": "Alles opnieuw laden",
-            "reload": "Opnieuw laden",
-            "reloadPending": "Opnieuw laden om {{version}} te laden",
-            "updatedFrom": "bijgewerkt vanaf {{version}}",
-            "version": "Versie {{version}}",
-            "state": {
-                "disabled": "Uit",
-                "active": "Actief",
-                "error": "Fout",
-                "invalid": "Ongeldig",
-                "incompatible": "Niet compatibel",
-                "needs_approval": "Goedkeuring nodig",
-                "missing": "Ontbreekt"
-            },
-            "permissions": "Rechten",
-            "events": "Gebeurtenissen",
-            "permission": {
-                "events": "Luistert naar gebeurtenissen",
-                "routes": "Biedt eigen routes aan"
-            },
-            "enabled": "Aan",
-            "needsApproval": "Deze versie vraagt meer dan voorheen. Zet hem opnieuw aan om de rechten en gebeurtenissen goed te keuren.",
-            "checkUpdate": "Controleren op updates",
-            "updateAvailable": "Update beschikbaar: {{version}}",
-            "upToDate": "Actueel",
-            "updateError": "Het updateadres kon niet worden gelezen",
-            "settings": "Instellingen",
-            "saveSettings": "Instellingen opslaan",
-            "saved": "Instellingen opgeslagen",
-            "secretSaved": "Opgeslagen",
-            "clearSecret": "Wissen",
-            "required": "verplicht",
-            "reloaded": "Plug-ins opnieuw geladen",
-            "loadError": "Plug-ins konden niet worden geladen",
-            "none": "Geen plug-in gevonden in de plug-inmap.",
-            "errorLabel": "Fout",
-            "saveError": "De plug-in kon niet worden opgeslagen",
-            "installLabel": "Git-adres van de plugin",
-            "install": "Toevoegen",
-            "installing": "Bezig met toevoegen...",
-            "installHint": "Dit downloadt code die in de server draait. Lees wat hij vraagt voordat je hem aanzet.",
-            "installed": "Plugin toegevoegd. Lees wat hij vraagt en zet hem dan aan.",
-            "installError": "De plugin kon niet worden toegevoegd",
-            "pull": "Bijwerken",
-            "pulled": "Plugin bijgewerkt",
-            "remove": "Verwijderen",
-            "removeTitle": "Deze plugin verwijderen?",
-            "removeMessage": "De map en de instellingen worden van de server verwijderd. Dit kan niet ongedaan worden gemaakt.",
-            "page": {
-                "notFound": "Plugin niet gevonden of uitgeschakeld"
-            },
-            "approveIntro": "Deze plug-in draait in de server en vraagt om:",
-            "approveOutro": "Rechten beperken wat Cadence aan de plug-in geeft; het is geen sandbox. Keur alleen code goed die je hebt gelezen.",
-            "approveTitle": "Rechten goedkeuren?",
-            "approve": "Goedkeuren en inschakelen"
-        },
+    "plugins": {
+      "title": "Plug-ins",
+      "description": "Plug-ins voegen je eigen integraties toe aan de server. Alleen een beheerder ziet ze. Een plug-in blijft uit tot je hem aanzet.",
+      "notConfigured": "Plug-ins staan uit. Zet TUDUDI_PLUGINS_DIR op een map met plug-inmappen en start de server opnieuw.",
+      "reloadAll": "Alles opnieuw laden",
+      "reload": "Opnieuw laden",
+      "reloadPending": "Opnieuw laden om {{version}} te laden",
+      "updatedFrom": "bijgewerkt vanaf {{version}}",
+      "version": "Versie {{version}}",
+      "state": {
+        "disabled": "Uit",
+        "active": "Actief",
+        "error": "Fout",
+        "invalid": "Ongeldig",
+        "incompatible": "Niet compatibel",
+        "needs_approval": "Goedkeuring nodig",
+        "missing": "Ontbreekt"
+      },
+      "permissions": "Rechten",
+      "events": "Gebeurtenissen",
+      "permission": {
+        "events": "Luistert naar gebeurtenissen",
+        "routes": "Biedt eigen routes aan"
+      },
+      "enabled": "Aan",
+      "needsApproval": "Deze versie vraagt meer dan voorheen. Zet hem opnieuw aan om de rechten en gebeurtenissen goed te keuren.",
+      "checkUpdate": "Controleren op updates",
+      "updateAvailable": "Update beschikbaar: {{version}}",
+      "upToDate": "Actueel",
+      "updateError": "Het updateadres kon niet worden gelezen",
+      "settings": "Instellingen",
+      "saveSettings": "Instellingen opslaan",
+      "saved": "Instellingen opgeslagen",
+      "secretSaved": "Opgeslagen",
+      "clearSecret": "Wissen",
+      "required": "verplicht",
+      "reloaded": "Plug-ins opnieuw geladen",
+      "loadError": "Plug-ins konden niet worden geladen",
+      "none": "Geen plug-in gevonden in de plug-inmap.",
+      "errorLabel": "Fout",
+      "saveError": "De plug-in kon niet worden opgeslagen",
+      "installLabel": "Git-adres van de plugin",
+      "install": "Toevoegen",
+      "installing": "Bezig met toevoegen...",
+      "installHint": "Dit downloadt code die in de server draait. Lees wat hij vraagt voordat je hem aanzet.",
+      "installed": "Plugin toegevoegd. Lees wat hij vraagt en zet hem dan aan.",
+      "installError": "De plugin kon niet worden toegevoegd",
+      "pull": "Bijwerken",
+      "pulled": "Plugin bijgewerkt",
+      "remove": "Verwijderen",
+      "removeTitle": "Deze plugin verwijderen?",
+      "removeMessage": "De map en de instellingen worden van de server verwijderd. Dit kan niet ongedaan worden gemaakt.",
+      "page": {
+        "notFound": "Plugin niet gevonden of uitgeschakeld"
+      },
+      "approveIntro": "Deze plug-in draait in de server en vraagt om:",
+      "approveOutro": "Rechten beperken wat Cadence aan de plug-in geeft; het is geen sandbox. Keur alleen code goed die je hebt gelezen.",
+      "approveTitle": "Rechten goedkeuren?",
+      "approve": "Goedkeuren en inschakelen"
+    },
     "showTaskDescription": "Beschrijving onder de titel tonen",
     "sync": {
       "field": {
@@ -1102,8 +1102,8 @@
     "nextTaskSuggestion": "Volgende Taak Suggestie",
     "enableNextTaskSuggestion": "Schakel Volgende Taak Suggesties in",
     "tabs": {
-            "agents": "Agents",
-            "plugins": "Plug-ins",
+      "agents": "Agents",
+      "plugins": "Plug-ins",
       "classify": "Indeling",
       "sync": "Synchronisatie",
       "general": "Algemeen",
@@ -1669,20 +1669,20 @@
     "photoOn": "op",
     "groups": {
       "account": "Account",
-            "appearance": "Interface",
-            "planning": "Organisatie",
+      "appearance": "Interface",
+      "planning": "Organisatie",
       "integrations": "Integraties",
-            "security": "Toegang",
+      "security": "Toegang",
       "advanced": "Geavanceerd"
     },
     "optional": "Optioneel",
     "accent": "Accentkleur",
     "accentCustom": "Aangepaste kleur (hex)",
-        "pureBlack": "Puur zwart in donkere modus",
-        "sidebarPanelTitle": "Paneel",
-        "sidebarPanelHint": "De blokken van de geopende zijbalk, van boven naar beneden.",
-        "sidebarPanelPinned": "Vastgezet",
-        "sidebarPanelMonth": "Maandkalender"
+    "pureBlack": "Puur zwart in donkere modus",
+    "sidebarPanelTitle": "Paneel",
+    "sidebarPanelHint": "De blokken van de geopende zijbalk, van boven naar beneden.",
+    "sidebarPanelPinned": "Vastgezet",
+    "sidebarPanelMonth": "Maandkalender"
   },
   "productivity": {
     "stalledProjects": "Stagnerende Projecten",
@@ -2254,8 +2254,8 @@
     "createError": "Aanmaken van notitie is mislukt"
   },
   "task": {
-        "inHours_one": "over {{count}} uur",
-        "hoursAgo_one": "{{count}} uur geleden",
+    "inHours_one": "over {{count}} uur",
+    "hoursAgo_one": "{{count}} uur geleden",
     "duplicateError": "De taak kon niet worden gedupliceerd.",
     "duplicated": "Taak gedupliceerd",
     "duplicate": "Dupliceren",
@@ -2975,7 +2975,7 @@
     "time": "Tijd",
     "allDay": "De hele dag",
     "google": {
-            "confirmDelete": "Definitief verwijderen?",
+      "confirmDelete": "Definitief verwijderen?",
       "endBeforeStart": "Het einde ligt vóór het begin",
       "editEvent": "Afspraak bewerken",
       "newEvent": "Nieuwe afspraak",
@@ -4021,10 +4021,10 @@
       "lead": "Wanneer",
       "atTime": "Op de tijd",
       "minutesBefore": "{{count}} min vooraf"
-        },
-        "desktopApp": {
-            "title": "Meldingen van deze app",
-            "body": "Cadence voor Linux toont systeemmeldingen, ook met het venster gesloten, zolang het pictogram in het systeemvak staat. Kies hieronder in de kolom Bureaublad welke. Er is een API-sleutel nodig, in te stellen in de app-instellingen (menu van het systeemvakpictogram)."
+    },
+    "desktopApp": {
+      "title": "Meldingen van deze app",
+      "body": "Cadence voor Linux toont systeemmeldingen, ook met het venster gesloten, zolang het pictogram in het systeemvak staat. Kies hieronder in de kolom Bureaublad welke. Er is een API-sleutel nodig, in te stellen in de app-instellingen (menu van het systeemvakpictogram)."
     }
   },
   "projectStatus": {
@@ -4505,7 +4505,7 @@
     "invalidHint": "Hij is mogelijk al gebruikt of verlopen. Vraag degene die hem stuurde om een nieuwe."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} taak gaat naar het eerstvolgende vrije moment.",
+    "placeAllHint_one": "{{count}} taak gaat naar het eerstvolgende vrije moment.",
     "inProgress": "Bezig",
     "overdue": "Achterstallig",
     "dueToday": "Vandaag gepland",
@@ -5183,7 +5183,7 @@
       "instructionsOther": "Elke andere kolom kan in de notitie van de taak bewaard worden, zodat er niets uit het blad verloren gaat."
     },
     "import": {
-            "undoneKept_one": "De import is ongedaan gemaakt. {{count}} taak die sindsdien is gewijzigd, is bewaard.",
+      "undoneKept_one": "De import is ongedaan gemaakt. {{count}} taak die sindsdien is gewijzigd, is bewaard.",
       "fieldParent": "Bovenliggende taak",
       "fieldWbs": "WBS / outlinenummer",
       "fieldEstimate": "Schatting",
@@ -5414,7 +5414,49 @@
     "columnActions": "Kolomacties",
     "newColumn": "Nieuwe kolom",
     "loadError": "Kolommen konden niet worden geladen",
-    "saveError": "Bord kon niet worden opgeslagen"
+    "saveError": "Bord kon niet worden opgeslagen",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Bespreken met de AI",
@@ -5826,8 +5868,8 @@
       "plan": "Op de pagina Plannen"
     },
     "shortcuts": {
-            "panePrevious": "Vorige taak in het paneel",
-            "paneNext": "Volgende taak in het paneel",
+      "panePrevious": "Vorige taak in het paneel",
+      "paneNext": "Volgende taak in het paneel",
       "palette": "Opdrachtenpalet openen",
       "capture": "Snelle invoer",
       "search": "Zoeken",

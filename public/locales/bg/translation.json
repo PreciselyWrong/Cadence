@@ -1,150 +1,150 @@
 {
-    "desktopWindow": {
-        "minimize": "Минимизиране",
-        "maximize": "Максимизиране",
-        "close": "Затваряне"
+  "desktopWindow": {
+    "minimize": "Минимизиране",
+    "maximize": "Максимизиране",
+    "close": "Затваряне"
+  },
+  "weekend": {
+    "share": {
+      "error": "Изображението не можа да бъде създадено.",
+      "downloaded": "Изображението е изтеглено",
+      "copied": "Изображението е копирано",
+      "footer": "Подготвено с Cadence",
+      "kicker": "УИКЕНД",
+      "action": "Сподели"
     },
-    "weekend": {
-        "share": {
-            "error": "Изображението не можа да бъде създадено.",
-            "downloaded": "Изображението е изтеглено",
-            "copied": "Изображението е копирано",
-            "footer": "Подготвено с Cadence",
-            "kicker": "УИКЕНД",
-            "action": "Сподели"
-        },
-        "request": {
-            "error": "Заявката не можа да бъде изпратена.",
-            "failed": "Не можа да се подготви ({{days}})",
-            "pending": "Подготвя се за {{days}}",
-            "submit": "Подготви",
-            "hint": "ИИ подготвя поне 5 идеи на ден. Ще получиш известие, когато е готово.",
-            "title": "Подготви дни",
-            "open": "Други дни"
-        },
-        "dayList": "Дните",
-        "title": "Уикенд",
-        "loadError": "Уикендът не можа да се отвори.",
-        "empty": "Нищо за предлагане този уикенд.",
-        "applied": "Приложени решения: {{count}}",
-        "applyError": "Решението не беше запазено.",
-        "validate": "Потвърди",
-        "calendar": "Добави в календара",
-        "other": "Друга идея",
-        "skip": "Пропусни",
-        "note": "Бележка",
-        "noteLabel": "Бележка за агента",
-        "notePlaceholder": "Какво трябва да знае агентът",
-        "busy": "Зает: {{busy}}",
-        "feels": "усеща се като {{temp}}°",
-        "otherAsked": "Поискана друга идея",
-        "decided": {
-            "calendar": "В календара",
-            "skip": "Пропуснато"
-        },
-        "event": {
-            "requested": "Добавя се",
-            "created": "Добавено в календара",
-            "failed": "Не е добавено",
-            "open": "Отвори в календара"
-        },
-        "countCalendar": "В календара: {{count}}",
-        "countOther": "Поискана друга идея: {{count}}",
-        "countNone": "Нищо избрано",
-        "part": {
-            "morning": "сутрин",
-            "afternoon": "следобед",
-            "day": "ден"
-        },
-        "weather": {
-            "sun": "слънчево",
-            "partly": "частично слънчево",
-            "cloud": "облачно",
-            "rain": "дъжд",
-            "snow": "сняг",
-            "storm": "буря",
-            "fog": "мъгла"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "По-хубаво другаде",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Заявката не можа да бъде изпратена.",
+      "failed": "Не можа да се подготви ({{days}})",
+      "pending": "Подготвя се за {{days}}",
+      "submit": "Подготви",
+      "hint": "ИИ подготвя поне 5 идеи на ден. Ще получиш известие, когато е готово.",
+      "title": "Подготви дни",
+      "open": "Други дни"
     },
-    "career": {
-        "choice": "избрано: {{label}}",
-        "validate": "Потвърди ({{count}})",
-        "clear": "Изчисти",
-        "applied": "Приложени решения: {{count}}",
-        "appliedOne": "Приложено 1 решение",
-        "title": "Кариера",
-        "updatedAt": "обновено в {{time}}",
-        "empty": "Нищо ново днес",
-        "emptyHint": "Агентът минава всяка сутрин: напомняния, обяви и задачи ще се появят тук.",
-        "allDecided": "Всичко е решено за днес",
-        "loadError": "Страницата „Кариера“ не можа да се зареди.",
-        "retry": "Опитай пак",
-        "applyError": "Решението не беше запазено.",
-        "later": "По-късно",
-        "skip": "Пропусни",
-        "followups": {
-            "title": "Напомняния",
-            "appliedAgo": "кандидатствано {{when}}",
-            "openDraft": "Отвори черновата",
-            "createTask": "Създай задача",
-            "done": "Готово"
-        },
-        "offers": {
-            "title": "Обяви за решаване",
-            "apply": "Кандидатствай",
-            "note": "Бележка",
-            "notePlaceholder": "Бележка за агента…",
-            "open": "Виж обявата",
-            "expires": "изтича {{when}}",
-            "expired": "изтекла"
-        },
-        "tasks": {
-            "title": "Предложени задачи",
-            "add": "Добави"
-        },
-        "decided": "Решено ({{count}})",
-        "state": {
-            "applied": "Кандидатствано",
-            "skipped": "Пропусната",
-            "later": "По-късно",
-            "done": "Готово",
-            "taskCreated": "Задачата е създадена",
-            "added": "Добавена",
-            "dismissed": "Отхвърлена"
-        }
+    "dayList": "Дните",
+    "title": "Уикенд",
+    "loadError": "Уикендът не можа да се отвори.",
+    "empty": "Нищо за предлагане този уикенд.",
+    "applied": "Приложени решения: {{count}}",
+    "applyError": "Решението не беше запазено.",
+    "validate": "Потвърди",
+    "calendar": "Добави в календара",
+    "other": "Друга идея",
+    "skip": "Пропусни",
+    "note": "Бележка",
+    "noteLabel": "Бележка за агента",
+    "notePlaceholder": "Какво трябва да знае агентът",
+    "busy": "Зает: {{busy}}",
+    "feels": "усеща се като {{temp}}°",
+    "otherAsked": "Поискана друга идея",
+    "decided": {
+      "calendar": "В календара",
+      "skip": "Пропуснато"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Маркирай като прочетено",
-        "open": "Отвори"
+    "event": {
+      "requested": "Добавя се",
+      "created": "Добавено в календара",
+      "failed": "Не е добавено",
+      "open": "Отвори в календара"
     },
-    "counts": {
-        "notes_other": "{{count}} бележки",
-        "notes_one": "{{count}} бележка",
-        "tasks_other": "{{count}} задачи",
-        "tasks_one": "{{count}} задача",
-        "goals_other": "{{count}} цели",
-        "goals_one": "{{count}} цел",
-        "projects_other": "{{count}} проекта",
-        "projects_one": "{{count}} проект"
+    "countCalendar": "В календара: {{count}}",
+    "countOther": "Поискана друга идея: {{count}}",
+    "countNone": "Нищо избрано",
+    "part": {
+      "morning": "сутрин",
+      "afternoon": "следобед",
+      "day": "ден"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Настолен компютър",
-        "link": "Връзка",
-        "openSource": "Отвори източника",
-        "fromSource": "Идва от {{source}}"
+    "weather": {
+      "sun": "слънчево",
+      "partly": "частично слънчево",
+      "cloud": "облачно",
+      "rain": "дъжд",
+      "snow": "сняг",
+      "storm": "буря",
+      "fog": "мъгла"
     },
+    "nearby": "Nearby",
+    "elsewhere": "По-хубаво другаде",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "избрано: {{label}}",
+    "validate": "Потвърди ({{count}})",
+    "clear": "Изчисти",
+    "applied": "Приложени решения: {{count}}",
+    "appliedOne": "Приложено 1 решение",
+    "title": "Кариера",
+    "updatedAt": "обновено в {{time}}",
+    "empty": "Нищо ново днес",
+    "emptyHint": "Агентът минава всяка сутрин: напомняния, обяви и задачи ще се появят тук.",
+    "allDecided": "Всичко е решено за днес",
+    "loadError": "Страницата „Кариера“ не можа да се зареди.",
+    "retry": "Опитай пак",
+    "applyError": "Решението не беше запазено.",
+    "later": "По-късно",
+    "skip": "Пропусни",
+    "followups": {
+      "title": "Напомняния",
+      "appliedAgo": "кандидатствано {{when}}",
+      "openDraft": "Отвори черновата",
+      "createTask": "Създай задача",
+      "done": "Готово"
+    },
+    "offers": {
+      "title": "Обяви за решаване",
+      "apply": "Кандидатствай",
+      "note": "Бележка",
+      "notePlaceholder": "Бележка за агента…",
+      "open": "Виж обявата",
+      "expires": "изтича {{when}}",
+      "expired": "изтекла"
+    },
+    "tasks": {
+      "title": "Предложени задачи",
+      "add": "Добави"
+    },
+    "decided": "Решено ({{count}})",
+    "state": {
+      "applied": "Кандидатствано",
+      "skipped": "Пропусната",
+      "later": "По-късно",
+      "done": "Готово",
+      "taskCreated": "Задачата е създадена",
+      "added": "Добавена",
+      "dismissed": "Отхвърлена"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Маркирай като прочетено",
+    "open": "Отвори"
+  },
+  "counts": {
+    "notes_other": "{{count}} бележки",
+    "notes_one": "{{count}} бележка",
+    "tasks_other": "{{count}} задачи",
+    "tasks_one": "{{count}} задача",
+    "goals_other": "{{count}} цели",
+    "goals_one": "{{count}} цел",
+    "projects_other": "{{count}} проекта",
+    "projects_one": "{{count}} проект"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Настолен компютър",
+    "link": "Връзка",
+    "openSource": "Отвори източника",
+    "fromSource": "Идва от {{source}}"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "Отново на опашката: {{count}}",
-            "failed_one": "Неуспешен елемент: {{count}}",
+      "requeued_one": "Отново на опашката: {{count}}",
+      "failed_one": "Неуспешен елемент: {{count}}",
       "retryError": "Повторният опит не бе възможен",
       "requeued": "Отново на опашката: {{count}}",
       "retry": "Опитай отново",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Винаги архивирай този подател",
-            "horizon": {
-                "someday": "Някой ден",
-                "nextMonth": "Следващия месец",
-                "thisMonth": "Този месец",
-                "nextWeek": "Следващата седмица",
-                "week": "Тази седмица",
-                "label": "Или по-късно"
-            },
-            "trashRequested": "Изтриването е заявено",
+      "horizon": {
+        "someday": "Някой ден",
+        "nextMonth": "Следващия месец",
+        "thisMonth": "Този месец",
+        "nextWeek": "Следващата седмица",
+        "week": "Тази седмица",
+        "label": "Или по-късно"
+      },
+      "trashRequested": "Изтриването е заявено",
       "draftRequested": "Черновата се подготвя в Gmail",
       "archiveRequested": "Поискано архивиране",
       "noteSent": "Върнато на Trieur",
@@ -402,10 +402,10 @@
     "entry": "За подреждане ({{count}})",
     "title": "За подреждане",
     "deck": {
-            "actionFailedTrash": "Изтриването не успя",
+      "actionFailedTrash": "Изтриването не успя",
       "progressLabel": "Писмо {{position}} от {{total}}",
       "option": {
-                "trash": "Изтрий",
+        "trash": "Изтрий",
         "draft": "Чернова",
         "read": "Прочети",
         "event": "Календар",
@@ -646,18 +646,18 @@
     "hideCompleted": "Скрий завършени задачи"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Повтарящите се задачи са запазени, изтрийте ги една по една: {{count}}",
-            "someFailed": "Непроменени: {{count}}",
-            "deleted": "Изтрити: {{count}}",
-            "moved": "Преместени: {{count}}",
-            "prioritized": "Променен приоритет: {{count}}",
-            "dated": "Променена дата: {{count}}",
-            "completed": "Завършени: {{count}}",
-            "clear": "Изчисти избора",
-            "count": "Избрани: {{count}}",
-            "label": "Избрани задачи"
-        },
+    "selection": {
+      "recurringKept": "Повтарящите се задачи са запазени, изтрийте ги една по една: {{count}}",
+      "someFailed": "Непроменени: {{count}}",
+      "deleted": "Изтрити: {{count}}",
+      "moved": "Преместени: {{count}}",
+      "prioritized": "Променен приоритет: {{count}}",
+      "dated": "Променена дата: {{count}}",
+      "completed": "Завършени: {{count}}",
+      "clear": "Изчисти избора",
+      "count": "Избрани: {{count}}",
+      "label": "Избрани задачи"
+    },
     "deletedToast": "„{{name}}“ е изтрита",
     "title": "Задачи",
     "today": "Днес",
@@ -790,17 +790,17 @@
       "setDueDate": "Задай срок"
     },
     "contextMenu": {
-            "review": "Преглед",
-            "copyError": "Неуспешно копиране",
-            "titleCopied": "Заглавието е копирано",
-            "linkCopied": "Връзката е копирана",
-            "deleteKey": "Del",
-            "copyTitle": "Копирай заглавието",
-            "copyLink": "Копирай връзката",
-            "pickDate": "Избери дата…",
-            "reopen": "Отвори отново",
-            "complete": "Завърши",
-            "open": "Отвори",
+      "review": "Преглед",
+      "copyError": "Неуспешно копиране",
+      "titleCopied": "Заглавието е копирано",
+      "linkCopied": "Връзката е копирана",
+      "deleteKey": "Del",
+      "copyTitle": "Копирай заглавието",
+      "copyLink": "Копирай връзката",
+      "pickDate": "Избери дата…",
+      "reopen": "Отвори отново",
+      "complete": "Завърши",
+      "open": "Отвори",
       "projectChanged": "Проектът е променен",
       "dateChanged": "Датата е променена",
       "label": "Действия със задачата",
@@ -872,66 +872,66 @@
     "noActivity": "Все още няма активност"
   },
   "profile": {
-        "plugins": {
-            "title": "Плъгини",
-            "description": "Плъгините добавят ваши интеграции към сървъра. Виждат се само от администратор. Плъгин остава изключен, докато не го включите.",
-            "notConfigured": "Плъгините са изключени. Задайте TUDUDI_PLUGINS_DIR към папка с папките на плъгините и рестартирайте сървъра.",
-            "reloadAll": "Презареди всички",
-            "reload": "Презареди",
-            "reloadPending": "Презаредете, за да се зареди {{version}}",
-            "updatedFrom": "обновен от {{version}}",
-            "version": "Версия {{version}}",
-            "state": {
-                "disabled": "Изключен",
-                "active": "Работи",
-                "error": "Грешка",
-                "invalid": "Невалиден",
-                "incompatible": "Несъвместим",
-                "needs_approval": "Нужно е одобрение",
-                "missing": "Липсва"
-            },
-            "permissions": "Права",
-            "events": "Събития",
-            "permission": {
-                "events": "Слуша събития",
-                "routes": "Предоставя собствени маршрути"
-            },
-            "enabled": "Включен",
-            "needsApproval": "Тази версия иска повече права от преди. Включете я отново, за да одобрите правата и събитията ѝ.",
-            "checkUpdate": "Провери за обновления",
-            "updateAvailable": "Налично обновление: {{version}}",
-            "upToDate": "Актуален",
-            "updateError": "Адресът за обновления не може да бъде прочетен",
-            "settings": "Настройки",
-            "saveSettings": "Запази настройките",
-            "saved": "Настройките са запазени",
-            "secretSaved": "Запазено",
-            "clearSecret": "Изчисти",
-            "required": "задължително",
-            "reloaded": "Плъгините са презаредени",
-            "loadError": "Плъгините не можаха да се заредят",
-            "none": "Няма намерен плъгин в папката за плъгини.",
-            "errorLabel": "Грешка",
-            "saveError": "Плъгинът не можа да се запази",
-            "installLabel": "Git адрес на плъгина",
-            "install": "Добави",
-            "installing": "Добавяне...",
-            "installHint": "Това изтегля код, който работи на сървъра. Прочетете какво иска, преди да го включите.",
-            "installed": "Плъгинът е добавен. Прочетете какво иска и после го включете.",
-            "installError": "Плъгинът не можа да бъде добавен",
-            "pull": "Актуализирай",
-            "pulled": "Плъгинът е актуализиран",
-            "remove": "Изтрий",
-            "removeTitle": "Да се изтрие ли този плъгин?",
-            "removeMessage": "Папката и настройките му се изтриват от сървъра. Това не може да се отмени.",
-            "page": {
-                "notFound": "Плъгинът не е намерен или е изключен"
-            },
-            "approveIntro": "Този плъгин работи в сървъра и иска:",
-            "approveOutro": "Правата ограничават какво Cadence предоставя на плъгина; те не са пясъчник. Одобрявайте само код, който сте прочели.",
-            "approveTitle": "Да се одобрят ли правата?",
-            "approve": "Одобрете и включете"
-        },
+    "plugins": {
+      "title": "Плъгини",
+      "description": "Плъгините добавят ваши интеграции към сървъра. Виждат се само от администратор. Плъгин остава изключен, докато не го включите.",
+      "notConfigured": "Плъгините са изключени. Задайте TUDUDI_PLUGINS_DIR към папка с папките на плъгините и рестартирайте сървъра.",
+      "reloadAll": "Презареди всички",
+      "reload": "Презареди",
+      "reloadPending": "Презаредете, за да се зареди {{version}}",
+      "updatedFrom": "обновен от {{version}}",
+      "version": "Версия {{version}}",
+      "state": {
+        "disabled": "Изключен",
+        "active": "Работи",
+        "error": "Грешка",
+        "invalid": "Невалиден",
+        "incompatible": "Несъвместим",
+        "needs_approval": "Нужно е одобрение",
+        "missing": "Липсва"
+      },
+      "permissions": "Права",
+      "events": "Събития",
+      "permission": {
+        "events": "Слуша събития",
+        "routes": "Предоставя собствени маршрути"
+      },
+      "enabled": "Включен",
+      "needsApproval": "Тази версия иска повече права от преди. Включете я отново, за да одобрите правата и събитията ѝ.",
+      "checkUpdate": "Провери за обновления",
+      "updateAvailable": "Налично обновление: {{version}}",
+      "upToDate": "Актуален",
+      "updateError": "Адресът за обновления не може да бъде прочетен",
+      "settings": "Настройки",
+      "saveSettings": "Запази настройките",
+      "saved": "Настройките са запазени",
+      "secretSaved": "Запазено",
+      "clearSecret": "Изчисти",
+      "required": "задължително",
+      "reloaded": "Плъгините са презаредени",
+      "loadError": "Плъгините не можаха да се заредят",
+      "none": "Няма намерен плъгин в папката за плъгини.",
+      "errorLabel": "Грешка",
+      "saveError": "Плъгинът не можа да се запази",
+      "installLabel": "Git адрес на плъгина",
+      "install": "Добави",
+      "installing": "Добавяне...",
+      "installHint": "Това изтегля код, който работи на сървъра. Прочетете какво иска, преди да го включите.",
+      "installed": "Плъгинът е добавен. Прочетете какво иска и после го включете.",
+      "installError": "Плъгинът не можа да бъде добавен",
+      "pull": "Актуализирай",
+      "pulled": "Плъгинът е актуализиран",
+      "remove": "Изтрий",
+      "removeTitle": "Да се изтрие ли този плъгин?",
+      "removeMessage": "Папката и настройките му се изтриват от сървъра. Това не може да се отмени.",
+      "page": {
+        "notFound": "Плъгинът не е намерен или е изключен"
+      },
+      "approveIntro": "Този плъгин работи в сървъра и иска:",
+      "approveOutro": "Правата ограничават какво Cadence предоставя на плъгина; те не са пясъчник. Одобрявайте само код, който сте прочели.",
+      "approveTitle": "Да се одобрят ли правата?",
+      "approve": "Одобрете и включете"
+    },
     "showTaskDescription": "Показване на описанието под заглавието",
     "sync": {
       "field": {
@@ -1102,8 +1102,8 @@
     "nextTaskSuggestion": "Предложение за следваща задача",
     "enableNextTaskSuggestion": "Активирайте предложенията за следваща задача",
     "tabs": {
-            "agents": "Агенти",
-            "plugins": "Плъгини",
+      "agents": "Агенти",
+      "plugins": "Плъгини",
       "classify": "Класификация",
       "sync": "Синхронизация",
       "general": "Общо",
@@ -1669,20 +1669,20 @@
     "photoOn": "в",
     "groups": {
       "account": "Акаунт",
-            "appearance": "Интерфейс",
-            "planning": "Организация",
+      "appearance": "Интерфейс",
+      "planning": "Организация",
       "integrations": "Интеграции",
-            "security": "Достъп",
+      "security": "Достъп",
       "advanced": "Разширени"
     },
     "optional": "По избор",
     "accent": "Акцентен цвят",
     "accentCustom": "Потребителски цвят (hex)",
-        "pureBlack": "Чисто черно в тъмен режим",
-        "sidebarPanelTitle": "Панел",
-        "sidebarPanelHint": "Блоковете на отворената странична лента, отгоре надолу.",
-        "sidebarPanelPinned": "Закачени",
-        "sidebarPanelMonth": "Месечен календар"
+    "pureBlack": "Чисто черно в тъмен режим",
+    "sidebarPanelTitle": "Панел",
+    "sidebarPanelHint": "Блоковете на отворената странична лента, отгоре надолу.",
+    "sidebarPanelPinned": "Закачени",
+    "sidebarPanelMonth": "Месечен календар"
   },
   "productivity": {
     "stalledProjects": "Забавени проекти",
@@ -2975,7 +2975,7 @@
     "time": "Време",
     "allDay": "Цял ден",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Краят е преди началото",
       "editEvent": "Редактиране на събитие",
       "newEvent": "Ново събитие",
@@ -4021,10 +4021,10 @@
       "lead": "Кога",
       "atTime": "Навреме",
       "minutesBefore": "{{count}} мин по-рано"
-        },
-        "desktopApp": {
-            "title": "Известия на това приложение",
-            "body": "Cadence за Linux показва системни известия, дори със затворен прозорец, докато иконата му е в системната област. Изберете кои в колоната Компютър по-долу. Нужен е API ключ, зададен в настройките на приложението (меню на иконата)."
+    },
+    "desktopApp": {
+      "title": "Известия на това приложение",
+      "body": "Cadence за Linux показва системни известия, дори със затворен прозорец, докато иконата му е в системната област. Изберете кои в колоната Компютър по-долу. Нужен е API ключ, зададен в настройките на приложението (меню на иконата)."
     }
   },
   "projectStatus": {
@@ -4505,8 +4505,8 @@
     "invalidHint": "Може вече да е използвана или да е изтекла. Помолете човека, който я е изпратил, за нова."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} задача ще заеме следващия свободен интервал.",
-        "placeAllDone_one": "{{count}} задача планирана.",
+    "placeAllHint_one": "{{count}} задача ще заеме следващия свободен интервал.",
+    "placeAllDone_one": "{{count}} задача планирана.",
     "inProgress": "В процес",
     "overdue": "Просрочени",
     "dueToday": "Със срок днес",
@@ -5183,7 +5183,7 @@
       "instructionsOther": "Всяка друга колона може да се запази в бележката на задачата, така че нищо от листа не се губи."
     },
     "import": {
-            "undoneKept_one": "Импортът е отменен. Запазена е {{count}} задача, променена оттогава.",
+      "undoneKept_one": "Импортът е отменен. Запазена е {{count}} задача, променена оттогава.",
       "fieldParent": "Родител",
       "fieldWbs": "WBS / номер в структурата",
       "fieldEstimate": "Оценка",
@@ -5414,7 +5414,49 @@
     "columnActions": "Действия с колоната",
     "newColumn": "Нова колона",
     "loadError": "Колоните не можаха да се заредят",
-    "saveError": "Таблото не можа да се запази"
+    "saveError": "Таблото не можа да се запази",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Обсъди с ИИ",
@@ -5826,8 +5868,8 @@
       "plan": "На страница Планиране"
     },
     "shortcuts": {
-            "panePrevious": "Предишна задача в панела",
-            "paneNext": "Следваща задача в панела",
+      "panePrevious": "Предишна задача в панела",
+      "paneNext": "Следваща задача в панела",
       "palette": "Отваряне на палитрата с команди",
       "capture": "Бързо записване",
       "search": "Търсене",

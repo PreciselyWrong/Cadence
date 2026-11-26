@@ -1,150 +1,150 @@
 {
-    "desktopWindow": {
-        "minimize": "Simge durumuna küçült",
-        "maximize": "Ekranı kapla",
-        "close": "Kapat"
+  "desktopWindow": {
+    "minimize": "Simge durumuna küçült",
+    "maximize": "Ekranı kapla",
+    "close": "Kapat"
+  },
+  "weekend": {
+    "share": {
+      "error": "Görsel oluşturulamadı.",
+      "downloaded": "Görsel indirildi",
+      "copied": "Görsel kopyalandı",
+      "footer": "Cadence ile hazırlandı",
+      "kicker": "HAFTA SONU",
+      "action": "Paylaş"
     },
-    "weekend": {
-        "share": {
-            "error": "Görsel oluşturulamadı.",
-            "downloaded": "Görsel indirildi",
-            "copied": "Görsel kopyalandı",
-            "footer": "Cadence ile hazırlandı",
-            "kicker": "HAFTA SONU",
-            "action": "Paylaş"
-        },
-        "request": {
-            "error": "İstek gönderilemedi.",
-            "failed": "Hazırlanamadı ({{days}})",
-            "pending": "{{days}} için hazırlanıyor",
-            "submit": "Hazırla",
-            "hint": "Yapay zekâ günde en az 5 fikir hazırlar. Hazır olduğunda bildirim gelir.",
-            "title": "Günleri hazırla",
-            "open": "Diğer günler"
-        },
-        "dayList": "Günler",
-        "title": "Hafta sonu",
-        "loadError": "Hafta sonu açılamadı.",
-        "empty": "Bu hafta sonu için öneri yok.",
-        "applied": "Uygulanan kararlar: {{count}}",
-        "applyError": "Karar kaydedilemedi.",
-        "validate": "Onayla",
-        "calendar": "Takvime ekle",
-        "other": "Başka bir fikir",
-        "skip": "Atla",
-        "note": "Not",
-        "noteLabel": "Asistan için not",
-        "notePlaceholder": "Asistanın bilmesi gerekenler",
-        "busy": "Meşgul: {{busy}}",
-        "feels": "hissedilen {{temp}}°",
-        "otherAsked": "Başka fikir istendi",
-        "decided": {
-            "calendar": "Takvimde",
-            "skip": "Atlandı"
-        },
-        "event": {
-            "requested": "Ekleniyor",
-            "created": "Takvime eklendi",
-            "failed": "Eklenmedi",
-            "open": "Takvimde aç"
-        },
-        "countCalendar": "Takvimde: {{count}}",
-        "countOther": "Başka fikir istendi: {{count}}",
-        "countNone": "Seçim yok",
-        "part": {
-            "morning": "sabah",
-            "afternoon": "öğleden sonra",
-            "day": "gün"
-        },
-        "weather": {
-            "sun": "güneşli",
-            "partly": "parçalı bulutlu",
-            "cloud": "bulutlu",
-            "rain": "yağmur",
-            "snow": "kar",
-            "storm": "fırtına",
-            "fog": "sis"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Başka yerde daha güzel",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "İstek gönderilemedi.",
+      "failed": "Hazırlanamadı ({{days}})",
+      "pending": "{{days}} için hazırlanıyor",
+      "submit": "Hazırla",
+      "hint": "Yapay zekâ günde en az 5 fikir hazırlar. Hazır olduğunda bildirim gelir.",
+      "title": "Günleri hazırla",
+      "open": "Diğer günler"
     },
-    "career": {
-        "choice": "seçildi: {{label}}",
-        "validate": "Onayla ({{count}})",
-        "clear": "Temizle",
-        "applied": "{{count}} karar uygulandı",
-        "appliedOne": "1 karar uygulandı",
-        "title": "Kariyer",
-        "updatedAt": "{{time}} itibarıyla güncellendi",
-        "empty": "Bugün yeni bir şey yok",
-        "emptyHint": "Ajan her sabah uğrar: takipler, ilanlar ve görevler burada görünür.",
-        "allDecided": "Bugün için her şey kararlaştırıldı",
-        "loadError": "Kariyer sayfası yüklenemedi.",
-        "retry": "Tekrar dene",
-        "applyError": "Karar kaydedilmedi.",
-        "later": "Sonra",
-        "skip": "Geç",
-        "followups": {
-            "title": "Takipler",
-            "appliedAgo": "başvuruldu: {{when}}",
-            "openDraft": "Taslağı aç",
-            "createTask": "Görev oluştur",
-            "done": "Tamam"
-        },
-        "offers": {
-            "title": "Karar bekleyen ilanlar",
-            "apply": "Başvur",
-            "note": "Not",
-            "notePlaceholder": "Ajan için bir not…",
-            "open": "İlanı gör",
-            "expires": "bitiş: {{when}}",
-            "expired": "süresi doldu"
-        },
-        "tasks": {
-            "title": "Önerilen görevler",
-            "add": "Ekle"
-        },
-        "decided": "Karar verilenler ({{count}})",
-        "state": {
-            "applied": "Başvuruldu",
-            "skipped": "Geçildi",
-            "later": "Sonra",
-            "done": "Tamam",
-            "taskCreated": "Görev oluşturuldu",
-            "added": "Eklendi",
-            "dismissed": "Reddedildi"
-        }
+    "dayList": "Günler",
+    "title": "Hafta sonu",
+    "loadError": "Hafta sonu açılamadı.",
+    "empty": "Bu hafta sonu için öneri yok.",
+    "applied": "Uygulanan kararlar: {{count}}",
+    "applyError": "Karar kaydedilemedi.",
+    "validate": "Onayla",
+    "calendar": "Takvime ekle",
+    "other": "Başka bir fikir",
+    "skip": "Atla",
+    "note": "Not",
+    "noteLabel": "Asistan için not",
+    "notePlaceholder": "Asistanın bilmesi gerekenler",
+    "busy": "Meşgul: {{busy}}",
+    "feels": "hissedilen {{temp}}°",
+    "otherAsked": "Başka fikir istendi",
+    "decided": {
+      "calendar": "Takvimde",
+      "skip": "Atlandı"
     },
-    "agentBanner": {
-        "agent": "Ajan",
-        "dismiss": "Okundu olarak işaretle",
-        "open": "Aç"
+    "event": {
+      "requested": "Ekleniyor",
+      "created": "Takvime eklendi",
+      "failed": "Eklenmedi",
+      "open": "Takvimde aç"
     },
-    "counts": {
-        "notes_other": "{{count}} not",
-        "notes_one": "{{count}} not",
-        "tasks_other": "{{count}} görev",
-        "tasks_one": "{{count}} görev",
-        "goals_other": "{{count}} hedef",
-        "goals_one": "{{count}} hedef",
-        "projects_other": "{{count}} proje",
-        "projects_one": "{{count}} proje"
+    "countCalendar": "Takvimde: {{count}}",
+    "countOther": "Başka fikir istendi: {{count}}",
+    "countNone": "Seçim yok",
+    "part": {
+      "morning": "sabah",
+      "afternoon": "öğleden sonra",
+      "day": "gün"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Masaüstü",
-        "link": "Bağlantı",
-        "openSource": "Kaynağı aç",
-        "fromSource": "Kaynak: {{source}}"
+    "weather": {
+      "sun": "güneşli",
+      "partly": "parçalı bulutlu",
+      "cloud": "bulutlu",
+      "rain": "yağmur",
+      "snow": "kar",
+      "storm": "fırtına",
+      "fog": "sis"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Başka yerde daha güzel",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "seçildi: {{label}}",
+    "validate": "Onayla ({{count}})",
+    "clear": "Temizle",
+    "applied": "{{count}} karar uygulandı",
+    "appliedOne": "1 karar uygulandı",
+    "title": "Kariyer",
+    "updatedAt": "{{time}} itibarıyla güncellendi",
+    "empty": "Bugün yeni bir şey yok",
+    "emptyHint": "Ajan her sabah uğrar: takipler, ilanlar ve görevler burada görünür.",
+    "allDecided": "Bugün için her şey kararlaştırıldı",
+    "loadError": "Kariyer sayfası yüklenemedi.",
+    "retry": "Tekrar dene",
+    "applyError": "Karar kaydedilmedi.",
+    "later": "Sonra",
+    "skip": "Geç",
+    "followups": {
+      "title": "Takipler",
+      "appliedAgo": "başvuruldu: {{when}}",
+      "openDraft": "Taslağı aç",
+      "createTask": "Görev oluştur",
+      "done": "Tamam"
+    },
+    "offers": {
+      "title": "Karar bekleyen ilanlar",
+      "apply": "Başvur",
+      "note": "Not",
+      "notePlaceholder": "Ajan için bir not…",
+      "open": "İlanı gör",
+      "expires": "bitiş: {{when}}",
+      "expired": "süresi doldu"
+    },
+    "tasks": {
+      "title": "Önerilen görevler",
+      "add": "Ekle"
+    },
+    "decided": "Karar verilenler ({{count}})",
+    "state": {
+      "applied": "Başvuruldu",
+      "skipped": "Geçildi",
+      "later": "Sonra",
+      "done": "Tamam",
+      "taskCreated": "Görev oluşturuldu",
+      "added": "Eklendi",
+      "dismissed": "Reddedildi"
+    }
+  },
+  "agentBanner": {
+    "agent": "Ajan",
+    "dismiss": "Okundu olarak işaretle",
+    "open": "Aç"
+  },
+  "counts": {
+    "notes_other": "{{count}} not",
+    "notes_one": "{{count}} not",
+    "tasks_other": "{{count}} görev",
+    "tasks_one": "{{count}} görev",
+    "goals_other": "{{count}} hedef",
+    "goals_one": "{{count}} hedef",
+    "projects_other": "{{count}} proje",
+    "projects_one": "{{count}} proje"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Masaüstü",
+    "link": "Bağlantı",
+    "openSource": "Kaynağı aç",
+    "fromSource": "Kaynak: {{source}}"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "Yeniden kuyrukta: {{count}}",
-            "failed_one": "Başarısız öğe: {{count}}",
+      "requeued_one": "Yeniden kuyrukta: {{count}}",
+      "failed_one": "Başarısız öğe: {{count}}",
       "retryError": "Yeniden denenemedi",
       "requeued": "Yeniden kuyrukta: {{count}}",
       "retry": "Yeniden dene",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Bu göndereni her zaman arşivle",
-            "horizon": {
-                "someday": "Bir gün",
-                "nextMonth": "Gelecek ay",
-                "thisMonth": "Bu ay",
-                "nextWeek": "Gelecek hafta",
-                "week": "Bu hafta",
-                "label": "Veya daha sonra"
-            },
-            "trashRequested": "Silme istendi",
+      "horizon": {
+        "someday": "Bir gün",
+        "nextMonth": "Gelecek ay",
+        "thisMonth": "Bu ay",
+        "nextWeek": "Gelecek hafta",
+        "week": "Bu hafta",
+        "label": "Veya daha sonra"
+      },
+      "trashRequested": "Silme istendi",
       "draftRequested": "Taslak Gmail’de hazırlanıyor",
       "archiveRequested": "Arşivleme istendi",
       "noteSent": "Trieur’a geri gönderildi",
@@ -402,10 +402,10 @@
     "entry": "Ayıklanacak ({{count}})",
     "title": "Ayıklanacak",
     "deck": {
-            "actionFailedTrash": "Silme tamamlanamadı",
+      "actionFailedTrash": "Silme tamamlanamadı",
       "progressLabel": "E-posta {{position}} / {{total}}",
       "option": {
-                "trash": "Sil",
+        "trash": "Sil",
         "draft": "Taslak",
         "read": "Oku",
         "event": "Takvim",
@@ -646,18 +646,18 @@
     "hideCompleted": "Tamamlanan Görevleri Gizle"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Yinelenen görevler korundu, tek tek silin: {{count}}",
-            "someFailed": "Değişmedi: {{count}}",
-            "deleted": "Silindi: {{count}}",
-            "moved": "Taşındı: {{count}}",
-            "prioritized": "Öncelik değişti: {{count}}",
-            "dated": "Tarih değişti: {{count}}",
-            "completed": "Tamamlandı: {{count}}",
-            "clear": "Seçimi temizle",
-            "count": "Seçili: {{count}}",
-            "label": "Seçili görevler"
-        },
+    "selection": {
+      "recurringKept": "Yinelenen görevler korundu, tek tek silin: {{count}}",
+      "someFailed": "Değişmedi: {{count}}",
+      "deleted": "Silindi: {{count}}",
+      "moved": "Taşındı: {{count}}",
+      "prioritized": "Öncelik değişti: {{count}}",
+      "dated": "Tarih değişti: {{count}}",
+      "completed": "Tamamlandı: {{count}}",
+      "clear": "Seçimi temizle",
+      "count": "Seçili: {{count}}",
+      "label": "Seçili görevler"
+    },
     "deletedToast": "\"{{name}}\" silindi",
     "title": "Görevler",
     "today": "Bugün",
@@ -790,17 +790,17 @@
       "setDueDate": "Bitiş tarihi ayarla"
     },
     "contextMenu": {
-            "review": "Gözden geçirme",
-            "copyError": "Kopyalanamadı",
-            "titleCopied": "Başlık kopyalandı",
-            "linkCopied": "Bağlantı kopyalandı",
-            "deleteKey": "Del",
-            "copyTitle": "Başlığı kopyala",
-            "copyLink": "Bağlantıyı kopyala",
-            "pickDate": "Tarih seç…",
-            "reopen": "Yeniden aç",
-            "complete": "Tamamla",
-            "open": "Aç",
+      "review": "Gözden geçirme",
+      "copyError": "Kopyalanamadı",
+      "titleCopied": "Başlık kopyalandı",
+      "linkCopied": "Bağlantı kopyalandı",
+      "deleteKey": "Del",
+      "copyTitle": "Başlığı kopyala",
+      "copyLink": "Bağlantıyı kopyala",
+      "pickDate": "Tarih seç…",
+      "reopen": "Yeniden aç",
+      "complete": "Tamamla",
+      "open": "Aç",
       "projectChanged": "Proje değiştirildi",
       "dateChanged": "Tarih değiştirildi",
       "label": "Görev işlemleri",
@@ -872,66 +872,66 @@
     "noActivity": "Henüz etkinlik yok"
   },
   "profile": {
-        "plugins": {
-            "title": "Eklentiler",
-            "description": "Eklentiler sunucuya kendi entegrasyonlarınızı ekler. Yalnızca yönetici bunları görür. Bir eklenti, siz açana kadar kapalı kalır.",
-            "notConfigured": "Eklentiler kapalı. TUDUDI_PLUGINS_DIR değişkenini eklenti klasörlerini içeren bir klasöre ayarlayın ve sunucuyu yeniden başlatın.",
-            "reloadAll": "Tümünü yeniden yükle",
-            "reload": "Yeniden yükle",
-            "reloadPending": "{{version}} sürümünü yüklemek için yeniden yükleyin",
-            "updatedFrom": "{{version}} sürümünden güncellendi",
-            "version": "Sürüm {{version}}",
-            "state": {
-                "disabled": "Kapalı",
-                "active": "Çalışıyor",
-                "error": "Hata",
-                "invalid": "Geçersiz",
-                "incompatible": "Uyumsuz",
-                "needs_approval": "Onay gerekiyor",
-                "missing": "Eksik"
-            },
-            "permissions": "İzinler",
-            "events": "Olaylar",
-            "permission": {
-                "events": "Olayları dinler",
-                "routes": "Kendi yollarını sunar"
-            },
-            "enabled": "Açık",
-            "needsApproval": "Bu sürüm öncekinden daha fazla şey istiyor. İzinlerini ve olaylarını onaylamak için yeniden açın.",
-            "checkUpdate": "Güncellemeleri denetle",
-            "updateAvailable": "Güncelleme var: {{version}}",
-            "upToDate": "Güncel",
-            "updateError": "Güncelleme adresi okunamadı",
-            "settings": "Ayarlar",
-            "saveSettings": "Ayarları kaydet",
-            "saved": "Ayarlar kaydedildi",
-            "secretSaved": "Kaydedildi",
-            "clearSecret": "Temizle",
-            "required": "zorunlu",
-            "reloaded": "Eklentiler yeniden yüklendi",
-            "loadError": "Eklentiler yüklenemedi",
-            "none": "Eklenti klasöründe eklenti bulunamadı.",
-            "errorLabel": "Hata",
-            "saveError": "Eklenti kaydedilemedi",
-            "installLabel": "Eklentinin Git adresi",
-            "install": "Ekle",
-            "installing": "Ekleniyor...",
-            "installHint": "Bu, sunucuda çalışan kodu indirir. Açmadan önce neyi istediğini okuyun.",
-            "installed": "Eklenti eklendi. Neyi istediğini okuyun, sonra açın.",
-            "installError": "Eklenti eklenemedi",
-            "pull": "Güncelle",
-            "pulled": "Eklenti güncellendi",
-            "remove": "Sil",
-            "removeTitle": "Bu eklenti silinsin mi?",
-            "removeMessage": "Klasörü ve ayarları sunucudan silinir. Bu geri alınamaz.",
-            "page": {
-                "notFound": "Eklenti bulunamadı veya kapalı"
-            },
-            "approveIntro": "Bu eklenti sunucunun içinde çalışır ve şunları ister:",
-            "approveOutro": "İzinler, Cadence'in eklentiye verdiklerini sınırlar; korumalı alan (sandbox) değildir. Yalnızca okuduğunuz kodu onaylayın.",
-            "approveTitle": "İzinler onaylansın mı?",
-            "approve": "Onayla ve aç"
-        },
+    "plugins": {
+      "title": "Eklentiler",
+      "description": "Eklentiler sunucuya kendi entegrasyonlarınızı ekler. Yalnızca yönetici bunları görür. Bir eklenti, siz açana kadar kapalı kalır.",
+      "notConfigured": "Eklentiler kapalı. TUDUDI_PLUGINS_DIR değişkenini eklenti klasörlerini içeren bir klasöre ayarlayın ve sunucuyu yeniden başlatın.",
+      "reloadAll": "Tümünü yeniden yükle",
+      "reload": "Yeniden yükle",
+      "reloadPending": "{{version}} sürümünü yüklemek için yeniden yükleyin",
+      "updatedFrom": "{{version}} sürümünden güncellendi",
+      "version": "Sürüm {{version}}",
+      "state": {
+        "disabled": "Kapalı",
+        "active": "Çalışıyor",
+        "error": "Hata",
+        "invalid": "Geçersiz",
+        "incompatible": "Uyumsuz",
+        "needs_approval": "Onay gerekiyor",
+        "missing": "Eksik"
+      },
+      "permissions": "İzinler",
+      "events": "Olaylar",
+      "permission": {
+        "events": "Olayları dinler",
+        "routes": "Kendi yollarını sunar"
+      },
+      "enabled": "Açık",
+      "needsApproval": "Bu sürüm öncekinden daha fazla şey istiyor. İzinlerini ve olaylarını onaylamak için yeniden açın.",
+      "checkUpdate": "Güncellemeleri denetle",
+      "updateAvailable": "Güncelleme var: {{version}}",
+      "upToDate": "Güncel",
+      "updateError": "Güncelleme adresi okunamadı",
+      "settings": "Ayarlar",
+      "saveSettings": "Ayarları kaydet",
+      "saved": "Ayarlar kaydedildi",
+      "secretSaved": "Kaydedildi",
+      "clearSecret": "Temizle",
+      "required": "zorunlu",
+      "reloaded": "Eklentiler yeniden yüklendi",
+      "loadError": "Eklentiler yüklenemedi",
+      "none": "Eklenti klasöründe eklenti bulunamadı.",
+      "errorLabel": "Hata",
+      "saveError": "Eklenti kaydedilemedi",
+      "installLabel": "Eklentinin Git adresi",
+      "install": "Ekle",
+      "installing": "Ekleniyor...",
+      "installHint": "Bu, sunucuda çalışan kodu indirir. Açmadan önce neyi istediğini okuyun.",
+      "installed": "Eklenti eklendi. Neyi istediğini okuyun, sonra açın.",
+      "installError": "Eklenti eklenemedi",
+      "pull": "Güncelle",
+      "pulled": "Eklenti güncellendi",
+      "remove": "Sil",
+      "removeTitle": "Bu eklenti silinsin mi?",
+      "removeMessage": "Klasörü ve ayarları sunucudan silinir. Bu geri alınamaz.",
+      "page": {
+        "notFound": "Eklenti bulunamadı veya kapalı"
+      },
+      "approveIntro": "Bu eklenti sunucunun içinde çalışır ve şunları ister:",
+      "approveOutro": "İzinler, Cadence'in eklentiye verdiklerini sınırlar; korumalı alan (sandbox) değildir. Yalnızca okuduğunuz kodu onaylayın.",
+      "approveTitle": "İzinler onaylansın mı?",
+      "approve": "Onayla ve aç"
+    },
     "showTaskDescription": "Açıklamayı başlığın altında göster",
     "sync": {
       "field": {
@@ -1102,8 +1102,8 @@
     "nextTaskSuggestion": "Sonraki Görev Önerisi",
     "enableNextTaskSuggestion": "Sonraki Görev Önerilerini Etkinleştir",
     "tabs": {
-            "agents": "Ajanlar",
-            "plugins": "Eklentiler",
+      "agents": "Ajanlar",
+      "plugins": "Eklentiler",
       "classify": "Sınıflandırma",
       "sync": "Senkronizasyon",
       "general": "Genel",
@@ -1353,7 +1353,7 @@
       "morningReplanToggle": "Sabahları öneriyi otomatik hazırla",
       "morningReplanDescription": "Geciken görevlerin olduğunda, seçtiğin saatte her sabah bir haftalık öneri hazırla.",
       "morningReplanTitle": "Sabah geciken görevleri yeniden planlama (YZ)",
-            "maxOption_one": "{{count}} görev",
+      "maxOption_one": "{{count}} görev",
       "title": "Planlama",
       "description": "\"Bugün ne yapabilirsin?\" gününü planlarken görevlerini nasıl sıralar. Satırları istediğin sıraya sürükle; aynı görevler her zaman aynı sırada çıkar.",
       "orderTitle": "Sıra (değiştirmek için sürükle)",
@@ -1669,20 +1669,20 @@
     "photoOn": "üzerinde",
     "groups": {
       "account": "Hesap",
-            "appearance": "Arayüz",
-            "planning": "Organizasyon",
+      "appearance": "Arayüz",
+      "planning": "Organizasyon",
       "integrations": "Entegrasyonlar",
-            "security": "Erişim",
+      "security": "Erişim",
       "advanced": "Gelişmiş"
     },
     "optional": "İsteğe bağlı",
     "accent": "Vurgu rengi",
     "accentCustom": "Özel renk (hex)",
-        "pureBlack": "Koyu modda saf siyah",
-        "sidebarPanelTitle": "Panel",
-        "sidebarPanelHint": "Açık kenar çubuğunun blokları, yukarıdan aşağıya.",
-        "sidebarPanelPinned": "Sabitlenenler",
-        "sidebarPanelMonth": "Aylık takvim"
+    "pureBlack": "Koyu modda saf siyah",
+    "sidebarPanelTitle": "Panel",
+    "sidebarPanelHint": "Açık kenar çubuğunun blokları, yukarıdan aşağıya.",
+    "sidebarPanelPinned": "Sabitlenenler",
+    "sidebarPanelMonth": "Aylık takvim"
   },
   "productivity": {
     "stalledProjects": "Duraklayan Projeler",
@@ -2254,12 +2254,12 @@
     "createError": "Not oluşturulamadı"
   },
   "task": {
-        "minutesAgo_one": "{{count}} dakika önce",
-        "inMinutes_one": "{{count}} dakika içinde",
-        "inHours_one": "{{count}} saat içinde",
-        "inDays_one": "{{count}} gün içinde",
-        "hoursAgo_one": "{{count}} saat önce",
-        "daysAgo_one": "{{count}} gün önce",
+    "minutesAgo_one": "{{count}} dakika önce",
+    "inMinutes_one": "{{count}} dakika içinde",
+    "inHours_one": "{{count}} saat içinde",
+    "inDays_one": "{{count}} gün içinde",
+    "hoursAgo_one": "{{count}} saat önce",
+    "daysAgo_one": "{{count}} gün önce",
     "duplicateError": "Görev çoğaltılamadı.",
     "duplicated": "Görev çoğaltıldı",
     "duplicate": "Çoğalt",
@@ -2975,7 +2975,7 @@
     "time": "Zaman",
     "allDay": "Tüm gün",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Bitiş, başlangıçtan önce",
       "editEvent": "Etkinliği düzenle",
       "newEvent": "Yeni etkinlik",
@@ -4021,10 +4021,10 @@
       "lead": "Ne zaman",
       "atTime": "Saatinde",
       "minutesBefore": "{{count}} dk önce"
-        },
-        "desktopApp": {
-            "title": "Bu uygulamanın bildirimleri",
-            "body": "Linux için Cadence, simgesi sistem tepsisinde olduğu sürece pencere kapalıyken bile sistem bildirimleri gösterir. Aşağıdaki Bilgisayar sütununda hangilerinin gösterileceğini seçin. Uygulama ayarlarında (tepsi menüsü) girilen bir API anahtarı gerekir."
+    },
+    "desktopApp": {
+      "title": "Bu uygulamanın bildirimleri",
+      "body": "Linux için Cadence, simgesi sistem tepsisinde olduğu sürece pencere kapalıyken bile sistem bildirimleri gösterir. Aşağıdaki Bilgisayar sütununda hangilerinin gösterileceğini seçin. Uygulama ayarlarında (tepsi menüsü) girilen bir API anahtarı gerekir."
     }
   },
   "projectStatus": {
@@ -4505,8 +4505,8 @@
     "invalidHint": "Daha önce kullanılmış veya süresi dolmuş olabilir. Gönderen kişiden yenisini iste."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} görev sıradaki boş zaman dilimine yerleşecek.",
-        "placeAllDone_one": "{{count}} görev yerleştirildi.",
+    "placeAllHint_one": "{{count}} görev sıradaki boş zaman dilimine yerleşecek.",
+    "placeAllDone_one": "{{count}} görev yerleştirildi.",
     "inProgress": "Devam ediyor",
     "overdue": "Gecikmiş",
     "dueToday": "Bugün son gün",
@@ -4577,7 +4577,7 @@
     "beta": "Beta",
     "betaHint": "Planlı Bugün sayfası yeni. Klasik sayfa hâlâ bu sayfanın en altında.",
     "ai": {
-            "carried_one": "{{count}} görev yarına eklendi",
+      "carried_one": "{{count}} görev yarına eklendi",
       "suggested": "YZ önerisi",
       "estimateGuess": "YZ tahmini",
       "nothingToAdd": "Eklenecek bir şey yok: boş zaman ya da planlanacak görev yok.",
@@ -5183,13 +5183,13 @@
       "instructionsOther": "Diğer tüm sütunlar görevin notunda tutulabilir, böylece sayfadaki hiçbir şey kaybolmaz."
     },
     "import": {
-            "undoneKept_one": "İçe aktarma geri alındı. O zamandan beri değiştirilen {{count}} görev korundu.",
-            "rowCount_one": "{{count}} satır",
-            "doneTitle_one": "{{count}} görev içe aktarıldı",
-            "countTags_one": "{{count}} yeni etiket",
-            "countProjects_one": "{{count}} yeni proje",
-            "countCreate_one": "{{count}} yeni görev",
-            "countAreas_one": "{{count}} yeni alan",
+      "undoneKept_one": "İçe aktarma geri alındı. O zamandan beri değiştirilen {{count}} görev korundu.",
+      "rowCount_one": "{{count}} satır",
+      "doneTitle_one": "{{count}} görev içe aktarıldı",
+      "countTags_one": "{{count}} yeni etiket",
+      "countProjects_one": "{{count}} yeni proje",
+      "countCreate_one": "{{count}} yeni görev",
+      "countAreas_one": "{{count}} yeni alan",
       "fieldParent": "Üst görev",
       "fieldWbs": "WBS / ana hat numarası",
       "fieldEstimate": "Tahmin",
@@ -5414,7 +5414,49 @@
     "columnActions": "Sütun işlemleri",
     "newColumn": "Yeni sütun",
     "loadError": "Sütunlar yüklenemedi",
-    "saveError": "Pano kaydedilemedi"
+    "saveError": "Pano kaydedilemedi",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Yapay zekâyla konuş",
@@ -5674,7 +5716,7 @@
     "close": "Kapat"
   },
   "comments": {
-        "count_one": "{{count}} yorum",
+    "count_one": "{{count}} yorum",
     "count": "{{count}} yorum",
     "loading": "Yorumlar yükleniyor...",
     "failedToLoad": "Yorumlar yüklenemedi",
@@ -5826,8 +5868,8 @@
       "plan": "Planla sayfasında"
     },
     "shortcuts": {
-            "panePrevious": "Paneldeki önceki görev",
-            "paneNext": "Paneldeki sonraki görev",
+      "panePrevious": "Paneldeki önceki görev",
+      "paneNext": "Paneldeki sonraki görev",
       "palette": "Komut paletini aç",
       "capture": "Hızlı yakalama",
       "search": "Ara",
@@ -6425,9 +6467,9 @@
     "allTomorrow": "Hepsini yarına",
     "replanTitle": "Gecikenleri yeniden planla ({{count}})",
     "replan": "Yeniden planla",
-        "plannedOn": "{{day}} planlandı",
-        "taskCount_one": "{{count}} görev",
-        "organized_one": "{{count}} görev yerleştirildi",
+    "plannedOn": "{{day}} planlandı",
+    "taskCount_one": "{{count}} görev",
+    "organized_one": "{{count}} görev yerleştirildi",
     "add": "Ekle",
     "addPlaceholder": "Bir görev ekle",
     "added": "“{{name}}” güne eklendi",

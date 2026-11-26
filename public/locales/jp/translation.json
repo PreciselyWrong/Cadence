@@ -1,150 +1,150 @@
 {
-    "desktopWindow": {
-        "minimize": "最小化",
-        "maximize": "最大化",
-        "close": "閉じる"
+  "desktopWindow": {
+    "minimize": "最小化",
+    "maximize": "最大化",
+    "close": "閉じる"
+  },
+  "weekend": {
+    "share": {
+      "error": "画像を作成できませんでした。",
+      "downloaded": "画像をダウンロードしました",
+      "copied": "画像をコピーしました",
+      "footer": "Cadence で準備",
+      "kicker": "週末",
+      "action": "共有"
     },
-    "weekend": {
-        "share": {
-            "error": "画像を作成できませんでした。",
-            "downloaded": "画像をダウンロードしました",
-            "copied": "画像をコピーしました",
-            "footer": "Cadence で準備",
-            "kicker": "週末",
-            "action": "共有"
-        },
-        "request": {
-            "error": "リクエストを送信できませんでした。",
-            "failed": "準備できませんでした（{{days}}）",
-            "pending": "{{days}} を準備中",
-            "submit": "準備する",
-            "hint": "AI が 1 日あたり少なくとも 5 つのアイデアを用意します。準備ができたら通知が届きます。",
-            "title": "日にちを準備",
-            "open": "別の日"
-        },
-        "dayList": "日にち",
-        "title": "週末",
-        "loadError": "週末の提案を開けませんでした。",
-        "empty": "今週末は提案がありません。",
-        "applied": "適用した決定: {{count}}",
-        "applyError": "決定を保存できませんでした。",
-        "validate": "確定",
-        "calendar": "予定に追加",
-        "other": "別の案",
-        "skip": "スキップ",
-        "note": "メモ",
-        "noteLabel": "エージェントへのメモ",
-        "notePlaceholder": "エージェントに伝えたいこと",
-        "busy": "予定あり: {{busy}}",
-        "feels": "体感 {{temp}}°",
-        "otherAsked": "別の案を依頼済み",
-        "decided": {
-            "calendar": "予定に追加済み",
-            "skip": "スキップ済み"
-        },
-        "event": {
-            "requested": "追加中",
-            "created": "カレンダーに追加済み",
-            "failed": "追加できず",
-            "open": "カレンダーで開く"
-        },
-        "countCalendar": "カレンダーに追加: {{count}}",
-        "countOther": "別の案を依頼: {{count}}",
-        "countNone": "未選択",
-        "part": {
-            "morning": "午前",
-            "afternoon": "午後",
-            "day": "終日"
-        },
-        "weather": {
-            "sun": "晴れ",
-            "partly": "薄曇り",
-            "cloud": "曇り",
-            "rain": "雨",
-            "snow": "雪",
-            "storm": "嵐",
-            "fog": "霧"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "他の場所がより良い",
-        "elsewhereLine": "{{place}}、{{day}}: {{weather}}、{{temp}}°"
+    "request": {
+      "error": "リクエストを送信できませんでした。",
+      "failed": "準備できませんでした（{{days}}）",
+      "pending": "{{days}} を準備中",
+      "submit": "準備する",
+      "hint": "AI が 1 日あたり少なくとも 5 つのアイデアを用意します。準備ができたら通知が届きます。",
+      "title": "日にちを準備",
+      "open": "別の日"
     },
-    "career": {
-        "choice": "選択: {{label}}",
-        "validate": "確定 ({{count}})",
-        "clear": "クリア",
-        "applied": "{{count}}件の決定を適用しました",
-        "appliedOne": "1件の決定を適用しました",
-        "title": "キャリア",
-        "updatedAt": "{{time}} に更新",
-        "empty": "今日は新しいことはありません",
-        "emptyHint": "エージェントは毎朝確認します。フォローアップ、求人、タスクがここに表示されます。",
-        "allDecided": "今日の判断はすべて完了しました",
-        "loadError": "キャリアページを読み込めませんでした。",
-        "retry": "再試行",
-        "applyError": "判断を保存できませんでした。",
-        "later": "後で",
-        "skip": "スキップ",
-        "followups": {
-            "title": "フォローアップ",
-            "appliedAgo": "応募 {{when}}",
-            "openDraft": "下書きを開く",
-            "createTask": "タスクを作成",
-            "done": "完了"
-        },
-        "offers": {
-            "title": "判断が必要な求人",
-            "apply": "応募する",
-            "note": "メモ",
-            "notePlaceholder": "エージェントへのメモ…",
-            "open": "求人を見る",
-            "expires": "締切 {{when}}",
-            "expired": "締切済み"
-        },
-        "tasks": {
-            "title": "提案されたタスク",
-            "add": "追加"
-        },
-        "decided": "判断済み ({{count}})",
-        "state": {
-            "applied": "応募済み",
-            "skipped": "スキップ済み",
-            "later": "後で",
-            "done": "完了",
-            "taskCreated": "タスクを作成済み",
-            "added": "追加済み",
-            "dismissed": "却下"
-        }
+    "dayList": "日にち",
+    "title": "週末",
+    "loadError": "週末の提案を開けませんでした。",
+    "empty": "今週末は提案がありません。",
+    "applied": "適用した決定: {{count}}",
+    "applyError": "決定を保存できませんでした。",
+    "validate": "確定",
+    "calendar": "予定に追加",
+    "other": "別の案",
+    "skip": "スキップ",
+    "note": "メモ",
+    "noteLabel": "エージェントへのメモ",
+    "notePlaceholder": "エージェントに伝えたいこと",
+    "busy": "予定あり: {{busy}}",
+    "feels": "体感 {{temp}}°",
+    "otherAsked": "別の案を依頼済み",
+    "decided": {
+      "calendar": "予定に追加済み",
+      "skip": "スキップ済み"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "既読にする",
-        "open": "開く"
+    "event": {
+      "requested": "追加中",
+      "created": "カレンダーに追加済み",
+      "failed": "追加できず",
+      "open": "カレンダーで開く"
     },
-    "counts": {
-        "notes_other": "{{count}}件のノート",
-        "notes_one": "{{count}}件のノート",
-        "tasks_other": "{{count}}件のタスク",
-        "tasks_one": "{{count}}件のタスク",
-        "goals_other": "{{count}}件の目標",
-        "goals_one": "{{count}}件の目標",
-        "projects_other": "{{count}}件のプロジェクト",
-        "projects_one": "{{count}}件のプロジェクト"
+    "countCalendar": "カレンダーに追加: {{count}}",
+    "countOther": "別の案を依頼: {{count}}",
+    "countNone": "未選択",
+    "part": {
+      "morning": "午前",
+      "afternoon": "午後",
+      "day": "終日"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "デスクトップ",
-        "link": "リンク",
-        "openSource": "元を開く",
-        "fromSource": "{{source}}から作成"
+    "weather": {
+      "sun": "晴れ",
+      "partly": "薄曇り",
+      "cloud": "曇り",
+      "rain": "雨",
+      "snow": "雪",
+      "storm": "嵐",
+      "fog": "霧"
     },
+    "nearby": "Nearby",
+    "elsewhere": "他の場所がより良い",
+    "elsewhereLine": "{{place}}、{{day}}: {{weather}}、{{temp}}°"
+  },
+  "career": {
+    "choice": "選択: {{label}}",
+    "validate": "確定 ({{count}})",
+    "clear": "クリア",
+    "applied": "{{count}}件の決定を適用しました",
+    "appliedOne": "1件の決定を適用しました",
+    "title": "キャリア",
+    "updatedAt": "{{time}} に更新",
+    "empty": "今日は新しいことはありません",
+    "emptyHint": "エージェントは毎朝確認します。フォローアップ、求人、タスクがここに表示されます。",
+    "allDecided": "今日の判断はすべて完了しました",
+    "loadError": "キャリアページを読み込めませんでした。",
+    "retry": "再試行",
+    "applyError": "判断を保存できませんでした。",
+    "later": "後で",
+    "skip": "スキップ",
+    "followups": {
+      "title": "フォローアップ",
+      "appliedAgo": "応募 {{when}}",
+      "openDraft": "下書きを開く",
+      "createTask": "タスクを作成",
+      "done": "完了"
+    },
+    "offers": {
+      "title": "判断が必要な求人",
+      "apply": "応募する",
+      "note": "メモ",
+      "notePlaceholder": "エージェントへのメモ…",
+      "open": "求人を見る",
+      "expires": "締切 {{when}}",
+      "expired": "締切済み"
+    },
+    "tasks": {
+      "title": "提案されたタスク",
+      "add": "追加"
+    },
+    "decided": "判断済み ({{count}})",
+    "state": {
+      "applied": "応募済み",
+      "skipped": "スキップ済み",
+      "later": "後で",
+      "done": "完了",
+      "taskCreated": "タスクを作成済み",
+      "added": "追加済み",
+      "dismissed": "却下"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "既読にする",
+    "open": "開く"
+  },
+  "counts": {
+    "notes_other": "{{count}}件のノート",
+    "notes_one": "{{count}}件のノート",
+    "tasks_other": "{{count}}件のタスク",
+    "tasks_one": "{{count}}件のタスク",
+    "goals_other": "{{count}}件の目標",
+    "goals_one": "{{count}}件の目標",
+    "projects_other": "{{count}}件のプロジェクト",
+    "projects_one": "{{count}}件のプロジェクト"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "デスクトップ",
+    "link": "リンク",
+    "openSource": "元を開く",
+    "fromSource": "{{source}}から作成"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "{{count}}件を再キューしました",
-            "failed_one": "失敗した項目：{{count}}件",
+      "requeued_one": "{{count}}件を再キューしました",
+      "failed_one": "失敗した項目：{{count}}件",
       "retryError": "再試行できませんでした",
       "requeued": "{{count}}件を再キューしました",
       "retry": "再試行",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "この送信者を常にアーカイブ",
-            "horizon": {
-                "someday": "いつか",
-                "nextMonth": "来月",
-                "thisMonth": "今月",
-                "nextWeek": "来週",
-                "week": "今週",
-                "label": "または後で"
-            },
-            "trashRequested": "削除をリクエストしました",
+      "horizon": {
+        "someday": "いつか",
+        "nextMonth": "来月",
+        "thisMonth": "今月",
+        "nextWeek": "来週",
+        "week": "今週",
+        "label": "または後で"
+      },
+      "trashRequested": "削除をリクエストしました",
       "draftRequested": "Gmail で下書きを準備中",
       "archiveRequested": "アーカイブを依頼しました",
       "noteSent": "Trieur に戻しました",
@@ -402,10 +402,10 @@
     "entry": "整理待ち（{{count}}）",
     "title": "整理待ち",
     "deck": {
-            "actionFailedTrash": "削除できませんでした",
+      "actionFailedTrash": "削除できませんでした",
       "progressLabel": "メール {{position}} / {{total}}",
       "option": {
-                "trash": "削除",
+        "trash": "削除",
         "draft": "下書き",
         "read": "読む",
         "event": "カレンダー",
@@ -646,18 +646,18 @@
     "hideCompleted": "完了したタスクを非表示"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "繰り返しタスクは残しました。1件ずつ削除してください：{{count}}",
-            "someFailed": "変更なし：{{count}}",
-            "deleted": "削除：{{count}}",
-            "moved": "移動：{{count}}",
-            "prioritized": "優先度を変更：{{count}}",
-            "dated": "日付を変更：{{count}}",
-            "completed": "完了：{{count}}",
-            "clear": "選択を解除",
-            "count": "選択中：{{count}}",
-            "label": "選択中のタスク"
-        },
+    "selection": {
+      "recurringKept": "繰り返しタスクは残しました。1件ずつ削除してください：{{count}}",
+      "someFailed": "変更なし：{{count}}",
+      "deleted": "削除：{{count}}",
+      "moved": "移動：{{count}}",
+      "prioritized": "優先度を変更：{{count}}",
+      "dated": "日付を変更：{{count}}",
+      "completed": "完了：{{count}}",
+      "clear": "選択を解除",
+      "count": "選択中：{{count}}",
+      "label": "選択中のタスク"
+    },
     "deletedToast": "「{{name}}」を削除しました",
     "title": "タスク",
     "today": "今日",
@@ -790,17 +790,17 @@
       "setDueDate": "期限日を設定"
     },
     "contextMenu": {
-            "review": "レビュー",
-            "copyError": "コピーできませんでした",
-            "titleCopied": "タイトルをコピーしました",
-            "linkCopied": "リンクをコピーしました",
-            "deleteKey": "Del",
-            "copyTitle": "タイトルをコピー",
-            "copyLink": "リンクをコピー",
-            "pickDate": "日付を選択…",
-            "reopen": "再開",
-            "complete": "完了",
-            "open": "開く",
+      "review": "レビュー",
+      "copyError": "コピーできませんでした",
+      "titleCopied": "タイトルをコピーしました",
+      "linkCopied": "リンクをコピーしました",
+      "deleteKey": "Del",
+      "copyTitle": "タイトルをコピー",
+      "copyLink": "リンクをコピー",
+      "pickDate": "日付を選択…",
+      "reopen": "再開",
+      "complete": "完了",
+      "open": "開く",
       "projectChanged": "プロジェクトを変更しました",
       "dateChanged": "日付を変更しました",
       "label": "タスクの操作",
@@ -872,66 +872,66 @@
     "noActivity": "まだアクティビティはありません"
   },
   "profile": {
-        "plugins": {
-            "title": "プラグイン",
-            "description": "プラグインは独自の連携をサーバーに追加します。管理者だけが見ることができます。有効にするまでプラグインはオフのままです。",
-            "notConfigured": "プラグインはオフです。TUDUDI_PLUGINS_DIR にプラグインフォルダーを含むフォルダーを設定し、サーバーを再起動してください。",
-            "reloadAll": "すべて再読み込み",
-            "reload": "再読み込み",
-            "reloadPending": "{{version}} を読み込むには再読み込みしてください",
-            "updatedFrom": "{{version}} から更新済み",
-            "version": "バージョン {{version}}",
-            "state": {
-                "disabled": "オフ",
-                "active": "実行中",
-                "error": "エラー",
-                "invalid": "無効",
-                "incompatible": "非対応",
-                "needs_approval": "承認が必要",
-                "missing": "見つかりません"
-            },
-            "permissions": "権限",
-            "events": "イベント",
-            "permission": {
-                "events": "イベントを受け取る",
-                "routes": "独自のルートを提供"
-            },
-            "enabled": "有効",
-            "needsApproval": "この版は以前より多くを要求しています。権限とイベントを承認するにはもう一度有効にしてください。",
-            "checkUpdate": "更新を確認",
-            "updateAvailable": "更新があります: {{version}}",
-            "upToDate": "最新です",
-            "updateError": "更新先アドレスを読み取れませんでした",
-            "settings": "設定",
-            "saveSettings": "設定を保存",
-            "saved": "設定を保存しました",
-            "secretSaved": "保存済み",
-            "clearSecret": "消去",
-            "required": "必須",
-            "reloaded": "プラグインを再読み込みしました",
-            "loadError": "プラグインを読み込めませんでした",
-            "none": "プラグインフォルダーにプラグインが見つかりません。",
-            "errorLabel": "エラー",
-            "saveError": "プラグインを保存できませんでした",
-            "installLabel": "プラグインの Git アドレス",
-            "install": "追加",
-            "installing": "追加中...",
-            "installHint": "サーバーで動くコードをダウンロードします。オンにする前に、何を求めるかを確認してください。",
-            "installed": "プラグインを追加しました。求めている内容を確認してから、オンにしてください。",
-            "installError": "プラグインを追加できませんでした",
-            "pull": "更新",
-            "pulled": "プラグインを更新しました",
-            "remove": "削除",
-            "removeTitle": "このプラグインを削除しますか？",
-            "removeMessage": "フォルダと設定がサーバーから削除されます。元に戻せません。",
-            "page": {
-                "notFound": "プラグインが見つからないか、オフです"
-            },
-            "approveIntro": "このプラグインはサーバー内で動作し、次を求めています:",
-            "approveOutro": "権限はCadenceがプラグインに渡す内容を制限するものですが、サンドボックスではありません。読んだコードだけを承認してください。",
-            "approveTitle": "権限を承認しますか？",
-            "approve": "承認して有効にする"
-        },
+    "plugins": {
+      "title": "プラグイン",
+      "description": "プラグインは独自の連携をサーバーに追加します。管理者だけが見ることができます。有効にするまでプラグインはオフのままです。",
+      "notConfigured": "プラグインはオフです。TUDUDI_PLUGINS_DIR にプラグインフォルダーを含むフォルダーを設定し、サーバーを再起動してください。",
+      "reloadAll": "すべて再読み込み",
+      "reload": "再読み込み",
+      "reloadPending": "{{version}} を読み込むには再読み込みしてください",
+      "updatedFrom": "{{version}} から更新済み",
+      "version": "バージョン {{version}}",
+      "state": {
+        "disabled": "オフ",
+        "active": "実行中",
+        "error": "エラー",
+        "invalid": "無効",
+        "incompatible": "非対応",
+        "needs_approval": "承認が必要",
+        "missing": "見つかりません"
+      },
+      "permissions": "権限",
+      "events": "イベント",
+      "permission": {
+        "events": "イベントを受け取る",
+        "routes": "独自のルートを提供"
+      },
+      "enabled": "有効",
+      "needsApproval": "この版は以前より多くを要求しています。権限とイベントを承認するにはもう一度有効にしてください。",
+      "checkUpdate": "更新を確認",
+      "updateAvailable": "更新があります: {{version}}",
+      "upToDate": "最新です",
+      "updateError": "更新先アドレスを読み取れませんでした",
+      "settings": "設定",
+      "saveSettings": "設定を保存",
+      "saved": "設定を保存しました",
+      "secretSaved": "保存済み",
+      "clearSecret": "消去",
+      "required": "必須",
+      "reloaded": "プラグインを再読み込みしました",
+      "loadError": "プラグインを読み込めませんでした",
+      "none": "プラグインフォルダーにプラグインが見つかりません。",
+      "errorLabel": "エラー",
+      "saveError": "プラグインを保存できませんでした",
+      "installLabel": "プラグインの Git アドレス",
+      "install": "追加",
+      "installing": "追加中...",
+      "installHint": "サーバーで動くコードをダウンロードします。オンにする前に、何を求めるかを確認してください。",
+      "installed": "プラグインを追加しました。求めている内容を確認してから、オンにしてください。",
+      "installError": "プラグインを追加できませんでした",
+      "pull": "更新",
+      "pulled": "プラグインを更新しました",
+      "remove": "削除",
+      "removeTitle": "このプラグインを削除しますか？",
+      "removeMessage": "フォルダと設定がサーバーから削除されます。元に戻せません。",
+      "page": {
+        "notFound": "プラグインが見つからないか、オフです"
+      },
+      "approveIntro": "このプラグインはサーバー内で動作し、次を求めています:",
+      "approveOutro": "権限はCadenceがプラグインに渡す内容を制限するものですが、サンドボックスではありません。読んだコードだけを承認してください。",
+      "approveTitle": "権限を承認しますか？",
+      "approve": "承認して有効にする"
+    },
     "showTaskDescription": "タイトルの下に説明を表示",
     "sync": {
       "field": {
@@ -1016,8 +1016,8 @@
     "nextTaskSuggestion": "次のタスクの提案",
     "enableNextTaskSuggestion": "次のタスク提案を有効にする",
     "tabs": {
-            "agents": "エージェント",
-            "plugins": "プラグイン",
+      "agents": "エージェント",
+      "plugins": "プラグイン",
       "classify": "分類",
       "sync": "同期",
       "general": "一般",
@@ -1353,7 +1353,7 @@
       "morningReplanToggle": "朝に自動で提案を準備する",
       "morningReplanDescription": "期限切れのタスクがあるとき、選んだ時刻の毎朝に週の提案を準備します。",
       "morningReplanTitle": "朝の期限切れ再計画（AI）",
-            "maxOption_one": "{{count}}件のタスク",
+      "maxOption_one": "{{count}}件のタスク",
       "title": "プランニング",
       "description": "一日を計画するとき、「今日は何ができそうですか?」がタスクを並べる順番です。行をドラッグして好きな順番にできます。同じタスクはいつも同じ順番で表示されます。",
       "orderTitle": "順番(ドラッグで変更)",
@@ -1669,20 +1669,20 @@
     "photoOn": "on",
     "groups": {
       "account": "アカウント",
-            "appearance": "インターフェース",
-            "planning": "整理",
+      "appearance": "インターフェース",
+      "planning": "整理",
       "integrations": "連携",
-            "security": "アクセス",
+      "security": "アクセス",
       "advanced": "詳細設定"
     },
     "optional": "任意",
     "accent": "アクセントカラー",
     "accentCustom": "カスタムカラー（16進数）",
-        "pureBlack": "ダークモードで純粋な黒を使う",
-        "sidebarPanelTitle": "パネル",
-        "sidebarPanelHint": "開いているサイドバーのブロック（上から下へ）。",
-        "sidebarPanelPinned": "ピン留め",
-        "sidebarPanelMonth": "月間カレンダー"
+    "pureBlack": "ダークモードで純粋な黒を使う",
+    "sidebarPanelTitle": "パネル",
+    "sidebarPanelHint": "開いているサイドバーのブロック（上から下へ）。",
+    "sidebarPanelPinned": "ピン留め",
+    "sidebarPanelMonth": "月間カレンダー"
   },
   "modals": {
     "confirmDelete": "本当に削除してよろしいですか？",
@@ -2607,12 +2607,12 @@
     "views": "プロジェクトの表示"
   },
   "task": {
-        "minutesAgo_one": "{{count}} 分前",
-        "inMinutes_one": "{{count}} 分後",
-        "inHours_one": "{{count}} 時間後",
-        "inDays_one": "{{count}} 日後",
-        "hoursAgo_one": "{{count}} 時間前",
-        "daysAgo_one": "{{count}} 日前",
+    "minutesAgo_one": "{{count}} 分前",
+    "inMinutes_one": "{{count}} 分後",
+    "inHours_one": "{{count}} 時間後",
+    "inDays_one": "{{count}} 日後",
+    "hoursAgo_one": "{{count}} 時間前",
+    "daysAgo_one": "{{count}} 日前",
     "duplicateError": "タスクを複製できませんでした。",
     "duplicated": "タスクを複製しました",
     "duplicate": "複製",
@@ -2906,7 +2906,7 @@
     "time": "時刻",
     "allDay": "終日",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "終了が開始より前です",
       "editEvent": "予定を編集",
       "newEvent": "新しい予定",
@@ -4021,10 +4021,10 @@
       "lead": "タイミング",
       "atTime": "時刻ちょうど",
       "minutesBefore": "{{count}} 分前"
-        },
-        "desktopApp": {
-            "title": "このアプリの通知",
-            "body": "Linux版 Cadence は、アイコンがシステムトレイにある限り、ウィンドウを閉じていてもシステム通知を表示します。下の「デスクトップ」列で通知を選べます。API キーが必要で、アプリの設定（トレイのメニュー）で入力します。"
+    },
+    "desktopApp": {
+      "title": "このアプリの通知",
+      "body": "Linux版 Cadence は、アイコンがシステムトレイにある限り、ウィンドウを閉じていてもシステム通知を表示します。下の「デスクトップ」列で通知を選べます。API キーが必要で、アプリの設定（トレイのメニュー）で入力します。"
     }
   },
   "projectStatus": {
@@ -4505,8 +4505,8 @@
     "invalidHint": "すでに使用されたか、期限が切れた可能性があります。送ってくれた人に新しいリンクを頼んでください。"
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} 件のタスクを次の空き時間へ配置します。",
-        "placeAllDone_one": "{{count}} 件のタスクを配置しました。",
+    "placeAllHint_one": "{{count}} 件のタスクを次の空き時間へ配置します。",
+    "placeAllDone_one": "{{count}} 件のタスクを配置しました。",
     "inProgress": "進行中",
     "overdue": "期限切れ",
     "dueToday": "今日が期限",
@@ -4577,7 +4577,7 @@
     "beta": "ベータ",
     "betaHint": "計画付きの今日のページは新しい機能です。従来のページはこのページの一番下から開けます。",
     "ai": {
-            "carried_one": "{{count}}件のタスクを明日に追加しました",
+      "carried_one": "{{count}}件のタスクを明日に追加しました",
       "suggested": "AI の提案",
       "estimateGuess": "AI の見積もり",
       "nothingToAdd": "追加するものはありません: 空き時間がないか、計画するタスクがありません。",
@@ -5183,13 +5183,13 @@
       "instructionsOther": "それ以外の列はタスクのノートに残せるので、シートの内容が失われることはありません。"
     },
     "import": {
-            "undoneKept_one": "インポートを取り消しました。その後に変更された {{count}} 件のタスクは残しました。",
-            "rowCount_one": "{{count}} 行",
-            "doneTitle_one": "{{count}} 件のタスクをインポートしました",
-            "countTags_one": "新しいタグ {{count}} 件",
-            "countProjects_one": "新しいプロジェクト {{count}} 件",
-            "countCreate_one": "新しいタスク {{count}} 件",
-            "countAreas_one": "新しいエリア {{count}} 件",
+      "undoneKept_one": "インポートを取り消しました。その後に変更された {{count}} 件のタスクは残しました。",
+      "rowCount_one": "{{count}} 行",
+      "doneTitle_one": "{{count}} 件のタスクをインポートしました",
+      "countTags_one": "新しいタグ {{count}} 件",
+      "countProjects_one": "新しいプロジェクト {{count}} 件",
+      "countCreate_one": "新しいタスク {{count}} 件",
+      "countAreas_one": "新しいエリア {{count}} 件",
       "fieldParent": "親タスク",
       "fieldWbs": "WBS / アウトライン番号",
       "fieldEstimate": "見積",
@@ -5414,7 +5414,49 @@
     "columnActions": "列の操作",
     "newColumn": "新しい列",
     "loadError": "列を読み込めませんでした",
-    "saveError": "ボードを保存できませんでした"
+    "saveError": "ボードを保存できませんでした",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "AIと話し合う",
@@ -5674,7 +5716,7 @@
     "close": "閉じる"
   },
   "comments": {
-        "count_one": "{{count}}件のコメント",
+    "count_one": "{{count}}件のコメント",
     "count": "コメント {{count}}件",
     "loading": "コメントを読み込み中...",
     "failedToLoad": "コメントを読み込めませんでした",
@@ -5826,8 +5868,8 @@
       "plan": "計画ページで"
     },
     "shortcuts": {
-            "panePrevious": "パネルの前のタスク",
-            "paneNext": "パネルの次のタスク",
+      "panePrevious": "パネルの前のタスク",
+      "paneNext": "パネルの次のタスク",
       "palette": "コマンドパレットを開く",
       "capture": "クイックキャプチャ",
       "search": "検索",
@@ -6425,9 +6467,9 @@
     "allTomorrow": "すべて明日へ",
     "replanTitle": "期限切れを再計画（{{count}}）",
     "replan": "再計画",
-        "plannedOn": "{{day}} に予定",
-        "taskCount_one": "{{count}} 件のタスク",
-        "organized_one": "{{count}}件のタスクを配置しました",
+    "plannedOn": "{{day}} に予定",
+    "taskCount_one": "{{count}} 件のタスク",
+    "organized_one": "{{count}}件のタスクを配置しました",
     "add": "追加",
     "addPlaceholder": "タスクを追加",
     "added": "「{{name}}」をこの日に追加しました",
@@ -6504,7 +6546,7 @@
   },
   "upcoming": {
     "overdueAiReplan": "AIで再計画",
-        "plannedOnDayHint_one": "{{count}} 件は日付に予定済み",
+    "plannedOnDayHint_one": "{{count}} 件は日付に予定済み",
     "replan": "再計画",
     "toPlan": "計画する",
     "expandToPlan": "計画するものを表示 ({{count}})",
@@ -6650,18 +6692,18 @@
     "stripLabel": "期間へ送る",
     "sentToHorizon": "{{name}}に送りました",
     "plannedOnDayHint_other": "{{count}}件は日付に予定済み",
-        "weekLoadTitle": "今日から週末までの予定と、1日の作業時間との比較",
-        "pickedMoved": "選択したタスクを移動しました",
-        "pickedCount": "選択中: {{count}}",
-        "pickedClear": "選択を解除",
-        "aiTab": "AIの計画",
-        "sectionToggle": "{{name}}を表示／非表示",
-        "pushedTitle": "先送り",
-        "pushedBadge": "30日で{{count}}回先送り",
-        "pushedMeta": "30日で{{count}}回",
-        "mergeCalendar": "統合カレンダー",
-        "mergeCalendarTitle": "日の列に予定を表示し、横のカレンダーを隠す",
-        "quickPlaceTitle": "{{day}}に計画：入る最初の日"
+    "weekLoadTitle": "今日から週末までの予定と、1日の作業時間との比較",
+    "pickedMoved": "選択したタスクを移動しました",
+    "pickedCount": "選択中: {{count}}",
+    "pickedClear": "選択を解除",
+    "aiTab": "AIの計画",
+    "sectionToggle": "{{name}}を表示／非表示",
+    "pushedTitle": "先送り",
+    "pushedBadge": "30日で{{count}}回先送り",
+    "pushedMeta": "30日で{{count}}回",
+    "mergeCalendar": "統合カレンダー",
+    "mergeCalendarTitle": "日の列に予定を表示し、横のカレンダーを隠す",
+    "quickPlaceTitle": "{{day}}に計画：入る最初の日"
   },
   "offline": {
     "offline": "オフライン",

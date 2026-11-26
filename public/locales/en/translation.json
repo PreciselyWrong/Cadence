@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Minimize",
-        "maximize": "Maximize",
-        "close": "Close"
+  "desktopWindow": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "close": "Close"
+  },
+  "weekend": {
+    "share": {
+      "error": "The image could not be created.",
+      "downloaded": "Image downloaded",
+      "copied": "Image copied",
+      "footer": "Prepared with Cadence",
+      "kicker": "WEEKEND",
+      "action": "Share"
     },
-    "weekend": {
-        "share": {
-            "error": "The image could not be created.",
-            "downloaded": "Image downloaded",
-            "copied": "Image copied",
-            "footer": "Prepared with Cadence",
-            "kicker": "WEEKEND",
-            "action": "Share"
-        },
-        "request": {
-            "error": "The request could not be sent.",
-            "failed": "Could not be prepared ({{days}})",
-            "pending": "Being prepared for {{days}}",
-            "submit": "Prepare",
-            "hint": "AI prepares at least 5 ideas per day. A notification arrives when it is ready.",
-            "title": "Prepare some days",
-            "open": "Other days"
-        },
-        "dayList": "The days",
-        "title": "Week-end",
-        "loadError": "Couldn’t open the weekend.",
-        "empty": "Nothing to suggest this weekend.",
-        "applied": "Decisions applied: {{count}}",
-        "applyError": "The decision was not saved.",
-        "validate": "Confirm",
-        "calendar": "Add to calendar",
-        "other": "Another idea",
-        "skip": "Skip",
-        "note": "Note",
-        "noteLabel": "Note for the agent",
-        "notePlaceholder": "What the agent should know",
-        "busy": "Busy: {{busy}}",
-        "feels": "feels like {{temp}}°",
-        "otherAsked": "Another idea asked",
-        "decided": {
-            "calendar": "On the calendar",
-            "skip": "Skipped"
-        },
-        "event": {
-            "requested": "Adding to calendar",
-            "created": "Added to calendar",
-            "failed": "Not added",
-            "open": "Open in calendar"
-        },
-        "countCalendar": "On the calendar: {{count}}",
-        "countOther": "Another idea asked: {{count}}",
-        "countNone": "Nothing picked",
-        "part": {
-            "morning": "morning",
-            "afternoon": "afternoon",
-            "day": "day"
-        },
-        "weather": {
-            "sun": "sunny",
-            "partly": "partly sunny",
-            "cloud": "cloudy",
-            "rain": "rain",
-            "snow": "snow",
-            "storm": "storm",
-            "fog": "fog"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Nicer elsewhere",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "The request could not be sent.",
+      "failed": "Could not be prepared ({{days}})",
+      "pending": "Being prepared for {{days}}",
+      "submit": "Prepare",
+      "hint": "AI prepares at least 5 ideas per day. A notification arrives when it is ready.",
+      "title": "Prepare some days",
+      "open": "Other days"
     },
-    "career": {
-        "choice": "chosen: {{label}}",
-        "validate": "Confirm ({{count}})",
-        "clear": "Clear",
-        "applied": "{{count}} decisions applied",
-        "appliedOne": "1 decision applied",
-        "title": "Career",
-        "updatedAt": "updated at {{time}}",
-        "empty": "Nothing new today",
-        "emptyHint": "The agent checks in every morning: its follow-ups, offers and tasks will show up here.",
-        "allDecided": "Everything is decided for today",
-        "loadError": "Couldn't load the Career page.",
-        "retry": "Try again",
-        "applyError": "The decision wasn't saved.",
-        "later": "Later",
-        "skip": "Skip",
-        "followups": {
-            "title": "Follow-ups",
-            "appliedAgo": "applied {{when}}",
-            "openDraft": "Open draft",
-            "createTask": "Create task",
-            "done": "Done"
-        },
-        "offers": {
-            "title": "Offers to decide",
-            "apply": "Apply",
-            "note": "Note",
-            "notePlaceholder": "A note for the agent…",
-            "open": "View offer",
-            "expires": "expires {{when}}",
-            "expired": "expired"
-        },
-        "tasks": {
-            "title": "Suggested tasks",
-            "add": "Add"
-        },
-        "decided": "Decided ({{count}})",
-        "state": {
-            "applied": "Applied",
-            "skipped": "Skipped",
-            "later": "Later",
-            "done": "Done",
-            "taskCreated": "Task created",
-            "added": "Added",
-            "dismissed": "Dismissed"
-        }
+    "dayList": "The days",
+    "title": "Week-end",
+    "loadError": "Couldn’t open the weekend.",
+    "empty": "Nothing to suggest this weekend.",
+    "applied": "Decisions applied: {{count}}",
+    "applyError": "The decision was not saved.",
+    "validate": "Confirm",
+    "calendar": "Add to calendar",
+    "other": "Another idea",
+    "skip": "Skip",
+    "note": "Note",
+    "noteLabel": "Note for the agent",
+    "notePlaceholder": "What the agent should know",
+    "busy": "Busy: {{busy}}",
+    "feels": "feels like {{temp}}°",
+    "otherAsked": "Another idea asked",
+    "decided": {
+      "calendar": "On the calendar",
+      "skip": "Skipped"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+    "event": {
+      "requested": "Adding to calendar",
+      "created": "Added to calendar",
+      "failed": "Not added",
+      "open": "Open in calendar"
     },
-    "counts": {
-        "notes_other": "{{count}} notes",
-        "notes_one": "{{count}} note",
-        "tasks_other": "{{count}} tasks",
-        "tasks_one": "{{count}} task",
-        "goals_other": "{{count}} goals",
-        "goals_one": "{{count}} goal",
-        "projects_other": "{{count}} projects",
-        "projects_one": "{{count}} project"
+    "countCalendar": "On the calendar: {{count}}",
+    "countOther": "Another idea asked: {{count}}",
+    "countNone": "Nothing picked",
+    "part": {
+      "morning": "morning",
+      "afternoon": "afternoon",
+      "day": "day"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Desktop",
-        "link": "Link",
-        "openSource": "Open the source",
-        "fromSource": "Came from {{source}}"
+    "weather": {
+      "sun": "sunny",
+      "partly": "partly sunny",
+      "cloud": "cloudy",
+      "rain": "rain",
+      "snow": "snow",
+      "storm": "storm",
+      "fog": "fog"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Nicer elsewhere",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "chosen: {{label}}",
+    "validate": "Confirm ({{count}})",
+    "clear": "Clear",
+    "applied": "{{count}} decisions applied",
+    "appliedOne": "1 decision applied",
+    "title": "Career",
+    "updatedAt": "updated at {{time}}",
+    "empty": "Nothing new today",
+    "emptyHint": "The agent checks in every morning: its follow-ups, offers and tasks will show up here.",
+    "allDecided": "Everything is decided for today",
+    "loadError": "Couldn't load the Career page.",
+    "retry": "Try again",
+    "applyError": "The decision wasn't saved.",
+    "later": "Later",
+    "skip": "Skip",
+    "followups": {
+      "title": "Follow-ups",
+      "appliedAgo": "applied {{when}}",
+      "openDraft": "Open draft",
+      "createTask": "Create task",
+      "done": "Done"
+    },
+    "offers": {
+      "title": "Offers to decide",
+      "apply": "Apply",
+      "note": "Note",
+      "notePlaceholder": "A note for the agent…",
+      "open": "View offer",
+      "expires": "expires {{when}}",
+      "expired": "expired"
+    },
+    "tasks": {
+      "title": "Suggested tasks",
+      "add": "Add"
+    },
+    "decided": "Decided ({{count}})",
+    "state": {
+      "applied": "Applied",
+      "skipped": "Skipped",
+      "later": "Later",
+      "done": "Done",
+      "taskCreated": "Task created",
+      "added": "Added",
+      "dismissed": "Dismissed"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Mark as read",
+    "open": "Open"
+  },
+  "counts": {
+    "notes_other": "{{count}} notes",
+    "notes_one": "{{count}} note",
+    "tasks_other": "{{count}} tasks",
+    "tasks_one": "{{count}} task",
+    "goals_other": "{{count}} goals",
+    "goals_one": "{{count}} goal",
+    "projects_other": "{{count}} projects",
+    "projects_one": "{{count}} project"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Desktop",
+    "link": "Link",
+    "openSource": "Open the source",
+    "fromSource": "Came from {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "Could not retry",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Always archive this sender",
-            "horizon": {
-                "someday": "Someday",
-                "nextMonth": "Next month",
-                "thisMonth": "This month",
-                "nextWeek": "Next week",
-                "week": "This week",
-                "label": "Or later"
-            },
-            "trashRequested": "Deletion requested",
+      "horizon": {
+        "someday": "Someday",
+        "nextMonth": "Next month",
+        "thisMonth": "This month",
+        "nextWeek": "Next week",
+        "week": "This week",
+        "label": "Or later"
+      },
+      "trashRequested": "Deletion requested",
       "draftRequested": "Draft being prepared in Gmail",
       "archiveRequested": "Archiving requested",
       "noteSent": "Sent back to the Trieur",
@@ -402,10 +402,10 @@
     "entry": "To sort ({{count}})",
     "title": "To sort",
     "deck": {
-            "actionFailedTrash": "Deleting did not go through",
+      "actionFailedTrash": "Deleting did not go through",
       "progressLabel": "Mail {{position}} of {{total}}",
       "option": {
-                "trash": "Delete",
+        "trash": "Delete",
         "draft": "Draft",
         "read": "Read",
         "event": "Calendar",
@@ -646,18 +646,18 @@
     "hideCompleted": "Hide Completed Tasks"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Recurring tasks kept, delete them one by one: {{count}}",
-            "someFailed": "Not changed: {{count}}",
-            "deleted": "Deleted: {{count}}",
-            "moved": "Moved: {{count}}",
-            "prioritized": "Priority changed: {{count}}",
-            "dated": "Date changed: {{count}}",
-            "completed": "Completed: {{count}}",
-            "clear": "Clear the selection",
-            "count": "Selected: {{count}}",
-            "label": "Selected tasks"
-        },
+    "selection": {
+      "recurringKept": "Recurring tasks kept, delete them one by one: {{count}}",
+      "someFailed": "Not changed: {{count}}",
+      "deleted": "Deleted: {{count}}",
+      "moved": "Moved: {{count}}",
+      "prioritized": "Priority changed: {{count}}",
+      "dated": "Date changed: {{count}}",
+      "completed": "Completed: {{count}}",
+      "clear": "Clear the selection",
+      "count": "Selected: {{count}}",
+      "label": "Selected tasks"
+    },
     "deletedToast": "\"{{name}}\" deleted",
     "title": "Tasks",
     "reorderError": "Failed to save task order",
@@ -791,17 +791,17 @@
       "setDueDate": "Set due date"
     },
     "contextMenu": {
-            "review": "Review",
-            "copyError": "Could not copy",
-            "titleCopied": "Title copied",
-            "linkCopied": "Link copied",
-            "deleteKey": "Del",
-            "copyTitle": "Copy title",
-            "copyLink": "Copy link",
-            "pickDate": "Pick a date…",
-            "reopen": "Reopen",
-            "complete": "Complete",
-            "open": "Open",
+      "review": "Review",
+      "copyError": "Could not copy",
+      "titleCopied": "Title copied",
+      "linkCopied": "Link copied",
+      "deleteKey": "Del",
+      "copyTitle": "Copy title",
+      "copyLink": "Copy link",
+      "pickDate": "Pick a date…",
+      "reopen": "Reopen",
+      "complete": "Complete",
+      "open": "Open",
       "projectChanged": "Project changed",
       "dateChanged": "Date changed",
       "label": "Task actions",
@@ -895,66 +895,66 @@
     }
   },
   "profile": {
-        "plugins": {
-            "title": "Plugins",
-            "description": "Plugins add your own integrations to the server. Only an admin sees them. A plugin stays off until you turn it on.",
-            "notConfigured": "Plugins are off. Set TUDUDI_PLUGINS_DIR to a folder that holds plugin folders, then restart the server.",
-            "reloadAll": "Reload all",
-            "reload": "Reload",
-            "reloadPending": "Reload to load {{version}}",
-            "updatedFrom": "updated from {{version}}",
-            "version": "Version {{version}}",
-            "state": {
-                "disabled": "Off",
-                "active": "Running",
-                "error": "Error",
-                "invalid": "Invalid",
-                "incompatible": "Incompatible",
-                "needs_approval": "Needs approval",
-                "missing": "Missing"
-            },
-            "permissions": "Permissions",
-            "events": "Events",
-            "permission": {
-                "events": "Listens to events",
-                "routes": "Serves its own routes"
-            },
-            "enabled": "Enabled",
-            "needsApproval": "This version asks for more than before. Turn it on again to approve its permissions and events.",
-            "checkUpdate": "Check for updates",
-            "updateAvailable": "Update available: {{version}}",
-            "upToDate": "Up to date",
-            "updateError": "Could not read the update address",
-            "settings": "Settings",
-            "saveSettings": "Save settings",
-            "saved": "Settings saved",
-            "secretSaved": "Saved",
-            "clearSecret": "Clear",
-            "required": "required",
-            "reloaded": "Plugins reloaded",
-            "loadError": "Could not load plugins",
-            "none": "No plugin found in the plugins folder.",
-            "errorLabel": "Error",
-            "saveError": "Could not save the plugin",
-            "installLabel": "Plugin Git address",
-            "install": "Add",
-            "installing": "Adding...",
-            "installHint": "This downloads code that runs in the server. Read what it asks for before you turn it on.",
-            "installed": "Plugin added. Read what it asks for, then turn it on.",
-            "installError": "Could not add the plugin",
-            "pull": "Update",
-            "pulled": "Plugin updated",
-            "remove": "Delete",
-            "removeTitle": "Delete this plugin?",
-            "removeMessage": "Its folder and its settings are deleted from the server. This cannot be undone.",
-            "page": {
-                "notFound": "Plugin not found or turned off"
-            },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
-        },
+    "plugins": {
+      "title": "Plugins",
+      "description": "Plugins add your own integrations to the server. Only an admin sees them. A plugin stays off until you turn it on.",
+      "notConfigured": "Plugins are off. Set TUDUDI_PLUGINS_DIR to a folder that holds plugin folders, then restart the server.",
+      "reloadAll": "Reload all",
+      "reload": "Reload",
+      "reloadPending": "Reload to load {{version}}",
+      "updatedFrom": "updated from {{version}}",
+      "version": "Version {{version}}",
+      "state": {
+        "disabled": "Off",
+        "active": "Running",
+        "error": "Error",
+        "invalid": "Invalid",
+        "incompatible": "Incompatible",
+        "needs_approval": "Needs approval",
+        "missing": "Missing"
+      },
+      "permissions": "Permissions",
+      "events": "Events",
+      "permission": {
+        "events": "Listens to events",
+        "routes": "Serves its own routes"
+      },
+      "enabled": "Enabled",
+      "needsApproval": "This version asks for more than before. Turn it on again to approve its permissions and events.",
+      "checkUpdate": "Check for updates",
+      "updateAvailable": "Update available: {{version}}",
+      "upToDate": "Up to date",
+      "updateError": "Could not read the update address",
+      "settings": "Settings",
+      "saveSettings": "Save settings",
+      "saved": "Settings saved",
+      "secretSaved": "Saved",
+      "clearSecret": "Clear",
+      "required": "required",
+      "reloaded": "Plugins reloaded",
+      "loadError": "Could not load plugins",
+      "none": "No plugin found in the plugins folder.",
+      "errorLabel": "Error",
+      "saveError": "Could not save the plugin",
+      "installLabel": "Plugin Git address",
+      "install": "Add",
+      "installing": "Adding...",
+      "installHint": "This downloads code that runs in the server. Read what it asks for before you turn it on.",
+      "installed": "Plugin added. Read what it asks for, then turn it on.",
+      "installError": "Could not add the plugin",
+      "pull": "Update",
+      "pulled": "Plugin updated",
+      "remove": "Delete",
+      "removeTitle": "Delete this plugin?",
+      "removeMessage": "Its folder and its settings are deleted from the server. This cannot be undone.",
+      "page": {
+        "notFound": "Plugin not found or turned off"
+      },
+      "approveIntro": "This plugin runs inside the server and asks for:",
+      "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+      "approveTitle": "Approve permissions?",
+      "approve": "Approve and enable"
+    },
     "sync": {
       "field": {
         "review_at": "Review on",
@@ -1168,7 +1168,7 @@
     "enableNextTaskSuggestion": "Enable Next Task Suggestions",
     "featuresAddons": "Features & Add-ons",
     "tabs": {
-            "plugins": "Plugins",
+      "plugins": "Plugins",
       "classify": "Filing",
       "sync": "Sync",
       "ai": "AI features",
@@ -1694,20 +1694,20 @@
     },
     "groups": {
       "account": "Account",
-            "appearance": "Interface",
-            "planning": "Organization",
+      "appearance": "Interface",
+      "planning": "Organization",
       "integrations": "Integrations",
-            "security": "Access",
+      "security": "Access",
       "advanced": "Advanced"
     },
     "optional": "Optional",
     "accent": "Accent colour",
     "accentCustom": "Custom colour (hex)",
-        "pureBlack": "Pure black in dark mode",
-        "sidebarPanelTitle": "Panel",
-        "sidebarPanelHint": "The blocks of the open sidebar, top to bottom.",
-        "sidebarPanelPinned": "Pinned",
-        "sidebarPanelMonth": "Month calendar"
+    "pureBlack": "Pure black in dark mode",
+    "sidebarPanelTitle": "Panel",
+    "sidebarPanelHint": "The blocks of the open sidebar, top to bottom.",
+    "sidebarPanelPinned": "Pinned",
+    "sidebarPanelMonth": "Month calendar"
   },
   "productivity": {
     "nothingYet": "Nothing to review yet.",
@@ -3163,7 +3163,7 @@
     "showCalendar": "Show {{name}}",
     "feedError": "Could not load: {{names}}",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "The end is before the start",
       "editEvent": "Edit event",
       "newEvent": "New event",
@@ -4251,10 +4251,10 @@
       "lead": "When",
       "atTime": "At the time",
       "minutesBefore": "{{count}} min before"
-        },
-        "desktopApp": {
-            "title": "Notifications of this app",
-            "body": "Cadence for Linux shows system notifications, even with the window closed, as long as its icon is in the system tray. Pick which ones in the Desktop column below. It needs an API key, set in the app settings (tray menu)."
+    },
+    "desktopApp": {
+      "title": "Notifications of this app",
+      "body": "Cadence for Linux shows system notifications, even with the window closed, as long as its icon is in the system tray. Pick which ones in the Desktop column below. It needs an API key, set in the app settings (tray menu)."
     }
   },
   "aiAssistant": {
@@ -5480,7 +5480,49 @@
     "columnActions": "Column actions",
     "newColumn": "New column",
     "loadError": "Could not load columns",
-    "saveError": "Could not save the board"
+    "saveError": "Could not save the board",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Discuss with the AI",
@@ -5798,8 +5840,8 @@
       "plan": "On the Plan page"
     },
     "shortcuts": {
-            "panePrevious": "Previous task in the pane",
-            "paneNext": "Next task in the pane",
+      "panePrevious": "Previous task in the pane",
+      "paneNext": "Next task in the pane",
       "palette": "Open the command palette",
       "capture": "Quick capture",
       "search": "Search",

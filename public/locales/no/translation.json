@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Minimer",
-        "maximize": "Maksimer",
-        "close": "Lukk"
+  "desktopWindow": {
+    "minimize": "Minimer",
+    "maximize": "Maksimer",
+    "close": "Lukk"
+  },
+  "weekend": {
+    "share": {
+      "error": "Bildet kunne ikke lages.",
+      "downloaded": "Bilde lastet ned",
+      "copied": "Bilde kopiert",
+      "footer": "Forberedt med Cadence",
+      "kicker": "HELG",
+      "action": "Del"
     },
-    "weekend": {
-        "share": {
-            "error": "Bildet kunne ikke lages.",
-            "downloaded": "Bilde lastet ned",
-            "copied": "Bilde kopiert",
-            "footer": "Forberedt med Cadence",
-            "kicker": "HELG",
-            "action": "Del"
-        },
-        "request": {
-            "error": "Forespørselen kunne ikke sendes.",
-            "failed": "Kunne ikke forberedes ({{days}})",
-            "pending": "Forberedes for {{days}}",
-            "submit": "Forbered",
-            "hint": "AI forbereder minst 5 ideer per dag. Du får et varsel når det er klart.",
-            "title": "Forbered dager",
-            "open": "Andre dager"
-        },
-        "dayList": "Dagene",
-        "title": "Helg",
-        "loadError": "Helgen kunne ikke åpnes.",
-        "empty": "Ingenting å foreslå denne helgen.",
-        "applied": "Beslutninger brukt: {{count}}",
-        "applyError": "Beslutningen ble ikke lagret.",
-        "validate": "Bekreft",
-        "calendar": "Legg i kalenderen",
-        "other": "En annen idé",
-        "skip": "Hopp over",
-        "note": "Notat",
-        "noteLabel": "Notat til agenten",
-        "notePlaceholder": "Det agenten bør vite",
-        "busy": "Opptatt: {{busy}}",
-        "feels": "føles som {{temp}}°",
-        "otherAsked": "Annen idé bedt om",
-        "decided": {
-            "calendar": "I kalenderen",
-            "skip": "Hoppet over"
-        },
-        "event": {
-            "requested": "Legges til",
-            "created": "Lagt til i kalenderen",
-            "failed": "Ikke lagt til",
-            "open": "Åpne i kalenderen"
-        },
-        "countCalendar": "I kalenderen: {{count}}",
-        "countOther": "Annen idé bedt om: {{count}}",
-        "countNone": "Ingenting valgt",
-        "part": {
-            "morning": "formiddag",
-            "afternoon": "ettermiddag",
-            "day": "dag"
-        },
-        "weather": {
-            "sun": "solskinn",
-            "partly": "delvis solskinn",
-            "cloud": "skyet",
-            "rain": "regn",
-            "snow": "snø",
-            "storm": "storm",
-            "fog": "tåke"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Penere andre steder",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Forespørselen kunne ikke sendes.",
+      "failed": "Kunne ikke forberedes ({{days}})",
+      "pending": "Forberedes for {{days}}",
+      "submit": "Forbered",
+      "hint": "AI forbereder minst 5 ideer per dag. Du får et varsel når det er klart.",
+      "title": "Forbered dager",
+      "open": "Andre dager"
     },
-    "career": {
-        "choice": "valgt: {{label}}",
-        "validate": "Bekreft ({{count}})",
-        "clear": "Tøm",
-        "applied": "{{count}} beslutninger brukt",
-        "appliedOne": "1 beslutning brukt",
-        "title": "Karriere",
-        "updatedAt": "oppdatert kl. {{time}}",
-        "empty": "Ingenting nytt i dag",
-        "emptyHint": "Agenten ser innom hver morgen: oppfølginger, stillinger og oppgaver vises her.",
-        "allDecided": "Alt er bestemt for i dag",
-        "loadError": "Kunne ikke laste Karriere-siden.",
-        "retry": "Prøv igjen",
-        "applyError": "Beslutningen ble ikke lagret.",
-        "later": "Senere",
-        "skip": "Hopp over",
-        "followups": {
-            "title": "Oppfølginger",
-            "appliedAgo": "søkt {{when}}",
-            "openDraft": "Åpne utkast",
-            "createTask": "Opprett oppgave",
-            "done": "Ferdig"
-        },
-        "offers": {
-            "title": "Stillinger å avgjøre",
-            "apply": "Søk",
-            "note": "Merknad",
-            "notePlaceholder": "En merknad til agenten…",
-            "open": "Se stillingen",
-            "expires": "utløper {{when}}",
-            "expired": "utløpt"
-        },
-        "tasks": {
-            "title": "Foreslåtte oppgaver",
-            "add": "Legg til"
-        },
-        "decided": "Bestemt ({{count}})",
-        "state": {
-            "applied": "Søkt",
-            "skipped": "Hoppet over",
-            "later": "Senere",
-            "done": "Ferdig",
-            "taskCreated": "Oppgave opprettet",
-            "added": "Lagt til",
-            "dismissed": "Avvist"
-        }
+    "dayList": "Dagene",
+    "title": "Helg",
+    "loadError": "Helgen kunne ikke åpnes.",
+    "empty": "Ingenting å foreslå denne helgen.",
+    "applied": "Beslutninger brukt: {{count}}",
+    "applyError": "Beslutningen ble ikke lagret.",
+    "validate": "Bekreft",
+    "calendar": "Legg i kalenderen",
+    "other": "En annen idé",
+    "skip": "Hopp over",
+    "note": "Notat",
+    "noteLabel": "Notat til agenten",
+    "notePlaceholder": "Det agenten bør vite",
+    "busy": "Opptatt: {{busy}}",
+    "feels": "føles som {{temp}}°",
+    "otherAsked": "Annen idé bedt om",
+    "decided": {
+      "calendar": "I kalenderen",
+      "skip": "Hoppet over"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Merk som lest",
-        "open": "Åpne"
+    "event": {
+      "requested": "Legges til",
+      "created": "Lagt til i kalenderen",
+      "failed": "Ikke lagt til",
+      "open": "Åpne i kalenderen"
     },
-    "counts": {
-        "notes_other": "{{count}} notater",
-        "notes_one": "{{count}} notat",
-        "tasks_other": "{{count}} oppgaver",
-        "tasks_one": "{{count}} oppgave",
-        "goals_other": "{{count}} mål",
-        "goals_one": "{{count}} mål",
-        "projects_other": "{{count}} prosjekter",
-        "projects_one": "{{count}} prosjekt"
+    "countCalendar": "I kalenderen: {{count}}",
+    "countOther": "Annen idé bedt om: {{count}}",
+    "countNone": "Ingenting valgt",
+    "part": {
+      "morning": "formiddag",
+      "afternoon": "ettermiddag",
+      "day": "dag"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Skrivebord",
-        "link": "Lenke",
-        "openSource": "Åpne kilden",
-        "fromSource": "Kommer fra {{source}}"
+    "weather": {
+      "sun": "solskinn",
+      "partly": "delvis solskinn",
+      "cloud": "skyet",
+      "rain": "regn",
+      "snow": "snø",
+      "storm": "storm",
+      "fog": "tåke"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Penere andre steder",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "valgt: {{label}}",
+    "validate": "Bekreft ({{count}})",
+    "clear": "Tøm",
+    "applied": "{{count}} beslutninger brukt",
+    "appliedOne": "1 beslutning brukt",
+    "title": "Karriere",
+    "updatedAt": "oppdatert kl. {{time}}",
+    "empty": "Ingenting nytt i dag",
+    "emptyHint": "Agenten ser innom hver morgen: oppfølginger, stillinger og oppgaver vises her.",
+    "allDecided": "Alt er bestemt for i dag",
+    "loadError": "Kunne ikke laste Karriere-siden.",
+    "retry": "Prøv igjen",
+    "applyError": "Beslutningen ble ikke lagret.",
+    "later": "Senere",
+    "skip": "Hopp over",
+    "followups": {
+      "title": "Oppfølginger",
+      "appliedAgo": "søkt {{when}}",
+      "openDraft": "Åpne utkast",
+      "createTask": "Opprett oppgave",
+      "done": "Ferdig"
+    },
+    "offers": {
+      "title": "Stillinger å avgjøre",
+      "apply": "Søk",
+      "note": "Merknad",
+      "notePlaceholder": "En merknad til agenten…",
+      "open": "Se stillingen",
+      "expires": "utløper {{when}}",
+      "expired": "utløpt"
+    },
+    "tasks": {
+      "title": "Foreslåtte oppgaver",
+      "add": "Legg til"
+    },
+    "decided": "Bestemt ({{count}})",
+    "state": {
+      "applied": "Søkt",
+      "skipped": "Hoppet over",
+      "later": "Senere",
+      "done": "Ferdig",
+      "taskCreated": "Oppgave opprettet",
+      "added": "Lagt til",
+      "dismissed": "Avvist"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Merk som lest",
+    "open": "Åpne"
+  },
+  "counts": {
+    "notes_other": "{{count}} notater",
+    "notes_one": "{{count}} notat",
+    "tasks_other": "{{count}} oppgaver",
+    "tasks_one": "{{count}} oppgave",
+    "goals_other": "{{count}} mål",
+    "goals_one": "{{count}} mål",
+    "projects_other": "{{count}} prosjekter",
+    "projects_one": "{{count}} prosjekt"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Skrivebord",
+    "link": "Lenke",
+    "openSource": "Åpne kilden",
+    "fromSource": "Kommer fra {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "Kunne ikke prøve igjen",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Arkiver alltid denne avsenderen",
-            "horizon": {
-                "someday": "En gang",
-                "nextMonth": "Neste måned",
-                "thisMonth": "Denne måneden",
-                "nextWeek": "Neste uke",
-                "week": "Denne uken",
-                "label": "Eller senere"
-            },
-            "trashRequested": "Sletting forespurt",
+      "horizon": {
+        "someday": "En gang",
+        "nextMonth": "Neste måned",
+        "thisMonth": "Denne måneden",
+        "nextWeek": "Neste uke",
+        "week": "Denne uken",
+        "label": "Eller senere"
+      },
+      "trashRequested": "Sletting forespurt",
       "draftRequested": "Utkast forberedes i Gmail",
       "archiveRequested": "Arkivering forespurt",
       "noteSent": "Sendt tilbake til Trieur",
@@ -402,10 +402,10 @@
     "entry": "Å sortere ({{count}})",
     "title": "Å sortere",
     "deck": {
-            "actionFailedTrash": "Slettingen mislyktes",
+      "actionFailedTrash": "Slettingen mislyktes",
       "progressLabel": "E-post {{position}} av {{total}}",
       "option": {
-                "trash": "Slett",
+        "trash": "Slett",
         "draft": "Utkast",
         "read": "Les",
         "event": "Kalender",
@@ -647,18 +647,18 @@
     "hideCompleted": "Skjul Fullførte Oppgaver"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Gjentakende oppgaver beholdt, slett dem én om gangen: {{count}}",
-            "someFailed": "Ikke endret: {{count}}",
-            "deleted": "Slettet: {{count}}",
-            "moved": "Flyttet: {{count}}",
-            "prioritized": "Prioritet endret: {{count}}",
-            "dated": "Dato endret: {{count}}",
-            "completed": "Fullført: {{count}}",
-            "clear": "Tøm utvalget",
-            "count": "Valgt: {{count}}",
-            "label": "Valgte oppgaver"
-        },
+    "selection": {
+      "recurringKept": "Gjentakende oppgaver beholdt, slett dem én om gangen: {{count}}",
+      "someFailed": "Ikke endret: {{count}}",
+      "deleted": "Slettet: {{count}}",
+      "moved": "Flyttet: {{count}}",
+      "prioritized": "Prioritet endret: {{count}}",
+      "dated": "Dato endret: {{count}}",
+      "completed": "Fullført: {{count}}",
+      "clear": "Tøm utvalget",
+      "count": "Valgt: {{count}}",
+      "label": "Valgte oppgaver"
+    },
     "deletedToast": "«{{name}}» slettet",
     "title": "Oppgaver",
     "today": "I dag",
@@ -791,17 +791,17 @@
       "setDueDate": "Sett forfallsdato"
     },
     "contextMenu": {
-            "review": "Gjennomgang",
-            "copyError": "Kunne ikke kopiere",
-            "titleCopied": "Tittel kopiert",
-            "linkCopied": "Lenke kopiert",
-            "deleteKey": "Del",
-            "copyTitle": "Kopier tittel",
-            "copyLink": "Kopier lenke",
-            "pickDate": "Velg en dato…",
-            "reopen": "Gjenåpne",
-            "complete": "Fullfør",
-            "open": "Åpne",
+      "review": "Gjennomgang",
+      "copyError": "Kunne ikke kopiere",
+      "titleCopied": "Tittel kopiert",
+      "linkCopied": "Lenke kopiert",
+      "deleteKey": "Del",
+      "copyTitle": "Kopier tittel",
+      "copyLink": "Kopier lenke",
+      "pickDate": "Velg en dato…",
+      "reopen": "Gjenåpne",
+      "complete": "Fullfør",
+      "open": "Åpne",
       "projectChanged": "Prosjekt endret",
       "dateChanged": "Dato endret",
       "label": "Oppgavehandlinger",
@@ -873,66 +873,66 @@
     "noActivity": "Ingen aktivitet ennå"
   },
   "profile": {
-        "plugins": {
-            "title": "Tillegg",
-            "description": "Tillegg legger til egne integrasjoner på serveren. Bare en administrator ser dem. Et tillegg er av til du slår det på.",
-            "notConfigured": "Tillegg er av. Sett TUDUDI_PLUGINS_DIR til en mappe med tilleggsmapper, og start serveren på nytt.",
-            "reloadAll": "Last alle på nytt",
-            "reload": "Last på nytt",
-            "reloadPending": "Last på nytt for å laste {{version}}",
-            "updatedFrom": "oppdatert fra {{version}}",
-            "version": "Versjon {{version}}",
-            "state": {
-                "disabled": "Av",
-                "active": "Kjører",
-                "error": "Feil",
-                "invalid": "Ugyldig",
-                "incompatible": "Ikke kompatibel",
-                "needs_approval": "Må godkjennes",
-                "missing": "Mangler"
-            },
-            "permissions": "Tillatelser",
-            "events": "Hendelser",
-            "permission": {
-                "events": "Lytter etter hendelser",
-                "routes": "Tilbyr egne ruter"
-            },
-            "enabled": "På",
-            "needsApproval": "Denne versjonen ber om mer enn før. Slå den på igjen for å godkjenne tillatelsene og hendelsene.",
-            "checkUpdate": "Se etter oppdateringer",
-            "updateAvailable": "Oppdatering tilgjengelig: {{version}}",
-            "upToDate": "Oppdatert",
-            "updateError": "Kunne ikke lese oppdateringsadressen",
-            "settings": "Innstillinger",
-            "saveSettings": "Lagre innstillinger",
-            "saved": "Innstillingene er lagret",
-            "secretSaved": "Lagret",
-            "clearSecret": "Tøm",
-            "required": "påkrevd",
-            "reloaded": "Tillegg lastet på nytt",
-            "loadError": "Kunne ikke laste tillegg",
-            "none": "Fant ingen tillegg i tilleggsmappen.",
-            "errorLabel": "Feil",
-            "saveError": "Kunne ikke lagre tillegget",
-            "installLabel": "Git-adresse til pluginen",
-            "install": "Legg til",
-            "installing": "Legger til...",
-            "installHint": "Dette laster ned kode som kjøres i serveren. Les hva den ber om før du slår den på.",
-            "installed": "Pluginen er lagt til. Les hva den ber om, og slå den deretter på.",
-            "installError": "Pluginen kunne ikke legges til",
-            "pull": "Oppdater",
-            "pulled": "Plugin oppdatert",
-            "remove": "Slett",
-            "removeTitle": "Slette denne pluginen?",
-            "removeMessage": "Mappen og innstillingene slettes fra serveren. Dette kan ikke angres.",
-            "page": {
-                "notFound": "Pluginen ble ikke funnet eller er slått av"
-            },
-            "approveIntro": "Dette tillegget kjøres i serveren og ber om:",
-            "approveOutro": "Tillatelser begrenser hva Cadence gir tillegget; de er ingen sandkasse. Godkjenn bare kode du har lest.",
-            "approveTitle": "Godkjenne tillatelsene?",
-            "approve": "Godkjenn og slå på"
-        },
+    "plugins": {
+      "title": "Tillegg",
+      "description": "Tillegg legger til egne integrasjoner på serveren. Bare en administrator ser dem. Et tillegg er av til du slår det på.",
+      "notConfigured": "Tillegg er av. Sett TUDUDI_PLUGINS_DIR til en mappe med tilleggsmapper, og start serveren på nytt.",
+      "reloadAll": "Last alle på nytt",
+      "reload": "Last på nytt",
+      "reloadPending": "Last på nytt for å laste {{version}}",
+      "updatedFrom": "oppdatert fra {{version}}",
+      "version": "Versjon {{version}}",
+      "state": {
+        "disabled": "Av",
+        "active": "Kjører",
+        "error": "Feil",
+        "invalid": "Ugyldig",
+        "incompatible": "Ikke kompatibel",
+        "needs_approval": "Må godkjennes",
+        "missing": "Mangler"
+      },
+      "permissions": "Tillatelser",
+      "events": "Hendelser",
+      "permission": {
+        "events": "Lytter etter hendelser",
+        "routes": "Tilbyr egne ruter"
+      },
+      "enabled": "På",
+      "needsApproval": "Denne versjonen ber om mer enn før. Slå den på igjen for å godkjenne tillatelsene og hendelsene.",
+      "checkUpdate": "Se etter oppdateringer",
+      "updateAvailable": "Oppdatering tilgjengelig: {{version}}",
+      "upToDate": "Oppdatert",
+      "updateError": "Kunne ikke lese oppdateringsadressen",
+      "settings": "Innstillinger",
+      "saveSettings": "Lagre innstillinger",
+      "saved": "Innstillingene er lagret",
+      "secretSaved": "Lagret",
+      "clearSecret": "Tøm",
+      "required": "påkrevd",
+      "reloaded": "Tillegg lastet på nytt",
+      "loadError": "Kunne ikke laste tillegg",
+      "none": "Fant ingen tillegg i tilleggsmappen.",
+      "errorLabel": "Feil",
+      "saveError": "Kunne ikke lagre tillegget",
+      "installLabel": "Git-adresse til pluginen",
+      "install": "Legg til",
+      "installing": "Legger til...",
+      "installHint": "Dette laster ned kode som kjøres i serveren. Les hva den ber om før du slår den på.",
+      "installed": "Pluginen er lagt til. Les hva den ber om, og slå den deretter på.",
+      "installError": "Pluginen kunne ikke legges til",
+      "pull": "Oppdater",
+      "pulled": "Plugin oppdatert",
+      "remove": "Slett",
+      "removeTitle": "Slette denne pluginen?",
+      "removeMessage": "Mappen og innstillingene slettes fra serveren. Dette kan ikke angres.",
+      "page": {
+        "notFound": "Pluginen ble ikke funnet eller er slått av"
+      },
+      "approveIntro": "Dette tillegget kjøres i serveren og ber om:",
+      "approveOutro": "Tillatelser begrenser hva Cadence gir tillegget; de er ingen sandkasse. Godkjenn bare kode du har lest.",
+      "approveTitle": "Godkjenne tillatelsene?",
+      "approve": "Godkjenn og slå på"
+    },
     "showTaskDescription": "Vis beskrivelsen under tittelen",
     "sync": {
       "field": {
@@ -1111,8 +1111,8 @@
     "nextTaskSuggestion": "Neste oppgaveforslag",
     "enableNextTaskSuggestion": "Aktiver forslag til neste oppgave",
     "tabs": {
-            "agents": "Agenter",
-            "plugins": "Tillegg",
+      "agents": "Agenter",
+      "plugins": "Tillegg",
       "classify": "Sortering",
       "sync": "Synk",
       "general": "Generelt",
@@ -1670,20 +1670,20 @@
     "photoOn": "på",
     "groups": {
       "account": "Konto",
-            "appearance": "Grensesnitt",
-            "planning": "Organisering",
+      "appearance": "Grensesnitt",
+      "planning": "Organisering",
       "integrations": "Integrasjoner",
-            "security": "Tilgang",
+      "security": "Tilgang",
       "advanced": "Avansert"
     },
     "optional": "Valgfritt",
     "accent": "Aksentfarge",
     "accentCustom": "Egendefinert farge (hex)",
-        "pureBlack": "Ren svart i mørk modus",
-        "sidebarPanelTitle": "Panel",
-        "sidebarPanelHint": "Blokkene i den åpne sidepanelet, fra topp til bunn.",
-        "sidebarPanelPinned": "Festet",
-        "sidebarPanelMonth": "Månedskalender"
+    "pureBlack": "Ren svart i mørk modus",
+    "sidebarPanelTitle": "Panel",
+    "sidebarPanelHint": "Blokkene i den åpne sidepanelet, fra topp til bunn.",
+    "sidebarPanelPinned": "Festet",
+    "sidebarPanelMonth": "Månedskalender"
   },
   "productivity": {
     "stalledProjects": "Stagnerte prosjekter",
@@ -2976,7 +2976,7 @@
     "time": "Tid",
     "allDay": "Hele dagen",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Slutten er før starten",
       "editEvent": "Rediger hendelse",
       "newEvent": "Ny hendelse",
@@ -4022,10 +4022,10 @@
       "lead": "Når",
       "atTime": "På tidspunktet",
       "minutesBefore": "{{count}} min før"
-        },
-        "desktopApp": {
-            "title": "Varsler fra denne appen",
-            "body": "Cadence for Linux viser systemvarsler, også når vinduet er lukket, så lenge ikonet er i systemstatusfeltet. Velg hvilke i kolonnen Datamaskin nedenfor. Den trenger en API-nøkkel, som settes i appinnstillingene (menyen i statusfeltet)."
+    },
+    "desktopApp": {
+      "title": "Varsler fra denne appen",
+      "body": "Cadence for Linux viser systemvarsler, også når vinduet er lukket, så lenge ikonet er i systemstatusfeltet. Velg hvilke i kolonnen Datamaskin nedenfor. Den trenger en API-nøkkel, som settes i appinnstillingene (menyen i statusfeltet)."
     }
   },
   "projectStatus": {
@@ -4510,7 +4510,7 @@
     "invalidHint": "Den kan allerede være brukt eller utløpt. Be personen som sendte den om en ny."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} oppgave legges i neste ledige tidsluke.",
+    "placeAllHint_one": "{{count}} oppgave legges i neste ledige tidsluke.",
     "inProgress": "Pågår",
     "overdue": "Forfalt",
     "dueToday": "Forfaller i dag",
@@ -5188,7 +5188,7 @@
       "instructionsOther": "Alle andre kolonner kan beholdes i oppgavens notat, så ingenting i arket går tapt."
     },
     "import": {
-            "undoneKept_one": "Importen ble angret. {{count}} oppgave som er endret siden da, ble beholdt.",
+      "undoneKept_one": "Importen ble angret. {{count}} oppgave som er endret siden da, ble beholdt.",
       "fieldParent": "Overordnet oppgave",
       "fieldWbs": "WBS / disposisjonsnummer",
       "fieldEstimate": "Estimat",
@@ -5419,7 +5419,49 @@
     "columnActions": "Kolonnehandlinger",
     "newColumn": "Ny kolonne",
     "loadError": "Kunne ikke laste kolonner",
-    "saveError": "Kunne ikke lagre tavlen"
+    "saveError": "Kunne ikke lagre tavlen",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Diskuter med KI-en",
@@ -5831,8 +5873,8 @@
       "plan": "På siden Planlegg"
     },
     "shortcuts": {
-            "panePrevious": "Forrige oppgave i panelet",
-            "paneNext": "Neste oppgave i panelet",
+      "panePrevious": "Forrige oppgave i panelet",
+      "paneNext": "Neste oppgave i panelet",
       "palette": "Åpne kommandopalett",
       "capture": "Hurtigfangst",
       "search": "Søk",

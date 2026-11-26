@@ -1,150 +1,150 @@
 {
-    "desktopWindow": {
-        "minimize": "최소화",
-        "maximize": "최대화",
-        "close": "닫기"
+  "desktopWindow": {
+    "minimize": "최소화",
+    "maximize": "최대화",
+    "close": "닫기"
+  },
+  "weekend": {
+    "share": {
+      "error": "이미지를 만들 수 없습니다.",
+      "downloaded": "이미지를 다운로드했습니다",
+      "copied": "이미지를 복사했습니다",
+      "footer": "Cadence로 준비함",
+      "kicker": "주말",
+      "action": "공유"
     },
-    "weekend": {
-        "share": {
-            "error": "이미지를 만들 수 없습니다.",
-            "downloaded": "이미지를 다운로드했습니다",
-            "copied": "이미지를 복사했습니다",
-            "footer": "Cadence로 준비함",
-            "kicker": "주말",
-            "action": "공유"
-        },
-        "request": {
-            "error": "요청을 보낼 수 없습니다.",
-            "failed": "준비하지 못했습니다 ({{days}})",
-            "pending": "{{days}} 준비 중",
-            "submit": "준비",
-            "hint": "AI가 하루에 최소 5개의 아이디어를 준비합니다. 준비되면 알림이 옵니다.",
-            "title": "날짜 준비",
-            "open": "다른 날"
-        },
-        "dayList": "날짜",
-        "title": "주말",
-        "loadError": "주말 계획을 열 수 없습니다.",
-        "empty": "이번 주말에 제안할 것이 없습니다.",
-        "applied": "적용된 결정: {{count}}",
-        "applyError": "결정을 저장하지 못했습니다.",
-        "validate": "확인",
-        "calendar": "캘린더에 추가",
-        "other": "다른 아이디어",
-        "skip": "건너뛰기",
-        "note": "메모",
-        "noteLabel": "에이전트에게 남길 메모",
-        "notePlaceholder": "에이전트가 알아야 할 내용",
-        "busy": "일정 있음: {{busy}}",
-        "feels": "체감 {{temp}}°",
-        "otherAsked": "다른 아이디어 요청됨",
-        "decided": {
-            "calendar": "캘린더에 있음",
-            "skip": "건너뜀"
-        },
-        "event": {
-            "requested": "추가 중",
-            "created": "캘린더에 추가됨",
-            "failed": "추가되지 않음",
-            "open": "캘린더에서 열기"
-        },
-        "countCalendar": "캘린더: {{count}}",
-        "countOther": "다른 아이디어 요청: {{count}}",
-        "countNone": "선택 없음",
-        "part": {
-            "morning": "오전",
-            "afternoon": "오후",
-            "day": "하루"
-        },
-        "weather": {
-            "sun": "맑음",
-            "partly": "구름 조금",
-            "cloud": "흐림",
-            "rain": "비",
-            "snow": "눈",
-            "storm": "폭풍",
-            "fog": "안개"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "다른 곳이 더 좋음",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "요청을 보낼 수 없습니다.",
+      "failed": "준비하지 못했습니다 ({{days}})",
+      "pending": "{{days}} 준비 중",
+      "submit": "준비",
+      "hint": "AI가 하루에 최소 5개의 아이디어를 준비합니다. 준비되면 알림이 옵니다.",
+      "title": "날짜 준비",
+      "open": "다른 날"
     },
-    "career": {
-        "choice": "선택: {{label}}",
-        "validate": "확인 ({{count}})",
-        "clear": "지우기",
-        "applied": "{{count}}개 결정 적용됨",
-        "appliedOne": "1개 결정 적용됨",
-        "title": "커리어",
-        "updatedAt": "{{time}}에 업데이트됨",
-        "empty": "오늘은 새로운 소식이 없습니다",
-        "emptyHint": "에이전트가 매일 아침 확인합니다. 후속 연락, 채용 공고, 할 일이 여기에 표시됩니다.",
-        "allDecided": "오늘 결정할 것은 모두 끝났습니다",
-        "loadError": "커리어 페이지를 불러오지 못했습니다.",
-        "retry": "다시 시도",
-        "applyError": "결정이 저장되지 않았습니다.",
-        "later": "나중에",
-        "skip": "건너뛰기",
-        "followups": {
-            "title": "후속 연락",
-            "appliedAgo": "지원 {{when}}",
-            "openDraft": "초안 열기",
-            "createTask": "할 일 만들기",
-            "done": "완료"
-        },
-        "offers": {
-            "title": "결정할 채용 공고",
-            "apply": "지원하기",
-            "note": "메모",
-            "notePlaceholder": "에이전트에게 남길 메모…",
-            "open": "공고 보기",
-            "expires": "마감 {{when}}",
-            "expired": "마감됨"
-        },
-        "tasks": {
-            "title": "제안된 할 일",
-            "add": "추가"
-        },
-        "decided": "결정됨 ({{count}})",
-        "state": {
-            "applied": "지원함",
-            "skipped": "건너뜀",
-            "later": "나중에",
-            "done": "완료",
-            "taskCreated": "할 일 생성됨",
-            "added": "추가됨",
-            "dismissed": "거절됨"
-        }
+    "dayList": "날짜",
+    "title": "주말",
+    "loadError": "주말 계획을 열 수 없습니다.",
+    "empty": "이번 주말에 제안할 것이 없습니다.",
+    "applied": "적용된 결정: {{count}}",
+    "applyError": "결정을 저장하지 못했습니다.",
+    "validate": "확인",
+    "calendar": "캘린더에 추가",
+    "other": "다른 아이디어",
+    "skip": "건너뛰기",
+    "note": "메모",
+    "noteLabel": "에이전트에게 남길 메모",
+    "notePlaceholder": "에이전트가 알아야 할 내용",
+    "busy": "일정 있음: {{busy}}",
+    "feels": "체감 {{temp}}°",
+    "otherAsked": "다른 아이디어 요청됨",
+    "decided": {
+      "calendar": "캘린더에 있음",
+      "skip": "건너뜀"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "읽음으로 표시",
-        "open": "열기"
+    "event": {
+      "requested": "추가 중",
+      "created": "캘린더에 추가됨",
+      "failed": "추가되지 않음",
+      "open": "캘린더에서 열기"
     },
-    "counts": {
-        "notes_other": "{{count}}개 노트",
-        "notes_one": "{{count}}개 노트",
-        "tasks_other": "{{count}}개 작업",
-        "tasks_one": "{{count}}개 작업",
-        "goals_other": "{{count}}개 목표",
-        "goals_one": "{{count}}개 목표",
-        "projects_other": "{{count}}개 프로젝트",
-        "projects_one": "{{count}}개 프로젝트"
+    "countCalendar": "캘린더: {{count}}",
+    "countOther": "다른 아이디어 요청: {{count}}",
+    "countNone": "선택 없음",
+    "part": {
+      "morning": "오전",
+      "afternoon": "오후",
+      "day": "하루"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "데스크톱",
-        "link": "링크",
-        "openSource": "원본 열기",
-        "fromSource": "{{source}}에서 가져옴"
+    "weather": {
+      "sun": "맑음",
+      "partly": "구름 조금",
+      "cloud": "흐림",
+      "rain": "비",
+      "snow": "눈",
+      "storm": "폭풍",
+      "fog": "안개"
     },
+    "nearby": "Nearby",
+    "elsewhere": "다른 곳이 더 좋음",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "선택: {{label}}",
+    "validate": "확인 ({{count}})",
+    "clear": "지우기",
+    "applied": "{{count}}개 결정 적용됨",
+    "appliedOne": "1개 결정 적용됨",
+    "title": "커리어",
+    "updatedAt": "{{time}}에 업데이트됨",
+    "empty": "오늘은 새로운 소식이 없습니다",
+    "emptyHint": "에이전트가 매일 아침 확인합니다. 후속 연락, 채용 공고, 할 일이 여기에 표시됩니다.",
+    "allDecided": "오늘 결정할 것은 모두 끝났습니다",
+    "loadError": "커리어 페이지를 불러오지 못했습니다.",
+    "retry": "다시 시도",
+    "applyError": "결정이 저장되지 않았습니다.",
+    "later": "나중에",
+    "skip": "건너뛰기",
+    "followups": {
+      "title": "후속 연락",
+      "appliedAgo": "지원 {{when}}",
+      "openDraft": "초안 열기",
+      "createTask": "할 일 만들기",
+      "done": "완료"
+    },
+    "offers": {
+      "title": "결정할 채용 공고",
+      "apply": "지원하기",
+      "note": "메모",
+      "notePlaceholder": "에이전트에게 남길 메모…",
+      "open": "공고 보기",
+      "expires": "마감 {{when}}",
+      "expired": "마감됨"
+    },
+    "tasks": {
+      "title": "제안된 할 일",
+      "add": "추가"
+    },
+    "decided": "결정됨 ({{count}})",
+    "state": {
+      "applied": "지원함",
+      "skipped": "건너뜀",
+      "later": "나중에",
+      "done": "완료",
+      "taskCreated": "할 일 생성됨",
+      "added": "추가됨",
+      "dismissed": "거절됨"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "읽음으로 표시",
+    "open": "열기"
+  },
+  "counts": {
+    "notes_other": "{{count}}개 노트",
+    "notes_one": "{{count}}개 노트",
+    "tasks_other": "{{count}}개 작업",
+    "tasks_one": "{{count}}개 작업",
+    "goals_other": "{{count}}개 목표",
+    "goals_one": "{{count}}개 목표",
+    "projects_other": "{{count}}개 프로젝트",
+    "projects_one": "{{count}}개 프로젝트"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "데스크톱",
+    "link": "링크",
+    "openSource": "원본 열기",
+    "fromSource": "{{source}}에서 가져옴"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "{{count}}개 항목을 다시 대기열에 넣었습니다",
-            "failed_one": "실패한 항목 {{count}}개",
+      "requeued_one": "{{count}}개 항목을 다시 대기열에 넣었습니다",
+      "failed_one": "실패한 항목 {{count}}개",
       "retryError": "다시 시도할 수 없습니다",
       "requeued": "{{count}}개 항목을 다시 대기열에 넣었습니다",
       "retry": "다시 시도",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "이 발신자 항상 보관",
-            "horizon": {
-                "someday": "언젠가",
-                "nextMonth": "다음 달",
-                "thisMonth": "이번 달",
-                "nextWeek": "다음 주",
-                "week": "이번 주",
-                "label": "또는 나중에"
-            },
-            "trashRequested": "삭제를 요청했습니다",
+      "horizon": {
+        "someday": "언젠가",
+        "nextMonth": "다음 달",
+        "thisMonth": "이번 달",
+        "nextWeek": "다음 주",
+        "week": "이번 주",
+        "label": "또는 나중에"
+      },
+      "trashRequested": "삭제를 요청했습니다",
       "draftRequested": "Gmail에서 초안 준비 중",
       "archiveRequested": "보관 요청됨",
       "noteSent": "Trieur에게 돌려보냄",
@@ -402,10 +402,10 @@
     "entry": "정리할 항목 ({{count}})",
     "title": "정리할 항목",
     "deck": {
-            "actionFailedTrash": "삭제하지 못했습니다",
+      "actionFailedTrash": "삭제하지 못했습니다",
       "progressLabel": "메일 {{position}} / {{total}}",
       "option": {
-                "trash": "삭제",
+        "trash": "삭제",
         "draft": "초안",
         "read": "읽기",
         "event": "캘린더",
@@ -646,18 +646,18 @@
     "hideCompleted": "완료된 작업 숨기기"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "반복 작업은 유지됨, 하나씩 삭제하세요: {{count}}",
-            "someFailed": "변경 안 됨: {{count}}",
-            "deleted": "삭제됨: {{count}}",
-            "moved": "이동됨: {{count}}",
-            "prioritized": "우선순위 변경됨: {{count}}",
-            "dated": "날짜 변경됨: {{count}}",
-            "completed": "완료됨: {{count}}",
-            "clear": "선택 해제",
-            "count": "선택됨: {{count}}",
-            "label": "선택한 작업"
-        },
+    "selection": {
+      "recurringKept": "반복 작업은 유지됨, 하나씩 삭제하세요: {{count}}",
+      "someFailed": "변경 안 됨: {{count}}",
+      "deleted": "삭제됨: {{count}}",
+      "moved": "이동됨: {{count}}",
+      "prioritized": "우선순위 변경됨: {{count}}",
+      "dated": "날짜 변경됨: {{count}}",
+      "completed": "완료됨: {{count}}",
+      "clear": "선택 해제",
+      "count": "선택됨: {{count}}",
+      "label": "선택한 작업"
+    },
     "deletedToast": "\"{{name}}\"을(를) 삭제했습니다",
     "title": "작업",
     "today": "오늘",
@@ -790,17 +790,17 @@
       "setDueDate": "마감일 설정"
     },
     "contextMenu": {
-            "review": "검토",
-            "copyError": "복사할 수 없습니다",
-            "titleCopied": "제목을 복사했습니다",
-            "linkCopied": "링크를 복사했습니다",
-            "deleteKey": "Del",
-            "copyTitle": "제목 복사",
-            "copyLink": "링크 복사",
-            "pickDate": "날짜 선택…",
-            "reopen": "다시 열기",
-            "complete": "완료",
-            "open": "열기",
+      "review": "검토",
+      "copyError": "복사할 수 없습니다",
+      "titleCopied": "제목을 복사했습니다",
+      "linkCopied": "링크를 복사했습니다",
+      "deleteKey": "Del",
+      "copyTitle": "제목 복사",
+      "copyLink": "링크 복사",
+      "pickDate": "날짜 선택…",
+      "reopen": "다시 열기",
+      "complete": "완료",
+      "open": "열기",
       "projectChanged": "프로젝트 변경됨",
       "dateChanged": "날짜 변경됨",
       "label": "작업 동작",
@@ -872,66 +872,66 @@
     "noActivity": "아직 활동이 없습니다"
   },
   "profile": {
-        "plugins": {
-            "title": "플러그인",
-            "description": "플러그인은 서버에 직접 만든 연동을 추가합니다. 관리자만 볼 수 있습니다. 켜기 전까지 플러그인은 꺼진 상태로 남습니다.",
-            "notConfigured": "플러그인이 꺼져 있습니다. TUDUDI_PLUGINS_DIR을 플러그인 폴더들이 들어 있는 폴더로 설정한 뒤 서버를 다시 시작하세요.",
-            "reloadAll": "모두 다시 불러오기",
-            "reload": "다시 불러오기",
-            "reloadPending": "{{version}}을(를) 불러오려면 다시 불러오세요",
-            "updatedFrom": "{{version}}에서 업데이트됨",
-            "version": "버전 {{version}}",
-            "state": {
-                "disabled": "꺼짐",
-                "active": "실행 중",
-                "error": "오류",
-                "invalid": "잘못됨",
-                "incompatible": "호환되지 않음",
-                "needs_approval": "승인 필요",
-                "missing": "없음"
-            },
-            "permissions": "권한",
-            "events": "이벤트",
-            "permission": {
-                "events": "이벤트 수신",
-                "routes": "자체 경로 제공"
-            },
-            "enabled": "사용",
-            "needsApproval": "이 버전은 이전보다 더 많은 것을 요청합니다. 권한과 이벤트를 승인하려면 다시 켜세요.",
-            "checkUpdate": "업데이트 확인",
-            "updateAvailable": "업데이트 있음: {{version}}",
-            "upToDate": "최신 상태",
-            "updateError": "업데이트 주소를 읽을 수 없습니다",
-            "settings": "설정",
-            "saveSettings": "설정 저장",
-            "saved": "설정을 저장했습니다",
-            "secretSaved": "저장됨",
-            "clearSecret": "지우기",
-            "required": "필수",
-            "reloaded": "플러그인을 다시 불러왔습니다",
-            "loadError": "플러그인을 불러올 수 없습니다",
-            "none": "플러그인 폴더에서 플러그인을 찾지 못했습니다.",
-            "errorLabel": "오류",
-            "saveError": "플러그인을 저장할 수 없습니다",
-            "installLabel": "플러그인 Git 주소",
-            "install": "추가",
-            "installing": "추가하는 중...",
-            "installHint": "서버에서 실행되는 코드를 내려받습니다. 켜기 전에 요청하는 내용을 읽어 보세요.",
-            "installed": "플러그인을 추가했습니다. 요청하는 내용을 읽은 뒤 켜세요.",
-            "installError": "플러그인을 추가할 수 없습니다",
-            "pull": "업데이트",
-            "pulled": "플러그인을 업데이트했습니다",
-            "remove": "삭제",
-            "removeTitle": "이 플러그인을 삭제할까요?",
-            "removeMessage": "폴더와 설정이 서버에서 삭제됩니다. 되돌릴 수 없습니다.",
-            "page": {
-                "notFound": "플러그인을 찾을 수 없거나 꺼져 있습니다"
-            },
-            "approveIntro": "이 플러그인은 서버 안에서 실행되며 다음을 요청합니다:",
-            "approveOutro": "권한은 Cadence가 플러그인에 넘기는 범위를 제한할 뿐, 샌드박스가 아닙니다. 직접 읽은 코드만 승인하세요.",
-            "approveTitle": "권한을 승인할까요?",
-            "approve": "승인하고 켜기"
-        },
+    "plugins": {
+      "title": "플러그인",
+      "description": "플러그인은 서버에 직접 만든 연동을 추가합니다. 관리자만 볼 수 있습니다. 켜기 전까지 플러그인은 꺼진 상태로 남습니다.",
+      "notConfigured": "플러그인이 꺼져 있습니다. TUDUDI_PLUGINS_DIR을 플러그인 폴더들이 들어 있는 폴더로 설정한 뒤 서버를 다시 시작하세요.",
+      "reloadAll": "모두 다시 불러오기",
+      "reload": "다시 불러오기",
+      "reloadPending": "{{version}}을(를) 불러오려면 다시 불러오세요",
+      "updatedFrom": "{{version}}에서 업데이트됨",
+      "version": "버전 {{version}}",
+      "state": {
+        "disabled": "꺼짐",
+        "active": "실행 중",
+        "error": "오류",
+        "invalid": "잘못됨",
+        "incompatible": "호환되지 않음",
+        "needs_approval": "승인 필요",
+        "missing": "없음"
+      },
+      "permissions": "권한",
+      "events": "이벤트",
+      "permission": {
+        "events": "이벤트 수신",
+        "routes": "자체 경로 제공"
+      },
+      "enabled": "사용",
+      "needsApproval": "이 버전은 이전보다 더 많은 것을 요청합니다. 권한과 이벤트를 승인하려면 다시 켜세요.",
+      "checkUpdate": "업데이트 확인",
+      "updateAvailable": "업데이트 있음: {{version}}",
+      "upToDate": "최신 상태",
+      "updateError": "업데이트 주소를 읽을 수 없습니다",
+      "settings": "설정",
+      "saveSettings": "설정 저장",
+      "saved": "설정을 저장했습니다",
+      "secretSaved": "저장됨",
+      "clearSecret": "지우기",
+      "required": "필수",
+      "reloaded": "플러그인을 다시 불러왔습니다",
+      "loadError": "플러그인을 불러올 수 없습니다",
+      "none": "플러그인 폴더에서 플러그인을 찾지 못했습니다.",
+      "errorLabel": "오류",
+      "saveError": "플러그인을 저장할 수 없습니다",
+      "installLabel": "플러그인 Git 주소",
+      "install": "추가",
+      "installing": "추가하는 중...",
+      "installHint": "서버에서 실행되는 코드를 내려받습니다. 켜기 전에 요청하는 내용을 읽어 보세요.",
+      "installed": "플러그인을 추가했습니다. 요청하는 내용을 읽은 뒤 켜세요.",
+      "installError": "플러그인을 추가할 수 없습니다",
+      "pull": "업데이트",
+      "pulled": "플러그인을 업데이트했습니다",
+      "remove": "삭제",
+      "removeTitle": "이 플러그인을 삭제할까요?",
+      "removeMessage": "폴더와 설정이 서버에서 삭제됩니다. 되돌릴 수 없습니다.",
+      "page": {
+        "notFound": "플러그인을 찾을 수 없거나 꺼져 있습니다"
+      },
+      "approveIntro": "이 플러그인은 서버 안에서 실행되며 다음을 요청합니다:",
+      "approveOutro": "권한은 Cadence가 플러그인에 넘기는 범위를 제한할 뿐, 샌드박스가 아닙니다. 직접 읽은 코드만 승인하세요.",
+      "approveTitle": "권한을 승인할까요?",
+      "approve": "승인하고 켜기"
+    },
     "showTaskDescription": "제목 아래에 설명 표시",
     "sync": {
       "field": {
@@ -1102,8 +1102,8 @@
     "nextTaskSuggestion": "다음 작업 제안",
     "enableNextTaskSuggestion": "다음 작업 제안 활성화",
     "tabs": {
-            "agents": "에이전트",
-            "plugins": "플러그인",
+      "agents": "에이전트",
+      "plugins": "플러그인",
       "classify": "분류",
       "sync": "동기화",
       "general": "일반",
@@ -1353,7 +1353,7 @@
       "morningReplanToggle": "아침에 제안을 자동으로 준비",
       "morningReplanDescription": "지연된 작업이 있으면 선택한 시각마다 아침에 주간 제안을 준비해요.",
       "morningReplanTitle": "아침 지연 작업 다시 계획 (AI)",
-            "maxOption_one": "작업 {{count}}개",
+      "maxOption_one": "작업 {{count}}개",
       "title": "계획",
       "description": "하루를 계획할 때 \"오늘 무엇을 할 수 있을까요?\"가 작업을 정렬하는 방식입니다. 행을 원하는 순서로 끌어 놓으세요. 같은 작업은 항상 같은 순서로 표시됩니다.",
       "orderTitle": "순서 (끌어서 변경)",
@@ -1669,20 +1669,20 @@
     "photoOn": "on",
     "groups": {
       "account": "계정",
-            "appearance": "인터페이스",
-            "planning": "정리",
+      "appearance": "인터페이스",
+      "planning": "정리",
       "integrations": "연동",
-            "security": "접근",
+      "security": "접근",
       "advanced": "고급"
     },
     "optional": "선택 사항",
     "accent": "강조 색상",
     "accentCustom": "사용자 지정 색상 (hex)",
-        "pureBlack": "다크 모드에서 순수 검정",
-        "sidebarPanelTitle": "패널",
-        "sidebarPanelHint": "열린 사이드바의 블록을 위에서 아래로 보여 줍니다.",
-        "sidebarPanelPinned": "고정됨",
-        "sidebarPanelMonth": "월간 달력"
+    "pureBlack": "다크 모드에서 순수 검정",
+    "sidebarPanelTitle": "패널",
+    "sidebarPanelHint": "열린 사이드바의 블록을 위에서 아래로 보여 줍니다.",
+    "sidebarPanelPinned": "고정됨",
+    "sidebarPanelMonth": "월간 달력"
   },
   "productivity": {
     "stalledProjects": "정체된 프로젝트",
@@ -2254,12 +2254,12 @@
     "createError": "메모 생성에 실패했습니다"
   },
   "task": {
-        "minutesAgo_one": "{{count}}분 전",
-        "inMinutes_one": "{{count}}분 후",
-        "inHours_one": "{{count}}시간 후",
-        "inDays_one": "{{count}}일 후",
-        "hoursAgo_one": "{{count}}시간 전",
-        "daysAgo_one": "{{count}}일 전",
+    "minutesAgo_one": "{{count}}분 전",
+    "inMinutes_one": "{{count}}분 후",
+    "inHours_one": "{{count}}시간 후",
+    "inDays_one": "{{count}}일 후",
+    "hoursAgo_one": "{{count}}시간 전",
+    "daysAgo_one": "{{count}}일 전",
     "duplicateError": "작업을 복제할 수 없습니다.",
     "duplicated": "작업을 복제했습니다",
     "duplicate": "복제",
@@ -2975,7 +2975,7 @@
     "time": "시간",
     "allDay": "종일",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "종료 시각이 시작 시각보다 빠릅니다.",
       "editEvent": "일정 편집",
       "newEvent": "새 일정",
@@ -4021,10 +4021,10 @@
       "lead": "언제",
       "atTime": "정시",
       "minutesBefore": "{{count}}분 전"
-        },
-        "desktopApp": {
-            "title": "이 앱의 알림",
-            "body": "Linux용 Cadence는 아이콘이 시스템 트레이에 있는 한 창을 닫아도 시스템 알림을 보여 줍니다. 아래 데스크톱 열에서 받을 알림을 고르세요. API 키가 필요하며, 앱 설정(트레이 메뉴)에서 입력합니다."
+    },
+    "desktopApp": {
+      "title": "이 앱의 알림",
+      "body": "Linux용 Cadence는 아이콘이 시스템 트레이에 있는 한 창을 닫아도 시스템 알림을 보여 줍니다. 아래 데스크톱 열에서 받을 알림을 고르세요. API 키가 필요하며, 앱 설정(트레이 메뉴)에서 입력합니다."
     }
   },
   "projectStatus": {
@@ -4505,8 +4505,8 @@
     "invalidHint": "이미 사용되었거나 만료되었을 수 있습니다. 보낸 사람에게 새 링크를 요청하세요."
   },
   "dailyPlan": {
-        "placeAllHint_one": "작업 {{count}}개를 다음 빈 시간에 배치합니다.",
-        "placeAllDone_one": "작업 {{count}}개를 배치했습니다.",
+    "placeAllHint_one": "작업 {{count}}개를 다음 빈 시간에 배치합니다.",
+    "placeAllDone_one": "작업 {{count}}개를 배치했습니다.",
     "inProgress": "진행 중",
     "overdue": "기한 지남",
     "dueToday": "오늘 마감",
@@ -4577,7 +4577,7 @@
     "beta": "베타",
     "betaHint": "계획이 있는 오늘 페이지는 새로운 기능입니다. 기존 페이지는 이 페이지 맨 아래에서 열 수 있습니다.",
     "ai": {
-            "carried_one": "내일에 추가된 작업 {{count}}개",
+      "carried_one": "내일에 추가된 작업 {{count}}개",
       "suggested": "AI 추천",
       "estimateGuess": "AI 예상",
       "nothingToAdd": "추가할 항목이 없습니다: 여유 시간이 없거나 계획할 할 일이 없습니다.",
@@ -5183,13 +5183,13 @@
       "instructionsOther": "그 밖의 열은 작업 메모에 보관할 수 있어서 시트의 내용이 사라지지 않습니다."
     },
     "import": {
-            "undoneKept_one": "가져오기를 취소했습니다. 그 이후 변경된 작업 {{count}}개는 유지되었습니다.",
-            "rowCount_one": "{{count}}개 행",
-            "doneTitle_one": "{{count}}개 작업을 가져왔습니다",
-            "countTags_one": "{{count}}개 새 태그",
-            "countProjects_one": "{{count}}개 새 프로젝트",
-            "countCreate_one": "{{count}}개 새 작업",
-            "countAreas_one": "{{count}}개 새 영역",
+      "undoneKept_one": "가져오기를 취소했습니다. 그 이후 변경된 작업 {{count}}개는 유지되었습니다.",
+      "rowCount_one": "{{count}}개 행",
+      "doneTitle_one": "{{count}}개 작업을 가져왔습니다",
+      "countTags_one": "{{count}}개 새 태그",
+      "countProjects_one": "{{count}}개 새 프로젝트",
+      "countCreate_one": "{{count}}개 새 작업",
+      "countAreas_one": "{{count}}개 새 영역",
       "fieldParent": "상위 작업",
       "fieldWbs": "WBS / 개요 번호",
       "fieldEstimate": "예상 시간",
@@ -5414,7 +5414,49 @@
     "columnActions": "열 작업",
     "newColumn": "새 열",
     "loadError": "열을 불러올 수 없습니다",
-    "saveError": "보드를 저장할 수 없습니다"
+    "saveError": "보드를 저장할 수 없습니다",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "AI와 상의하기",
@@ -5674,7 +5716,7 @@
     "close": "닫기"
   },
   "comments": {
-        "count_one": "댓글 {{count}}개",
+    "count_one": "댓글 {{count}}개",
     "count": "댓글 {{count}}개",
     "loading": "댓글을 불러오는 중...",
     "failedToLoad": "댓글을 불러오지 못했습니다.",
@@ -5826,8 +5868,8 @@
       "plan": "계획 페이지에서"
     },
     "shortcuts": {
-            "panePrevious": "패널의 이전 작업",
-            "paneNext": "패널의 다음 작업",
+      "panePrevious": "패널의 이전 작업",
+      "paneNext": "패널의 다음 작업",
       "palette": "명령 팔레트 열기",
       "capture": "빠른 캡처",
       "search": "검색",
@@ -6425,9 +6467,9 @@
     "allTomorrow": "모두 내일로",
     "replanTitle": "지연된 작업 다시 계획 ({{count}})",
     "replan": "다시 계획",
-        "plannedOn": "{{day}} 예정",
-        "taskCount_one": "작업 {{count}}개",
-        "organized_one": "{{count}}개 작업 배치됨",
+    "plannedOn": "{{day}} 예정",
+    "taskCount_one": "작업 {{count}}개",
+    "organized_one": "{{count}}개 작업 배치됨",
     "add": "추가",
     "addPlaceholder": "작업 추가",
     "added": "“{{name}}”을(를) 이 날에 추가함",
@@ -6504,7 +6546,7 @@
   },
   "upcoming": {
     "overdueAiReplan": "AI로 다시 계획",
-        "plannedOnDayHint_one": "{{count}}개는 특정 날에 계획됨",
+    "plannedOnDayHint_one": "{{count}}개는 특정 날에 계획됨",
     "replan": "다시 계획",
     "toPlan": "계획할 일",
     "expandToPlan": "계획할 일 보기 ({{count}})",
@@ -6650,18 +6692,18 @@
     "stripLabel": "기간으로 보내기",
     "sentToHorizon": "{{name}}(으)로 보냄",
     "plannedOnDayHint_other": "{{count}}개는 특정 날에 계획됨",
-        "weekLoadTitle": "오늘부터 주말까지 계획된 시간과 하루 근무 시간 비교",
-        "pickedMoved": "선택한 작업을 옮겼습니다",
-        "pickedCount": "선택됨: {{count}}",
-        "pickedClear": "선택 해제",
-        "aiTab": "AI 계획",
-        "sectionToggle": "{{name}} 표시 또는 숨기기",
-        "pushedTitle": "미룬 작업",
-        "pushedBadge": "30일 동안 {{count}}번 미룸",
-        "pushedMeta": "30일 동안 {{count}}회",
-        "mergeCalendar": "통합 캘린더",
-        "mergeCalendarTitle": "일정을 날짜 열에 표시하고 옆 캘린더 숨기기",
-        "quickPlaceTitle": "{{day}}에 계획: 들어갈 자리가 있는 첫날"
+    "weekLoadTitle": "오늘부터 주말까지 계획된 시간과 하루 근무 시간 비교",
+    "pickedMoved": "선택한 작업을 옮겼습니다",
+    "pickedCount": "선택됨: {{count}}",
+    "pickedClear": "선택 해제",
+    "aiTab": "AI 계획",
+    "sectionToggle": "{{name}} 표시 또는 숨기기",
+    "pushedTitle": "미룬 작업",
+    "pushedBadge": "30일 동안 {{count}}번 미룸",
+    "pushedMeta": "30일 동안 {{count}}회",
+    "mergeCalendar": "통합 캘린더",
+    "mergeCalendarTitle": "일정을 날짜 열에 표시하고 옆 캘린더 숨기기",
+    "quickPlaceTitle": "{{day}}에 계획: 들어갈 자리가 있는 첫날"
   },
   "offline": {
     "offline": "오프라인",

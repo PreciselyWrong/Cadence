@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Minimera",
-        "maximize": "Maximera",
-        "close": "Stäng"
+  "desktopWindow": {
+    "minimize": "Minimera",
+    "maximize": "Maximera",
+    "close": "Stäng"
+  },
+  "weekend": {
+    "share": {
+      "error": "Bilden kunde inte skapas.",
+      "downloaded": "Bild nedladdad",
+      "copied": "Bild kopierad",
+      "footer": "Förberett med Cadence",
+      "kicker": "HELG",
+      "action": "Dela"
     },
-    "weekend": {
-        "share": {
-            "error": "Bilden kunde inte skapas.",
-            "downloaded": "Bild nedladdad",
-            "copied": "Bild kopierad",
-            "footer": "Förberett med Cadence",
-            "kicker": "HELG",
-            "action": "Dela"
-        },
-        "request": {
-            "error": "Begäran kunde inte skickas.",
-            "failed": "Kunde inte förberedas ({{days}})",
-            "pending": "Förbereds för {{days}}",
-            "submit": "Förbered",
-            "hint": "AI förbereder minst 5 idéer per dag. En avisering kommer när det är klart.",
-            "title": "Förbered dagar",
-            "open": "Andra dagar"
-        },
-        "dayList": "Dagarna",
-        "title": "Helgen",
-        "loadError": "Det gick inte att öppna helgen.",
-        "empty": "Inget att föreslå den här helgen.",
-        "applied": "Beslut tillämpade: {{count}}",
-        "applyError": "Beslutet sparades inte.",
-        "validate": "Bekräfta",
-        "calendar": "Lägg i kalendern",
-        "other": "En annan idé",
-        "skip": "Hoppa över",
-        "note": "Anteckning",
-        "noteLabel": "Anteckning till agenten",
-        "notePlaceholder": "Vad agenten bör veta",
-        "busy": "Upptagen: {{busy}}",
-        "feels": "känns som {{temp}}°",
-        "otherAsked": "En annan idé efterfrågad",
-        "decided": {
-            "calendar": "I kalendern",
-            "skip": "Hoppades över"
-        },
-        "event": {
-            "requested": "Läggs till",
-            "created": "Tillagd i kalendern",
-            "failed": "Inte tillagd",
-            "open": "Öppna i kalendern"
-        },
-        "countCalendar": "I kalendern: {{count}}",
-        "countOther": "En annan idé efterfrågad: {{count}}",
-        "countNone": "Inget valt",
-        "part": {
-            "morning": "förmiddag",
-            "afternoon": "eftermiddag",
-            "day": "dag"
-        },
-        "weather": {
-            "sun": "soligt",
-            "partly": "växlande molnighet",
-            "cloud": "molnigt",
-            "rain": "regn",
-            "snow": "snö",
-            "storm": "åska",
-            "fog": "dimma"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Finare någon annanstans",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Begäran kunde inte skickas.",
+      "failed": "Kunde inte förberedas ({{days}})",
+      "pending": "Förbereds för {{days}}",
+      "submit": "Förbered",
+      "hint": "AI förbereder minst 5 idéer per dag. En avisering kommer när det är klart.",
+      "title": "Förbered dagar",
+      "open": "Andra dagar"
     },
-    "career": {
-        "choice": "valt: {{label}}",
-        "validate": "Bekräfta ({{count}})",
-        "clear": "Rensa",
-        "applied": "{{count}} beslut tillämpade",
-        "appliedOne": "1 beslut tillämpat",
-        "title": "Karriär",
-        "updatedAt": "uppdaterad kl. {{time}}",
-        "empty": "Inget nytt i dag",
-        "emptyHint": "Agenten tittar in varje morgon: uppföljningar, tjänster och uppgifter visas här.",
-        "allDecided": "Allt är bestämt för i dag",
-        "loadError": "Det gick inte att läsa in Karriär-sidan.",
-        "retry": "Försök igen",
-        "applyError": "Beslutet sparades inte.",
-        "later": "Senare",
-        "skip": "Hoppa över",
-        "followups": {
-            "title": "Uppföljningar",
-            "appliedAgo": "sökt {{when}}",
-            "openDraft": "Öppna utkast",
-            "createTask": "Skapa uppgift",
-            "done": "Klar"
-        },
-        "offers": {
-            "title": "Tjänster att besluta om",
-            "apply": "Sök",
-            "note": "Anteckning",
-            "notePlaceholder": "En anteckning till agenten…",
-            "open": "Visa tjänsten",
-            "expires": "går ut {{when}}",
-            "expired": "utgången"
-        },
-        "tasks": {
-            "title": "Föreslagna uppgifter",
-            "add": "Lägg till"
-        },
-        "decided": "Beslutat ({{count}})",
-        "state": {
-            "applied": "Sökt",
-            "skipped": "Överhoppad",
-            "later": "Senare",
-            "done": "Klar",
-            "taskCreated": "Uppgift skapad",
-            "added": "Tillagd",
-            "dismissed": "Avfärdad"
-        }
+    "dayList": "Dagarna",
+    "title": "Helgen",
+    "loadError": "Det gick inte att öppna helgen.",
+    "empty": "Inget att föreslå den här helgen.",
+    "applied": "Beslut tillämpade: {{count}}",
+    "applyError": "Beslutet sparades inte.",
+    "validate": "Bekräfta",
+    "calendar": "Lägg i kalendern",
+    "other": "En annan idé",
+    "skip": "Hoppa över",
+    "note": "Anteckning",
+    "noteLabel": "Anteckning till agenten",
+    "notePlaceholder": "Vad agenten bör veta",
+    "busy": "Upptagen: {{busy}}",
+    "feels": "känns som {{temp}}°",
+    "otherAsked": "En annan idé efterfrågad",
+    "decided": {
+      "calendar": "I kalendern",
+      "skip": "Hoppades över"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Markera som läst",
-        "open": "Öppna"
+    "event": {
+      "requested": "Läggs till",
+      "created": "Tillagd i kalendern",
+      "failed": "Inte tillagd",
+      "open": "Öppna i kalendern"
     },
-    "counts": {
-        "notes_other": "{{count}} anteckningar",
-        "notes_one": "{{count}} anteckning",
-        "tasks_other": "{{count}} uppgifter",
-        "tasks_one": "{{count}} uppgift",
-        "goals_other": "{{count}} mål",
-        "goals_one": "{{count}} mål",
-        "projects_other": "{{count}} projekt",
-        "projects_one": "{{count}} projekt"
+    "countCalendar": "I kalendern: {{count}}",
+    "countOther": "En annan idé efterfrågad: {{count}}",
+    "countNone": "Inget valt",
+    "part": {
+      "morning": "förmiddag",
+      "afternoon": "eftermiddag",
+      "day": "dag"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Skrivbord",
-        "link": "Länk",
-        "openSource": "Öppna källan",
-        "fromSource": "Kommer från {{source}}"
+    "weather": {
+      "sun": "soligt",
+      "partly": "växlande molnighet",
+      "cloud": "molnigt",
+      "rain": "regn",
+      "snow": "snö",
+      "storm": "åska",
+      "fog": "dimma"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Finare någon annanstans",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "valt: {{label}}",
+    "validate": "Bekräfta ({{count}})",
+    "clear": "Rensa",
+    "applied": "{{count}} beslut tillämpade",
+    "appliedOne": "1 beslut tillämpat",
+    "title": "Karriär",
+    "updatedAt": "uppdaterad kl. {{time}}",
+    "empty": "Inget nytt i dag",
+    "emptyHint": "Agenten tittar in varje morgon: uppföljningar, tjänster och uppgifter visas här.",
+    "allDecided": "Allt är bestämt för i dag",
+    "loadError": "Det gick inte att läsa in Karriär-sidan.",
+    "retry": "Försök igen",
+    "applyError": "Beslutet sparades inte.",
+    "later": "Senare",
+    "skip": "Hoppa över",
+    "followups": {
+      "title": "Uppföljningar",
+      "appliedAgo": "sökt {{when}}",
+      "openDraft": "Öppna utkast",
+      "createTask": "Skapa uppgift",
+      "done": "Klar"
+    },
+    "offers": {
+      "title": "Tjänster att besluta om",
+      "apply": "Sök",
+      "note": "Anteckning",
+      "notePlaceholder": "En anteckning till agenten…",
+      "open": "Visa tjänsten",
+      "expires": "går ut {{when}}",
+      "expired": "utgången"
+    },
+    "tasks": {
+      "title": "Föreslagna uppgifter",
+      "add": "Lägg till"
+    },
+    "decided": "Beslutat ({{count}})",
+    "state": {
+      "applied": "Sökt",
+      "skipped": "Överhoppad",
+      "later": "Senare",
+      "done": "Klar",
+      "taskCreated": "Uppgift skapad",
+      "added": "Tillagd",
+      "dismissed": "Avfärdad"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Markera som läst",
+    "open": "Öppna"
+  },
+  "counts": {
+    "notes_other": "{{count}} anteckningar",
+    "notes_one": "{{count}} anteckning",
+    "tasks_other": "{{count}} uppgifter",
+    "tasks_one": "{{count}} uppgift",
+    "goals_other": "{{count}} mål",
+    "goals_one": "{{count}} mål",
+    "projects_other": "{{count}} projekt",
+    "projects_one": "{{count}} projekt"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Skrivbord",
+    "link": "Länk",
+    "openSource": "Öppna källan",
+    "fromSource": "Kommer från {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "Kunde inte försöka igen",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Arkivera alltid denna avsändare",
-            "horizon": {
-                "someday": "Någon gång",
-                "nextMonth": "Nästa månad",
-                "thisMonth": "Den här månaden",
-                "nextWeek": "Nästa vecka",
-                "week": "Den här veckan",
-                "label": "Eller senare"
-            },
-            "trashRequested": "Radering begärd",
+      "horizon": {
+        "someday": "Någon gång",
+        "nextMonth": "Nästa månad",
+        "thisMonth": "Den här månaden",
+        "nextWeek": "Nästa vecka",
+        "week": "Den här veckan",
+        "label": "Eller senare"
+      },
+      "trashRequested": "Radering begärd",
       "draftRequested": "Utkast förbereds i Gmail",
       "archiveRequested": "Arkivering begärd",
       "noteSent": "Skickat tillbaka till Trieur",
@@ -402,10 +402,10 @@
     "entry": "Att sortera ({{count}})",
     "title": "Att sortera",
     "deck": {
-            "actionFailedTrash": "Raderingen lyckades inte",
+      "actionFailedTrash": "Raderingen lyckades inte",
       "progressLabel": "Mejl {{position}} av {{total}}",
       "option": {
-                "trash": "Radera",
+        "trash": "Radera",
         "draft": "Utkast",
         "read": "Läs",
         "event": "Kalender",
@@ -646,18 +646,18 @@
     "hideCompleted": "Dölj slutförda uppgifter"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Återkommande uppgifter behållna, radera dem en i taget: {{count}}",
-            "someFailed": "Inte ändrade: {{count}}",
-            "deleted": "Raderade: {{count}}",
-            "moved": "Flyttade: {{count}}",
-            "prioritized": "Prioritet ändrad: {{count}}",
-            "dated": "Datum ändrat: {{count}}",
-            "completed": "Slutförda: {{count}}",
-            "clear": "Rensa urvalet",
-            "count": "Valda: {{count}}",
-            "label": "Valda uppgifter"
-        },
+    "selection": {
+      "recurringKept": "Återkommande uppgifter behållna, radera dem en i taget: {{count}}",
+      "someFailed": "Inte ändrade: {{count}}",
+      "deleted": "Raderade: {{count}}",
+      "moved": "Flyttade: {{count}}",
+      "prioritized": "Prioritet ändrad: {{count}}",
+      "dated": "Datum ändrat: {{count}}",
+      "completed": "Slutförda: {{count}}",
+      "clear": "Rensa urvalet",
+      "count": "Valda: {{count}}",
+      "label": "Valda uppgifter"
+    },
     "deletedToast": "”{{name}}” togs bort",
     "title": "Uppgifter",
     "today": "Idag",
@@ -790,17 +790,17 @@
       "setDueDate": "Ange förfallodatum"
     },
     "contextMenu": {
-            "review": "Granskning",
-            "copyError": "Kunde inte kopiera",
-            "titleCopied": "Titel kopierad",
-            "linkCopied": "Länk kopierad",
-            "deleteKey": "Del",
-            "copyTitle": "Kopiera titel",
-            "copyLink": "Kopiera länk",
-            "pickDate": "Välj ett datum…",
-            "reopen": "Öppna igen",
-            "complete": "Slutför",
-            "open": "Öppna",
+      "review": "Granskning",
+      "copyError": "Kunde inte kopiera",
+      "titleCopied": "Titel kopierad",
+      "linkCopied": "Länk kopierad",
+      "deleteKey": "Del",
+      "copyTitle": "Kopiera titel",
+      "copyLink": "Kopiera länk",
+      "pickDate": "Välj ett datum…",
+      "reopen": "Öppna igen",
+      "complete": "Slutför",
+      "open": "Öppna",
       "projectChanged": "Projekt ändrat",
       "dateChanged": "Datum ändrat",
       "label": "Åtgärder för uppgiften",
@@ -872,66 +872,66 @@
     }
   },
   "profile": {
-        "plugins": {
-            "title": "Tillägg",
-            "description": "Tillägg lägger till egna integrationer på servern. Bara en administratör ser dem. Ett tillägg är av tills du slår på det.",
-            "notConfigured": "Tillägg är av. Ange TUDUDI_PLUGINS_DIR till en mapp med tilläggsmappar och starta om servern.",
-            "reloadAll": "Läs in alla igen",
-            "reload": "Läs in igen",
-            "reloadPending": "Läs in igen för att läsa in {{version}}",
-            "updatedFrom": "uppdaterad från {{version}}",
-            "version": "Version {{version}}",
-            "state": {
-                "disabled": "Av",
-                "active": "Igång",
-                "error": "Fel",
-                "invalid": "Ogiltig",
-                "incompatible": "Inkompatibel",
-                "needs_approval": "Kräver godkännande",
-                "missing": "Saknas"
-            },
-            "permissions": "Behörigheter",
-            "events": "Händelser",
-            "permission": {
-                "events": "Lyssnar på händelser",
-                "routes": "Tillhandahåller egna rutter"
-            },
-            "enabled": "På",
-            "needsApproval": "Den här versionen begär mer än tidigare. Slå på den igen för att godkänna dess behörigheter och händelser.",
-            "checkUpdate": "Sök efter uppdateringar",
-            "updateAvailable": "Uppdatering finns: {{version}}",
-            "upToDate": "Uppdaterad",
-            "updateError": "Kunde inte läsa uppdateringsadressen",
-            "settings": "Inställningar",
-            "saveSettings": "Spara inställningar",
-            "saved": "Inställningarna sparades",
-            "secretSaved": "Sparad",
-            "clearSecret": "Rensa",
-            "required": "obligatorisk",
-            "reloaded": "Tillägg lästa in igen",
-            "loadError": "Kunde inte läsa in tillägg",
-            "none": "Inget tillägg hittades i tilläggsmappen.",
-            "errorLabel": "Fel",
-            "saveError": "Kunde inte spara tillägget",
-            "installLabel": "Git-adress till pluginet",
-            "install": "Lägg till",
-            "installing": "Lägger till...",
-            "installHint": "Det här laddar ner kod som körs i servern. Läs vad den begär innan du slår på den.",
-            "installed": "Pluginet har lagts till. Läs vad det begär och slå sedan på det.",
-            "installError": "Pluginet kunde inte läggas till",
-            "pull": "Uppdatera",
-            "pulled": "Pluginet har uppdaterats",
-            "remove": "Ta bort",
-            "removeTitle": "Ta bort det här pluginet?",
-            "removeMessage": "Dess mapp och inställningar tas bort från servern. Detta kan inte ångras.",
-            "page": {
-                "notFound": "Pluginet hittades inte eller är avstängt"
-            },
-            "approveIntro": "Det här pluginet körs i servern och begär:",
-            "approveOutro": "Behörigheterna begränsar vad Cadence ger pluginet; de är ingen sandlåda. Godkänn bara kod du har läst.",
-            "approveTitle": "Godkänn behörigheter?",
-            "approve": "Godkänn och aktivera"
-        },
+    "plugins": {
+      "title": "Tillägg",
+      "description": "Tillägg lägger till egna integrationer på servern. Bara en administratör ser dem. Ett tillägg är av tills du slår på det.",
+      "notConfigured": "Tillägg är av. Ange TUDUDI_PLUGINS_DIR till en mapp med tilläggsmappar och starta om servern.",
+      "reloadAll": "Läs in alla igen",
+      "reload": "Läs in igen",
+      "reloadPending": "Läs in igen för att läsa in {{version}}",
+      "updatedFrom": "uppdaterad från {{version}}",
+      "version": "Version {{version}}",
+      "state": {
+        "disabled": "Av",
+        "active": "Igång",
+        "error": "Fel",
+        "invalid": "Ogiltig",
+        "incompatible": "Inkompatibel",
+        "needs_approval": "Kräver godkännande",
+        "missing": "Saknas"
+      },
+      "permissions": "Behörigheter",
+      "events": "Händelser",
+      "permission": {
+        "events": "Lyssnar på händelser",
+        "routes": "Tillhandahåller egna rutter"
+      },
+      "enabled": "På",
+      "needsApproval": "Den här versionen begär mer än tidigare. Slå på den igen för att godkänna dess behörigheter och händelser.",
+      "checkUpdate": "Sök efter uppdateringar",
+      "updateAvailable": "Uppdatering finns: {{version}}",
+      "upToDate": "Uppdaterad",
+      "updateError": "Kunde inte läsa uppdateringsadressen",
+      "settings": "Inställningar",
+      "saveSettings": "Spara inställningar",
+      "saved": "Inställningarna sparades",
+      "secretSaved": "Sparad",
+      "clearSecret": "Rensa",
+      "required": "obligatorisk",
+      "reloaded": "Tillägg lästa in igen",
+      "loadError": "Kunde inte läsa in tillägg",
+      "none": "Inget tillägg hittades i tilläggsmappen.",
+      "errorLabel": "Fel",
+      "saveError": "Kunde inte spara tillägget",
+      "installLabel": "Git-adress till pluginet",
+      "install": "Lägg till",
+      "installing": "Lägger till...",
+      "installHint": "Det här laddar ner kod som körs i servern. Läs vad den begär innan du slår på den.",
+      "installed": "Pluginet har lagts till. Läs vad det begär och slå sedan på det.",
+      "installError": "Pluginet kunde inte läggas till",
+      "pull": "Uppdatera",
+      "pulled": "Pluginet har uppdaterats",
+      "remove": "Ta bort",
+      "removeTitle": "Ta bort det här pluginet?",
+      "removeMessage": "Dess mapp och inställningar tas bort från servern. Detta kan inte ångras.",
+      "page": {
+        "notFound": "Pluginet hittades inte eller är avstängt"
+      },
+      "approveIntro": "Det här pluginet körs i servern och begär:",
+      "approveOutro": "Behörigheterna begränsar vad Cadence ger pluginet; de är ingen sandlåda. Godkänn bara kod du har läst.",
+      "approveTitle": "Godkänn behörigheter?",
+      "approve": "Godkänn och aktivera"
+    },
     "showTaskDescription": "Visa beskrivningen under rubriken",
     "sync": {
       "field": {
@@ -1110,8 +1110,8 @@
     "nextTaskSuggestion": "Förslag på nästa uppgift",
     "enableNextTaskSuggestion": "Aktivera förslag på nästa uppgift",
     "tabs": {
-            "agents": "Agenter",
-            "plugins": "Tillägg",
+      "agents": "Agenter",
+      "plugins": "Tillägg",
       "classify": "Sortering",
       "sync": "Synk",
       "general": "Allmänt",
@@ -1669,20 +1669,20 @@
     "photoOn": "på",
     "groups": {
       "account": "Konto",
-            "appearance": "Gränssnitt",
-            "planning": "Organisation",
+      "appearance": "Gränssnitt",
+      "planning": "Organisation",
       "integrations": "Integrationer",
-            "security": "Åtkomst",
+      "security": "Åtkomst",
       "advanced": "Avancerat"
     },
     "optional": "Valfritt",
     "accent": "Accentfärg",
     "accentCustom": "Egen färg (hex)",
-        "pureBlack": "Ren svart i mörkt läge",
-        "sidebarPanelTitle": "Panel",
-        "sidebarPanelHint": "Blocken i den öppna sidopanelen, uppifrån och ner.",
-        "sidebarPanelPinned": "Fästa",
-        "sidebarPanelMonth": "Månadskalender"
+    "pureBlack": "Ren svart i mörkt läge",
+    "sidebarPanelTitle": "Panel",
+    "sidebarPanelHint": "Blocken i den öppna sidopanelen, uppifrån och ner.",
+    "sidebarPanelPinned": "Fästa",
+    "sidebarPanelMonth": "Månadskalender"
   },
   "productivity": {
     "stalledProjects": "Stagnerade projekt",
@@ -2975,7 +2975,7 @@
     "time": "Tid",
     "allDay": "Hela dagen",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Slutet är före starten",
       "editEvent": "Redigera händelse",
       "newEvent": "Ny händelse",
@@ -4021,10 +4021,10 @@
       "lead": "När",
       "atTime": "På tiden",
       "minutesBefore": "{{count}} min före"
-        },
-        "desktopApp": {
-            "title": "Aviseringar från den här appen",
-            "body": "Cadence för Linux visar systemaviseringar, även med fönstret stängt, så länge dess ikon finns i systemfältet. Välj vilka i kolumnen Dator nedan. Det krävs en API-nyckel, som anges i appens inställningar (menyn i systemfältet)."
+    },
+    "desktopApp": {
+      "title": "Aviseringar från den här appen",
+      "body": "Cadence för Linux visar systemaviseringar, även med fönstret stängt, så länge dess ikon finns i systemfältet. Välj vilka i kolumnen Dator nedan. Det krävs en API-nyckel, som anges i appens inställningar (menyn i systemfältet)."
     }
   },
   "projectStatus": {
@@ -4505,7 +4505,7 @@
     "invalidHint": "Den kan redan ha använts eller gått ut. Be personen som skickade den om en ny."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} uppgift tar nästa lediga lucka.",
+    "placeAllHint_one": "{{count}} uppgift tar nästa lediga lucka.",
     "inProgress": "Pågår",
     "overdue": "Försenade",
     "dueToday": "Förfaller idag",
@@ -5183,7 +5183,7 @@
       "instructionsOther": "Alla andra kolumner kan sparas i uppgiftens anteckning, så inget i bladet går förlorat."
     },
     "import": {
-            "undoneKept_one": "Importen ångrades. {{count}} uppgift som ändrats sedan dess behölls.",
+      "undoneKept_one": "Importen ångrades. {{count}} uppgift som ändrats sedan dess behölls.",
       "fieldParent": "Överordnad uppgift",
       "fieldWbs": "WBS / disposition-nummer",
       "fieldEstimate": "Uppskattning",
@@ -5414,7 +5414,49 @@
     "columnActions": "Kolumnåtgärder",
     "newColumn": "Ny kolumn",
     "loadError": "Kunde inte läsa in kolumner",
-    "saveError": "Kunde inte spara tavlan"
+    "saveError": "Kunde inte spara tavlan",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Diskutera med AI:n",
@@ -5826,8 +5868,8 @@
       "plan": "På sidan Planera"
     },
     "shortcuts": {
-            "panePrevious": "Föregående uppgift i panelen",
-            "paneNext": "Nästa uppgift i panelen",
+      "panePrevious": "Föregående uppgift i panelen",
+      "paneNext": "Nästa uppgift i panelen",
       "palette": "Öppna kommandopaletten",
       "capture": "Snabbfångst",
       "search": "Sök",

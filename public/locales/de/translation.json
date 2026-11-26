@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Minimieren",
-        "maximize": "Maximieren",
-        "close": "Schließen"
+  "desktopWindow": {
+    "minimize": "Minimieren",
+    "maximize": "Maximieren",
+    "close": "Schließen"
+  },
+  "weekend": {
+    "share": {
+      "error": "Das Bild konnte nicht erstellt werden.",
+      "downloaded": "Bild heruntergeladen",
+      "copied": "Bild kopiert",
+      "footer": "Vorbereitet mit Cadence",
+      "kicker": "WOCHENENDE",
+      "action": "Teilen"
     },
-    "weekend": {
-        "share": {
-            "error": "Das Bild konnte nicht erstellt werden.",
-            "downloaded": "Bild heruntergeladen",
-            "copied": "Bild kopiert",
-            "footer": "Vorbereitet mit Cadence",
-            "kicker": "WOCHENENDE",
-            "action": "Teilen"
-        },
-        "request": {
-            "error": "Die Anfrage konnte nicht gesendet werden.",
-            "failed": "Konnte nicht vorbereitet werden ({{days}})",
-            "pending": "Wird vorbereitet für {{days}}",
-            "submit": "Vorbereiten",
-            "hint": "Die KI bereitet mindestens 5 Ideen pro Tag vor. Eine Benachrichtigung kommt, wenn es fertig ist.",
-            "title": "Tage vorbereiten",
-            "open": "Andere Tage"
-        },
-        "dayList": "Die Tage",
-        "title": "Wochenende",
-        "loadError": "Das Wochenende lässt sich nicht öffnen.",
-        "empty": "Nichts vorzuschlagen an diesem Wochenende.",
-        "applied": "Entscheidungen übernommen: {{count}}",
-        "applyError": "Die Entscheidung wurde nicht gespeichert.",
-        "validate": "Bestätigen",
-        "calendar": "In den Kalender",
-        "other": "Andere Idee",
-        "skip": "Überspringen",
-        "note": "Notiz",
-        "noteLabel": "Notiz für den Agenten",
-        "notePlaceholder": "Was der Agent wissen sollte",
-        "busy": "Belegt: {{busy}}",
-        "feels": "gefühlt {{temp}}°",
-        "otherAsked": "Andere Idee angefragt",
-        "decided": {
-            "calendar": "Im Kalender",
-            "skip": "Übersprungen"
-        },
-        "event": {
-            "requested": "Wird eingetragen",
-            "created": "Im Kalender eingetragen",
-            "failed": "Nicht eingetragen",
-            "open": "Im Kalender öffnen"
-        },
-        "countCalendar": "Im Kalender: {{count}}",
-        "countOther": "Andere Idee angefragt: {{count}}",
-        "countNone": "Nichts ausgewählt",
-        "part": {
-            "morning": "Morgen",
-            "afternoon": "Nachmittag",
-            "day": "Tag"
-        },
-        "weather": {
-            "sun": "sonnig",
-            "partly": "auflockernd",
-            "cloud": "bewölkt",
-            "rain": "Regen",
-            "snow": "Schnee",
-            "storm": "Gewitter",
-            "fog": "Nebel"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Woanders schöner",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Die Anfrage konnte nicht gesendet werden.",
+      "failed": "Konnte nicht vorbereitet werden ({{days}})",
+      "pending": "Wird vorbereitet für {{days}}",
+      "submit": "Vorbereiten",
+      "hint": "Die KI bereitet mindestens 5 Ideen pro Tag vor. Eine Benachrichtigung kommt, wenn es fertig ist.",
+      "title": "Tage vorbereiten",
+      "open": "Andere Tage"
     },
-    "career": {
-        "choice": "gewählt: {{label}}",
-        "validate": "Bestätigen ({{count}})",
-        "clear": "Leeren",
-        "applied": "{{count}} Entscheidungen angewendet",
-        "appliedOne": "1 Entscheidung angewendet",
-        "title": "Karriere",
-        "updatedAt": "aktualisiert um {{time}}",
-        "empty": "Heute nichts Neues",
-        "emptyHint": "Der Agent schaut jeden Morgen vorbei: Nachfassaktionen, Angebote und Aufgaben erscheinen hier.",
-        "allDecided": "Für heute ist alles entschieden",
-        "loadError": "Die Karriere-Seite konnte nicht geladen werden.",
-        "retry": "Erneut versuchen",
-        "applyError": "Die Entscheidung wurde nicht gespeichert.",
-        "later": "Später",
-        "skip": "Überspringen",
-        "followups": {
-            "title": "Nachfassen",
-            "appliedAgo": "beworben {{when}}",
-            "openDraft": "Entwurf öffnen",
-            "createTask": "Aufgabe erstellen",
-            "done": "Erledigt"
-        },
-        "offers": {
-            "title": "Angebote zu entscheiden",
-            "apply": "Bewerben",
-            "note": "Anmerkung",
-            "notePlaceholder": "Eine Anmerkung für den Agenten…",
-            "open": "Angebot ansehen",
-            "expires": "läuft {{when}} ab",
-            "expired": "abgelaufen"
-        },
-        "tasks": {
-            "title": "Vorgeschlagene Aufgaben",
-            "add": "Hinzufügen"
-        },
-        "decided": "Entschieden ({{count}})",
-        "state": {
-            "applied": "Beworben",
-            "skipped": "Übersprungen",
-            "later": "Später",
-            "done": "Erledigt",
-            "taskCreated": "Aufgabe erstellt",
-            "added": "Hinzugefügt",
-            "dismissed": "Verworfen"
-        }
+    "dayList": "Die Tage",
+    "title": "Wochenende",
+    "loadError": "Das Wochenende lässt sich nicht öffnen.",
+    "empty": "Nichts vorzuschlagen an diesem Wochenende.",
+    "applied": "Entscheidungen übernommen: {{count}}",
+    "applyError": "Die Entscheidung wurde nicht gespeichert.",
+    "validate": "Bestätigen",
+    "calendar": "In den Kalender",
+    "other": "Andere Idee",
+    "skip": "Überspringen",
+    "note": "Notiz",
+    "noteLabel": "Notiz für den Agenten",
+    "notePlaceholder": "Was der Agent wissen sollte",
+    "busy": "Belegt: {{busy}}",
+    "feels": "gefühlt {{temp}}°",
+    "otherAsked": "Andere Idee angefragt",
+    "decided": {
+      "calendar": "Im Kalender",
+      "skip": "Übersprungen"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Als gelesen markieren",
-        "open": "Öffnen"
+    "event": {
+      "requested": "Wird eingetragen",
+      "created": "Im Kalender eingetragen",
+      "failed": "Nicht eingetragen",
+      "open": "Im Kalender öffnen"
     },
-    "counts": {
-        "notes_other": "{{count}} Notizen",
-        "notes_one": "{{count}} Notiz",
-        "tasks_other": "{{count}} Aufgaben",
-        "tasks_one": "{{count}} Aufgabe",
-        "goals_other": "{{count}} Ziele",
-        "goals_one": "{{count}} Ziel",
-        "projects_other": "{{count}} Projekte",
-        "projects_one": "{{count}} Projekt"
+    "countCalendar": "Im Kalender: {{count}}",
+    "countOther": "Andere Idee angefragt: {{count}}",
+    "countNone": "Nichts ausgewählt",
+    "part": {
+      "morning": "Morgen",
+      "afternoon": "Nachmittag",
+      "day": "Tag"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Desktop",
-        "link": "Link",
-        "openSource": "Quelle öffnen",
-        "fromSource": "Stammt von {{source}}"
+    "weather": {
+      "sun": "sonnig",
+      "partly": "auflockernd",
+      "cloud": "bewölkt",
+      "rain": "Regen",
+      "snow": "Schnee",
+      "storm": "Gewitter",
+      "fog": "Nebel"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Woanders schöner",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "gewählt: {{label}}",
+    "validate": "Bestätigen ({{count}})",
+    "clear": "Leeren",
+    "applied": "{{count}} Entscheidungen angewendet",
+    "appliedOne": "1 Entscheidung angewendet",
+    "title": "Karriere",
+    "updatedAt": "aktualisiert um {{time}}",
+    "empty": "Heute nichts Neues",
+    "emptyHint": "Der Agent schaut jeden Morgen vorbei: Nachfassaktionen, Angebote und Aufgaben erscheinen hier.",
+    "allDecided": "Für heute ist alles entschieden",
+    "loadError": "Die Karriere-Seite konnte nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "applyError": "Die Entscheidung wurde nicht gespeichert.",
+    "later": "Später",
+    "skip": "Überspringen",
+    "followups": {
+      "title": "Nachfassen",
+      "appliedAgo": "beworben {{when}}",
+      "openDraft": "Entwurf öffnen",
+      "createTask": "Aufgabe erstellen",
+      "done": "Erledigt"
+    },
+    "offers": {
+      "title": "Angebote zu entscheiden",
+      "apply": "Bewerben",
+      "note": "Anmerkung",
+      "notePlaceholder": "Eine Anmerkung für den Agenten…",
+      "open": "Angebot ansehen",
+      "expires": "läuft {{when}} ab",
+      "expired": "abgelaufen"
+    },
+    "tasks": {
+      "title": "Vorgeschlagene Aufgaben",
+      "add": "Hinzufügen"
+    },
+    "decided": "Entschieden ({{count}})",
+    "state": {
+      "applied": "Beworben",
+      "skipped": "Übersprungen",
+      "later": "Später",
+      "done": "Erledigt",
+      "taskCreated": "Aufgabe erstellt",
+      "added": "Hinzugefügt",
+      "dismissed": "Verworfen"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Als gelesen markieren",
+    "open": "Öffnen"
+  },
+  "counts": {
+    "notes_other": "{{count}} Notizen",
+    "notes_one": "{{count}} Notiz",
+    "tasks_other": "{{count}} Aufgaben",
+    "tasks_one": "{{count}} Aufgabe",
+    "goals_other": "{{count}} Ziele",
+    "goals_one": "{{count}} Ziel",
+    "projects_other": "{{count}} Projekte",
+    "projects_one": "{{count}} Projekt"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Desktop",
+    "link": "Link",
+    "openSource": "Quelle öffnen",
+    "fromSource": "Stammt von {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "Erneuter Versuch nicht möglich",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Diesen Absender immer archivieren",
-            "horizon": {
-                "someday": "Irgendwann",
-                "nextMonth": "Nächsten Monat",
-                "thisMonth": "Diesen Monat",
-                "nextWeek": "Nächste Woche",
-                "week": "Diese Woche",
-                "label": "Oder später"
-            },
-            "trashRequested": "Löschen angefordert",
+      "horizon": {
+        "someday": "Irgendwann",
+        "nextMonth": "Nächsten Monat",
+        "thisMonth": "Diesen Monat",
+        "nextWeek": "Nächste Woche",
+        "week": "Diese Woche",
+        "label": "Oder später"
+      },
+      "trashRequested": "Löschen angefordert",
       "draftRequested": "Entwurf wird in Gmail vorbereitet",
       "archiveRequested": "Archivieren angefordert",
       "noteSent": "An den Trieur zurückgeschickt",
@@ -402,10 +402,10 @@
     "entry": "Zu sortieren ({{count}})",
     "title": "Zu sortieren",
     "deck": {
-            "actionFailedTrash": "Das Löschen ist fehlgeschlagen",
+      "actionFailedTrash": "Das Löschen ist fehlgeschlagen",
       "progressLabel": "Mail {{position}} von {{total}}",
       "option": {
-                "trash": "Löschen",
+        "trash": "Löschen",
         "draft": "Entwurf",
         "read": "Lesen",
         "event": "Kalender",
@@ -646,18 +646,18 @@
     "hideCompleted": "Abgeschlossene Aufgaben ausblenden"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Wiederkehrende Aufgaben behalten, einzeln löschen: {{count}}",
-            "someFailed": "Nicht geändert: {{count}}",
-            "deleted": "Gelöscht: {{count}}",
-            "moved": "Verschoben: {{count}}",
-            "prioritized": "Priorität geändert: {{count}}",
-            "dated": "Datum geändert: {{count}}",
-            "completed": "Erledigt: {{count}}",
-            "clear": "Auswahl aufheben",
-            "count": "Ausgewählt: {{count}}",
-            "label": "Ausgewählte Aufgaben"
-        },
+    "selection": {
+      "recurringKept": "Wiederkehrende Aufgaben behalten, einzeln löschen: {{count}}",
+      "someFailed": "Nicht geändert: {{count}}",
+      "deleted": "Gelöscht: {{count}}",
+      "moved": "Verschoben: {{count}}",
+      "prioritized": "Priorität geändert: {{count}}",
+      "dated": "Datum geändert: {{count}}",
+      "completed": "Erledigt: {{count}}",
+      "clear": "Auswahl aufheben",
+      "count": "Ausgewählt: {{count}}",
+      "label": "Ausgewählte Aufgaben"
+    },
     "deletedToast": "\"{{name}}\" gelöscht",
     "title": "Aufgaben",
     "backlog": "Backlog",
@@ -790,17 +790,17 @@
       "setDueDate": "Fälligkeitsdatum setzen"
     },
     "contextMenu": {
-            "review": "Überprüfung",
-            "copyError": "Kopieren fehlgeschlagen",
-            "titleCopied": "Titel kopiert",
-            "linkCopied": "Link kopiert",
-            "deleteKey": "Entf",
-            "copyTitle": "Titel kopieren",
-            "copyLink": "Link kopieren",
-            "pickDate": "Datum wählen…",
-            "reopen": "Wieder öffnen",
-            "complete": "Erledigen",
-            "open": "Öffnen",
+      "review": "Überprüfung",
+      "copyError": "Kopieren fehlgeschlagen",
+      "titleCopied": "Titel kopiert",
+      "linkCopied": "Link kopiert",
+      "deleteKey": "Entf",
+      "copyTitle": "Titel kopieren",
+      "copyLink": "Link kopieren",
+      "pickDate": "Datum wählen…",
+      "reopen": "Wieder öffnen",
+      "complete": "Erledigen",
+      "open": "Öffnen",
       "projectChanged": "Projekt geändert",
       "dateChanged": "Datum geändert",
       "label": "Aktionen für die Aufgabe",
@@ -1415,66 +1415,66 @@
     "views": "Projektansichten"
   },
   "profile": {
-        "plugins": {
-            "title": "Plugins",
-            "description": "Plugins fügen eigene Integrationen zum Server hinzu. Nur ein Administrator sieht sie. Ein Plugin bleibt aus, bis du es einschaltest.",
-            "notConfigured": "Plugins sind aus. Setze TUDUDI_PLUGINS_DIR auf einen Ordner mit Plugin-Ordnern und starte den Server neu.",
-            "reloadAll": "Alle neu laden",
-            "reload": "Neu laden",
-            "reloadPending": "Zum Laden von {{version}} neu laden",
-            "updatedFrom": "aktualisiert von {{version}}",
-            "version": "Version {{version}}",
-            "state": {
-                "disabled": "Aus",
-                "active": "Aktiv",
-                "error": "Fehler",
-                "invalid": "Ungültig",
-                "incompatible": "Inkompatibel",
-                "needs_approval": "Freigabe nötig",
-                "missing": "Fehlt"
-            },
-            "permissions": "Berechtigungen",
-            "events": "Ereignisse",
-            "permission": {
-                "events": "Hört auf Ereignisse",
-                "routes": "Stellt eigene Routen bereit"
-            },
-            "enabled": "Aktiviert",
-            "needsApproval": "Diese Version verlangt mehr als zuvor. Schalte sie erneut ein, um Berechtigungen und Ereignisse zu bestätigen.",
-            "checkUpdate": "Nach Updates suchen",
-            "updateAvailable": "Update verfügbar: {{version}}",
-            "upToDate": "Aktuell",
-            "updateError": "Die Update-Adresse konnte nicht gelesen werden",
-            "settings": "Einstellungen",
-            "saveSettings": "Einstellungen speichern",
-            "saved": "Einstellungen gespeichert",
-            "secretSaved": "Gespeichert",
-            "clearSecret": "Leeren",
-            "required": "erforderlich",
-            "reloaded": "Plugins neu geladen",
-            "loadError": "Plugins konnten nicht geladen werden",
-            "none": "Im Plugin-Ordner wurde kein Plugin gefunden.",
-            "errorLabel": "Fehler",
-            "saveError": "Das Plugin konnte nicht gespeichert werden",
-            "installLabel": "Git-Adresse des Plugins",
-            "install": "Hinzufügen",
-            "installing": "Wird hinzugefügt...",
-            "installHint": "Hier wird Code heruntergeladen, der im Server läuft. Lies vor dem Einschalten, was er verlangt.",
-            "installed": "Plugin hinzugefügt. Lies, was es verlangt, und schalte es dann ein.",
-            "installError": "Das Plugin konnte nicht hinzugefügt werden",
-            "pull": "Aktualisieren",
-            "pulled": "Plugin aktualisiert",
-            "remove": "Löschen",
-            "removeTitle": "Dieses Plugin löschen?",
-            "removeMessage": "Sein Ordner und seine Einstellungen werden vom Server gelöscht. Das lässt sich nicht rückgängig machen.",
-            "page": {
-                "notFound": "Plugin nicht gefunden oder ausgeschaltet"
-            },
-            "approveIntro": "Dieses Plugin läuft im Server und verlangt:",
-            "approveOutro": "Berechtigungen begrenzen, was Cadence dem Plugin übergibt; sie sind keine Sandbox. Gib nur Code frei, den du gelesen hast.",
-            "approveTitle": "Berechtigungen freigeben?",
-            "approve": "Freigeben und aktivieren"
-        },
+    "plugins": {
+      "title": "Plugins",
+      "description": "Plugins fügen eigene Integrationen zum Server hinzu. Nur ein Administrator sieht sie. Ein Plugin bleibt aus, bis du es einschaltest.",
+      "notConfigured": "Plugins sind aus. Setze TUDUDI_PLUGINS_DIR auf einen Ordner mit Plugin-Ordnern und starte den Server neu.",
+      "reloadAll": "Alle neu laden",
+      "reload": "Neu laden",
+      "reloadPending": "Zum Laden von {{version}} neu laden",
+      "updatedFrom": "aktualisiert von {{version}}",
+      "version": "Version {{version}}",
+      "state": {
+        "disabled": "Aus",
+        "active": "Aktiv",
+        "error": "Fehler",
+        "invalid": "Ungültig",
+        "incompatible": "Inkompatibel",
+        "needs_approval": "Freigabe nötig",
+        "missing": "Fehlt"
+      },
+      "permissions": "Berechtigungen",
+      "events": "Ereignisse",
+      "permission": {
+        "events": "Hört auf Ereignisse",
+        "routes": "Stellt eigene Routen bereit"
+      },
+      "enabled": "Aktiviert",
+      "needsApproval": "Diese Version verlangt mehr als zuvor. Schalte sie erneut ein, um Berechtigungen und Ereignisse zu bestätigen.",
+      "checkUpdate": "Nach Updates suchen",
+      "updateAvailable": "Update verfügbar: {{version}}",
+      "upToDate": "Aktuell",
+      "updateError": "Die Update-Adresse konnte nicht gelesen werden",
+      "settings": "Einstellungen",
+      "saveSettings": "Einstellungen speichern",
+      "saved": "Einstellungen gespeichert",
+      "secretSaved": "Gespeichert",
+      "clearSecret": "Leeren",
+      "required": "erforderlich",
+      "reloaded": "Plugins neu geladen",
+      "loadError": "Plugins konnten nicht geladen werden",
+      "none": "Im Plugin-Ordner wurde kein Plugin gefunden.",
+      "errorLabel": "Fehler",
+      "saveError": "Das Plugin konnte nicht gespeichert werden",
+      "installLabel": "Git-Adresse des Plugins",
+      "install": "Hinzufügen",
+      "installing": "Wird hinzugefügt...",
+      "installHint": "Hier wird Code heruntergeladen, der im Server läuft. Lies vor dem Einschalten, was er verlangt.",
+      "installed": "Plugin hinzugefügt. Lies, was es verlangt, und schalte es dann ein.",
+      "installError": "Das Plugin konnte nicht hinzugefügt werden",
+      "pull": "Aktualisieren",
+      "pulled": "Plugin aktualisiert",
+      "remove": "Löschen",
+      "removeTitle": "Dieses Plugin löschen?",
+      "removeMessage": "Sein Ordner und seine Einstellungen werden vom Server gelöscht. Das lässt sich nicht rückgängig machen.",
+      "page": {
+        "notFound": "Plugin nicht gefunden oder ausgeschaltet"
+      },
+      "approveIntro": "Dieses Plugin läuft im Server und verlangt:",
+      "approveOutro": "Berechtigungen begrenzen, was Cadence dem Plugin übergibt; sie sind keine Sandbox. Gib nur Code frei, den du gelesen hast.",
+      "approveTitle": "Berechtigungen freigeben?",
+      "approve": "Freigeben und aktivieren"
+    },
     "showTaskDescription": "Beschreibung unter dem Titel anzeigen",
     "sync": {
       "field": {
@@ -1587,8 +1587,8 @@
     "nextTaskSuggestion": "Nächste Aufgabenvorschlag",
     "enableNextTaskSuggestion": "Nächste Aufgabenvorschläge aktivieren",
     "tabs": {
-            "agents": "Agenten",
-            "plugins": "Plugins",
+      "agents": "Agenten",
+      "plugins": "Plugins",
       "classify": "Einordnung",
       "sync": "Synchronisation",
       "general": "Allgemein",
@@ -2212,20 +2212,20 @@
     "photoOn": "auf",
     "groups": {
       "account": "Konto",
-            "appearance": "Oberfläche",
-            "planning": "Organisation",
+      "appearance": "Oberfläche",
+      "planning": "Organisation",
       "integrations": "Integrationen",
-            "security": "Zugriff",
+      "security": "Zugriff",
       "advanced": "Erweitert"
     },
     "optional": "Optional",
     "accent": "Akzentfarbe",
     "accentCustom": "Eigene Farbe (Hex)",
-        "pureBlack": "Reines Schwarz im Dunkelmodus",
-        "sidebarPanelTitle": "Panel",
-        "sidebarPanelHint": "Die Blöcke der geöffneten Seitenleiste, von oben nach unten.",
-        "sidebarPanelPinned": "Angeheftet",
-        "sidebarPanelMonth": "Monatskalender"
+    "pureBlack": "Reines Schwarz im Dunkelmodus",
+    "sidebarPanelTitle": "Panel",
+    "sidebarPanelHint": "Die Blöcke der geöffneten Seitenleiste, von oben nach unten.",
+    "sidebarPanelPinned": "Angeheftet",
+    "sidebarPanelMonth": "Monatskalender"
   },
   "task": {
     "duplicateError": "Aufgabe konnte nicht dupliziert werden.",
@@ -2527,7 +2527,7 @@
     "time": "Zeit",
     "allDay": "Ganztägig",
     "google": {
-            "confirmDelete": "Endgültig löschen?",
+      "confirmDelete": "Endgültig löschen?",
       "endBeforeStart": "Das Ende liegt vor dem Beginn",
       "editEvent": "Termin bearbeiten",
       "newEvent": "Neuer Termin",
@@ -4030,10 +4030,10 @@
       "lead": "Wann",
       "atTime": "Zur Uhrzeit",
       "minutesBefore": "{{count}} Min. vorher"
-        },
-        "desktopApp": {
-            "title": "Benachrichtigungen dieser App",
-            "body": "Cadence für Linux zeigt Systembenachrichtigungen an, auch bei geschlossenem Fenster, solange das Symbol im Infobereich liegt. Wähle unten in der Spalte Desktop aus, welche. Dafür ist ein API-Schlüssel nötig, der in den App-Einstellungen (Menü des Infobereich-Symbols) eingetragen wird."
+    },
+    "desktopApp": {
+      "title": "Benachrichtigungen dieser App",
+      "body": "Cadence für Linux zeigt Systembenachrichtigungen an, auch bei geschlossenem Fenster, solange das Symbol im Infobereich liegt. Wähle unten in der Spalte Desktop aus, welche. Dafür ist ein API-Schlüssel nötig, der in den App-Einstellungen (Menü des Infobereich-Symbols) eingetragen wird."
     }
   },
   "projectStatus": {
@@ -4514,7 +4514,7 @@
     "invalidHint": "Er wurde vielleicht schon verwendet oder ist abgelaufen. Bitte die Person, die ihn gesendet hat, um einen neuen."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} Aufgabe kommt in den nächsten freien Slot.",
+    "placeAllHint_one": "{{count}} Aufgabe kommt in den nächsten freien Slot.",
     "inProgress": "In Arbeit",
     "overdue": "Überfällig",
     "dueToday": "Heute fällig",
@@ -5192,7 +5192,7 @@
       "instructionsOther": "Jede andere Spalte kann in der Notiz der Aufgabe behalten werden, damit nichts aus dem Blatt verloren geht."
     },
     "import": {
-            "undoneKept_one": "Der Import wurde rückgängig gemacht. {{count}} seitdem geänderte Aufgabe wurde behalten.",
+      "undoneKept_one": "Der Import wurde rückgängig gemacht. {{count}} seitdem geänderte Aufgabe wurde behalten.",
       "fieldParent": "Übergeordnete Aufgabe",
       "fieldWbs": "WBS / Gliederungsnummer",
       "fieldEstimate": "Schätzung",
@@ -5423,7 +5423,49 @@
     "columnActions": "Spaltenaktionen",
     "newColumn": "Neue Spalte",
     "loadError": "Spalten konnten nicht geladen werden",
-    "saveError": "Board konnte nicht gespeichert werden"
+    "saveError": "Board konnte nicht gespeichert werden",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Mit der KI besprechen",
@@ -5835,8 +5877,8 @@
       "plan": "Auf der Seite Planen"
     },
     "shortcuts": {
-            "panePrevious": "Vorherige Aufgabe im Bereich",
-            "paneNext": "Nächste Aufgabe im Bereich",
+      "panePrevious": "Vorherige Aufgabe im Bereich",
+      "paneNext": "Nächste Aufgabe im Bereich",
       "palette": "Befehlspalette öffnen",
       "capture": "Schnellerfassung",
       "search": "Suchen",

@@ -1,150 +1,150 @@
 {
-    "desktopWindow": {
-        "minimize": "最小化",
-        "maximize": "最大化",
-        "close": "关闭"
+  "desktopWindow": {
+    "minimize": "最小化",
+    "maximize": "最大化",
+    "close": "关闭"
+  },
+  "weekend": {
+    "share": {
+      "error": "无法创建图片。",
+      "downloaded": "图片已下载",
+      "copied": "图片已复制",
+      "footer": "由 Cadence 准备",
+      "kicker": "周末",
+      "action": "分享"
     },
-    "weekend": {
-        "share": {
-            "error": "无法创建图片。",
-            "downloaded": "图片已下载",
-            "copied": "图片已复制",
-            "footer": "由 Cadence 准备",
-            "kicker": "周末",
-            "action": "分享"
-        },
-        "request": {
-            "error": "请求无法发送。",
-            "failed": "无法准备（{{days}}）",
-            "pending": "正在为 {{days}} 准备",
-            "submit": "准备",
-            "hint": "AI 每天至少准备 5 个点子。准备好后会收到通知。",
-            "title": "准备日期",
-            "open": "其他日期"
-        },
-        "dayList": "日期",
-        "title": "周末",
-        "loadError": "无法打开周末安排。",
-        "empty": "这个周末没有可推荐的安排。",
-        "applied": "已应用决定：{{count}}",
-        "applyError": "决定未能保存。",
-        "validate": "确认",
-        "calendar": "加入日历",
-        "other": "换个想法",
-        "skip": "跳过",
-        "note": "备注",
-        "noteLabel": "给助手的备注",
-        "notePlaceholder": "助手需要知道的内容",
-        "busy": "已有安排：{{busy}}",
-        "feels": "体感 {{temp}}°",
-        "otherAsked": "已请求另一个想法",
-        "decided": {
-            "calendar": "已在日历中",
-            "skip": "已跳过"
-        },
-        "event": {
-            "requested": "正在添加",
-            "created": "已加入日历",
-            "failed": "未能添加",
-            "open": "在日历中打开"
-        },
-        "countCalendar": "加入日历：{{count}}",
-        "countOther": "请求另一个想法：{{count}}",
-        "countNone": "未选择",
-        "part": {
-            "morning": "上午",
-            "afternoon": "下午",
-            "day": "全天"
-        },
-        "weather": {
-            "sun": "晴",
-            "partly": "局部晴",
-            "cloud": "多云",
-            "rain": "雨",
-            "snow": "雪",
-            "storm": "暴风雨",
-            "fog": "雾"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "别处更好",
-        "elsewhereLine": "{{place}}，{{day}}：{{weather}}，{{temp}}°"
+    "request": {
+      "error": "请求无法发送。",
+      "failed": "无法准备（{{days}}）",
+      "pending": "正在为 {{days}} 准备",
+      "submit": "准备",
+      "hint": "AI 每天至少准备 5 个点子。准备好后会收到通知。",
+      "title": "准备日期",
+      "open": "其他日期"
     },
-    "career": {
-        "choice": "已选：{{label}}",
-        "validate": "确认（{{count}}）",
-        "clear": "清除",
-        "applied": "已应用 {{count}} 项决定",
-        "appliedOne": "已应用 1 项决定",
-        "title": "职业",
-        "updatedAt": "更新于 {{time}}",
-        "empty": "今天没有新内容",
-        "emptyHint": "代理每天早上都会查看：跟进、职位和任务会显示在这里。",
-        "allDecided": "今天的事项都已决定",
-        "loadError": "无法加载职业页面。",
-        "retry": "重试",
-        "applyError": "决定未保存。",
-        "later": "稍后",
-        "skip": "跳过",
-        "followups": {
-            "title": "跟进",
-            "appliedAgo": "申请于{{when}}",
-            "openDraft": "打开草稿",
-            "createTask": "创建任务",
-            "done": "完成"
-        },
-        "offers": {
-            "title": "待决定的职位",
-            "apply": "申请",
-            "note": "备注",
-            "notePlaceholder": "给代理的备注…",
-            "open": "查看职位",
-            "expires": "{{when}}截止",
-            "expired": "已截止"
-        },
-        "tasks": {
-            "title": "建议的任务",
-            "add": "添加"
-        },
-        "decided": "已决定（{{count}}）",
-        "state": {
-            "applied": "已申请",
-            "skipped": "已跳过",
-            "later": "稍后",
-            "done": "完成",
-            "taskCreated": "已创建任务",
-            "added": "已添加",
-            "dismissed": "已忽略"
-        }
+    "dayList": "日期",
+    "title": "周末",
+    "loadError": "无法打开周末安排。",
+    "empty": "这个周末没有可推荐的安排。",
+    "applied": "已应用决定：{{count}}",
+    "applyError": "决定未能保存。",
+    "validate": "确认",
+    "calendar": "加入日历",
+    "other": "换个想法",
+    "skip": "跳过",
+    "note": "备注",
+    "noteLabel": "给助手的备注",
+    "notePlaceholder": "助手需要知道的内容",
+    "busy": "已有安排：{{busy}}",
+    "feels": "体感 {{temp}}°",
+    "otherAsked": "已请求另一个想法",
+    "decided": {
+      "calendar": "已在日历中",
+      "skip": "已跳过"
     },
-    "agentBanner": {
-        "agent": "助手",
-        "dismiss": "标为已读",
-        "open": "打开"
+    "event": {
+      "requested": "正在添加",
+      "created": "已加入日历",
+      "failed": "未能添加",
+      "open": "在日历中打开"
     },
-    "counts": {
-        "notes_other": "{{count}}条笔记",
-        "notes_one": "{{count}}条笔记",
-        "tasks_other": "{{count}}个任务",
-        "tasks_one": "{{count}}个任务",
-        "goals_other": "{{count}}个目标",
-        "goals_one": "{{count}}个目标",
-        "projects_other": "{{count}}个项目",
-        "projects_one": "{{count}}个项目"
+    "countCalendar": "加入日历：{{count}}",
+    "countOther": "请求另一个想法：{{count}}",
+    "countNone": "未选择",
+    "part": {
+      "morning": "上午",
+      "afternoon": "下午",
+      "day": "全天"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "桌面",
-        "link": "链接",
-        "openSource": "打开来源",
-        "fromSource": "来自{{source}}"
+    "weather": {
+      "sun": "晴",
+      "partly": "局部晴",
+      "cloud": "多云",
+      "rain": "雨",
+      "snow": "雪",
+      "storm": "暴风雨",
+      "fog": "雾"
     },
+    "nearby": "Nearby",
+    "elsewhere": "别处更好",
+    "elsewhereLine": "{{place}}，{{day}}：{{weather}}，{{temp}}°"
+  },
+  "career": {
+    "choice": "已选：{{label}}",
+    "validate": "确认（{{count}}）",
+    "clear": "清除",
+    "applied": "已应用 {{count}} 项决定",
+    "appliedOne": "已应用 1 项决定",
+    "title": "职业",
+    "updatedAt": "更新于 {{time}}",
+    "empty": "今天没有新内容",
+    "emptyHint": "代理每天早上都会查看：跟进、职位和任务会显示在这里。",
+    "allDecided": "今天的事项都已决定",
+    "loadError": "无法加载职业页面。",
+    "retry": "重试",
+    "applyError": "决定未保存。",
+    "later": "稍后",
+    "skip": "跳过",
+    "followups": {
+      "title": "跟进",
+      "appliedAgo": "申请于{{when}}",
+      "openDraft": "打开草稿",
+      "createTask": "创建任务",
+      "done": "完成"
+    },
+    "offers": {
+      "title": "待决定的职位",
+      "apply": "申请",
+      "note": "备注",
+      "notePlaceholder": "给代理的备注…",
+      "open": "查看职位",
+      "expires": "{{when}}截止",
+      "expired": "已截止"
+    },
+    "tasks": {
+      "title": "建议的任务",
+      "add": "添加"
+    },
+    "decided": "已决定（{{count}}）",
+    "state": {
+      "applied": "已申请",
+      "skipped": "已跳过",
+      "later": "稍后",
+      "done": "完成",
+      "taskCreated": "已创建任务",
+      "added": "已添加",
+      "dismissed": "已忽略"
+    }
+  },
+  "agentBanner": {
+    "agent": "助手",
+    "dismiss": "标为已读",
+    "open": "打开"
+  },
+  "counts": {
+    "notes_other": "{{count}}条笔记",
+    "notes_one": "{{count}}条笔记",
+    "tasks_other": "{{count}}个任务",
+    "tasks_one": "{{count}}个任务",
+    "goals_other": "{{count}}个目标",
+    "goals_one": "{{count}}个目标",
+    "projects_other": "{{count}}个项目",
+    "projects_one": "{{count}}个项目"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "桌面",
+    "link": "链接",
+    "openSource": "打开来源",
+    "fromSource": "来自{{source}}"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "已重新排队 {{count}} 个项目",
-            "failed_one": "失败项目：{{count}}",
+      "requeued_one": "已重新排队 {{count}} 个项目",
+      "failed_one": "失败项目：{{count}}",
       "retryError": "无法重试",
       "requeued": "已重新排队 {{count}} 个项目",
       "retry": "重试",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "始终归档此发件人",
-            "horizon": {
-                "someday": "某天",
-                "nextMonth": "下月",
-                "thisMonth": "本月",
-                "nextWeek": "下周",
-                "week": "本周",
-                "label": "或稍后"
-            },
-            "trashRequested": "已请求删除",
+      "horizon": {
+        "someday": "某天",
+        "nextMonth": "下月",
+        "thisMonth": "本月",
+        "nextWeek": "下周",
+        "week": "本周",
+        "label": "或稍后"
+      },
+      "trashRequested": "已请求删除",
       "draftRequested": "正在 Gmail 中准备草稿",
       "archiveRequested": "已请求归档",
       "noteSent": "已退回给 Trieur",
@@ -402,10 +402,10 @@
     "entry": "待整理（{{count}}）",
     "title": "待整理",
     "deck": {
-            "actionFailedTrash": "删除未成功",
+      "actionFailedTrash": "删除未成功",
       "progressLabel": "第 {{position}} / {{total}} 封邮件",
       "option": {
-                "trash": "删除",
+        "trash": "删除",
         "draft": "草稿",
         "read": "阅读",
         "event": "日历",
@@ -646,18 +646,18 @@
     "hideCompleted": "隐藏已完成的任务"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "已保留重复任务，请逐个删除：{{count}}",
-            "someFailed": "未更改：{{count}}",
-            "deleted": "已删除：{{count}}",
-            "moved": "已移动：{{count}}",
-            "prioritized": "优先级已更改：{{count}}",
-            "dated": "日期已更改：{{count}}",
-            "completed": "已完成：{{count}}",
-            "clear": "清除选择",
-            "count": "已选：{{count}}",
-            "label": "已选任务"
-        },
+    "selection": {
+      "recurringKept": "已保留重复任务，请逐个删除：{{count}}",
+      "someFailed": "未更改：{{count}}",
+      "deleted": "已删除：{{count}}",
+      "moved": "已移动：{{count}}",
+      "prioritized": "优先级已更改：{{count}}",
+      "dated": "日期已更改：{{count}}",
+      "completed": "已完成：{{count}}",
+      "clear": "清除选择",
+      "count": "已选：{{count}}",
+      "label": "已选任务"
+    },
     "deletedToast": "“{{name}}”已删除",
     "title": "任务",
     "today": "今天",
@@ -790,17 +790,17 @@
       "setDueDate": "设置截止日期"
     },
     "contextMenu": {
-            "review": "回顾",
-            "copyError": "无法复制",
-            "titleCopied": "标题已复制",
-            "linkCopied": "链接已复制",
-            "deleteKey": "Del",
-            "copyTitle": "复制标题",
-            "copyLink": "复制链接",
-            "pickDate": "选择日期…",
-            "reopen": "重新打开",
-            "complete": "完成",
-            "open": "打开",
+      "review": "回顾",
+      "copyError": "无法复制",
+      "titleCopied": "标题已复制",
+      "linkCopied": "链接已复制",
+      "deleteKey": "Del",
+      "copyTitle": "复制标题",
+      "copyLink": "复制链接",
+      "pickDate": "选择日期…",
+      "reopen": "重新打开",
+      "complete": "完成",
+      "open": "打开",
       "projectChanged": "项目已更改",
       "dateChanged": "日期已更改",
       "label": "任务操作",
@@ -872,66 +872,66 @@
     "noActivity": "还没有活动"
   },
   "profile": {
-        "plugins": {
-            "title": "插件",
-            "description": "插件会为服务器添加你自己的集成。只有管理员能看到。插件在你开启之前保持关闭。",
-            "notConfigured": "插件已关闭。请将 TUDUDI_PLUGINS_DIR 设为包含插件文件夹的目录，然后重启服务器。",
-            "reloadAll": "全部重新加载",
-            "reload": "重新加载",
-            "reloadPending": "重新加载以载入 {{version}}",
-            "updatedFrom": "已从 {{version}} 更新",
-            "version": "版本 {{version}}",
-            "state": {
-                "disabled": "已关闭",
-                "active": "运行中",
-                "error": "错误",
-                "invalid": "无效",
-                "incompatible": "不兼容",
-                "needs_approval": "需要批准",
-                "missing": "缺失"
-            },
-            "permissions": "权限",
-            "events": "事件",
-            "permission": {
-                "events": "监听事件",
-                "routes": "提供自有路由"
-            },
-            "enabled": "已启用",
-            "needsApproval": "此版本请求的权限比以前多。请重新开启以批准其权限和事件。",
-            "checkUpdate": "检查更新",
-            "updateAvailable": "有可用更新：{{version}}",
-            "upToDate": "已是最新",
-            "updateError": "无法读取更新地址",
-            "settings": "设置",
-            "saveSettings": "保存设置",
-            "saved": "设置已保存",
-            "secretSaved": "已保存",
-            "clearSecret": "清除",
-            "required": "必填",
-            "reloaded": "插件已重新加载",
-            "loadError": "无法加载插件",
-            "none": "插件文件夹中没有找到插件。",
-            "errorLabel": "错误",
-            "saveError": "无法保存插件",
-            "installLabel": "插件的 Git 地址",
-            "install": "添加",
-            "installing": "正在添加...",
-            "installHint": "这会下载在服务器中运行的代码。开启前请先阅读它的权限请求。",
-            "installed": "插件已添加。请先阅读它的权限请求，然后再开启。",
-            "installError": "无法添加插件",
-            "pull": "更新",
-            "pulled": "插件已更新",
-            "remove": "删除",
-            "removeTitle": "删除此插件？",
-            "removeMessage": "其文件夹和设置将从服务器中删除，且无法撤销。",
-            "page": {
-                "notFound": "插件未找到或已关闭"
-            },
-            "approveIntro": "此插件在服务器内运行，并请求以下权限：",
-            "approveOutro": "权限只限制 Cadence 交给插件的内容，并非沙箱。只批准你读过的代码。",
-            "approveTitle": "批准权限？",
-            "approve": "批准并启用"
-        },
+    "plugins": {
+      "title": "插件",
+      "description": "插件会为服务器添加你自己的集成。只有管理员能看到。插件在你开启之前保持关闭。",
+      "notConfigured": "插件已关闭。请将 TUDUDI_PLUGINS_DIR 设为包含插件文件夹的目录，然后重启服务器。",
+      "reloadAll": "全部重新加载",
+      "reload": "重新加载",
+      "reloadPending": "重新加载以载入 {{version}}",
+      "updatedFrom": "已从 {{version}} 更新",
+      "version": "版本 {{version}}",
+      "state": {
+        "disabled": "已关闭",
+        "active": "运行中",
+        "error": "错误",
+        "invalid": "无效",
+        "incompatible": "不兼容",
+        "needs_approval": "需要批准",
+        "missing": "缺失"
+      },
+      "permissions": "权限",
+      "events": "事件",
+      "permission": {
+        "events": "监听事件",
+        "routes": "提供自有路由"
+      },
+      "enabled": "已启用",
+      "needsApproval": "此版本请求的权限比以前多。请重新开启以批准其权限和事件。",
+      "checkUpdate": "检查更新",
+      "updateAvailable": "有可用更新：{{version}}",
+      "upToDate": "已是最新",
+      "updateError": "无法读取更新地址",
+      "settings": "设置",
+      "saveSettings": "保存设置",
+      "saved": "设置已保存",
+      "secretSaved": "已保存",
+      "clearSecret": "清除",
+      "required": "必填",
+      "reloaded": "插件已重新加载",
+      "loadError": "无法加载插件",
+      "none": "插件文件夹中没有找到插件。",
+      "errorLabel": "错误",
+      "saveError": "无法保存插件",
+      "installLabel": "插件的 Git 地址",
+      "install": "添加",
+      "installing": "正在添加...",
+      "installHint": "这会下载在服务器中运行的代码。开启前请先阅读它的权限请求。",
+      "installed": "插件已添加。请先阅读它的权限请求，然后再开启。",
+      "installError": "无法添加插件",
+      "pull": "更新",
+      "pulled": "插件已更新",
+      "remove": "删除",
+      "removeTitle": "删除此插件？",
+      "removeMessage": "其文件夹和设置将从服务器中删除，且无法撤销。",
+      "page": {
+        "notFound": "插件未找到或已关闭"
+      },
+      "approveIntro": "此插件在服务器内运行，并请求以下权限：",
+      "approveOutro": "权限只限制 Cadence 交给插件的内容，并非沙箱。只批准你读过的代码。",
+      "approveTitle": "批准权限？",
+      "approve": "批准并启用"
+    },
     "showTaskDescription": "在标题下方显示描述",
     "sync": {
       "field": {
@@ -1102,8 +1102,8 @@
     "nextTaskSuggestion": "下一个任务建议",
     "enableNextTaskSuggestion": "启用下一个任务建议",
     "tabs": {
-            "agents": "智能体",
-            "plugins": "插件",
+      "agents": "智能体",
+      "plugins": "插件",
       "classify": "归类",
       "sync": "同步",
       "general": "常规",
@@ -1353,7 +1353,7 @@
       "morningReplanToggle": "早上自动准备建议",
       "morningReplanDescription": "在你选定的时间每天早上，当有逾期任务时，准备一份一周安排建议。",
       "morningReplanTitle": "早晨逾期任务重新安排（AI）",
-            "maxOption_one": "{{count}}个任务",
+      "maxOption_one": "{{count}}个任务",
       "title": "计划",
       "description": "规划一天时,\"今天可以做些什么?\"如何排列你的任务。拖动各行调整为你想要的顺序;相同的任务总是以相同的顺序出现。",
       "orderTitle": "顺序(拖动以更改)",
@@ -1669,20 +1669,20 @@
     "photoOn": "来自",
     "groups": {
       "account": "账户",
-            "appearance": "界面",
-            "planning": "组织",
+      "appearance": "界面",
+      "planning": "组织",
       "integrations": "集成",
-            "security": "访问",
+      "security": "访问",
       "advanced": "高级"
     },
     "optional": "可选",
     "accent": "强调色",
     "accentCustom": "自定义颜色（十六进制）",
-        "pureBlack": "深色模式使用纯黑",
-        "sidebarPanelTitle": "面板",
-        "sidebarPanelHint": "已打开侧边栏的模块，从上到下排列。",
-        "sidebarPanelPinned": "已固定",
-        "sidebarPanelMonth": "月历"
+    "pureBlack": "深色模式使用纯黑",
+    "sidebarPanelTitle": "面板",
+    "sidebarPanelHint": "已打开侧边栏的模块，从上到下排列。",
+    "sidebarPanelPinned": "已固定",
+    "sidebarPanelMonth": "月历"
   },
   "productivity": {
     "stalledProjects": "停滞项目",
@@ -2254,12 +2254,12 @@
     "createError": "创建笔记失败"
   },
   "task": {
-        "minutesAgo_one": "{{count}} 分钟前",
-        "inMinutes_one": "{{count}} 分钟后",
-        "inHours_one": "{{count}} 小时后",
-        "inDays_one": "{{count}} 天后",
-        "hoursAgo_one": "{{count}} 小时前",
-        "daysAgo_one": "{{count}} 天前",
+    "minutesAgo_one": "{{count}} 分钟前",
+    "inMinutes_one": "{{count}} 分钟后",
+    "inHours_one": "{{count}} 小时后",
+    "inDays_one": "{{count}} 天后",
+    "hoursAgo_one": "{{count}} 小时前",
+    "daysAgo_one": "{{count}} 天前",
     "duplicateError": "无法复制任务。",
     "duplicated": "任务已复制",
     "duplicate": "复制",
@@ -2975,7 +2975,7 @@
     "time": "时间",
     "allDay": "全天",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "结束时间早于开始时间",
       "editEvent": "编辑事件",
       "newEvent": "新建事件",
@@ -4021,10 +4021,10 @@
       "lead": "何时",
       "atTime": "准时",
       "minutesBefore": "提前 {{count}} 分钟"
-        },
-        "desktopApp": {
-            "title": "此应用的通知",
-            "body": "Linux 版 Cadence 只要图标留在系统托盘中，即使窗口已关闭，也会显示系统通知。请在下方的「桌面」列中选择要显示哪些。它需要 API 密钥，在应用设置（托盘菜单）中填写。"
+    },
+    "desktopApp": {
+      "title": "此应用的通知",
+      "body": "Linux 版 Cadence 只要图标留在系统托盘中，即使窗口已关闭，也会显示系统通知。请在下方的「桌面」列中选择要显示哪些。它需要 API 密钥，在应用设置（托盘菜单）中填写。"
     }
   },
   "projectStatus": {
@@ -4505,8 +4505,8 @@
     "invalidHint": "它可能已被使用或已过期。请向发送者索取新的链接。"
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} 个任务将放入接下来的一个空闲时段。",
-        "placeAllDone_one": "已安排 {{count}} 个任务。",
+    "placeAllHint_one": "{{count}} 个任务将放入接下来的一个空闲时段。",
+    "placeAllDone_one": "已安排 {{count}} 个任务。",
     "inProgress": "进行中",
     "overdue": "已逾期",
     "dueToday": "今天到期",
@@ -4577,7 +4577,7 @@
     "beta": "测试版",
     "betaHint": "带计划的今日页面是新功能。经典页面仍可在本页底部打开。",
     "ai": {
-            "carried_one": "已将 {{count}} 个任务加入明天",
+      "carried_one": "已将 {{count}} 个任务加入明天",
       "suggested": "AI 建议",
       "estimateGuess": "AI 预估",
       "nothingToAdd": "没有可添加的:没有空闲时间或没有待规划的任务。",
@@ -5183,13 +5183,13 @@
       "instructionsOther": "其他任何列都可以保留在任务的笔记中，这样表中的内容不会丢失。"
     },
     "import": {
-            "undoneKept_one": "导入已撤销。自那以后修改的 {{count}} 项任务已保留。",
-            "rowCount_one": "{{count}} 行",
-            "doneTitle_one": "已导入 {{count}} 项任务",
-            "countTags_one": "新增 {{count}} 个标签",
-            "countProjects_one": "新增 {{count}} 个项目",
-            "countCreate_one": "新增 {{count}} 项任务",
-            "countAreas_one": "新增 {{count}} 个领域",
+      "undoneKept_one": "导入已撤销。自那以后修改的 {{count}} 项任务已保留。",
+      "rowCount_one": "{{count}} 行",
+      "doneTitle_one": "已导入 {{count}} 项任务",
+      "countTags_one": "新增 {{count}} 个标签",
+      "countProjects_one": "新增 {{count}} 个项目",
+      "countCreate_one": "新增 {{count}} 项任务",
+      "countAreas_one": "新增 {{count}} 个领域",
       "fieldParent": "父任务",
       "fieldWbs": "WBS / 大纲编号",
       "fieldEstimate": "预估",
@@ -5414,7 +5414,49 @@
     "columnActions": "列操作",
     "newColumn": "新列",
     "loadError": "无法加载列",
-    "saveError": "无法保存看板"
+    "saveError": "无法保存看板",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "与 AI 讨论",
@@ -5674,7 +5716,7 @@
     "close": "关闭"
   },
   "comments": {
-        "count_one": "{{count}} 条评论",
+    "count_one": "{{count}} 条评论",
     "count": "{{count}} 条评论",
     "loading": "正在加载评论…",
     "failedToLoad": "无法加载评论",
@@ -5826,8 +5868,8 @@
       "plan": "在计划页面"
     },
     "shortcuts": {
-            "panePrevious": "面板中的上一个任务",
-            "paneNext": "面板中的下一个任务",
+      "panePrevious": "面板中的上一个任务",
+      "paneNext": "面板中的下一个任务",
       "palette": "打开命令面板",
       "capture": "快速捕获",
       "search": "搜索",
@@ -6425,9 +6467,9 @@
     "allTomorrow": "全部移到明天",
     "replanTitle": "重新规划逾期任务（{{count}}）",
     "replan": "重新规划",
-        "plannedOn": "计划于 {{day}}",
-        "taskCount_one": "{{count}} 项任务",
-        "organized_one": "已安排 {{count}} 项任务",
+    "plannedOn": "计划于 {{day}}",
+    "taskCount_one": "{{count}} 项任务",
+    "organized_one": "已安排 {{count}} 项任务",
     "add": "添加",
     "addPlaceholder": "添加任务",
     "added": "已将“{{name}}”加入当天",
@@ -6504,7 +6546,7 @@
   },
   "upcoming": {
     "overdueAiReplan": "用 AI 重新安排",
-        "plannedOnDayHint_one": "{{count}} 项已安排到某天",
+    "plannedOnDayHint_one": "{{count}} 项已安排到某天",
     "replan": "待重新安排",
     "toPlan": "待安排",
     "expandToPlan": "显示待安排 ({{count}})",
@@ -6650,18 +6692,18 @@
     "stripLabel": "发送到展望",
     "sentToHorizon": "已发送到{{name}}",
     "plannedOnDayHint_other": "{{count}} 项已安排到某天",
-        "weekLoadTitle": "从今天到本周末的计划时长，对比你的每日工作时间",
-        "pickedMoved": "已移动所选任务",
-        "pickedCount": "已选：{{count}}",
-        "pickedClear": "清除选择",
-        "aiTab": "AI 计划",
-        "sectionToggle": "显示或隐藏{{name}}",
-        "pushedTitle": "反复推迟",
-        "pushedBadge": "30 天内推迟 {{count}} 次",
-        "pushedMeta": "30 天 {{count}}×",
-        "mergeCalendar": "合并日历",
-        "mergeCalendarTitle": "在每天的列中显示日程并隐藏侧边日历",
-        "quickPlaceTitle": "安排在{{day}}：第一个有空的日子"
+    "weekLoadTitle": "从今天到本周末的计划时长，对比你的每日工作时间",
+    "pickedMoved": "已移动所选任务",
+    "pickedCount": "已选：{{count}}",
+    "pickedClear": "清除选择",
+    "aiTab": "AI 计划",
+    "sectionToggle": "显示或隐藏{{name}}",
+    "pushedTitle": "反复推迟",
+    "pushedBadge": "30 天内推迟 {{count}} 次",
+    "pushedMeta": "30 天 {{count}}×",
+    "mergeCalendar": "合并日历",
+    "mergeCalendarTitle": "在每天的列中显示日程并隐藏侧边日历",
+    "quickPlaceTitle": "安排在{{day}}：第一个有空的日子"
   },
   "offline": {
     "offline": "离线",

@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Minimizar",
-        "maximize": "Maximizar",
-        "close": "Cerrar"
+  "desktopWindow": {
+    "minimize": "Minimizar",
+    "maximize": "Maximizar",
+    "close": "Cerrar"
+  },
+  "weekend": {
+    "share": {
+      "error": "No se pudo crear la imagen.",
+      "downloaded": "Imagen descargada",
+      "copied": "Imagen copiada",
+      "footer": "Preparado con Cadence",
+      "kicker": "FIN DE SEMANA",
+      "action": "Compartir"
     },
-    "weekend": {
-        "share": {
-            "error": "No se pudo crear la imagen.",
-            "downloaded": "Imagen descargada",
-            "copied": "Imagen copiada",
-            "footer": "Preparado con Cadence",
-            "kicker": "FIN DE SEMANA",
-            "action": "Compartir"
-        },
-        "request": {
-            "error": "No se pudo enviar la solicitud.",
-            "failed": "No se pudo preparar ({{days}})",
-            "pending": "En preparación para {{days}}",
-            "submit": "Preparar",
-            "hint": "La IA prepara al menos 5 ideas por día. Llegará una notificación cuando esté listo.",
-            "title": "Preparar días",
-            "open": "Otros días"
-        },
-        "dayList": "Los días",
-        "title": "Fin de semana",
-        "loadError": "No se pudo abrir el fin de semana.",
-        "empty": "Nada que proponer este fin de semana.",
-        "applied": "Decisiones aplicadas: {{count}}",
-        "applyError": "La decisión no se guardó.",
-        "validate": "Confirmar",
-        "calendar": "Añadir al calendario",
-        "other": "Otra idea",
-        "skip": "Omitir",
-        "note": "Nota",
-        "noteLabel": "Nota para el agente",
-        "notePlaceholder": "Lo que el agente debe saber",
-        "busy": "Ocupado: {{busy}}",
-        "feels": "sensación {{temp}}°",
-        "otherAsked": "Otra idea pedida",
-        "decided": {
-            "calendar": "En el calendario",
-            "skip": "Omitida"
-        },
-        "event": {
-            "requested": "Añadiendo al calendario",
-            "created": "Añadido al calendario",
-            "failed": "No añadido",
-            "open": "Abrir en el calendario"
-        },
-        "countCalendar": "En el calendario: {{count}}",
-        "countOther": "Otra idea pedida: {{count}}",
-        "countNone": "Nada elegido",
-        "part": {
-            "morning": "mañana",
-            "afternoon": "tarde",
-            "day": "día"
-        },
-        "weather": {
-            "sun": "soleado",
-            "partly": "claros",
-            "cloud": "nublado",
-            "rain": "lluvia",
-            "snow": "nieve",
-            "storm": "tormenta",
-            "fog": "niebla"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Mejor en otro sitio",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "No se pudo enviar la solicitud.",
+      "failed": "No se pudo preparar ({{days}})",
+      "pending": "En preparación para {{days}}",
+      "submit": "Preparar",
+      "hint": "La IA prepara al menos 5 ideas por día. Llegará una notificación cuando esté listo.",
+      "title": "Preparar días",
+      "open": "Otros días"
     },
-    "career": {
-        "choice": "elegido: {{label}}",
-        "validate": "Confirmar ({{count}})",
-        "clear": "Borrar",
-        "applied": "{{count}} decisiones aplicadas",
-        "appliedOne": "1 decisión aplicada",
-        "title": "Carrera",
-        "updatedAt": "actualizado a las {{time}}",
-        "empty": "Nada nuevo hoy",
-        "emptyHint": "El agente pasa cada mañana: sus seguimientos, ofertas y tareas aparecerán aquí.",
-        "allDecided": "Todo está decidido por hoy",
-        "loadError": "No se pudo cargar la página Carrera.",
-        "retry": "Reintentar",
-        "applyError": "La decisión no se guardó.",
-        "later": "Más tarde",
-        "skip": "Omitir",
-        "followups": {
-            "title": "Seguimientos",
-            "appliedAgo": "postulado {{when}}",
-            "openDraft": "Abrir borrador",
-            "createTask": "Crear tarea",
-            "done": "Hecho"
-        },
-        "offers": {
-            "title": "Ofertas por decidir",
-            "apply": "Postular",
-            "note": "Nota",
-            "notePlaceholder": "Una nota para el agente…",
-            "open": "Ver la oferta",
-            "expires": "vence {{when}}",
-            "expired": "vencida"
-        },
-        "tasks": {
-            "title": "Tareas propuestas",
-            "add": "Añadir"
-        },
-        "decided": "Decidido ({{count}})",
-        "state": {
-            "applied": "Postulado",
-            "skipped": "Omitida",
-            "later": "Más tarde",
-            "done": "Hecho",
-            "taskCreated": "Tarea creada",
-            "added": "Añadida",
-            "dismissed": "Descartada"
-        }
+    "dayList": "Los días",
+    "title": "Fin de semana",
+    "loadError": "No se pudo abrir el fin de semana.",
+    "empty": "Nada que proponer este fin de semana.",
+    "applied": "Decisiones aplicadas: {{count}}",
+    "applyError": "La decisión no se guardó.",
+    "validate": "Confirmar",
+    "calendar": "Añadir al calendario",
+    "other": "Otra idea",
+    "skip": "Omitir",
+    "note": "Nota",
+    "noteLabel": "Nota para el agente",
+    "notePlaceholder": "Lo que el agente debe saber",
+    "busy": "Ocupado: {{busy}}",
+    "feels": "sensación {{temp}}°",
+    "otherAsked": "Otra idea pedida",
+    "decided": {
+      "calendar": "En el calendario",
+      "skip": "Omitida"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Marcar como leído",
-        "open": "Abrir"
+    "event": {
+      "requested": "Añadiendo al calendario",
+      "created": "Añadido al calendario",
+      "failed": "No añadido",
+      "open": "Abrir en el calendario"
     },
-    "counts": {
-        "notes_other": "{{count}} notas",
-        "notes_one": "{{count}} nota",
-        "tasks_other": "{{count}} tareas",
-        "tasks_one": "{{count}} tarea",
-        "goals_other": "{{count}} objetivos",
-        "goals_one": "{{count}} objetivo",
-        "projects_other": "{{count}} proyectos",
-        "projects_one": "{{count}} proyecto"
+    "countCalendar": "En el calendario: {{count}}",
+    "countOther": "Otra idea pedida: {{count}}",
+    "countNone": "Nada elegido",
+    "part": {
+      "morning": "mañana",
+      "afternoon": "tarde",
+      "day": "día"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Escritorio",
-        "link": "Enlace",
-        "openSource": "Abrir el origen",
-        "fromSource": "Procede de {{source}}"
+    "weather": {
+      "sun": "soleado",
+      "partly": "claros",
+      "cloud": "nublado",
+      "rain": "lluvia",
+      "snow": "nieve",
+      "storm": "tormenta",
+      "fog": "niebla"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Mejor en otro sitio",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "elegido: {{label}}",
+    "validate": "Confirmar ({{count}})",
+    "clear": "Borrar",
+    "applied": "{{count}} decisiones aplicadas",
+    "appliedOne": "1 decisión aplicada",
+    "title": "Carrera",
+    "updatedAt": "actualizado a las {{time}}",
+    "empty": "Nada nuevo hoy",
+    "emptyHint": "El agente pasa cada mañana: sus seguimientos, ofertas y tareas aparecerán aquí.",
+    "allDecided": "Todo está decidido por hoy",
+    "loadError": "No se pudo cargar la página Carrera.",
+    "retry": "Reintentar",
+    "applyError": "La decisión no se guardó.",
+    "later": "Más tarde",
+    "skip": "Omitir",
+    "followups": {
+      "title": "Seguimientos",
+      "appliedAgo": "postulado {{when}}",
+      "openDraft": "Abrir borrador",
+      "createTask": "Crear tarea",
+      "done": "Hecho"
+    },
+    "offers": {
+      "title": "Ofertas por decidir",
+      "apply": "Postular",
+      "note": "Nota",
+      "notePlaceholder": "Una nota para el agente…",
+      "open": "Ver la oferta",
+      "expires": "vence {{when}}",
+      "expired": "vencida"
+    },
+    "tasks": {
+      "title": "Tareas propuestas",
+      "add": "Añadir"
+    },
+    "decided": "Decidido ({{count}})",
+    "state": {
+      "applied": "Postulado",
+      "skipped": "Omitida",
+      "later": "Más tarde",
+      "done": "Hecho",
+      "taskCreated": "Tarea creada",
+      "added": "Añadida",
+      "dismissed": "Descartada"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Marcar como leído",
+    "open": "Abrir"
+  },
+  "counts": {
+    "notes_other": "{{count}} notas",
+    "notes_one": "{{count}} nota",
+    "tasks_other": "{{count}} tareas",
+    "tasks_one": "{{count}} tarea",
+    "goals_other": "{{count}} objetivos",
+    "goals_one": "{{count}} objetivo",
+    "projects_other": "{{count}} proyectos",
+    "projects_one": "{{count}} proyecto"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Escritorio",
+    "link": "Enlace",
+    "openSource": "Abrir el origen",
+    "fromSource": "Procede de {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "No se pudo reintentar",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Archivar siempre este remitente",
-            "horizon": {
-                "someday": "Algún día",
-                "nextMonth": "Próximo mes",
-                "thisMonth": "Este mes",
-                "nextWeek": "Próxima semana",
-                "week": "Esta semana",
-                "label": "O más tarde"
-            },
-            "trashRequested": "Eliminación solicitada",
+      "horizon": {
+        "someday": "Algún día",
+        "nextMonth": "Próximo mes",
+        "thisMonth": "Este mes",
+        "nextWeek": "Próxima semana",
+        "week": "Esta semana",
+        "label": "O más tarde"
+      },
+      "trashRequested": "Eliminación solicitada",
       "draftRequested": "Borrador en preparación en Gmail",
       "archiveRequested": "Archivado solicitado",
       "noteSent": "Devuelto al Trieur",
@@ -402,10 +402,10 @@
     "entry": "Por ordenar ({{count}})",
     "title": "Por ordenar",
     "deck": {
-            "actionFailedTrash": "La eliminación no se completó",
+      "actionFailedTrash": "La eliminación no se completó",
       "progressLabel": "Correo {{position}} de {{total}}",
       "option": {
-                "trash": "Eliminar",
+        "trash": "Eliminar",
         "draft": "Borrador",
         "read": "Leer",
         "event": "Calendario",
@@ -710,66 +710,66 @@
     "sign_up": "Registrarse"
   },
   "profile": {
-        "plugins": {
-            "title": "Plugins",
-            "description": "Los plugins añaden integraciones propias al servidor. Solo los ve un administrador. Un plugin permanece desactivado hasta que lo actives.",
-            "notConfigured": "Los plugins están desactivados. Define TUDUDI_PLUGINS_DIR con una carpeta que contenga las carpetas de plugins y reinicia el servidor.",
-            "reloadAll": "Recargar todo",
-            "reload": "Recargar",
-            "reloadPending": "Recarga para cargar {{version}}",
-            "updatedFrom": "actualizado desde {{version}}",
-            "version": "Versión {{version}}",
-            "state": {
-                "disabled": "Desactivado",
-                "active": "Activo",
-                "error": "Error",
-                "invalid": "No válido",
-                "incompatible": "Incompatible",
-                "needs_approval": "Requiere aprobación",
-                "missing": "No encontrado"
-            },
-            "permissions": "Permisos",
-            "events": "Eventos",
-            "permission": {
-                "events": "Escucha eventos",
-                "routes": "Sirve sus propias rutas"
-            },
-            "enabled": "Activado",
-            "needsApproval": "Esta versión pide más que la anterior. Vuelve a activarlo para aprobar sus permisos y eventos.",
-            "checkUpdate": "Buscar actualizaciones",
-            "updateAvailable": "Actualización disponible: {{version}}",
-            "upToDate": "Al día",
-            "updateError": "No se pudo leer la dirección de actualización",
-            "settings": "Ajustes",
-            "saveSettings": "Guardar ajustes",
-            "saved": "Ajustes guardados",
-            "secretSaved": "Guardado",
-            "clearSecret": "Borrar",
-            "required": "obligatorio",
-            "reloaded": "Plugins recargados",
-            "loadError": "No se pudieron cargar los plugins",
-            "none": "No se encontró ningún plugin en la carpeta de plugins.",
-            "errorLabel": "Error",
-            "saveError": "No se pudo guardar el plugin",
-            "installLabel": "Dirección Git del plugin",
-            "install": "Añadir",
-            "installing": "Añadiendo...",
-            "installHint": "Esto descarga código que se ejecuta en el servidor. Lee lo que pide antes de activarlo.",
-            "installed": "Plugin añadido. Lee lo que pide y luego actívalo.",
-            "installError": "No se pudo añadir el plugin",
-            "pull": "Actualizar",
-            "pulled": "Plugin actualizado",
-            "remove": "Eliminar",
-            "removeTitle": "¿Eliminar este plugin?",
-            "removeMessage": "Su carpeta y sus ajustes se eliminan del servidor. No se puede deshacer.",
-            "page": {
-                "notFound": "Plugin no encontrado o desactivado"
-            },
-            "approveIntro": "Este plugin se ejecuta dentro del servidor y pide:",
-            "approveOutro": "Los permisos limitan lo que Cadence entrega al plugin; no son un entorno aislado. Aprueba solo código que hayas leído.",
-            "approveTitle": "¿Aprobar permisos?",
-            "approve": "Aprobar y activar"
-        },
+    "plugins": {
+      "title": "Plugins",
+      "description": "Los plugins añaden integraciones propias al servidor. Solo los ve un administrador. Un plugin permanece desactivado hasta que lo actives.",
+      "notConfigured": "Los plugins están desactivados. Define TUDUDI_PLUGINS_DIR con una carpeta que contenga las carpetas de plugins y reinicia el servidor.",
+      "reloadAll": "Recargar todo",
+      "reload": "Recargar",
+      "reloadPending": "Recarga para cargar {{version}}",
+      "updatedFrom": "actualizado desde {{version}}",
+      "version": "Versión {{version}}",
+      "state": {
+        "disabled": "Desactivado",
+        "active": "Activo",
+        "error": "Error",
+        "invalid": "No válido",
+        "incompatible": "Incompatible",
+        "needs_approval": "Requiere aprobación",
+        "missing": "No encontrado"
+      },
+      "permissions": "Permisos",
+      "events": "Eventos",
+      "permission": {
+        "events": "Escucha eventos",
+        "routes": "Sirve sus propias rutas"
+      },
+      "enabled": "Activado",
+      "needsApproval": "Esta versión pide más que la anterior. Vuelve a activarlo para aprobar sus permisos y eventos.",
+      "checkUpdate": "Buscar actualizaciones",
+      "updateAvailable": "Actualización disponible: {{version}}",
+      "upToDate": "Al día",
+      "updateError": "No se pudo leer la dirección de actualización",
+      "settings": "Ajustes",
+      "saveSettings": "Guardar ajustes",
+      "saved": "Ajustes guardados",
+      "secretSaved": "Guardado",
+      "clearSecret": "Borrar",
+      "required": "obligatorio",
+      "reloaded": "Plugins recargados",
+      "loadError": "No se pudieron cargar los plugins",
+      "none": "No se encontró ningún plugin en la carpeta de plugins.",
+      "errorLabel": "Error",
+      "saveError": "No se pudo guardar el plugin",
+      "installLabel": "Dirección Git del plugin",
+      "install": "Añadir",
+      "installing": "Añadiendo...",
+      "installHint": "Esto descarga código que se ejecuta en el servidor. Lee lo que pide antes de activarlo.",
+      "installed": "Plugin añadido. Lee lo que pide y luego actívalo.",
+      "installError": "No se pudo añadir el plugin",
+      "pull": "Actualizar",
+      "pulled": "Plugin actualizado",
+      "remove": "Eliminar",
+      "removeTitle": "¿Eliminar este plugin?",
+      "removeMessage": "Su carpeta y sus ajustes se eliminan del servidor. No se puede deshacer.",
+      "page": {
+        "notFound": "Plugin no encontrado o desactivado"
+      },
+      "approveIntro": "Este plugin se ejecuta dentro del servidor y pide:",
+      "approveOutro": "Los permisos limitan lo que Cadence entrega al plugin; no son un entorno aislado. Aprueba solo código que hayas leído.",
+      "approveTitle": "¿Aprobar permisos?",
+      "approve": "Aprobar y activar"
+    },
     "showTaskDescription": "Mostrar la descripción debajo del título",
     "sync": {
       "field": {
@@ -872,8 +872,8 @@
     "nextTaskSuggestion": "Sugerencia de Próxima Tarea",
     "enableNextTaskSuggestion": "Habilitar Sugerencias de Próxima Tarea",
     "tabs": {
-            "agents": "Agentes",
-            "plugins": "Plugins",
+      "agents": "Agentes",
+      "plugins": "Plugins",
       "classify": "Clasificación",
       "sync": "Sincronización",
       "general": "General",
@@ -1507,20 +1507,20 @@
     "photoOn": "en",
     "groups": {
       "account": "Cuenta",
-            "appearance": "Interfaz",
-            "planning": "Organización",
+      "appearance": "Interfaz",
+      "planning": "Organización",
       "integrations": "Integraciones",
-            "security": "Acceso",
+      "security": "Acceso",
       "advanced": "Avanzado"
     },
     "optional": "Opcional",
     "accent": "Color de acento",
     "accentCustom": "Color personalizado (hex)",
-        "pureBlack": "Negro puro en modo oscuro",
-        "sidebarPanelTitle": "Panel",
-        "sidebarPanelHint": "Los bloques de la barra lateral abierta, de arriba abajo.",
-        "sidebarPanelPinned": "Fijados",
-        "sidebarPanelMonth": "Calendario mensual"
+    "pureBlack": "Negro puro en modo oscuro",
+    "sidebarPanelTitle": "Panel",
+    "sidebarPanelHint": "Los bloques de la barra lateral abierta, de arriba abajo.",
+    "sidebarPanelPinned": "Fijados",
+    "sidebarPanelMonth": "Calendario mensual"
   },
   "errors": {
     "required": "Este campo es obligatorio",
@@ -1578,18 +1578,18 @@
     "tag": "Etiqueta"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Tareas recurrentes conservadas, elimínalas una a una: {{count}}",
-            "someFailed": "Sin cambios: {{count}}",
-            "deleted": "Eliminadas: {{count}}",
-            "moved": "Movidas: {{count}}",
-            "prioritized": "Prioridad cambiada: {{count}}",
-            "dated": "Fecha cambiada: {{count}}",
-            "completed": "Completadas: {{count}}",
-            "clear": "Borrar la selección",
-            "count": "Seleccionadas: {{count}}",
-            "label": "Tareas seleccionadas"
-        },
+    "selection": {
+      "recurringKept": "Tareas recurrentes conservadas, elimínalas una a una: {{count}}",
+      "someFailed": "Sin cambios: {{count}}",
+      "deleted": "Eliminadas: {{count}}",
+      "moved": "Movidas: {{count}}",
+      "prioritized": "Prioridad cambiada: {{count}}",
+      "dated": "Fecha cambiada: {{count}}",
+      "completed": "Completadas: {{count}}",
+      "clear": "Borrar la selección",
+      "count": "Seleccionadas: {{count}}",
+      "label": "Tareas seleccionadas"
+    },
     "deletedToast": "\"{{name}}\" eliminada",
     "title": "Tareas",
     "today": "Hoy",
@@ -1722,17 +1722,17 @@
       "setDueDate": "Establecer fecha límite"
     },
     "contextMenu": {
-            "review": "Revisión",
-            "copyError": "No se pudo copiar",
-            "titleCopied": "Título copiado",
-            "linkCopied": "Enlace copiado",
-            "deleteKey": "Supr",
-            "copyTitle": "Copiar título",
-            "copyLink": "Copiar enlace",
-            "pickDate": "Elegir una fecha…",
-            "reopen": "Reabrir",
-            "complete": "Completar",
-            "open": "Abrir",
+      "review": "Revisión",
+      "copyError": "No se pudo copiar",
+      "titleCopied": "Título copiado",
+      "linkCopied": "Enlace copiado",
+      "deleteKey": "Supr",
+      "copyTitle": "Copiar título",
+      "copyLink": "Copiar enlace",
+      "pickDate": "Elegir una fecha…",
+      "reopen": "Reabrir",
+      "complete": "Completar",
+      "open": "Abrir",
       "projectChanged": "Proyecto cambiado",
       "dateChanged": "Fecha cambiada",
       "label": "Acciones de la tarea",
@@ -2941,7 +2941,7 @@
     "time": "Tiempo",
     "allDay": "Todo el día",
     "google": {
-            "confirmDelete": "¿Eliminar definitivamente?",
+      "confirmDelete": "¿Eliminar definitivamente?",
       "endBeforeStart": "El final es anterior al inicio",
       "editEvent": "Editar evento",
       "newEvent": "Nuevo evento",
@@ -4014,10 +4014,10 @@
       "lead": "Cuándo",
       "atTime": "A la hora",
       "minutesBefore": "{{count}} min antes"
-        },
-        "desktopApp": {
-            "title": "Notificaciones de esta app",
-            "body": "Cadence para Linux muestra notificaciones del sistema, incluso con la ventana cerrada, mientras su icono esté en la bandeja del sistema. Elige cuáles en la columna Escritorio de abajo. Necesita una clave de API, configurada en los ajustes de la app (menú de la bandeja)."
+    },
+    "desktopApp": {
+      "title": "Notificaciones de esta app",
+      "body": "Cadence para Linux muestra notificaciones del sistema, incluso con la ventana cerrada, mientras su icono esté en la bandeja del sistema. Elige cuáles en la columna Escritorio de abajo. Necesita una clave de API, configurada en los ajustes de la app (menú de la bandeja)."
     }
   },
   "projectStatus": {
@@ -4498,7 +4498,7 @@
     "invalidHint": "Puede que ya se haya usado o haya caducado. Pide uno nuevo a quien te lo envió."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} tarea ocupa el próximo hueco libre.",
+    "placeAllHint_one": "{{count}} tarea ocupa el próximo hueco libre.",
     "inProgress": "En curso",
     "overdue": "Atrasadas",
     "dueToday": "Vencen hoy",
@@ -5176,7 +5176,7 @@
       "instructionsOther": "Cualquier otra columna se puede guardar en la nota de la tarea, así no se pierde nada de la hoja."
     },
     "import": {
-            "undoneKept_one": "Se deshizo la importación. Se conservó {{count}} tarea cambiada desde entonces.",
+      "undoneKept_one": "Se deshizo la importación. Se conservó {{count}} tarea cambiada desde entonces.",
       "fieldParent": "Tarea padre",
       "fieldWbs": "WBS / número de esquema",
       "fieldEstimate": "Estimación",
@@ -5408,7 +5408,49 @@
     "columnActions": "Acciones de la columna",
     "newColumn": "Nueva columna",
     "loadError": "No se pudieron cargar las columnas",
-    "saveError": "No se pudo guardar el tablero"
+    "saveError": "No se pudo guardar el tablero",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Hablar con la IA",
@@ -5820,8 +5862,8 @@
       "plan": "En la página Planificar"
     },
     "shortcuts": {
-            "panePrevious": "Tarea anterior en el panel",
-            "paneNext": "Tarea siguiente en el panel",
+      "panePrevious": "Tarea anterior en el panel",
+      "paneNext": "Tarea siguiente en el panel",
       "palette": "Abrir la paleta de comandos",
       "capture": "Captura rápida",
       "search": "Buscar",

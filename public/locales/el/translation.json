@@ -1,150 +1,150 @@
 {
-    "desktopWindow": {
-        "minimize": "Ελαχιστοποίηση",
-        "maximize": "Μεγιστοποίηση",
-        "close": "Κλείσιμο"
+  "desktopWindow": {
+    "minimize": "Ελαχιστοποίηση",
+    "maximize": "Μεγιστοποίηση",
+    "close": "Κλείσιμο"
+  },
+  "weekend": {
+    "share": {
+      "error": "Δεν ήταν δυνατή η δημιουργία της εικόνας.",
+      "downloaded": "Η εικόνα λήφθηκε",
+      "copied": "Η εικόνα αντιγράφηκε",
+      "footer": "Ετοιμάστηκε με το Cadence",
+      "kicker": "ΣΑΒΒΑΤΟΚΥΡΙΑΚΟ",
+      "action": "Κοινοποίηση"
     },
-    "weekend": {
-        "share": {
-            "error": "Δεν ήταν δυνατή η δημιουργία της εικόνας.",
-            "downloaded": "Η εικόνα λήφθηκε",
-            "copied": "Η εικόνα αντιγράφηκε",
-            "footer": "Ετοιμάστηκε με το Cadence",
-            "kicker": "ΣΑΒΒΑΤΟΚΥΡΙΑΚΟ",
-            "action": "Κοινοποίηση"
-        },
-        "request": {
-            "error": "Δεν ήταν δυνατή η αποστολή του αιτήματος.",
-            "failed": "Δεν ήταν δυνατή η προετοιμασία ({{days}})",
-            "pending": "Ετοιμάζεται για {{days}}",
-            "submit": "Προετοιμασία",
-            "hint": "Η ΤΝ ετοιμάζει τουλάχιστον 5 ιδέες ανά ημέρα. Θα λάβεις ειδοποίηση όταν είναι έτοιμο.",
-            "title": "Προετοιμασία ημερών",
-            "open": "Άλλες μέρες"
-        },
-        "dayList": "Οι μέρες",
-        "title": "Σαββατοκύριακο",
-        "loadError": "Δεν ήταν δυνατό το άνοιγμα του Σαββατοκύριακου.",
-        "empty": "Τίποτα να προτείνω αυτό το Σαββατοκύριακο.",
-        "applied": "Εφαρμόστηκαν αποφάσεις: {{count}}",
-        "applyError": "Η απόφαση δεν αποθηκεύτηκε.",
-        "validate": "Επιβεβαίωση",
-        "calendar": "Προσθήκη στο ημερολόγιο",
-        "other": "Άλλη ιδέα",
-        "skip": "Παράλειψη",
-        "note": "Σημείωση",
-        "noteLabel": "Σημείωση για τον βοηθό",
-        "notePlaceholder": "Τι πρέπει να ξέρει ο βοηθός",
-        "busy": "Κατειλημμένο: {{busy}}",
-        "feels": "αίσθηση {{temp}}°",
-        "otherAsked": "Ζητήθηκε άλλη ιδέα",
-        "decided": {
-            "calendar": "Στο ημερολόγιο",
-            "skip": "Παραλήφθηκε"
-        },
-        "event": {
-            "requested": "Προστίθεται",
-            "created": "Προστέθηκε στο ημερολόγιο",
-            "failed": "Δεν προστέθηκε",
-            "open": "Άνοιγμα στο ημερολόγιο"
-        },
-        "countCalendar": "Στο ημερολόγιο: {{count}}",
-        "countOther": "Ζητήθηκε άλλη ιδέα: {{count}}",
-        "countNone": "Τίποτα επιλεγμένο",
-        "part": {
-            "morning": "πρωί",
-            "afternoon": "απόγευμα",
-            "day": "ημέρα"
-        },
-        "weather": {
-            "sun": "ηλιόλουστα",
-            "partly": "μερικώς συννεφιά",
-            "cloud": "συννεφιασμένα",
-            "rain": "βροχή",
-            "snow": "χιόνι",
-            "storm": "καταιγίδα",
-            "fog": "ομίχλη"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Καλύτερα αλλού",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Δεν ήταν δυνατή η αποστολή του αιτήματος.",
+      "failed": "Δεν ήταν δυνατή η προετοιμασία ({{days}})",
+      "pending": "Ετοιμάζεται για {{days}}",
+      "submit": "Προετοιμασία",
+      "hint": "Η ΤΝ ετοιμάζει τουλάχιστον 5 ιδέες ανά ημέρα. Θα λάβεις ειδοποίηση όταν είναι έτοιμο.",
+      "title": "Προετοιμασία ημερών",
+      "open": "Άλλες μέρες"
     },
-    "career": {
-        "choice": "επιλογή: {{label}}",
-        "validate": "Επιβεβαίωση ({{count}})",
-        "clear": "Εκκαθάριση",
-        "applied": "Εφαρμόστηκαν {{count}} αποφάσεις",
-        "appliedOne": "Εφαρμόστηκε 1 απόφαση",
-        "title": "Καριέρα",
-        "updatedAt": "ενημερώθηκε στις {{time}}",
-        "empty": "Τίποτα νέο σήμερα",
-        "emptyHint": "Ο πράκτορας περνά κάθε πρωί: υπενθυμίσεις, αγγελίες και εργασίες θα εμφανίζονται εδώ.",
-        "allDecided": "Όλα αποφασίστηκαν για σήμερα",
-        "loadError": "Δεν ήταν δυνατή η φόρτωση της σελίδας Καριέρα.",
-        "retry": "Δοκιμάστε ξανά",
-        "applyError": "Η απόφαση δεν αποθηκεύτηκε.",
-        "later": "Αργότερα",
-        "skip": "Παράλειψη",
-        "followups": {
-            "title": "Υπενθυμίσεις",
-            "appliedAgo": "αίτηση {{when}}",
-            "openDraft": "Άνοιγμα πρόχειρου",
-            "createTask": "Δημιουργία εργασίας",
-            "done": "Έγινε"
-        },
-        "offers": {
-            "title": "Αγγελίες προς απόφαση",
-            "apply": "Αίτηση",
-            "note": "Σημείωση",
-            "notePlaceholder": "Μια σημείωση για τον πράκτορα…",
-            "open": "Δείτε την αγγελία",
-            "expires": "λήγει {{when}}",
-            "expired": "έληξε"
-        },
-        "tasks": {
-            "title": "Προτεινόμενες εργασίες",
-            "add": "Προσθήκη"
-        },
-        "decided": "Αποφασίστηκαν ({{count}})",
-        "state": {
-            "applied": "Υποβλήθηκε αίτηση",
-            "skipped": "Παραλείφθηκε",
-            "later": "Αργότερα",
-            "done": "Έγινε",
-            "taskCreated": "Η εργασία δημιουργήθηκε",
-            "added": "Προστέθηκε",
-            "dismissed": "Απορρίφθηκε"
-        }
+    "dayList": "Οι μέρες",
+    "title": "Σαββατοκύριακο",
+    "loadError": "Δεν ήταν δυνατό το άνοιγμα του Σαββατοκύριακου.",
+    "empty": "Τίποτα να προτείνω αυτό το Σαββατοκύριακο.",
+    "applied": "Εφαρμόστηκαν αποφάσεις: {{count}}",
+    "applyError": "Η απόφαση δεν αποθηκεύτηκε.",
+    "validate": "Επιβεβαίωση",
+    "calendar": "Προσθήκη στο ημερολόγιο",
+    "other": "Άλλη ιδέα",
+    "skip": "Παράλειψη",
+    "note": "Σημείωση",
+    "noteLabel": "Σημείωση για τον βοηθό",
+    "notePlaceholder": "Τι πρέπει να ξέρει ο βοηθός",
+    "busy": "Κατειλημμένο: {{busy}}",
+    "feels": "αίσθηση {{temp}}°",
+    "otherAsked": "Ζητήθηκε άλλη ιδέα",
+    "decided": {
+      "calendar": "Στο ημερολόγιο",
+      "skip": "Παραλήφθηκε"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Σήμανση ως διαβασμένου",
-        "open": "Άνοιγμα"
+    "event": {
+      "requested": "Προστίθεται",
+      "created": "Προστέθηκε στο ημερολόγιο",
+      "failed": "Δεν προστέθηκε",
+      "open": "Άνοιγμα στο ημερολόγιο"
     },
-    "counts": {
-        "notes_other": "{{count}} σημειώσεις",
-        "notes_one": "{{count}} σημείωση",
-        "tasks_other": "{{count}} εργασίες",
-        "tasks_one": "{{count}} εργασία",
-        "goals_other": "{{count}} στόχοι",
-        "goals_one": "{{count}} στόχος",
-        "projects_other": "{{count}} έργα",
-        "projects_one": "{{count}} έργο"
+    "countCalendar": "Στο ημερολόγιο: {{count}}",
+    "countOther": "Ζητήθηκε άλλη ιδέα: {{count}}",
+    "countNone": "Τίποτα επιλεγμένο",
+    "part": {
+      "morning": "πρωί",
+      "afternoon": "απόγευμα",
+      "day": "ημέρα"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Υπολογιστής",
-        "link": "Σύνδεσμος",
-        "openSource": "Άνοιγμα πηγής",
-        "fromSource": "Προέρχεται από {{source}}"
+    "weather": {
+      "sun": "ηλιόλουστα",
+      "partly": "μερικώς συννεφιά",
+      "cloud": "συννεφιασμένα",
+      "rain": "βροχή",
+      "snow": "χιόνι",
+      "storm": "καταιγίδα",
+      "fog": "ομίχλη"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Καλύτερα αλλού",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "επιλογή: {{label}}",
+    "validate": "Επιβεβαίωση ({{count}})",
+    "clear": "Εκκαθάριση",
+    "applied": "Εφαρμόστηκαν {{count}} αποφάσεις",
+    "appliedOne": "Εφαρμόστηκε 1 απόφαση",
+    "title": "Καριέρα",
+    "updatedAt": "ενημερώθηκε στις {{time}}",
+    "empty": "Τίποτα νέο σήμερα",
+    "emptyHint": "Ο πράκτορας περνά κάθε πρωί: υπενθυμίσεις, αγγελίες και εργασίες θα εμφανίζονται εδώ.",
+    "allDecided": "Όλα αποφασίστηκαν για σήμερα",
+    "loadError": "Δεν ήταν δυνατή η φόρτωση της σελίδας Καριέρα.",
+    "retry": "Δοκιμάστε ξανά",
+    "applyError": "Η απόφαση δεν αποθηκεύτηκε.",
+    "later": "Αργότερα",
+    "skip": "Παράλειψη",
+    "followups": {
+      "title": "Υπενθυμίσεις",
+      "appliedAgo": "αίτηση {{when}}",
+      "openDraft": "Άνοιγμα πρόχειρου",
+      "createTask": "Δημιουργία εργασίας",
+      "done": "Έγινε"
+    },
+    "offers": {
+      "title": "Αγγελίες προς απόφαση",
+      "apply": "Αίτηση",
+      "note": "Σημείωση",
+      "notePlaceholder": "Μια σημείωση για τον πράκτορα…",
+      "open": "Δείτε την αγγελία",
+      "expires": "λήγει {{when}}",
+      "expired": "έληξε"
+    },
+    "tasks": {
+      "title": "Προτεινόμενες εργασίες",
+      "add": "Προσθήκη"
+    },
+    "decided": "Αποφασίστηκαν ({{count}})",
+    "state": {
+      "applied": "Υποβλήθηκε αίτηση",
+      "skipped": "Παραλείφθηκε",
+      "later": "Αργότερα",
+      "done": "Έγινε",
+      "taskCreated": "Η εργασία δημιουργήθηκε",
+      "added": "Προστέθηκε",
+      "dismissed": "Απορρίφθηκε"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Σήμανση ως διαβασμένου",
+    "open": "Άνοιγμα"
+  },
+  "counts": {
+    "notes_other": "{{count}} σημειώσεις",
+    "notes_one": "{{count}} σημείωση",
+    "tasks_other": "{{count}} εργασίες",
+    "tasks_one": "{{count}} εργασία",
+    "goals_other": "{{count}} στόχοι",
+    "goals_one": "{{count}} στόχος",
+    "projects_other": "{{count}} έργα",
+    "projects_one": "{{count}} έργο"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Υπολογιστής",
+    "link": "Σύνδεσμος",
+    "openSource": "Άνοιγμα πηγής",
+    "fromSource": "Προέρχεται από {{source}}"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "{{count}} στοιχείο ξανά στην ουρά",
-            "failed_one": "{{count}} αποτυχημένο στοιχείο",
+      "requeued_one": "{{count}} στοιχείο ξανά στην ουρά",
+      "failed_one": "{{count}} αποτυχημένο στοιχείο",
       "retryError": "Η επανάληψη δεν ήταν δυνατή",
       "requeued": "Ξανά στην ουρά: {{count}}",
       "retry": "Επανάληψη",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Πάντα αρχειοθέτηση αυτού του αποστολέα",
-            "horizon": {
-                "someday": "Κάποτε",
-                "nextMonth": "Τον επόμενο μήνα",
-                "thisMonth": "Αυτόν τον μήνα",
-                "nextWeek": "Την επόμενη εβδομάδα",
-                "week": "Αυτή την εβδομάδα",
-                "label": "Ή αργότερα"
-            },
-            "trashRequested": "Ζητήθηκε διαγραφή",
+      "horizon": {
+        "someday": "Κάποτε",
+        "nextMonth": "Τον επόμενο μήνα",
+        "thisMonth": "Αυτόν τον μήνα",
+        "nextWeek": "Την επόμενη εβδομάδα",
+        "week": "Αυτή την εβδομάδα",
+        "label": "Ή αργότερα"
+      },
+      "trashRequested": "Ζητήθηκε διαγραφή",
       "draftRequested": "Το πρόχειρο ετοιμάζεται στο Gmail",
       "archiveRequested": "Ζητήθηκε αρχειοθέτηση",
       "noteSent": "Επιστράφηκε στον Trieur",
@@ -402,10 +402,10 @@
     "entry": "Για ταξινόμηση ({{count}})",
     "title": "Για ταξινόμηση",
     "deck": {
-            "actionFailedTrash": "Η διαγραφή δεν ολοκληρώθηκε",
+      "actionFailedTrash": "Η διαγραφή δεν ολοκληρώθηκε",
       "progressLabel": "Μήνυμα {{position}} από {{total}}",
       "option": {
-                "trash": "Διαγραφή",
+        "trash": "Διαγραφή",
         "draft": "Πρόχειρο",
         "read": "Ανάγνωση",
         "event": "Ημερολόγιο",
@@ -709,66 +709,66 @@
     "sign_up": "Εγγραφή"
   },
   "profile": {
-        "plugins": {
-            "title": "Πρόσθετα",
-            "description": "Τα πρόσθετα προσθέτουν δικές σας ενσωματώσεις στον διακομιστή. Τα βλέπει μόνο ο διαχειριστής. Ένα πρόσθετο παραμένει ανενεργό μέχρι να το ενεργοποιήσετε.",
-            "notConfigured": "Τα πρόσθετα είναι απενεργοποιημένα. Ορίστε το TUDUDI_PLUGINS_DIR σε φάκελο που περιέχει φακέλους πρόσθετων και επανεκκινήστε τον διακομιστή.",
-            "reloadAll": "Επαναφόρτωση όλων",
-            "reload": "Επαναφόρτωση",
-            "reloadPending": "Επαναφορτώστε για φόρτωση της {{version}}",
-            "updatedFrom": "ενημερώθηκε από την {{version}}",
-            "version": "Έκδοση {{version}}",
-            "state": {
-                "disabled": "Ανενεργό",
-                "active": "Σε λειτουργία",
-                "error": "Σφάλμα",
-                "invalid": "Μη έγκυρο",
-                "incompatible": "Ασύμβατο",
-                "needs_approval": "Απαιτείται έγκριση",
-                "missing": "Λείπει"
-            },
-            "permissions": "Δικαιώματα",
-            "events": "Συμβάντα",
-            "permission": {
-                "events": "Ακούει συμβάντα",
-                "routes": "Παρέχει τις δικές του διαδρομές"
-            },
-            "enabled": "Ενεργό",
-            "needsApproval": "Αυτή η έκδοση ζητά περισσότερα από πριν. Ενεργοποιήστε το ξανά για να εγκρίνετε τα δικαιώματα και τα συμβάντα του.",
-            "checkUpdate": "Έλεγχος για ενημερώσεις",
-            "updateAvailable": "Διαθέσιμη ενημέρωση: {{version}}",
-            "upToDate": "Ενημερωμένο",
-            "updateError": "Δεν ήταν δυνατή η ανάγνωση της διεύθυνσης ενημερώσεων",
-            "settings": "Ρυθμίσεις",
-            "saveSettings": "Αποθήκευση ρυθμίσεων",
-            "saved": "Οι ρυθμίσεις αποθηκεύτηκαν",
-            "secretSaved": "Αποθηκευμένο",
-            "clearSecret": "Διαγραφή",
-            "required": "υποχρεωτικό",
-            "reloaded": "Τα πρόσθετα επαναφορτώθηκαν",
-            "loadError": "Δεν ήταν δυνατή η φόρτωση των πρόσθετων",
-            "none": "Δεν βρέθηκε πρόσθετο στον φάκελο πρόσθετων.",
-            "errorLabel": "Σφάλμα",
-            "saveError": "Δεν ήταν δυνατή η αποθήκευση του πρόσθετου",
-            "installLabel": "Διεύθυνση Git του πρόσθετου",
-            "install": "Προσθήκη",
-            "installing": "Προσθήκη...",
-            "installHint": "Αυτό κατεβάζει κώδικα που εκτελείται στον διακομιστή. Διαβάστε τι ζητά πριν το ενεργοποιήσετε.",
-            "installed": "Το πρόσθετο προστέθηκε. Διαβάστε τι ζητά και μετά ενεργοποιήστε το.",
-            "installError": "Δεν ήταν δυνατή η προσθήκη του πρόσθετου",
-            "pull": "Ενημέρωση",
-            "pulled": "Το πρόσθετο ενημερώθηκε",
-            "remove": "Διαγραφή",
-            "removeTitle": "Διαγραφή αυτού του πρόσθετου;",
-            "removeMessage": "Ο φάκελός του και οι ρυθμίσεις του διαγράφονται από τον διακομιστή. Δεν μπορεί να αναιρεθεί.",
-            "page": {
-                "notFound": "Το πρόσθετο δεν βρέθηκε ή είναι απενεργοποιημένο"
-            },
-            "approveIntro": "Αυτό το πρόσθετο εκτελείται μέσα στον διακομιστή και ζητά:",
-            "approveOutro": "Τα δικαιώματα περιορίζουν όσα δίνει το Cadence στο πρόσθετο· δεν είναι sandbox. Εγκρίνετε μόνο κώδικα που έχετε διαβάσει.",
-            "approveTitle": "Έγκριση δικαιωμάτων;",
-            "approve": "Έγκριση και ενεργοποίηση"
-        },
+    "plugins": {
+      "title": "Πρόσθετα",
+      "description": "Τα πρόσθετα προσθέτουν δικές σας ενσωματώσεις στον διακομιστή. Τα βλέπει μόνο ο διαχειριστής. Ένα πρόσθετο παραμένει ανενεργό μέχρι να το ενεργοποιήσετε.",
+      "notConfigured": "Τα πρόσθετα είναι απενεργοποιημένα. Ορίστε το TUDUDI_PLUGINS_DIR σε φάκελο που περιέχει φακέλους πρόσθετων και επανεκκινήστε τον διακομιστή.",
+      "reloadAll": "Επαναφόρτωση όλων",
+      "reload": "Επαναφόρτωση",
+      "reloadPending": "Επαναφορτώστε για φόρτωση της {{version}}",
+      "updatedFrom": "ενημερώθηκε από την {{version}}",
+      "version": "Έκδοση {{version}}",
+      "state": {
+        "disabled": "Ανενεργό",
+        "active": "Σε λειτουργία",
+        "error": "Σφάλμα",
+        "invalid": "Μη έγκυρο",
+        "incompatible": "Ασύμβατο",
+        "needs_approval": "Απαιτείται έγκριση",
+        "missing": "Λείπει"
+      },
+      "permissions": "Δικαιώματα",
+      "events": "Συμβάντα",
+      "permission": {
+        "events": "Ακούει συμβάντα",
+        "routes": "Παρέχει τις δικές του διαδρομές"
+      },
+      "enabled": "Ενεργό",
+      "needsApproval": "Αυτή η έκδοση ζητά περισσότερα από πριν. Ενεργοποιήστε το ξανά για να εγκρίνετε τα δικαιώματα και τα συμβάντα του.",
+      "checkUpdate": "Έλεγχος για ενημερώσεις",
+      "updateAvailable": "Διαθέσιμη ενημέρωση: {{version}}",
+      "upToDate": "Ενημερωμένο",
+      "updateError": "Δεν ήταν δυνατή η ανάγνωση της διεύθυνσης ενημερώσεων",
+      "settings": "Ρυθμίσεις",
+      "saveSettings": "Αποθήκευση ρυθμίσεων",
+      "saved": "Οι ρυθμίσεις αποθηκεύτηκαν",
+      "secretSaved": "Αποθηκευμένο",
+      "clearSecret": "Διαγραφή",
+      "required": "υποχρεωτικό",
+      "reloaded": "Τα πρόσθετα επαναφορτώθηκαν",
+      "loadError": "Δεν ήταν δυνατή η φόρτωση των πρόσθετων",
+      "none": "Δεν βρέθηκε πρόσθετο στον φάκελο πρόσθετων.",
+      "errorLabel": "Σφάλμα",
+      "saveError": "Δεν ήταν δυνατή η αποθήκευση του πρόσθετου",
+      "installLabel": "Διεύθυνση Git του πρόσθετου",
+      "install": "Προσθήκη",
+      "installing": "Προσθήκη...",
+      "installHint": "Αυτό κατεβάζει κώδικα που εκτελείται στον διακομιστή. Διαβάστε τι ζητά πριν το ενεργοποιήσετε.",
+      "installed": "Το πρόσθετο προστέθηκε. Διαβάστε τι ζητά και μετά ενεργοποιήστε το.",
+      "installError": "Δεν ήταν δυνατή η προσθήκη του πρόσθετου",
+      "pull": "Ενημέρωση",
+      "pulled": "Το πρόσθετο ενημερώθηκε",
+      "remove": "Διαγραφή",
+      "removeTitle": "Διαγραφή αυτού του πρόσθετου;",
+      "removeMessage": "Ο φάκελός του και οι ρυθμίσεις του διαγράφονται από τον διακομιστή. Δεν μπορεί να αναιρεθεί.",
+      "page": {
+        "notFound": "Το πρόσθετο δεν βρέθηκε ή είναι απενεργοποιημένο"
+      },
+      "approveIntro": "Αυτό το πρόσθετο εκτελείται μέσα στον διακομιστή και ζητά:",
+      "approveOutro": "Τα δικαιώματα περιορίζουν όσα δίνει το Cadence στο πρόσθετο· δεν είναι sandbox. Εγκρίνετε μόνο κώδικα που έχετε διαβάσει.",
+      "approveTitle": "Έγκριση δικαιωμάτων;",
+      "approve": "Έγκριση και ενεργοποίηση"
+    },
     "showTaskDescription": "Εμφάνιση της περιγραφής κάτω από τον τίτλο",
     "sync": {
       "field": {
@@ -913,8 +913,8 @@
     "nextTaskSuggestion": "Πρόταση Επόμενης Εργασίας",
     "enableNextTaskSuggestion": "Ενεργοποίηση Προτάσεων Επόμενης Εργασίας",
     "tabs": {
-            "agents": "Πράκτορες",
-            "plugins": "Πρόσθετα",
+      "agents": "Πράκτορες",
+      "plugins": "Πρόσθετα",
       "classify": "Ταξινόμηση",
       "sync": "Συγχρονισμός",
       "general": "Γενικά",
@@ -1506,20 +1506,20 @@
     "photoOn": "στο",
     "groups": {
       "account": "Λογαριασμός",
-            "appearance": "Διεπαφή",
-            "planning": "Οργάνωση",
+      "appearance": "Διεπαφή",
+      "planning": "Οργάνωση",
       "integrations": "Ενσωματώσεις",
-            "security": "Πρόσβαση",
+      "security": "Πρόσβαση",
       "advanced": "Για προχωρημένους"
     },
     "optional": "Προαιρετικό",
     "accent": "Χρώμα έμφασης",
     "accentCustom": "Προσαρμοσμένο χρώμα (hex)",
-        "pureBlack": "Απόλυτο μαύρο στη σκοτεινή λειτουργία",
-        "sidebarPanelTitle": "Πάνελ",
-        "sidebarPanelHint": "Τα μπλοκ της ανοιχτής πλαϊνής στήλης, από πάνω προς τα κάτω.",
-        "sidebarPanelPinned": "Καρφιτσωμένα",
-        "sidebarPanelMonth": "Ημερολόγιο μήνα"
+    "pureBlack": "Απόλυτο μαύρο στη σκοτεινή λειτουργία",
+    "sidebarPanelTitle": "Πάνελ",
+    "sidebarPanelHint": "Τα μπλοκ της ανοιχτής πλαϊνής στήλης, από πάνω προς τα κάτω.",
+    "sidebarPanelPinned": "Καρφιτσωμένα",
+    "sidebarPanelMonth": "Ημερολόγιο μήνα"
   },
   "errors": {
     "required": "Αυτό το πεδίο είναι υποχρεωτικό",
@@ -1577,18 +1577,18 @@
     "tag": "Ετικέτα"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Οι επαναλαμβανόμενες εργασίες κρατήθηκαν, διαγράψτε τις μία μία: {{count}}",
-            "someFailed": "Χωρίς αλλαγή: {{count}}",
-            "deleted": "Διαγράφηκαν: {{count}}",
-            "moved": "Μετακινήθηκαν: {{count}}",
-            "prioritized": "Αλλαγή προτεραιότητας: {{count}}",
-            "dated": "Αλλαγή ημερομηνίας: {{count}}",
-            "completed": "Ολοκληρώθηκαν: {{count}}",
-            "clear": "Καθαρισμός επιλογής",
-            "count": "Επιλεγμένες: {{count}}",
-            "label": "Επιλεγμένες εργασίες"
-        },
+    "selection": {
+      "recurringKept": "Οι επαναλαμβανόμενες εργασίες κρατήθηκαν, διαγράψτε τις μία μία: {{count}}",
+      "someFailed": "Χωρίς αλλαγή: {{count}}",
+      "deleted": "Διαγράφηκαν: {{count}}",
+      "moved": "Μετακινήθηκαν: {{count}}",
+      "prioritized": "Αλλαγή προτεραιότητας: {{count}}",
+      "dated": "Αλλαγή ημερομηνίας: {{count}}",
+      "completed": "Ολοκληρώθηκαν: {{count}}",
+      "clear": "Καθαρισμός επιλογής",
+      "count": "Επιλεγμένες: {{count}}",
+      "label": "Επιλεγμένες εργασίες"
+    },
     "deletedToast": "Το «{{name}}» διαγράφηκε",
     "title": "Εργασίες",
     "today": "Σήμερα",
@@ -1721,17 +1721,17 @@
       "setDueDate": "Ορισμός ημερομηνίας λήξης"
     },
     "contextMenu": {
-            "review": "Ανασκόπηση",
-            "copyError": "Η αντιγραφή απέτυχε",
-            "titleCopied": "Ο τίτλος αντιγράφηκε",
-            "linkCopied": "Ο σύνδεσμος αντιγράφηκε",
-            "deleteKey": "Del",
-            "copyTitle": "Αντιγραφή τίτλου",
-            "copyLink": "Αντιγραφή συνδέσμου",
-            "pickDate": "Επιλογή ημερομηνίας…",
-            "reopen": "Επανάνοιγμα",
-            "complete": "Ολοκλήρωση",
-            "open": "Άνοιγμα",
+      "review": "Ανασκόπηση",
+      "copyError": "Η αντιγραφή απέτυχε",
+      "titleCopied": "Ο τίτλος αντιγράφηκε",
+      "linkCopied": "Ο σύνδεσμος αντιγράφηκε",
+      "deleteKey": "Del",
+      "copyTitle": "Αντιγραφή τίτλου",
+      "copyLink": "Αντιγραφή συνδέσμου",
+      "pickDate": "Επιλογή ημερομηνίας…",
+      "reopen": "Επανάνοιγμα",
+      "complete": "Ολοκλήρωση",
+      "open": "Άνοιγμα",
       "projectChanged": "Το έργο άλλαξε",
       "dateChanged": "Η ημερομηνία άλλαξε",
       "label": "Ενέργειες εργασίας",
@@ -2976,7 +2976,7 @@
     "time": "Ώρα",
     "allDay": "Όλη μέρα",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Το τέλος είναι πριν από την έναρξη",
       "editEvent": "Επεξεργασία συμβάντος",
       "newEvent": "Νέο συμβάν",
@@ -4022,10 +4022,10 @@
       "lead": "Πότε",
       "atTime": "Στην ώρα",
       "minutesBefore": "{{count}} λεπτά πριν"
-        },
-        "desktopApp": {
-            "title": "Ειδοποιήσεις αυτής της εφαρμογής",
-            "body": "Το Cadence για Linux εμφανίζει ειδοποιήσεις συστήματος, ακόμη και με κλειστό παράθυρο, όσο το εικονίδιό του βρίσκεται στην περιοχή ειδοποιήσεων. Επιλέξτε ποιες στη στήλη Υπολογιστής παρακάτω. Χρειάζεται κλειδί API, που ορίζεται στις ρυθμίσεις της εφαρμογής (μενού εικονιδίου)."
+    },
+    "desktopApp": {
+      "title": "Ειδοποιήσεις αυτής της εφαρμογής",
+      "body": "Το Cadence για Linux εμφανίζει ειδοποιήσεις συστήματος, ακόμη και με κλειστό παράθυρο, όσο το εικονίδιό του βρίσκεται στην περιοχή ειδοποιήσεων. Επιλέξτε ποιες στη στήλη Υπολογιστής παρακάτω. Χρειάζεται κλειδί API, που ορίζεται στις ρυθμίσεις της εφαρμογής (μενού εικονιδίου)."
     }
   },
   "projectStatus": {
@@ -4506,7 +4506,7 @@
     "invalidHint": "Ίσως έχει ήδη χρησιμοποιηθεί ή έχει λήξει. Ζήτα καινούριο από το άτομο που τον έστειλε."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} εργασία θα μπει στο επόμενο ελεύθερο χρονικό διάστημα.",
+    "placeAllHint_one": "{{count}} εργασία θα μπει στο επόμενο ελεύθερο χρονικό διάστημα.",
     "inProgress": "Σε εξέλιξη",
     "overdue": "Εκπρόθεσμες",
     "dueToday": "Λήγουν σήμερα",
@@ -5184,7 +5184,7 @@
       "instructionsOther": "Κάθε άλλη στήλη μπορεί να διατηρηθεί στη σημείωση της εργασίας, ώστε να μη χαθεί τίποτα από το φύλλο."
     },
     "import": {
-            "undoneKept_one": "Η εισαγωγή αναιρέθηκε. Διατηρήθηκε {{count}} εργασία που άλλαξε από τότε.",
+      "undoneKept_one": "Η εισαγωγή αναιρέθηκε. Διατηρήθηκε {{count}} εργασία που άλλαξε από τότε.",
       "fieldParent": "Γονική εργασία",
       "fieldWbs": "WBS / αριθμός δομής",
       "fieldEstimate": "Εκτίμηση",
@@ -5415,7 +5415,49 @@
     "columnActions": "Ενέργειες στήλης",
     "newColumn": "Νέα στήλη",
     "loadError": "Δεν ήταν δυνατή η φόρτωση των στηλών",
-    "saveError": "Δεν ήταν δυνατή η αποθήκευση του πίνακα"
+    "saveError": "Δεν ήταν δυνατή η αποθήκευση του πίνακα",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Συζήτηση με την ΤΝ",
@@ -5827,8 +5869,8 @@
       "plan": "Στη σελίδα Σχεδιασμός"
     },
     "shortcuts": {
-            "panePrevious": "Προηγούμενη εργασία στο πλαίσιο",
-            "paneNext": "Επόμενη εργασία στο πλαίσιο",
+      "panePrevious": "Προηγούμενη εργασία στο πλαίσιο",
+      "paneNext": "Επόμενη εργασία στο πλαίσιο",
       "palette": "Άνοιγμα παλέτας εντολών",
       "capture": "Γρήγορη καταγραφή",
       "search": "Αναζήτηση",

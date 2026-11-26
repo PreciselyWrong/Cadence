@@ -1,150 +1,150 @@
 {
-    "desktopWindow": {
-        "minimize": "Thu nhỏ",
-        "maximize": "Phóng to",
-        "close": "Đóng"
+  "desktopWindow": {
+    "minimize": "Thu nhỏ",
+    "maximize": "Phóng to",
+    "close": "Đóng"
+  },
+  "weekend": {
+    "share": {
+      "error": "Không thể tạo ảnh.",
+      "downloaded": "Đã tải ảnh xuống",
+      "copied": "Đã sao chép ảnh",
+      "footer": "Chuẩn bị với Cadence",
+      "kicker": "CUỐI TUẦN",
+      "action": "Chia sẻ"
     },
-    "weekend": {
-        "share": {
-            "error": "Không thể tạo ảnh.",
-            "downloaded": "Đã tải ảnh xuống",
-            "copied": "Đã sao chép ảnh",
-            "footer": "Chuẩn bị với Cadence",
-            "kicker": "CUỐI TUẦN",
-            "action": "Chia sẻ"
-        },
-        "request": {
-            "error": "Không thể gửi yêu cầu.",
-            "failed": "Không thể chuẩn bị ({{days}})",
-            "pending": "Đang chuẩn bị cho {{days}}",
-            "submit": "Chuẩn bị",
-            "hint": "AI chuẩn bị ít nhất 5 ý tưởng mỗi ngày. Bạn sẽ nhận thông báo khi xong.",
-            "title": "Chuẩn bị ngày",
-            "open": "Ngày khác"
-        },
-        "dayList": "Các ngày",
-        "title": "Cuối tuần",
-        "loadError": "Không mở được đề xuất cuối tuần.",
-        "empty": "Không có gì để đề xuất cuối tuần này.",
-        "applied": "Đã áp dụng quyết định: {{count}}",
-        "applyError": "Chưa lưu được quyết định.",
-        "validate": "Xác nhận",
-        "calendar": "Thêm vào lịch",
-        "other": "Ý tưởng khác",
-        "skip": "Bỏ qua",
-        "note": "Ghi chú",
-        "noteLabel": "Ghi chú cho trợ lý",
-        "notePlaceholder": "Trợ lý cần biết điều gì",
-        "busy": "Bận: {{busy}}",
-        "feels": "cảm giác {{temp}}°",
-        "otherAsked": "Đã yêu cầu ý tưởng khác",
-        "decided": {
-            "calendar": "Đã có trong lịch",
-            "skip": "Đã bỏ qua"
-        },
-        "event": {
-            "requested": "Đang thêm",
-            "created": "Đã thêm vào lịch",
-            "failed": "Chưa thêm",
-            "open": "Mở trong lịch"
-        },
-        "countCalendar": "Trong lịch: {{count}}",
-        "countOther": "Yêu cầu ý tưởng khác: {{count}}",
-        "countNone": "Chưa chọn",
-        "part": {
-            "morning": "sáng",
-            "afternoon": "chiều",
-            "day": "cả ngày"
-        },
-        "weather": {
-            "sun": "nắng",
-            "partly": "nắng có mây",
-            "cloud": "nhiều mây",
-            "rain": "mưa",
-            "snow": "tuyết",
-            "storm": "giông",
-            "fog": "sương mù"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Đẹp hơn ở nơi khác",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Không thể gửi yêu cầu.",
+      "failed": "Không thể chuẩn bị ({{days}})",
+      "pending": "Đang chuẩn bị cho {{days}}",
+      "submit": "Chuẩn bị",
+      "hint": "AI chuẩn bị ít nhất 5 ý tưởng mỗi ngày. Bạn sẽ nhận thông báo khi xong.",
+      "title": "Chuẩn bị ngày",
+      "open": "Ngày khác"
     },
-    "career": {
-        "choice": "đã chọn: {{label}}",
-        "validate": "Xác nhận ({{count}})",
-        "clear": "Xóa",
-        "applied": "Đã áp dụng {{count}} quyết định",
-        "appliedOne": "Đã áp dụng 1 quyết định",
-        "title": "Sự nghiệp",
-        "updatedAt": "cập nhật lúc {{time}}",
-        "empty": "Hôm nay không có gì mới",
-        "emptyHint": "Trợ lý ghé qua mỗi sáng: các lần nhắc lại, tin tuyển dụng và việc cần làm sẽ hiện ở đây.",
-        "allDecided": "Hôm nay đã quyết định xong",
-        "loadError": "Không thể tải trang Sự nghiệp.",
-        "retry": "Thử lại",
-        "applyError": "Quyết định chưa được lưu.",
-        "later": "Để sau",
-        "skip": "Bỏ qua",
-        "followups": {
-            "title": "Nhắc lại",
-            "appliedAgo": "đã ứng tuyển {{when}}",
-            "openDraft": "Mở bản nháp",
-            "createTask": "Tạo việc",
-            "done": "Xong"
-        },
-        "offers": {
-            "title": "Tin tuyển dụng cần quyết định",
-            "apply": "Ứng tuyển",
-            "note": "Ghi chú",
-            "notePlaceholder": "Ghi chú cho trợ lý…",
-            "open": "Xem tin tuyển dụng",
-            "expires": "hết hạn {{when}}",
-            "expired": "đã hết hạn"
-        },
-        "tasks": {
-            "title": "Việc được đề xuất",
-            "add": "Thêm"
-        },
-        "decided": "Đã quyết định ({{count}})",
-        "state": {
-            "applied": "Đã ứng tuyển",
-            "skipped": "Đã bỏ qua",
-            "later": "Để sau",
-            "done": "Xong",
-            "taskCreated": "Đã tạo việc",
-            "added": "Đã thêm",
-            "dismissed": "Đã loại"
-        }
+    "dayList": "Các ngày",
+    "title": "Cuối tuần",
+    "loadError": "Không mở được đề xuất cuối tuần.",
+    "empty": "Không có gì để đề xuất cuối tuần này.",
+    "applied": "Đã áp dụng quyết định: {{count}}",
+    "applyError": "Chưa lưu được quyết định.",
+    "validate": "Xác nhận",
+    "calendar": "Thêm vào lịch",
+    "other": "Ý tưởng khác",
+    "skip": "Bỏ qua",
+    "note": "Ghi chú",
+    "noteLabel": "Ghi chú cho trợ lý",
+    "notePlaceholder": "Trợ lý cần biết điều gì",
+    "busy": "Bận: {{busy}}",
+    "feels": "cảm giác {{temp}}°",
+    "otherAsked": "Đã yêu cầu ý tưởng khác",
+    "decided": {
+      "calendar": "Đã có trong lịch",
+      "skip": "Đã bỏ qua"
     },
-    "agentBanner": {
-        "agent": "Tác nhân",
-        "dismiss": "Đánh dấu đã đọc",
-        "open": "Mở"
+    "event": {
+      "requested": "Đang thêm",
+      "created": "Đã thêm vào lịch",
+      "failed": "Chưa thêm",
+      "open": "Mở trong lịch"
     },
-    "counts": {
-        "notes_other": "{{count}} ghi chú",
-        "notes_one": "{{count}} ghi chú",
-        "tasks_other": "{{count}} công việc",
-        "tasks_one": "{{count}} công việc",
-        "goals_other": "{{count}} mục tiêu",
-        "goals_one": "{{count}} mục tiêu",
-        "projects_other": "{{count}} dự án",
-        "projects_one": "{{count}} dự án"
+    "countCalendar": "Trong lịch: {{count}}",
+    "countOther": "Yêu cầu ý tưởng khác: {{count}}",
+    "countNone": "Chưa chọn",
+    "part": {
+      "morning": "sáng",
+      "afternoon": "chiều",
+      "day": "cả ngày"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Máy tính",
-        "link": "Liên kết",
-        "openSource": "Mở nguồn",
-        "fromSource": "Đến từ {{source}}"
+    "weather": {
+      "sun": "nắng",
+      "partly": "nắng có mây",
+      "cloud": "nhiều mây",
+      "rain": "mưa",
+      "snow": "tuyết",
+      "storm": "giông",
+      "fog": "sương mù"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Đẹp hơn ở nơi khác",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "đã chọn: {{label}}",
+    "validate": "Xác nhận ({{count}})",
+    "clear": "Xóa",
+    "applied": "Đã áp dụng {{count}} quyết định",
+    "appliedOne": "Đã áp dụng 1 quyết định",
+    "title": "Sự nghiệp",
+    "updatedAt": "cập nhật lúc {{time}}",
+    "empty": "Hôm nay không có gì mới",
+    "emptyHint": "Trợ lý ghé qua mỗi sáng: các lần nhắc lại, tin tuyển dụng và việc cần làm sẽ hiện ở đây.",
+    "allDecided": "Hôm nay đã quyết định xong",
+    "loadError": "Không thể tải trang Sự nghiệp.",
+    "retry": "Thử lại",
+    "applyError": "Quyết định chưa được lưu.",
+    "later": "Để sau",
+    "skip": "Bỏ qua",
+    "followups": {
+      "title": "Nhắc lại",
+      "appliedAgo": "đã ứng tuyển {{when}}",
+      "openDraft": "Mở bản nháp",
+      "createTask": "Tạo việc",
+      "done": "Xong"
+    },
+    "offers": {
+      "title": "Tin tuyển dụng cần quyết định",
+      "apply": "Ứng tuyển",
+      "note": "Ghi chú",
+      "notePlaceholder": "Ghi chú cho trợ lý…",
+      "open": "Xem tin tuyển dụng",
+      "expires": "hết hạn {{when}}",
+      "expired": "đã hết hạn"
+    },
+    "tasks": {
+      "title": "Việc được đề xuất",
+      "add": "Thêm"
+    },
+    "decided": "Đã quyết định ({{count}})",
+    "state": {
+      "applied": "Đã ứng tuyển",
+      "skipped": "Đã bỏ qua",
+      "later": "Để sau",
+      "done": "Xong",
+      "taskCreated": "Đã tạo việc",
+      "added": "Đã thêm",
+      "dismissed": "Đã loại"
+    }
+  },
+  "agentBanner": {
+    "agent": "Tác nhân",
+    "dismiss": "Đánh dấu đã đọc",
+    "open": "Mở"
+  },
+  "counts": {
+    "notes_other": "{{count}} ghi chú",
+    "notes_one": "{{count}} ghi chú",
+    "tasks_other": "{{count}} công việc",
+    "tasks_one": "{{count}} công việc",
+    "goals_other": "{{count}} mục tiêu",
+    "goals_one": "{{count}} mục tiêu",
+    "projects_other": "{{count}} dự án",
+    "projects_one": "{{count}} dự án"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Máy tính",
+    "link": "Liên kết",
+    "openSource": "Mở nguồn",
+    "fromSource": "Đến từ {{source}}"
+  },
   "autoClassify": {
     "health": {
-            "requeued_one": "Đã xếp lại {{count}} mục",
-            "failed_one": "{{count}} mục thất bại",
+      "requeued_one": "Đã xếp lại {{count}} mục",
+      "failed_one": "{{count}} mục thất bại",
       "retryError": "Không thể thử lại",
       "requeued": "Đã xếp lại {{count}} mục",
       "retry": "Thử lại",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Luôn lưu trữ người gửi này",
-            "horizon": {
-                "someday": "Một ngày nào đó",
-                "nextMonth": "Tháng sau",
-                "thisMonth": "Tháng này",
-                "nextWeek": "Tuần sau",
-                "week": "Tuần này",
-                "label": "Hoặc sau"
-            },
-            "trashRequested": "Đã yêu cầu xóa",
+      "horizon": {
+        "someday": "Một ngày nào đó",
+        "nextMonth": "Tháng sau",
+        "thisMonth": "Tháng này",
+        "nextWeek": "Tuần sau",
+        "week": "Tuần này",
+        "label": "Hoặc sau"
+      },
+      "trashRequested": "Đã yêu cầu xóa",
       "draftRequested": "Đang chuẩn bị bản nháp trong Gmail",
       "archiveRequested": "Đã yêu cầu lưu trữ",
       "noteSent": "Đã gửi lại cho Trieur",
@@ -402,10 +402,10 @@
     "entry": "Cần phân loại ({{count}})",
     "title": "Cần phân loại",
     "deck": {
-            "actionFailedTrash": "Việc xóa không thành công",
+      "actionFailedTrash": "Việc xóa không thành công",
       "progressLabel": "Thư {{position}} / {{total}}",
       "option": {
-                "trash": "Xóa",
+        "trash": "Xóa",
         "draft": "Bản nháp",
         "read": "Đọc",
         "event": "Lịch",
@@ -646,18 +646,18 @@
     "hideCompleted": "Ẩn Nhiệm vụ Đã hoàn thành"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Đã giữ công việc lặp lại, hãy xóa từng cái: {{count}}",
-            "someFailed": "Không thay đổi: {{count}}",
-            "deleted": "Đã xóa: {{count}}",
-            "moved": "Đã chuyển: {{count}}",
-            "prioritized": "Đã đổi mức ưu tiên: {{count}}",
-            "dated": "Đã đổi ngày: {{count}}",
-            "completed": "Đã hoàn thành: {{count}}",
-            "clear": "Bỏ chọn",
-            "count": "Đã chọn: {{count}}",
-            "label": "Công việc đã chọn"
-        },
+    "selection": {
+      "recurringKept": "Đã giữ công việc lặp lại, hãy xóa từng cái: {{count}}",
+      "someFailed": "Không thay đổi: {{count}}",
+      "deleted": "Đã xóa: {{count}}",
+      "moved": "Đã chuyển: {{count}}",
+      "prioritized": "Đã đổi mức ưu tiên: {{count}}",
+      "dated": "Đã đổi ngày: {{count}}",
+      "completed": "Đã hoàn thành: {{count}}",
+      "clear": "Bỏ chọn",
+      "count": "Đã chọn: {{count}}",
+      "label": "Công việc đã chọn"
+    },
     "deletedToast": "Đã xóa \"{{name}}\"",
     "title": "Nhiệm vụ",
     "today": "Hôm nay",
@@ -790,17 +790,17 @@
       "setDueDate": "Đặt ngày đến hạn"
     },
     "contextMenu": {
-            "review": "Xem lại",
-            "copyError": "Không thể sao chép",
-            "titleCopied": "Đã sao chép tiêu đề",
-            "linkCopied": "Đã sao chép liên kết",
-            "deleteKey": "Del",
-            "copyTitle": "Sao chép tiêu đề",
-            "copyLink": "Sao chép liên kết",
-            "pickDate": "Chọn ngày…",
-            "reopen": "Mở lại",
-            "complete": "Hoàn thành",
-            "open": "Mở",
+      "review": "Xem lại",
+      "copyError": "Không thể sao chép",
+      "titleCopied": "Đã sao chép tiêu đề",
+      "linkCopied": "Đã sao chép liên kết",
+      "deleteKey": "Del",
+      "copyTitle": "Sao chép tiêu đề",
+      "copyLink": "Sao chép liên kết",
+      "pickDate": "Chọn ngày…",
+      "reopen": "Mở lại",
+      "complete": "Hoàn thành",
+      "open": "Mở",
       "projectChanged": "Đã đổi dự án",
       "dateChanged": "Đã đổi ngày",
       "label": "Thao tác công việc",
@@ -872,66 +872,66 @@
     "noActivity": "Chưa có hoạt động nào"
   },
   "profile": {
-        "plugins": {
-            "title": "Tiện ích mở rộng",
-            "description": "Tiện ích mở rộng thêm các tích hợp riêng vào máy chủ. Chỉ quản trị viên mới thấy. Tiện ích vẫn tắt cho đến khi bạn bật.",
-            "notConfigured": "Tiện ích mở rộng đang tắt. Đặt TUDUDI_PLUGINS_DIR thành thư mục chứa các thư mục tiện ích, rồi khởi động lại máy chủ.",
-            "reloadAll": "Tải lại tất cả",
-            "reload": "Tải lại",
-            "reloadPending": "Tải lại để nạp {{version}}",
-            "updatedFrom": "đã cập nhật từ {{version}}",
-            "version": "Phiên bản {{version}}",
-            "state": {
-                "disabled": "Đã tắt",
-                "active": "Đang chạy",
-                "error": "Lỗi",
-                "invalid": "Không hợp lệ",
-                "incompatible": "Không tương thích",
-                "needs_approval": "Cần phê duyệt",
-                "missing": "Thiếu"
-            },
-            "permissions": "Quyền",
-            "events": "Sự kiện",
-            "permission": {
-                "events": "Lắng nghe sự kiện",
-                "routes": "Cung cấp đường dẫn riêng"
-            },
-            "enabled": "Đã bật",
-            "needsApproval": "Phiên bản này yêu cầu nhiều hơn trước. Bật lại để phê duyệt quyền và sự kiện của nó.",
-            "checkUpdate": "Kiểm tra cập nhật",
-            "updateAvailable": "Có bản cập nhật: {{version}}",
-            "upToDate": "Đã cập nhật",
-            "updateError": "Không đọc được địa chỉ cập nhật",
-            "settings": "Cài đặt",
-            "saveSettings": "Lưu cài đặt",
-            "saved": "Đã lưu cài đặt",
-            "secretSaved": "Đã lưu",
-            "clearSecret": "Xóa",
-            "required": "bắt buộc",
-            "reloaded": "Đã tải lại tiện ích mở rộng",
-            "loadError": "Không thể tải tiện ích mở rộng",
-            "none": "Không tìm thấy tiện ích nào trong thư mục tiện ích.",
-            "errorLabel": "Lỗi",
-            "saveError": "Không thể lưu tiện ích mở rộng",
-            "installLabel": "Địa chỉ Git của plugin",
-            "install": "Thêm",
-            "installing": "Đang thêm...",
-            "installHint": "Thao tác này tải mã chạy trên máy chủ. Hãy đọc những gì plugin yêu cầu trước khi bật.",
-            "installed": "Đã thêm plugin. Hãy đọc những gì plugin yêu cầu rồi bật.",
-            "installError": "Không thể thêm plugin",
-            "pull": "Cập nhật",
-            "pulled": "Đã cập nhật plugin",
-            "remove": "Xóa",
-            "removeTitle": "Xóa plugin này?",
-            "removeMessage": "Thư mục và cài đặt của plugin sẽ bị xóa khỏi máy chủ. Không thể hoàn tác.",
-            "page": {
-                "notFound": "Không tìm thấy plugin hoặc plugin đã tắt"
-            },
-            "approveIntro": "Plugin này chạy trong máy chủ và yêu cầu:",
-            "approveOutro": "Quyền chỉ giới hạn những gì Cadence cung cấp cho plugin; đây không phải hộp cát. Chỉ phê duyệt mã bạn đã đọc.",
-            "approveTitle": "Phê duyệt quyền?",
-            "approve": "Phê duyệt và bật"
-        },
+    "plugins": {
+      "title": "Tiện ích mở rộng",
+      "description": "Tiện ích mở rộng thêm các tích hợp riêng vào máy chủ. Chỉ quản trị viên mới thấy. Tiện ích vẫn tắt cho đến khi bạn bật.",
+      "notConfigured": "Tiện ích mở rộng đang tắt. Đặt TUDUDI_PLUGINS_DIR thành thư mục chứa các thư mục tiện ích, rồi khởi động lại máy chủ.",
+      "reloadAll": "Tải lại tất cả",
+      "reload": "Tải lại",
+      "reloadPending": "Tải lại để nạp {{version}}",
+      "updatedFrom": "đã cập nhật từ {{version}}",
+      "version": "Phiên bản {{version}}",
+      "state": {
+        "disabled": "Đã tắt",
+        "active": "Đang chạy",
+        "error": "Lỗi",
+        "invalid": "Không hợp lệ",
+        "incompatible": "Không tương thích",
+        "needs_approval": "Cần phê duyệt",
+        "missing": "Thiếu"
+      },
+      "permissions": "Quyền",
+      "events": "Sự kiện",
+      "permission": {
+        "events": "Lắng nghe sự kiện",
+        "routes": "Cung cấp đường dẫn riêng"
+      },
+      "enabled": "Đã bật",
+      "needsApproval": "Phiên bản này yêu cầu nhiều hơn trước. Bật lại để phê duyệt quyền và sự kiện của nó.",
+      "checkUpdate": "Kiểm tra cập nhật",
+      "updateAvailable": "Có bản cập nhật: {{version}}",
+      "upToDate": "Đã cập nhật",
+      "updateError": "Không đọc được địa chỉ cập nhật",
+      "settings": "Cài đặt",
+      "saveSettings": "Lưu cài đặt",
+      "saved": "Đã lưu cài đặt",
+      "secretSaved": "Đã lưu",
+      "clearSecret": "Xóa",
+      "required": "bắt buộc",
+      "reloaded": "Đã tải lại tiện ích mở rộng",
+      "loadError": "Không thể tải tiện ích mở rộng",
+      "none": "Không tìm thấy tiện ích nào trong thư mục tiện ích.",
+      "errorLabel": "Lỗi",
+      "saveError": "Không thể lưu tiện ích mở rộng",
+      "installLabel": "Địa chỉ Git của plugin",
+      "install": "Thêm",
+      "installing": "Đang thêm...",
+      "installHint": "Thao tác này tải mã chạy trên máy chủ. Hãy đọc những gì plugin yêu cầu trước khi bật.",
+      "installed": "Đã thêm plugin. Hãy đọc những gì plugin yêu cầu rồi bật.",
+      "installError": "Không thể thêm plugin",
+      "pull": "Cập nhật",
+      "pulled": "Đã cập nhật plugin",
+      "remove": "Xóa",
+      "removeTitle": "Xóa plugin này?",
+      "removeMessage": "Thư mục và cài đặt của plugin sẽ bị xóa khỏi máy chủ. Không thể hoàn tác.",
+      "page": {
+        "notFound": "Không tìm thấy plugin hoặc plugin đã tắt"
+      },
+      "approveIntro": "Plugin này chạy trong máy chủ và yêu cầu:",
+      "approveOutro": "Quyền chỉ giới hạn những gì Cadence cung cấp cho plugin; đây không phải hộp cát. Chỉ phê duyệt mã bạn đã đọc.",
+      "approveTitle": "Phê duyệt quyền?",
+      "approve": "Phê duyệt và bật"
+    },
     "showTaskDescription": "Hiện mô tả dưới tiêu đề",
     "sync": {
       "field": {
@@ -1102,8 +1102,8 @@
     "nextTaskSuggestion": "Gợi ý Nhiệm vụ Tiếp theo",
     "enableNextTaskSuggestion": "Bật Gợi ý Nhiệm vụ Tiếp theo",
     "tabs": {
-            "agents": "Tác nhân",
-            "plugins": "Tiện ích mở rộng",
+      "agents": "Tác nhân",
+      "plugins": "Tiện ích mở rộng",
       "classify": "Phân loại",
       "sync": "Đồng bộ",
       "general": "Chung",
@@ -1353,7 +1353,7 @@
       "morningReplanToggle": "Tự động chuẩn bị đề xuất vào buổi sáng",
       "morningReplanDescription": "Mỗi sáng vào giờ bạn chọn, chuẩn bị một đề xuất tuần khi có việc quá hạn.",
       "morningReplanTitle": "Lên lịch lại việc quá hạn buổi sáng (AI)",
-            "maxOption_one": "{{count}} công việc",
+      "maxOption_one": "{{count}} công việc",
       "title": "Lập kế hoạch",
       "description": "Cách \"Hôm nay bạn có thể làm gì?\" sắp xếp công việc của bạn khi bạn lên kế hoạch cho ngày. Kéo các hàng theo thứ tự bạn muốn; cùng các công việc luôn hiện theo cùng một thứ tự.",
       "orderTitle": "Thứ tự (kéo để thay đổi)",
@@ -1670,19 +1670,19 @@
     "groups": {
       "account": "Tài khoản",
       "appearance": "Giao diện",
-            "planning": "Tổ chức",
+      "planning": "Tổ chức",
       "integrations": "Tích hợp",
-            "security": "Truy cập",
+      "security": "Truy cập",
       "advanced": "Nâng cao"
     },
     "optional": "Tùy chọn",
     "accent": "Màu nhấn",
     "accentCustom": "Màu tùy chỉnh (hex)",
-        "pureBlack": "Đen thuần ở chế độ tối",
-        "sidebarPanelTitle": "Bảng",
-        "sidebarPanelHint": "Các khối của thanh bên đang mở, từ trên xuống dưới.",
-        "sidebarPanelPinned": "Đã ghim",
-        "sidebarPanelMonth": "Lịch tháng"
+    "pureBlack": "Đen thuần ở chế độ tối",
+    "sidebarPanelTitle": "Bảng",
+    "sidebarPanelHint": "Các khối của thanh bên đang mở, từ trên xuống dưới.",
+    "sidebarPanelPinned": "Đã ghim",
+    "sidebarPanelMonth": "Lịch tháng"
   },
   "productivity": {
     "stalledProjects": "Dự án Đang Tạm Dừng",
@@ -2254,12 +2254,12 @@
     "createError": "Tạo ghi chú thất bại"
   },
   "task": {
-        "minutesAgo_one": "{{count}} phút trước",
-        "inMinutes_one": "sau {{count}} phút",
-        "inHours_one": "sau {{count}} giờ",
-        "inDays_one": "sau {{count}} ngày",
-        "hoursAgo_one": "{{count}} giờ trước",
-        "daysAgo_one": "{{count}} ngày trước",
+    "minutesAgo_one": "{{count}} phút trước",
+    "inMinutes_one": "sau {{count}} phút",
+    "inHours_one": "sau {{count}} giờ",
+    "inDays_one": "sau {{count}} ngày",
+    "hoursAgo_one": "{{count}} giờ trước",
+    "daysAgo_one": "{{count}} ngày trước",
     "duplicateError": "Không thể nhân bản công việc.",
     "duplicated": "Đã nhân bản công việc",
     "duplicate": "Nhân bản",
@@ -2975,7 +2975,7 @@
     "time": "Thời gian",
     "allDay": "Cả ngày",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Kết thúc trước khi bắt đầu",
       "editEvent": "Sửa sự kiện",
       "newEvent": "Sự kiện mới",
@@ -4021,10 +4021,10 @@
       "lead": "Khi nào",
       "atTime": "Đúng giờ",
       "minutesBefore": "Trước {{count}} phút"
-        },
-        "desktopApp": {
-            "title": "Thông báo của ứng dụng này",
-            "body": "Cadence cho Linux hiển thị thông báo hệ thống, kể cả khi cửa sổ đã đóng, miễn là biểu tượng của ứng dụng còn trong khay hệ thống. Chọn thông báo nào trong cột Máy tính bên dưới. Cần khóa API, đặt trong cài đặt ứng dụng (menu khay)."
+    },
+    "desktopApp": {
+      "title": "Thông báo của ứng dụng này",
+      "body": "Cadence cho Linux hiển thị thông báo hệ thống, kể cả khi cửa sổ đã đóng, miễn là biểu tượng của ứng dụng còn trong khay hệ thống. Chọn thông báo nào trong cột Máy tính bên dưới. Cần khóa API, đặt trong cài đặt ứng dụng (menu khay)."
     }
   },
   "projectStatus": {
@@ -4505,8 +4505,8 @@
     "invalidHint": "Có thể nó đã được dùng hoặc đã hết hạn. Hãy nhờ người đã gửi liên kết cấp cho bạn một liên kết mới."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} việc sẽ được xếp vào khung giờ trống tiếp theo.",
-        "placeAllDone_one": "Đã xếp {{count}} việc.",
+    "placeAllHint_one": "{{count}} việc sẽ được xếp vào khung giờ trống tiếp theo.",
+    "placeAllDone_one": "Đã xếp {{count}} việc.",
     "inProgress": "Đang làm",
     "overdue": "Quá hạn",
     "dueToday": "Đến hạn hôm nay",
@@ -4577,7 +4577,7 @@
     "beta": "Beta",
     "betaHint": "Trang Hôm nay có kế hoạch là tính năng mới. Trang cổ điển vẫn ở cuối trang này.",
     "ai": {
-            "carried_one": "{{count}} việc đã được chuyển sang ngày mai",
+      "carried_one": "{{count}} việc đã được chuyển sang ngày mai",
       "suggested": "AI gợi ý",
       "estimateGuess": "AI ước tính",
       "nothingToAdd": "Không có gì để thêm: không có thời gian rảnh hoặc công việc để lên kế hoạch.",
@@ -5183,13 +5183,13 @@
       "instructionsOther": "Mọi cột khác đều có thể giữ trong ghi chú của công việc, nên không có gì trong bảng bị mất."
     },
     "import": {
-            "undoneKept_one": "Đã hoàn tác việc nhập. {{count}} công việc đã đổi từ đó được giữ lại.",
-            "rowCount_one": "{{count}} dòng",
-            "doneTitle_one": "Đã nhập {{count}} công việc",
-            "countTags_one": "{{count}} thẻ mới",
-            "countProjects_one": "{{count}} dự án mới",
-            "countCreate_one": "{{count}} công việc mới",
-            "countAreas_one": "{{count}} khu vực mới",
+      "undoneKept_one": "Đã hoàn tác việc nhập. {{count}} công việc đã đổi từ đó được giữ lại.",
+      "rowCount_one": "{{count}} dòng",
+      "doneTitle_one": "Đã nhập {{count}} công việc",
+      "countTags_one": "{{count}} thẻ mới",
+      "countProjects_one": "{{count}} dự án mới",
+      "countCreate_one": "{{count}} công việc mới",
+      "countAreas_one": "{{count}} khu vực mới",
       "fieldParent": "Việc cha",
       "fieldWbs": "WBS / số thứ tự đề cương",
       "fieldEstimate": "Ước tính",
@@ -5414,7 +5414,49 @@
     "columnActions": "Thao tác cột",
     "newColumn": "Cột mới",
     "loadError": "Không thể tải các cột",
-    "saveError": "Không thể lưu bảng"
+    "saveError": "Không thể lưu bảng",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Thảo luận với AI",
@@ -5674,7 +5716,7 @@
     "close": "Đóng"
   },
   "comments": {
-        "count_one": "{{count}} bình luận",
+    "count_one": "{{count}} bình luận",
     "count": "{{count}} bình luận",
     "loading": "Đang tải bình luận...",
     "failedToLoad": "Không thể tải bình luận",
@@ -5826,8 +5868,8 @@
       "plan": "Trên trang Lên kế hoạch"
     },
     "shortcuts": {
-            "panePrevious": "Công việc trước trong bảng",
-            "paneNext": "Công việc tiếp theo trong bảng",
+      "panePrevious": "Công việc trước trong bảng",
+      "paneNext": "Công việc tiếp theo trong bảng",
       "palette": "Mở bảng lệnh",
       "capture": "Ghi nhanh",
       "search": "Tìm kiếm",
@@ -6425,9 +6467,9 @@
     "allTomorrow": "Chuyển tất cả sang ngày mai",
     "replanTitle": "Lên lịch lại việc quá hạn ({{count}})",
     "replan": "Lên lịch lại",
-        "plannedOn": "Dự kiến {{day}}",
-        "taskCount_one": "{{count}} công việc",
-        "organized_one": "{{count}} công việc đã được xếp lịch",
+    "plannedOn": "Dự kiến {{day}}",
+    "taskCount_one": "{{count}} công việc",
+    "organized_one": "{{count}} công việc đã được xếp lịch",
     "add": "Thêm",
     "addPlaceholder": "Thêm công việc",
     "added": "Đã thêm “{{name}}” vào ngày",
@@ -6504,7 +6546,7 @@
   },
   "upcoming": {
     "overdueAiReplan": "Lên lịch lại bằng AI",
-        "plannedOnDayHint_one": "{{count}} đã lên lịch vào một ngày",
+    "plannedOnDayHint_one": "{{count}} đã lên lịch vào một ngày",
     "replan": "Cần lên lịch lại",
     "toPlan": "Cần lên kế hoạch",
     "expandToPlan": "Hiện mục cần lên kế hoạch ({{count}})",
@@ -6650,18 +6692,18 @@
     "stripLabel": "Gửi đến một tầm nhìn",
     "sentToHorizon": "Đã gửi đến {{name}}",
     "plannedOnDayHint_other": "{{count}} đã lên lịch vào một ngày",
-        "weekLoadTitle": "Đã lên lịch từ hôm nay đến cuối tuần, so với giờ làm trong ngày",
-        "pickedMoved": "Đã chuyển các việc đã chọn",
-        "pickedCount": "Đã chọn: {{count}}",
-        "pickedClear": "Bỏ chọn",
-        "aiTab": "Do AI lên kế hoạch",
-        "sectionToggle": "Hiện hoặc ẩn {{name}}",
-        "pushedTitle": "Bị hoãn",
-        "pushedBadge": "Đã hoãn {{count}} lần trong 30 ngày",
-        "pushedMeta": "{{count}}× trong 30 ngày",
-        "mergeCalendar": "Lịch gộp",
-        "mergeCalendarTitle": "Hiện lịch trong các cột ngày và ẩn lịch bên cạnh",
-        "quickPlaceTitle": "Lên lịch {{day}}: ngày đầu tiên còn chỗ"
+    "weekLoadTitle": "Đã lên lịch từ hôm nay đến cuối tuần, so với giờ làm trong ngày",
+    "pickedMoved": "Đã chuyển các việc đã chọn",
+    "pickedCount": "Đã chọn: {{count}}",
+    "pickedClear": "Bỏ chọn",
+    "aiTab": "Do AI lên kế hoạch",
+    "sectionToggle": "Hiện hoặc ẩn {{name}}",
+    "pushedTitle": "Bị hoãn",
+    "pushedBadge": "Đã hoãn {{count}} lần trong 30 ngày",
+    "pushedMeta": "{{count}}× trong 30 ngày",
+    "mergeCalendar": "Lịch gộp",
+    "mergeCalendarTitle": "Hiện lịch trong các cột ngày và ẩn lịch bên cạnh",
+    "quickPlaceTitle": "Lên lịch {{day}}: ngày đầu tiên còn chỗ"
   },
   "offline": {
     "offline": "Ngoại tuyến",

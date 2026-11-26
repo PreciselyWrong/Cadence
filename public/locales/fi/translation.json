@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Pienennä",
-        "maximize": "Suurenna",
-        "close": "Sulje"
+  "desktopWindow": {
+    "minimize": "Pienennä",
+    "maximize": "Suurenna",
+    "close": "Sulje"
+  },
+  "weekend": {
+    "share": {
+      "error": "Kuvaa ei voitu luoda.",
+      "downloaded": "Kuva ladattu",
+      "copied": "Kuva kopioitu",
+      "footer": "Valmisteltu Cadencella",
+      "kicker": "VIIKONLOPPU",
+      "action": "Jaa"
     },
-    "weekend": {
-        "share": {
-            "error": "Kuvaa ei voitu luoda.",
-            "downloaded": "Kuva ladattu",
-            "copied": "Kuva kopioitu",
-            "footer": "Valmisteltu Cadencella",
-            "kicker": "VIIKONLOPPU",
-            "action": "Jaa"
-        },
-        "request": {
-            "error": "Pyyntöä ei voitu lähettää.",
-            "failed": "Ei voitu valmistella ({{days}})",
-            "pending": "Valmistellaan: {{days}}",
-            "submit": "Valmistele",
-            "hint": "Tekoäly valmistelee vähintään 5 ideaa päivää kohden. Saat ilmoituksen, kun se on valmis.",
-            "title": "Valmistele päiviä",
-            "open": "Muut päivät"
-        },
-        "dayList": "Päivät",
-        "title": "Viikonloppu",
-        "loadError": "Viikonloppua ei voitu avata.",
-        "empty": "Ei ehdotettavaa tälle viikonlopulle.",
-        "applied": "Päätöksiä sovellettu: {{count}}",
-        "applyError": "Päätöstä ei tallennettu.",
-        "validate": "Vahvista",
-        "calendar": "Kalenteriin",
-        "other": "Toinen idea",
-        "skip": "Ohita",
-        "note": "Muistiinpano",
-        "noteLabel": "Muistiinpano agentille",
-        "notePlaceholder": "Mitä agentin pitää tietää",
-        "busy": "Varattu: {{busy}}",
-        "feels": "tuntuu {{temp}}°",
-        "otherAsked": "Toista ideaa pyydetty",
-        "decided": {
-            "calendar": "Kalenterissa",
-            "skip": "Ohitettu"
-        },
-        "event": {
-            "requested": "Lisätään",
-            "created": "Lisätty kalenteriin",
-            "failed": "Ei lisätty",
-            "open": "Avaa kalenterissa"
-        },
-        "countCalendar": "Kalenterissa: {{count}}",
-        "countOther": "Toista ideaa pyydetty: {{count}}",
-        "countNone": "Ei valintoja",
-        "part": {
-            "morning": "aamu",
-            "afternoon": "iltapäivä",
-            "day": "päivä"
-        },
-        "weather": {
-            "sun": "aurinkoista",
-            "partly": "selkeneviä",
-            "cloud": "pilvistä",
-            "rain": "sadetta",
-            "snow": "lunta",
-            "storm": "ukkosta",
-            "fog": "sumua"
-        },
-        "nearby": "Nearby",
-        "elsewhere": "Kauniimpaa muualla",
-        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    "request": {
+      "error": "Pyyntöä ei voitu lähettää.",
+      "failed": "Ei voitu valmistella ({{days}})",
+      "pending": "Valmistellaan: {{days}}",
+      "submit": "Valmistele",
+      "hint": "Tekoäly valmistelee vähintään 5 ideaa päivää kohden. Saat ilmoituksen, kun se on valmis.",
+      "title": "Valmistele päiviä",
+      "open": "Muut päivät"
     },
-    "career": {
-        "choice": "valittu: {{label}}",
-        "validate": "Vahvista ({{count}})",
-        "clear": "Tyhjennä",
-        "applied": "{{count}} päätöstä toteutettu",
-        "appliedOne": "1 päätös toteutettu",
-        "title": "Ura",
-        "updatedAt": "päivitetty klo {{time}}",
-        "empty": "Ei mitään uutta tänään",
-        "emptyHint": "Agentti käy joka aamu: seurannat, työpaikat ja tehtävät näkyvät täällä.",
-        "allDecided": "Kaikki on päätetty tältä päivältä",
-        "loadError": "Ura-sivua ei voitu ladata.",
-        "retry": "Yritä uudelleen",
-        "applyError": "Päätöstä ei tallennettu.",
-        "later": "Myöhemmin",
-        "skip": "Ohita",
-        "followups": {
-            "title": "Seurannat",
-            "appliedAgo": "haettu {{when}}",
-            "openDraft": "Avaa luonnos",
-            "createTask": "Luo tehtävä",
-            "done": "Tehty"
-        },
-        "offers": {
-            "title": "Päätettävät työpaikat",
-            "apply": "Hae",
-            "note": "Huomautus",
-            "notePlaceholder": "Huomautus agentille…",
-            "open": "Näytä työpaikka",
-            "expires": "umpeutuu {{when}}",
-            "expired": "umpeutunut"
-        },
-        "tasks": {
-            "title": "Ehdotetut tehtävät",
-            "add": "Lisää"
-        },
-        "decided": "Päätetty ({{count}})",
-        "state": {
-            "applied": "Haettu",
-            "skipped": "Ohitettu",
-            "later": "Myöhemmin",
-            "done": "Tehty",
-            "taskCreated": "Tehtävä luotu",
-            "added": "Lisätty",
-            "dismissed": "Hylätty"
-        }
+    "dayList": "Päivät",
+    "title": "Viikonloppu",
+    "loadError": "Viikonloppua ei voitu avata.",
+    "empty": "Ei ehdotettavaa tälle viikonlopulle.",
+    "applied": "Päätöksiä sovellettu: {{count}}",
+    "applyError": "Päätöstä ei tallennettu.",
+    "validate": "Vahvista",
+    "calendar": "Kalenteriin",
+    "other": "Toinen idea",
+    "skip": "Ohita",
+    "note": "Muistiinpano",
+    "noteLabel": "Muistiinpano agentille",
+    "notePlaceholder": "Mitä agentin pitää tietää",
+    "busy": "Varattu: {{busy}}",
+    "feels": "tuntuu {{temp}}°",
+    "otherAsked": "Toista ideaa pyydetty",
+    "decided": {
+      "calendar": "Kalenterissa",
+      "skip": "Ohitettu"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Merkitse luetuksi",
-        "open": "Avaa"
+    "event": {
+      "requested": "Lisätään",
+      "created": "Lisätty kalenteriin",
+      "failed": "Ei lisätty",
+      "open": "Avaa kalenterissa"
     },
-    "counts": {
-        "notes_other": "{{count}} muistiinpanoa",
-        "notes_one": "{{count}} muistiinpano",
-        "tasks_other": "{{count}} tehtävää",
-        "tasks_one": "{{count}} tehtävä",
-        "goals_other": "{{count}} tavoitetta",
-        "goals_one": "{{count}} tavoite",
-        "projects_other": "{{count}} projektia",
-        "projects_one": "{{count}} projekti"
+    "countCalendar": "Kalenterissa: {{count}}",
+    "countOther": "Toista ideaa pyydetty: {{count}}",
+    "countNone": "Ei valintoja",
+    "part": {
+      "morning": "aamu",
+      "afternoon": "iltapäivä",
+      "day": "päivä"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Työpöytä",
-        "link": "Linkki",
-        "openSource": "Avaa lähde",
-        "fromSource": "Lähde: {{source}}"
+    "weather": {
+      "sun": "aurinkoista",
+      "partly": "selkeneviä",
+      "cloud": "pilvistä",
+      "rain": "sadetta",
+      "snow": "lunta",
+      "storm": "ukkosta",
+      "fog": "sumua"
     },
+    "nearby": "Nearby",
+    "elsewhere": "Kauniimpaa muualla",
+    "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "valittu: {{label}}",
+    "validate": "Vahvista ({{count}})",
+    "clear": "Tyhjennä",
+    "applied": "{{count}} päätöstä toteutettu",
+    "appliedOne": "1 päätös toteutettu",
+    "title": "Ura",
+    "updatedAt": "päivitetty klo {{time}}",
+    "empty": "Ei mitään uutta tänään",
+    "emptyHint": "Agentti käy joka aamu: seurannat, työpaikat ja tehtävät näkyvät täällä.",
+    "allDecided": "Kaikki on päätetty tältä päivältä",
+    "loadError": "Ura-sivua ei voitu ladata.",
+    "retry": "Yritä uudelleen",
+    "applyError": "Päätöstä ei tallennettu.",
+    "later": "Myöhemmin",
+    "skip": "Ohita",
+    "followups": {
+      "title": "Seurannat",
+      "appliedAgo": "haettu {{when}}",
+      "openDraft": "Avaa luonnos",
+      "createTask": "Luo tehtävä",
+      "done": "Tehty"
+    },
+    "offers": {
+      "title": "Päätettävät työpaikat",
+      "apply": "Hae",
+      "note": "Huomautus",
+      "notePlaceholder": "Huomautus agentille…",
+      "open": "Näytä työpaikka",
+      "expires": "umpeutuu {{when}}",
+      "expired": "umpeutunut"
+    },
+    "tasks": {
+      "title": "Ehdotetut tehtävät",
+      "add": "Lisää"
+    },
+    "decided": "Päätetty ({{count}})",
+    "state": {
+      "applied": "Haettu",
+      "skipped": "Ohitettu",
+      "later": "Myöhemmin",
+      "done": "Tehty",
+      "taskCreated": "Tehtävä luotu",
+      "added": "Lisätty",
+      "dismissed": "Hylätty"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Merkitse luetuksi",
+    "open": "Avaa"
+  },
+  "counts": {
+    "notes_other": "{{count}} muistiinpanoa",
+    "notes_one": "{{count}} muistiinpano",
+    "tasks_other": "{{count}} tehtävää",
+    "tasks_one": "{{count}} tehtävä",
+    "goals_other": "{{count}} tavoitetta",
+    "goals_one": "{{count}} tavoite",
+    "projects_other": "{{count}} projektia",
+    "projects_one": "{{count}} projekti"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Työpöytä",
+    "link": "Linkki",
+    "openSource": "Avaa lähde",
+    "fromSource": "Lähde: {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "Uudelleenyritys ei onnistunut",
@@ -332,15 +332,15 @@
     },
     "mail": {
       "alwaysArchive": "Arkistoi tämä lähettäjä aina",
-            "horizon": {
-                "someday": "Joskus",
-                "nextMonth": "Ensi kuussa",
-                "thisMonth": "Tässä kuussa",
-                "nextWeek": "Ensi viikolla",
-                "week": "Tällä viikolla",
-                "label": "Tai myöhemmin"
-            },
-            "trashRequested": "Poistoa pyydetty",
+      "horizon": {
+        "someday": "Joskus",
+        "nextMonth": "Ensi kuussa",
+        "thisMonth": "Tässä kuussa",
+        "nextWeek": "Ensi viikolla",
+        "week": "Tällä viikolla",
+        "label": "Tai myöhemmin"
+      },
+      "trashRequested": "Poistoa pyydetty",
       "draftRequested": "Luonnosta valmistellaan Gmailissa",
       "archiveRequested": "Arkistointia pyydetty",
       "noteSent": "Palautettu Trieurille",
@@ -402,10 +402,10 @@
     "entry": "Lajiteltavat ({{count}})",
     "title": "Lajiteltavat",
     "deck": {
-            "actionFailedTrash": "Poisto ei onnistunut",
+      "actionFailedTrash": "Poisto ei onnistunut",
       "progressLabel": "Viesti {{position}}/{{total}}",
       "option": {
-                "trash": "Poista",
+        "trash": "Poista",
         "draft": "Luonnos",
         "read": "Lue",
         "event": "Kalenteri",
@@ -646,18 +646,18 @@
     "hideCompleted": "Piilota valmiit tehtävät"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Toistuvat tehtävät säilytetty, poista ne yksi kerrallaan: {{count}}",
-            "someFailed": "Ei muutettu: {{count}}",
-            "deleted": "Poistettu: {{count}}",
-            "moved": "Siirretty: {{count}}",
-            "prioritized": "Prioriteetti muutettu: {{count}}",
-            "dated": "Päivä muutettu: {{count}}",
-            "completed": "Valmiit: {{count}}",
-            "clear": "Tyhjennä valinta",
-            "count": "Valittu: {{count}}",
-            "label": "Valitut tehtävät"
-        },
+    "selection": {
+      "recurringKept": "Toistuvat tehtävät säilytetty, poista ne yksi kerrallaan: {{count}}",
+      "someFailed": "Ei muutettu: {{count}}",
+      "deleted": "Poistettu: {{count}}",
+      "moved": "Siirretty: {{count}}",
+      "prioritized": "Prioriteetti muutettu: {{count}}",
+      "dated": "Päivä muutettu: {{count}}",
+      "completed": "Valmiit: {{count}}",
+      "clear": "Tyhjennä valinta",
+      "count": "Valittu: {{count}}",
+      "label": "Valitut tehtävät"
+    },
     "deletedToast": "”{{name}}” poistettu",
     "title": "Tehtävät",
     "today": "Tänään",
@@ -790,17 +790,17 @@
       "setDueDate": "Aseta eräpäivä"
     },
     "contextMenu": {
-            "review": "Katselmointi",
-            "copyError": "Kopiointi epäonnistui",
-            "titleCopied": "Otsikko kopioitu",
-            "linkCopied": "Linkki kopioitu",
-            "deleteKey": "Del",
-            "copyTitle": "Kopioi otsikko",
-            "copyLink": "Kopioi linkki",
-            "pickDate": "Valitse päivä…",
-            "reopen": "Avaa uudelleen",
-            "complete": "Merkitse valmiiksi",
-            "open": "Avaa",
+      "review": "Katselmointi",
+      "copyError": "Kopiointi epäonnistui",
+      "titleCopied": "Otsikko kopioitu",
+      "linkCopied": "Linkki kopioitu",
+      "deleteKey": "Del",
+      "copyTitle": "Kopioi otsikko",
+      "copyLink": "Kopioi linkki",
+      "pickDate": "Valitse päivä…",
+      "reopen": "Avaa uudelleen",
+      "complete": "Merkitse valmiiksi",
+      "open": "Avaa",
       "projectChanged": "Projekti vaihdettu",
       "dateChanged": "Päivämäärä vaihdettu",
       "label": "Tehtävän toiminnot",
@@ -872,66 +872,66 @@
     "noActivity": "Ei vielä aktiivisuutta"
   },
   "profile": {
-        "plugins": {
-            "title": "Liitännäiset",
-            "description": "Liitännäiset lisäävät palvelimeen omia integraatioitasi. Vain ylläpitäjä näkee ne. Liitännäinen pysyy pois päältä, kunnes käynnistät sen.",
-            "notConfigured": "Liitännäiset ovat pois käytöstä. Aseta TUDUDI_PLUGINS_DIR kansioon, jossa on liitännäiskansiot, ja käynnistä palvelin uudelleen.",
-            "reloadAll": "Lataa kaikki uudelleen",
-            "reload": "Lataa uudelleen",
-            "reloadPending": "Lataa uudelleen, jotta {{version}} latautuu",
-            "updatedFrom": "päivitetty versiosta {{version}}",
-            "version": "Versio {{version}}",
-            "state": {
-                "disabled": "Pois päältä",
-                "active": "Käynnissä",
-                "error": "Virhe",
-                "invalid": "Virheellinen",
-                "incompatible": "Yhteensopimaton",
-                "needs_approval": "Hyväksyntä tarvitaan",
-                "missing": "Puuttuu"
-            },
-            "permissions": "Oikeudet",
-            "events": "Tapahtumat",
-            "permission": {
-                "events": "Kuuntelee tapahtumia",
-                "routes": "Tarjoaa omat reitit"
-            },
-            "enabled": "Käytössä",
-            "needsApproval": "Tämä versio vaatii enemmän kuin ennen. Käynnistä se uudelleen hyväksyäksesi sen oikeudet ja tapahtumat.",
-            "checkUpdate": "Tarkista päivitykset",
-            "updateAvailable": "Päivitys saatavilla: {{version}}",
-            "upToDate": "Ajan tasalla",
-            "updateError": "Päivitysosoitetta ei voitu lukea",
-            "settings": "Asetukset",
-            "saveSettings": "Tallenna asetukset",
-            "saved": "Asetukset tallennettu",
-            "secretSaved": "Tallennettu",
-            "clearSecret": "Tyhjennä",
-            "required": "pakollinen",
-            "reloaded": "Liitännäiset ladattu uudelleen",
-            "loadError": "Liitännäisiä ei voitu ladata",
-            "none": "Liitännäiskansiosta ei löytynyt liitännäisiä.",
-            "errorLabel": "Virhe",
-            "saveError": "Liitännäisen tallentaminen ei onnistunut",
-            "installLabel": "Liitännäisen Git-osoite",
-            "install": "Lisää",
-            "installing": "Lisätään...",
-            "installHint": "Tämä lataa palvelimessa suoritettavaa koodia. Lue, mitä se pyytää, ennen kuin otat sen käyttöön.",
-            "installed": "Liitännäinen lisätty. Lue, mitä se pyytää, ja ota se sitten käyttöön.",
-            "installError": "Liitännäistä ei voitu lisätä",
-            "pull": "Päivitä",
-            "pulled": "Liitännäinen päivitetty",
-            "remove": "Poista",
-            "removeTitle": "Poistetaanko tämä liitännäinen?",
-            "removeMessage": "Sen kansio ja asetukset poistetaan palvelimelta. Tätä ei voi peruuttaa.",
-            "page": {
-                "notFound": "Liitännäistä ei löydy tai se on pois päältä"
-            },
-            "approveIntro": "Tämä liitännäinen toimii palvelimen sisällä ja pyytää:",
-            "approveOutro": "Oikeudet rajaavat sitä, mitä Cadence antaa liitännäiselle; ne eivät ole hiekkalaatikko. Hyväksy vain koodia, jonka olet lukenut.",
-            "approveTitle": "Hyväksytäänkö oikeudet?",
-            "approve": "Hyväksy ja ota käyttöön"
-        },
+    "plugins": {
+      "title": "Liitännäiset",
+      "description": "Liitännäiset lisäävät palvelimeen omia integraatioitasi. Vain ylläpitäjä näkee ne. Liitännäinen pysyy pois päältä, kunnes käynnistät sen.",
+      "notConfigured": "Liitännäiset ovat pois käytöstä. Aseta TUDUDI_PLUGINS_DIR kansioon, jossa on liitännäiskansiot, ja käynnistä palvelin uudelleen.",
+      "reloadAll": "Lataa kaikki uudelleen",
+      "reload": "Lataa uudelleen",
+      "reloadPending": "Lataa uudelleen, jotta {{version}} latautuu",
+      "updatedFrom": "päivitetty versiosta {{version}}",
+      "version": "Versio {{version}}",
+      "state": {
+        "disabled": "Pois päältä",
+        "active": "Käynnissä",
+        "error": "Virhe",
+        "invalid": "Virheellinen",
+        "incompatible": "Yhteensopimaton",
+        "needs_approval": "Hyväksyntä tarvitaan",
+        "missing": "Puuttuu"
+      },
+      "permissions": "Oikeudet",
+      "events": "Tapahtumat",
+      "permission": {
+        "events": "Kuuntelee tapahtumia",
+        "routes": "Tarjoaa omat reitit"
+      },
+      "enabled": "Käytössä",
+      "needsApproval": "Tämä versio vaatii enemmän kuin ennen. Käynnistä se uudelleen hyväksyäksesi sen oikeudet ja tapahtumat.",
+      "checkUpdate": "Tarkista päivitykset",
+      "updateAvailable": "Päivitys saatavilla: {{version}}",
+      "upToDate": "Ajan tasalla",
+      "updateError": "Päivitysosoitetta ei voitu lukea",
+      "settings": "Asetukset",
+      "saveSettings": "Tallenna asetukset",
+      "saved": "Asetukset tallennettu",
+      "secretSaved": "Tallennettu",
+      "clearSecret": "Tyhjennä",
+      "required": "pakollinen",
+      "reloaded": "Liitännäiset ladattu uudelleen",
+      "loadError": "Liitännäisiä ei voitu ladata",
+      "none": "Liitännäiskansiosta ei löytynyt liitännäisiä.",
+      "errorLabel": "Virhe",
+      "saveError": "Liitännäisen tallentaminen ei onnistunut",
+      "installLabel": "Liitännäisen Git-osoite",
+      "install": "Lisää",
+      "installing": "Lisätään...",
+      "installHint": "Tämä lataa palvelimessa suoritettavaa koodia. Lue, mitä se pyytää, ennen kuin otat sen käyttöön.",
+      "installed": "Liitännäinen lisätty. Lue, mitä se pyytää, ja ota se sitten käyttöön.",
+      "installError": "Liitännäistä ei voitu lisätä",
+      "pull": "Päivitä",
+      "pulled": "Liitännäinen päivitetty",
+      "remove": "Poista",
+      "removeTitle": "Poistetaanko tämä liitännäinen?",
+      "removeMessage": "Sen kansio ja asetukset poistetaan palvelimelta. Tätä ei voi peruuttaa.",
+      "page": {
+        "notFound": "Liitännäistä ei löydy tai se on pois päältä"
+      },
+      "approveIntro": "Tämä liitännäinen toimii palvelimen sisällä ja pyytää:",
+      "approveOutro": "Oikeudet rajaavat sitä, mitä Cadence antaa liitännäiselle; ne eivät ole hiekkalaatikko. Hyväksy vain koodia, jonka olet lukenut.",
+      "approveTitle": "Hyväksytäänkö oikeudet?",
+      "approve": "Hyväksy ja ota käyttöön"
+    },
     "showTaskDescription": "Näytä kuvaus otsikon alla",
     "sync": {
       "field": {
@@ -1110,8 +1110,8 @@
     "nextTaskSuggestion": "Seuraava tehtäväehdotus",
     "enableNextTaskSuggestion": "Ota käyttöön seuraavien tehtävien ehdotukset",
     "tabs": {
-            "agents": "Agentit",
-            "plugins": "Liitännäiset",
+      "agents": "Agentit",
+      "plugins": "Liitännäiset",
       "classify": "Lajittelu",
       "sync": "Synkronointi",
       "general": "Yleinen",
@@ -1669,20 +1669,20 @@
     "photoOn": "kohteessa",
     "groups": {
       "account": "Tili",
-            "appearance": "Käyttöliittymä",
-            "planning": "Järjestäminen",
+      "appearance": "Käyttöliittymä",
+      "planning": "Järjestäminen",
       "integrations": "Integraatiot",
-            "security": "Käyttöoikeudet",
+      "security": "Käyttöoikeudet",
       "advanced": "Lisäasetukset"
     },
     "optional": "valinnainen",
     "accent": "Korostusväri",
     "accentCustom": "Oma väri (hex)",
-        "pureBlack": "Puhdas musta tumma tilassa",
-        "sidebarPanelTitle": "Paneeli",
-        "sidebarPanelHint": "Avoimen sivupalkin lohkot ylhäältä alas.",
-        "sidebarPanelPinned": "Kiinnitetyt",
-        "sidebarPanelMonth": "Kuukausikalenteri"
+    "pureBlack": "Puhdas musta tumma tilassa",
+    "sidebarPanelTitle": "Paneeli",
+    "sidebarPanelHint": "Avoimen sivupalkin lohkot ylhäältä alas.",
+    "sidebarPanelPinned": "Kiinnitetyt",
+    "sidebarPanelMonth": "Kuukausikalenteri"
   },
   "productivity": {
     "stalledProjects": "Jumiutuneet projektit",
@@ -2254,9 +2254,9 @@
     "createError": "Muistiinpanon luominen epäonnistui"
   },
   "task": {
-        "inMinutes_one": "{{count}} minuutin kuluttua",
-        "inHours_one": "{{count}} tunnin kuluttua",
-        "inDays_one": "{{count}} päivän kuluttua",
+    "inMinutes_one": "{{count}} minuutin kuluttua",
+    "inHours_one": "{{count}} tunnin kuluttua",
+    "inDays_one": "{{count}} päivän kuluttua",
     "duplicateError": "Tehtävää ei voitu kopioida.",
     "duplicated": "Tehtävä kopioitu",
     "duplicate": "Kopioi",
@@ -2975,7 +2975,7 @@
     "time": "Aika",
     "allDay": "Koko päivä",
     "google": {
-            "confirmDelete": "Delete for good?",
+      "confirmDelete": "Delete for good?",
       "endBeforeStart": "Loppu on ennen alkua",
       "editEvent": "Muokkaa tapahtumaa",
       "newEvent": "Uusi tapahtuma",
@@ -4021,10 +4021,10 @@
       "lead": "Milloin",
       "atTime": "Kellonaikaan",
       "minutesBefore": "{{count}} min ennen"
-        },
-        "desktopApp": {
-            "title": "Tämän sovelluksen ilmoitukset",
-            "body": "Cadence Linuxille näyttää järjestelmäilmoituksia, vaikka ikkuna on suljettu, kunhan sen kuvake on ilmoitusalueella. Valitse alla olevasta sarakkeesta Tietokone mitkä. Se tarvitsee API-avaimen, joka asetetaan sovelluksen asetuksissa (ilmoitusalueen valikko)."
+    },
+    "desktopApp": {
+      "title": "Tämän sovelluksen ilmoitukset",
+      "body": "Cadence Linuxille näyttää järjestelmäilmoituksia, vaikka ikkuna on suljettu, kunhan sen kuvake on ilmoitusalueella. Valitse alla olevasta sarakkeesta Tietokone mitkä. Se tarvitsee API-avaimen, joka asetetaan sovelluksen asetuksissa (ilmoitusalueen valikko)."
     }
   },
   "projectStatus": {
@@ -4505,7 +4505,7 @@
     "invalidHint": "Se on ehkä jo käytetty tai vanhentunut. Pyydä uusi sen lähettäneeltä."
   },
   "dailyPlan": {
-        "placeAllHint_one": "{{count}} tehtävä sijoittuu seuraavaan vapaaseen aikaan.",
+    "placeAllHint_one": "{{count}} tehtävä sijoittuu seuraavaan vapaaseen aikaan.",
     "inProgress": "Käynnissä",
     "overdue": "Myöhässä",
     "dueToday": "Erääntyy tänään",
@@ -5183,7 +5183,7 @@
       "instructionsOther": "Mikä tahansa muu sarake voidaan säilyttää tehtävän muistiinpanossa, joten mikään taulukossa ei katoa."
     },
     "import": {
-            "undoneKept_one": "Tuonti peruttiin. {{count}} tehtävä, joka on muuttunut sen jälkeen, säilytettiin.",
+      "undoneKept_one": "Tuonti peruttiin. {{count}} tehtävä, joka on muuttunut sen jälkeen, säilytettiin.",
       "fieldParent": "Yläatehtävä",
       "fieldWbs": "WBS / jäsennysnumero",
       "fieldEstimate": "Arvio",
@@ -5414,7 +5414,49 @@
     "columnActions": "Sarakkeen toiminnot",
     "newColumn": "Uusi sarake",
     "loadError": "Sarakkeiden lataus epäonnistui",
-    "saveError": "Taulun tallennus epäonnistui"
+    "saveError": "Taulun tallennus epäonnistui",
+    "addTask": "Add task",
+    "blocked": "Blocked",
+    "byPriority": "By priority",
+    "bySection": "By section",
+    "byStatus": "By status",
+    "byTag": "By tag",
+    "capturePlaceholder": "Quick idea...",
+    "capturesColumn": "Captures & Inbox",
+    "capturesEmpty": "Inbox is clear. Drag items from here into a project column.",
+    "capturesTitle": "Captures",
+    "cardFields": "Card details",
+    "collapseColumn": "Collapse column",
+    "compact": "Compact",
+    "density": "Density",
+    "detailed": "Detailed",
+    "display": "Display",
+    "groupBy": "Group by",
+    "handoffTitle": "Current state",
+    "hideEmptyColumns": "Hide empty columns",
+    "hideSubProjectsList": "Hide sub-projects list above",
+    "includeSubProjects": "Include sub-projects",
+    "mode": "Board mode",
+    "modeBySubProject": "1 col / project",
+    "modePortfolio": "Portfolio",
+    "modeTasks": "All tasks",
+    "movedToProject": "Moved to {{project}}",
+    "moveToProject": "Move to project",
+    "newView": "View",
+    "newViewName": "New view name",
+    "noOpenTasks": "No open tasks in this sub-project.",
+    "normal": "Normal",
+    "onlyTodoMd": "TODO.md repos only",
+    "openProject": "Open page",
+    "peekProject": "Inspect tasks",
+    "projectStatuses": "Sub-project statuses",
+    "quickAddPlaceholder": "Add a task...",
+    "recent7d": "Tasks captured in the last 7 days",
+    "saveView": "Save as new view",
+    "sendToSubProject": "Send to project...",
+    "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
+    "untagged": "Untagged",
+    "wipLimit": "WIP limit (In progress)"
   },
   "taskPane": {
     "chat": "Keskustele tekoälyn kanssa",
@@ -5826,8 +5868,8 @@
       "plan": "Suunnittele-sivulla"
     },
     "shortcuts": {
-            "panePrevious": "Edellinen tehtävä paneelissa",
-            "paneNext": "Seuraava tehtävä paneelissa",
+      "panePrevious": "Edellinen tehtävä paneelissa",
+      "paneNext": "Seuraava tehtävä paneelissa",
       "palette": "Avaa komentopaletti",
       "capture": "Pikakaappaus",
       "search": "Hae",

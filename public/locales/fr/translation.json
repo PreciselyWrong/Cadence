@@ -1,146 +1,146 @@
 {
-    "desktopWindow": {
-        "minimize": "Réduire",
-        "maximize": "Agrandir",
-        "close": "Fermer"
+  "desktopWindow": {
+    "minimize": "Réduire",
+    "maximize": "Agrandir",
+    "close": "Fermer"
+  },
+  "weekend": {
+    "share": {
+      "error": "L’image n’a pas pu être créée.",
+      "downloaded": "Image téléchargée",
+      "copied": "Image copiée",
+      "footer": "Préparé avec Cadence",
+      "kicker": "WEEK-END",
+      "action": "Partager"
     },
-    "weekend": {
-        "share": {
-            "error": "L’image n’a pas pu être créée.",
-            "downloaded": "Image téléchargée",
-            "copied": "Image copiée",
-            "footer": "Préparé avec Cadence",
-            "kicker": "WEEK-END",
-            "action": "Partager"
-        },
-        "request": {
-            "error": "La demande n’a pas pu être envoyée.",
-            "failed": "Pas pu être préparé ({{days}})",
-            "pending": "En préparation pour {{days}}",
-            "submit": "Préparer",
-            "hint": "L’IA prépare au moins 5 idées par jour. Une notification arrive quand c’est prêt.",
-            "title": "Préparer des jours",
-            "open": "Autres jours"
-        },
-        "dayList": "Les jours",
-        "title": "Week-end",
-        "loadError": "Impossible d’ouvrir le week-end.",
-        "empty": "Rien à proposer ce week-end.",
-        "applied": "Décisions appliquées : {{count}}",
-        "applyError": "La décision n’a pas été enregistrée.",
-        "validate": "Valider",
-        "calendar": "Mettre à l’agenda",
-        "other": "Autre idée",
-        "skip": "Ignorer",
-        "note": "Remarque",
-        "noteLabel": "Remarque pour l’agent",
-        "notePlaceholder": "Ce que l’agent doit savoir",
-        "busy": "Occupé : {{busy}}",
-        "feels": "ressenti {{temp}}°",
-        "otherAsked": "Autre idée demandée",
-        "decided": {
-            "calendar": "À l’agenda",
-            "skip": "Ignorée"
-        },
-        "event": {
-            "requested": "Ajout en cours",
-            "created": "Ajouté à l’agenda",
-            "failed": "Pas ajouté",
-            "open": "Ouvrir dans l’agenda"
-        },
-        "countCalendar": "À l’agenda : {{count}}",
-        "countOther": "Autre idée demandée : {{count}}",
-        "countNone": "Rien de choisi",
-        "part": {
-            "morning": "matin",
-            "afternoon": "après-midi",
-            "day": "journée"
-        },
-        "weather": {
-            "sun": "ensoleillé",
-            "partly": "éclaircies",
-            "cloud": "nuageux",
-            "rain": "pluie",
-            "snow": "neige",
-            "storm": "orage",
-            "fog": "brouillard"
-        },
-        "nearby": "Près de chez nous",
-        "elsewhere": "Plus beau ailleurs",
-        "elsewhereLine": "{{place}}, {{day}} : {{weather}}, {{temp}}°"
+    "request": {
+      "error": "La demande n’a pas pu être envoyée.",
+      "failed": "Pas pu être préparé ({{days}})",
+      "pending": "En préparation pour {{days}}",
+      "submit": "Préparer",
+      "hint": "L’IA prépare au moins 5 idées par jour. Une notification arrive quand c’est prêt.",
+      "title": "Préparer des jours",
+      "open": "Autres jours"
     },
-    "career": {
-        "choice": "choisi : {{label}}",
-        "validate": "Valider ({{count}})",
-        "clear": "Effacer",
-        "applied": "{{count}} décisions appliquées",
-        "appliedOne": "1 décision appliquée",
-        "title": "Carrière",
-        "updatedAt": "mis à jour à {{time}}",
-        "empty": "Rien de neuf aujourd’hui",
-        "emptyHint": "L’agent passe chaque matin : ses relances, offres et tâches apparaîtront ici.",
-        "allDecided": "Tout est décidé pour aujourd’hui",
-        "loadError": "Impossible de charger la page Carrière.",
-        "retry": "Réessayer",
-        "applyError": "La décision n’a pas été enregistrée.",
-        "later": "Plus tard",
-        "skip": "Passer",
-        "followups": {
-            "title": "Relances",
-            "appliedAgo": "postulé {{when}}",
-            "openDraft": "Ouvrir le brouillon",
-            "createTask": "Créer la tâche",
-            "done": "Fait"
-        },
-        "offers": {
-            "title": "Offres à décider",
-            "apply": "Postuler",
-            "note": "Remarque",
-            "notePlaceholder": "Une remarque pour l’agent…",
-            "open": "Voir l’offre",
-            "expires": "expire {{when}}",
-            "expired": "expirée"
-        },
-        "tasks": {
-            "title": "Tâches proposées",
-            "add": "Ajouter"
-        },
-        "decided": "Décidé ({{count}})",
-        "state": {
-            "applied": "Postulé",
-            "skipped": "Passée",
-            "later": "Plus tard",
-            "done": "Faite",
-            "taskCreated": "Tâche créée",
-            "added": "Ajoutée",
-            "dismissed": "Écartée"
-        }
+    "dayList": "Les jours",
+    "title": "Week-end",
+    "loadError": "Impossible d’ouvrir le week-end.",
+    "empty": "Rien à proposer ce week-end.",
+    "applied": "Décisions appliquées : {{count}}",
+    "applyError": "La décision n’a pas été enregistrée.",
+    "validate": "Valider",
+    "calendar": "Mettre à l’agenda",
+    "other": "Autre idée",
+    "skip": "Ignorer",
+    "note": "Remarque",
+    "noteLabel": "Remarque pour l’agent",
+    "notePlaceholder": "Ce que l’agent doit savoir",
+    "busy": "Occupé : {{busy}}",
+    "feels": "ressenti {{temp}}°",
+    "otherAsked": "Autre idée demandée",
+    "decided": {
+      "calendar": "À l’agenda",
+      "skip": "Ignorée"
     },
-    "agentBanner": {
-        "agent": "Agent",
-        "dismiss": "Marquer comme lu",
-        "open": "Ouvrir"
+    "event": {
+      "requested": "Ajout en cours",
+      "created": "Ajouté à l’agenda",
+      "failed": "Pas ajouté",
+      "open": "Ouvrir dans l’agenda"
     },
-    "counts": {
-        "notes_other": "{{count}} notes",
-        "notes_one": "{{count}} note",
-        "tasks_other": "{{count}} tâches",
-        "tasks_one": "{{count}} tâche",
-        "goals_other": "{{count}} objectifs",
-        "goals_one": "{{count}} objectif",
-        "projects_other": "{{count}} projets",
-        "projects_one": "{{count}} projet"
+    "countCalendar": "À l’agenda : {{count}}",
+    "countOther": "Autre idée demandée : {{count}}",
+    "countNone": "Rien de choisi",
+    "part": {
+      "morning": "matin",
+      "afternoon": "après-midi",
+      "day": "journée"
     },
-    "taskSource": {
-        "gmail": "Gmail",
-        "telegram": "Telegram",
-        "mcp": "MCP",
-        "android": "Android",
-        "desktop": "Bureau",
-        "link": "Lien",
-        "openSource": "Ouvrir la source",
-        "fromSource": "Vient de {{source}}"
+    "weather": {
+      "sun": "ensoleillé",
+      "partly": "éclaircies",
+      "cloud": "nuageux",
+      "rain": "pluie",
+      "snow": "neige",
+      "storm": "orage",
+      "fog": "brouillard"
     },
+    "nearby": "Près de chez nous",
+    "elsewhere": "Plus beau ailleurs",
+    "elsewhereLine": "{{place}}, {{day}} : {{weather}}, {{temp}}°"
+  },
+  "career": {
+    "choice": "choisi : {{label}}",
+    "validate": "Valider ({{count}})",
+    "clear": "Effacer",
+    "applied": "{{count}} décisions appliquées",
+    "appliedOne": "1 décision appliquée",
+    "title": "Carrière",
+    "updatedAt": "mis à jour à {{time}}",
+    "empty": "Rien de neuf aujourd’hui",
+    "emptyHint": "L’agent passe chaque matin : ses relances, offres et tâches apparaîtront ici.",
+    "allDecided": "Tout est décidé pour aujourd’hui",
+    "loadError": "Impossible de charger la page Carrière.",
+    "retry": "Réessayer",
+    "applyError": "La décision n’a pas été enregistrée.",
+    "later": "Plus tard",
+    "skip": "Passer",
+    "followups": {
+      "title": "Relances",
+      "appliedAgo": "postulé {{when}}",
+      "openDraft": "Ouvrir le brouillon",
+      "createTask": "Créer la tâche",
+      "done": "Fait"
+    },
+    "offers": {
+      "title": "Offres à décider",
+      "apply": "Postuler",
+      "note": "Remarque",
+      "notePlaceholder": "Une remarque pour l’agent…",
+      "open": "Voir l’offre",
+      "expires": "expire {{when}}",
+      "expired": "expirée"
+    },
+    "tasks": {
+      "title": "Tâches proposées",
+      "add": "Ajouter"
+    },
+    "decided": "Décidé ({{count}})",
+    "state": {
+      "applied": "Postulé",
+      "skipped": "Passée",
+      "later": "Plus tard",
+      "done": "Faite",
+      "taskCreated": "Tâche créée",
+      "added": "Ajoutée",
+      "dismissed": "Écartée"
+    }
+  },
+  "agentBanner": {
+    "agent": "Agent",
+    "dismiss": "Marquer comme lu",
+    "open": "Ouvrir"
+  },
+  "counts": {
+    "notes_other": "{{count}} notes",
+    "notes_one": "{{count}} note",
+    "tasks_other": "{{count}} tâches",
+    "tasks_one": "{{count}} tâche",
+    "goals_other": "{{count}} objectifs",
+    "goals_one": "{{count}} objectif",
+    "projects_other": "{{count}} projets",
+    "projects_one": "{{count}} projet"
+  },
+  "taskSource": {
+    "gmail": "Gmail",
+    "telegram": "Telegram",
+    "mcp": "MCP",
+    "android": "Android",
+    "desktop": "Bureau",
+    "link": "Lien",
+    "openSource": "Ouvrir la source",
+    "fromSource": "Vient de {{source}}"
+  },
   "autoClassify": {
     "health": {
       "retryError": "Relance impossible",
@@ -289,24 +289,24 @@
     }
   },
   "roadmap": {
-      "title": "Feuille de route",
-      "range": "{{start}} au {{end}}",
-      "noDates": "Pas encore de dates",
-      "projectDates": "{{range}} (dates du projet)",
-      "noArea": "Sans domaine",
-      "toggle": "Afficher ou masquer {{name}}",
-      "previousQuarter": "Trimestre précédent",
-      "nextQuarter": "Trimestre suivant",
-      "thisQuarter": "Ce trimestre",
-      "expandAll": "Tout déplier",
-      "collapseAll": "Tout replier",
-      "loadError": "Impossible de charger la feuille de route.",
-      "empty": "Rien à afficher pour l'instant. Les barres viennent des dates de début et d'échéance des tâches de vos projets.",
-      "items": "Domaine / Projet / Tâche",
-      "goalsOutside": "Hors de ce trimestre : {{count}}",
-      "legendGoal": "Date cible de l'objectif",
-      "legendArea": "Résumé du domaine",
-      "legendProject": "Résumé du projet"
+    "title": "Feuille de route",
+    "range": "{{start}} au {{end}}",
+    "noDates": "Pas encore de dates",
+    "projectDates": "{{range}} (dates du projet)",
+    "noArea": "Sans domaine",
+    "toggle": "Afficher ou masquer {{name}}",
+    "previousQuarter": "Trimestre précédent",
+    "nextQuarter": "Trimestre suivant",
+    "thisQuarter": "Ce trimestre",
+    "expandAll": "Tout déplier",
+    "collapseAll": "Tout replier",
+    "loadError": "Impossible de charger la feuille de route.",
+    "empty": "Rien à afficher pour l'instant. Les barres viennent des dates de début et d'échéance des tâches de vos projets.",
+    "items": "Domaine / Projet / Tâche",
+    "goalsOutside": "Hors de ce trimestre : {{count}}",
+    "legendGoal": "Date cible de l'objectif",
+    "legendArea": "Résumé du domaine",
+    "legendProject": "Résumé du projet"
   },
   "triage": {
     "batch": {
@@ -352,15 +352,15 @@
     },
     "mail": {
       "alwaysArchive": "Toujours archiver cet expéditeur",
-            "horizon": {
-                "someday": "Un jour",
-                "nextMonth": "Mois prochain",
-                "thisMonth": "Ce mois-ci",
-                "nextWeek": "Semaine prochaine",
-                "week": "Cette semaine",
-                "label": "Ou plus tard"
-            },
-            "trashRequested": "Suppression demandée",
+      "horizon": {
+        "someday": "Un jour",
+        "nextMonth": "Mois prochain",
+        "thisMonth": "Ce mois-ci",
+        "nextWeek": "Semaine prochaine",
+        "week": "Cette semaine",
+        "label": "Ou plus tard"
+      },
+      "trashRequested": "Suppression demandée",
       "draftRequested": "Brouillon en préparation dans Gmail",
       "archiveRequested": "Archivage demandé",
       "noteSent": "Renvoyé au Trieur",
@@ -422,10 +422,10 @@
     "entry": "À trier ({{count}})",
     "title": "À trier",
     "deck": {
-            "actionFailedTrash": "La suppression n’a pas abouti",
+      "actionFailedTrash": "La suppression n’a pas abouti",
       "progressLabel": "Mail {{position}} sur {{total}}",
       "option": {
-                "trash": "Supprimer",
+        "trash": "Supprimer",
         "draft": "Brouillon",
         "read": "Lire",
         "event": "Agenda",
@@ -669,18 +669,18 @@
     "todayPageSettings": "Paramètres de la page Aujourd'hui"
   },
   "tasks": {
-        "selection": {
-            "recurringKept": "Tâches récurrentes gardées, à supprimer une par une : {{count}}",
-            "someFailed": "Non modifiées : {{count}}",
-            "deleted": "Supprimées : {{count}}",
-            "moved": "Déplacées : {{count}}",
-            "prioritized": "Priorité modifiée : {{count}}",
-            "dated": "Date modifiée : {{count}}",
-            "completed": "Terminées : {{count}}",
-            "clear": "Vider la sélection",
-            "count": "Sélection : {{count}}",
-            "label": "Tâches sélectionnées"
-        },
+    "selection": {
+      "recurringKept": "Tâches récurrentes gardées, à supprimer une par une : {{count}}",
+      "someFailed": "Non modifiées : {{count}}",
+      "deleted": "Supprimées : {{count}}",
+      "moved": "Déplacées : {{count}}",
+      "prioritized": "Priorité modifiée : {{count}}",
+      "dated": "Date modifiée : {{count}}",
+      "completed": "Terminées : {{count}}",
+      "clear": "Vider la sélection",
+      "count": "Sélection : {{count}}",
+      "label": "Tâches sélectionnées"
+    },
     "deletedToast": "« {{name}} » supprimée",
     "title": "Tâches",
     "today": "Aujourd'hui",
@@ -813,17 +813,17 @@
       "setDueDate": "Définir l'échéance"
     },
     "contextMenu": {
-            "review": "Revue",
-            "copyError": "Copie impossible",
-            "titleCopied": "Titre copié",
-            "linkCopied": "Lien copié",
-            "deleteKey": "Suppr",
-            "copyTitle": "Copier le titre",
-            "copyLink": "Copier le lien",
-            "pickDate": "Choisir une date…",
-            "reopen": "Rouvrir",
-            "complete": "Terminer",
-            "open": "Ouvrir",
+      "review": "Revue",
+      "copyError": "Copie impossible",
+      "titleCopied": "Titre copié",
+      "linkCopied": "Lien copié",
+      "deleteKey": "Suppr",
+      "copyTitle": "Copier le titre",
+      "copyLink": "Copier le lien",
+      "pickDate": "Choisir une date…",
+      "reopen": "Rouvrir",
+      "complete": "Terminer",
+      "open": "Ouvrir",
       "projectChanged": "Projet modifié",
       "dateChanged": "Date modifiée",
       "label": "Actions de la tâche",
@@ -895,66 +895,66 @@
     "noActivity": "Aucune activité pour le moment"
   },
   "profile": {
-        "plugins": {
-            "title": "Plugins",
-            "description": "Les plugins ajoutent vos propres intégrations au serveur. Seul un administrateur les voit. Un plugin reste désactivé tant que vous ne l'activez pas.",
-            "notConfigured": "Les plugins sont désactivés. Renseignez TUDUDI_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.",
-            "reloadAll": "Tout recharger",
-            "reload": "Recharger",
-            "reloadPending": "Recharger pour charger {{version}}",
-            "updatedFrom": "mis à jour depuis {{version}}",
-            "version": "Version {{version}}",
-            "state": {
-                "disabled": "Désactivé",
-                "active": "Actif",
-                "error": "Erreur",
-                "invalid": "Invalide",
-                "incompatible": "Incompatible",
-                "needs_approval": "Approbation requise",
-                "missing": "Introuvable"
-            },
-            "permissions": "Permissions",
-            "events": "Événements",
-            "permission": {
-                "events": "Écoute les événements",
-                "routes": "Expose ses propres routes"
-            },
-            "enabled": "Activé",
-            "needsApproval": "Cette version demande plus qu'avant. Réactivez-le pour approuver ses permissions et ses événements.",
-            "checkUpdate": "Vérifier les mises à jour",
-            "updateAvailable": "Mise à jour disponible : {{version}}",
-            "upToDate": "À jour",
-            "updateError": "Impossible de lire l'adresse de mise à jour",
-            "settings": "Réglages",
-            "saveSettings": "Enregistrer les réglages",
-            "saved": "Réglages enregistrés",
-            "secretSaved": "Enregistré",
-            "clearSecret": "Effacer",
-            "required": "obligatoire",
-            "reloaded": "Plugins rechargés",
-            "loadError": "Impossible de charger les plugins",
-            "none": "Aucun plugin trouvé dans le dossier des plugins.",
-            "errorLabel": "Erreur",
-            "saveError": "Impossible d'enregistrer le plugin",
-            "installLabel": "Adresse Git du plugin",
-            "install": "Ajouter",
-            "installing": "Ajout en cours...",
-            "installHint": "Télécharge du code qui s'exécute dans le serveur. Lisez ce qu'il demande avant de l'activer.",
-            "installed": "Plugin ajouté. Lisez ce qu'il demande, puis activez-le.",
-            "installError": "Impossible d'ajouter le plugin",
-            "pull": "Mettre à jour",
-            "pulled": "Plugin mis à jour",
-            "remove": "Supprimer",
-            "removeTitle": "Supprimer ce plugin ?",
-            "removeMessage": "Son dossier et ses réglages sont supprimés du serveur. Action irréversible.",
-            "page": {
-                "notFound": "Plugin introuvable ou désactivé"
-            },
-            "approveIntro": "Ce plugin s'exécute dans le serveur et demande :",
-            "approveOutro": "Les permissions limitent ce que Cadence donne au plugin ; ce n'est pas un bac à sable. N'approuvez que du code que vous avez lu.",
-            "approveTitle": "Approuver les permissions ?",
-            "approve": "Approuver et activer"
-        },
+    "plugins": {
+      "title": "Plugins",
+      "description": "Les plugins ajoutent vos propres intégrations au serveur. Seul un administrateur les voit. Un plugin reste désactivé tant que vous ne l'activez pas.",
+      "notConfigured": "Les plugins sont désactivés. Renseignez TUDUDI_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.",
+      "reloadAll": "Tout recharger",
+      "reload": "Recharger",
+      "reloadPending": "Recharger pour charger {{version}}",
+      "updatedFrom": "mis à jour depuis {{version}}",
+      "version": "Version {{version}}",
+      "state": {
+        "disabled": "Désactivé",
+        "active": "Actif",
+        "error": "Erreur",
+        "invalid": "Invalide",
+        "incompatible": "Incompatible",
+        "needs_approval": "Approbation requise",
+        "missing": "Introuvable"
+      },
+      "permissions": "Permissions",
+      "events": "Événements",
+      "permission": {
+        "events": "Écoute les événements",
+        "routes": "Expose ses propres routes"
+      },
+      "enabled": "Activé",
+      "needsApproval": "Cette version demande plus qu'avant. Réactivez-le pour approuver ses permissions et ses événements.",
+      "checkUpdate": "Vérifier les mises à jour",
+      "updateAvailable": "Mise à jour disponible : {{version}}",
+      "upToDate": "À jour",
+      "updateError": "Impossible de lire l'adresse de mise à jour",
+      "settings": "Réglages",
+      "saveSettings": "Enregistrer les réglages",
+      "saved": "Réglages enregistrés",
+      "secretSaved": "Enregistré",
+      "clearSecret": "Effacer",
+      "required": "obligatoire",
+      "reloaded": "Plugins rechargés",
+      "loadError": "Impossible de charger les plugins",
+      "none": "Aucun plugin trouvé dans le dossier des plugins.",
+      "errorLabel": "Erreur",
+      "saveError": "Impossible d'enregistrer le plugin",
+      "installLabel": "Adresse Git du plugin",
+      "install": "Ajouter",
+      "installing": "Ajout en cours...",
+      "installHint": "Télécharge du code qui s'exécute dans le serveur. Lisez ce qu'il demande avant de l'activer.",
+      "installed": "Plugin ajouté. Lisez ce qu'il demande, puis activez-le.",
+      "installError": "Impossible d'ajouter le plugin",
+      "pull": "Mettre à jour",
+      "pulled": "Plugin mis à jour",
+      "remove": "Supprimer",
+      "removeTitle": "Supprimer ce plugin ?",
+      "removeMessage": "Son dossier et ses réglages sont supprimés du serveur. Action irréversible.",
+      "page": {
+        "notFound": "Plugin introuvable ou désactivé"
+      },
+      "approveIntro": "Ce plugin s'exécute dans le serveur et demande :",
+      "approveOutro": "Les permissions limitent ce que Cadence donne au plugin ; ce n'est pas un bac à sable. N'approuvez que du code que vous avez lu.",
+      "approveTitle": "Approuver les permissions ?",
+      "approve": "Approuver et activer"
+    },
     "sync": {
       "field": {
         "review_at": "À revoir le",
@@ -1125,7 +1125,7 @@
     "nextTaskSuggestion": "Suggestion de prochaine tâche",
     "enableNextTaskSuggestion": "Activer les suggestions de prochaine tâche",
     "tabs": {
-            "plugins": "Plugins",
+      "plugins": "Plugins",
       "classify": "Classement",
       "sync": "Synchronisation",
       "general": "Général",
@@ -1426,7 +1426,7 @@
       "tieRecent": "Les dernières modifiées d'abord",
       "tieNewest": "Les plus récentes d'abord",
       "tieOldest": "Les plus anciennes d'abord",
-            "staleOff": "Désactivé",
+      "staleOff": "Désactivé",
       "staleMonths": "{{count}} mois",
       "horizonDay": "1 jour",
       "horizonDays": "{{count}} jours",
@@ -1695,20 +1695,20 @@
     "photoOn": "sur",
     "groups": {
       "account": "Compte",
-            "appearance": "Interface",
-            "planning": "Organisation",
+      "appearance": "Interface",
+      "planning": "Organisation",
       "integrations": "Intégrations",
-            "security": "Accès",
+      "security": "Accès",
       "advanced": "Avancé"
     },
     "optional": "Optionnel",
     "accent": "Couleur d'accent",
     "accentCustom": "Couleur libre (hex)",
-        "pureBlack": "Noir pur en mode sombre",
-        "sidebarPanelTitle": "Panneau",
-        "sidebarPanelHint": "Les blocs de la barre latérale ouverte, de haut en bas.",
-        "sidebarPanelPinned": "Épinglés",
-        "sidebarPanelMonth": "Calendrier du mois"
+    "pureBlack": "Noir pur en mode sombre",
+    "sidebarPanelTitle": "Panneau",
+    "sidebarPanelHint": "Les blocs de la barre latérale ouverte, de haut en bas.",
+    "sidebarPanelPinned": "Épinglés",
+    "sidebarPanelMonth": "Calendrier du mois"
   },
   "productivity": {
     "stalledProjects": "Projets bloqués",
@@ -3005,7 +3005,7 @@
     "time": "Temps",
     "allDay": "Toute la journée",
     "google": {
-            "confirmDelete": "Supprimer pour de bon ?",
+      "confirmDelete": "Supprimer pour de bon ?",
       "endBeforeStart": "La fin est avant le début",
       "editEvent": "Modifier l'événement",
       "newEvent": "Nouvel événement",
@@ -4052,10 +4052,10 @@
       "lead": "Quand",
       "atTime": "À l'heure",
       "minutesBefore": "{{count}} min avant"
-        },
-        "desktopApp": {
-            "title": "Notifications de cette app",
-            "body": "Cadence pour Linux affiche des notifications système, même fenêtre fermée, tant que son icône est dans la barre système. Choisissez lesquelles dans la colonne Ordinateur ci-dessous. Il lui faut une clé d'API, saisie dans les réglages de l'app (menu de l'icône)."
+    },
+    "desktopApp": {
+      "title": "Notifications de cette app",
+      "body": "Cadence pour Linux affiche des notifications système, même fenêtre fermée, tant que son icône est dans la barre système. Choisissez lesquelles dans la colonne Ordinateur ci-dessous. Il lui faut une clé d'API, saisie dans les réglages de l'app (menu de l'icône)."
     }
   },
   "projectStatus": {
@@ -5446,7 +5446,49 @@
     "columnActions": "Actions de la colonne",
     "newColumn": "Nouvelle colonne",
     "loadError": "Impossible de charger les colonnes",
-    "saveError": "Impossible d'enregistrer le tableau"
+    "saveError": "Impossible d'enregistrer le tableau",
+    "addTask": "Ajouter une tâche",
+    "blocked": "Bloqué",
+    "byPriority": "Par priorité",
+    "bySection": "Par section",
+    "byStatus": "Par statut",
+    "byTag": "Par étiquette",
+    "capturePlaceholder": "Idée rapide...",
+    "capturesColumn": "Captures et Boîte de réception",
+    "capturesEmpty": "Boîte vide. Glissez un élément ici vers une colonne projet.",
+    "capturesTitle": "Captures",
+    "cardFields": "Champs des cartes",
+    "collapseColumn": "Replier la colonne",
+    "compact": "Compact",
+    "density": "Densité",
+    "detailed": "Détaillé",
+    "display": "Affichage",
+    "groupBy": "Grouper par",
+    "handoffTitle": "État actuel",
+    "hideEmptyColumns": "Masquer les colonnes vides",
+    "hideSubProjectsList": "Masquer la liste des sous-projets au-dessus",
+    "includeSubProjects": "Inclure les sous-projets",
+    "mode": "Mode du tableau",
+    "modeBySubProject": "1 col / projet",
+    "modePortfolio": "Portefeuille",
+    "modeTasks": "Toutes les tâches",
+    "movedToProject": "Déplacé dans {{project}}",
+    "moveToProject": "Déplacer vers un projet",
+    "newView": "Vue",
+    "newViewName": "Nom de la nouvelle vue",
+    "noOpenTasks": "Aucune tâche ouverte dans ce sous-projet.",
+    "normal": "Normal",
+    "onlyTodoMd": "Dépôts TODO.md uniquement",
+    "openProject": "Ouvrir la page",
+    "peekProject": "Voir les tâches",
+    "projectStatuses": "Statuts des sous-projets",
+    "quickAddPlaceholder": "Ajouter une tâche...",
+    "recent7d": "Tâches capturées ces 7 derniers jours",
+    "saveView": "Enregistrer comme nouvelle vue",
+    "sendToSubProject": "Envoyer au projet...",
+    "todoMdMoveBlocked": "Les tâches TODO.md restent dans leur projet de dépôt.",
+    "untagged": "Sans étiquette",
+    "wipLimit": "Limite WIP (En cours)"
   },
   "taskPane": {
     "chat": "Discuter avec l'IA",
@@ -5858,8 +5900,8 @@
       "plan": "Sur la page Planifier"
     },
     "shortcuts": {
-            "panePrevious": "Tâche précédente dans la fiche",
-            "paneNext": "Tâche suivante dans la fiche",
+      "panePrevious": "Tâche précédente dans la fiche",
+      "paneNext": "Tâche suivante dans la fiche",
       "palette": "Ouvrir la palette de commandes",
       "capture": "Capture rapide",
       "search": "Rechercher",
