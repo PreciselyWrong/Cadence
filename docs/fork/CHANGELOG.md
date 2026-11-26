@@ -4,6 +4,12 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26
+
+- Projets › Tableau : tour de contrôle Kanban multi-sous-projets activée par défaut pour les projets parents (vues enregistrées `Actifs` 1 colonne/projet, `Portefeuille` par statut/priorité/étiquette avec compteur WIP visuel et tiroir latéral « Voir », `Tâches` agrégées, `En pause`), colonne « Captures » glissable à gauche, filtre 7 jours, colonnes repliables, liste « Sous-projets » du dessus repliable, mode mobile à onglets.
+- Projets `TODO.md` : la section `## État actuel` (handoff) est extraite automatiquement dans l'état du projet (branche, bloqueurs, prochaine action) sans créer de fausses tâches, et affichée sur les cartes et la fiche projet.
+- Android : une tâche capturée sans date avec `+projet` ou `~domaine` reste visible dans « À classer » (`needsWhen = true`), avec confirmation de destination.
+
 ## 2026.11.21
 
 - Week-end : plusieurs sorties proposées pour la même demi-journée (16 au plus), chacune à choisir ou à ignorer.
