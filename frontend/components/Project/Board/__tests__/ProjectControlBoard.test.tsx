@@ -317,4 +317,30 @@ describe('ProjectControlBoard', () => {
         ).not.toBeInTheDocument();
         prompt.mockRestore();
     });
+
+    it('opens a task from a click anywhere on its card, not from its check box', async () => {
+        const onOpenTask = jest.fn();
+        render(
+            <MemoryRouter>
+                <ProjectControlBoard
+                    project={devProject}
+                    tasks={[]}
+                    config={defaultBoardConfig(true)}
+                    onChangeConfig={jest.fn()}
+                    onMoveTaskSection={jest.fn()}
+                    onOpenTask={onOpenTask}
+                    t={t}
+                />
+            </MemoryRouter>
+        );
+        const card = await screen.findByTestId('control-card-t1');
+        fireEvent.click(card);
+        expect(onOpenTask).toHaveBeenCalledTimes(1);
+        expect(onOpenTask.mock.calls[0][0].uid).toBe('t1');
+
+        fireEvent.click(
+            card.querySelector('input[type="checkbox"]') as Element
+        );
+        expect(onOpenTask).toHaveBeenCalledTimes(1);
+    });
 });

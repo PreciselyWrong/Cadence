@@ -725,7 +725,15 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                     draggingRef.current = null;
                     setDragOverCol(null);
                 }}
-                className={`group rounded-lg border border-gray-200/80 bg-white ${densityPad} shadow-xs transition hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700`}
+                data-testid={`control-card-${task.uid}`}
+                // A click anywhere on the card opens the task; a drag never
+                // ends in a click, and the controls keep their own action.
+                onClick={(e) => {
+                    if ((e.target as HTMLElement).closest('input, button'))
+                        return;
+                    onOpenTask(task);
+                }}
+                className={`group cursor-pointer rounded-lg border border-gray-200/80 bg-white ${densityPad} shadow-xs transition hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700`}
             >
                 <div className="flex items-start gap-2">
                     <input

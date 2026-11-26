@@ -133,7 +133,16 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
                             onDragStartItem({ kind: 'unsorted_task', task })
                         }
                         onDragEnd={onDragEnd}
-                        className="group rounded-lg border border-gray-200/90 bg-white p-2 shadow-xs hover:border-blue-300 dark:border-gray-800 dark:bg-gray-900"
+                        onClick={(e) => {
+                            if (
+                                (e.target as HTMLElement).closest(
+                                    'select, button'
+                                )
+                            )
+                                return;
+                            onOpenTask(task);
+                        }}
+                        className="group cursor-pointer rounded-lg border border-gray-200/90 bg-white p-2 shadow-xs hover:border-blue-300 dark:border-gray-800 dark:bg-gray-900"
                     >
                         <button
                             type="button"
