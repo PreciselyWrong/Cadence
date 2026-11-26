@@ -291,6 +291,11 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING(64),
                 allowNull: true,
             },
+            // Rank of its bullet in the file (0 first), read on every import.
+            source_position: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
             // Where the task came from (tasks/core/source.js lists the values)
             // and the page it points to, shown as a badge that opens it.
             source: {

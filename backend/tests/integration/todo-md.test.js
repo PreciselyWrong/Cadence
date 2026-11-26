@@ -250,6 +250,38 @@ describe('TODO.md projects', () => {
         expect(movedTag.name).toBe('code');
     });
 
+    it('keeps the place of each bullet in the file, and follows it when the file is reordered', async () => {
+        await agent.post('/api/todo-md/rescan');
+        const byName = async () =>
+            Object.fromEntries(
+                (await tasksOf('alpha')).map((t) => [t.name, t.source_position])
+            );
+        expect(await byName()).toEqual({
+            'Ship the thing': 0,
+            'Write docs': 1,
+            'Fix bug': 2,
+            'Maybe a widget': 3,
+            'Set up repo': 4,
+        });
+
+        fs.writeFileSync(
+            alpha(),
+            ALPHA.replace(
+                '- [ ] Write docs\n- Fix bug\n',
+                '- Fix bug\n- [ ] Write docs\n'
+            )
+        );
+        await agent.post('/api/todo-md/rescan');
+
+        expect(await byName()).toMatchObject({ 'Fix bug': 1, 'Write docs': 2 });
+        const project = await Project.findOne({ where: { name: 'alpha' } });
+        const res = await agent.get(`/api/tasks?project_id=${project.id}`);
+        const fix = (res.body.tasks || res.body).find(
+            (t) => t.name === 'Fix bug'
+        );
+        expect(fix.source_position).toBe(1);
+    });
+
     it('keeps everything when the root cannot be read', async () => {
         await agent.post('/api/todo-md/rescan');
         const before = await Task.count();

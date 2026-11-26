@@ -221,7 +221,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
     }
     const timezone = owner.timezone || 'UTC';
 
-    for (const item of parsed.items) {
+    for (const [position, item] of parsed.items.entries()) {
         const status = desiredStatus(item);
         const task = pairs.get(item);
         const desired = {
@@ -230,6 +230,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
             status,
             source_section: item.section.slice(0, 150),
             source_key: item.key,
+            source_position: position,
         };
 
         if (!task) {
@@ -681,7 +682,11 @@ async function unlinkProject(uid) {
             },
         });
         for (const task of tasks) {
-            await task.update({ source_key: null, source_section: null });
+            await task.update({
+                source_key: null,
+                source_section: null,
+                source_position: null,
+            });
         }
         await project.update({ source_type: null, source_path: null });
         return { project_uid: project.uid };

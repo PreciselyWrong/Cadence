@@ -126,9 +126,9 @@ const ENTITIES = {
         },
         // Set when the server (or any device) has already notified the
         // reminder; a device must not ring one that was sent after it.
-        // The key of a task mirrored from a TODO.md bullet: only its check box
-        // can change on a device.
-        serverFields: ['reminder_sent_at', 'source_key'],
+        // The key of a task mirrored from a TODO.md bullet and its place in
+        // the file: only its check box can change on a device.
+        serverFields: ['reminder_sent_at', 'source_key', 'source_position'],
         refs: {
             project_uid: { column: 'project_id', entity: 'project' },
             area_uid: { column: 'area_id', entity: 'area' },
