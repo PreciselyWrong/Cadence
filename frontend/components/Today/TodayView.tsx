@@ -76,6 +76,7 @@ import {
 import { useDay } from './useDay';
 import DayList from './DayList';
 import TaskLine from './TaskLine';
+import PickRow from './PickRow';
 import OverdueReplanSheet from './OverdueReplanSheet';
 import { computeTodayLater } from './todayLater';
 import {
@@ -993,33 +994,14 @@ const NewToday: React.FC = () => {
         action: (() => void) | null,
         label: string
     ) => (
-        <div
+        <PickRow
             key={task.uid}
-            className="flex min-h-[36px] items-center gap-3 rounded-lg px-3 hover:bg-surface-high max-sm:min-h-[44px]"
-        >
-            <button
-                type="button"
-                className="min-w-0 flex-1 truncate text-left text-body-m text-surface-on"
-                onClick={() => task.uid && openTask(task.uid)}
-            >
-                {task.name}
-            </button>
-            {task.due_date && (
-                <span className="text-xs tabular-nums text-surface-on-variant">
-                    {new Intl.DateTimeFormat(locale, {
-                        day: 'numeric',
-                        month: 'short',
-                    }).format(parseISO(task.due_date.slice(0, 10)))}
-                </span>
-            )}
-            {action ? (
-                <Button size="sm" variant="ghost" onClick={action}>
-                    {label}
-                </Button>
-            ) : (
-                <span className="text-xs text-surface-on-variant">{label}</span>
-            )}
-        </div>
+            task={task}
+            locale={locale}
+            onOpen={openTask}
+            action={action}
+            label={label}
+        />
     );
 
     // A late task put on the day (dragged, taken) leaves the late list at once.
