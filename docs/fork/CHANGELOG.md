@@ -4,6 +4,14 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.2
+
+- Projets `TODO.md` : `#bug` (étiquette), `!high` / `!med` / `!low` et `@AAAA-MM-JJ` dans une puce ajoutent les étiquettes et fixent la priorité et l'échéance ; ils disparaissent du titre et changer l'un d'eux garde la même tâche.
+- « Découper en étapes » dans la fiche d'une tâche (web et Android) : l'IA propose de petites étapes minutées, à modifier avant de les ajouter en sous-tâches avec leur durée ; sans IA, « Première étape de 2 min ? ». Réglages dans Profil et Réglages Android.
+- Android 1.47.0 (`android/CHANGELOG.md`) : un clic sur une tâche d'un widget l'ouvre aussi quand l'app est déjà ouverte.
+- « Historique » en bas de la fiche d'une tâche (web et Android) : chaque changement avec son heure exacte et son origine (dans l'app, clé d'API, appareil, IA, suggestion IA acceptée) ; la création est notée partout.
+- Android 1.48.0 (`android/CHANGELOG.md`) : « Historique » dans la fiche de tâche.
+
 ## 2026.11.26
 
 - Projets › Tableau : tour de contrôle Kanban multi-sous-projets activée par défaut pour les projets parents (vues enregistrées `Actifs` 1 colonne/projet, `Portefeuille` par statut/priorité/étiquette avec compteur WIP visuel et tiroir latéral « Voir », `Tâches` agrégées, `En pause`), colonne « Captures » glissable à gauche, filtre 7 jours, colonnes repliables, liste « Sous-projets » du dessus repliable, mode mobile à onglets.
