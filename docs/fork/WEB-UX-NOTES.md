@@ -1184,3 +1184,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 ### 2026-11-26 : projet et tags sur les tâches à choisir (Aujourd'hui)
 - **Décision** : les lignes « Demain » et « Suggestions » de la page Aujourd'hui montrent le projet et les deux premiers tags en puces (même puce que les lignes de la journée), avant la date et « Ajouter » : on sait d'où vient la suggestion sans l'ouvrir.
 - **Android** : déjà fait, « Demain » et « Suggérées » passent par `taskRows` sans ligne calme, qui montre projet et tags (`TodayTab.kt`).
+
+### 2026-11-26 : « Aujourd'hui » reste dans la barre de la journée
+
+- **Décision** : dans l'en-tête de la vue du jour, le bouton « Aujourd'hui » est toujours affiché à côté des flèches, grisé quand on est déjà sur aujourd'hui. Avant il n'apparaissait qu'ailleurs, et la barre sautait à chaque changement de jour.
+- **Android** : à vérifier sur l'en-tête d'Aujourd'hui ; même règle si un retour à aujourd'hui y apparaît et disparaît.

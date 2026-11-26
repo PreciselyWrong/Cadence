@@ -1932,11 +1932,12 @@ const TodayPage: React.FC = () => {
                         >
                             <ChevronRightIcon className="h-5 w-5" />
                         </button>
-                        {date && !isToday && (
+                        {date && (
                             <button
                                 type="button"
                                 onClick={goToToday}
-                                className="min-h-[34px] rounded-lg px-3 text-sm font-medium bg-gray-100 text-gray-900 hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800"
+                                disabled={isToday}
+                                className="min-h-[34px] rounded-lg px-3 text-sm font-medium bg-gray-100 text-gray-900 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800"
                                 data-testid="day-today"
                             >
                                 {t('tasks.today', 'Today')}

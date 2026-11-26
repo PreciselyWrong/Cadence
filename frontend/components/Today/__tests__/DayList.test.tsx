@@ -171,9 +171,15 @@ describe('DayList body', () => {
         expect(keep).not.toHaveBeenCalled();
     });
 
-    it('offers the return to today only away from today', () => {
+    it('keeps the return to today in place, usable only away from today', () => {
         const onToday = jest.fn();
-        render(<DayList {...baseProps({ isToday: false, onToday })} />);
+        const { rerender } = render(
+            <DayList {...baseProps({ isToday: true, onToday })} />
+        );
+        // On today the button stays, so the header does not jump on a day change.
+        expect(screen.getByRole('button', { name: 'Today' })).toBeDisabled();
+
+        rerender(<DayList {...baseProps({ isToday: false, onToday })} />);
         fireEvent.click(screen.getByRole('button', { name: 'Today' }));
         expect(onToday).toHaveBeenCalledTimes(1);
     });

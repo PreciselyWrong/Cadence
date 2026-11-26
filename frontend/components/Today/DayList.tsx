@@ -286,8 +286,14 @@ const DayList: React.FC<DayListProps> = ({
                             </IconButton>
                         </>
                     )}
-                    {showDayNav && !isToday && (
-                        <Button variant="ghost" size="sm" onClick={onToday}>
+                    {/* Always there, so the header does not jump on a day change. */}
+                    {showDayNav && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={onToday}
+                            disabled={isToday}
+                        >
                             {t('today.goToToday', 'Today')}
                         </Button>
                     )}
