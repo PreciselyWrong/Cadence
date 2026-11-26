@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.AccountTree
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.DateRange
@@ -99,6 +100,7 @@ import ch.nicolab.cadence.tasks.model.DetailTitle
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
 import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
 import ch.nicolab.cadence.tasks.project.canBecomeProject
+import ch.nicolab.cadence.tasks.breakdown.Breakdown
 import ch.nicolab.cadence.tasks.triage.MailDeck
 import java.net.URLEncoder
 import ch.nicolab.cadence.tasks.model.EstimateFormat
@@ -210,6 +212,7 @@ internal fun TaskDetailSheet(
     var dateTab by remember { mutableStateOf(DateTab.Due) }
     var confirmDelete by remember { mutableStateOf(false) }
     var confirmProject by remember { mutableStateOf(false) }
+    var breakingDown by remember { mutableStateOf(false) }
     // Une sous-tâche ouverte s'affiche par-dessus : sa fiche est une fiche de tâche comme une autre.
     var openedSubtask by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
     var openedNote by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
@@ -565,6 +568,12 @@ internal fun TaskDetailSheet(
                     picker = null
                     confirmProject = true
                 }
+                if (Breakdown.canBreakDown(current)) ActionRow(Icons.Outlined.AutoAwesome, stringResource(R.string.breakdown_action), palette.primary) {
+                    // Le serveur lit le nom et la note tels qu'il les a : le texte en attente part avant la proposition.
+                    flushText()
+                    picker = null
+                    breakingDown = true
+                }
                 // La suppression d'une tâche de fichier se fait dans le fichier : pas de ligne ici.
                 if (!FileBackedActions.ownsField(current, FileOwnedField.DELETE)) ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
                     picker = null
@@ -586,6 +595,7 @@ internal fun TaskDetailSheet(
     openedSubtask?.let { uid ->
         TaskDetailSheet(taskUid = uid, viewModel = viewModel, onDismiss = { openedSubtask = null })
     }
+    if (breakingDown) BreakdownSheet(taskUid = current.uid, viewModel = viewModel, onDismiss = { breakingDown = false })
     if (confirmProject) {
         ConvertToProjectDialog(
             name = current.name,

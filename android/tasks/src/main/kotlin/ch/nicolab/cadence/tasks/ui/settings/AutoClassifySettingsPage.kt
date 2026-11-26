@@ -224,6 +224,7 @@ fun AutoClassifySettingsPage(modifier: Modifier = Modifier) {
             }
         }
         dryResult?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface) }
+        BreakdownSettingsSection()
         MailSenderRulesSection()
     }
 }

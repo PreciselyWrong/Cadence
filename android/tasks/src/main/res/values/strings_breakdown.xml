@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="breakdown_action">Découper en étapes</string>
+    <string name="breakdown_title">Découper en étapes</string>
+    <string name="breakdown_loading">L\'IA découpe la tâche…</string>
+    <string name="breakdown_offline">Découper en étapes demande une connexion au serveur.</string>
+    <string name="breakdown_refused">Cette tâche ne peut pas être découpée ici.</string>
+    <string name="breakdown_retry">Réessayer</string>
+    <string name="breakdown_intro_ai">Étapes proposées par l\'IA. Ajuste-les avant de les ajouter.</string>
+    <string name="breakdown_prompt_fallback">Première étape de 2 min ?</string>
+    <string name="breakdown_reason_disabled">IA désactivée</string>
+    <string name="breakdown_reason_not_configured">IA non configurée</string>
+    <string name="breakdown_reason_failed">IA indisponible</string>
+    <string name="breakdown_reason_empty">L\'IA n\'a rien proposé</string>
+    <string name="breakdown_step_label">Étape %1$d</string>
+    <string name="breakdown_step_placeholder">Ce que je fais en premier</string>
+    <string name="breakdown_minutes_label">Durée</string>
+    <string name="breakdown_minutes_suffix">min</string>
+    <string name="breakdown_minutes_invalid">De 5 à 720 minutes, ou vide</string>
+    <string name="breakdown_name_invalid">200 caractères au plus</string>
+    <string name="breakdown_step_up">Monter l\'étape %1$d</string>
+    <string name="breakdown_step_down">Descendre l\'étape %1$d</string>
+    <string name="breakdown_step_remove">Retirer l\'étape %1$d</string>
+    <string name="breakdown_add_step">Ajouter une étape</string>
+    <string name="breakdown_total">Total : %1$s</string>
+    <string name="breakdown_apply_none">Ajouter des étapes</string>
+    <plurals name="breakdown_apply">
+        <item quantity="one">Ajouter %1$d étape</item>
+        <item quantity="other">Ajouter %1$d étapes</item>
+    </plurals>
+    <plurals name="breakdown_added">
+        <item quantity="one">%1$d étape ajoutée</item>
+        <item quantity="other">%1$d étapes ajoutées</item>
+    </plurals>
+    <string name="breakdown_apply_failed">Les étapes n\'ont pas pu être ajoutées.</string>
+
+    <string name="breakdown_settings_title">Découper en étapes</string>
+    <string name="breakdown_settings_intro">L\'IA propose des étapes minutées pour une tâche ; tu les ajustes avant de les ajouter en sous-tâches.</string>
+    <string name="breakdown_settings_enabled">Proposition de l\'IA</string>
+    <string name="breakdown_max_steps">Étapes au plus</string>
+    <string name="breakdown_min_step_minutes">Durée d\'une étape, au moins (min)</string>
+    <string name="breakdown_max_step_minutes">Durée d\'une étape, au plus (min)</string>
+    <string name="breakdown_note_chars">Caractères de la note envoyés</string>
+    <string name="breakdown_max_tokens">Longueur de réponse (jetons)</string>
+    <string name="breakdown_saved">Réglages enregistrés</string>
+    <string name="breakdown_invalid">Valeur invalide : %1$s</string>
+    <string name="breakdown_settings_refused">Réglages refusés : %1$s</string>
+    <string name="breakdown_settings_offline">Réglages indisponibles hors ligne</string>
+    <string name="breakdown_save">Enregistrer</string>
+</resources>

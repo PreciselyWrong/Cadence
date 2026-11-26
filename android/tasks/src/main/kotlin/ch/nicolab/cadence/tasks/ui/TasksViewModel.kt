@@ -273,6 +273,11 @@ internal class TasksViewModel(
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages: Flow<String> = _messages.asSharedFlow()
 
+    /** Un message d'écran (bandeau) venu d'une feuille qui n'a pas son propre hôte. */
+    fun announce(message: String) {
+        _messages.tryEmit(message)
+    }
+
     private val _completed = MutableSharedFlow<TaskItem>(extraBufferCapacity = 4)
     private val heldCompletion = HeldCompletion(COMPLETE_HOLD_MS)
 

@@ -1,3 +1,8 @@
+## [1.47.0] : 26 novembre 2026
+
+- « Découper en étapes » dans les actions d'une tâche : l'IA propose des étapes minutées, tu les ajustes (nom, durée, ordre) puis elles deviennent des sous-tâches ; sans IA, la feuille demande une première étape de 2 min. Réglages de l'IA dans Réglages › Classement.
+- Un clic sur une tâche d'un widget l'ouvre aussi quand l'app est déjà ouverte.
+
 ## [1.45.0] : 21 novembre 2026
 
 - Week-end : chaque sortie proposée montre une petite image et son lieu, et une section « Près de chez nous » liste les autres événements du week-end autour de la maison, avec leur lien.

@@ -101,6 +101,10 @@ object TasksGraph {
     fun autoClassify(context: Context): ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRepository =
         ch.nicolab.cadence.tasks.autoclassify.autoClassifyRepository(context)
 
+    /** « Découper en étapes » : proposition, envoi et réglages (en ligne seulement). */
+    fun breakdown(context: Context): ch.nicolab.cadence.tasks.breakdown.BreakdownRepository =
+        ch.nicolab.cadence.tasks.breakdown.breakdownRepository(context)
+
     /** Écritures du plan du jour (Reporter, Placer) : plan local d'abord, appels différés ensuite. */
     internal fun planEdits(context: Context): PlanEdits = createPlanEdits(context.applicationContext)
 
