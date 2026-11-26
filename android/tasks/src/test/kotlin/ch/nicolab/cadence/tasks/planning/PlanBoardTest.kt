@@ -209,4 +209,15 @@ class PlanBoardTest {
         assertEquals(listOf("demain"), later.tomorrow.map { it.uid })
         assertEquals(listOf("semaine", "sugg"), later.suggested.map { it.uid })
     }
+
+    @Test
+    fun `Suggérées garde au plus vingt tâches, comme le serveur, après avoir retiré demain et ce qui est à l'écran`() {
+        val many = (1..25).map { TaskItem(uid = "s$it", name = "s$it") }
+        val later = PlanBoard.todayLater(
+            tomorrow = listOf(many[0]), horizons = PlanHorizons(emptyMap(), emptyList()), today = LocalDate.of(2026, 11, 26),
+            suggestions = many, shown = setOf("s2"),
+        )
+        assertEquals(20, later.suggested.size)
+        assertEquals("s3", later.suggested.first().uid)
+    }
 }

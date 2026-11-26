@@ -38,25 +38,40 @@ class NextActionTest {
     }
 
     @Test
-    fun `suggestions put the designated action first and drop the other tasks of that project`() {
+    fun `suggestions put the designated action first and keep only it among the plain tasks of that project`() {
         val tasks = listOf(
             task("autre", "p", inView = true),
             task("choisie", "p"),
+            task("reste", "p"),
             task("libre", "q", inView = true),
             task("sans-projet", inView = true),
         )
+        val projects = listOf(
+            ProjectItem("p", "Projet", status = "in_progress", nextTaskUid = "choisie"),
+            ProjectItem("q", "Autre", status = "in_progress"),
+        )
 
-        val result = TaskViews.suggestions(tasks, today, now, week, mapOf("p" to "choisie")).map { it.uid }
+        val result = TaskViews.suggestions(tasks, today, now, week, projects).map { it.uid }
 
-        assertEquals(listOf("choisie", "libre", "sans-projet").sorted(), result.sorted())
         assertEquals("choisie", result.first())
-        assertFalse("autre" in result)
+        assertEquals(listOf("choisie", "libre", "sans-projet", "autre").sorted(), result.sorted())
+        assertFalse("reste" in result)
+    }
+
+    @Test
+    fun `a task the user put in view or committed to this week stays suggested even when its project picked another action`() {
+        val tasks = listOf(task("choisie", "p"), task("en-vue", "p", inView = true), task("semaine", "p").copy(weekOf = week))
+        val projects = listOf(ProjectItem("p", "Projet", status = "planned", nextTaskUid = "choisie"))
+
+        val result = TaskViews.suggestions(tasks, today, now, week, projects).map { it.uid }
+
+        assertEquals(listOf("semaine", "en-vue"), result)
     }
 
     @Test
     fun `a stale designation does not hide the rest of the project`() {
         val tasks = listOf(task("autre", "p", inView = true), task("close", "p", status = TaskStatus.DONE))
-        assertEquals(listOf("autre"), TaskViews.suggestions(tasks, today, now, week, mapOf("p" to "close")).map { it.uid })
+        assertEquals(listOf("autre"), TaskViews.suggestions(tasks, today, now, week, listOf(ProjectItem("p", "Projet", status = "in_progress", nextTaskUid = "close"))).map { it.uid })
     }
 
     @Test

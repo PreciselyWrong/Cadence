@@ -22,7 +22,6 @@ import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.BoardTaskPlacement
 import ch.nicolab.cadence.tasks.model.ProjectSectionItem
-import ch.nicolab.cadence.tasks.model.WithLinkFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.CommentItem
 import ch.nicolab.cadence.tasks.model.AreaSuggestions
@@ -62,6 +61,7 @@ import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.project.canBecomeProject
 import ch.nicolab.cadence.tasks.model.TaskSources
+import ch.nicolab.cadence.tasks.model.TaskScope
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
@@ -257,12 +257,13 @@ internal class TasksViewModel(
     private val tasks: Flow<List<TaskItem>> =
         combine(repository.observeTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }
 
-    /** Tâches du domaine filtré et du filtre « Avec un lien » : Aujourd'hui, À venir et les suggestions ; les projets et le Bilan gardent [tasks]. */
-    private val scopedTasks: Flow<List<TaskItem>> = scopedAllTasks()
+    /** Tâches du domaine filtré : Aujourd'hui, À venir, les suggestions et Planifier. « Avec un lien » n'y vaut jamais ([TaskScope]). */
+    private val scopedTasks: Flow<List<TaskItem>> =
+        combine(tasks, _areaFilter, projects) { all, area, projects -> TaskScope.planning(all, projects, area) }
 
-    private fun scopedAllTasks(): Flow<List<TaskItem>> =
+    private fun listTasks(): Flow<List<TaskItem>> =
         combine(tasks, _areaFilter, projects, chosenWithLink) { all, area, projects, withLink ->
-            WithLinkFilter.tasks(AreaFilter.tasks(all, projects, area), withLink)
+            TaskScope.lists(all, projects, area, withLink)
         }
 
     fun setWithLink(on: Boolean) {
@@ -312,7 +313,7 @@ internal class TasksViewModel(
 
     /** Suggestions du jour : Cette semaine puis En vue, hors « Plus tard ». */
     val suggestions: StateFlow<List<TaskItem>> = combine(scopedTasks, moment, weekStart, projects) { all, m, week, projects ->
-        TaskViews.suggestions(all, m.today, m.now, week, NextAction.byProject(projects))
+        TaskViews.suggestions(all, m.today, m.now, week, projects)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Événements de l'agenda pour le jour courant ; le flux ne se relance qu'au changement de jour ou de fuseau. */
@@ -366,7 +367,7 @@ internal class TasksViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** [allTasks] du domaine filtré : comptes et listes des Étiquettes, et Terminées. */
-    val areaTasks: StateFlow<List<TaskItem>> = scopedAllTasks()
+    val areaTasks: StateFlow<List<TaskItem>> = listTasks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val tags: StateFlow<List<TagItem>> = repository.observeTags()

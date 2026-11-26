@@ -235,7 +235,7 @@ class TaskViewsTest {
     }
 
     @Test
-    fun `suggestions du jour, cette semaine puis en vue, sans plus tard ni ce qui est déjà du jour`() {
+    fun `suggestions du jour, cette semaine, en vue puis le reste, sans plus tard ni ce qui est déjà du jour`() {
         val week = LocalDate.of(2026, 10, 26)
         val tasks = listOf(
             TaskItem("vue-ancienne", "a", inViewAt = Instant.parse("2026-10-01T00:00:00Z")),
@@ -248,7 +248,7 @@ class TaskViewsTest {
             TaskItem("vue-terminee", "h", inViewAt = Instant.EPOCH, status = TaskStatus.DONE),
         )
         assertEquals(
-            listOf("semaine", "vue-recente", "vue-ancienne"),
+            listOf("semaine", "vue-recente", "vue-ancienne", "semaine-passee"),
             TaskViews.suggestions(tasks, today, now, week).map { it.uid },
         )
     }

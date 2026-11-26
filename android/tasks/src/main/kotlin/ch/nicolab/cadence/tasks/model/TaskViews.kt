@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.model
 
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -31,32 +32,59 @@ object TaskViews {
         }.sortedWith(todayOrder)
 
     /**
-     * Suggestions du jour : la prochaine action choisie de chaque projet, puis les tâches décidées pour la
-     * semaine [weekStart], puis celles en vue (la plus récemment mise en vue d'abord), hors « Plus tard » et
-     * hors ce qu'Aujourd'hui montre déjà, et jamais une routine (tâche récurrente) : elle vient le jour de son échéance, comme le web. Un projet qui a choisi sa prochaine action ([nextByProject],
-     * projet vers tâche) ne propose que celle-là.
+     * Suggestions du jour, comme le serveur (`getCandidates`, `daily-plan/service.js`), hors ce qu'Aujourd'hui montre
+     * déjà, hors « Plus tard » et jamais une routine (elle vient le jour de son échéance) :
+     * 1. la prochaine action choisie de chaque projet ([ProjectItem.nextTaskUid]), si elle est suggestible ;
+     * 2. les tâches décidées pour la semaine [weekStart], 3. celles en vue : choisies par l'utilisateur, elles restent
+     *    suggérées même si leur projet a choisi une autre action ou n'est pas en cours ;
+     * 4. le reste : tâche ouverte (pas commencée ou en attente) sans projet, ou d'un projet en cours (réglage serveur par
+     *    défaut), échéance dans [HORIZON_DAYS] jours au plus. Un projet qui a choisi sa prochaine action ne propose que
+     *    celle-là.
+     * Chaque groupe suit la priorité, un projet avant l'absence de projet, puis l'échéance proche ; à égalité, les
+     * mises en vue récentes d'abord, sinon l'ordre du nom (l'appareil ne connaît pas la dernière modification d'une
+     * tâche, que le serveur utilise ensuite). Le plafond ([MAX_SUGGESTIONS]) s'applique à l'écran, après Demain ([ch.nicolab.cadence.tasks.planning.PlanBoard.todayLater]).
      */
     fun suggestions(
         tasks: List<TaskItem>,
         today: LocalDate,
         now: Instant,
         weekStart: LocalDate,
-        nextByProject: Map<String, String> = emptyMap(),
+        projects: List<ProjectItem> = emptyList(),
     ): List<TaskItem> {
         val shown = today(tasks, today, now).mapTo(hashSetOf()) { it.uid }
-        val picks = nextByProject.filter { (project, uid) ->
+        val picks = NextAction.byProject(projects).filter { (project, uid) ->
             tasks.any { it.uid == uid && it.projectUid == project && !it.isClosed }
         }
-        val open = tasks.filter { task ->
-            visibleNow(task, now) && !task.someday && !task.isRecurring && task.uid !in shown &&
-                (task.projectUid == null || task.projectUid !in picks || picks[task.projectUid] == task.uid)
-        }
-        val designated = open.filter { it.projectUid != null && picks[it.projectUid] == it.uid }.sortedBy { it.name.lowercase() }
-        val rest = open.filterNot { it in designated }
-        val week = rest.filter { it.weekOf == weekStart }.sortedBy { it.name.lowercase() }
-        val inView = rest.filter { it.weekOf != weekStart && it.inViewAt != null }.sortedByDescending { it.inViewAt }
-        return designated + week + inView
+        val active = projects.filter { it.projectStatus == ProjectStatus.IN_PROGRESS }.mapTo(hashSetOf()) { it.uid }
+        val horizon = now.plus(Duration.ofDays(HORIZON_DAYS))
+        val open = tasks.filter { visibleNow(it, now) && !it.someday && !it.isRecurring && it.uid !in shown }
+        fun chosen(task: TaskItem) = task.weekOf == weekStart || task.inViewAt != null
+        fun suggestible(task: TaskItem): Boolean =
+            (task.status == TaskStatus.NOT_STARTED || task.status == TaskStatus.WAITING) &&
+                task.dueDate?.isAfter(horizon) != true &&
+                if (task.projectUid == null) true
+                else task.projectUid in active && (task.projectUid !in picks || picks[task.projectUid] == task.uid)
+        val rest = open.filterNot(::chosen).filter(::suggestible)
+        val designated = rest.filter { it.projectUid != null && picks[it.projectUid] == it.uid }.sortedBy { it.name.lowercase() }
+        val week = open.filter { it.weekOf == weekStart }.sortedWith(rank.thenBy(::nameKey))
+        val inView = open.filter { it.weekOf != weekStart && it.inViewAt != null }
+            .sortedWith(rank.thenByDescending { it.inViewAt }.thenBy(::nameKey))
+        return designated + week + inView + (rest - designated.toSet()).sortedWith(rank.thenBy(::nameKey))
     }
+
+    /** Plafond de Suggérées dans Aujourd'hui : réglage serveur par défaut (`maxSuggestions`, 20). */
+    const val MAX_SUGGESTIONS = 20
+
+    private const val HORIZON_DAYS = 3L
+
+    private fun nameKey(task: TaskItem): String = task.name.lowercase()
+
+    /** Ordre d'un groupe de suggestions (`ranking.js`) : priorité, projet avant sans projet, échéance proche ; le départage (mise en vue, nom) est celui de l'appelant. */
+    private val rank: Comparator<TaskItem> = compareByDescending<TaskItem> { task ->
+        task.priority?.let { it.coerceIn(TaskPriority.LOW, TaskPriority.HIGH) + 1 } ?: 0
+    }
+        .thenBy { it.projectUid == null }
+        .thenBy { it.dueDate ?: Instant.MAX }
 
     fun overdue(tasks: List<TaskItem>, today: LocalDate, now: Instant): List<TaskItem> =
         today(tasks, today, now).filter { isOverdue(it, today) }
@@ -138,7 +166,7 @@ object TaskViews {
 
     fun ofProject(tasks: List<TaskItem>, projectUid: String, now: Instant): List<TaskItem> =
         tasks.filter { it.projectUid == projectUid && visibleNow(it, now) }
-            .sortedWith(compareBy<TaskItem> { it.dueDate == null }.thenBy { it.dueDate }.thenBy { it.name.lowercase() })
+            .sortedWith(compareBy<TaskItem> { it.dueDate == null }.thenBy { it.dueDate }.thenBy(::nameKey))
 
     /**
      * Report d'une tâche au [day] : une échéance à heure fixe garde son heure locale,

@@ -242,7 +242,7 @@ internal object PlanBoard {
 
     /**
      * Sections repliées d'Aujourd'hui, chaque tâche une seule fois et jamais une de [shown] (déjà à l'écran) : Demain
-     * ([tomorrow], plus les tâches prévues demain), puis Suggérées (le reste de [suggestions]). Les horizons (cette
+     * ([tomorrow], plus les tâches prévues demain), puis Suggérées (le reste de [suggestions], au plus [TaskViews.MAX_SUGGESTIONS] comme le serveur). Les horizons (cette
      * semaine, le mois…) restent dans Planifier : Aujourd'hui ne montre que ce qui se fait aujourd'hui et demain.
      */
     fun todayLater(
@@ -258,7 +258,7 @@ internal object PlanBoard {
         val plannedTomorrow = horizons.plannedThisWeek.filter { it.second == day1 }.map { it.first }
         return TodayLater(
             tomorrow = take(tomorrow + plannedTomorrow),
-            suggested = take(suggestions),
+            suggested = take(suggestions).take(TaskViews.MAX_SUGGESTIONS),
         )
     }
 
