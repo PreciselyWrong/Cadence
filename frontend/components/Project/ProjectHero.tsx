@@ -38,6 +38,8 @@ const MAX_NAME_LENGTH = 150;
 
 interface ProjectHeroProps {
     project: Project;
+    // The board needs the height: the banner image steps aside there.
+    hideBanner?: boolean;
     areas: Area[];
     t: TFunction;
     doneCount: number;
@@ -66,6 +68,7 @@ interface ProjectHeroProps {
 
 const ProjectHero: React.FC<ProjectHeroProps> = ({
     project,
+    hideBanner = false,
     t,
     doneCount,
     totalCount,
@@ -325,7 +328,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     return (
         <div className="mb-6 space-y-3">
             <div className={`space-y-3 pt-6 sm:space-y-4 ${PAGE_GUTTER}`}>
-                {project.image_url && (
+                {project.image_url && !hideBanner && (
                     <div
                         className="h-28 overflow-hidden rounded-2xl sm:h-44"
                         data-testid="project-banner"

@@ -38,6 +38,7 @@ import {
 import { rescanTodoMd } from '../../../utils/todoMdService';
 import { useToast } from '../../Shared/ToastContext';
 import EntityIcon from '../../Shared/EntityIcon';
+import TaskCheckCircle from '../../Task/TaskCheckCircle';
 import { getProjectStatusTint } from '../projectStatusStyles';
 import { dueDayLabel, isDueLate, localToday } from '../../Shared/task/dueLabel';
 import {
@@ -158,8 +159,10 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
 
     const reloadTree = useCallback(async () => {
         if (!projectUid || !config.includeSubProjects || !hasSubProjects) {
-            setSubProjects([]);
-            setSubTasks([]);
+            // Keep the same empty arrays: a new one each call would render
+            // again, and loop when a caller's callbacks are not stable.
+            setSubProjects((prev) => (prev.length > 0 ? [] : prev));
+            setSubTasks((prev) => (prev.length > 0 ? [] : prev));
             return;
         }
         setTreeLoading(true);
@@ -247,19 +250,19 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
         (status: ProjectStatus): string => {
             switch (status) {
                 case 'in_progress':
-                    return t('projects.status.inProgress', 'In progress');
+                    return t('projectStatus.in_progress', 'In progress');
                 case 'planned':
-                    return t('projects.status.planned', 'Planned');
+                    return t('projectStatus.planned', 'Planned');
                 case 'waiting':
-                    return t('projects.status.waiting', 'Waiting');
+                    return t('projectStatus.waiting', 'Waiting');
                 case 'not_started':
-                    return t('projects.status.notStarted', 'Not started');
+                    return t('projectStatus.not_started', 'Not started');
                 case 'paused':
-                    return t('projects.status.paused', 'Paused');
+                    return t('projectStatus.paused', 'Paused');
                 case 'done':
-                    return t('projects.status.done', 'Done');
+                    return t('projectStatus.done', 'Done');
                 case 'cancelled':
-                    return t('projects.status.cancelled', 'Cancelled');
+                    return t('projectStatus.cancelled', 'Cancelled');
                 case 'archived':
                     return t('projects.status.archived', 'Archived');
             }
@@ -273,13 +276,13 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 case 'not_started':
                     return t('tasks.kanban.todo', 'To Do');
                 case 'planned':
-                    return t('tasks.status.planned', 'Planned');
+                    return t('projectStatus.planned', 'Planned');
                 case 'in_progress':
-                    return t('tasks.status.inProgress', 'In progress');
+                    return t('projectStatus.in_progress', 'In progress');
                 case 'waiting':
-                    return t('tasks.status.waiting', 'Waiting');
+                    return t('projectStatus.waiting', 'Waiting');
                 case 'done':
-                    return t('tasks.status.done', 'Done');
+                    return t('projectStatus.done', 'Done');
             }
         },
         [t]
@@ -729,21 +732,23 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 // A click anywhere on the card opens the task; a drag never
                 // ends in a click, and the controls keep their own action.
                 onClick={(e) => {
-                    if ((e.target as HTMLElement).closest('input, button'))
+                    if ((e.target as HTMLElement).closest('button'))
                         return;
                     onOpenTask(task);
                 }}
                 className={`group cursor-pointer rounded-lg border border-gray-200/80 bg-white ${densityPad} shadow-xs transition hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700`}
             >
                 <div className="flex items-start gap-2">
-                    <input
-                        type="checkbox"
-                        checked={done}
-                        disabled={readOnly}
-                        onChange={() => void handleToggleSubTask(task)}
-                        aria-label={task.name}
-                        className="mt-0.5 h-4 w-4 shrink-0 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
+                    <span className="mt-px flex shrink-0">
+                        <TaskCheckCircle
+                            task={task}
+                            size="card"
+                            delayed={false}
+                            onToggle={() => {
+                                if (!readOnly) void handleToggleSubTask(task);
+                            }}
+                        />
+                    </span>
                     <button
                         type="button"
                         onClick={() => onOpenTask(task)}
@@ -761,7 +766,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                     (activePreset.cardFields.tags &&
                         task.tags &&
                         task.tags.length > 0)) && (
-                    <div className="mt-1.5 flex flex-wrap items-center gap-1 pl-6">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1 pl-[26px]">
                         {showProjectBadge && ownerSub && (
                             <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                                 {ownerSub.name}
@@ -1046,33 +1051,6 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
 
                 {/* Mode, Group-by, Captures, Search, Display */}
                 <div className="flex flex-wrap items-center gap-1.5">
-                    {hasSubProjects && config.includeSubProjects && (
-                        <select
-                            aria-label={t('projectBoard.mode', 'Board mode')}
-                            value={activePreset.mode}
-                            onChange={(e) =>
-                                updateActivePreset({
-                                    mode: e.target.value as BoardViewMode,
-                                })
-                            }
-                            data-testid="board-mode-select"
-                            className="rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-2.5 pr-8 text-[13px] font-medium text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
-                        >
-                            <option value="by_subproject">
-                                {t(
-                                    'projectBoard.modeBySubProject',
-                                    '1 col / project'
-                                )}
-                            </option>
-                            <option value="portfolio">
-                                {t('projectBoard.modePortfolio', 'Portfolio')}
-                            </option>
-                            <option value="tasks">
-                                {t('projectBoard.modeTasks', 'All tasks')}
-                            </option>
-                        </select>
-                    )}
-
                     {activePreset.mode === 'portfolio' && (
                         <select
                             aria-label={t('projectBoard.groupBy', 'Group by')}
@@ -1170,27 +1148,26 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                         <span>{t('projectBoard.capturesTitle', 'Captures')}</span>
                     </button>
 
-                    <button
-                        type="button"
-                        onClick={() =>
-                            updateActivePreset({
-                                recentDays: activePreset.recentDays ? null : 7,
-                            })
-                        }
-                        aria-pressed={Boolean(activePreset.recentDays)}
-                        title={t(
-                            'projectBoard.recent7d',
-                            'Tasks captured in the last 7 days'
-                        )}
-                        className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition ${
-                            activePreset.recentDays
-                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
-                        }`}
-                    >
-                        <ClockIcon className="h-3.5 w-3.5" />
-                        <span>{t('projectBoard.recent7dShort', '7d')}</span>
-                    </button>
+                    {activePreset.recentDays && (
+                        <button
+                            type="button"
+                            onClick={() =>
+                                updateActivePreset({ recentDays: null })
+                            }
+                            data-testid="board-recent-chip"
+                            title={t(
+                                'projectBoard.recent7d',
+                                'Tasks captured in the last 7 days'
+                            )}
+                            className="inline-flex items-center gap-1 rounded-lg bg-amber-100 px-2.5 py-1.5 text-[13px] font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-200"
+                        >
+                            <ClockIcon className="h-3.5 w-3.5" />
+                            <span>
+                                {t('projectBoard.recent7dShort', '7d')}
+                            </span>
+                            <XMarkIcon className="h-3 w-3" />
+                        </button>
+                    )}
 
                     <div className="relative">
                         <MagnifyingGlassIcon className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
@@ -1326,6 +1303,65 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 )}
 
                                 <div className="space-y-1.5 border-b border-gray-100 pb-2.5 dark:border-gray-800">
+                                    {hasSubProjects && config.includeSubProjects && (
+                                        <div className="flex items-center justify-between gap-2">
+                                            <span className="text-gray-600 dark:text-gray-300">
+                                                {t('projectBoard.mode', 'Board mode')}
+                                            </span>
+                                            <select
+                                                aria-label={t(
+                                                    'projectBoard.mode',
+                                                    'Board mode'
+                                                )}
+                                                value={activePreset.mode}
+                                                onChange={(e) =>
+                                                    updateActivePreset({
+                                                        mode: e.target
+                                                            .value as BoardViewMode,
+                                                    })
+                                                }
+                                                data-testid="board-mode-select"
+                                                className="rounded border border-gray-200 bg-gray-50 py-0.5 pl-1.5 pr-7 dark:border-gray-700 dark:bg-gray-800"
+                                            >
+                                                <option value="by_subproject">
+                                                    {t(
+                                                        'projectBoard.modeBySubProject',
+                                                        '1 col / project'
+                                                    )}
+                                                </option>
+                                                <option value="portfolio">
+                                                    {t(
+                                                        'projectBoard.modePortfolio',
+                                                        'Portfolio'
+                                                    )}
+                                                </option>
+                                                <option value="tasks">
+                                                    {t(
+                                                        'projectBoard.modeTasks',
+                                                        'All tasks'
+                                                    )}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    )}
+                                    <label className="flex items-center justify-between gap-2">
+                                        <span className="text-gray-600 dark:text-gray-300">
+                                            {t(
+                                                'projectBoard.recent7d',
+                                                'Tasks captured in the last 7 days'
+                                            )}
+                                        </span>
+                                        <input
+                                            type="checkbox"
+                                            data-testid="board-recent-toggle"
+                                            checked={Boolean(activePreset.recentDays)}
+                                            onChange={(e) =>
+                                                updateActivePreset({
+                                                    recentDays: e.target.checked ? 7 : null,
+                                                })
+                                            }
+                                        />
+                                    </label>
                                     <label className="flex items-center justify-between gap-2">
                                         <span className="text-gray-600 dark:text-gray-300">
                                             {t(
@@ -1452,11 +1488,41 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     </p>
                                     {(
                                         [
-                                            ['handoff', 'Handoff'],
-                                            ['nextAction', 'Next action'],
-                                            ['progress', 'Progress'],
-                                            ['tags', 'Tags'],
-                                            ['dueDate', 'Due date'],
+                                            [
+                                                'handoff',
+                                                t(
+                                                    'projectBoard.handoffTitle',
+                                                    'Current state'
+                                                ),
+                                            ],
+                                            [
+                                                'nextAction',
+                                                t(
+                                                    'projectBoard.fieldNextAction',
+                                                    'Next task'
+                                                ),
+                                            ],
+                                            [
+                                                'progress',
+                                                t(
+                                                    'projectBoard.fieldProgress',
+                                                    'Progress'
+                                                ),
+                                            ],
+                                            [
+                                                'tags',
+                                                t(
+                                                    'projectBoard.fieldTags',
+                                                    'Tags'
+                                                ),
+                                            ],
+                                            [
+                                                'dueDate',
+                                                t(
+                                                    'projectBoard.fieldDueDate',
+                                                    'Due date'
+                                                ),
+                                            ],
                                         ] as const
                                     ).map(([key, label]) => (
                                         <label
@@ -1595,7 +1661,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                     )}
 
                     {/* Main Kanban Canvas */}
-                    <div className="flex items-start gap-3 overflow-x-auto pb-4">
+                    <div className="flex items-start gap-3 overflow-x-auto pb-4 md:min-h-[calc(100vh-6rem)]">
                         {activePreset.showInboxColumn && (
                             <BoardInboxColumn
                                 inboxItems={inboxItems}
@@ -1682,7 +1748,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         }}
                                         className={`${
                                             hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-80 md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                        } w-full md:w-[17.5rem] md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : 'border-gray-200/80 bg-gray-50/70 dark:border-gray-800 dark:bg-gray-900/40'
@@ -1712,7 +1778,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                 <span className="truncate text-sm font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400">
                                                     {col.title}
                                                 </span>
-                                                {health && (
+                                                {health && health !== 'ok' && (
                                                     <span
                                                         role="img"
                                                         data-testid={`health-${col.projectUid}`}
@@ -1759,6 +1825,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                 <HandoffSummary
                                                     handoff={handoff}
                                                     health={health}
+                                                    compact
                                                     t={t}
                                                     className="mb-2"
                                                 />
@@ -1909,7 +1976,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         }}
                                         className={`${
                                             hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-80 md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                        } w-full md:w-[17.5rem] md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : col.isOverWip
@@ -2017,7 +2084,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         }}
                                         className={`${
                                             hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-80 md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                        } w-full md:w-[17.5rem] md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : 'border-gray-200/80 bg-gray-50/70 dark:border-gray-800 dark:bg-gray-900/40'

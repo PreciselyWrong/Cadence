@@ -1172,3 +1172,11 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Android** : à faire, pas de tableau des sous-projets ; au minimum l'action « Actualiser les TODO.md » et l'état de l'arbre sur un projet parent.
 - **Repris du marché** (Linear, GitHub Projects, guides de suivi multi-projets) : pastille de santé à côté du nom de chaque sous-projet (rouge bloqué, grise périmé, verte à jour), « Périmé · il y a … » quand l'État actuel n'a pas bougé depuis 14 jours (réglable dans Display, 0 pour couper) ; dans chaque colonne les tâches suivent les sections du fichier (Now, Next, Ideas, puis les autres), et une section se replie après 8 cartes (« Afficher les N autres »).
 - **Non repris** : couloirs horizontaux et couvertures de cartes (trop chargés pour un tableau personnel) ; l'ordre des tâches dans une section ne suit pas encore l'ordre du fichier (il faudrait le stocker).
+
+### 2026-11-26 : tableau des sous-projets allégé
+
+- **Décision** : deux vues au lieu de quatre, « Tâches par projet » (une colonne par sous-projet en cours, colonnes sans tâche masquées) et « Projets » (les sous-projets en cartes par statut, sans limite WIP, « En pause » visible) ; les tableaux déjà enregistrés passent aux deux vues et gardent les vues créées à la main. Le type de vue et « 7 derniers jours » descendent dans Affichage ; un filtre 7 j actif reste visible dans la barre, un clic l'enlève.
+- **Décision** : dans une colonne, l'État actuel se réduit à la prochaine action (deux lignes), avec « Bloqué » ou « Périmé » seulement s'il y a lieu ; branche, arbre et âge sont dans l'infobulle et le tiroir. La pastille de santé n'apparaît que pour un projet bloqué ou périmé. Les tâches ont le rond de coche de Cadence, tous les statuts sont traduits.
+- **Décision** : la bannière du projet se retire sur l'onglet Tableau, les colonnes font 250 px (cinq visibles au lieu de quatre) et changer de vue garde la position de défilement.
+- **Android** : rien à reporter tant qu'il n'y a pas de tableau des sous-projets (entrée dans `TODO.md`).
+

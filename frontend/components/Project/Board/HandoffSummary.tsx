@@ -12,6 +12,9 @@ interface HandoffSummaryProps {
     handoff: ProjectHandoffState;
     // 'stale' flags a current state the file has not refreshed for a while.
     health?: ProjectHealth | null;
+    // In a column: the next action, plus only what needs attention; the
+    // branch, the tree and the age go to the tooltip (and the drawer).
+    compact?: boolean;
     t: TFunction;
     className?: string;
 }
@@ -21,6 +24,7 @@ interface HandoffSummaryProps {
 const HandoffSummary: React.FC<HandoffSummaryProps> = ({
     handoff,
     health = null,
+    compact = false,
     t,
     className = '',
 }) => {
@@ -34,6 +38,50 @@ const HandoffSummary: React.FC<HandoffSummaryProps> = ({
         handoff.branch || handoff.tree || handoff.blockers || updatedAgo;
     if (!handoff.next_action && !hasMeta) return null;
     const clean = handoff.tree ? CLEAN_TREE.test(handoff.tree) : false;
+
+    if (compact) {
+        const details = [handoff.branch, handoff.tree, updatedAgo]
+            .filter(Boolean)
+            .join(' · ');
+        const tooltip = [handoff.next_action, details, handoff.blockers]
+            .filter(Boolean)
+            .join('\n');
+        return (
+            <div
+                className={`rounded-lg border border-indigo-100 bg-indigo-50/60 px-2.5 py-1.5 dark:border-indigo-900/50 dark:bg-indigo-950/30 ${className}`}
+                title={tooltip}
+                data-testid="handoff-compact"
+            >
+                {handoff.next_action && (
+                    <p className="line-clamp-2 text-[13px] font-medium leading-snug text-indigo-950 dark:text-indigo-200">
+                        → {handoff.next_action}
+                    </p>
+                )}
+                {(handoff.blockers || health === 'stale') && (
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                        {handoff.blockers && (
+                            <span className="inline-flex items-center gap-1 rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+                                <ExclamationTriangleIcon className="h-3.5 w-3.5" />
+                                {t('projectBoard.blocked', 'Blocked')}
+                            </span>
+                        )}
+                        {health === 'stale' && updatedAgo && (
+                            <span
+                                className="rounded bg-gray-200 px-1.5 py-0.5 text-[11px] font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                                data-testid="handoff-stale"
+                            >
+                                {t(
+                                    'projectBoard.staleSince',
+                                    'Stale · {{ago}}',
+                                    { ago: updatedAgo }
+                                )}
+                            </span>
+                        )}
+                    </div>
+                )}
+            </div>
+        );
+    }
 
     return (
         <div

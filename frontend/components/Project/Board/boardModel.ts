@@ -57,7 +57,12 @@ export interface BoardPreset {
     cardFields: CardFields;
 }
 
+// Bumped when the built-in views change, so saved boards pick them up.
+// 2: two views (tasks by project, projects) instead of four.
+export const BOARD_CONFIG_VERSION = 2;
+
 export interface ProjectBoardConfig {
+    version: number;
     activePresetId: string;
     includeSubProjects: boolean;
     hideSubProjectsList: boolean;
@@ -179,7 +184,7 @@ export const defaultPresetsForProject = (
     return [
         {
             id: 'active-projects',
-            name: 'Actifs',
+            name: 'Tâches par projet',
             mode: 'by_subproject',
             portfolioGroupBy: 'status',
             taskGroupBy: 'status',
@@ -189,7 +194,7 @@ export const defaultPresetsForProject = (
             onlyTodoMd: false,
             recentDays: null,
             selectedTags: [],
-            hideEmptyColumns: false,
+            hideEmptyColumns: true,
             showInboxColumn: false,
             wipLimits: {},
             collapsedColumns: [],
@@ -199,7 +204,7 @@ export const defaultPresetsForProject = (
         },
         {
             id: 'portfolio',
-            name: 'Portefeuille',
+            name: 'Projets',
             mode: 'portfolio',
             portfolioGroupBy: 'status',
             taskGroupBy: 'status',
@@ -211,49 +216,9 @@ export const defaultPresetsForProject = (
             selectedTags: [],
             hideEmptyColumns: false,
             showInboxColumn: false,
-            wipLimits: { in_progress: 3 },
-            collapsedColumns: ['paused', 'done'],
-            density: 'normal',
-            staleDays: DEFAULT_STALE_DAYS,
-            cardFields: { ...DEFAULT_CARD_FIELDS },
-        },
-        {
-            id: 'all-tasks',
-            name: 'Tâches',
-            mode: 'tasks',
-            portfolioGroupBy: 'status',
-            taskGroupBy: 'status',
-            swimlaneBy: 'none',
-            includeSubProjects: true,
-            projectStatuses: ['in_progress', 'planned', 'waiting'],
-            onlyTodoMd: false,
-            recentDays: null,
-            selectedTags: [],
-            hideEmptyColumns: false,
-            showInboxColumn: false,
-            wipLimits: { in_progress: 5 },
+            wipLimits: {},
             collapsedColumns: ['done'],
             density: 'normal',
-            staleDays: DEFAULT_STALE_DAYS,
-            cardFields: { ...DEFAULT_CARD_FIELDS },
-        },
-        {
-            id: 'icebox',
-            name: 'En pause',
-            mode: 'portfolio',
-            portfolioGroupBy: 'priority',
-            taskGroupBy: 'status',
-            swimlaneBy: 'none',
-            includeSubProjects: true,
-            projectStatuses: ['paused', 'waiting', 'not_started'],
-            onlyTodoMd: false,
-            recentDays: null,
-            selectedTags: [],
-            hideEmptyColumns: false,
-            showInboxColumn: false,
-            wipLimits: {},
-            collapsedColumns: [],
-            density: 'compact',
             staleDays: DEFAULT_STALE_DAYS,
             cardFields: { ...DEFAULT_CARD_FIELDS },
         },
@@ -265,6 +230,7 @@ export const defaultBoardConfig = (
 ): ProjectBoardConfig => {
     const presets = defaultPresetsForProject(hasSubProjects);
     return {
+        version: BOARD_CONFIG_VERSION,
         activePresetId: presets[0].id,
         includeSubProjects: hasSubProjects,
         hideSubProjectsList: hasSubProjects,

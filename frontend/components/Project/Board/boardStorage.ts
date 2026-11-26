@@ -1,4 +1,5 @@
 import {
+    BOARD_CONFIG_VERSION,
     BoardPreset,
     DEFAULT_CARD_FIELDS,
     ProjectBoardConfig,
@@ -6,9 +7,13 @@ import {
 } from './boardModel';
 import { fetchProfile, updateUiSettings } from '../../../utils/profileService';
 
-const storageKey = (projectUid: string) => `cadence_project_board:${projectUid}`;
+const storageKey = (projectUid: string) =>
+    `cadence_project_board:${projectUid}`;
 
-const normalizePreset = (raw: Partial<BoardPreset>, fallback: BoardPreset): BoardPreset => ({
+const normalizePreset = (
+    raw: Partial<BoardPreset>,
+    fallback: BoardPreset
+): BoardPreset => ({
     ...fallback,
     ...raw,
     projectStatuses: Array.isArray(raw.projectStatuses)
@@ -38,16 +43,25 @@ export const normalizeBoardConfig = (
     if (!raw || typeof raw !== 'object') return base;
     const obj = raw as Partial<ProjectBoardConfig>;
     const rawPresets = Array.isArray(obj.presets) ? obj.presets : [];
-    const presets =
-        rawPresets.length > 0
-            ? rawPresets.map((p, idx) =>
-                  normalizePreset(p, base.presets[idx] || base.presets[0])
-              )
-            : base.presets;
+    const outdated = obj.version !== BOARD_CONFIG_VERSION;
+    // A board saved before the built-in views changed takes the current
+    // ones and keeps only the views its owner created.
+    const kept = outdated
+        ? rawPresets.filter((p) => String(p?.id).startsWith('custom-'))
+        : rawPresets;
+    const normalized = kept.map((p, idx) =>
+        normalizePreset(p, base.presets[idx] || base.presets[0])
+    );
+    const presets = outdated
+        ? [...base.presets, ...normalized]
+        : normalized.length > 0
+          ? normalized
+          : base.presets;
     const activePresetId = presets.some((p) => p.id === obj.activePresetId)
         ? (obj.activePresetId as string)
         : presets[0].id;
     return {
+        version: BOARD_CONFIG_VERSION,
         activePresetId,
         includeSubProjects:
             typeof obj.includeSubProjects === 'boolean'

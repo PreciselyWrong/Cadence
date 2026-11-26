@@ -1078,6 +1078,7 @@ const ProjectDetails: React.FC = () => {
             <PageShell template="board">
                 <ProjectHero
                     project={project}
+                    hideBanner={view === 'board'}
                     nextAction={nextBestAction}
                     areas={areas}
                     t={t}

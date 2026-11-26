@@ -35,14 +35,16 @@ describe('boardModel', () => {
         const cfg = defaultBoardConfig(true);
         expect(cfg.includeSubProjects).toBe(true);
         expect(cfg.hideSubProjectsList).toBe(true);
-        expect(cfg.presets.map((p) => p.mode)).toEqual([
-            'by_subproject',
-            'portfolio',
-            'tasks',
-            'portfolio',
+        // Two views only: tasks by project, and the projects themselves.
+        expect(cfg.presets.map((p) => [p.id, p.mode])).toEqual([
+            ['active-projects', 'by_subproject'],
+            ['portfolio', 'portfolio'],
         ]);
         expect(cfg.presets[0].projectStatuses).toEqual(['in_progress']);
-        expect(cfg.presets[1].wipLimits).toEqual({ in_progress: 3 });
+        expect(cfg.presets[0].hideEmptyColumns).toBe(true);
+        // No WIP alarm on the number of projects in progress.
+        expect(cfg.presets[1].wipLimits).toEqual({});
+        expect(cfg.presets[1].collapsedColumns).toEqual(['done']);
     });
 
     it('builds one column per active sub-project and respects hideEmptyColumns', () => {
@@ -61,7 +63,10 @@ describe('boardModel', () => {
             makeTask({ uid: 't2', name: 'Sleeping task', project_uid: 'p2' }),
         ];
 
-        const preset = defaultBoardConfig(true).presets[0]; // Actifs (in_progress)
+        const preset = {
+            ...defaultBoardConfig(true).presets[0],
+            hideEmptyColumns: false,
+        };
         const cols = buildSubProjectColumns(
             parent,
             [],
@@ -92,7 +97,11 @@ describe('boardModel', () => {
             makeSub({ uid: 'p4', name: 'D', status: 'in_progress' }),
             makeSub({ uid: 'p5', name: 'E', status: 'paused' }),
         ];
-        const preset = defaultBoardConfig(true).presets[1]; // Portefeuille
+        const preset = {
+            ...defaultBoardConfig(true).presets[1],
+            wipLimits: { in_progress: 3 },
+            collapsedColumns: ['paused', 'done'],
+        };
         const cols = buildPortfolioColumns(subs, preset, '');
         const inProgress = cols.find((c) => c.id === 'in_progress')!;
         const paused = cols.find((c) => c.id === 'paused')!;
@@ -121,7 +130,10 @@ describe('boardModel', () => {
             }),
         ];
         const preset = {
-            ...defaultBoardConfig(true).presets[2],
+            ...defaultBoardConfig(true).presets[0],
+            mode: 'tasks' as const,
+            projectStatuses: [],
+            hideEmptyColumns: false,
             recentDays: 7,
         };
         const byStatus = buildTaskGroupColumns(

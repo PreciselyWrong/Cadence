@@ -6,6 +6,16 @@ import { defaultBoardConfig } from '../boardModel';
 import { Project } from '../../../../entities/Project';
 import { Task } from '../../../../entities/Task';
 
+// The task check circle reads its labels through the hook.
+jest.mock('react-i18next', () => ({
+    // dateUtils loads the app's i18n instance, which registers this plugin.
+    initReactI18next: { type: '3rdParty', init: () => undefined },
+    useTranslation: () => ({
+        t: (key: string, fallback?: unknown) =>
+            typeof fallback === 'string' ? fallback : key,
+    }),
+}));
+
 jest.mock('../../../Shared/ToastContext', () => ({
     useToast: () => ({
         showSuccessToast: jest.fn(),
@@ -151,10 +161,11 @@ describe('ProjectControlBoard', () => {
             expect(screen.getByTestId('subproject-col-p1')).toBeInTheDocument();
         });
         expect(screen.getByText('→ Ship phase 2 board')).toBeInTheDocument();
-        expect(screen.getByText('feat/kanban')).toBeInTheDocument();
+        // A column keeps the next action only; the rest is in its tooltip.
+        expect(screen.queryByText('feat/kanban')).not.toBeInTheDocument();
         expect(
-            screen.getByText('modifications non commitées')
-        ).toBeInTheDocument();
+            screen.getByTestId('handoff-compact').getAttribute('title')
+        ).toContain('feat/kanban');
         expect(screen.getByText('Wire control board')).toBeInTheDocument();
         // Health from the current state: not refreshed since 2020, so stale.
         expect(screen.getByTestId('health-p1')).toHaveAttribute(
@@ -178,6 +189,10 @@ describe('ProjectControlBoard', () => {
         // Switch to Portfolio preset and inspect Cadence in the drawer.
         fireEvent.click(screen.getByTestId('board-preset-portfolio'));
         expect(screen.getByTestId('portfolio-card-p1')).toBeInTheDocument();
+        expect(screen.getByText('feat/kanban')).toBeInTheDocument();
+        expect(
+            screen.getByText('modifications non commitées')
+        ).toBeInTheDocument();
 
         fireEvent.click(screen.getByTestId('peek-project-p1'));
         expect(screen.getByTestId('subproject-drawer')).toBeInTheDocument();
@@ -338,9 +353,143 @@ describe('ProjectControlBoard', () => {
         expect(onOpenTask).toHaveBeenCalledTimes(1);
         expect(onOpenTask.mock.calls[0][0].uid).toBe('t1');
 
+        // The round check every Cadence task uses, not a native box.
+        expect(card.querySelector('input[type="checkbox"]')).toBeNull();
         fireEvent.click(
-            card.querySelector('input[type="checkbox"]') as Element
+            card.querySelector('[data-testid="task-check-circle"]') as Element
         );
         expect(onOpenTask).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps the toolbar to the views: board type and the 7-day filter sit in Display', async () => {
+        const Wrapper: React.FC = () => {
+            const [config, setConfig] = React.useState(() =>
+                defaultBoardConfig(true)
+            );
+            return (
+                <MemoryRouter>
+                    <ProjectControlBoard
+                        project={devProject}
+                        tasks={[]}
+                        config={config}
+                        onChangeConfig={setConfig}
+                        onMoveTaskSection={jest.fn()}
+                        onOpenTask={jest.fn()}
+                        t={t}
+                    />
+                </MemoryRouter>
+            );
+        };
+        render(<Wrapper />);
+        await screen.findByTestId('subproject-col-p1');
+
+        expect(
+            screen.queryByTestId('board-mode-select')
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByTestId('board-recent-chip')
+        ).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('board-display-button'));
+        expect(screen.getByTestId('board-mode-select')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('board-recent-toggle'));
+
+        // An active filter stays visible in the toolbar, one click clears it.
+        fireEvent.click(screen.getByTestId('board-recent-chip'));
+        expect(
+            screen.queryByTestId('board-recent-chip')
+        ).not.toBeInTheDocument();
+    });
+
+    it('shows no health dot on a project that is on track', async () => {
+        (fetchProjectBoardTree as jest.Mock).mockResolvedValue({
+            ...mockTree,
+            sub_projects: mockTree.sub_projects.map((p) =>
+                p.handoff_state
+                    ? {
+                          ...p,
+                          handoff_state: {
+                              ...p.handoff_state,
+                              updated_at: new Date().toISOString(),
+                          },
+                      }
+                    : p
+            ),
+        });
+        render(
+            <MemoryRouter>
+                <ProjectControlBoard
+                    project={devProject}
+                    tasks={[]}
+                    config={defaultBoardConfig(true)}
+                    onChangeConfig={jest.fn()}
+                    onMoveTaskSection={jest.fn()}
+                    onOpenTask={jest.fn()}
+                    t={t}
+                />
+            </MemoryRouter>
+        );
+        await screen.findByTestId('subproject-col-p1');
+        expect(screen.queryByTestId('health-p1')).not.toBeInTheDocument();
+    });
+
+    it('labels statuses and card fields from the translations, not in English', async () => {
+        // Resolves keys in the French file, like the app does.
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const fr = require('../../../../../public/locales/fr/translation.json');
+        const lookup = (key: string) =>
+            key
+                .split('.')
+                .reduce(
+                    (node: any, part) =>
+                        node && typeof node === 'object'
+                            ? node[part]
+                            : undefined,
+                    fr
+                );
+        const tFr = ((key: string, def?: string) => {
+            const value = lookup(key);
+            return typeof value === 'string' ? value : def || key;
+        }) as any;
+        const Wrapper: React.FC = () => {
+            const [config, setConfig] = React.useState(() =>
+                defaultBoardConfig(true)
+            );
+            return (
+                <MemoryRouter>
+                    <ProjectControlBoard
+                        project={devProject}
+                        tasks={[]}
+                        config={config}
+                        onChangeConfig={setConfig}
+                        onMoveTaskSection={jest.fn()}
+                        onOpenTask={jest.fn()}
+                        t={tFr}
+                    />
+                </MemoryRouter>
+            );
+        };
+        render(<Wrapper />);
+        await screen.findByTestId('subproject-col-p1');
+
+        fireEvent.click(screen.getByTestId('board-preset-portfolio'));
+        expect(
+            screen.getByTestId('portfolio-col-in_progress')
+        ).toHaveTextContent('En cours');
+        expect(screen.getByTestId('portfolio-col-paused')).toHaveTextContent(
+            'En pause'
+        );
+
+        fireEvent.click(screen.getByTestId('board-display-button'));
+        const menu = screen.getByTestId('board-display-menu');
+        for (const english of [
+            'In progress',
+            'Not started',
+            'Handoff',
+            'Next action',
+            'Due date',
+        ]) {
+            expect(menu).not.toHaveTextContent(english);
+        }
     });
 });

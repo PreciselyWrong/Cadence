@@ -39,6 +39,30 @@ const renderHero = (
     );
 
 describe('ProjectHero declutter', () => {
+    it('hides the banner when the view below needs the room', () => {
+        render(
+            <ProjectHero
+                project={{
+                    uid: 'p1',
+                    name: 'Launch',
+                    status: 'in_progress',
+                    image_url: '/api/uploads/projects/banner.jpg',
+                }}
+                areas={[]}
+                t={t}
+                doneCount={1}
+                totalCount={4}
+                onUpdate={jest.fn().mockResolvedValue(undefined)}
+                onDeleteClick={jest.fn()}
+                onShareClick={jest.fn()}
+                onTogglePin={jest.fn()}
+                hideBanner
+            />
+        );
+        expect(screen.queryByTestId('project-banner')).not.toBeInTheDocument();
+        expect(screen.getByText('Launch')).toBeInTheDocument();
+    });
+
     it('shows the image as a wide banner and keeps the colored icon', () => {
         const { container } = renderHero({
             image_url: '/api/uploads/projects/banner.jpg',
