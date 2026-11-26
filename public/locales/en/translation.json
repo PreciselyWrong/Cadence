@@ -5945,7 +5945,8 @@
     "unassigned": "Nobody",
     "reopen": "Reopen",
     "complete": "Complete",
-    "more": "More"
+    "more": "More",
+    "moreActions": "More on this task"
   },
   "datePopover": {
     "later": "Later",

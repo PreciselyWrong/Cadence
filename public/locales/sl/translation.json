@@ -6076,7 +6076,8 @@
     "unassigned": "Nihče",
     "reopen": "Ponovno odpri",
     "complete": "Dokončaj",
-    "more": "Več"
+    "more": "Več",
+    "moreActions": "Več o tej nalogi"
   },
   "datePopover": {
     "later": "Pozneje",

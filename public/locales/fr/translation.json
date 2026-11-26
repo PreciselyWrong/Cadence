@@ -6005,7 +6005,8 @@
     "unassigned": "Personne",
     "reopen": "Rouvrir",
     "complete": "Terminer",
-    "more": "Plus"
+    "more": "Plus",
+    "moreActions": "Plus sur cette tâche"
   },
   "datePopover": {
     "later": "Plus tard",

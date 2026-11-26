@@ -92,11 +92,28 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
     return (
         <>
             <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-                <div className="space-y-5">
+                <div className="space-y-4">
                     <TaskEditorBody
                         ed={ed}
                         titleId={titleId}
                         plannedLabel={plannedLabel}
+                        planning={
+                            <>
+                                <TaskDecisionRow
+                                    task={ed.task}
+                                    onSaved={async (saved) => {
+                                        ed.reset(saved);
+                                        onSaved(saved);
+                                    }}
+                                />
+                                {ed.task.uid && (
+                                    <PostponementHistory
+                                        taskUid={ed.task.uid}
+                                        version={ed.task.due_date}
+                                    />
+                                )}
+                            </>
+                        }
                     />
                     {ed.error && (
                         <p
@@ -105,19 +122,6 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
                         >
                             {ed.error}
                         </p>
-                    )}
-                    <TaskDecisionRow
-                        task={ed.task}
-                        onSaved={async (saved) => {
-                            ed.reset(saved);
-                            onSaved(saved);
-                        }}
-                    />
-                    {ed.task.uid && (
-                        <PostponementHistory
-                            taskUid={ed.task.uid}
-                            version={ed.task.due_date}
-                        />
                     )}
                 </div>
             </div>
@@ -297,11 +301,18 @@ const TaskPane: React.FC = () => {
     if (!shown || !openTaskUid) return null;
 
     const planned = parsePlannedOn(location.search);
-    const plannedLabel = planned
-        ? t('taskPane.planned', 'Planned {{when}}', {
-              when: formatPlannedWhen(planned, i18n.language),
-          })
-        : null;
+    // The day the sheet was opened from, unless it only repeats the due
+    // date already on the chips.
+    const plannedRepeatsDue =
+        planned !== null &&
+        planned.minute === null &&
+        planned.date === task?.due_date?.slice(0, 10);
+    const plannedLabel =
+        planned && !plannedRepeatsDue
+            ? t('taskPane.planned', 'Planned {{when}}', {
+                  when: formatPlannedWhen(planned, i18n.language),
+              })
+            : null;
     // Jump to the task's project or tag: their pages list the other tasks.
     // The page the task points at, one click away.
     const paneLink = task ? taskLinkOf(task) : null;
@@ -332,16 +343,23 @@ const TaskPane: React.FC = () => {
                     type="button"
                     onClick={() => setExpanded((value) => !value)}
                     aria-pressed={expanded}
-                    className="inline-flex items-center gap-1.5 rounded-lg px-1.5 py-1 text-body-m text-surface-on-variant hover:bg-surface-high hover:text-surface-on"
+                    aria-label={
+                        expanded
+                            ? t('taskPane.shrink', 'Shrink')
+                            : t('taskPane.expand', 'Expand')
+                    }
+                    title={
+                        expanded
+                            ? t('taskPane.shrink', 'Shrink')
+                            : t('taskPane.expand', 'Expand')
+                    }
+                    className={iconButton}
                 >
                     {expanded ? (
-                        <ArrowsPointingInIcon className="h-4 w-4" />
+                        <ArrowsPointingInIcon className="h-5 w-5" />
                     ) : (
-                        <ArrowsPointingOutIcon className="h-4 w-4" />
+                        <ArrowsPointingOutIcon className="h-5 w-5" />
                     )}
-                    {expanded
-                        ? t('taskPane.shrink', 'Shrink')
-                        : t('taskPane.expand', 'Expand')}
                 </button>
                 {task && (
                     <nav

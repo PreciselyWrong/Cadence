@@ -5982,7 +5982,8 @@
     "unassigned": "Niemand",
     "reopen": "Wieder öffnen",
     "complete": "Erledigen",
-    "more": "Mehr"
+    "more": "Mehr",
+    "moreActions": "Mehr zu dieser Aufgabe"
   },
   "datePopover": {
     "later": "Später",

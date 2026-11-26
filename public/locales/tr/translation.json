@@ -5973,7 +5973,8 @@
     "unassigned": "Kimse",
     "reopen": "Yeniden aç",
     "complete": "Tamamla",
-    "more": "Daha fazla"
+    "more": "Daha fazla",
+    "moreActions": "Bu görev hakkında daha fazla"
   },
   "datePopover": {
     "later": "Daha sonra",

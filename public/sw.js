@@ -235,6 +235,13 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    // Translations keep one address across builds: served from the cache
+    // first, a new string stayed in its old wording until the next worker.
+    if (url.pathname.includes('/locales/')) {
+        event.respondWith(handleFresh(request));
+        return;
+    }
+
     event.respondWith(handleStatic(request));
 });
 
@@ -296,6 +303,23 @@ async function handleNavigate(request) {
     const own = await caches.open(CACHE_VERSION);
     const shell = await own.match(scopeUrl(''));
     return shell || offlineError();
+}
+
+// The server's copy when it answers, the cached one offline.
+async function handleFresh(request) {
+    try {
+        const response = await fetchWithTimeout(request, READ_TIMEOUT_MS);
+        if (response.ok) {
+            const clone = response.clone();
+            caches
+                .open(CACHE_VERSION)
+                .then((cache) => cache.put(request, clone));
+            return response;
+        }
+    } catch {
+        // network error or timeout
+    }
+    return (await caches.match(request)) || fetch(request);
 }
 
 async function handleStatic(request) {

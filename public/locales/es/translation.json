@@ -5967,7 +5967,8 @@
     "unassigned": "Nadie",
     "reopen": "Reabrir",
     "complete": "Completar",
-    "more": "Más"
+    "more": "Más",
+    "moreActions": "Más sobre esta tarea"
   },
   "datePopover": {
     "later": "Más tarde",

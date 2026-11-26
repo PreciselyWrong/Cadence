@@ -670,6 +670,52 @@ describe('TaskPane as a floating sheet', () => {
         ).toHaveTextContent('Planned Thu 12 Nov · 10:00');
     });
 
+    it('does not repeat the planned day when it is already the due day', async () => {
+        mockedFetchTaskByUid.mockResolvedValue({
+            ...baseTask,
+            due_date: '2026-11-12',
+        } as Task);
+        renderSheet('/today?task=uid-1&on=2026-11-12');
+
+        await screen.findByRole('dialog', { name: 'Write report' });
+        expect(screen.queryByTestId('task-planned-label')).toBeNull();
+    });
+
+    it('puts the planning toggles under the chips, before the description', async () => {
+        renderSheet('/today?task=uid-1');
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+
+        const later = within(dialog).getByRole('button', { name: 'Later' });
+        const note = within(dialog).getByTestId('task-note-preview');
+        expect(
+            later.compareDocumentPosition(note) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+    });
+
+    it('gathers attach, comment and history in one bar at the bottom', async () => {
+        renderSheet('/today?task=uid-1');
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+
+        const bar = within(dialog).getByRole('toolbar', {
+            name: 'More on this task',
+        });
+        expect(
+            within(bar)
+                .getAllByRole('button')
+                .map((button) => button.textContent)
+        ).toEqual(['Attach files', 'Comment', 'History']);
+
+        fireEvent.click(within(bar).getByRole('button', { name: 'History' }));
+        expect(
+            within(bar).getByRole('button', { name: 'History' })
+        ).toHaveAttribute('aria-expanded', 'true');
+    });
+
     it('drops the planned day when the sheet closes', async () => {
         renderSheet('/today?task=uid-1&on=2026-11-12&at=600');
         await screen.findByTestId('task-planned-label');

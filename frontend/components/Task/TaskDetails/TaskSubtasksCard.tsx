@@ -67,7 +67,7 @@ const TaskSubtasksCard: React.FC<TaskSubtasksCardProps> = ({
                 </div>
             )}
 
-            <div className="group flex items-center py-3 px-4 rounded-lg shadow-sm bg-white dark:bg-gray-900 transition-all duration-200 ease-in-out hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-700 focus-within:ring-1 focus-within:ring-blue-300 dark:focus-within:ring-blue-500 cursor-text">
+            <div className="group flex items-center py-2.5 px-4 rounded-lg shadow-sm bg-white dark:bg-gray-900 transition-all duration-200 ease-in-out hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-700 focus-within:ring-1 focus-within:ring-blue-300 dark:focus-within:ring-blue-500 cursor-text">
                 <PlusCircleIcon className="h-5 w-5 mr-3 flex-shrink-0 text-gray-500 dark:text-gray-400 transition-colors duration-200 group-hover:text-gray-500 dark:group-hover:text-gray-400 group-focus-within:text-blue-400 dark:group-focus-within:text-blue-400" />
                 <input
                     type="text"
@@ -77,17 +77,19 @@ const TaskSubtasksCard: React.FC<TaskSubtasksCardProps> = ({
                     placeholder={t('subtasks.placeholder', 'Add a subtask...')}
                     className="text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 bg-transparent focus:outline-none focus:ring-0 w-full cursor-text"
                 />
+                {/* Breaking the task down fills the same list: its action
+                sits on the row that adds to it. */}
+                {onBreakdown && (
+                    <button
+                        type="button"
+                        onClick={onBreakdown}
+                        className="-my-1.5 -mr-2 ml-2 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    >
+                        <SparklesIcon className="h-4 w-4" aria-hidden="true" />
+                        {t('breakdown.title', 'Découper en étapes')}
+                    </button>
+                )}
             </div>
-            {onBreakdown && (
-                <button
-                    type="button"
-                    onClick={onBreakdown}
-                    className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
-                >
-                    <SparklesIcon className="h-4 w-4" aria-hidden="true" />
-                    {t('breakdown.title', 'Découper en étapes')}
-                </button>
-            )}
         </div>
     );
 };

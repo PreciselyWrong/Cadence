@@ -5973,7 +5973,8 @@
     "unassigned": "담당자 없음",
     "reopen": "다시 열기",
     "complete": "완료",
-    "more": "더보기"
+    "more": "더보기",
+    "moreActions": "이 작업 더 보기"
   },
   "datePopover": {
     "later": "나중에",

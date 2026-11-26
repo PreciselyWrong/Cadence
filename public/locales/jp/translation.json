@@ -5973,7 +5973,8 @@
     "unassigned": "担当者なし",
     "reopen": "再開",
     "complete": "完了",
-    "more": "その他"
+    "more": "その他",
+    "moreActions": "このタスクについて"
   },
   "datePopover": {
     "later": "後で",

@@ -422,6 +422,35 @@ describe('service worker pages', () => {
     });
 });
 
+describe('service worker translations', () => {
+    const url = '/locales/fr/translation.json?v=3';
+    const cached = () =>
+        new Map([
+            [
+                `${ORIGIN}${url}`,
+                { body: '{"history":"History"}', status: 200, headers: [] },
+            ],
+        ]);
+
+    it('takes the server copy over a cached one from an older build', async () => {
+        const sw = loadWorker(() => json({ history: 'Historique' }));
+        sw.caches.stores.set('tududi-v4', cached());
+
+        const response = await sw.request(url);
+
+        expect(await response.json()).toEqual({ history: 'Historique' });
+    });
+
+    it('serves the cached copy offline', async () => {
+        const sw = loadWorker(down);
+        sw.caches.stores.set('tududi-v4', cached());
+
+        const response = await sw.request(url);
+
+        expect(await response.json()).toEqual({ history: 'History' });
+    });
+});
+
 describe('service worker offline writes', () => {
     it('answers an update with the row as it will be and shows it in lists', async () => {
         const sw = loadWorker(down);

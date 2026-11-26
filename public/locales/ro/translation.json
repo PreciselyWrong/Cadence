@@ -5991,7 +5991,8 @@
     "unassigned": "Nimeni",
     "reopen": "Redeschide",
     "complete": "Finalizează",
-    "more": "Mai mult"
+    "more": "Mai mult",
+    "moreActions": "Mai multe despre această sarcină"
   },
   "datePopover": {
     "later": "Mai târziu",

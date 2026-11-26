@@ -2,7 +2,9 @@ import AutoClassifiedMark from '../AutoClassify/AutoClassifiedMark';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+    ChatBubbleLeftIcon,
     CheckIcon,
+    ClockIcon,
     ExclamationTriangleIcon,
     PaperClipIcon,
 } from '@heroicons/react/24/outline';
@@ -61,12 +63,20 @@ interface TaskEditorBodyProps {
     titleId?: string;
     // "Planned Thu 12 Nov · 10:00", shown under the chips.
     plannedLabel?: string | null;
+    // The sheet's planning toggles (In view, This week, Later) and
+    // postponements: they belong with the date, right under the chips.
+    planning?: React.ReactNode;
 }
+
+// The quiet actions at the foot of the sheet, side by side.
+const footAction =
+    'inline-flex min-h-[36px] items-center gap-1.5 rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-expanded:bg-gray-100 aria-expanded:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:aria-expanded:bg-gray-800 dark:aria-expanded:text-gray-100 max-sm:min-h-[44px]';
 
 export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
     ed,
     titleId,
     plannedLabel,
+    planning,
 }) => {
     const {
         t,
@@ -109,6 +119,8 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
     const [attachOpen, setAttachOpen] = useState(false);
     const [breakdownOpen, setBreakdownOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0);
+    const [commentOpen, setCommentOpen] = useState(false);
+    const [historyOpen, setHistoryOpen] = useState(false);
     const showAttachments = attachOpen || attachmentsCount > 0;
 
     return (
@@ -252,6 +264,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                     {plannedLabel}
                 </p>
             )}
+            {planning}
 
             <div data-testid="task-note-field">
                 {readOnly ? (
@@ -384,36 +397,69 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                             />
                         </SidePanelSection>
                     </div>
-                    {!showAttachments && (
-                        <button
-                            type="button"
-                            onClick={() => setAttachOpen(true)}
-                            className="inline-flex min-h-[40px] items-center gap-1.5 self-start rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
-                        >
-                            <PaperClipIcon className="h-4 w-4" />
-                            {t('capture.attach', 'Attach files')}
-                        </button>
-                    )}
-
                     <TaskContexts taskUid={task.uid} />
 
                     <Backlinks type="task" uid={task.uid} className="-mx-2" />
 
-                    <SidePanelSection
-                        title={
-                            commentCount > 0
-                                ? t('task.comments', 'Comments')
-                                : ''
-                        }
-                    >
-                        <TaskComments
-                            task={task}
-                            quietWhenEmpty
-                            onCommentCountChange={setCommentCount}
-                        />
-                    </SidePanelSection>
+                    <div hidden={commentCount === 0 && !commentOpen}>
+                        <SidePanelSection
+                            title={
+                                commentCount > 0
+                                    ? t('task.comments', 'Comments')
+                                    : ''
+                            }
+                        >
+                            <TaskComments
+                                task={task}
+                                quietWhenEmpty
+                                composerOpen={commentOpen}
+                                onCommentCountChange={setCommentCount}
+                            />
+                        </SidePanelSection>
+                    </div>
 
-                    <TaskHistory taskUid={task.uid} />
+                    <div
+                        role="toolbar"
+                        aria-label={t(
+                            'taskPanel.moreActions',
+                            'More on this task'
+                        )}
+                        className="-mx-2 flex flex-wrap items-center gap-1 border-t border-gray-100 pt-3 dark:border-gray-800"
+                    >
+                        <button
+                            type="button"
+                            onClick={() => setAttachOpen(true)}
+                            className={footAction}
+                        >
+                            <PaperClipIcon
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                            />
+                            {t('capture.attach', 'Attach files')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setCommentOpen(true)}
+                            className={footAction}
+                        >
+                            <ChatBubbleLeftIcon
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                            />
+                            {t('comments.submit', 'Comment')}
+                        </button>
+                        <button
+                            type="button"
+                            aria-expanded={historyOpen}
+                            onClick={() => setHistoryOpen((open) => !open)}
+                            className={footAction}
+                        >
+                            <ClockIcon className="h-4 w-4" aria-hidden="true" />
+                            {t('timeline.history', 'History')}
+                        </button>
+                    </div>
+
+                    {historyOpen && <TaskHistory taskUid={task.uid} />}
                 </>
             )}
 

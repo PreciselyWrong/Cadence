@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { hashColor } from '../../constants/colorPalette';
 import {
-    ChatBubbleLeftIcon,
     ExclamationTriangleIcon,
     HandThumbDownIcon,
     HandThumbUpIcon,
@@ -32,9 +31,10 @@ import CommentComposer from './CommentComposer';
 interface TaskCommentsProps {
     task: Task;
     onCommentCountChange?: (count: number) => void;
-    // Without comments, show one quiet "Comment" button instead of an open
-    // composer; the composer opens on demand.
+    // Without comments, show nothing until composerOpen: the sheet's foot
+    // bar holds the "Comment" button.
     quietWhenEmpty?: boolean;
+    composerOpen?: boolean;
 }
 
 // Posted comments store a plain `@Name` in the body (nothing hidden in the
@@ -357,6 +357,7 @@ const TaskComments: React.FC<TaskCommentsProps> = ({
     task,
     onCommentCountChange,
     quietWhenEmpty = false,
+    composerOpen: composerRequested = false,
 }) => {
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
@@ -368,7 +369,6 @@ const TaskComments: React.FC<TaskCommentsProps> = ({
         null
     );
     const [replyingToUid, setReplyingToUid] = useState<string | null>(null);
-    const [composerOpen, setComposerOpen] = useState(false);
 
     useEffect(() => {
         if (!task.uid) {
@@ -539,16 +539,9 @@ const TaskComments: React.FC<TaskCommentsProps> = ({
                 </div>
             )}
 
-            {quietWhenEmpty && comments.length === 0 && !composerOpen ? (
-                <button
-                    type="button"
-                    onClick={() => setComposerOpen(true)}
-                    className="inline-flex min-h-[40px] items-center gap-1.5 self-start rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
-                >
-                    <ChatBubbleLeftIcon className="h-4 w-4" />
-                    {t('comments.submit', 'Comment')}
-                </button>
-            ) : (
+            {quietWhenEmpty &&
+            comments.length === 0 &&
+            !composerRequested ? null : (
                 <CommentComposer
                     task={task}
                     people={people}

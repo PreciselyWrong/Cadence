@@ -6133,7 +6133,8 @@
     "unassigned": "Nikto",
     "reopen": "Znova otvoriť",
     "complete": "Dokončiť",
-    "more": "Viac"
+    "more": "Viac",
+    "moreActions": "Viac o tejto úlohe"
   },
   "datePopover": {
     "later": "Neskôr",

@@ -6071,7 +6071,8 @@
     "unassigned": "Никто",
     "reopen": "Открыть снова",
     "complete": "Выполнить",
-    "more": "Ещё"
+    "more": "Ещё",
+    "moreActions": "Ещё об этой задаче"
   },
   "datePopover": {
     "later": "Позже",

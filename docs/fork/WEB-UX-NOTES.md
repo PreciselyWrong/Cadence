@@ -1160,3 +1160,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Décision** : bouton discret « Historique » en bas de la fiche, fermé par défaut ; chaque ligne dit quoi, l'heure exacte et qui (app, appareil, IA, suggestion IA acceptée), pour comprendre d'où vient une tâche inattendue.
 - **Android** : fait (`ui/TaskHistorySection.kt`), lecture en ligne de `GET /api/task/:uid/timeline`.
+
+### 2026-11-26 : fiche de tâche remise en ordre
+
+- **Décision** : la fiche se lit de haut en bas comme une tâche se pense. Titre, chips, puis juste dessous « En vue / Cette semaine / Plus tard » et les reports (ils parlent du moment, comme la date) ; description ; sous-tâches avec « Découper en étapes » sur la ligne d'ajout ; pièces jointes et commentaires seulement s'il y en a ; en bas une seule barre discrète « Joindre · Commenter · Historique » au lieu de trois boutons empilés ; l'historique s'ouvre sous la barre. « Planifiée … » disparaît quand il répète l'échéance ; « Agrandir » devient une icône.
+- **Android** : à reporter dans la fiche (`TaskDetailSheet`) : même ordre, mêmes regroupements.

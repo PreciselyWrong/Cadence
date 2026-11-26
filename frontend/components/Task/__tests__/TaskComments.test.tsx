@@ -150,14 +150,16 @@ describe('TaskComments', () => {
         expect(screen.queryByText('No comments yet')).toBeNull();
     });
 
-    it('quiet mode: one "Comment" button until there is a comment to show', async () => {
+    it('quiet mode: nothing until the sheet asks for the composer', async () => {
         (fetchComments as jest.Mock).mockResolvedValue([]);
 
-        render(<TaskComments task={task} quietWhenEmpty />);
+        const { rerender } = render(
+            <TaskComments task={task} quietWhenEmpty />
+        );
 
-        const open = await screen.findByRole('button', { name: 'Comment' });
+        await waitFor(() => expect(fetchComments).toHaveBeenCalled());
         expect(screen.queryByRole('textbox')).toBeNull();
-        fireEvent.click(open);
+        rerender(<TaskComments task={task} quietWhenEmpty composerOpen />);
         expect(await screen.findByRole('textbox')).toBeInTheDocument();
     });
 

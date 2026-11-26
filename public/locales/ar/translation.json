@@ -6035,7 +6035,8 @@
     "unassigned": "لا أحد",
     "reopen": "إعادة فتح",
     "complete": "إنهاء",
-    "more": "المزيد"
+    "more": "المزيد",
+    "moreActions": "المزيد عن هذه المهمة"
   },
   "datePopover": {
     "later": "لاحقًا",

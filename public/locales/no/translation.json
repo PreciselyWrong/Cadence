@@ -5978,7 +5978,8 @@
     "unassigned": "Ingen",
     "reopen": "Gjenåpne",
     "complete": "Fullfør",
-    "more": "Mer"
+    "more": "Mer",
+    "moreActions": "Mer om denne oppgaven"
   },
   "datePopover": {
     "later": "Senere",

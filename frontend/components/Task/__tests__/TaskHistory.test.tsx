@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import TaskHistory from '../TaskHistory';
 import { getTaskTimeline } from '../../../utils/taskEventService';
 
@@ -33,7 +33,7 @@ const event = (id: number, type: string, source: string, at: string) =>
 describe('TaskHistory', () => {
     beforeEach(() => mockTimeline.mockReset());
 
-    it('stays closed until asked, then says who made each change', async () => {
+    it('says who made each change', async () => {
         mockTimeline.mockResolvedValue([
             event(1, 'created', 'device', '2026-11-11T20:12:15Z'),
             event(2, 'due_date_changed', 'suggestion', '2026-11-20T12:22:50Z'),
@@ -41,9 +41,6 @@ describe('TaskHistory', () => {
         ]);
 
         render(<TaskHistory taskUid="t1" />);
-        expect(mockTimeline).not.toHaveBeenCalled();
-
-        fireEvent.click(screen.getByRole('button', { name: 'History' }));
 
         expect(await screen.findByText(/From a device/)).toBeInTheDocument();
         expect(

@@ -5973,7 +5973,8 @@
     "unassigned": "Không ai",
     "reopen": "Mở lại",
     "complete": "Hoàn thành",
-    "more": "Thêm"
+    "more": "Thêm",
+    "moreActions": "Thêm về công việc này"
   },
   "datePopover": {
     "later": "Để sau",
