@@ -1,3 +1,7 @@
+## [1.48.0] : 26 novembre 2026
+
+- « Historique » en bas de la fiche d'une tâche : chaque changement avec sa date, son heure et son origine (dans l'app, depuis un appareil, par l'IA, suggestion IA acceptée), pour comprendre d'où vient une tâche.
+
 ## [1.47.0] : 26 novembre 2026
 
 - « Découper en étapes » dans les actions d'une tâche : l'IA propose des étapes minutées, tu les ajustes (nom, durée, ordre) puis elles deviennent des sous-tâches ; sans IA, la feuille demande une première étape de 2 min. Réglages de l'IA dans Réglages › Classement.

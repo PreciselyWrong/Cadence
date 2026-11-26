@@ -118,7 +118,7 @@ Branche `feat/habit-stats-bdad4581`.
 
 ## Next
 
-- [ ] Vérifier « Historique » d'une tâche sur le téléphone (APK non installé : seule la liseuse était branchée) #humain
+- [ ] Installer Cadence 1.48.0 depuis NicoApps et vérifier « Historique » d'une tâche #humain
 - [x] Plan web : « En retard » dans la colonne de gauche, au-dessus de la Boîte de réception
 - [x] Plan web : voir les tâches que je repousse sans cesse
 - Découper une tâche en petites étapes minutées par l'IA (web et Android)
