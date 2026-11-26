@@ -262,7 +262,13 @@ const DayList: React.FC<DayListProps> = ({
                 className={`sticky top-0 z-10 bg-surface ${PAGE_GUTTER} pb-3 pt-6`}
             >
                 <div className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-2">
-                    <h1 className="mr-1 flex min-w-0 max-w-full items-baseline gap-2">
+                    {/* With the day arrows, the title keeps the width of the
+                        longest day name so the arrows stay under the pointer. */}
+                    <h1
+                        className={`mr-1 flex min-w-0 max-w-full items-baseline gap-2 ${
+                            showDayNav ? 'sm:min-w-[19.5rem]' : ''
+                        }`}
+                    >
                         <span className={`shrink-0 ${PAGE_TITLE_CLASS}`}>
                             {title}
                         </span>
