@@ -314,6 +314,16 @@ Once a day, a scheduled job (`morning_replan` in `backend/modules/tasks/taskSche
 
 The created row stores `facts.trigger = 'morning'` (sent to the agent) and `facts.last_morning_run = today` (stripped by `agentFacts`). When the agent answers with `ready`, `notifyOutcome` uses the French title « N retards replacés, à valider » (`1 retard replacé, à valider` for one). In Profile › Planning (`PlanningTab.tsx`), the « Morning overdue replan (AI) » card is shown only when an agent listens.
 
+## Measured cost
+
+Read on 2026-11-26 from Hermes `sessions` (`state.db` of each profile: input = `input_tokens + cache_read_tokens + cache_write_tokens`). Budgets: `.agents/skills/hermes-calls/SKILL.md` (interactive ≲ 20 k, scheduled ≲ 50 k).
+
+| Run | Profile, model | Input | Output | API calls | Verdict |
+|---|---|---|---|---|---|
+| Morning run, 2026-11-24 / 25 / 26 at 06:30 | `planificateur`, Sonnet 5.5 | 35.9 k / 36.1 k / 37.1 k (about 23 k read from cache, 13 k written) | 1.3 k / 1.7 k / 2.6 k | 3 | Within the scheduled budget. The 13 k cache write every day is the prompt plus facts: the cache does not live from one morning to the next. |
+| Chat page of the `hermes` plugin, 2026-11-13 (before « Discuter avec l'IA ») | `default`, Opus 5.5 | 158 k | 5.7 k | 5 (8 tools) | Eight times the interactive budget: the only reference until a real « Discuter avec l'IA » run. |
+| « Discuter avec l'IA » from a task (since 2026-11-19) | | not measured | | | No run yet: measure the first exchange from the task sheet and fill this row. |
+
 
 ## Not done yet
 
