@@ -18,17 +18,28 @@ const {
 // proposal, it does not bulk-load tasks through it.
 const APPLY_MAX = 50;
 
-async function uiSettingsOf(userId) {
-    const user = await User.findByPk(userId, {
-        attributes: ['id', 'ui_settings'],
-    });
-    const value = user?.ui_settings;
+const parsed = (value) => {
     if (typeof value !== 'string') return value || {};
     try {
         return JSON.parse(value) || {};
     } catch {
         return {};
     }
+};
+
+async function uiSettingsOf(userId) {
+    const user = await User.findByPk(userId, {
+        attributes: ['id', 'ui_settings'],
+    });
+    return parsed(user?.ui_settings);
+}
+
+// The per-account AI switch of Profile, which every AI help follows.
+async function aiSwitchedOn(userId) {
+    const user = await User.findByPk(userId, {
+        attributes: ['id', 'features'],
+    });
+    return parsed(user?.features).ai_assistant_enabled === true;
 }
 
 async function getSettings(user) {
@@ -73,7 +84,9 @@ const result = (source, reason, steps = []) => ({
 async function propose(user, uid) {
     const task = await topLevelTask(uid);
     const settings = resolveSettings(await uiSettingsOf(user.id));
-    if (!settings.enabled) return result('fallback', 'disabled');
+    if (!settings.enabled || !(await aiSwitchedOn(user.id))) {
+        return result('fallback', 'disabled');
+    }
     if (!(await model.isConfigured(user.id))) {
         return result('fallback', 'not_configured');
     }

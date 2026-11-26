@@ -30,6 +30,7 @@ describe('task breakdown', () => {
 
     beforeEach(async () => {
         ({ user, agent } = await signIn('breakdown@example.com'));
+        await user.update({ features: { ai_assistant_enabled: true } });
         task = await Task.create({
             name: 'Faire la déclaration d’impôts',
             note: 'Tout est dans le classeur bleu',
@@ -100,6 +101,13 @@ describe('task breakdown', () => {
         });
 
         answer([{ name: 'Step', minutes: 5 }]);
+        await user.update({ features: { ai_assistant_enabled: false } });
+        const switchedOff = await agent.post(`/api/task/${task.uid}/breakdown`);
+        expect(switchedOff.body).toMatchObject({
+            source: 'fallback',
+            reason: 'disabled',
+        });
+        await user.update({ features: { ai_assistant_enabled: true } });
         await agent.put('/api/breakdown/settings').send({ enabled: false });
         const off = await agent.post(`/api/task/${task.uid}/breakdown`);
         expect(off.body).toMatchObject({
