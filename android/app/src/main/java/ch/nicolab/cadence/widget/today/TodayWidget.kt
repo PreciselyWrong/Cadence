@@ -38,7 +38,6 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.unit.ColorProvider as GlanceColor
@@ -143,6 +142,16 @@ class TodayWidget : GlanceAppWidget() {
             .onStart { emit(initial) }
             .distinctUntilChangedBy { it.drawn }
             .flowOn(Dispatchers.IO)
+        // Tant que la session tourne, elle suit la base : les écritures ne la réveillent plus ([TodaySessions]).
+        TodaySessions.process.opened(appWidgetId)
+        try {
+            provideTodayContent(reloads, initial)
+        } finally {
+            TodaySessions.process.closed(appWidgetId)
+        }
+    }
+
+    private suspend fun provideTodayContent(reloads: Flow<TodayView>, initial: TodayView): Nothing {
         provideContent {
             val view by reloads.collectAsState(initial)
             val allHeld by WidgetCompletions.held.collectAsState()
@@ -286,7 +295,7 @@ class TodayWidgetReceiver : GlanceAppWidgetReceiver() {
         if (intent.action in DAY_SIGNALS) {
             TodayWidgetReloads.request()
             val app = context.applicationContext as CadenceApp
-            app.applicationScope.launch { TodayWidget().updateAll(context) }
+            app.applicationScope.launch { TodaySessions.wakeSleeping(context) }
         }
     }
 
@@ -312,7 +321,8 @@ class TodayWidgetReceiver : GlanceAppWidgetReceiver() {
 class CompleteTodayTaskAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val uid = parameters[taskUidKey] ?: return
-        WidgetCompletions.toggle(context, uid) { TodayWidget().update(context, glanceId) }
+        // Une session ouverte redessine la coche par [WidgetCompletions.held] ; un update() y renverrait une image.
+        WidgetCompletions.toggle(context, uid) { TodaySessions.wake(context, glanceId) }
     }
 }
 
@@ -326,7 +336,7 @@ class ToggleTodayEventAction : ActionCallback {
         )
         CalendarGraph.repository(context).toggleDone(key)
         // Une session ouverte suit déjà les occurrences faites ; les autres démarrent ici.
-        TodayWidget().updateAll(context)
+        TodaySessions.wakeSleeping(context)
     }
 }
 

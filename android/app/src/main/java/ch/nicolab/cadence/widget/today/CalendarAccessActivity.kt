@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import ch.nicolab.cadence.calendar.CalendarGraph
-import androidx.glance.appwidget.updateAll
 import kotlinx.coroutines.launch
 
 /**
@@ -18,7 +17,7 @@ class CalendarAccessActivity : ComponentActivity() {
         CalendarGraph.repository(this).refresh()
         TodayWidgetReloads.request()
         lifecycleScope.launch {
-            TodayWidget().updateAll(applicationContext)
+            TodaySessions.wakeSleeping(applicationContext)
             finish()
         }
     }

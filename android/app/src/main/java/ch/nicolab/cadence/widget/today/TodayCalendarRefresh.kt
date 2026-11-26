@@ -7,7 +7,6 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.provider.CalendarContract
-import androidx.glance.appwidget.updateAll
 import ch.nicolab.cadence.CadenceApp
 import kotlinx.coroutines.launch
 
@@ -52,7 +51,7 @@ class TodayCalendarRefreshJobService : JobService() {
         val app = applicationContext as CadenceApp
         TodayWidgetReloads.request()
         app.applicationScope.launch {
-            TodayWidget().updateAll(app)
+            TodaySessions.wakeSleeping(app)
             jobFinished(params, false)
         }
         return true

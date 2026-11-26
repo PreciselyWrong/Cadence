@@ -49,7 +49,7 @@ class CadenceApp : Application() {
         // Le widget suit la base plutôt que les appelants : tout changement s'y voit.
         WidgetAutoRefresh(repository.observeWidgetRevisions()) {
             CadenceWidget().updateAll(this)
-            ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this)
+            ch.nicolab.cadence.widget.today.TodaySessions.wakeSleeping(this)
         }.start(applicationScope)
         // Les habitudes se synchronisent avec les tâches : même serveur, même clé, même passage.
         HabitSyncRegistry.storage = RoomHabitSyncStorage(database)
@@ -62,20 +62,20 @@ class CadenceApp : Application() {
             TasksGraph.repository(this@CadenceApp).observeTasks()
                 .distinctUntilChanged()
                 .debounce(100)
-                .collect { ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this@CadenceApp) }
+                .collect { ch.nicolab.cadence.widget.today.TodaySessions.wakeSleeping(this@CadenceApp) }
         }
         // Un plan du jour relu ou modifié range autrement les tâches du widget du jour, comme Aujourd'hui dans l'app.
         applicationScope.launch {
             ch.nicolab.cadence.tasks.reminder.PlanSlotsStore(this@CadenceApp).entryChanges()
                 .drop(1)
-                .collect { ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this@CadenceApp) }
+                .collect { ch.nicolab.cadence.widget.today.TodaySessions.wakeSleeping(this@CadenceApp) }
         }
         // Masquer ou rétablir un événement le retire ou le rend aussitôt au widget du jour.
         applicationScope.launch {
             ch.nicolab.cadence.calendar.CalendarGraph.repository(this@CadenceApp).hiddenEvents()
                 .distinctUntilChanged()
                 .drop(1)
-                .collect { ch.nicolab.cadence.widget.today.TodayWidget().updateAll(this@CadenceApp) }
+                .collect { ch.nicolab.cadence.widget.today.TodaySessions.wakeSleeping(this@CadenceApp) }
         }
     }
 }

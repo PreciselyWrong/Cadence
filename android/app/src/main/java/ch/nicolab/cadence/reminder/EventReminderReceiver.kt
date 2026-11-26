@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.glance.appwidget.updateAll
 import ch.nicolab.cadence.MainActivity
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.CalendarGraph
@@ -22,7 +21,7 @@ import ch.nicolab.cadence.calendar.localEnd
 import ch.nicolab.cadence.calendar.localStart
 import ch.nicolab.cadence.designsystem.R as DesignR
 import ch.nicolab.cadence.tasks.reminder.ReminderAlarms
-import ch.nicolab.cadence.widget.today.TodayWidget
+import ch.nicolab.cadence.widget.today.TodaySessions
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -137,7 +136,7 @@ internal object EventReminderNotifier {
         CalendarGraph.repository(context).markDone(key)
         NotificationManagerCompat.from(context).cancel(token, EventReminderScheduler.NOTIFICATION_ID)
         EventReminderScheduler.forgetPosted(context, token)
-        TodayWidget().updateAll(context)
+        TodaySessions.wakeSleeping(context)
     }
 
     private fun show(context: Context, token: String, item: EventWithDone, start: Long, now: Long, canCheck: Boolean, endingOnly: Boolean = false) {
