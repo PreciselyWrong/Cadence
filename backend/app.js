@@ -461,6 +461,7 @@ const decisionsModule = require('./modules/decisions');
 const proposalsModule = require('./modules/proposals');
 const contentLinksModule = require('./modules/content-links');
 const autoClassifyModule = require('./modules/auto-classify');
+const breakdownModule = require('./modules/breakdown');
 const usersModule = require('./modules/users');
 const viewsModule = require('./modules/views');
 const mcpModule = require('./modules/mcp');
@@ -613,6 +614,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, proposalsModule.routes);
     app.use(basePath, contentLinksModule.routes);
     app.use(basePath, autoClassifyModule.routes);
+    app.use(basePath, breakdownModule.routes);
     app.use(basePath, telegramModule.routes);
     app.use(basePath, quotesModule.routes);
     app.use(basePath, backupModule.routes);

@@ -49,7 +49,14 @@ async function getSubtasks(parentTaskId, userId, timezone) {
     return { error: null, subtasks: serializedSubtasks };
 }
 
-async function createSubtasks(parentTaskId, subtasks, userId) {
+// `withEstimates` takes each subtask's estimated_minutes, already checked by
+// the caller (« Découper en étapes »); other callers never set it.
+async function createSubtasks(
+    parentTaskId,
+    subtasks,
+    userId,
+    { withEstimates = false } = {}
+) {
     if (!subtasks || !Array.isArray(subtasks)) return;
 
     // Get the highest order value for existing subtasks
@@ -88,12 +95,15 @@ async function createSubtasks(parentTaskId, subtasks, userId) {
                         ? new Date(subtask.completed_at)
                         : new Date()
                     : null,
+            estimated_minutes: withEstimates
+                ? (subtask.estimated_minutes ?? null)
+                : null,
             recurrence_type: 'none',
             completion_based: false,
             order: maxOrder + index + 1, // Assign sequential order values
         }));
 
-    await taskRepository.createMany(subtasksData);
+    return taskRepository.createMany(subtasksData);
 }
 
 async function updateSubtasks(taskId, subtasks, userId) {
