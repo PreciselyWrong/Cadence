@@ -198,6 +198,7 @@ async function collectInput(user, settings, { today, now = new Date() } = {}) {
     return {
         today: day,
         timezone,
+        language: user.language,
         now: new Date(now).toISOString(),
         tasks,
         closedTasks,

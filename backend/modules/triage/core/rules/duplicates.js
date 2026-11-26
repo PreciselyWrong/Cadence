@@ -5,7 +5,7 @@
 // different days are different tasks: neither is ever reported, so nobody is
 // asked whether "Sport" is a duplicate of "Sport".
 const { isWithinLookback } = require('./dates');
-const { texts, titleOf } = require('./texts');
+const { textsFor, titleOf } = require('./texts');
 
 // Lowercase, no accents, punctuation as word breaks: "Réserver l'hôtel!"
 // and "reserver l hotel" compare equal.
@@ -120,7 +120,7 @@ function findDuplicates(input, settings) {
 }
 
 // What tells two tasks apart, so nobody has to guess from their names alone.
-function describe(task) {
+function describe(task, texts) {
     return [
         task.completed_at
             ? texts.duplicate.closedOn(task.completed_at.slice(0, 10))
@@ -133,11 +133,12 @@ function describe(task) {
 }
 
 function duplicateCards(input, settings) {
+    const texts = textsFor(input.language);
     const tasksByUid = new Map(input.tasks.map((t) => [t.uid, t]));
     return findDuplicates(input, settings).map((match) => {
         const open = tasksByUid.get(match.task_uid);
-        const title = titleOf(open.name);
-        const other = titleOf(match.closed_name);
+        const title = titleOf(open.name, texts);
+        const other = titleOf(match.closed_name, texts);
         const sameName =
             normalizeName(open.name) === normalizeName(match.closed_name);
         const key = `duplicate:${match.task_uid}:${match.closed_uid}`;
@@ -150,8 +151,8 @@ function duplicateCards(input, settings) {
             type: 'duplicate',
             text,
             details: [
-                texts.duplicate.thisTask(describe(open) || title),
-                texts.duplicate.otherTask(describe(match.twin) || other),
+                texts.duplicate.thisTask(describe(open, texts) || title),
+                texts.duplicate.otherTask(describe(match.twin, texts) || other),
             ],
             task_uids: [match.task_uid],
             event_refs: [],

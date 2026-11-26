@@ -2,7 +2,7 @@
 
 // Calendar conflicts in the days read for triage. Both are questions for the user:
 // the engine cannot know whether a meeting can move.
-const { texts, titleOf } = require('./texts');
+const { textsFor, titleOf } = require('./texts');
 
 const isTimed = (event) =>
     event.busy &&
@@ -61,27 +61,31 @@ const targetOf = (event) =>
         : { scope: 'event', ref: event.ref };
 
 function conflictCards(input) {
+    const texts = textsFor(input.language);
     const workCards = workHourConflicts(input).map(({ event }) => ({
         key: `work:${event.ref}`,
         type: 'event_in_work_hours',
-        text: texts.card.workHours(titleOf(event.title)),
+        text: texts.card.workHours(titleOf(event.title, texts)),
         task_uids: [],
         event_refs: [event.ref],
         question: {
             key: `work:${event.ref}`,
-            text: texts.card.workHoursQuestion(titleOf(event.title)),
+            text: texts.card.workHoursQuestion(titleOf(event.title, texts)),
             target: targetOf(event),
         },
     }));
     const overlapCards = overlappingEvents(input).map(({ a, b }) => ({
         key: `conflict:${a.ref}:${b.ref}`,
         type: 'conflict',
-        text: texts.card.conflict(titleOf(a.title), titleOf(b.title)),
+        text: texts.card.conflict(
+            titleOf(a.title, texts),
+            titleOf(b.title, texts)
+        ),
         task_uids: [],
         event_refs: [a.ref, b.ref],
         question: {
             key: `conflict:${a.ref}:${b.ref}`,
-            text: texts.card.conflictQuestion(titleOf(a.title)),
+            text: texts.card.conflictQuestion(titleOf(a.title, texts)),
             target: targetOf(a),
         },
     }));

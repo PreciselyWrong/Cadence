@@ -42,7 +42,10 @@ describe('triage › mail ready notification', () => {
         jest.useFakeTimers({
             doNotFake: ['setImmediate', 'nextTick', 'queueMicrotask'],
         });
-        user = await createTestUser({ email: 'mailready@example.com' });
+        user = await createTestUser({
+            email: 'mailready@example.com',
+            language: 'fr',
+        });
         run = toolsFor(user);
     });
 
@@ -87,6 +90,16 @@ describe('triage › mail ready notification', () => {
             title: '3 mails à trier',
             data: { kind: 'mail_ready', count: 3 },
         });
+    });
+
+    it('counts the cards in English for an English account', async () => {
+        await user.update({ language: 'en' });
+        await propose({ thread_id: 'thread-a' });
+        await propose({ thread_id: 'thread-b' });
+        jest.advanceTimersByTime(2 * MINUTE);
+        await mailReady.idle();
+        const [row] = await readyRows(user.id);
+        expect(row.title).toBe('2 mails to sort');
     });
 
     it('replaces the unread notification of the previous burst', async () => {

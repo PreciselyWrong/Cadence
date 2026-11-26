@@ -78,4 +78,39 @@ describe('deadlineCards', () => {
             )
         ).toEqual([]);
     });
+
+    it('writes the dates in English for an English account', () => {
+        const [card] = deadlineCards(
+            input({
+                language: 'en',
+                tasks: [
+                    task({
+                        uid: 'task-a',
+                        name: 'Send the sample file',
+                        note: 'Must go out before November 12.',
+                        due_date: '2026-11-20',
+                    }),
+                ],
+            })
+        );
+        expect(card.text).toBe(
+            'The note of "Send the sample file" mentions Nov 12, before the Nov 20 due date.'
+        );
+    });
+
+    it('falls back to English for a language other than French', () => {
+        const [card] = deadlineCards(
+            input({
+                language: 'de',
+                tasks: [
+                    task({
+                        uid: 'task-a',
+                        name: '',
+                        note: 'Must go out before November 12.',
+                    }),
+                ],
+            })
+        );
+        expect(card.text).toBe('The note of "Untitled" mentions Nov 12.');
+    });
 });

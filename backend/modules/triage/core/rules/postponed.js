@@ -3,9 +3,10 @@
 // A task pushed back often enough is worth asking about: do it, drop it, or
 // plan it for real. The count comes from review/postponements.js, already
 // limited to the review window, so this rule only compares it.
-const { texts } = require('./texts');
+const { textsFor } = require('./texts');
 
 function postponedCards(input, settings) {
+    const texts = textsFor(input.language);
     const threshold = settings.thresholds.postponements;
     return input.tasks
         .map((task) => ({

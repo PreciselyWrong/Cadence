@@ -3,7 +3,7 @@
 // « N mails à trier » (docs/43-mail-triage.md): once a burst of mail cards is
 // over, the user gets one notification with how many still wait for a
 // decision. Each card that is created or reopened restarts the quiet period.
-const { MailItem, Notification } = require('../../models');
+const { MailItem, Notification, User } = require('../../models');
 const { logError } = require('../../services/logService');
 
 const MAIL_READY_DELAY_MS = 2 * 60 * 1000;
@@ -11,14 +11,19 @@ const MAIL_READY_DELAY_MS = 2 * 60 * 1000;
 const timers = new Map();
 const running = new Set();
 
-const titleOf = (count) =>
-    count === 1 ? '1 mail à trier' : `${count} mails à trier`;
+// French for `fr`, English otherwise, like the triage rules (rules/texts.js).
+const titleOf = (count, language) => {
+    if (String(language || '').startsWith('fr'))
+        return count === 1 ? '1 mail à trier' : `${count} mails à trier`;
+    return count === 1 ? '1 mail to sort' : `${count} mails to sort`;
+};
 
 async function announce(userId) {
     const count = await MailItem.count({
         where: { user_id: userId, status: 'pending' },
     });
     if (count === 0) return;
+    const user = await User.findByPk(userId, { attributes: ['language'] });
     const unread = await Notification.findAll({
         where: {
             user_id: userId,
@@ -31,7 +36,7 @@ async function announce(userId) {
     await Notification.createNotification({
         userId,
         type: 'mail_ready',
-        title: titleOf(count),
+        title: titleOf(count, user?.language),
         level: 'info',
         data: { kind: 'mail_ready', count },
         sources: ['desktop', 'mobile'],

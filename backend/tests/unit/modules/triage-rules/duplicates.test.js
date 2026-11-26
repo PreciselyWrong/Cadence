@@ -171,6 +171,30 @@ describe('duplicateCards', () => {
         expect(card.details.join(' ')).toContain('2 novembre');
     });
 
+    it('describes both tasks in English for an English account', () => {
+        const [card] = duplicateCards(
+            input({
+                language: 'en',
+                tasks: [
+                    task({
+                        uid: 'open-a',
+                        name: 'Pay the invoice',
+                        project_name: 'Sample home',
+                    }),
+                ],
+                closedTasks: [
+                    closed({ uid: 'closed-a', name: 'Pay the invoice' }),
+                ],
+            }),
+            settingsWith()
+        );
+        expect(card.text).toBe('A task with the same name was just completed.');
+        expect(card.details).toEqual([
+            'This one: project Sample home',
+            'The other: completed on Nov 2',
+        ]);
+    });
+
     it('never reports a recurring task or a done occurrence of its series', () => {
         const found = findDuplicates(
             input({

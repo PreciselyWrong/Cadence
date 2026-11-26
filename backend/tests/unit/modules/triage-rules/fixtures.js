@@ -56,6 +56,7 @@ const event = (overrides = {}) => ({
 const input = (overrides = {}) => ({
     today: TODAY,
     timezone: 'Europe/Paris',
+    language: 'fr',
     now: '2026-11-04T06:00:00Z',
     tasks: [],
     closedTasks: [],

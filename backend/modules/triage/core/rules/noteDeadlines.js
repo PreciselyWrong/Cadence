@@ -4,7 +4,7 @@
 // novembre" while the task only has a later due date. The note is user
 // text, so the finding is only ever a question about the task.
 const chrono = require('chrono-node');
-const { texts, titleOf } = require('./texts');
+const { textsFor, titleOf } = require('./texts');
 
 // French first: the notes are written in French. English only fills the gaps
 // the French parser left (the same text matched twice is kept once).
@@ -47,6 +47,7 @@ function datesInNote(note, today) {
 // future date when there is no due date) are worth a question. The earliest
 // one is the one asked about.
 function deadlineCards(input) {
+    const texts = textsFor(input.language);
     const cards = [];
     for (const task of input.tasks) {
         const days = datesInNote(task.note, input.today)
@@ -58,7 +59,7 @@ function deadlineCards(input) {
             .sort();
         if (!days.length) continue;
         const day = days[0];
-        const title = titleOf(task.name);
+        const title = titleOf(task.name, texts);
         const key = `deadline:${task.uid}:${day}`;
         cards.push({
             key,

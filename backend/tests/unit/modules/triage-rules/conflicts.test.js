@@ -98,4 +98,22 @@ describe('conflictCards', () => {
             question: { target: { scope: 'event', ref: 'event:a' } },
         });
     });
+
+    it('asks in English for an English account', () => {
+        const events = [
+            event({
+                ref: 'event:a',
+                title: 'Dentist',
+                start_minute: 990,
+                end_minute: 1050,
+            }),
+        ];
+        const [card] = conflictCards(
+            input({ language: 'en', events, focusBlocksByDate: WORK })
+        );
+        expect(card.text).toBe('"Dentist" falls in your focus hours.');
+        expect(card.question.text).toBe(
+            'Should "Dentist" stay in your focus hours?'
+        );
+    });
 });

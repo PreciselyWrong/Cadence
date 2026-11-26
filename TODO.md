@@ -15,7 +15,6 @@ Prochaine action: Vérifier galerie et arborescence sur le téléphone ; lancer 
 ## Next
 
 - [ ] Wiki : capture « propositions » (la proposition de semaine ne s'affiche qu'avec un agent IA, absent du compte de démo) #doc
-- [ ] i18n : les cartes « À trier » et la revue hebdo sont écrites en français côté serveur (`backend/modules/triage/core/rules/texts.js`), même pour un compte en anglais ; visible sur `screenshots/web/triage.png` #code
 - [ ] Vérifier l'APK Android : galerie et arborescence (le reste vérifié par adb le 2026-11-26 : fiche, widget, ajout rapide, Listes, case de fiche, Régularité, synchro hors ligne et conflits, partage, rappels) #humain
 - [ ] Android : « Meilleur jour » des statistiques d'habitude affiche « 0 en moyenne, contre 0 » pour une habitude binaire (Bilan › Huile/Crème) #code
 - [ ] Android : en ajout rapide avec « Plus d'options », le bouton « Ajouter » passe sous le clavier (la touche ✓ ajoute) #ux

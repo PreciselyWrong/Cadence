@@ -21,6 +21,8 @@ A queue of proposals on open tasks, one at a time, each with its reason in one l
 
 `alerts.disabled` applies to these types.
 
+The rules write their cards in the account's language: French when `users.language` starts with `fr`, English otherwise (`backend/modules/triage/core/rules/texts.js`; the server does not load the web's 26 translations).
+
 ## Settings
 
 Profile › À trier (web) and Réglages › À trier (Android, `TriageSettingsPage`, saved online with a clear error when offline). Stored in `ui_settings.brief`, the key of the retired daily brief (`docs/39-daily-brief.md`), so the values saved before 2026-11-12 are kept; the other keys left there are ignored (`modules/triage/settings.js`). A read never fails (an invalid value falls back to its default); an update with an unknown key or an invalid value answers 400.

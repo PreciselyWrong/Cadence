@@ -52,4 +52,21 @@ describe('postponedCards', () => {
             )
         ).toHaveLength(1);
     });
+
+    it('speaks English to an English account', () => {
+        const [card] = postponedCards(
+            input({
+                language: 'en',
+                tasks,
+                postponements: {
+                    'task-a': {
+                        recent_count: 3,
+                        last_planned_for: '2026-11-02',
+                    },
+                },
+            }),
+            settingsWith()
+        );
+        expect(card.text).toBe('Pushed back 3 times recently: drop it?');
+    });
 });
