@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { TFunction } from 'i18next';
-import {
-    InboxIcon,
-    PlusIcon,
-    XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { InboxIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { InboxItem } from '../../../entities/InboxItem';
 import { BoardTreeSubProject } from '../../../entities/Project';
 import { Task } from '../../../entities/Task';
@@ -25,7 +21,8 @@ interface BoardInboxColumnProps {
     onDragStartItem: (
         payload:
             | { kind: 'unsorted_task'; task: Task }
-            | { kind: 'inbox_item'; item: InboxItem }
+            | { kind: 'inbox_item'; item: InboxItem },
+        e: React.DragEvent
     ) => void;
     onDragEnd: () => void;
     t: TFunction;
@@ -67,7 +64,7 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
         <section
             aria-label={t('projectBoard.capturesColumn', 'Captures & Inbox')}
             data-testid="board-inbox-column"
-            className="flex w-[17.5rem] md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border border-blue-200/80 bg-blue-50/40 p-2.5 dark:border-blue-900/50 dark:bg-blue-950/20"
+            className="flex w-[17.5rem] md:max-h-full shrink-0 flex-col rounded-xl border border-blue-200/80 bg-blue-50/40 p-2.5 dark:border-blue-900/50 dark:bg-blue-950/20"
         >
             <div className="mb-2 flex items-center justify-between gap-2 px-1">
                 <div className="flex items-center gap-1.5">
@@ -129,8 +126,8 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
                     <div
                         key={`u:${task.uid}`}
                         draggable
-                        onDragStart={() =>
-                            onDragStartItem({ kind: 'unsorted_task', task })
+                        onDragStart={(e) =>
+                            onDragStartItem({ kind: 'unsorted_task', task }, e)
                         }
                         onDragEnd={onDragEnd}
                         onClick={(e) => {
@@ -190,8 +187,8 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
                     <div
                         key={`i:${item.uid}`}
                         draggable
-                        onDragStart={() =>
-                            onDragStartItem({ kind: 'inbox_item', item })
+                        onDragStart={(e) =>
+                            onDragStartItem({ kind: 'inbox_item', item }, e)
                         }
                         onDragEnd={onDragEnd}
                         className="rounded-lg border border-dashed border-blue-200 bg-white/90 p-2 dark:border-blue-900/60 dark:bg-gray-900/80"

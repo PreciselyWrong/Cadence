@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { TFunction } from 'i18next';
 import {
     AdjustmentsHorizontalIcon,
@@ -177,7 +183,13 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
         } finally {
             setTreeLoading(false);
         }
-    }, [projectUid, config.includeSubProjects, hasSubProjects, showErrorToast, t]);
+    }, [
+        projectUid,
+        config.includeSubProjects,
+        hasSubProjects,
+        showErrorToast,
+        t,
+    ]);
 
     useEffect(() => {
         void reloadTree();
@@ -328,7 +340,8 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 : null;
         for (const p of subProjects) {
             if (wanted && !wanted.has(p.status)) continue;
-            if (activePreset.onlyTodoMd && p.source_type !== 'todo_md') continue;
+            if (activePreset.onlyTodoMd && p.source_type !== 'todo_md')
+                continue;
             set.add(p.uid);
         }
         return set;
@@ -527,7 +540,9 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 }
             }
             await updateTask(task.uid, payload as Partial<Task>);
-            setUnsortedTasks((prev) => prev.filter((tk) => tk.uid !== task.uid));
+            setUnsortedTasks((prev) =>
+                prev.filter((tk) => tk.uid !== task.uid)
+            );
             if (
                 task.project_uid === projectUid ||
                 targetProjectUid === projectUid
@@ -539,15 +554,11 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 t('projectBoard.movedToProject', 'Moved to {{project}}', {
                     project:
                         targetSub?.name ||
-                        (targetProjectUid === projectUid
-                            ? project.name
-                            : ''),
+                        (targetProjectUid === projectUid ? project.name : ''),
                 })
             );
         } catch {
-            showErrorToast(
-                t('projectBoard.saveError', 'Could not move task')
-            );
+            showErrorToast(t('projectBoard.saveError', 'Could not move task'));
         }
     };
 
@@ -586,11 +597,11 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
         targetUid: string,
         priorityKey: PriorityKey
     ) => {
-        const priority = priorityKeyToValue(priorityKey) as unknown as Project['priority'];
+        const priority = priorityKeyToValue(
+            priorityKey
+        ) as unknown as Project['priority'];
         setSubProjects((prev) =>
-            prev.map((p) =>
-                p.uid === targetUid ? { ...p, priority } : p
-            )
+            prev.map((p) => (p.uid === targetUid ? { ...p, priority } : p))
         );
         try {
             await updateProject(targetUid, { priority });
@@ -660,7 +671,9 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 } as Partial<Task>);
             } else if (groupBy === 'priority') {
                 await updateTask(payload.task.uid, {
-                    priority: priorityKeyToValue(colId as PriorityKey) as Task['priority'],
+                    priority: priorityKeyToValue(
+                        colId as PriorityKey
+                    ) as Task['priority'],
                 });
             }
             onReloadParent?.();
@@ -698,6 +711,50 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
         [drawerProjectUid, subTasks]
     );
 
+    // On md+ the canvas ends at the bottom of the window, so its horizontal
+    // scrollbar is always reachable; the page header above it is not a
+    // fixed height, so measure instead of guessing.
+    const canvasRef = useRef<HTMLDivElement | null>(null);
+    useEffect(() => {
+        const el = canvasRef.current;
+        if (!el) return undefined;
+        const wide = window.matchMedia?.('(min-width: 768px)');
+        let frame = 0;
+        const fit = () => {
+            frame = 0;
+            if (!wide?.matches) {
+                el.style.height = '';
+                return;
+            }
+            const top = el.getBoundingClientRect().top;
+            const room = window.innerHeight - Math.max(top, 0) - 16;
+            el.style.height = `${Math.max(room, 280)}px`;
+        };
+        const schedule = () => {
+            if (!frame) frame = window.requestAnimationFrame(fit);
+        };
+        fit();
+        window.addEventListener('resize', schedule);
+        // Scrolling happens in an ancestor, which does not bubble.
+        document.addEventListener('scroll', schedule, true);
+        return () => {
+            if (frame) window.cancelAnimationFrame(frame);
+            window.removeEventListener('resize', schedule);
+            document.removeEventListener('scroll', schedule, true);
+            el.style.height = '';
+        };
+    });
+
+    // Firefox starts no drag unless the event carries data.
+    const startNativeDrag = (e: React.DragEvent, uid?: string | null) => {
+        e.dataTransfer.effectAllowed = 'move';
+        try {
+            e.dataTransfer.setData('text/plain', uid || '');
+        } catch {
+            // Some browsers refuse data on synthetic events.
+        }
+    };
+
     const renderTaskCard = (task: Task, showProjectBadge = false) => {
         const done = DONE_STATUSES.has(task.status);
         const ownerSub = task.project_uid
@@ -721,8 +778,9 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
             <div
                 key={task.uid}
                 draggable={canDrag}
-                onDragStart={() => {
+                onDragStart={(e) => {
                     draggingRef.current = { kind: 'task', task };
+                    startNativeDrag(e, task.uid);
                 }}
                 onDragEnd={() => {
                     draggingRef.current = null;
@@ -732,8 +790,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 // A click anywhere on the card opens the task; a drag never
                 // ends in a click, and the controls keep their own action.
                 onClick={(e) => {
-                    if ((e.target as HTMLElement).closest('button'))
-                        return;
+                    if ((e.target as HTMLElement).closest('button')) return;
                     onOpenTask(task);
                 }}
                 className={`group cursor-pointer rounded-lg border border-gray-200/80 bg-white ${densityPad} shadow-xs transition hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700`}
@@ -807,20 +864,33 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 draggable={!readOnly}
                 tabIndex={0}
                 onKeyDown={(e) => {
-                    if (e.key === ' ') {
+                    if (e.target !== e.currentTarget) return;
+                    if (e.key === ' ' || e.key === 'Enter') {
                         e.preventDefault();
                         setDrawerProjectUid(sub.uid);
                     }
                 }}
-                onDragStart={() => {
+                // A click anywhere on the card opens its tasks; the controls
+                // keep their own action and a drag never ends in a click.
+                onClick={(e) => {
+                    if (
+                        (e.target as HTMLElement).closest(
+                            'button, select, a, input'
+                        )
+                    )
+                        return;
+                    setDrawerProjectUid(sub.uid);
+                }}
+                onDragStart={(e) => {
                     draggingRef.current = { kind: 'subproject', project: sub };
+                    startNativeDrag(e, sub.uid);
                 }}
                 onDragEnd={() => {
                     draggingRef.current = null;
                     setDragOverCol(null);
                 }}
                 data-testid={`portfolio-card-${sub.uid}`}
-                className={`group rounded-xl border border-gray-200/90 bg-white ${densityPad} shadow-xs transition hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-blue-700`}
+                className={`group cursor-pointer rounded-xl border border-gray-200/90 bg-white ${densityPad} shadow-xs transition hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-blue-700`}
             >
                 <div className="flex items-start justify-between gap-2">
                     <div className="flex min-w-0 items-center gap-1.5">
@@ -862,11 +932,13 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                     />
                 )}
 
-                {fields.nextAction && !handoff?.next_action && sub.next_task && (
-                    <p className="mt-1.5 truncate text-xs text-gray-600 dark:text-gray-400">
-                        → {sub.next_task.name}
-                    </p>
-                )}
+                {fields.nextAction &&
+                    !handoff?.next_action &&
+                    sub.next_task && (
+                        <p className="mt-1.5 truncate text-xs text-gray-600 dark:text-gray-400">
+                            → {sub.next_task.name}
+                        </p>
+                    )}
 
                 {fields.progress && (
                     <div className="mt-2 flex items-center gap-2">
@@ -878,19 +950,33 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 }}
                             />
                         </div>
-                        <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
-                            {sub.open_tasks_count ?? 0}
+                        <span
+                            data-testid={`open-count-${sub.uid}`}
+                            title={t(
+                                'projectBoard.openCountDetail',
+                                '{{count}} open tasks out of {{total}}',
+                                {
+                                    count: sub.open_tasks_count ?? 0,
+                                    total: sub.total_tasks_count ?? 0,
+                                }
+                            )}
+                            className="whitespace-nowrap text-xs tabular-nums text-gray-500 dark:text-gray-400"
+                        >
+                            {t('projectBoard.openCount', '{{count}} open', {
+                                count: sub.open_tasks_count ?? 0,
+                            })}
                         </span>
                     </div>
                 )}
 
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-1">
                     <div className="flex flex-wrap items-center gap-1">
-                        {fields.sourceBadge && sub.source_type === 'todo_md' && (
-                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[11px] font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                                TODO.md
-                            </span>
-                        )}
+                        {fields.sourceBadge &&
+                            sub.source_type === 'todo_md' && (
+                                <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[11px] font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                                    TODO.md
+                                </span>
+                            )}
                         {fields.tags &&
                             (sub.tags || []).slice(0, 2).map((tag) => (
                                 <span
@@ -1031,7 +1117,8 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 onChange={(e) => setNewViewName(e.target.value)}
                                 onBlur={() => setNewViewName(null)}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Escape') setNewViewName(null);
+                                    if (e.key === 'Escape')
+                                        setNewViewName(null);
                                 }}
                                 maxLength={40}
                                 placeholder={t(
@@ -1145,7 +1232,9 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                         }`}
                     >
                         <InboxIcon className="h-3.5 w-3.5" />
-                        <span>{t('projectBoard.capturesTitle', 'Captures')}</span>
+                        <span>
+                            {t('projectBoard.capturesTitle', 'Captures')}
+                        </span>
                     </button>
 
                     {activePreset.recentDays && (
@@ -1162,9 +1251,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                             className="inline-flex items-center gap-1 rounded-lg bg-amber-100 px-2.5 py-1.5 text-[13px] font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-200"
                         >
                             <ClockIcon className="h-3.5 w-3.5" />
-                            <span>
-                                {t('projectBoard.recent7dShort', '7d')}
-                            </span>
+                            <span>{t('projectBoard.recent7dShort', '7d')}</span>
                             <XMarkIcon className="h-3 w-3" />
                         </button>
                     )}
@@ -1245,105 +1332,115 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     </div>
                                 )}
 
-                                {hasSubProjects && config.includeSubProjects && (
-                                    <div className="space-y-1.5 border-b border-gray-100 pb-2.5 dark:border-gray-800">
-                                        <p className="font-medium text-gray-700 dark:text-gray-200">
-                                            {t(
-                                                'projectBoard.projectStatuses',
-                                                'Sub-project statuses'
-                                            )}
-                                        </p>
-                                        <div className="flex flex-wrap gap-1">
-                                            {PORTFOLIO_STATUS_ORDER.map((st) => {
-                                                const active =
-                                                    activePreset.projectStatuses.includes(
-                                                        st
-                                                    );
-                                                return (
-                                                    <button
-                                                        key={st}
-                                                        type="button"
-                                                        onClick={() =>
-                                                            toggleStatusFilter(
-                                                                st
-                                                            )
-                                                        }
-                                                        className={`rounded-md px-2 py-0.5 text-[11px] font-medium transition ${
-                                                            active
-                                                                ? 'bg-blue-600 text-white'
-                                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
-                                                        }`}
-                                                    >
-                                                        {statusLabel(st)}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                        <label className="mt-1 flex items-center justify-between gap-2">
-                                            <span className="text-gray-600 dark:text-gray-300">
+                                {hasSubProjects &&
+                                    config.includeSubProjects && (
+                                        <div className="space-y-1.5 border-b border-gray-100 pb-2.5 dark:border-gray-800">
+                                            <p className="font-medium text-gray-700 dark:text-gray-200">
                                                 {t(
-                                                    'projectBoard.onlyTodoMd',
-                                                    'TODO.md repos only'
+                                                    'projectBoard.projectStatuses',
+                                                    'Sub-project statuses'
                                                 )}
-                                            </span>
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    activePreset.onlyTodoMd
-                                                }
-                                                onChange={(e) =>
-                                                    updateActivePreset({
-                                                        onlyTodoMd:
-                                                            e.target.checked,
-                                                    })
-                                                }
-                                            />
-                                        </label>
-                                    </div>
-                                )}
-
-                                <div className="space-y-1.5 border-b border-gray-100 pb-2.5 dark:border-gray-800">
-                                    {hasSubProjects && config.includeSubProjects && (
-                                        <div className="flex items-center justify-between gap-2">
-                                            <span className="text-gray-600 dark:text-gray-300">
-                                                {t('projectBoard.mode', 'Board mode')}
-                                            </span>
-                                            <select
-                                                aria-label={t(
-                                                    'projectBoard.mode',
-                                                    'Board mode'
+                                            </p>
+                                            <div className="flex flex-wrap gap-1">
+                                                {PORTFOLIO_STATUS_ORDER.map(
+                                                    (st) => {
+                                                        const active =
+                                                            activePreset.projectStatuses.includes(
+                                                                st
+                                                            );
+                                                        return (
+                                                            <button
+                                                                key={st}
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    toggleStatusFilter(
+                                                                        st
+                                                                    )
+                                                                }
+                                                                className={`rounded-md px-2 py-0.5 text-[11px] font-medium transition ${
+                                                                    active
+                                                                        ? 'bg-blue-600 text-white'
+                                                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+                                                                }`}
+                                                            >
+                                                                {statusLabel(
+                                                                    st
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    }
                                                 )}
-                                                value={activePreset.mode}
-                                                onChange={(e) =>
-                                                    updateActivePreset({
-                                                        mode: e.target
-                                                            .value as BoardViewMode,
-                                                    })
-                                                }
-                                                data-testid="board-mode-select"
-                                                className="rounded border border-gray-200 bg-gray-50 py-0.5 pl-1.5 pr-7 dark:border-gray-700 dark:bg-gray-800"
-                                            >
-                                                <option value="by_subproject">
+                                            </div>
+                                            <label className="mt-1 flex items-center justify-between gap-2">
+                                                <span className="text-gray-600 dark:text-gray-300">
                                                     {t(
-                                                        'projectBoard.modeBySubProject',
-                                                        '1 col / project'
+                                                        'projectBoard.onlyTodoMd',
+                                                        'TODO.md repos only'
                                                     )}
-                                                </option>
-                                                <option value="portfolio">
-                                                    {t(
-                                                        'projectBoard.modePortfolio',
-                                                        'Portfolio'
-                                                    )}
-                                                </option>
-                                                <option value="tasks">
-                                                    {t(
-                                                        'projectBoard.modeTasks',
-                                                        'All tasks'
-                                                    )}
-                                                </option>
-                                            </select>
+                                                </span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        activePreset.onlyTodoMd
+                                                    }
+                                                    onChange={(e) =>
+                                                        updateActivePreset({
+                                                            onlyTodoMd:
+                                                                e.target
+                                                                    .checked,
+                                                        })
+                                                    }
+                                                />
+                                            </label>
                                         </div>
                                     )}
+
+                                <div className="space-y-1.5 border-b border-gray-100 pb-2.5 dark:border-gray-800">
+                                    {hasSubProjects &&
+                                        config.includeSubProjects && (
+                                            <div className="flex items-center justify-between gap-2">
+                                                <span className="text-gray-600 dark:text-gray-300">
+                                                    {t(
+                                                        'projectBoard.mode',
+                                                        'Board mode'
+                                                    )}
+                                                </span>
+                                                <select
+                                                    aria-label={t(
+                                                        'projectBoard.mode',
+                                                        'Board mode'
+                                                    )}
+                                                    value={activePreset.mode}
+                                                    onChange={(e) =>
+                                                        updateActivePreset({
+                                                            mode: e.target
+                                                                .value as BoardViewMode,
+                                                        })
+                                                    }
+                                                    data-testid="board-mode-select"
+                                                    className="rounded border border-gray-200 bg-gray-50 py-0.5 pl-1.5 pr-7 dark:border-gray-700 dark:bg-gray-800"
+                                                >
+                                                    <option value="by_subproject">
+                                                        {t(
+                                                            'projectBoard.modeBySubProject',
+                                                            '1 col / project'
+                                                        )}
+                                                    </option>
+                                                    <option value="portfolio">
+                                                        {t(
+                                                            'projectBoard.modePortfolio',
+                                                            'Portfolio'
+                                                        )}
+                                                    </option>
+                                                    <option value="tasks">
+                                                        {t(
+                                                            'projectBoard.modeTasks',
+                                                            'All tasks'
+                                                        )}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        )}
                                     <label className="flex items-center justify-between gap-2">
                                         <span className="text-gray-600 dark:text-gray-300">
                                             {t(
@@ -1354,10 +1451,14 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         <input
                                             type="checkbox"
                                             data-testid="board-recent-toggle"
-                                            checked={Boolean(activePreset.recentDays)}
+                                            checked={Boolean(
+                                                activePreset.recentDays
+                                            )}
                                             onChange={(e) =>
                                                 updateActivePreset({
-                                                    recentDays: e.target.checked ? 7 : null,
+                                                    recentDays: e.target.checked
+                                                        ? 7
+                                                        : null,
                                                 })
                                             }
                                         />
@@ -1432,8 +1533,9 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                 updateActivePreset({
                                                     staleDays: Math.max(
                                                         0,
-                                                        Number(e.target.value) ||
-                                                            0
+                                                        Number(
+                                                            e.target.value
+                                                        ) || 0
                                                     ),
                                                 })
                                             }
@@ -1575,8 +1677,14 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 handleConvertInboxToProject
                             }
                             onOpenTask={onOpenTask}
-                            onDragStartItem={(p) => {
+                            onDragStartItem={(p, e) => {
                                 draggingRef.current = p;
+                                startNativeDrag(
+                                    e,
+                                    p.kind === 'inbox_item'
+                                        ? p.item.uid
+                                        : p.task.uid
+                                );
                             }}
                             onDragEnd={() => {
                                 draggingRef.current = null;
@@ -1661,7 +1769,11 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                     )}
 
                     {/* Main Kanban Canvas */}
-                    <div className="flex items-start gap-3 overflow-x-auto pb-4 md:min-h-[calc(100vh-6rem)]">
+                    <div
+                        ref={canvasRef}
+                        data-testid="board-canvas"
+                        className="flex items-start gap-3 overflow-x-auto pb-4"
+                    >
                         {activePreset.showInboxColumn && (
                             <BoardInboxColumn
                                 inboxItems={inboxItems}
@@ -1684,8 +1796,14 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     handleConvertInboxToProject
                                 }
                                 onOpenTask={onOpenTask}
-                                onDragStartItem={(p) => {
+                                onDragStartItem={(p, e) => {
                                     draggingRef.current = p;
+                                    startNativeDrag(
+                                        e,
+                                        p.kind === 'inbox_item'
+                                            ? p.item.uid
+                                            : p.task.uid
+                                    );
                                 }}
                                 onDragEnd={() => {
                                     draggingRef.current = null;
@@ -1747,8 +1865,10 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                             );
                                         }}
                                         className={`${
-                                            hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-[17.5rem] md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                            hiddenOnMobile
+                                                ? 'hidden md:flex'
+                                                : 'flex'
+                                        } w-full md:w-[17.5rem] md:max-h-full shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : 'border-gray-200/80 bg-gray-50/70 dark:border-gray-800 dark:bg-gray-900/40'
@@ -1849,20 +1969,27 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                             e.preventDefault();
                                                             const trimmed =
                                                                 quickTaskName.trim();
-                                                            if (!trimmed) return;
+                                                            if (!trimmed)
+                                                                return;
                                                             await handleQuickAddInProject(
                                                                 col.projectUid,
                                                                 trimmed
                                                             );
-                                                            setQuickTaskName('');
-                                                            setAddingColId(null);
+                                                            setQuickTaskName(
+                                                                ''
+                                                            );
+                                                            setAddingColId(
+                                                                null
+                                                            );
                                                         }}
                                                         className="space-y-1.5"
                                                     >
                                                         <input
                                                             type="text"
                                                             autoFocus
-                                                            value={quickTaskName}
+                                                            value={
+                                                                quickTaskName
+                                                            }
                                                             onChange={(e) =>
                                                                 setQuickTaskName(
                                                                     e.target
@@ -1911,7 +2038,9 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                             setAddingColId(
                                                                 col.id
                                                             );
-                                                            setQuickTaskName('');
+                                                            setQuickTaskName(
+                                                                ''
+                                                            );
                                                         }}
                                                         className="flex w-full items-center gap-1 rounded-lg px-2 py-1.5 text-[13px] text-gray-500 hover:bg-gray-200/70 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                                                     >
@@ -1975,8 +2104,10 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                             );
                                         }}
                                         className={`${
-                                            hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-[17.5rem] md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                            hiddenOnMobile
+                                                ? 'hidden md:flex'
+                                                : 'flex'
+                                        } w-full md:w-[17.5rem] md:max-h-full shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : col.isOverWip
@@ -2083,8 +2214,10 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                             );
                                         }}
                                         className={`${
-                                            hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-[17.5rem] md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                            hiddenOnMobile
+                                                ? 'hidden md:flex'
+                                                : 'flex'
+                                        } w-full md:w-[17.5rem] md:max-h-full shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : 'border-gray-200/80 bg-gray-50/70 dark:border-gray-800 dark:bg-gray-900/40'

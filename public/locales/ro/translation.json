@@ -5518,6 +5518,8 @@
     "onlyTodoMd": "TODO.md repos only",
     "openProject": "Open page",
     "peekProject": "Inspect tasks",
+    "openCount": "{{count}} deschise",
+    "openCountDetail": "{{count}} sarcini deschise din {{total}}",
     "projectStatuses": "Sub-project statuses",
     "quickAddPlaceholder": "Add a task...",
     "recent7d": "Tasks captured in the last 7 days",

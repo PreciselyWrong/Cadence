@@ -5534,6 +5534,8 @@
     "onlyTodoMd": "Dépôts TODO.md uniquement",
     "openProject": "Ouvrir la page",
     "peekProject": "Voir les tâches",
+    "openCount": "{{count}} ouvertes",
+    "openCountDetail": "{{count}} tâches ouvertes sur {{total}}",
     "projectStatuses": "Statuts des sous-projets",
     "quickAddPlaceholder": "Ajouter une tâche...",
     "recent7d": "Tâches créées ces 7 derniers jours",

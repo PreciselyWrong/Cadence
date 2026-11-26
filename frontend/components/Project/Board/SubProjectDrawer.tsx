@@ -8,15 +8,12 @@ import {
     PlusIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
-import {
-    BoardTreeSubProject,
-    ProjectStatus,
-} from '../../../entities/Project';
+import { BoardTreeSubProject, ProjectStatus } from '../../../entities/Project';
 import { Task } from '../../../entities/Task';
 import { createUidSlug } from '../../../utils/slugUtils';
 import EntityIcon from '../../Shared/EntityIcon';
 import { getProjectStatusTint } from '../projectStatusStyles';
-import { PORTFOLIO_STATUS_ORDER } from './boardModel';
+import { normalizeTaskStatus, PORTFOLIO_STATUS_ORDER } from './boardModel';
 
 interface SubProjectDrawerProps {
     project: BoardTreeSubProject | null;
@@ -62,6 +59,12 @@ const SubProjectDrawer: React.FC<SubProjectDrawerProps> = ({
 
     if (!project) return null;
 
+    const inProgressTasks = tasks.filter(
+        (tk) => normalizeTaskStatus(tk.status) === 'in_progress'
+    );
+    const otherTasks = tasks.filter(
+        (tk) => normalizeTaskStatus(tk.status) !== 'in_progress'
+    );
     const handoff = project.handoff_state;
     const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -74,6 +77,35 @@ const SubProjectDrawer: React.FC<SubProjectDrawerProps> = ({
         } finally {
             setAdding(false);
         }
+    };
+
+    const renderTask = (task: Task) => {
+        const done = DONE_STATUSES.has(task.status);
+        return (
+            <li
+                key={task.uid}
+                className="flex items-start gap-2 rounded-lg border border-gray-100 bg-gray-50/70 px-2.5 py-2 hover:bg-gray-100/80 dark:border-gray-800 dark:bg-gray-800/50 dark:hover:bg-gray-800"
+            >
+                <input
+                    type="checkbox"
+                    checked={done}
+                    disabled={readOnly}
+                    onChange={() => onToggleTask(task)}
+                    className="mt-0.5 h-4 w-4 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <button
+                    type="button"
+                    onClick={() => onOpenTask(task)}
+                    className={`min-w-0 flex-1 text-left text-sm ${
+                        done
+                            ? 'text-gray-400 line-through'
+                            : 'text-gray-900 dark:text-gray-100'
+                    }`}
+                >
+                    {task.name}
+                </button>
+            </li>
+        );
     };
 
     return (
@@ -229,6 +261,23 @@ const SubProjectDrawer: React.FC<SubProjectDrawerProps> = ({
                         <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                             {t('tasks.title', 'Tasks')} ({tasks.length})
                         </h3>
+                        {inProgressTasks.length > 0 && (
+                            <div
+                                className="mb-3"
+                                data-testid="drawer-in-progress"
+                            >
+                                <h4 className="mb-1.5 text-[11px] font-semibold text-blue-700 dark:text-blue-300">
+                                    {t(
+                                        'projectStatus.in_progress',
+                                        'In progress'
+                                    )}{' '}
+                                    ({inProgressTasks.length})
+                                </h4>
+                                <ul className="space-y-1.5">
+                                    {inProgressTasks.map(renderTask)}
+                                </ul>
+                            </div>
+                        )}
                         {tasks.length === 0 ? (
                             <p className="rounded-lg border border-dashed border-gray-200 px-3 py-4 text-center text-xs text-gray-500 dark:border-gray-800 dark:text-gray-400">
                                 {t(
@@ -237,38 +286,11 @@ const SubProjectDrawer: React.FC<SubProjectDrawerProps> = ({
                                 )}
                             </p>
                         ) : (
-                            <ul className="space-y-1.5">
-                                {tasks.map((task) => {
-                                    const done = DONE_STATUSES.has(task.status);
-                                    return (
-                                        <li
-                                            key={task.uid}
-                                            className="flex items-start gap-2 rounded-lg border border-gray-100 bg-gray-50/70 px-2.5 py-2 hover:bg-gray-100/80 dark:border-gray-800 dark:bg-gray-800/50 dark:hover:bg-gray-800"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                checked={done}
-                                                disabled={readOnly}
-                                                onChange={() =>
-                                                    onToggleTask(task)
-                                                }
-                                                className="mt-0.5 h-4 w-4 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => onOpenTask(task)}
-                                                className={`min-w-0 flex-1 text-left text-sm ${
-                                                    done
-                                                        ? 'text-gray-400 line-through'
-                                                        : 'text-gray-900 dark:text-gray-100'
-                                                }`}
-                                            >
-                                                {task.name}
-                                            </button>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
+                            otherTasks.length > 0 && (
+                                <ul className="space-y-1.5">
+                                    {otherTasks.map(renderTask)}
+                                </ul>
+                            )
                         )}
                     </section>
                 </div>

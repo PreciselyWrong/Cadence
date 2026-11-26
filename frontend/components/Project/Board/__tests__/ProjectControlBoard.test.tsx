@@ -1,5 +1,11 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+    fireEvent,
+    render,
+    screen,
+    waitFor,
+    within,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import ProjectControlBoard from '../ProjectControlBoard';
 import { defaultBoardConfig } from '../boardModel';
@@ -491,5 +497,82 @@ describe('ProjectControlBoard', () => {
         ]) {
             expect(menu).not.toHaveTextContent(english);
         }
+    });
+
+    describe('portfolio cards', () => {
+        const renderPortfolio = async () => {
+            const Wrapper: React.FC = () => {
+                const [config, setConfig] = React.useState(() =>
+                    defaultBoardConfig(true)
+                );
+                return (
+                    <MemoryRouter>
+                        <ProjectControlBoard
+                            project={devProject}
+                            tasks={[]}
+                            config={config}
+                            onChangeConfig={setConfig}
+                            onMoveTaskSection={jest.fn()}
+                            onOpenTask={jest.fn()}
+                            t={t}
+                        />
+                    </MemoryRouter>
+                );
+            };
+            render(<Wrapper />);
+            await screen.findByTestId('subproject-col-p1');
+            fireEvent.click(screen.getByTestId('board-preset-portfolio'));
+            return screen.getByTestId('portfolio-card-p1');
+        };
+
+        it('fills dataTransfer on dragStart so Firefox starts the drag', async () => {
+            const card = await renderPortfolio();
+            const dataTransfer = { setData: jest.fn(), effectAllowed: '' };
+            fireEvent.dragStart(card, { dataTransfer });
+            expect(dataTransfer.setData).toHaveBeenCalledWith(
+                'text/plain',
+                'p1'
+            );
+            expect(dataTransfer.effectAllowed).toBe('move');
+        });
+
+        it('opens the drawer on a click anywhere on the card, or Enter', async () => {
+            const card = await renderPortfolio();
+            fireEvent.click(card);
+            expect(screen.getByTestId('subproject-drawer')).toBeInTheDocument();
+            fireEvent.click(screen.getByLabelText('Close'));
+            expect(
+                screen.queryByTestId('subproject-drawer')
+            ).not.toBeInTheDocument();
+            fireEvent.keyDown(card, { key: 'Enter' });
+            expect(screen.getByTestId('subproject-drawer')).toBeInTheDocument();
+        });
+
+        it('labels the open task count', async () => {
+            const card = await renderPortfolio();
+            const count = within(card).getByTestId('open-count-p1');
+            expect(count).toHaveTextContent('open');
+            expect(count.getAttribute('title')).toContain('open tasks out of');
+        });
+
+        it('lists in-progress tasks first in the drawer', async () => {
+            (fetchProjectBoardTree as jest.Mock).mockResolvedValue({
+                ...mockTree,
+                tasks: [
+                    ...mockTree.tasks,
+                    {
+                        uid: 'ip1',
+                        name: 'Doing now',
+                        status: 'in_progress',
+                        project_uid: 'p1',
+                    } as Task,
+                ],
+            });
+            const card = await renderPortfolio();
+            fireEvent.click(card);
+            const group = screen.getByTestId('drawer-in-progress');
+            expect(group).toHaveTextContent('Doing now');
+            expect(group).not.toHaveTextContent('Wire control board');
+        });
     });
 });

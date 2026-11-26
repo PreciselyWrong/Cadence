@@ -1189,3 +1189,11 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Décision** : dans l'en-tête de la vue du jour, le bouton « Aujourd'hui » est toujours affiché à côté des flèches, grisé quand on est déjà sur aujourd'hui. Avant il n'apparaissait qu'ailleurs, et la barre sautait à chaque changement de jour.
 - **Android** : à vérifier sur l'en-tête d'Aujourd'hui ; même règle si un retour à aujourd'hui y apparaît et disparaît.
+
+### 2026-11-26 : tableau des sous-projets, cartes cliquables et défilement
+
+- **Décision** : dans la vue « Projets », toute la carte ouvre le tiroir des tâches (plus seulement l'icône œil), le tiroir montre d'abord les tâches en cours, et le compteur est libellé (« 28 ouvertes »). Un chiffre nu ou une icône seule ne disent pas ce qu'ils ouvrent.
+- **Décision** : le tableau prend la hauteur restante de la fenêtre, pour que sa barre de défilement horizontale soit toujours à l'écran.
+- **Correctif** : le glisser des cartes renseigne `dataTransfer`, sans quoi Firefox ne démarre aucun glissement.
+- **Android** : la vue « Projets » n'existe pas encore sur Android (entrée dans `TODO.md`) ; à sa création, carte entière cliquable et compteur libellé.
+

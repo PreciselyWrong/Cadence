@@ -5502,6 +5502,8 @@
     "onlyTodoMd": "TODO.md repos only",
     "openProject": "Open page",
     "peekProject": "Inspect tasks",
+    "openCount": "{{count}} отворени",
+    "openCountDetail": "{{count}} отворени задачи от {{total}}",
     "projectStatuses": "Sub-project statuses",
     "quickAddPlaceholder": "Add a task...",
     "recent7d": "Tasks captured in the last 7 days",

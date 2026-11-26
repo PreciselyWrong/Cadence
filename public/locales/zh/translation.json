@@ -5502,6 +5502,8 @@
     "onlyTodoMd": "TODO.md repos only",
     "openProject": "Open page",
     "peekProject": "Inspect tasks",
+    "openCount": "{{count}} 项未完成",
+    "openCountDetail": "共 {{total}} 项任务，{{count}} 项未完成",
     "projectStatuses": "Sub-project statuses",
     "quickAddPlaceholder": "Add a task...",
     "recent7d": "Tasks captured in the last 7 days",
