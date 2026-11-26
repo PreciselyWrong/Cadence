@@ -21,6 +21,45 @@ export interface ProjectTaskStatus {
     not_started: number;
 }
 
+export interface ProjectHandoffState {
+    section?: string | null;
+    branch?: string | null;
+    tests?: string | null;
+    blockers?: string | null;
+    next_action?: string | null;
+    raw?: string | null;
+    updated_at?: string | null;
+}
+
+export interface ProjectSubProjectSummary {
+    uid: string;
+    name: string;
+    status: ProjectStatus;
+    icon?: string | null;
+    color?: string | null;
+    handoff_state?: ProjectHandoffState | null;
+    open_tasks_count?: number;
+}
+
+export interface BoardTreeSubProject extends ProjectSubProjectSummary {
+    id?: number;
+    description?: string | null;
+    priority?: PriorityType;
+    due_date_at?: string | null;
+    source_type?: string | null;
+    source_path?: string | null;
+    handoff_state?: ProjectHandoffState | null;
+    parent_project_uid?: string | null;
+    area?: Area | null;
+    tags?: Tag[];
+    next_task_uid?: string | null;
+    next_task?: { uid: string; name: string } | null;
+    done_tasks_count: number;
+    total_tasks_count: number;
+    completion_percentage: number;
+    updated_at?: string;
+}
+
 export interface Project {
     id?: number;
     uid?: string;
@@ -31,6 +70,7 @@ export interface Project {
     // under the server's TODO root.
     source_type?: string | null;
     source_path?: string | null;
+    handoff_state?: ProjectHandoffState | null;
     area?: Area;
     area_id?: number | null;
     area_uid?: string | null;
@@ -45,13 +85,7 @@ export interface Project {
     // A sub-project's parent; its area follows the parent's.
     parent_project_uid?: string | null;
     // Direct sub-projects the viewer can see (project page only).
-    SubProjects?: {
-        uid: string;
-        name: string;
-        status: ProjectStatus;
-        icon?: string | null;
-        open_tasks_count?: number;
-    }[];
+    SubProjects?: ProjectSubProjectSummary[];
     tags?: Tag[];
     priority?: PriorityType;
     tasks?: Task[];

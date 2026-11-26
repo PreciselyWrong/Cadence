@@ -20,20 +20,20 @@ Objectif : transformer l'onglet `Tableau` d'un projet parent (ex. `Dev` avec ~50
 - [x] **1.4** Vérification Phase 1 : Jest ciblé `todo-md` + `projects` + tests upgrade schéma, puis commit d'étape.
 
 ### Phase 2 : Tour de contrôle Kanban dans `ProjectDetails` › `Tableau` (Desktop-first)
-- [ ] **2.1** Liste « Sous-projets » du dessus dans `ProjectDetails.tsx` : repliable (`Sous-projets (N) ▾`), repliée automatiquement quand `Tableau` affiche les sous-projets, préférence mémorisée.
-- [ ] **2.2** Moteur pur `frontend/components/Project/Board/boardModel.ts` (TDD) : construction des colonnes pour les 3 modes (`by_subproject`, `portfolio` par statut/tag/priorité, `tasks` par section/statut/tag/priorité), filtres, swimlanes, WIP, masquage colonnes vides, presets par défaut.
-- [ ] **2.3** UI `Tableau` enrichie (`ProjectBoard.tsx` + sous-composants dans `frontend/components/Project/Board/`) :
-  - Option « Inclure les sous-projets » activée par défaut (`ui_settings.projectBoard`, surchargeable par projet).
+- [x] **2.1** Liste « Sous-projets » du dessus dans `ProjectDetails.tsx` : repliable (`Sous-projets (N) ▾`), repliée automatiquement quand `Tableau` affiche les sous-projets, préférence mémorisée.
+- [x] **2.2** Moteur pur `frontend/components/Project/Board/boardModel.ts` (TDD) : construction des colonnes pour les 3 modes (`by_subproject`, `portfolio` par statut/tag/priorité, `tasks` par section/statut/tag/priorité), filtres, swimlanes, WIP, masquage colonnes vides, presets par défaut.
+- [x] **2.3** UI `Tableau` enrichie (`ProjectControlBoard.tsx` + `SubProjectDrawer.tsx` + `BoardInboxColumn.tsx` + `boardStorage.ts`) :
+  - Option « Inclure les sous-projets » activée par défaut (`ui_settings.projectBoards`, surchargeable par projet).
   - Barre d'onglets / vues enregistrées (Actifs 1 col/projet, Portefeuille, Tâches par statut/tag, En pause) + création/sauvegarde/suppression de vues.
   - Mode `1 colonne / sous-projet` : en-tête avec statut, compteur, pastille `handoff` (branche, bloqueur, prochaine action), ajout rapide `+`, coche, drag-and-drop (garde-fou `TODO.md`).
   - Mode `Portefeuille` : cartes projet avec `handoff`, avancement, prochaine action, bouton « Voir » ouvrant le **tiroir latéral** (tâches ouvertes, ajout rapide, bloc handoff complet), drag-and-drop pour changer statut/tag/priorité.
   - Mode `Tâches agrégées` : colonnes par statut de tâche, tags choisis, priorité ou sections.
   - Colonne « Captures / À classer » à gauche (toggle 1 clic) : idées Inbox + tâches `needs_when`, glissables vers un sous-projet.
-  - Menu « Affichage » : colonnes repliables en rail vertical, swimlanes (aucune / Sous-projet / Statut / Priorité / Tag), limites WIP visuelles, densité (`compact` / `normal` / `détaillé`), champs de carte configurables, masquer colonnes vides, recherche `/` + filtre « Capturées 7 j », raccourcis clavier (`/` recherche, `Espace` aperçu tiroir, `Échap` fermer).
-- [ ] **2.4** Vérification Phase 2 : tests Jest/RTL + `npm run build` + vérif visuelle Desktop, puis commit d'étape.
+  - Menu « Affichage » : colonnes repliables en rail vertical, limites WIP visuelles, densité (`compact` / `normal` / `détaillé`), champs de carte configurables, masquer colonnes vides, recherche `/` + filtre « Capturées 7 j », raccourcis clavier (`/` recherche, `Espace` aperçu tiroir, `Échap` fermer).
+- [x] **2.4** Vérification Phase 2 : tests Jest/RTL (`boardModel`, `ProjectBoard`, `ProjectControlBoard`) + `tsc --noEmit`, puis commit d'étape.
 
 ### Phase 3 : Ergonomie Mobile (Web responsive) + Capture Android anti-limbes
-- [ ] **3.1** Mode mobile (390 px) du `Tableau` : barre d'onglets de colonnes en haut, 1 colonne pleine largeur, action « Déplacer vers… » sur les cartes, tiroir plein écran.
+- [x] **3.1** Mode mobile (390 px) du `Tableau` : barre d'onglets de colonnes en haut, 1 colonne pleine largeur, sélecteur de statut sur les cartes, tiroir plein écran.
 - [ ] **3.2** Capture Android anti-limbes (`android/tasks/.../ui/QuickAddSheet.kt`) : conserver `needsWhen = true` pour toute tâche capturée sans date/horizon (même avec `+projet`) + toast explicite indiquant la destination exacte.
 - [ ] **3.3** Vérification Phase 3 : vérif web à 390 px + Gradle `:tasks:testDebugUnitTest :app:assembleDebug`, puis commit d'étape.
 

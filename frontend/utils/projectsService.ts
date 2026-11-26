@@ -1,4 +1,5 @@
-import { Project } from '../entities/Project';
+import { BoardTreeSubProject, Project } from '../entities/Project';
+import { Task } from '../entities/Task';
 import { handleAuthResponse } from './authUtils';
 import { getApiPath } from '../config/paths';
 import { getCsrfToken } from './csrfService';
@@ -56,6 +57,27 @@ export const fetchProjectById = async (projectId: string): Promise<Project> => {
     });
 
     await handleAuthResponse(response, 'Failed to fetch project details.');
+    return await response.json();
+};
+
+export interface ProjectBoardTree {
+    sub_projects: BoardTreeSubProject[];
+    tasks: Task[];
+}
+
+export const fetchProjectBoardTree = async (
+    projectUid: string,
+    includeCompleted = false
+): Promise<ProjectBoardTree> => {
+    const query = includeCompleted ? '?include_completed=1' : '';
+    const response = await fetch(
+        getApiPath(`project/${projectUid}/board-tree${query}`),
+        {
+            credentials: 'include',
+            headers: { Accept: 'application/json' },
+        }
+    );
+    await handleAuthResponse(response, 'Failed to load sub-projects board.');
     return await response.json();
 };
 

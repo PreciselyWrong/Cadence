@@ -86,6 +86,8 @@ interface Profile {
         } | null;
         // Keys: `view:<uid>`, `tag:<name>`, `project:<uid>`, `tasks`.
         viewTypes?: Record<string, ViewType>;
+        // Per-project Kanban board presets & display preferences.
+        projectBoards?: Record<string, unknown>;
         everyone?: {
             column_order?: string[];
         };

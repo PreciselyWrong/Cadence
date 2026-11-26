@@ -73,7 +73,16 @@ import ProjectPages from './ProjectPages';
 import { useProjectPages } from './useProjectPages';
 import ProjectTimeline from './Timeline/ProjectTimeline';
 import ProjectOutline from './ProjectOutline';
-import ProjectBoard from './Board/ProjectBoard';
+import ProjectControlBoard from './Board/ProjectControlBoard';
+import {
+    ProjectBoardConfig,
+    defaultBoardConfig,
+} from './Board/boardModel';
+import {
+    loadRemoteBoardConfig,
+    readLocalBoardConfig,
+    saveBoardConfig,
+} from './Board/boardStorage';
 import TaskMonthCalendar from '../Task/TaskMonthCalendar';
 import { useViewType } from '../../hooks/useViewType';
 import { orderBoardColumn } from '../../utils/projectSectionsService';
@@ -208,6 +217,48 @@ const ProjectDetails: React.FC = () => {
     const aiInsightsRef = useRef<ProjectAIInsightsHandle>(null);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
+    const hasSubProjects = Boolean(
+        project?.SubProjects && project.SubProjects.length > 0
+    );
+    const [boardConfig, setBoardConfig] = useState<ProjectBoardConfig>(() =>
+        defaultBoardConfig(false)
+    );
+    const [subProjectsListOverride, setSubProjectsListOverride] = useState<
+        boolean | null
+    >(null);
+
+    useEffect(() => {
+        if (!project?.uid) return;
+        const uid = project.uid;
+        setSubProjectsListOverride(null);
+        setBoardConfig(readLocalBoardConfig(uid, hasSubProjects));
+        let cancelled = false;
+        loadRemoteBoardConfig(uid, hasSubProjects).then((remote) => {
+            if (!cancelled && remote) setBoardConfig(remote);
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [project?.uid, hasSubProjects]);
+
+    const handleBoardConfigChange = useCallback(
+        (next: ProjectBoardConfig) => {
+            setBoardConfig(next);
+            if (project?.uid) {
+                void saveBoardConfig(project.uid, next);
+            }
+        },
+        [project?.uid]
+    );
+
+    const subProjectsListExpanded =
+        subProjectsListOverride !== null
+            ? subProjectsListOverride
+            : !(
+                  view === 'board' &&
+                  boardConfig.includeSubProjects &&
+                  boardConfig.hideSubProjectsList
+              );
     // TODO.md projects: the section a new task is written under.
     // Empty: the task stays in Cadence, whatever file the project follows.
     const [todoSection, setTodoSection] = useState<string>('');
@@ -1093,49 +1144,103 @@ const ProjectDetails: React.FC = () => {
                     />
                 )}
 
+                {project.handoff_state && (
+                    <section
+                        aria-label={t(
+                            'projectBoard.handoffTitle',
+                            'Current state'
+                        )}
+                        data-testid="project-handoff-banner"
+                        className={`mb-4 ${PAGE_GUTTER}`}
+                    >
+                        <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 px-3.5 py-2.5 text-xs dark:border-indigo-900/50 dark:bg-indigo-950/30">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <span className="font-semibold uppercase tracking-wide text-indigo-700 dark:text-indigo-300">
+                                    {project.handoff_state.section ||
+                                        t(
+                                            'projectBoard.handoffTitle',
+                                            'Current state'
+                                        )}
+                                </span>
+                                {project.handoff_state.branch && (
+                                    <span className="rounded bg-white/80 px-1.5 py-0.5 font-mono text-[11px] text-gray-700 dark:bg-gray-900/80 dark:text-gray-300">
+                                        {project.handoff_state.branch}
+                                    </span>
+                                )}
+                            </div>
+                            {project.handoff_state.next_action && (
+                                <p className="mt-1 font-medium text-gray-900 dark:text-gray-100">
+                                    → {project.handoff_state.next_action}
+                                </p>
+                            )}
+                            {project.handoff_state.blockers && (
+                                <p className="mt-1 text-amber-800 dark:text-amber-300">
+                                    ⚠ {project.handoff_state.blockers}
+                                </p>
+                            )}
+                        </div>
+                    </section>
+                )}
+
                 {project.SubProjects && project.SubProjects.length > 0 && (
                     <section
                         aria-labelledby="sub-projects-heading"
                         className={`mb-4 ${PAGE_GUTTER}`}
                     >
-                        <h2
+                        <button
+                            type="button"
                             id="sub-projects-heading"
-                            className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+                            aria-expanded={subProjectsListExpanded}
+                            data-testid="sub-projects-toggle"
+                            onClick={() =>
+                                setSubProjectsListOverride(
+                                    !subProjectsListExpanded
+                                )
+                            }
+                            className="mb-2 inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                         >
+                            <ChevronRightIcon
+                                className={`h-3.5 w-3.5 transition-transform ${
+                                    subProjectsListExpanded ? 'rotate-90' : ''
+                                }`}
+                            />
                             {t('projects.subProjects', 'Sub-projects')}
-                        </h2>
-                        {/* One row per sub-project, like a folder in a list:
-                        icon, name, open tasks, chevron. */}
-                        <ul className="overflow-hidden rounded-xl bg-white dark:bg-gray-900">
-                            {project.SubProjects.map((subProject) => (
-                                <li
-                                    key={subProject.uid}
-                                    className="border-b border-gray-100 last:border-b-0 dark:border-gray-800"
-                                >
-                                    <Link
-                                        to={`/project/${createUidSlug(subProject.uid, subProject.name)}`}
-                                        className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800"
+                            <span className="text-xs font-normal tabular-nums text-gray-500 dark:text-gray-400">
+                                ({project.SubProjects.length})
+                            </span>
+                        </button>
+                        {subProjectsListExpanded && (
+                            <ul className="overflow-hidden rounded-xl bg-white dark:bg-gray-900">
+                                {project.SubProjects.map((subProject) => (
+                                    <li
+                                        key={subProject.uid}
+                                        className="border-b border-gray-100 last:border-b-0 dark:border-gray-800"
                                     >
-                                        <EntityIcon
-                                            icon={subProject.icon}
-                                            className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                                            fallback={
-                                                <FolderIcon className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
-                                            }
-                                        />
-                                        <span className="min-w-0 flex-1 truncate">
-                                            {subProject.name}
-                                        </span>
-                                        {!!subProject.open_tasks_count && (
-                                            <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
-                                                {subProject.open_tasks_count}
+                                        <Link
+                                            to={`/project/${createUidSlug(subProject.uid, subProject.name)}`}
+                                            className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800"
+                                        >
+                                            <EntityIcon
+                                                icon={subProject.icon}
+                                                className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                                                fallback={
+                                                    <FolderIcon className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
+                                                }
+                                            />
+                                            <span className="min-w-0 flex-1 truncate">
+                                                {subProject.name}
                                             </span>
-                                        )}
-                                        <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400" />
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                                            {!!subProject.open_tasks_count && (
+                                                <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
+                                                    {subProject.open_tasks_count}
+                                                </span>
+                                            )}
+                                            <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400" />
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </section>
                 )}
 
@@ -1321,14 +1426,21 @@ const ProjectDetails: React.FC = () => {
                                 </div>
 
                                 {view === 'board' ? (
-                                    <ProjectBoard
+                                    <ProjectControlBoard
                                         project={project}
                                         tasks={displayTasks}
-                                        onMoveTask={handleTaskSectionChange}
+                                        config={boardConfig}
+                                        onChangeConfig={handleBoardConfigChange}
+                                        onMoveTaskSection={
+                                            handleTaskSectionChange
+                                        }
                                         onOrderColumn={handleColumnOrder}
                                         readOnly={project.access_level === 'ro'}
                                         onOpenTask={openTaskInSheet}
                                         onToggleTask={toggleFromCard}
+                                        onReloadParent={() =>
+                                            setReloadKey((k) => k + 1)
+                                        }
                                         t={t}
                                     />
                                 ) : view === 'calendar' ? (
