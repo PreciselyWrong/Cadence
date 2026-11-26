@@ -1,3 +1,11 @@
+## [1.49.0] : 26 novembre 2026
+
+- Tableau des sous-projets : sur un projet parent, la vue Tableau montre une colonne par sous-projet en cours, avec ses tâches par section du fichier TODO.md (Now, Next, Ideas) dans l'ordre du fichier, la prochaine action, et « Bloqué » ou « Périmé » quand il y a lieu. « Actualiser les TODO.md » est dans le menu de la page.
+- Fiche de tâche dans l'ordre du web : planification sous les pastilles, puis description, sous-tâches, et une seule barre « Joindre · Commenter · Historique » ; « Découper » sur la ligne d'ajout de sous-tâche.
+- Aujourd'hui : une tâche sans date se retrouve, « Demain » et « Suggérées » restent visibles, les suggestions suivent celles du serveur et « Ma journée » compte celles qui sont affichées.
+- Saisie rapide allégée : suggestions en liste, clavier toujours levé.
+- Widget Aujourd'hui : il ne saute plus après une coche ou un ajout, et décocher une tâche annule vraiment.
+
 ## [1.48.0] : 26 novembre 2026
 
 - « Historique » en bas de la fiche d'une tâche : chaque changement avec sa date, son heure et son origine (dans l'app, depuis un appareil, par l'IA, suggestion IA acceptée), pour comprendre d'où vient une tâche.

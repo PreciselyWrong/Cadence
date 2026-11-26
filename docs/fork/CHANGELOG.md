@@ -4,6 +4,12 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.6
+
+- Projets › Tableau : dans chaque section, les tâches suivent l'ordre du fichier TODO.md.
+- Synchronisation : les appareils reçoivent la section de fichier de chaque tâche (`source_section`) et l'État actuel de chaque projet TODO.md (`handoff_state`), en lecture seule.
+- Android 1.49.0 (`android/CHANGELOG.md`) : tableau des sous-projets sur un projet parent (colonnes par sous-projet, sections du fichier, prochaine action, « Actualiser les TODO.md »), fiche de tâche dans l'ordre du web, Aujourd'hui et saisie rapide revus, widget Aujourd'hui stabilisé.
+
 ## 2026.11.26.5
 
 - Projets › Tableau : deux vues au lieu de quatre, « Tâches par projet » et « Projets » ; les tableaux déjà enregistrés passent aux deux vues et gardent les vues créées à la main. Le type de vue et le filtre des 7 derniers jours sont dans Affichage, les colonnes sans tâche sont masquées, la limite WIP du portefeuille disparaît.
