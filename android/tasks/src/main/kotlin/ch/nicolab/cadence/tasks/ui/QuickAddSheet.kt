@@ -135,7 +135,7 @@ import kotlinx.coroutines.launch
 /** Destination d'une saisie. Une adresse seule devient une tâche nommée par le genre de page (`docs/37-links.md`). */
 enum class CaptureTarget { INBOX, TASK, NOTE }
 
-private class ParsedChip(val icon: ImageVector, val label: String, val tint: Color? = null, val onRemove: () -> Unit)
+internal class ParsedChip(val icon: ImageVector, val label: String, val tint: Color? = null, val onRemove: () -> Unit)
 
 /**
  * Ajout rapide d'une tâche, réutilisable par d'autres écrans (ex. l'activité du widget).
@@ -470,7 +470,7 @@ fun QuickAddSheet(
                 },
                 parsed = parsed,
                 chips = chips,
-                enabled = !saving,
+                saving = saving,
                 focus = focus,
                 onDone = ::save,
                 onEscape = {
@@ -633,12 +633,13 @@ fun QuickAddSheet(
 
 /** Champ unique : le texte, les mots reconnus en accent, et leurs pastilles juste dessous. */
 @Composable
-private fun CaptureBox(
+internal fun CaptureBox(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     parsed: ParsedQuickAdd,
     chips: List<ParsedChip>,
-    enabled: Boolean,
+    /** Pendant l'écriture : lecture seule, pas désactivé (un champ désactivé perd le focus et Android ferme le clavier). */
+    saving: Boolean,
     focus: FocusRequester,
     onDone: () -> Unit,
     /** Échap : vrai si une liste de suggestions s'est fermée (la touche est alors consommée). */
@@ -692,7 +693,7 @@ private fun CaptureBox(
                         onValueChange(next.copy(text = singleLineCapture(next.text)))
                     }
                 },
-                enabled = enabled,
+                readOnly = saving,
                 singleLine = false,
                 maxLines = CAPTURE_MAX_LINES,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = palette.onSurface),
