@@ -32,6 +32,8 @@ const linksRepository = require('../modules/links/repository');
 const { normalizeUrl, classifyKind } = require('../modules/links/core/urls');
 const mailService = require('../modules/triage/mail');
 const decisionsService = require('../modules/decisions/service');
+const proposalsService = require('../modules/proposals/service');
+const { proposeCareer } = require('../modules/proposals/career');
 
 const DEMO_EMAIL = 'demo@cadence.test';
 const DEMO_PASSWORD = 'demodemo';
@@ -75,6 +77,9 @@ const {
     SyncChange,
     SyncOp,
     SyncConflict,
+    View,
+    Proposal,
+    Notification,
 } = models;
 
 function parisNow() {
@@ -180,6 +185,9 @@ async function wipeUserData(userId) {
     await AgentDecision.destroy({ where });
 
     await Link.destroy({ where });
+    await View.destroy({ where });
+    await Proposal.destroy({ where });
+    await Notification.destroy({ where });
 
     // Clear parent links before deleting tasks, projects, goals, tags.
     await Task.update(
@@ -422,6 +430,27 @@ async function seedProjects(userId, areas, goals) {
         goal_id: goals.keyResults[0].id,
     });
 
+    const accueil = await Project.create({
+        name: 'Page d’accueil',
+        description: 'Nouveau bandeau, preuves sociales et appel à l’action',
+        area_id: areas.Travail.id,
+        parent_project_id: refonte.id,
+        user_id: userId,
+        status: 'in_progress',
+        due_date_at: atLocal(18, 18),
+    });
+
+    const blog = await Project.create({
+        name: 'Blog et actualités',
+        description:
+            'Gabarit d’article, flux RSS et migration des anciens billets',
+        area_id: areas.Travail.id,
+        parent_project_id: refonte.id,
+        user_id: userId,
+        status: 'planned',
+        due_date_at: atLocal(24, 18),
+    });
+
     const appV2 = await Project.create({
         name: "Lancement de l'app v2",
         description: 'Coordination design, QA mobile et mise en production',
@@ -481,6 +510,8 @@ async function seedProjects(userId, areas, goals) {
     return {
         refonte,
         tarifs,
+        accueil,
+        blog,
         appV2,
         cuisine,
         bretagne,
@@ -968,8 +999,9 @@ async function seedTasksAndRelations(
             due_date: endOfDayLocal(2),
             priority: 2,
             estimated_minutes: 90,
+            note: 'Cible : le comité de direction du client, 20 minutes dont 5 de questions.\n\n- Partir du bilan de la refonte, pas du détail technique\n- Montrer les trois écrans avant/après\n- Finir sur le calendrier de livraison',
         },
-        []
+        ['rapide', 'en-attente']
     );
     await add({
         name: 'Exporter les écrans Figma en haute définition',
@@ -1038,6 +1070,23 @@ async function seedTasksAndRelations(
         parent_task_id: parent3.id,
         order: 2,
     });
+
+    // --- Sub-project board of « Refonte du site client » ---
+    const boardTasks = [
+        ['accueil', 'Maquetter le nouveau bandeau', 2],
+        ['accueil', 'Rédiger les trois témoignages clients', 1],
+        ['accueil', 'Brancher le bouton d’appel à l’action', 1],
+        ['blog', 'Dessiner le gabarit d’article', 1],
+        ['blog', 'Migrer les dix anciens billets', 0],
+    ];
+    for (const [key, name, priority] of boardTasks) {
+        await add({
+            name,
+            project_id: projects[key].id,
+            area_id: areas.Travail.id,
+            priority,
+        });
+    }
 
     // --- Link tasks (2) ---
     await add(
@@ -1647,6 +1696,237 @@ async function seedTriageMailAndDecisions(user) {
     };
 }
 
+// Saved searches (the Views page): a name, filters and a few criteria.
+async function seedViews(userId) {
+    const views = [
+        {
+            name: 'Priorités de la semaine',
+            filters: ['Task'],
+            priority: 'high',
+            due: 'next_week',
+            is_pinned: true,
+        },
+        {
+            name: 'À lire et à regarder',
+            filters: ['Task', 'Note'],
+            tags: ['lecture'],
+        },
+        { name: 'Appels à passer', filters: ['Task'], tags: ['appel'] },
+        {
+            name: 'Quick wins du jour',
+            filters: ['Task'],
+            tags: ['rapide'],
+            due: 'today',
+        },
+    ];
+    for (const view of views) {
+        await View.create({ user_id: userId, ...view });
+    }
+    return views;
+}
+
+// Next Saturday and Sunday, or this one when today is one of them.
+function weekendDays() {
+    const now = parisNow();
+    const saturday = now.clone().isoWeekday(6);
+    if (now.isoWeekday() === 7) saturday.subtract(1, 'day');
+    return [
+        saturday.format('YYYY-MM-DD'),
+        saturday.clone().add(1, 'day').format('YYYY-MM-DD'),
+    ];
+}
+
+// Agent proposals, filled the way the agent does it: a week to plan, a
+// weekend to choose, a career digest. Only invented content, example.com links.
+async function seedProposals(user) {
+    const created = await proposalsService.createProposal(user, {
+        kind: 'week',
+    });
+    const week = await proposalsService.getProposal(user, created.row.uid);
+    const open = week.facts.tasks.filter((task) => !task.someday);
+    const dates = (offset) => {
+        const day = moment(week.facts.period.start).add(offset, 'days');
+        return day.format('YYYY-MM-DD');
+    };
+    const plans = [
+        ['plan_day', 1, 'Mardi est le jour le plus calme'],
+        ['plan_day', 2, 'À faire avant le point de jeudi'],
+        ['this_week', null, 'Peut attendre la fin de semaine'],
+        ['next_week', null, 'Pas urgent, à revoir lundi prochain'],
+        ['plan_day', 3, 'Un créneau libre l’après-midi'],
+    ];
+    const changes = open.slice(0, plans.length).map((task, index) => {
+        const [op, offset, reason] = plans[index];
+        return {
+            task_uid: task.uid,
+            op,
+            reason,
+            ...(offset !== null ? { date: dates(offset) } : {}),
+        };
+    });
+    await proposalsService.answerProposal(user, week.uid, {
+        answer: {
+            headline: 'Mardi est libre, deux retards replacés',
+            subtitle:
+                'Je garde la présentation client pour mardi : elle bloque la suite.',
+            changes,
+            focus: open.slice(0, 3).map((task) => task.uid),
+            questions: [
+                {
+                    id: 'q1',
+                    text: 'Travailles-tu vendredi après-midi ?',
+                    choices: ['Oui', 'Non'],
+                },
+            ],
+        },
+    });
+
+    const [saturday, sunday] = weekendDays();
+    const slot = (id, date, part, weather, temp, activity, extra = {}) => ({
+        id,
+        date,
+        part,
+        weather,
+        temp,
+        feels: temp - 2,
+        activity,
+        ...extra,
+    });
+    await proposalsService.proposeWeekend(user, {
+        headline: 'Un samedi lumineux, un dimanche à l’abri',
+        subtitle: 'Sortie en forêt le matin, musée si la pluie arrive.',
+        days: [
+            { date: saturday, weather: 'sun', min: 4, max: 12 },
+            { date: sunday, weather: 'rain', min: 6, max: 9 },
+        ],
+        slots: [
+            slot(
+                'sat-am',
+                saturday,
+                'morning',
+                'sun',
+                9,
+                {
+                    title: 'Randonnée dans la forêt de la Roche',
+                    url: 'https://example.com/foret-de-la-roche',
+                    place: 'Forêt de la Roche',
+                    note: 'Boucle de 9 km, boue possible, bonnes chaussures.',
+                    travel: '35 min en voiture',
+                    start: '09:30',
+                    end: '12:30',
+                    after: 'Déjeuner à la crêperie du village',
+                },
+                { recommended: true }
+            ),
+            slot('sat-pm', saturday, 'afternoon', 'sun', 12, {
+                title: 'Marché de producteurs et café',
+                url: 'https://example.com/marche-producteurs',
+                place: 'Place du Marché',
+                note: 'Fromages, pain au levain et légumes de saison.',
+                travel: '10 min à vélo',
+                start: '14:00',
+                end: '16:30',
+            }),
+            slot(
+                'sun-am',
+                sunday,
+                'morning',
+                'rain',
+                7,
+                {
+                    title: 'Exposition de photographie au musée',
+                    url: 'https://example.com/musee-photo',
+                    place: 'Musée de la Photographie',
+                    note: 'Dernier week-end de l’exposition sur la lumière.',
+                    travel: '20 min en tramway',
+                    start: '10:30',
+                    end: '12:30',
+                },
+                { recommended: true }
+            ),
+            slot('sun-pm', sunday, 'afternoon', 'rain', 8, null, {
+                busy: 'Déjeuner chez Marc',
+            }),
+        ],
+        nearby: [
+            {
+                title: 'Concert de jazz au Petit Théâtre',
+                date: saturday,
+                start: '20:30',
+                place: 'Petit Théâtre',
+                travel: '15 min',
+                url: 'https://example.com/jazz-petit-theatre',
+                note: 'Quartet local, entrée libre.',
+            },
+        ],
+        elsewhere: [
+            {
+                place: 'Quimper',
+                date: sunday,
+                weather: 'partly',
+                temp: 11,
+                travel: '1 h 10 en train',
+            },
+        ],
+    });
+
+    await proposeCareer(user, {
+        headline: 'Deux offres à regarder, une relance à faire',
+        subtitle: 'Passage de ce matin sur tes recherches en cours.',
+        stats: [
+            { label: 'Candidatures', value: '6' },
+            { label: 'Entretiens', value: '2' },
+            { label: 'Relances', value: '1' },
+        ],
+        offers: [
+            {
+                id: 'offer-1',
+                title: 'Designer produit senior',
+                company: 'Atelier Lumière',
+                url: 'https://example.com/offres/designer-produit',
+                fit: 'Proche de ton expérience sur les systèmes de design.',
+                location: 'Lyon, télétravail partiel',
+                rate: '55 à 65 k€',
+                expires: dayStr(6),
+                source: 'agent',
+            },
+            {
+                id: 'offer-2',
+                title: 'Responsable UX freelance',
+                company: 'Studio Marée',
+                url: 'https://example.com/offres/responsable-ux',
+                fit: 'Mission de trois mois, compatible avec ton projet de printemps.',
+                location: 'À distance',
+                rate: '450 € par jour',
+                expires: dayStr(10),
+                source: 'agent',
+            },
+        ],
+        followups: [
+            {
+                id: 'follow-1',
+                title: 'Designer produit',
+                company: 'Coopérative Nova',
+                applied_at: dayStr(-9),
+                note: 'Aucune réponse depuis neuf jours.',
+            },
+        ],
+        tasks: [
+            {
+                id: 'task-1',
+                name: 'Mettre à jour le portfolio avec le projet de refonte',
+                note: 'Ajouter deux études de cas et les chiffres clés.',
+                due_date: dayStr(4),
+            },
+        ],
+    });
+    // The proposals above notify; read, so the bell stays quiet in the shots.
+    await Notification.update(
+        { read_at: new Date() },
+        { where: { user_id: user.id } }
+    );
+}
+
 async function main() {
     await ensureSchema();
     const { user, rawToken } = await ensureDemoUser();
@@ -1672,6 +1952,8 @@ async function main() {
     const notes = await seedNotes(user.id, projects, tags, people, refTask);
     const sessions = await seedFocusSessions(user, focusTasks);
     const triage = await seedTriageMailAndDecisions(user);
+    const views = await seedViews(user.id);
+    await seedProposals(user);
 
     console.log('');
     console.log('Cadence screenshots database seeded successfully.');
@@ -1691,6 +1973,7 @@ async function main() {
     console.log(`Focus sessions:  ${sessions.length}`);
     console.log(`Mail triage:     ${triage.mailCount}`);
     console.log(`Decisions:       ${triage.decisionCount}`);
+    console.log(`Views:           ${views.length}`);
     console.log('--------------------------------------------------');
     console.log(`Email:    ${DEMO_EMAIL}`);
     console.log(`Password: ${DEMO_PASSWORD}`);

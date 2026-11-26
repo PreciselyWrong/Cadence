@@ -24,7 +24,7 @@ environment:
 
 **Never mount `~/Dev` or any folder that holds secrets** (`.env` files, keys, credentials). The server only ever reads and writes files named `TODO.md`, but a mount exposes everything in it to the container. Two ways to fill the dedicated folder:
 
-- **A two-way sync of just those files**, for working copies that are not always pushed: [`scripts/todo-md-sync.sh`](../scripts/todo-md-sync.sh) (see its header) copies the `TODO.md` of every sub-folder of a work folder, minus an exclusion list, to and from the mounted folder, merging edits line by line.
+- **A two-way sync of just those files**, for working copies that are not always pushed: [`scripts/todo-md-sync.sh`](../scripts/todo-md-sync.sh) (see its header) copies the `TODO.md` of every sub-folder of a work folder, minus an exclusion list, to and from the mounted folder, merging edits line by line. Example user units in [`scripts/systemd/`](../scripts/systemd/): a timer runs it every minute (share to work folder) and the generated `todo-md-sync.path` ([`scripts/todo-md-sync-paths.sh`](../scripts/todo-md-sync-paths.sh)) runs it as soon as a local `TODO.md` changes, with no extra process (systemd's own inotify watch).
 - **[Git repositories](#git-repositories)**: the server clones each one itself and nothing is mounted.
 
 Mount the folder, never a single file: a write replaces the file, which a single-file bind mount cannot follow.

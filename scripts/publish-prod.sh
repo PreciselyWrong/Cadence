@@ -5,7 +5,8 @@
 #      which keeps the container template (ports, volumes, variables);
 #   3. checks that the container now runs the cadenceVersion of HEAD;
 #   4. sends the Android APK to NicoApps when its versionName has never been
-#      published (tag android-v<versionName>), then tags it.
+#      published (tag android-v<versionName>), then tags it;
+#   5. publishes wiki/ to the GitHub wiki (scripts/publish-wiki.sh).
 #
 # Private settings stay out of the repository (public): they are read from
 # ~/.config/cadence/deploy.env or the environment.
@@ -59,6 +60,7 @@ if $plan; then
     else
         echo "NicoApps : rien (Android $apk_version déjà publié ou ignoré)"
     fi
+    echo "Wiki : publication de wiki/"
     exit 0
 fi
 
@@ -102,5 +104,8 @@ if $send_apk; then
     git tag "$apk_tag" "$sha"
     git push -q origin "$apk_tag"
 fi
+
+# The wiki is documentation: a failure is reported, the release stands.
+scripts/publish-wiki.sh || echo "Wiki non publié : relancer scripts/publish-wiki.sh." >&2
 
 echo PUBLISH_PROD_OK

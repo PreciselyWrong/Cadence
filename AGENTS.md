@@ -26,6 +26,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Tâche | Lire |
 |---|---|
 | Objectif, décisions, pièges, références | `docs/fork/DECISIONS.md` |
+| Wiki utilisateur (pages, captures, publication) | `wiki/README.md`, `wiki/Maintenir-le-wiki.md` |
 | Feuille de route | `TODO.md` (`Now`, `Next`, `Ideas`) |
 | Guide de l'amont, index des docs | `docs/fork/UPSTREAM-GUIDE.md` |
 | Fonctionnalités du fork, synchro amont | `docs/fork/FORK.md` |
@@ -137,6 +138,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - ⛔ Livrer une fonctionnalité sur le web seul ou sur Android seul sans l'équivalent de l'autre côté ni entrée dans `TODO.md` — Cadence est un seul système ; les deux clients doivent rester équivalents et ce fichier à jour.
 - ⛔ Lancer `npm`, ou `git` hors clone/pull demandé par un admin, pour un plugin ; activer un plugin cloné sans qu'un admin l'ait allumé ; ou activer les plugins en mode hébergé — du code exécuté dans le serveur.
 - ⛔ Éditer `dist/` — généré par `npm run build`.
+- ⛔ Livrer ou changer une fonctionnalité visible (comportement, libellé, délai, limite, cas particulier) sans mettre à jour sa page `wiki/` dans le même commit (publié par `scripts/publish-prod.sh`, ou seul par `scripts/publish-wiki.sh`) : le wiki est le guide utilisateur, il ne doit jamais décrire une version périmée. Ne jamais éditer le wiki sur GitHub (écrasé à la publication).
 - ⛔ Corriger un bug sans test qui l'aurait détecté — exigence de `docs/testing.md`.
 - ⛔ Lancer toute la suite Jest d'un coup — elle a saturé la mémoire de la machine ; cibler les fichiers avec `-w 2`.
 - ⛔ Basculer la prod vers Postgres par-dessus une base SQLite remplie — le serveur refuse ; passer par export puis import.

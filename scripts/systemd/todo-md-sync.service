@@ -1,0 +1,17 @@
+# Example user unit for scripts/todo-md-sync.sh (docs/35-todo-md-projects.md).
+# Copy to ~/.config/systemd/user/ with todo-md-sync.timer, put both scripts in
+# ~/.local/bin, set SHARE_ROOT, then: systemctl --user enable --now todo-md-sync.timer
+# The first run writes todo-md-sync.path (instant sync on a local edit):
+# systemctl --user enable --now todo-md-sync.path
+[Unit]
+Description=Synchro des TODO.md entre le dossier de travail et Cadence
+
+[Service]
+Type=oneshot
+# Skips the run when the share is not mounted (away from home).
+ExecCondition=/usr/bin/timeout 15 /usr/bin/test -d /mnt/cadence-todos
+Environment=LOCAL_ROOT=%h/Dev
+Environment=SHARE_ROOT=/mnt/cadence-todos
+ExecStart=%h/.local/bin/todo-md-sync.sh
+ExecStartPost=-%h/.local/bin/todo-md-sync-paths.sh
+TimeoutStartSec=2min
