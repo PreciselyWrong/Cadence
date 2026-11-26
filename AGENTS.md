@@ -83,6 +83,7 @@ npm run migration:create   # puis npm run db:migrate
 npm run migration:status
 cd android && ./dev.sh --test   # tests du domaine Android (JDK 21 Temurin)
 cd android && ./dev.sh          # build debug + installation ADB (--dummy, --plan)
+scripts/publish-prod.sh         # après chaque push de mise en production : image, conteneur Unraid, APK NicoApps (--plan)
 ```
 
 Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Android : `JAVA_HOME=/usr/lib/jvm/temurin-21-jdk $JAVA_HOME/bin/java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain :tasks:testDebugUnitTest :app:assembleDebug` depuis `android/` (le `gradlew` versionné ne marche pas sous Linux).
