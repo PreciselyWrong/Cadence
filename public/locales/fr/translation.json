@@ -5544,7 +5544,14 @@
     "wipLimit": "Limite WIP (En cours)",
     "refreshTodoMd": "Actualiser les TODO.md",
     "refreshTodoMdTitle": "Relire le TODO.md de chaque sous-projet",
-    "recent7dShort": "7 j"
+    "recent7dShort": "7 j",
+    "otherTasks": "Autres",
+    "showMore": "Afficher les {{count}} autres",
+    "showLess": "Afficher moins",
+    "stale": "Périmé",
+    "staleSince": "Périmé · {{ago}}",
+    "onTrack": "À jour",
+    "staleDays": "Périmé après (jours)"
   },
   "taskPane": {
     "chat": "Discuter avec l'IA",

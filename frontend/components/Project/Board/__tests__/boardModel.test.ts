@@ -4,7 +4,9 @@ import {
     buildTaskGroupColumns,
     canMoveTaskBetweenProjects,
     defaultBoardConfig,
+    groupTasksBySourceSection,
     isOverWip,
+    projectHealth,
 } from '../boardModel';
 import { BoardTreeSubProject, Project } from '../../../../entities/Project';
 import { Task } from '../../../../entities/Task';
@@ -44,7 +46,11 @@ describe('boardModel', () => {
     });
 
     it('builds one column per active sub-project and respects hideEmptyColumns', () => {
-        const parent: Project = { uid: 'dev', name: 'Dev', status: 'in_progress' };
+        const parent: Project = {
+            uid: 'dev',
+            name: 'Dev',
+            status: 'in_progress',
+        };
         const subs = [
             makeSub({ uid: 'p1', name: 'Cadence', status: 'in_progress' }),
             makeSub({ uid: 'p2', name: 'PausedRepo', status: 'paused' }),
@@ -118,9 +124,18 @@ describe('boardModel', () => {
             ...defaultBoardConfig(true).presets[2],
             recentDays: 7,
         };
-        const byStatus = buildTaskGroupColumns(tasks, [], preset, '', null, now);
+        const byStatus = buildTaskGroupColumns(
+            tasks,
+            [],
+            preset,
+            '',
+            null,
+            now
+        );
         expect(
-            byStatus.find((c) => c.id === 'in_progress')!.tasks.map((t) => t.uid)
+            byStatus
+                .find((c) => c.id === 'in_progress')!
+                .tasks.map((t) => t.uid)
         ).toEqual(['t1']);
         expect(
             byStatus.find((c) => c.id === 'not_started')!.tasks
@@ -134,9 +149,9 @@ describe('boardModel', () => {
             null,
             now
         );
-        expect(byTag.find((c) => c.id === 'bug')!.tasks.map((t) => t.uid)).toEqual([
-            't1',
-        ]);
+        expect(
+            byTag.find((c) => c.id === 'bug')!.tasks.map((t) => t.uid)
+        ).toEqual(['t1']);
         expect(
             byTag.find((c) => c.id === '__untagged__')!.tasks.map((t) => t.uid)
         ).toEqual(['t2']);
@@ -153,5 +168,50 @@ describe('boardModel', () => {
         ).toBe(false);
         expect(isOverWip(4, 3)).toBe(true);
         expect(isOverWip(3, 3)).toBe(false);
+    });
+
+    it('rates a project blocked, stale or on track from its current state', () => {
+        const now = new Date('2026-11-26T12:00:00Z');
+        const fresh = '2026-11-20T12:00:00Z';
+        expect(projectHealth(null, now, 14)).toBeNull();
+        expect(
+            projectHealth({ blockers: 'API down', updated_at: fresh }, now, 14)
+        ).toBe('blocked');
+        expect(
+            projectHealth(
+                { next_action: 'Ship', updated_at: '2026-11-01T12:00:00Z' },
+                now,
+                14
+            )
+        ).toBe('stale');
+        expect(
+            projectHealth({ next_action: 'Ship', updated_at: fresh }, now, 14)
+        ).toBe('ok');
+        // 0 turns the staleness check off.
+        expect(
+            projectHealth(
+                { next_action: 'Ship', updated_at: '2026-01-01T12:00:00Z' },
+                now,
+                0
+            )
+        ).toBe('ok');
+    });
+
+    it('groups a column by TODO.md section, Now first and loose tasks last', () => {
+        const groups = groupTasksBySourceSection([
+            makeTask({ uid: 'a', name: 'Later', source_section: 'Next' }),
+            makeTask({ uid: 'b', name: 'Loose' }),
+            makeTask({ uid: 'c', name: 'Urgent', source_section: 'Now' }),
+            makeTask({ uid: 'd', name: 'Custom', source_section: 'Bugs' }),
+            makeTask({ uid: 'e', name: 'Later 2', source_section: 'next' }),
+        ]);
+        expect(groups.map((g) => [g.label, g.tasks.map((t) => t.uid)])).toEqual(
+            [
+                ['Now', ['c']],
+                ['Next', ['a', 'e']],
+                ['Bugs', ['d']],
+                [null, ['b']],
+            ]
+        );
     });
 });

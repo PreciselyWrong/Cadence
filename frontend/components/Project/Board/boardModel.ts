@@ -1,9 +1,11 @@
 import {
     BoardTreeSubProject,
     Project,
+    ProjectHandoffState,
     ProjectStatus,
 } from '../../../entities/Project';
 import { Task } from '../../../entities/Task';
+import { TODO_MD_SECTIONS } from '../../../utils/todoMd';
 import { ProjectSection } from '../../../utils/projectSectionsService';
 
 export type BoardViewMode = 'by_subproject' | 'portfolio' | 'tasks';
@@ -30,6 +32,9 @@ export const DEFAULT_CARD_FIELDS: CardFields = {
     sourceBadge: true,
 };
 
+// Linear and most portfolio guides review project health every two weeks.
+export const DEFAULT_STALE_DAYS = 14;
+
 export interface BoardPreset {
     id: string;
     name: string;
@@ -47,6 +52,8 @@ export interface BoardPreset {
     wipLimits: Record<string, number>;
     collapsedColumns: string[];
     density: CardDensity;
+    // A current state older than this many days reads as stale; 0 = never.
+    staleDays: number;
     cardFields: CardFields;
 }
 
@@ -143,6 +150,7 @@ export const defaultPresetsForProject = (
                 wipLimits: {},
                 collapsedColumns: [],
                 density: 'normal',
+                staleDays: DEFAULT_STALE_DAYS,
                 cardFields: { ...DEFAULT_CARD_FIELDS },
             },
             {
@@ -162,6 +170,7 @@ export const defaultPresetsForProject = (
                 wipLimits: { in_progress: 3 },
                 collapsedColumns: ['done'],
                 density: 'normal',
+                staleDays: DEFAULT_STALE_DAYS,
                 cardFields: { ...DEFAULT_CARD_FIELDS },
             },
         ];
@@ -185,6 +194,7 @@ export const defaultPresetsForProject = (
             wipLimits: {},
             collapsedColumns: [],
             density: 'normal',
+            staleDays: DEFAULT_STALE_DAYS,
             cardFields: { ...DEFAULT_CARD_FIELDS },
         },
         {
@@ -204,6 +214,7 @@ export const defaultPresetsForProject = (
             wipLimits: { in_progress: 3 },
             collapsedColumns: ['paused', 'done'],
             density: 'normal',
+            staleDays: DEFAULT_STALE_DAYS,
             cardFields: { ...DEFAULT_CARD_FIELDS },
         },
         {
@@ -223,6 +234,7 @@ export const defaultPresetsForProject = (
             wipLimits: { in_progress: 5 },
             collapsedColumns: ['done'],
             density: 'normal',
+            staleDays: DEFAULT_STALE_DAYS,
             cardFields: { ...DEFAULT_CARD_FIELDS },
         },
         {
@@ -242,6 +254,7 @@ export const defaultPresetsForProject = (
             wipLimits: {},
             collapsedColumns: [],
             density: 'compact',
+            staleDays: DEFAULT_STALE_DAYS,
             cardFields: { ...DEFAULT_CARD_FIELDS },
         },
     ];
@@ -614,4 +627,49 @@ export const buildTaskGroupColumns = (
             };
         })
         .filter((col) => !preset.hideEmptyColumns || col.tasks.length > 0);
+};
+
+export type ProjectHealth = 'blocked' | 'stale' | 'ok';
+
+// Health of a project from its "État actuel": blocked when it names a
+// blocker, stale when the file has not moved for `staleDays`, else on track.
+export const projectHealth = (
+    handoff: ProjectHandoffState | null | undefined,
+    now: Date,
+    staleDays: number
+): ProjectHealth | null => {
+    if (!handoff) return null;
+    if (handoff.blockers) return 'blocked';
+    if (staleDays > 0 && handoff.updated_at) {
+        const age = now.getTime() - new Date(handoff.updated_at).getTime();
+        if (age > staleDays * 86_400_000) return 'stale';
+    }
+    return 'ok';
+};
+
+export interface TaskSectionGroup {
+    key: string;
+    // null for the tasks that belong to no section of the file.
+    label: string | null;
+    tasks: Task[];
+}
+
+// The tasks of one project in the order of its TODO.md: Now, Next, Ideas,
+// then the file's other sections, then the tasks that only live in Cadence.
+export const groupTasksBySourceSection = (tasks: Task[]): TaskSectionGroup[] => {
+    const known = TODO_MD_SECTIONS.map((name) => name.toLowerCase());
+    const groups = new Map<string, TaskSectionGroup>();
+    for (const task of tasks) {
+        const label = task.source_section?.trim() || null;
+        const key = label ? label.toLowerCase() : '';
+        const group = groups.get(key);
+        if (group) group.tasks.push(task);
+        else groups.set(key, { key, label, tasks: [task] });
+    }
+    const rank = (group: TaskSectionGroup) => {
+        if (!group.label) return Number.MAX_SAFE_INTEGER;
+        const index = known.indexOf(group.key);
+        return index === -1 ? known.length : index;
+    };
+    return [...groups.values()].sort((a, b) => rank(a) - rank(b));
 };

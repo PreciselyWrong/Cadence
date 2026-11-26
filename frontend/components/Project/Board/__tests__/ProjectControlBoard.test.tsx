@@ -67,6 +67,7 @@ const mockTree = {
                 section: 'État actuel',
                 branch: 'feat/kanban',
                 tree: 'modifications non commitées',
+                updated_at: '2020-01-01T00:00:00Z',
                 blockers: null,
                 next_action: 'Ship phase 2 board',
             },
@@ -93,7 +94,19 @@ const mockTree = {
             name: 'Wire control board',
             status: 0,
             project_uid: 'p1',
+            source_section: 'Next',
         } as Task,
+        ...Array.from(
+            { length: 10 },
+            (_, i) =>
+                ({
+                    uid: `n${i}`,
+                    name: `Now task ${i}`,
+                    status: 0,
+                    project_uid: 'p1',
+                    source_section: 'Now',
+                }) as Task
+        ),
         {
             uid: 't2',
             name: 'Paused task',
@@ -143,6 +156,20 @@ describe('ProjectControlBoard', () => {
             screen.getByText('modifications non commitées')
         ).toBeInTheDocument();
         expect(screen.getByText('Wire control board')).toBeInTheDocument();
+        // Health from the current state: not refreshed since 2020, so stale.
+        expect(screen.getByTestId('health-p1')).toHaveAttribute(
+            'data-health',
+            'stale'
+        );
+        expect(screen.getByTestId('handoff-stale')).toBeInTheDocument();
+        // Sections of the file, Now first, folded past eight cards.
+        const sections = screen
+            .getAllByTestId(/^board-section-/)
+            .map((el) => el.getAttribute('data-testid'));
+        expect(sections).toEqual(['board-section-now', 'board-section-next']);
+        expect(screen.queryByText('Now task 9')).not.toBeInTheDocument();
+        fireEvent.click(screen.getByText('Show {{count}} more'));
+        expect(screen.getByText('Now task 9')).toBeInTheDocument();
         // Paused sub-project is filtered out of the default Actifs preset.
         expect(
             screen.queryByTestId('subproject-col-p2')

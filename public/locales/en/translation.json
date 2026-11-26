@@ -5578,7 +5578,14 @@
     "wipLimit": "WIP limit (In progress)",
     "refreshTodoMd": "Refresh TODO.md",
     "refreshTodoMdTitle": "Read the TODO.md file of every sub-project again",
-    "recent7dShort": "7d"
+    "recent7dShort": "7d",
+    "otherTasks": "Other",
+    "showMore": "Show {{count}} more",
+    "showLess": "Show less",
+    "stale": "Stale",
+    "staleSince": "Stale · {{ago}}",
+    "onTrack": "On track",
+    "staleDays": "Stale after (days)"
   },
   "taskPane": {
     "chat": "Discuss with the AI",

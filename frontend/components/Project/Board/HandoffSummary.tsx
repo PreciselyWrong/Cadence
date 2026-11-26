@@ -1,12 +1,17 @@
 import React from 'react';
 import { TFunction } from 'i18next';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { formatDistanceToNow } from 'date-fns';
 import { ProjectHandoffState } from '../../../entities/Project';
+import { getCurrentLocale } from '../../../utils/dateUtils';
+import { ProjectHealth } from './boardModel';
 
 const CLEAN_TREE = /^(propre|clean)/i;
 
 interface HandoffSummaryProps {
     handoff: ProjectHandoffState;
+    // 'stale' flags a current state the file has not refreshed for a while.
+    health?: ProjectHealth | null;
     t: TFunction;
     className?: string;
 }
@@ -15,10 +20,18 @@ interface HandoffSummaryProps {
 // action, then the branch, the working tree state and a blocker flag.
 const HandoffSummary: React.FC<HandoffSummaryProps> = ({
     handoff,
+    health = null,
     t,
     className = '',
 }) => {
-    const hasMeta = handoff.branch || handoff.tree || handoff.blockers;
+    const updatedAgo = handoff.updated_at
+        ? formatDistanceToNow(new Date(handoff.updated_at), {
+              addSuffix: true,
+              locale: getCurrentLocale(),
+          })
+        : null;
+    const hasMeta =
+        handoff.branch || handoff.tree || handoff.blockers || updatedAgo;
     if (!handoff.next_action && !hasMeta) return null;
     const clean = handoff.tree ? CLEAN_TREE.test(handoff.tree) : false;
 
@@ -56,6 +69,26 @@ const HandoffSummary: React.FC<HandoffSummaryProps> = ({
                                 }`}
                             />
                             <span className="truncate">{handoff.tree}</span>
+                        </span>
+                    )}
+                    {updatedAgo && (
+                        <span
+                            className={
+                                health === 'stale'
+                                    ? 'rounded bg-gray-200 px-1.5 py-0.5 text-[11px] font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200'
+                                    : 'text-gray-500 dark:text-gray-400'
+                            }
+                            data-testid={
+                                health === 'stale' ? 'handoff-stale' : undefined
+                            }
+                        >
+                            {health === 'stale'
+                                ? t(
+                                      'projectBoard.staleSince',
+                                      'Stale · {{ago}}',
+                                      { ago: updatedAgo }
+                                  )
+                                : updatedAgo}
                         </span>
                     )}
                     {handoff.blockers && (

@@ -55,11 +55,13 @@ import {
     buildTaskGroupColumns,
     canMoveTaskBetweenProjects,
     priorityKeyToValue,
+    projectHealth,
     taskStatusToCode,
 } from './boardModel';
 import SubProjectDrawer from './SubProjectDrawer';
 import BoardInboxColumn from './BoardInboxColumn';
 import HandoffSummary from './HandoffSummary';
+import SectionedTaskList from './SectionedTaskList';
 import ProjectBoard from './ProjectBoard';
 
 interface ProjectControlBoardProps {
@@ -86,6 +88,12 @@ type DragPayload =
     | { kind: 'inbox_item'; item: InboxItem };
 
 const DONE_STATUSES = new Set<unknown>([2, 'done']);
+
+const HEALTH_DOT = {
+    blocked: 'bg-red-500',
+    stale: 'bg-gray-400',
+    ok: 'bg-green-500',
+} as const;
 
 const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
     project,
@@ -664,6 +672,13 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
     };
 
     const today = localToday();
+    const healthOf = (sub?: BoardTreeSubProject | null) =>
+        projectHealth(sub?.handoff_state, new Date(), activePreset.staleDays);
+    const HEALTH_LABEL = {
+        blocked: t('projectBoard.blocked', 'Blocked'),
+        stale: t('projectBoard.stale', 'Stale'),
+        ok: t('projectBoard.onTrack', 'On track'),
+    };
     const densityPad =
         activePreset.density === 'compact'
             ? 'px-2 py-1.5'
@@ -828,7 +843,12 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 </div>
 
                 {fields.handoff && handoff && (
-                    <HandoffSummary handoff={handoff} t={t} className="mt-2" />
+                    <HandoffSummary
+                        handoff={handoff}
+                        health={healthOf(sub)}
+                        t={t}
+                        className="mt-2"
+                    />
                 )}
 
                 {fields.nextAction && !handoff?.next_action && sub.next_task && (
@@ -1326,6 +1346,31 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     <div className="flex items-center justify-between gap-2">
                                         <span className="text-gray-600 dark:text-gray-300">
                                             {t(
+                                                'projectBoard.staleDays',
+                                                'Stale after (days)'
+                                            )}
+                                        </span>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            max={365}
+                                            data-testid="board-stale-days"
+                                            value={activePreset.staleDays}
+                                            onChange={(e) =>
+                                                updateActivePreset({
+                                                    staleDays: Math.max(
+                                                        0,
+                                                        Number(e.target.value) ||
+                                                            0
+                                                    ),
+                                                })
+                                            }
+                                            className="w-14 rounded border border-gray-200 px-1.5 py-0.5 text-right dark:border-gray-700 dark:bg-gray-800"
+                                        />
+                                    </div>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <span className="text-gray-600 dark:text-gray-300">
+                                            {t(
                                                 'projectBoard.density',
                                                 'Density'
                                             )}
@@ -1583,6 +1628,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     );
                                 }
                                 const handoff = col.project?.handoff_state;
+                                const health = healthOf(col.project);
                                 return (
                                     <section
                                         key={col.id}
@@ -1630,6 +1676,20 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                 <span className="truncate text-sm font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400">
                                                     {col.title}
                                                 </span>
+                                                {health && (
+                                                    <span
+                                                        role="img"
+                                                        data-testid={`health-${col.projectUid}`}
+                                                        data-health={health}
+                                                        aria-label={
+                                                            HEALTH_LABEL[health]
+                                                        }
+                                                        title={
+                                                            HEALTH_LABEL[health]
+                                                        }
+                                                        className={`h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white dark:ring-gray-900 ${HEALTH_DOT[health]}`}
+                                                    />
+                                                )}
                                                 <span
                                                     className={`rounded-full px-1.5 py-0.5 text-xs font-semibold tabular-nums ${
                                                         col.isOverWip
@@ -1662,15 +1722,20 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                             handoff && (
                                                 <HandoffSummary
                                                     handoff={handoff}
+                                                    health={health}
                                                     t={t}
                                                     className="mb-2"
                                                 />
                                             )}
 
                                         <div className="min-h-0 flex-1 space-y-1.5 md:overflow-y-auto">
-                                            {col.tasks.map((tk) =>
-                                                renderTaskCard(tk, false)
-                                            )}
+                                            <SectionedTaskList
+                                                tasks={col.tasks}
+                                                renderTask={(tk) =>
+                                                    renderTaskCard(tk, false)
+                                                }
+                                                t={t}
+                                            />
                                         </div>
 
                                         {!readOnly && (
