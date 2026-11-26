@@ -4,6 +4,19 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.9
+
+Corrections issues de l'audit UX du client web sur ordinateur (`docs/fork/UX-AUDIT-WEB.md`).
+
+- Langue : le message de fin de tâche est traduit et identique partout, les dates suivent la langue de l'interface (tableau, panneau du projet, feuille de route, objectifs, chronologie, focus), « Ajouter » et « Filtrer » sont traduits, « Nom » et « Prénom » sont remis dans le bon ordre en français.
+- Projets › Tableau : « Tâches par projet » montre aussi les sous-projets prévus ou non commencés ; les noms des vues intégrées sont traduits. Les tableaux enregistrés reprennent les vues intégrées et gardent les vues créées à la main.
+- Fiche de tâche : une ligne survolée ne passe plus par-dessus la fiche, fermer la fiche rend le focus à la ligne d'origine, un titre long passe à la ligne.
+- Barre latérale : le rail d'icônes garde le même ordre sur toutes les pages ; sous 1280 px de large la barre démarre repliée, et un choix explicite est mémorisé sur l'appareil.
+- Aujourd'hui : pas de « Rien de prévu » pendant le chargement, une seule heure par ligne, un créneau passé se lit « Manquée à 09:30 ». Planifier : une seule puce par carte.
+- Calendrier › Mois : un jour de plus de trois entrées en montre deux et un bouton « +N » qui liste les autres.
+- Habitudes : une habitude à plusieurs séances affiche « 2 sur 3 cette semaine » et sa carte se remplit en proportion.
+- Feuille de route : les libellés d'objectifs ne se chevauchent plus.
+
 ## 2026.11.26.8
 
 - **Variables d'environnement renommées** : toutes les `TUDUDI_*` deviennent `CADENCE_*` (`CADENCE_SESSION_SECRET`, `CADENCE_USER_EMAIL`, `CADENCE_ALLOWED_ORIGINS`, etc.). Les anciens noms sont encore lus pour cette version, avec un avertissement au démarrage, puis retirés à la suivante : renomme-les dans ton conteneur ou ton `.env`. Bases, cookies et préfixe `tt_` des jetons ne changent pas.
