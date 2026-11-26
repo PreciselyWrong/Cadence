@@ -28,6 +28,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.AttachFile
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.ChatBubbleOutline
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.OpenInNew
@@ -266,12 +275,91 @@ internal fun NoteCard(
     }
 }
 
+/** Ligne d'ajout de sous-tâche ; « Découper en étapes » s'y tient quand la tâche peut être découpée (comme le web). */
+@Composable
+internal fun SubtaskAddRow(
+    draft: String,
+    onDraftChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    onBreakDown: (() -> Unit)?,
+) {
+    val palette = cadence
+    Row(Modifier.fillMaxWidth().heightIn(min = Size.touch), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(Size.touch), contentAlignment = Alignment.Center) {
+            Icon(Icons.Outlined.Add, null, tint = palette.primary, modifier = Modifier.size(Size.iconLarge))
+        }
+        Spacer(Modifier.width(Space.xs))
+        InlineTextField(
+            value = draft,
+            onValueChange = onDraftChange,
+            placeholder = stringResource(R.string.tasks_detail_subtask_add),
+            modifier = Modifier.weight(1f),
+            singleLine = true,
+            onDone = onSubmit,
+        )
+        if (onBreakDown != null) {
+            TextButton(onClick = onBreakDown, modifier = Modifier.heightIn(min = Size.touch)) {
+                Icon(Icons.Outlined.AutoAwesome, null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(Space.xs))
+                Text(stringResource(R.string.breakdown_action), style = MaterialTheme.typography.labelLarge)
+            }
+        }
+    }
+}
+
+/**
+ * Bas de la fiche : une seule barre discrète « Joindre · Commenter · Historique » au lieu de trois sections
+ * toujours affichées ; l'historique s'ouvre sous la barre. « Joindre » manque quand le serveur coupe les pièces jointes.
+ */
+@Composable
+internal fun TaskDetailFooter(
+    canAttach: Boolean,
+    historyOpen: Boolean,
+    onAttach: () -> Unit,
+    onComment: () -> Unit,
+    onHistory: () -> Unit,
+) {
+    val palette = cadence
+    Column(Modifier.fillMaxWidth()) {
+        HorizontalDivider(color = palette.outlineVariant)
+        Row(
+            Modifier.fillMaxWidth().padding(top = Space.xs),
+            horizontalArrangement = Arrangement.spacedBy(Space.xs),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (canAttach) FooterAction(Icons.Outlined.AttachFile, stringResource(R.string.task_footer_attach), selected = false, onAttach)
+            FooterAction(Icons.Outlined.ChatBubbleOutline, stringResource(R.string.task_footer_comment), selected = false, onComment)
+            FooterAction(Icons.Outlined.History, stringResource(R.string.task_history_title), selected = historyOpen, onHistory)
+        }
+    }
+}
+
+@Composable
+private fun FooterAction(icon: ImageVector, label: String, selected: Boolean, onClick: () -> Unit) {
+    val palette = cadence
+    val tint = if (selected) palette.onSurface else palette.onSurfaceVariant
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier.heightIn(min = Size.touch).semantics { this.selected = selected },
+        colors = ButtonDefaults.textButtonColors(contentColor = tint),
+    ) {
+        Icon(icon, null, modifier = Modifier.size(18.dp))
+        Spacer(Modifier.width(Space.xs))
+        Text(label, style = MaterialTheme.typography.labelLarge)
+    }
+}
+
 /**
  * Sous-tâches : liste à cocher, progression dans le titre, ajout en ligne. Toucher une sous-tâche ouvre
  * un menu (renommer, ouvrir comme tâche, supprimer avec « Annuler »).
  */
 @Composable
-internal fun SubtasksCard(parentUid: String, viewModel: TasksViewModel, onOpen: (TaskItem) -> Unit) {
+internal fun SubtasksCard(
+    parentUid: String,
+    viewModel: TasksViewModel,
+    onOpen: (TaskItem) -> Unit,
+    onBreakDown: (() -> Unit)? = null,
+) {
     val flow = remember(parentUid) { viewModel.observeSubtasks(parentUid) }
     val subtasks by flow.collectAsStateWithLifecycle(initialValue = emptyList())
     var draft by rememberSaveable(parentUid) { mutableStateOf("") }
@@ -312,20 +400,7 @@ internal fun SubtasksCard(parentUid: String, viewModel: TasksViewModel, onOpen: 
                     )
                 }
             }
-            Row(Modifier.heightIn(min = Size.touch), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(Size.touch), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Outlined.Add, null, tint = palette.primary, modifier = Modifier.size(Size.iconLarge))
-                }
-                Spacer(Modifier.width(Space.xs))
-                InlineTextField(
-                    value = draft,
-                    onValueChange = { draft = it },
-                    placeholder = stringResource(R.string.tasks_detail_subtask_add),
-                    modifier = Modifier.weight(1f),
-                    singleLine = true,
-                    onDone = submit,
-                )
-            }
+            SubtaskAddRow(draft = draft, onDraftChange = { draft = it }, onSubmit = submit, onBreakDown = onBreakDown)
         }
     }
     menuFor?.let { subtask ->

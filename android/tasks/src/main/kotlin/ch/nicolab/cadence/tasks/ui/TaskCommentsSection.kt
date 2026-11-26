@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -34,7 +37,6 @@ import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Space
-import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.CommentItem
@@ -51,10 +53,14 @@ internal fun TaskCommentsSection(
     onDelete: (String) -> Unit,
     onRef: ((ContentRef) -> Unit)? = null,
     onWikiLink: (String) -> Unit = {},
+    // « Commenter » en bas de la fiche : chaque toucher met le curseur dans le champ.
+    focusRequests: Int = 0,
 ) {
     val palette = cadence
     val haptic = rememberCadenceHaptic()
     var draft by remember { mutableStateOf("") }
+    val field = remember { FocusRequester() }
+    LaunchedEffect(focusRequests) { if (focusRequests > 0) field.requestFocus() }
     val send = {
         val text = draft.trim()
         if (text.isNotEmpty()) {
@@ -125,6 +131,7 @@ internal fun TaskCommentsSection(
                     onValueChange = { draft = it },
                     modifier = Modifier
                         .weight(1f)
+                        .focusRequester(field)
                         .padding(vertical = Space.xs),
                     textStyle = MaterialTheme.typography.bodyMedium.copy(color = palette.onSurface),
                     cursorBrush = SolidColor(palette.primary),

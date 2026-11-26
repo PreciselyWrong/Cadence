@@ -1,33 +1,23 @@
 package ch.nicolab.cadence.tasks.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.History
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
@@ -48,13 +38,12 @@ private sealed interface HistoryState {
 }
 
 /**
- * « Historique » d'une tâche, replié : le toucher lit les évènements en ligne et déplie la liste. Hors ligne ou en
- * erreur : une seule ligne.
+ * « Historique » d'une tâche, ouvert par la barre du bas de la fiche : lit les évènements en ligne à l'ouverture.
+ * Hors ligne ou en erreur : une seule ligne.
  */
 @Composable
-internal fun TaskHistorySection(taskUid: String, modifier: Modifier = Modifier) {
+internal fun TaskHistorySection(taskUid: String, open: Boolean, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    var open by rememberSaveable(taskUid) { mutableStateOf(false) }
     var state by remember(taskUid) { mutableStateOf<HistoryState>(HistoryState.Loading) }
     LaunchedEffect(open, taskUid) {
         if (!open) return@LaunchedEffect
@@ -67,18 +56,8 @@ internal fun TaskHistorySection(taskUid: String, modifier: Modifier = Modifier) 
             HistoryState.Unavailable
         }
     }
+    if (!open) return
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-        Row(
-            Modifier
-                .heightIn(min = Size.touch)
-                .clickable(role = Role.Button) { open = !open },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Space.xs),
-        ) {
-            Icon(Icons.Outlined.History, contentDescription = null, tint = cadence.onSurfaceVariant, modifier = Modifier.size(18.dp))
-            Text(stringResource(R.string.task_history_title), style = MaterialTheme.typography.labelLarge, color = cadence.onSurfaceVariant)
-        }
-        if (!open) return@Column
         when (val current = state) {
             HistoryState.Loading -> CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
             HistoryState.Unavailable -> Text(stringResource(R.string.history_unavailable), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)

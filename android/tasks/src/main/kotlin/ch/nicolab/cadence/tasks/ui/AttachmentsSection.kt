@@ -31,6 +31,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -76,12 +77,18 @@ private val ATTACHMENT_DATE: DateTimeFormatter =
  * Section « Pièces jointes » en ligne pour une tâche ou un projet :
  * masquée si le drapeau `attachments` est coupé, sinon liste, ajout via le sélecteur système,
  * ouverture via `FileProvider` et suppression par appui long.
+ *
+ * Fiche de tâche (`quietWhenEmpty`) : rien n'est montré sans pièce jointe ; « Joindre » en bas de la fiche
+ * incrémente `pickRequests` pour ouvrir le sélecteur, et `onAvailable` dit si le serveur accepte les pièces jointes.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun AttachmentsSection(
     target: AttachmentTarget,
     modifier: Modifier = Modifier,
+    quietWhenEmpty: Boolean = false,
+    pickRequests: Int = 0,
+    onAvailable: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     val client = remember(context) { TasksGraph.attachments(context) }
@@ -136,6 +143,7 @@ internal fun AttachmentsSection(
         }
     }
 
+    LaunchedEffect(enabled) { enabled?.let(onAvailable) }
     if (enabled != true) return
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -171,6 +179,17 @@ internal fun AttachmentsSection(
             }
         }
     }
+
+    // Seul un nouveau toucher sur « Joindre » ouvre le sélecteur, pas un retour de la section à l'écran.
+    var handledPicks by remember(target) { mutableIntStateOf(pickRequests) }
+    LaunchedEffect(pickRequests) {
+        if (pickRequests != handledPicks) {
+            handledPicks = pickRequests
+            picker.launch(arrayOf("*/*"))
+        }
+    }
+
+    if (quietWhenEmpty && items.isEmpty() && !uploading && error == null) return
 
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
         Row(

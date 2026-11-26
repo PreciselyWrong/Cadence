@@ -26,7 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.AccountTree
-import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.DateRange
@@ -56,6 +55,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -231,6 +231,10 @@ internal fun TaskDetailSheet(
     LaunchedEffect(noteEditing) { if (noteEditing) noteOutline.reloadFolds() }
     val focusManager = LocalFocusManager.current
     var moreFields by rememberSaveable(current.uid) { mutableStateOf(false) }
+    var historyOpen by rememberSaveable(current.uid) { mutableStateOf(false) }
+    var commentFocus by remember(current.uid) { mutableIntStateOf(0) }
+    var attachPicks by remember(current.uid) { mutableIntStateOf(0) }
+    var canAttach by remember(current.uid) { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
     LaunchedEffect(hasReminder) {
@@ -321,6 +325,7 @@ internal fun TaskDetailSheet(
                     onRepeat = { picker = Picker.Repeat },
                     onAssignee = { picker = Picker.Assignee },
                 )
+                // Planification sous les chips (comme le web) : horizon, prochaine action et reports parlent du moment.
                 // Horizon et prochaine action : seulement s'ils servent déjà, sinon derrière « Plus de champs ».
                 val funnelInUse = current.someday || current.reviewOn != null ||
                     FunnelStage.entries.any { Funnel.has(current, it, weekStart) }
@@ -354,14 +359,22 @@ internal fun TaskDetailSheet(
                     onToggleTask = { viewModel.toggle(it) },
                 )
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
-                TaskCommentsSection(
-                    comments = comments,
-                    onAdd = { viewModel.addComment(current.uid, it) },
-                    onDelete = { viewModel.deleteCommentWithUndo(it) },
-                    onRef = openRef,
-                    onWikiLink = openWiki,
-                )
-                if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
+                if (!current.fileBacked) {
+                    SubtasksCard(
+                        parentUid = current.uid,
+                        viewModel = viewModel,
+                        onOpen = { openedSubtask = it.uid },
+                        onBreakDown = if (Breakdown.canBreakDown(current)) {
+                            {
+                                // Le serveur lit le nom et la note tels qu'il les a : le texte en attente part avant la proposition.
+                                flushText()
+                                breakingDown = true
+                            }
+                        } else {
+                            null
+                        },
+                    )
+                }
                 TaskRelationsSection(
                     relations = relations,
                     onOpenTask = { openedSubtask = it },
@@ -373,10 +386,23 @@ internal fun TaskDetailSheet(
                     uid = current.uid,
                     onOpen = { link -> if (link.type == "note") openedNote = link.uid else openedSubtask = link.uid },
                 )
+                // Pièces jointes et commentaires seulement s'il y en a ; la barre du bas en ajoute.
                 AttachmentsSection(
                     target = ch.nicolab.cadence.tasks.attachments.AttachmentTarget.Task(current.uid),
+                    quietWhenEmpty = true,
+                    pickRequests = attachPicks,
+                    onAvailable = { canAttach = it },
                 )
-                TaskHistorySection(taskUid = current.uid)
+                if (comments.isNotEmpty() || commentFocus > 0) {
+                    TaskCommentsSection(
+                        comments = comments,
+                        onAdd = { viewModel.addComment(current.uid, it) },
+                        onDelete = { viewModel.deleteCommentWithUndo(it) },
+                        onRef = openRef,
+                        onWikiLink = openWiki,
+                        focusRequests = commentFocus,
+                    )
+                }
                 val keyedFields = detailFields(
                         task = current,
                         today = today,
@@ -420,6 +446,14 @@ internal fun TaskDetailSheet(
                     NotificationsOffNotice()
                 }
                 if (moreFields) ReadOnlyDetails(current)
+                TaskDetailFooter(
+                    canAttach = canAttach,
+                    historyOpen = historyOpen,
+                    onAttach = { attachPicks++ },
+                    onComment = { commentFocus++ },
+                    onHistory = { historyOpen = !historyOpen },
+                )
+                TaskHistorySection(taskUid = current.uid, open = historyOpen)
                 Spacer(Modifier.height(Space.xl))
             }
             if (noteEditing && !textLocked) {
@@ -568,12 +602,6 @@ internal fun TaskDetailSheet(
                 if (canBecomeProject(current)) ActionRow(Icons.Outlined.AccountTree, stringResource(R.string.tasks_action_to_project), palette.primary) {
                     picker = null
                     confirmProject = true
-                }
-                if (Breakdown.canBreakDown(current)) ActionRow(Icons.Outlined.AutoAwesome, stringResource(R.string.breakdown_action), palette.primary) {
-                    // Le serveur lit le nom et la note tels qu'il les a : le texte en attente part avant la proposition.
-                    flushText()
-                    picker = null
-                    breakingDown = true
                 }
                 // La suppression d'une tâche de fichier se fait dans le fichier : pas de ligne ici.
                 if (!FileBackedActions.ownsField(current, FileOwnedField.DELETE)) ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {

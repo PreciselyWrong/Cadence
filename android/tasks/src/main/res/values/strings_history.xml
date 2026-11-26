@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="task_history_title">Historique</string>
+    <string name="task_footer_attach">Joindre</string>
+    <string name="task_footer_comment">Commenter</string>
     <string name="history_unavailable">Historique indisponible hors ligne</string>
     <string name="history_created">Tâche créée</string>
     <string name="history_due">Échéance : %1$s → %2$s</string>
