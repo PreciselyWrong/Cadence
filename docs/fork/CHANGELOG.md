@@ -4,6 +4,10 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.7
+
+- Aujourd'hui : le bouton « Aujourd'hui » reste dans la barre du jour, grisé quand on y est déjà, et les flèches de jour ne bougent plus avec la longueur du titre.
+
 ## 2026.11.26.6
 
 - Projets › Tableau : dans chaque section, les tâches suivent l'ordre du fichier TODO.md.
