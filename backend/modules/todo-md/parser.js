@@ -38,24 +38,20 @@ function extractHandoff(section, lines) {
     const result = {
         section: section.name,
         branch: null,
+        tree: null,
         tests: null,
         blockers: null,
         next_action: null,
         raw: trimmed.join('\n'),
     };
 
-    for (const rawLine of trimmed) {
-        const cleaned = stripMarkdown(
-            rawLine.replace(/^\s*[-*+]\s+(?:\[[ xX]\]\s+)?/, '')
-        );
-        const sep = cleaned.indexOf(':');
-        if (sep === -1) continue;
-        const key = normalizeHeading(cleaned.slice(0, sep));
-        const value = cleaned.slice(sep + 1).trim();
-        if (!value) continue;
-
+    const assign = (rawKey, value) => {
+        const key = normalizeHeading(rawKey);
+        if (!value) return;
         if (key.includes('branche') || key.includes('branch')) {
             result.branch = value;
+        } else if (key.includes('arbre') || key.includes('tree')) {
+            result.tree = value;
         } else if (key.includes('test') || key.includes('verif')) {
             result.tests = value;
         } else if (key.includes('bloqueur') || key.includes('blocker')) {
@@ -66,6 +62,25 @@ function extractHandoff(section, lines) {
             key.includes('next step')
         ) {
             result.next_action = value;
+        }
+    };
+
+    for (const rawLine of trimmed) {
+        const cleaned = stripMarkdown(
+            rawLine.replace(/^\s*[-*+]\s+(?:\[[ xX]\]\s+)?/, '')
+        );
+        const sep = cleaned.indexOf(':');
+        if (sep === -1) continue;
+        const key = cleaned.slice(0, sep);
+        const value = cleaned.slice(sep + 1).trim();
+        // The compact format puts the tree state on the branch line:
+        // "Branche: main | Arbre: propre". Other values keep their pipes.
+        const tail = value.match(/^(.*?)\s+\|\s+([^:|]+):\s*(.+)$/);
+        if (tail && /branch/.test(normalizeHeading(key))) {
+            assign(key, tail[1].trim());
+            assign(tail[2], tail[3].trim());
+        } else {
+            assign(key, value);
         }
     }
 

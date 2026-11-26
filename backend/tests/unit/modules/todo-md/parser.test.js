@@ -144,6 +144,7 @@ describe('todo-md handoff section', () => {
         expect(parsed.handoff).toEqual({
             section: 'État actuel',
             branch: 'feat/kanban (propre)',
+            tree: null,
             tests: '12 passés, 0 échoué',
             blockers: 'attente validation API',
             next_action: 'brancher le endpoint board-tree',
@@ -163,6 +164,26 @@ describe('todo-md handoff section', () => {
         expect(parsed.items).toEqual([]);
         expect(parsed.handoff.blockers).toBeNull();
         expect(parsed.handoff.next_action).toBe('lancer le build');
+    });
+
+    it('splits the compact "Branche: x | Arbre: y" line into branch and tree', () => {
+        const parsed = parseTodoMd(
+            [
+                '## État actuel',
+                'Branche: `main` | Arbre: modifications non commitées',
+                'Tests: non exécutés',
+                'Bloqueur: aucun',
+                'Prochaine action: Finaliser le tableau | puis publier',
+                '',
+            ].join('\n')
+        );
+        expect(parsed.handoff.branch).toBe('main');
+        expect(parsed.handoff.tree).toBe('modifications non commitées');
+        expect(parsed.handoff.tests).toBe('non exécutés');
+        expect(parsed.handoff.blockers).toBeNull();
+        expect(parsed.handoff.next_action).toBe(
+            'Finaliser le tableau | puis publier'
+        );
     });
 
     it('returns null handoff when no handoff section exists', () => {

@@ -5575,7 +5575,10 @@
     "sendToSubProject": "Send to project...",
     "todoMdMoveBlocked": "TODO.md tasks stay in their repository project.",
     "untagged": "Untagged",
-    "wipLimit": "WIP limit (In progress)"
+    "wipLimit": "WIP limit (In progress)",
+    "refreshTodoMd": "Refresh TODO.md",
+    "refreshTodoMdTitle": "Read the TODO.md file of every sub-project again",
+    "recent7dShort": "7d"
   },
   "taskPane": {
     "chat": "Discuss with the AI",

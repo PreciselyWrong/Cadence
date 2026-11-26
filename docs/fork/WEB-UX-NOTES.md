@@ -1165,3 +1165,8 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 
 - **Décision** : la fiche se lit de haut en bas comme une tâche se pense. Titre, chips, puis juste dessous « En vue / Cette semaine / Plus tard » et les reports (ils parlent du moment, comme la date) ; description ; sous-tâches avec « Découper en étapes » sur la ligne d'ajout ; pièces jointes et commentaires seulement s'il y en a ; en bas une seule barre discrète « Joindre · Commenter · Historique » au lieu de trois boutons empilés ; l'historique s'ouvre sous la barre. « Planifiée … » disparaît quand il répète l'échéance ; « Agrandir » devient une icône.
 - **Android** : à reporter dans la fiche (`TaskDetailSheet`) : même ordre, mêmes regroupements.
+
+### 2026-11-26 : tableau des sous-projets plus lisible
+
+- **Décision** : dans le tableau d'un projet parent, le texte passe à 14 px (tâches) et 12 px (étiquettes), les colonnes à 320 px ; chaque colonne défile seule sous son en-tête, pour que la barre de défilement horizontale reste à l'écran. L'« État actuel » montre la prochaine action sur trois lignes, puis la branche seule et l'état de l'arbre avec une pastille (verte si propre, ambre sinon). Bouton « Actualiser les TODO.md » dans la barre du tableau : relit les fichiers de tous les sous-projets, puis recharge les colonnes.
+- **Android** : à faire, pas de tableau des sous-projets ; au minimum l'action « Actualiser les TODO.md » et l'état de l'arbre sur un projet parent.

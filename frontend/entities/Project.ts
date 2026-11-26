@@ -24,6 +24,8 @@ export interface ProjectTaskStatus {
 export interface ProjectHandoffState {
     section?: string | null;
     branch?: string | null;
+    // Working tree state ("propre", "modifications non commitées").
+    tree?: string | null;
     tests?: string | null;
     blockers?: string | null;
     next_action?: string | null;

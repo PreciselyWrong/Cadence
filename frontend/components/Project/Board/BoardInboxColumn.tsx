@@ -67,7 +67,7 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
         <section
             aria-label={t('projectBoard.capturesColumn', 'Captures & Inbox')}
             data-testid="board-inbox-column"
-            className="flex w-72 shrink-0 flex-col rounded-xl border border-blue-200/80 bg-blue-50/40 p-2.5 dark:border-blue-900/50 dark:bg-blue-950/20"
+            className="flex w-80 md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border border-blue-200/80 bg-blue-50/40 p-2.5 dark:border-blue-900/50 dark:bg-blue-950/20"
         >
             <div className="mb-2 flex items-center justify-between gap-2 px-1">
                 <div className="flex items-center gap-1.5">
@@ -98,7 +98,7 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
                         'projectBoard.capturePlaceholder',
                         'Quick idea…'
                     )}
-                    className="min-w-0 flex-1 rounded-lg border border-blue-200 bg-white px-2 py-1 text-xs text-gray-900 focus:border-blue-500 focus:outline-none dark:border-blue-900 dark:bg-gray-900 dark:text-gray-100"
+                    className="min-w-0 flex-1 rounded-lg border border-blue-200 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:border-blue-900 dark:bg-gray-900 dark:text-gray-100"
                 />
                 <button
                     type="submit"
@@ -110,7 +110,7 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
                 </button>
             </form>
 
-            <div className="flex-1 space-y-1.5 overflow-y-auto pr-0.5">
+            <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto pr-0.5">
                 {loading && total === 0 && (
                     <p className="py-4 text-center text-xs text-gray-400">
                         {t('common.loading', 'Loading…')}
@@ -138,7 +138,7 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
                         <button
                             type="button"
                             onClick={() => onOpenTask(task)}
-                            className="block w-full text-left text-xs font-medium text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400"
+                            className="block w-full break-words text-left text-sm font-medium text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400"
                         >
                             {task.name}
                         </button>
@@ -187,7 +187,7 @@ const BoardInboxColumn: React.FC<BoardInboxColumnProps> = ({
                         onDragEnd={onDragEnd}
                         className="rounded-lg border border-dashed border-blue-200 bg-white/90 p-2 dark:border-blue-900/60 dark:bg-gray-900/80"
                     >
-                        <p className="text-xs text-gray-800 dark:text-gray-200">
+                        <p className="break-words text-sm text-gray-800 dark:text-gray-200">
                             {item.content}
                         </p>
                         {subProjects.length > 0 && (

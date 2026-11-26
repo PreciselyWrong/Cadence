@@ -295,6 +295,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
             ? JSON.stringify([
                   h.section,
                   h.branch,
+                  h.tree,
                   h.tests,
                   h.blockers,
                   h.next_action,

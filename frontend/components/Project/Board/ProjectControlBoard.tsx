@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TFunction } from 'i18next';
 import {
     AdjustmentsHorizontalIcon,
+    ArrowPathIcon,
     ChevronDoubleLeftIcon,
     ChevronDoubleRightIcon,
     ClockIcon,
-    ExclamationTriangleIcon,
     EyeIcon,
     FolderIcon,
     InboxIcon,
@@ -35,6 +35,7 @@ import {
     fetchInboxItems,
     processInboxItem,
 } from '../../../utils/inboxService';
+import { rescanTodoMd } from '../../../utils/todoMdService';
 import { useToast } from '../../Shared/ToastContext';
 import EntityIcon from '../../Shared/EntityIcon';
 import { getProjectStatusTint } from '../projectStatusStyles';
@@ -58,6 +59,7 @@ import {
 } from './boardModel';
 import SubProjectDrawer from './SubProjectDrawer';
 import BoardInboxColumn from './BoardInboxColumn';
+import HandoffSummary from './HandoffSummary';
 import ProjectBoard from './ProjectBoard';
 
 interface ProjectControlBoardProps {
@@ -121,6 +123,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
     const [addingColId, setAddingColId] = useState<string | null>(null);
     const [quickTaskName, setQuickTaskName] = useState('');
     const [dragOverCol, setDragOverCol] = useState<string | null>(null);
+    const [refreshing, setRefreshing] = useState(false);
     const draggingRef = useRef<DragPayload | null>(null);
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -166,6 +169,28 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
     useEffect(() => {
         void reloadTree();
     }, [reloadTree]);
+
+    const followsTodoMd =
+        project.source_type === 'todo_md' ||
+        subProjects.some((p) => p.source_type === 'todo_md');
+
+    // Reads the TODO.md file of every project again, then shows the result.
+    const handleRefreshTodoMd = async () => {
+        if (refreshing) return;
+        setRefreshing(true);
+        try {
+            await rescanTodoMd();
+            await reloadTree();
+            onReloadParent?.();
+            showSuccessToast(t('todoMd.rereadDone', 'TODO.md files reread.'));
+        } catch {
+            showErrorToast(
+                t('todoMd.rereadFailed', 'Could not reread the TODO.md files.')
+            );
+        } finally {
+            setRefreshing(false);
+        }
+    };
 
     const reloadInbox = useCallback(async () => {
         if (!activePreset.showInboxColumn) return;
@@ -696,12 +721,12 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                         disabled={readOnly}
                         onChange={() => void handleToggleSubTask(task)}
                         aria-label={task.name}
-                        className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <button
                         type="button"
                         onClick={() => onOpenTask(task)}
-                        className={`min-w-0 flex-1 text-left text-[13px] leading-snug ${
+                        className={`min-w-0 flex-1 break-words text-left text-sm leading-snug ${
                             done
                                 ? 'text-gray-400 line-through'
                                 : 'text-gray-900 dark:text-gray-100'
@@ -715,15 +740,15 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                     (activePreset.cardFields.tags &&
                         task.tags &&
                         task.tags.length > 0)) && (
-                    <div className="mt-1.5 flex flex-wrap items-center gap-1 pl-5">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1 pl-6">
                         {showProjectBadge && ownerSub && (
-                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                                 {ownerSub.name}
                             </span>
                         )}
                         {dueLabel && (
                             <span
-                                className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                                className={`rounded px-1.5 py-0.5 text-xs font-medium ${
                                     late
                                         ? 'bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300'
                                         : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
@@ -736,7 +761,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                             (task.tags || []).slice(0, 3).map((tag) => (
                                 <span
                                     key={tag.name}
-                                    className="rounded bg-blue-50/80 px-1.5 py-0.5 text-[10px] text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
+                                    className="rounded bg-blue-50/80 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
                                 >
                                     #{tag.name}
                                 </span>
@@ -803,30 +828,11 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 </div>
 
                 {fields.handoff && handoff && (
-                    <div className="mt-2 rounded-lg bg-indigo-50/70 px-2 py-1.5 text-[11px] dark:bg-indigo-950/35">
-                        {handoff.next_action && (
-                            <p className="line-clamp-2 font-medium text-indigo-950 dark:text-indigo-200">
-                                → {handoff.next_action}
-                            </p>
-                        )}
-                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                            {handoff.branch && (
-                                <span className="truncate rounded bg-white/80 px-1 py-0.5 font-mono text-[10px] text-gray-600 dark:bg-gray-900/80 dark:text-gray-300">
-                                    {handoff.branch}
-                                </span>
-                            )}
-                            {handoff.blockers && (
-                                <span className="inline-flex items-center gap-0.5 rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
-                                    <ExclamationTriangleIcon className="h-3 w-3" />
-                                    {t('projectBoard.blocked', 'Blocked')}
-                                </span>
-                            )}
-                        </div>
-                    </div>
+                    <HandoffSummary handoff={handoff} t={t} className="mt-2" />
                 )}
 
                 {fields.nextAction && !handoff?.next_action && sub.next_task && (
-                    <p className="mt-1.5 truncate text-[11px] text-gray-600 dark:text-gray-400">
+                    <p className="mt-1.5 truncate text-xs text-gray-600 dark:text-gray-400">
                         → {sub.next_task.name}
                     </p>
                 )}
@@ -841,7 +847,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 }}
                             />
                         </div>
-                        <span className="text-[11px] tabular-nums text-gray-500 dark:text-gray-400">
+                        <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
                             {sub.open_tasks_count ?? 0}
                         </span>
                     </div>
@@ -850,7 +856,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-1">
                     <div className="flex flex-wrap items-center gap-1">
                         {fields.sourceBadge && sub.source_type === 'todo_md' && (
-                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[11px] font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                                 TODO.md
                             </span>
                         )}
@@ -858,7 +864,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                             (sub.tags || []).slice(0, 2).map((tag) => (
                                 <span
                                     key={tag.name}
-                                    className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+                                    className="rounded bg-gray-100 px-1.5 py-0.5 text-[11px] text-gray-600 dark:bg-gray-800 dark:text-gray-300"
                                 >
                                     #{tag.name}
                                 </span>
@@ -874,7 +880,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                     e.target.value as ProjectStatus
                                 )
                             }
-                            className="md:hidden rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-[11px] text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="md:hidden rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-xs text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             {PORTFOLIO_STATUS_ORDER.map((st) => (
                                 <option key={st} value={st}>
@@ -932,7 +938,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                         return (
                             <div
                                 key={preset.id}
-                                className={`inline-flex items-center rounded-lg text-xs font-medium transition ${
+                                className={`inline-flex items-center rounded-lg text-[13px] font-medium transition ${
                                     active
                                         ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900'
                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
@@ -947,7 +953,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         })
                                     }
                                     data-testid={`board-preset-${preset.id}`}
-                                    className="px-2.5 py-1"
+                                    className="px-2.5 py-1.5"
                                 >
                                     {preset.name}
                                 </button>
@@ -973,7 +979,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                         type="button"
                         onClick={handleSaveNewPreset}
                         title={t('projectBoard.saveView', 'Save as new view')}
-                        className="inline-flex items-center gap-0.5 rounded-lg border border-dashed border-gray-300 px-2 py-1 text-xs text-gray-500 hover:border-gray-400 hover:text-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        className="inline-flex items-center gap-0.5 rounded-lg border border-dashed border-gray-300 px-2.5 py-1.5 text-[13px] text-gray-500 hover:border-gray-400 hover:text-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     >
                         <PlusIcon className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">
@@ -994,7 +1000,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 })
                             }
                             data-testid="board-mode-select"
-                            className="rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-xs font-medium text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-[13px] font-medium text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             <option value="by_subproject">
                                 {t(
@@ -1022,7 +1028,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 })
                             }
                             data-testid="board-portfolio-groupby"
-                            className="rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-[13px] text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             <option value="status">
                                 {t('projectBoard.byStatus', 'By status')}
@@ -1046,7 +1052,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                 })
                             }
                             data-testid="board-task-groupby"
-                            className="rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-[13px] text-gray-700 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             <option value="status">
                                 {t('projectBoard.byStatus', 'By status')}
@@ -1063,6 +1069,32 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                         </select>
                     )}
 
+                    {followsTodoMd && !readOnly && (
+                        <button
+                            type="button"
+                            onClick={() => void handleRefreshTodoMd()}
+                            disabled={refreshing}
+                            data-testid="board-refresh-todo-md"
+                            title={t(
+                                'projectBoard.refreshTodoMdTitle',
+                                'Read the TODO.md file of every sub-project again'
+                            )}
+                            className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[13px] font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                        >
+                            <ArrowPathIcon
+                                className={`h-4 w-4 ${
+                                    refreshing ? 'animate-spin' : ''
+                                }`}
+                            />
+                            <span>
+                                {t(
+                                    'projectBoard.refreshTodoMd',
+                                    'Refresh TODO.md'
+                                )}
+                            </span>
+                        </button>
+                    )}
+
                     <button
                         type="button"
                         onClick={() =>
@@ -1072,7 +1104,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                         }
                         aria-pressed={activePreset.showInboxColumn}
                         data-testid="toggle-captures-column"
-                        className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition ${
+                        className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition ${
                             activePreset.showInboxColumn
                                 ? 'bg-blue-600 text-white'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
@@ -1094,14 +1126,14 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                             'projectBoard.recent7d',
                             'Tasks captured in the last 7 days'
                         )}
-                        className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition ${
+                        className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition ${
                             activePreset.recentDays
                                 ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
                         }`}
                     >
                         <ClockIcon className="h-3.5 w-3.5" />
-                        <span>7j</span>
+                        <span>{t('projectBoard.recent7dShort', '7d')}</span>
                     </button>
 
                     <div className="relative">
@@ -1112,7 +1144,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder={t('common.filter', 'Filter (/ )')}
-                            className="w-28 rounded-lg border border-gray-200 bg-gray-50 py-1 pl-7 pr-2 text-xs text-gray-900 focus:w-44 focus:border-blue-500 focus:bg-white focus:outline-none transition-all dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                            className="w-32 rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-7 pr-2 text-[13px] text-gray-900 focus:w-44 focus:border-blue-500 focus:bg-white focus:outline-none transition-all dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                         />
                     </div>
 
@@ -1123,7 +1155,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                             onClick={() => setDisplayOpen((v) => !v)}
                             aria-expanded={displayOpen}
                             data-testid="board-display-button"
-                            className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[13px] font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             <AdjustmentsHorizontalIcon className="h-3.5 w-3.5" />
                             <span>{t('projectBoard.display', 'Display')}</span>
@@ -1568,7 +1600,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         }}
                                         className={`${
                                             hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-72 shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                        } w-full md:w-80 md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : 'border-gray-200/80 bg-gray-50/70 dark:border-gray-800 dark:bg-gray-900/40'
@@ -1595,11 +1627,11 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                         }}
                                                     />
                                                 )}
-                                                <span className="truncate text-xs font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400">
+                                                <span className="truncate text-sm font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400">
                                                     {col.title}
                                                 </span>
                                                 <span
-                                                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${
+                                                    className={`rounded-full px-1.5 py-0.5 text-xs font-semibold tabular-nums ${
                                                         col.isOverWip
                                                             ? 'bg-red-100 text-red-700 dark:bg-red-900/60 dark:text-red-200'
                                                             : 'bg-gray-200/80 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
@@ -1628,33 +1660,14 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
 
                                         {activePreset.cardFields.handoff &&
                                             handoff && (
-                                                <div className="mb-2 rounded-lg border border-indigo-100 bg-indigo-50/60 px-2 py-1.5 text-[11px] dark:border-indigo-900/50 dark:bg-indigo-950/30">
-                                                    {handoff.next_action && (
-                                                        <p className="line-clamp-2 font-medium text-indigo-950 dark:text-indigo-200">
-                                                            →{' '}
-                                                            {handoff.next_action}
-                                                        </p>
-                                                    )}
-                                                    <div className="mt-1 flex flex-wrap items-center gap-1">
-                                                        {handoff.branch && (
-                                                            <span className="truncate rounded bg-white/80 px-1 py-0.5 font-mono text-[10px] text-gray-600 dark:bg-gray-900/80 dark:text-gray-300">
-                                                                {handoff.branch}
-                                                            </span>
-                                                        )}
-                                                        {handoff.blockers && (
-                                                            <span className="inline-flex items-center gap-0.5 rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
-                                                                <ExclamationTriangleIcon className="h-3 w-3" />
-                                                                {t(
-                                                                    'projectBoard.blocked',
-                                                                    'Blocked'
-                                                                )}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                                <HandoffSummary
+                                                    handoff={handoff}
+                                                    t={t}
+                                                    className="mb-2"
+                                                />
                                             )}
 
-                                        <div className="flex-1 space-y-1.5">
+                                        <div className="min-h-0 flex-1 space-y-1.5 md:overflow-y-auto">
                                             {col.tasks.map((tk) =>
                                                 renderTaskCard(tk, false)
                                             )}
@@ -1692,7 +1705,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                                 'projectBoard.quickAddPlaceholder',
                                                                 'Add a task…'
                                                             )}
-                                                            className="w-full rounded-lg border border-blue-400 bg-white px-2 py-1 text-xs text-gray-900 focus:outline-none dark:bg-gray-900 dark:text-gray-100"
+                                                            className="w-full rounded-lg border border-blue-400 bg-white px-2 py-1.5 text-sm text-gray-900 focus:outline-none dark:bg-gray-900 dark:text-gray-100"
                                                         />
                                                         <div className="flex justify-end gap-1">
                                                             <button
@@ -1732,7 +1745,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                             );
                                                             setQuickTaskName('');
                                                         }}
-                                                        className="flex w-full items-center gap-1 rounded-lg px-2 py-1 text-xs text-gray-500 hover:bg-gray-200/70 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                                                        className="flex w-full items-center gap-1 rounded-lg px-2 py-1.5 text-[13px] text-gray-500 hover:bg-gray-200/70 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
                                                     >
                                                         <PlusIcon className="h-3.5 w-3.5" />
                                                         {t(
@@ -1795,7 +1808,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         }}
                                         className={`${
                                             hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-72 shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                        } w-full md:w-80 md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : col.isOverWip
@@ -1818,7 +1831,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                 </span>
                                                 <span
                                                     data-testid={`wip-badge-${col.id}`}
-                                                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${
+                                                    className={`rounded-full px-1.5 py-0.5 text-xs font-semibold tabular-nums ${
                                                         col.isOverWip
                                                             ? 'bg-red-100 text-red-700 dark:bg-red-900/70 dark:text-red-200'
                                                             : 'bg-gray-200/80 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
@@ -1845,7 +1858,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                             </button>
                                         </div>
 
-                                        <div className="flex-1 space-y-2">
+                                        <div className="min-h-0 flex-1 space-y-2 md:overflow-y-auto">
                                             {col.projects.map(
                                                 renderPortfolioCard
                                             )}
@@ -1903,7 +1916,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                         }}
                                         className={`${
                                             hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                                        } w-full md:w-72 shrink-0 flex-col rounded-xl border p-2.5 transition ${
+                                        } w-full md:w-80 md:max-h-[calc(100vh-6rem)] shrink-0 flex-col rounded-xl border p-2.5 transition ${
                                             dragOverCol === col.id
                                                 ? 'border-blue-400 bg-blue-50/40 dark:border-blue-600 dark:bg-blue-950/30'
                                                 : 'border-gray-200/80 bg-gray-50/70 dark:border-gray-800 dark:bg-gray-900/40'
@@ -1915,7 +1928,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                                     {title}
                                                 </span>
                                                 <span
-                                                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${
+                                                    className={`rounded-full px-1.5 py-0.5 text-xs font-semibold tabular-nums ${
                                                         col.isOverWip
                                                             ? 'bg-red-100 text-red-700 dark:bg-red-900/60 dark:text-red-200'
                                                             : 'bg-gray-200/80 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
@@ -1942,7 +1955,7 @@ const ProjectControlBoard: React.FC<ProjectControlBoardProps> = ({
                                             </button>
                                         </div>
 
-                                        <div className="flex-1 space-y-1.5">
+                                        <div className="min-h-0 flex-1 space-y-1.5 md:overflow-y-auto">
                                             {col.tasks.map((tk) =>
                                                 renderTaskCard(tk, true)
                                             )}

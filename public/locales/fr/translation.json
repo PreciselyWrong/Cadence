@@ -5541,7 +5541,10 @@
     "sendToSubProject": "Envoyer au projet...",
     "todoMdMoveBlocked": "Les tâches TODO.md restent dans leur projet de dépôt.",
     "untagged": "Sans étiquette",
-    "wipLimit": "Limite WIP (En cours)"
+    "wipLimit": "Limite WIP (En cours)",
+    "refreshTodoMd": "Actualiser les TODO.md",
+    "refreshTodoMdTitle": "Relire le TODO.md de chaque sous-projet",
+    "recent7dShort": "7 j"
   },
   "taskPane": {
     "chat": "Discuter avec l'IA",

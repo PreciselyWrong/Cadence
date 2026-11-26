@@ -31,6 +31,11 @@ jest.mock('../../../../utils/inboxService', () => ({
     processInboxItem: jest.fn(),
 }));
 
+jest.mock('../../../../utils/todoMdService', () => ({
+    rescanTodoMd: jest.fn(),
+}));
+
+import { rescanTodoMd } from '../../../../utils/todoMdService';
 import { fetchProjectBoardTree } from '../../../../utils/projectsService';
 import { fetchInboxItems } from '../../../../utils/inboxService';
 
@@ -41,7 +46,12 @@ const devProject: Project = {
     name: 'Dev',
     status: 'in_progress',
     SubProjects: [
-        { uid: 'p1', name: 'Cadence', status: 'in_progress', open_tasks_count: 1 },
+        {
+            uid: 'p1',
+            name: 'Cadence',
+            status: 'in_progress',
+            open_tasks_count: 1,
+        },
         { uid: 'p2', name: 'Memo', status: 'paused', open_tasks_count: 1 },
     ],
 };
@@ -56,6 +66,7 @@ const mockTree = {
             handoff_state: {
                 section: 'État actuel',
                 branch: 'feat/kanban',
+                tree: 'modifications non commitées',
                 blockers: null,
                 next_action: 'Ship phase 2 board',
             },
@@ -128,9 +139,14 @@ describe('ProjectControlBoard', () => {
         });
         expect(screen.getByText('→ Ship phase 2 board')).toBeInTheDocument();
         expect(screen.getByText('feat/kanban')).toBeInTheDocument();
+        expect(
+            screen.getByText('modifications non commitées')
+        ).toBeInTheDocument();
         expect(screen.getByText('Wire control board')).toBeInTheDocument();
         // Paused sub-project is filtered out of the default Actifs preset.
-        expect(screen.queryByTestId('subproject-col-p2')).not.toBeInTheDocument();
+        expect(
+            screen.queryByTestId('subproject-col-p2')
+        ).not.toBeInTheDocument();
 
         // Switch to Portfolio preset and inspect Cadence in the drawer.
         fireEvent.click(screen.getByTestId('board-preset-portfolio'));
@@ -167,8 +183,74 @@ describe('ProjectControlBoard', () => {
         fireEvent.click(screen.getByTestId('toggle-captures-column'));
 
         await waitFor(() => {
-            expect(screen.getByTestId('board-inbox-column')).toBeInTheDocument();
+            expect(
+                screen.getByTestId('board-inbox-column')
+            ).toBeInTheDocument();
             expect(screen.getByText('Mobile idea')).toBeInTheDocument();
         });
+    });
+
+    it('rereads every TODO.md file, then reloads the sub-projects', async () => {
+        (rescanTodoMd as jest.Mock).mockResolvedValue({
+            projects: 2,
+            created: 1,
+            updated: 0,
+            removed: 0,
+            errors: [],
+        });
+        const onReloadParent = jest.fn();
+        render(
+            <MemoryRouter>
+                <ProjectControlBoard
+                    project={devProject}
+                    tasks={[]}
+                    config={defaultBoardConfig(true)}
+                    onChangeConfig={jest.fn()}
+                    onMoveTaskSection={jest.fn()}
+                    onOpenTask={jest.fn()}
+                    onReloadParent={onReloadParent}
+                    t={t}
+                />
+            </MemoryRouter>
+        );
+
+        const button = await screen.findByTestId('board-refresh-todo-md');
+        const loads = (fetchProjectBoardTree as jest.Mock).mock.calls.length;
+        fireEvent.click(button);
+
+        await waitFor(() => {
+            expect(rescanTodoMd).toHaveBeenCalledTimes(1);
+            expect(
+                (fetchProjectBoardTree as jest.Mock).mock.calls.length
+            ).toBeGreaterThan(loads);
+            expect(onReloadParent).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it('offers no TODO.md refresh when no sub-project follows a file', async () => {
+        (fetchProjectBoardTree as jest.Mock).mockResolvedValue({
+            ...mockTree,
+            sub_projects: mockTree.sub_projects.map((p) => ({
+                ...p,
+                source_type: null,
+            })),
+        });
+        render(
+            <MemoryRouter>
+                <ProjectControlBoard
+                    project={devProject}
+                    tasks={[]}
+                    config={defaultBoardConfig(true)}
+                    onChangeConfig={jest.fn()}
+                    onMoveTaskSection={jest.fn()}
+                    onOpenTask={jest.fn()}
+                    t={t}
+                />
+            </MemoryRouter>
+        );
+        await screen.findByTestId('subproject-col-p1');
+        expect(
+            screen.queryByTestId('board-refresh-todo-md')
+        ).not.toBeInTheDocument();
     });
 });
