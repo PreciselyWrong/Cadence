@@ -2,7 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import groovy.json.JsonSlurper
 import java.util.Properties
 
-val releaseVersion = JsonSlurper().parse(rootProject.file("app-release/version.json")) as Map<*, *>
+// Read through a provider so the configuration cache is invalidated when the version changes
+// (a plain file read kept an old versionCode and adb refused the APK as a downgrade).
+val releaseVersion = JsonSlurper().parseText(
+    providers.fileContents(rootProject.layout.projectDirectory.file("app-release/version.json")).asText.get(),
+) as Map<*, *>
 
 // The published APK is the debug build, so every machine that publishes must sign with the same
 // key, kept outside the repository; without the file, Gradle falls back to the machine's debug key.
