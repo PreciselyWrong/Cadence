@@ -4,6 +4,10 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.4
+
+- Projets › Tableau : un clic n'importe où sur une carte ouvre la tâche (seul le titre le faisait) ; la case à cocher et les menus gardent leur action, le glisser reste inchangé.
+
 ## 2026.11.26.3
 
 - Projets › Tableau : texte et colonnes agrandis, chaque colonne défile sous son en-tête, bouton « Actualiser les TODO.md » qui relit les fichiers de tous les sous-projets.
