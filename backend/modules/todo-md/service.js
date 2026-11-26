@@ -12,6 +12,10 @@ const { appendTask, setItemDone, TodoEditError } = require('./writer');
 const { editTodoFile, readTodoText } = require('./safeFile');
 const { Op } = require('sequelize');
 const { logInfo, logError } = require('../../services/logService');
+const {
+    processDueDateForStorage,
+    utcToUserDateString,
+} = require('../../utils/timezone-utils');
 
 const SOURCE_TYPE = 'todo_md';
 const DEFAULT_SECTION = 'Next';
@@ -19,6 +23,7 @@ const DEFAULT_SECTION = 'Next';
 // a task given it in a linked project is written to the file.
 const CODE_TAG = 'code';
 const STATUS = { NOT_STARTED: 0, DONE: 2, ARCHIVED: 3, CANCELLED: 5 };
+const PRIORITY = { low: 0, medium: 1, high: 2 };
 
 class TodoMdError extends Error {
     constructor(code, message, status = 400) {
@@ -89,13 +94,31 @@ function desiredStatus(item) {
     return item.done ? STATUS.DONE : STATUS.NOT_STARTED;
 }
 
-// Adds the code tag, leaving the task's other tags in place.
-async function ensureCodeTag(task, userId) {
+// Adds the code tag and the bullet's `#tags`, leaving the task's other tags
+// in place: a tag is never taken off by the file.
+async function ensureTags(task, wanted, userId) {
     const tags = await task.getTags({ attributes: ['name'] });
     const names = tags.map((tag) => tag.name);
-    if (names.includes(CODE_TAG)) return;
+    const missing = [CODE_TAG, ...wanted].filter((n) => !names.includes(n));
+    if (missing.length === 0) return;
     const { updateTaskTags } = require('../tasks/operations/tags');
-    await updateTaskTags(task, [...names, CODE_TAG], userId);
+    await updateTaskTags(task, [...names, ...missing], userId);
+}
+
+// Priority and due date written in the bullet. A field the bullet does not
+// set is left out, so Cadence keeps its own value.
+function inlineFields(item, task, timezone) {
+    const fields = {};
+    if (item.priority) fields.priority = PRIORITY[item.priority];
+    if (
+        item.due_date &&
+        (!task?.due_date ||
+            utcToUserDateString(task.due_date, timezone) !== item.due_date)
+    ) {
+        fields.due_date = processDueDateForStorage(item.due_date, timezone);
+        fields.due_has_time = false;
+    }
+    return fields;
 }
 
 // Tasks of a project that have the code tag but no bullet yet.
@@ -183,15 +206,20 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
         if (!spare.has(task.name)) spare.set(task.name, []);
         spare.get(task.name).push(task);
     }
-    for (const item of parsed.items) {
-        if (pairs.has(item)) continue;
-        const candidates = spare.get(item.name);
-        if (candidates && candidates.length > 0) {
-            const task = candidates.shift();
-            pairs.set(item, task);
-            used.add(task.id);
+    // A row imported before inline tokens were read still has them in its
+    // name: it is found under the bullet's former name.
+    for (const name of ['name', 'legacyName']) {
+        for (const item of parsed.items) {
+            if (pairs.has(item)) continue;
+            const candidates = spare.get(item[name]);
+            if (candidates && candidates.length > 0) {
+                const task = candidates.shift();
+                pairs.set(item, task);
+                used.add(task.id);
+            }
         }
     }
+    const timezone = owner.timezone || 'UTC';
 
     for (const item of parsed.items) {
         const status = desiredStatus(item);
@@ -207,6 +235,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
         if (!task) {
             const created = await Task.create({
                 ...desired,
+                ...inlineFields(item, null, timezone),
                 ...(adopt && adopt.key === item.key ? { uid: adopt.uid } : {}),
                 user_id: owner.id,
                 project_id: project.id,
@@ -214,7 +243,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
                 // and the file's date would count it as done today.
                 completed_at: null,
             });
-            await ensureCodeTag(created, owner.id);
+            await ensureTags(created, item.tags, owner.id);
             stats.created += 1;
             continue;
         }
@@ -222,6 +251,13 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
         const changes = {};
         for (const [field, value] of Object.entries(desired)) {
             if ((task.get(field) ?? null) !== value) changes[field] = value;
+        }
+        for (const [field, value] of Object.entries(
+            inlineFields(item, task, timezone)
+        )) {
+            if (field === 'due_date' || task.get(field) !== value) {
+                changes[field] = value;
+            }
         }
         if (status === STATUS.NOT_STARTED) {
             if (task.completed_at) changes.completed_at = null;
@@ -233,7 +269,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
             await task.save();
             stats.updated += 1;
         }
-        await ensureCodeTag(task, owner.id);
+        await ensureTags(task, item.tags, owner.id);
     }
 
     for (const task of owned) {
@@ -248,7 +284,9 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
     const nextHandoff = parsed.handoff
         ? {
               ...parsed.handoff,
-              updated_at: modifiedAt ? new Date(modifiedAt).toISOString() : null,
+              updated_at: modifiedAt
+                  ? new Date(modifiedAt).toISOString()
+                  : null,
           }
         : null;
     const prevHandoff = project.handoff_state || null;

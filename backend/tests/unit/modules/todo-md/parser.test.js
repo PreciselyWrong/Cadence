@@ -169,4 +169,83 @@ describe('todo-md handoff section', () => {
         const parsed = parseTodoMd('## Next\n- Only task\n');
         expect(parsed.handoff).toBeNull();
     });
+
+    describe('inline metadata', () => {
+        const only = (line) => parseTodoMd(`## Next\n${line}\n`).items[0];
+
+        it('reads tags, priority and due date and cleans them from the name', () => {
+            const item = only(
+                '- Fix login #bug #UX !High @2026-12-05 #secu #bug'
+            );
+            expect(item.name).toBe('Fix login #UX');
+            expect(item.tags).toEqual(['bug', 'secu']);
+            expect(item.priority).toBe('high');
+            expect(item.due_date).toBe('2026-12-05');
+        });
+
+        it('reads tokens anywhere in the bullet line, not in its note', () => {
+            const parsed = parseTodoMd(
+                '## Next\n- [ ] #infra Move the backups !med to the NAS\n  note #doc @2026-01-02\n'
+            );
+            const [item] = parsed.items;
+            expect(item.name).toBe('Move the backups to the NAS');
+            expect(item.tags).toEqual(['infra']);
+            expect(item.priority).toBe('medium');
+            expect(item.due_date).toBeNull();
+            expect(item.note).toBe('note #doc @2026-01-02');
+        });
+
+        it('maps every priority and leaves null without one', () => {
+            expect(only('- A !low').priority).toBe('low');
+            expect(only('- A !MED').priority).toBe('medium');
+            expect(only('- A !high').priority).toBe('high');
+            expect(only('- A').priority).toBeNull();
+            expect(only('- A').tags).toEqual([]);
+            expect(only('- A').due_date).toBeNull();
+        });
+
+        it('ignores impossible dates and leaves them in the name', () => {
+            const item = only('- Pay rent @2026-02-30');
+            expect(item.due_date).toBeNull();
+            expect(item.name).toBe('Pay rent @2026-02-30');
+            expect(only('- Leap @2028-02-29').due_date).toBe('2028-02-29');
+            expect(only('- Not leap @2027-02-29').due_date).toBeNull();
+        });
+
+        it('ignores tokens inside code spans, links, URLs and words', () => {
+            const item = only(
+                '- Run `npm test #perf !high` see [docs](https://x.dev/a#doc) https://x.dev/b#bug mail@2026-01-01 a!low'
+            );
+            expect(item.tags).toEqual([]);
+            expect(item.priority).toBeNull();
+            expect(item.due_date).toBeNull();
+            expect(item.name).toBe(
+                'Run npm test #perf !high see docs https://x.dev/b#bug mail@2026-01-01 a!low'
+            );
+        });
+
+        it('keeps issue numbers out of tags', () => {
+            const item = only('- Close #123 #ok #v2');
+            expect(item.tags).toEqual(['ok', 'v2']);
+            expect(item.name).toBe('Close #123');
+        });
+
+        it('keys a bullet by its clean name, so editing tokens keeps its identity', () => {
+            const plain = only('- Fix login');
+            expect(only('- Fix login #bug').key).toBe(plain.key);
+            expect(only('- Fix login #bug !high @2026-12-05').key).toBe(
+                plain.key
+            );
+            expect(only('- !low Fix login @2027-01-01 #ux').key).toBe(
+                plain.key
+            );
+        });
+
+        it('keeps the name the bullet had before tokens were read', () => {
+            const item = only('- Fix **login** #bug !high');
+            expect(item.name).toBe('Fix login');
+            expect(item.legacyName).toBe('Fix login #bug !high');
+            expect(only('- Plain').legacyName).toBe('Plain');
+        });
+    });
 });

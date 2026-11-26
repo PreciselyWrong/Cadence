@@ -93,6 +93,59 @@ function stripMarkdown(text) {
         .trim();
 }
 
+// Inline metadata of a bullet line: `#tag`, `!high|!med|!low` and
+// `@YYYY-MM-DD`, each a whole word. Code spans, links and URLs are masked
+// first so `#anchor` or a token quoted in backticks stays text.
+const PROTECTED =
+    /`[^`]*`|!?\[[^\]]*\]\([^)]*\)|<[^>\s]+>|\b[a-z][a-z0-9+.-]*:\/\/\S+/gi;
+const CANDIDATE = /(?<=^|\s)[#!@]\S+(?=\s|$)/g;
+const TAG_TOKEN = /^#([a-z0-9][a-z0-9_-]*)$/;
+const PRIORITY_TOKEN = /^!(high|med|low)$/i;
+const DUE_TOKEN = /^@(\d{4})-(\d{2})-(\d{2})$/;
+const PRIORITIES = { high: 'high', med: 'medium', low: 'low' };
+
+function isRealDate(year, month, day) {
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return (
+        date.getUTCFullYear() === year &&
+        date.getUTCMonth() === month - 1 &&
+        date.getUTCDate() === day
+    );
+}
+
+// Returns the bullet text without its tokens, and what they say. The last
+// priority or date wins; a token that does not parse (`#123`, `@2026-02-30`)
+// is ordinary text.
+function readInlineMetadata(raw) {
+    const masked = raw.replace(PROTECTED, (m) => '\u0000'.repeat(m.length));
+    const meta = { tags: [], priority: null, due_date: null };
+    const cuts = [];
+    for (const match of masked.matchAll(CANDIDATE)) {
+        const token = match[0];
+        const tag = TAG_TOKEN.exec(token);
+        const priority = PRIORITY_TOKEN.exec(token);
+        const due = DUE_TOKEN.exec(token);
+        if (tag && !/^\d+$/.test(tag[1])) {
+            if (!meta.tags.includes(tag[1])) meta.tags.push(tag[1]);
+        } else if (priority) {
+            meta.priority = PRIORITIES[priority[1].toLowerCase()];
+        } else if (due && isRealDate(+due[1], +due[2], +due[3])) {
+            meta.due_date = token.slice(1);
+        } else {
+            continue;
+        }
+        cuts.push([match.index, match.index + token.length]);
+    }
+    let text = '';
+    let from = 0;
+    for (const [start, end] of cuts) {
+        text += raw.slice(from, start);
+        from = end;
+    }
+    meta.text = text + raw.slice(from);
+    return meta;
+}
+
 function splitLines(text) {
     const lines = [];
     let start = 0;
@@ -222,7 +275,14 @@ function parseTodoMd(text) {
     const occurrences = new Map();
     for (const it of items) {
         const sectionKey = it.section.toLowerCase();
-        it.name = stripMarkdown(it.raw);
+        const meta = readInlineMetadata(it.raw);
+        // The name the bullet had before tokens were read, to adopt rows
+        // imported then; a bullet made only of tokens keeps them as its name.
+        it.legacyName = stripMarkdown(it.raw);
+        it.name = stripMarkdown(meta.text) || it.legacyName;
+        it.tags = meta.tags;
+        it.priority = meta.priority;
+        it.due_date = meta.due_date;
         it.note = dedent(
             lines.slice(it.firstLine + 1, it.lastLine + 1).map((l) => l.text)
         ).join('\n');
@@ -253,6 +313,7 @@ function parseTodoMd(text) {
 module.exports = {
     parseTodoMd,
     stripMarkdown,
+    readInlineMetadata,
     DONE_SECTIONS,
     DROPPED_SECTIONS,
     HANDOFF_SECTIONS,
