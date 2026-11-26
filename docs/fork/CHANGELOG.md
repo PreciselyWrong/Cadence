@@ -4,6 +4,15 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.26.5
+
+- Projets › Tableau : deux vues au lieu de quatre, « Tâches par projet » et « Projets » ; les tableaux déjà enregistrés passent aux deux vues et gardent les vues créées à la main. Le type de vue et le filtre des 7 derniers jours sont dans Affichage, les colonnes sans tâche sont masquées, la limite WIP du portefeuille disparaît.
+- Projets › Tableau : dans une colonne, l'État actuel se réduit à la prochaine action (branche, arbre et âge dans l'infobulle et le tiroir), la pastille de santé n'apparaît que pour un projet bloqué ou périmé, les tâches ont le rond de coche de Cadence et tous les statuts sont traduits.
+- Projets › Tableau : la bannière du projet se retire sur l'onglet Tableau, les colonnes font 250 px et changer de vue garde la position de défilement.
+- Corrigé : boucle de rendu possible du tableau d'un projet sans sous-projet ; « Actualiser les TODO.md » n'est plus mis en file hors ligne.
+- Projets `TODO.md` : la place de chaque puce du fichier est retenue (`tasks.source_position`, migration) ; pas encore d'effet visible, le tri du tableau suivra.
+- Android (sans nouvelle version, toujours 1.48.0) : fiche de tâche dans l'ordre du web, « Découper » court sur la ligne d'ajout de sous-tâche, `version.json` relu à chaque build.
+
 ## 2026.11.26.4
 
 - Projets › Tableau : un clic n'importe où sur une carte ouvre la tâche (seul le titre le faisait) ; la case à cocher et les menus gardent leur action, le glisser reste inchangé.
