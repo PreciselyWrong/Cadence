@@ -55,6 +55,10 @@ Only names are given; default values and details are in `.env.example`.
 | Calendars | `CALDAV_ENABLED`, `CALDAV_ALLOW_PRIVATE_HOSTS`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI` |
 | AI (OpenAI-compatible provider) | `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL` |
 
+### Google Calendar and Tasks
+
+Create a Google OAuth client (Calendar and Tasks APIs, redirect URI `https://<your Cadence>/api/google/oauth/callback`). On its consent screen, use `https://<your Cadence>` as the home page and `https://<your Cadence>/privacy` as the privacy policy: Cadence serves that page publicly, without sign-in. Then publish the app "In production": in "Testing" mode Google expires the connection after 7 days and you have to reconnect every week.
+
 ### Behind a reverse proxy
 
 With Caddy, Nginx, Traefik or an ingress, set `CADENCE_TRUST_PROXY` so that Cadence reads the client's real address: `true` (a single proxy, the simplest), `1` (first hop only), `loopback` or a subnet. Put the public address in `CADENCE_ALLOWED_ORIGINS`. Without this setting, rate limiting writes a validation error in the logs.

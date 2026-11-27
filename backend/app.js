@@ -671,6 +671,16 @@ app.all('/mcp', oauthRoutes.onlyWhenEnabled, (req, res) => {
     res.set('Allow', 'POST').status(405).json({ error: 'Method not allowed' });
 });
 
+// Public privacy policy, linked from Google's OAuth consent screen. It needs
+// its own route: the SPA fallback would answer with the app shell.
+app.get('/privacy', (req, res) => {
+    res.sendFile(
+        serveFromDist
+            ? path.join(__dirname, 'dist', 'privacy.html')
+            : path.join(__dirname, '../public', 'privacy.html')
+    );
+});
+
 // SPA fallback
 app.get('*', (req, res) => {
     if (

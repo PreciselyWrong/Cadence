@@ -75,7 +75,7 @@ Entries are written at the end of each run (`google_sync_logs`); older ones are 
 ## Setup (administrator)
 
 1. Google Cloud Console → new project → enable **Google Calendar API** and **Google Tasks API**.
-2. OAuth consent screen: type External, add yourself as a user, scopes `calendar` and `tasks`. Then **Publish app** (to "In production"). In "Testing" mode Google expires the refresh token after 7 days and the sync stops; an unverified app in production only shows a warning screen once, which is fine for personal use.
+2. OAuth consent screen: type External, add yourself as a user, scopes `calendar` and `tasks`. Branding: home page `https://<your Cadence>` and privacy policy `https://<your Cadence>/privacy` (a public page served by Cadence); Google requires both before publishing. Then **Publish app** (to "In production"). In "Testing" mode Google expires the refresh token after 7 days and the sync stops; an unverified app in production only shows a warning screen once, which is fine for personal use.
 3. Credentials → OAuth client ID → Web application → Authorised redirect URI: `https://<your Cadence>/api/google/oauth/callback`.
 4. Set on the server:
 
