@@ -162,6 +162,18 @@ describe('Google sync', () => {
         expect(await GoogleAccount.count()).toBe(0);
     });
 
+    // The phone app calls /api/v1; Google only knows the /api callback, so a
+    // versioned base must not leak into redirect_uri (redirect_uri_mismatch).
+    it('sends the /api callback when the app starts from /api/v1', async () => {
+        const start = await agent
+            .get('/api/v1/google/connect')
+            .query({ origin: 'https://tududi.example', client: 'app' });
+        expect(start.status).toBe(200);
+        expect(new URL(start.body.url).searchParams.get('redirect_uri')).toBe(
+            'https://tududi.example/api/google/oauth/callback'
+        );
+    });
+
     it('rejects a callback with a wrong state', async () => {
         const res = await agent
             .get('/api/google/oauth/callback')

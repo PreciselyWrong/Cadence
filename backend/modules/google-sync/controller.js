@@ -48,7 +48,9 @@ module.exports = {
             /^https?:\/\//.test(req.query.origin)
                 ? req.query.origin
                 : getConfig().frontendUrl;
-        const basePath = req.baseUrl || '/api';
+        // Always the unversioned base: it is the callback registered with
+        // Google, and the phone app starts from /api/v1.
+        const basePath = '/api';
         res.json(
             accountService.startConnect(req.session, {
                 origin,
