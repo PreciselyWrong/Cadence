@@ -164,6 +164,20 @@ describe('validateCareer', () => {
         expect(answer.stats).toHaveLength(4);
     });
 
+    it('keeps an offer fit long enough for three key points and two reasons', () => {
+        const fit = 'p'.repeat(450);
+        const answer = validateCareer(
+            payload({
+                offers: [
+                    offer({ fit }),
+                    offer({ id: 'o2', fit: 'f'.repeat(600) }),
+                ],
+            })
+        );
+        expect(answer.offers[0].fit).toBe(fit);
+        expect(answer.offers[1].fit).toHaveLength(500);
+    });
+
     it('truncates long texts to their limits', () => {
         const answer = validateCareer(
             payload({

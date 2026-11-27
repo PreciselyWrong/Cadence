@@ -100,7 +100,8 @@ const readOffer = (entry) => {
     const title = cleanText(entry.title, 120);
     const company = cleanText(entry.company, 120);
     const url = httpsUrl(entry.url);
-    const fit = cleanText(entry.fit, 200);
+    // Room for three key points and two reasons, the note of the "Apply" task.
+    const fit = cleanText(entry.fit, 500);
     if (!id || !title || !company || !url || !fit) return null;
     return {
         id,
