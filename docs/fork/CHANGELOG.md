@@ -4,6 +4,11 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.28.1
+
+- **Google ne demande plus de se reconnecter chaque semaine** : page publique `/privacy` (règles de confidentialité en anglais), exigée par Google pour passer l'app OAuth en production ; en mode Test, le jeton expirait après 7 jours.
+- **Connexion Google depuis Android** : elle échouait avec « Erreur 400 : redirect_uri_mismatch », le serveur envoyant à Google une adresse de retour en `/api/v1` au lieu de `/api`.
+
 ## 2026.11.26.10
 
 - **À trier dans la langue du compte** : les cartes des règles (reports, doublons, conflits d'agenda, échéance lue dans une note) et la notification « N mails à trier » étaient toujours en français ; elles sont maintenant en anglais pour un compte qui n'est pas en français.
