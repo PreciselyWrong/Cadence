@@ -4,6 +4,10 @@ Une entrée par mise en production du serveur et du web, la plus récente en hau
 
 Avant 2026.11.19 : pas de numéro propre ; l'historique est dans `git log` et `docs/fork/FORK.md`.
 
+## 2026.11.28.2
+
+- **Tâches récurrentes dans le calendrier** : une tâche avec un créneau (début et échéance) s'étirait sur plusieurs semaines, le début restant sur la première occurrence ; il suit maintenant l'échéance quand on termine, saute ou déplace une occurrence.
+
 ## 2026.11.28.1
 
 - **Google ne demande plus de se reconnecter chaque semaine** : page publique `/privacy` (règles de confidentialité en anglais), exigée par Google pour passer l'app OAuth en production ; en mode Test, le jeton expirait après 7 jours.
