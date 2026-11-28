@@ -374,12 +374,18 @@ async function calculateNextIterations(task, startFromDate, userTimezone) {
 
 // When a recurring task moves to its next due date, its reminder keeps the
 // same distance from it and fires again. Returns the fields to write.
-function shiftedReminderFields(reminderAt, fromDue, toDue) {
-    if (!reminderAt || !fromDue || !toDue) return {};
+// The reminder and the start keep their distance to the due date, so a time
+// block (start 14:00, due 15:00) moves whole to the next occurrence.
+function shiftedOccurrenceFields({ reminderAt, startDate }, fromDue, toDue) {
+    if (!fromDue || !toDue) return {};
     const delta = new Date(toDue).getTime() - new Date(fromDue).getTime();
+    const shift = (instant) => new Date(new Date(instant).getTime() + delta);
     return {
-        reminder_at: new Date(new Date(reminderAt).getTime() + delta),
-        reminder_sent_at: null,
+        ...(reminderAt && {
+            reminder_at: shift(reminderAt),
+            reminder_sent_at: null,
+        }),
+        ...(startDate && { start_date: shift(startDate) }),
     };
 }
 
@@ -444,8 +450,11 @@ function planOccurrenceAdvance(
             shouldGenerateNextTask(recurrenceContext, nextDueDate)
         ),
         completionBased,
-        reminderFields: shiftedReminderFields(
-            resolve('reminder_at'),
+        shiftedFields: shiftedOccurrenceFields(
+            {
+                reminderAt: resolve('reminder_at'),
+                startDate: resolve('start_date'),
+            },
             originalDueDate,
             nextDueDate
         ),
@@ -495,7 +504,7 @@ async function completeOccurrence(task, { timezone = 'UTC', userId } = {}) {
                   status: Task.STATUS.NOT_STARTED,
                   completed_at: null,
                   due_date: occurrence.nextDueDate,
-                  ...occurrence.reminderFields,
+                  ...occurrence.shiftedFields,
               }
             : {
                   status: Task.STATUS.DONE,
@@ -551,8 +560,8 @@ async function skipRecurringOccurrence(task, userId, userTimezone) {
         due_date: nextDueDate,
         status: Task.STATUS.NOT_STARTED,
         completed_at: null,
-        ...shiftedReminderFields(
-            task.reminder_at,
+        ...shiftedOccurrenceFields(
+            { reminderAt: task.reminder_at, startDate: task.start_date },
             originalDueDate,
             nextDueDate
         ),

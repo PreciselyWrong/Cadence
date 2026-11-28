@@ -81,13 +81,17 @@ const daysBetween = (fromDate, toDate) =>
 
 // A reminder moved with its occurrence keeps its local time of day and its
 // distance in days from the due date, across a daylight-saving switch too.
-const shiftedReminder = (task, days, timezone) =>
-    task.reminder_at
-        ? {
-              reminder_at: shiftInstant(task.reminder_at, days, timezone),
-              reminder_sent_at: null,
-          }
-        : {};
+// The reminder and the start move with the due date, keeping the time block.
+const shiftedTimes = (task, days, timezone) => ({
+    ...(task.reminder_at && {
+        reminder_at: shiftInstant(task.reminder_at, days, timezone),
+        reminder_sent_at: null,
+    }),
+    ...(task.start_date && {
+        start_date: shiftInstant(task.start_date, days, timezone),
+        start_has_time: task.start_has_time,
+    }),
+});
 
 const shiftWeekday = (weekday, days) => (((weekday + days) % 7) + 7) % 7;
 
@@ -179,7 +183,7 @@ async function shiftWholeSeries(task, deltaDays, timezone) {
     const changes = {
         due_date: newDue,
         ...shiftPattern(task, deltaDays, localDateOf(newDue, timezone)),
-        ...shiftedReminder(task, deltaDays, timezone),
+        ...shiftedTimes(task, deltaDays, timezone),
         recurrence_exdates: (task.recurrence_exdates || []).map((date) =>
             shiftDateString(date, deltaDays)
         ),
@@ -220,7 +224,7 @@ async function splitSeries(
             {
                 ...pick(task, SERIES_FIELDS),
                 ...shiftPattern(task, deltaDays, dueDate),
-                ...shiftedReminder(
+                ...shiftedTimes(
                     task,
                     daysBetween(localDateOf(task.due_date, timezone), dueDate),
                     timezone
@@ -265,7 +269,7 @@ async function detachOccurrence(task, { occurrenceDate, dueDate, timezone }) {
         const moved = await Task.create(
             {
                 ...pick(task, ONE_OFF_FIELDS),
-                ...shiftedReminder(
+                ...shiftedTimes(
                     task,
                     daysBetween(localDateOf(task.due_date, timezone), dueDate),
                     timezone
@@ -288,7 +292,7 @@ async function detachOccurrence(task, { occurrenceDate, dueDate, timezone }) {
                           status: Task.STATUS.NOT_STARTED,
                           completed_at: null,
                           due_date: advance.nextDueDate,
-                          ...advance.reminderFields,
+                          ...advance.shiftedFields,
                       }
                     : {
                           status: Task.STATUS.DONE,

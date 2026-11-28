@@ -990,7 +990,7 @@ async function applyTaskPatch(task, body, req) {
             taskAttributes.status = Task.STATUS.NOT_STARTED;
             taskAttributes.completed_at = null;
             taskAttributes.due_date = recurringOccurrence.nextDueDate;
-            Object.assign(taskAttributes, recurringOccurrence.reminderFields);
+            Object.assign(taskAttributes, recurringOccurrence.shiftedFields);
         }
     }
 
